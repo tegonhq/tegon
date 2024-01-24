@@ -1,6 +1,6 @@
 <div align="center">
 
-[![Star us on GitHub](https://img.shields.io/github/stars/tegonhq/poozle?color=FFD700&label=Stars&logo=Github)](https://github.com/tegonhq/tegon) -->
+[![Star us on GitHub](https://img.shields.io/github/stars/tegonhq/tegon?color=FFD700&label=Stars&logo=Github)](https://github.com/tegonhq/tegon) -->
 
 [Love Tegon? Give us a ⭐ on GitHub!](https://github.com/tegonhq/tegon)
 
