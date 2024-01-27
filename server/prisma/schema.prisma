@@ -13,30 +13,30 @@ generator dbml {
 }
 
 // TODO (harshith): Need to fix enum array in swagger
-// generator nestjsDto {
-//   provider                        = "prisma-generator-nestjs-dto"
-//   output                          = "../src/@@generated"
-//   outputToNestJsResourceStructure = "true"
-//   exportRelationModifierClasses   = "true"
-//   reExport                        = "true"
-//   entityPrefix                    = ""
-//   entitySuffix                    = ""
-//   fileNamingStyle                 = "camel"
-// }
+generator nestjsDto {
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../src/@@generated"
+  outputToNestJsResourceStructure = "true"
+  exportRelationModifierClasses   = "true"
+  reExport                        = "true"
+  entityPrefix                    = ""
+  entitySuffix                    = ""
+  fileNamingStyle                 = "camel"
+}
 
 model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   email     String   @unique
-  password  String
 
-  fullname String?
-  username String
-  role     Role
+  fullname                String?
+  username                String
+  role                    Role
+  initialSetupComplete    Boolean @default(false)
+  anonymousDataCollection Boolean @default(false)
 
-  Workspace   Workspace? @relation(fields: [workspaceId], references: [id])
-  workspaceId String?
+  UsersOnWorkspaces UsersOnWorkspaces[]
 }
 
 model Workspace {
@@ -47,7 +47,32 @@ model Workspace {
   name String
   slug String @unique
 
-  users User[]
+  UsersOnWorkspaces UsersOnWorkspaces[]
+  Team              Team[]
+}
+
+model UsersOnWorkspaces {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  userId      String
+  workspaceId String
+
+  @@id([userId, workspaceId])
+}
+
+model Team {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name       String
+  identifier String
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
 }
 
 enum Role {

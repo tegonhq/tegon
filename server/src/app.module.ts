@@ -19,13 +19,7 @@ import { AppService } from './app.service';
     PrismaModule.forRoot({
       isGlobal: true,
       prismaServiceOptions: {
-        middlewares: [
-          // configure your prisma middleware
-          loggingMiddleware({
-            logger: new Logger('PrismaMiddleware'),
-            logLevel: 'log',
-          }),
-        ],
+        middlewares: [loggingMiddleware(new Logger('PrismaMiddleware'))], // configure your prisma middleware
       },
     }),
 

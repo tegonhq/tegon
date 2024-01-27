@@ -22,8 +22,6 @@ export const config = {
 };
 
 export default (req, res) => {
-  console.log('here');
-
   // Return a Promise to let Next.js know when we're done
   // processing the request:
   return new Promise((resolve, reject) => {

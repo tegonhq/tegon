@@ -1,19 +1,15 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import 'styles/globals.css';
-import type { AppProps } from 'next/app';
+import type { NextComponentType } from 'next';
 
 import { frontendConfig } from 'lib/config';
+import { useGetQueryClient } from 'lib/react-query-client';
 import { cn } from 'lib/utils';
+import { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 import { Inter } from 'next/font/google';
-import { useRouter } from 'next/router';
 import * as React from 'react';
-import {
-  Hydrate,
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-} from 'react-query';
+import { Hydrate, QueryClientProvider } from 'react-query';
 import SuperTokensReact, { SuperTokensWrapper } from 'supertokens-auth-react';
 
 import { ThemeProvider } from 'components/theme-provider';
@@ -31,29 +27,16 @@ export const fontSans = Inter({
   variable: '--font-sans',
 });
 
-const useGetQueryClient = () => {
-  const router = useRouter();
-
-  return React.useRef(
-    new QueryClient({
-      queryCache: new QueryCache({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        onError: (error: any) => {
-          if (error?.resStatus === 403) {
-            // global intercept 403 and redirect to home page
-            router.push('/');
-          }
-        },
-      }),
-    }),
-  );
-};
-
-export default function App({
+export const MyApp: NextComponentType<
+  AppContext,
+  AppInitialProps,
+  AppLayoutProps
+> = ({
   Component,
   pageProps: { dehydratedState, ...pageProps },
-}: AppProps) {
+}: AppLayoutProps) => {
   const queryClientRef = useGetQueryClient();
+  const getLayout = Component.getLayout || ((page: React.ReactNode) => page);
 
   return (
     <SuperTokensWrapper>
@@ -67,15 +50,17 @@ export default function App({
           <Hydrate state={dehydratedState}>
             <div
               className={cn(
-                'min-h-screen bg-background font-sans antialiased',
+                'min-h-screen bg-background font-sans antialiased flex',
                 fontSans.variable,
               )}
             >
-              <Component {...pageProps} />
+              {getLayout(<Component {...pageProps} />)}
             </div>
           </Hydrate>
         </QueryClientProvider>
       </ThemeProvider>
     </SuperTokensWrapper>
   );
-}
+};
+
+export default MyApp;

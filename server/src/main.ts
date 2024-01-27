@@ -2,7 +2,7 @@
 
 /* eslint-disable dot-location */
 
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -40,7 +40,12 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
 
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('', app, document);
+
+  // Versioning
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 
   // Cors
   if (corsConfig.enabled) {
