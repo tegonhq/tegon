@@ -1,7 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-/** Copyright (c) 2023, Poozle, all rights reserved. **/
-
 import { ReactElement } from 'react';
 
 import { Logo } from 'components/dynamic-logo';
@@ -16,7 +14,7 @@ export function AuthLayout(props: Props): ReactElement {
   return (
     <div className="flex h-screen w-screen flex-col justify-center items-center">
       <div className="pt-8">
-        <Logo width={150} height={50} />
+        <Logo width={120} height={50} />
       </div>
 
       <div className="flex-grow flex justify-center items-center h-full">

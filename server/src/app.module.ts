@@ -29,7 +29,7 @@ import { AppService } from './app.service';
       },
     }),
 
-    AuthModule,
+    AuthModule.forRoot(),
     UsersModule,
   ],
   controllers: [AppController],

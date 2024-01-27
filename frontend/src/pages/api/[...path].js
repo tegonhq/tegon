@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 /* eslint-disable dot-location */
 /** Copyright (c) 2023, Tegon, all rights reserved. **/
 
@@ -21,6 +22,8 @@ export const config = {
 };
 
 export default (req, res) => {
+  console.log('here');
+
   // Return a Promise to let Next.js know when we're done
   // processing the request:
   return new Promise((resolve, reject) => {

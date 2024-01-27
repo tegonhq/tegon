@@ -1,11 +1,15 @@
 {
-  "$schema": "https://json.schemastore.org/nest-cli",
+  "language": "ts",
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "deleteOutDir": true,
-    "builder": "swc",
-    "typeCheck": true,
-    "plugins": [ "@nestjs/swagger/plugin" ]
+    "plugins": [ {
+        "name": "@nestjs/swagger",
+        "options": {
+          "introspectComments": true,
+          "controllerKeyOfComment": "description",
+          "dtoFileNameSuffix": [ ".interface.ts", ".entity.ts", ".dto.ts" ]
+        }
+      } ]
   }
 }

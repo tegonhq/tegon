@@ -67,6 +67,11 @@ module.exports = {
             position: 'after',
           },
           {
+            pattern: '+(services){/**,}',
+            group: 'internal',
+            position: 'after',
+          },
+          {
             pattern: '+(store){/**,}',
             group: 'internal',
             position: 'after',

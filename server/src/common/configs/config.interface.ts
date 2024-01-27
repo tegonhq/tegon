@@ -1,13 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 export interface Config {
-  nest: NestConfig;
   cors: CorsConfig;
   superToken: SuperTokenConfig;
-}
-
-export interface NestConfig {
-  port: number;
 }
 
 export interface AppInfoConfig {

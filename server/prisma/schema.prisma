@@ -12,27 +12,42 @@ generator dbml {
   provider = "prisma-dbml-generator"
 }
 
+// TODO (harshith): Need to fix enum array in swagger
+// generator nestjsDto {
+//   provider                        = "prisma-generator-nestjs-dto"
+//   output                          = "../src/@@generated"
+//   outputToNestJsResourceStructure = "true"
+//   exportRelationModifierClasses   = "true"
+//   reExport                        = "true"
+//   entityPrefix                    = ""
+//   entitySuffix                    = ""
+//   fileNamingStyle                 = "camel"
+// }
+
 model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   email     String   @unique
   password  String
-  firstname String?
-  lastname  String?
-  posts     Post[]
-  role      Role
+
+  fullname String?
+  username String
+  role     Role
+
+  Workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+  workspaceId String?
 }
 
-model Post {
+model Workspace {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  published Boolean
-  title     String
-  content   String?
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  String?
+
+  name String
+  slug String @unique
+
+  users User[]
 }
 
 enum Role {

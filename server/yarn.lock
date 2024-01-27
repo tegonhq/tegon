@@ -739,6 +739,11 @@
     got "^11.8.5"
     os-filter-obj "^2.0.0"
 
+"@nestjs/axios@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/axios/-/axios-3.0.1.tgz#b006f81dd54a49def92cfaf9a8970434567e75ce"
+  integrity sha512-VlOZhAGDmOoFdsmewn8AyClAdGpKXQQaY1+3PGB+g6ceurGIdTxZgRX3VXc1T6Zs60PedWjg3A82TDOB05mrzQ==
+
 "@nestjs/cli@10.3.0":
   version "10.3.0"
   resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-10.3.0.tgz#5f9ef49a60baf4b39cb87e4b74240f7c9339e923"

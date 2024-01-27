@@ -4,13 +4,10 @@ import type { Config } from './config.interface';
 
 import jwt from 'supertokens-node/lib/build/recipe/jwt';
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
-import Passwordless from 'supertokens-node/recipe/passwordless';
 import Session from 'supertokens-node/recipe/session';
+import UserRoles from 'supertokens-node/recipe/userroles';
 
 export const config: Config = {
-  nest: {
-    port: 3000,
-  },
   cors: {
     enabled: true,
   },
@@ -28,11 +25,8 @@ export const config: Config = {
 
 export const recipeList = [
   jwt.init(),
-  Passwordless.init({
-    flowType: 'MAGIC_LINK',
-    contactMethod: 'EMAIL',
-  }),
   EmailPassword.init(),
+  UserRoles.init(),
   Session.init(), // initializes session features
 ];
 

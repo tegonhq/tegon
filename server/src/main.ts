@@ -7,8 +7,9 @@ import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
+import supertokens from 'supertokens-node';
 
-import type { CorsConfig, NestConfig } from 'common/configs/config.interface';
+import type { CorsConfig } from 'common/configs/config.interface';
 
 import { AppModule } from './app.module';
 
@@ -21,12 +22,13 @@ async function bootstrap() {
   // enable shutdown hook
   app.enableShutdownHooks();
 
+  // Cors
+
   // Prisma Client Exception Filter for unhandled exceptions
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   const configService = app.get(ConfigService);
-  const nestConfig = configService.get<NestConfig>('nest');
   const corsConfig = configService.get<CorsConfig>('cors');
 
   // Swagger Api
@@ -42,9 +44,13 @@ async function bootstrap() {
 
   // Cors
   if (corsConfig.enabled) {
-    app.enableCors();
+    app.enableCors({
+      origin: configService.get('FRONTEND_HOST').split(',') || '',
+      allowedHeaders: ['content-type', ...supertokens.getAllCORSHeaders()],
+      credentials: true,
+    });
   }
 
-  await app.listen(process.env.PORT || nestConfig.port || 3000);
+  await app.listen(process.env.PORT || 3001);
 }
 bootstrap();
