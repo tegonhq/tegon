@@ -2,7 +2,6 @@
 
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
@@ -13,7 +12,7 @@ export class UsersService {
         id,
       },
       include: {
-        Workspace: true,
+        UsersOnWorkspaces: true,
       },
     });
   }

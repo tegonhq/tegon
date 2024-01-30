@@ -1,5 +1,6 @@
 
-import {User} from '../../user/entities/user.entity'
+import {UsersOnWorkspaces} from '../../usersOnWorkspaces/entities/usersOnWorkspaces.entity'
+import {Team} from '../../team/entities/team.entity'
 
 
 export class Workspace {
@@ -7,5 +8,7 @@ export class Workspace {
 createdAt: Date ;
 updatedAt: Date ;
 name: string ;
-users?: User[] ;
+slug: string ;
+UsersOnWorkspaces?: UsersOnWorkspaces[] ;
+Team?: Team[] ;
 }

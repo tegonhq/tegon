@@ -4,11 +4,12 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
-import { WorkspacesService } from './workspaces.service';
+import WorkspacesService from './workspaces.service';
+import { WorkspacesController } from './workspaces.controller';
 
 @Module({
   imports: [PrismaModule, HttpModule],
-  controllers: [],
+  controllers: [WorkspacesController],
   providers: [WorkspacesService, PrismaService],
   exports: [WorkspacesService],
 })
