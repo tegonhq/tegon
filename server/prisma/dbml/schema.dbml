@@ -7,12 +7,12 @@ Table User {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   email String [unique, not null]
-  password String [not null]
   fullname String
   username String [not null]
   role Role [not null]
-  Workspace Workspace
-  workspaceId String
+  initialSetupComplete Boolean [not null, default: false]
+  anonymousDataCollection Boolean [not null, default: false]
+  UsersOnWorkspaces UsersOnWorkspaces [not null]
 }
 
 Table Workspace {
@@ -21,7 +21,31 @@ Table Workspace {
   updatedAt DateTime [not null]
   name String [not null]
   slug String [unique, not null]
-  users User [not null]
+  UsersOnWorkspaces UsersOnWorkspaces [not null]
+  Team Team [not null]
+}
+
+Table UsersOnWorkspaces {
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  workspace Workspace [not null]
+  userId String [not null]
+  workspaceId String [not null]
+
+  indexes {
+    (userId, workspaceId) [pk]
+  }
+}
+
+Table Team {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  identifier String [not null]
+  workspace Workspace [not null]
+  workspaceId String [not null]
 }
 
 Enum Role {
@@ -29,4 +53,8 @@ Enum Role {
   USER
 }
 
-Ref: User.workspaceId > Workspace.id
+Ref: UsersOnWorkspaces.userId > User.id
+
+Ref: UsersOnWorkspaces.workspaceId > Workspace.id
+
+Ref: Team.workspaceId > Workspace.id

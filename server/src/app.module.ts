@@ -9,6 +9,7 @@ import { loggingMiddleware } from 'common/middleware/logging.middleware';
 
 import { AuthModule } from 'modules/auth/auth.module';
 import { UsersModule } from 'modules/users/users.module';
+import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -25,6 +26,7 @@ import { AppService } from './app.service';
 
     AuthModule.forRoot(),
     UsersModule,
+    WorkspacesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
