@@ -14,35 +14,45 @@ import {
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
 
-export interface WorkspaceDropdownProps {
+export interface ProfileDropdownProps {
   isCollapsed: boolean;
 }
 
-export function WorkspaceDropdown({ isCollapsed }: WorkspaceDropdownProps) {
+export function ProfileDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="px-1">
+        <Button size="sm" variant="ghost" className="px-1">
           <div className="flex justify-between">
             <Avatar className="h-[20px] w-[30px] ">
               <AvatarImage />
-              <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-xs rounded-sm">
-                BO
+              <AvatarFallback className="bg-cyan-500 dark:bg-cyan-900 rounded-sm">
+                HA
               </AvatarFallback>
             </Avatar>
-            {!isCollapsed && <div className="ml-2"> Born4rhell</div>}
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="min-w-60" align="start">
+      <DropdownMenuContent className="w-60" align="start">
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            Workspace settings
+            View Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            Invite & manage members
+            Settings
             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            Help
+            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            Keyboard shortcuts
+            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

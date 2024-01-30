@@ -1,9 +1,9 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Slot } from '@radix-ui/react-slot';
+import { RiLoader4Line } from '@remixicon/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from 'lib/utils';
-import { Loader2 } from 'lucide-react';
 import * as React from 'react';
 
 const buttonVariants = cva(
@@ -20,12 +20,13 @@ const buttonVariants = cva(
         secondary:
           'bg-gray-100 text-gray-900 shadow-sm hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80',
         ghost:
-          'hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50',
+          'hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-900 dark:hover:text-gray-50 dark:focus-visible:ring-0',
         link: 'text-blue-600 underline-offset-4 hover:underline dark:text-blue-600',
       },
       size: {
         default: 'h-9 px-4 py-2',
         sm: 'h-8 rounded-md px-3 text-xs',
+        xs: 'h-7 rounded-md px-1 text-xs',
         lg: 'h-10 rounded-md px-8',
         icon: 'h-9 w-9',
       },
@@ -73,7 +74,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         disabled={isLoading ?? disabled}
       >
-        {isLoading ? <Loader2 className="animate-spin mr-2" /> : <></>}
+        {isLoading ? <RiLoader4Line className="animate-spin mr-2" /> : <></>}
         {children}
       </Comp>
     );

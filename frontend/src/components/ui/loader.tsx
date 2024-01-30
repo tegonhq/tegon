@@ -2,7 +2,8 @@
 
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from 'lib/utils';
-import { Loader2 } from 'lucide-react';
+import { RiLoader4Line } from '@remixicon/react';
+
 import * as React from 'react';
 
 const loaderVariants = cva(
@@ -34,7 +35,7 @@ const Loader = React.forwardRef<HTMLButtonElement, LoaderProps>(
       <div
         className={cn(loaderVariants({ size }), `h-[${height}px]`, 'w-full')}
       >
-        <Loader2 className="animate-spin mr-2" />
+        <RiLoader4Line className="animate-spin mr-2" />
       </div>
     );
   },
