@@ -10,9 +10,12 @@ import { loggingMiddleware } from 'common/middleware/logging.middleware';
 import { AuthModule } from 'modules/auth/auth.module';
 import { UsersModule } from 'modules/users/users.module';
 import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
+import { LabelsModule } from 'modules/labels/labels.module';
+import { TemplatesModule } from 'modules/templates/templates.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TeamsModule } from 'modules/teams/teams.module';
 
 @Module({
   imports: [
@@ -27,6 +30,9 @@ import { AppService } from './app.service';
     AuthModule.forRoot(),
     UsersModule,
     WorkspacesModule,
+    TeamsModule,
+    LabelsModule,
+    TemplatesModule
   ],
   controllers: [AppController],
   providers: [AppService],

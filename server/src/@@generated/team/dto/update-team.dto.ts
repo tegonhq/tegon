@@ -5,6 +5,8 @@
 
 
 export class UpdateTeamDto {
-  name?: string;
+  deleted?: Date;
+name?: string;
 identifier?: string;
+icon?: string;
 }

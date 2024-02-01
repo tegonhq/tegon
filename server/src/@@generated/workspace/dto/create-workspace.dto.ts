@@ -5,6 +5,8 @@
 
 
 export class CreateWorkspaceDto {
-  name: string;
+  deleted?: Date;
+name: string;
 slug: string;
+icon?: string;
 }

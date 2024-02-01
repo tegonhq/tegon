@@ -37,18 +37,24 @@ model User {
   anonymousDataCollection Boolean @default(false)
 
   UsersOnWorkspaces UsersOnWorkspaces[]
+  template          Template[]
+  team              Team[]
 }
 
 model Workspace {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
 
   name String
-  slug String @unique
+  slug String  @unique
+  icon String?
 
   UsersOnWorkspaces UsersOnWorkspaces[]
   Team              Team[]
+  Label             Label[]
+  Template          Template[]
 }
 
 model UsersOnWorkspaces {
@@ -59,23 +65,72 @@ model UsersOnWorkspaces {
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   userId      String
   workspaceId String
+  status      Status    @default(ACTIVE)
 
   @@id([userId, workspaceId])
 }
 
 model Team {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
 
   name       String
   identifier String
+  icon       String?
+
+  workspace   Workspace  @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+  user        User       @relation(fields: [userId], references: [id])
+  userId      String
+  Label       Label[]
+  Template    Template[]
+}
+
+model Label {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deleted   DateTime?
+
+  name        String
+  color       String
+  description String?
 
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   workspaceId String
+  team        Team?     @relation(fields: [teamId], references: [id])
+  teamId      String?
+  group       Label?    @relation("Report", fields: [groupId], references: [id])
+  groupId     String?
+  labels      Label[]   @relation("Report")
+}
+
+model Template {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deleted   DateTime?
+
+  name         String
+  type         String
+  templateData Json
+
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdById String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+  team        Team?     @relation(fields: [teamId], references: [id])
+  teamId      String?
 }
 
 enum Role {
   ADMIN
   USER
+}
+
+enum Status {
+  ACTIVE
+  SUSPENDED
 }

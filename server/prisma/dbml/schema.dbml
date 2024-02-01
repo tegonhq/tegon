@@ -13,16 +13,22 @@ Table User {
   initialSetupComplete Boolean [not null, default: false]
   anonymousDataCollection Boolean [not null, default: false]
   UsersOnWorkspaces UsersOnWorkspaces [not null]
+  template Template [not null]
+  team Team [not null]
 }
 
 Table Workspace {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  deleted DateTime
   name String [not null]
   slug String [unique, not null]
+  icon String
   UsersOnWorkspaces UsersOnWorkspaces [not null]
   Team Team [not null]
+  Label Label [not null]
+  Template Template [not null]
 }
 
 Table UsersOnWorkspaces {
@@ -32,6 +38,7 @@ Table UsersOnWorkspaces {
   workspace Workspace [not null]
   userId String [not null]
   workspaceId String [not null]
+  status Status [not null, default: 'ACTIVE']
 
   indexes {
     (userId, workspaceId) [pk]
@@ -42,10 +49,49 @@ Table Team {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  deleted DateTime
   name String [not null]
   identifier String [not null]
+  icon String
   workspace Workspace [not null]
   workspaceId String [not null]
+  user User [not null]
+  userId String [not null]
+  Label Label [not null]
+  Template Template [not null]
+}
+
+Table Label {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deleted DateTime
+  name String [not null]
+  color String [not null]
+  description String
+  workspace Workspace [not null]
+  workspaceId String [not null]
+  team Team
+  teamId String
+  group Label
+  groupId String
+  labels Label [not null]
+}
+
+Table Template {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deleted DateTime
+  name String [not null]
+  type String [not null]
+  templateData Json [not null]
+  createdBy User [not null]
+  createdById String [not null]
+  workspace Workspace [not null]
+  workspaceId String [not null]
+  team Team
+  teamId String
 }
 
 Enum Role {
@@ -53,8 +99,27 @@ Enum Role {
   USER
 }
 
+Enum Status {
+  ACTIVE
+  SUSPENDED
+}
+
 Ref: UsersOnWorkspaces.userId > User.id
 
 Ref: UsersOnWorkspaces.workspaceId > Workspace.id
 
 Ref: Team.workspaceId > Workspace.id
+
+Ref: Team.userId > User.id
+
+Ref: Label.workspaceId > Workspace.id
+
+Ref: Label.teamId > Team.id
+
+Ref: Label.groupId - Label.id
+
+Ref: Template.createdById > User.id
+
+Ref: Template.workspaceId > Workspace.id
+
+Ref: Template.teamId > Team.id
