@@ -1,30 +1,35 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import { IsOptional, IsString } from 'class-validator';
 
-export class CreateWorkspaceInput {
+export class CreateTeamInput {
   @IsString()
   name: string;
 
   @IsString()
-  slug: string;
+  identifier: string;
 
   @IsOptional()
   @IsString()
-  icon: string
+  icon?: string
 }
 
-export class UpdateWorkspaceInput {
+export class UpdateTeamInput {
   @IsOptional()
   @IsString()
   name?: string;
 
   @IsOptional()
   @IsString()
-  slug?: string;
+  identifier?: string;
 
   @IsOptional()
   @IsString()
-  icon: string
+  icon?: string
+}
+
+export class TeamRequestIdBody {
+  @IsString()
+  teamId: string;
 }
 
 export class WorkspaceRequestIdBody {

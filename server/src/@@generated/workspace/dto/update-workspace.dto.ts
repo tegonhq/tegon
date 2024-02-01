@@ -5,6 +5,8 @@
 
 
 export class UpdateWorkspaceDto {
-  name?: string;
+  deleted?: Date;
+name?: string;
 slug?: string;
+icon?: string;
 }

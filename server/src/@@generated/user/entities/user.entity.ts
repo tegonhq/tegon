@@ -1,6 +1,8 @@
 
 import {Role} from '@prisma/client'
 import {UsersOnWorkspaces} from '../../usersOnWorkspaces/entities/usersOnWorkspaces.entity'
+import {Template} from '../../template/entities/template.entity'
+import {Team} from '../../team/entities/team.entity'
 
 
 export class User {
@@ -14,4 +16,6 @@ role: Role ;
 initialSetupComplete: boolean ;
 anonymousDataCollection: boolean ;
 UsersOnWorkspaces?: UsersOnWorkspaces[] ;
+template?: Template[] ;
+team?: Team[] ;
 }

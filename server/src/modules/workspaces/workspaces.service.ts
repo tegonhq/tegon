@@ -50,7 +50,11 @@ export default class WorkspacesService {
         id: WorkspaceRequestIdBody.workspaceId,
       },
       include: {
-        UsersOnWorkspaces: true,
+        UsersOnWorkspaces: {
+          include:{
+            user: true
+          }
+        },
       },
     });
   }

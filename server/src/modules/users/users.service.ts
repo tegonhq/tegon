@@ -2,6 +2,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
+import { UpdateUserBody } from './user.interface';
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
@@ -15,5 +16,19 @@ export class UsersService {
         UsersOnWorkspaces: true,
       },
     });
+  }
+
+  async updateUser(id: string, updateData: UpdateUserBody) {
+    return await this.prisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        ...updateData
+      },
+      include: {
+        UsersOnWorkspaces: true
+      }
+    })
   }
 }
