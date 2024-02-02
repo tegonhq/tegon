@@ -76,9 +76,9 @@ model Team {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name       String
-  identifier String
-  icon       String?
+  name        String
+  identifier  String
+  icon        String?
 
   workspace   Workspace  @relation(fields: [workspaceId], references: [id])
   workspaceId String
@@ -86,6 +86,7 @@ model Team {
   userId      String
   Label       Label[]
   Template    Template[]
+  Workflow    Workflow[]
 }
 
 model Label {
@@ -123,6 +124,21 @@ model Template {
   workspaceId String
   team        Team?     @relation(fields: [teamId], references: [id])
   teamId      String?
+}
+
+model Workflow {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deleted   DateTime?
+
+  name     String
+  position Int
+  color    String
+  type     String
+
+  team   Team?  @relation(fields: [teamId], references: [id])
+  teamId String
 }
 
 enum Role {

@@ -16,6 +16,7 @@ import { TemplatesModule } from 'modules/templates/templates.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TeamsModule } from 'modules/teams/teams.module';
+import { WorkflowsModule } from 'modules/workflows/workflows.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { TeamsModule } from 'modules/teams/teams.module';
     WorkspacesModule,
     TeamsModule,
     LabelsModule,
-    TemplatesModule
+    TemplatesModule,
+    WorkflowsModule
   ],
   controllers: [AppController],
   providers: [AppService],

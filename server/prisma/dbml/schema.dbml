@@ -59,6 +59,7 @@ Table Team {
   userId String [not null]
   Label Label [not null]
   Template Template [not null]
+  Workflow Workflow [not null]
 }
 
 Table Label {
@@ -94,6 +95,19 @@ Table Template {
   teamId String
 }
 
+Table Workflow {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deleted DateTime
+  name String [not null]
+  position Int [not null]
+  color String [not null]
+  type String [not null]
+  team Team
+  teamId String [not null]
+}
+
 Enum Role {
   ADMIN
   USER
@@ -123,3 +137,5 @@ Ref: Template.createdById > User.id
 Ref: Template.workspaceId > Workspace.id
 
 Ref: Template.teamId > Team.id
+
+Ref: Workflow.teamId > Team.id
