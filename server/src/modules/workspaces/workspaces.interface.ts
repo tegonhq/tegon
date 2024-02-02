@@ -1,4 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { IsOptional, IsString } from 'class-validator';
 
 export class CreateWorkspaceInput {
@@ -10,7 +11,7 @@ export class CreateWorkspaceInput {
 
   @IsOptional()
   @IsString()
-  icon: string
+  icon: string;
 }
 
 export class UpdateWorkspaceInput {
@@ -24,7 +25,7 @@ export class UpdateWorkspaceInput {
 
   @IsOptional()
   @IsString()
-  icon: string
+  icon: string;
 }
 
 export class WorkspaceRequestIdBody {

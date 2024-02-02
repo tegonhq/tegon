@@ -24,7 +24,10 @@ export class UsersController {
   @UseGuards(new AuthGuard())
   async getUser(@SessionDecorator() session: SessionContainer): Promise<User> {
     const userId = session.getUserId();
+    console.log(userId);
     const user = await this.usersService.getUser(userId);
+
+    console.log(user);
 
     return user;
   }

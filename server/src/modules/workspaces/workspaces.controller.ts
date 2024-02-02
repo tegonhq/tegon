@@ -1,17 +1,19 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Workspace } from '@prisma/client';
+import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
-import { SessionContainer } from 'supertokens-node/recipe/session';
 
-import WorkspacesService from './workspaces.service';
 import {
   CreateWorkspaceInput,
   UpdateWorkspaceInput,
   WorkspaceRequestIdBody,
 } from './workspaces.interface';
-import { Workspace } from '@prisma/client';
+import WorkspacesService from './workspaces.service';
 
 @Controller({
   version: '1',

@@ -76,7 +76,7 @@ export function SignForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="XÆA-12Musk" {...field} />
+                <Input placeholder="XÆA-12Musk" type="password" {...field} />
               </FormControl>
 
               <FormMessage />

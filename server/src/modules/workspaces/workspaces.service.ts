@@ -3,6 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { Workspace } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+
 import {
   CreateWorkspaceInput,
   UpdateWorkspaceInput,
@@ -22,7 +23,7 @@ export default class WorkspacesService {
         ...workspaceData,
         UsersOnWorkspaces: {
           create: {
-            userId: userId,
+            userId,
           },
         },
       },
@@ -37,7 +38,7 @@ export default class WorkspacesService {
   async getAllWorkspaces(userId: string): Promise<Workspace[]> {
     return await this.prisma.workspace.findMany({
       where: {
-        UsersOnWorkspaces: { every: { userId: userId } },
+        UsersOnWorkspaces: { every: { userId } },
       },
     });
   }
@@ -64,9 +65,7 @@ export default class WorkspacesService {
     workspaceData: UpdateWorkspaceInput,
   ): Promise<Workspace> {
     return await this.prisma.workspace.update({
-      data: {
-        ...workspaceData,
-      },
+      data: workspaceData,
       where: {
         id: WorkspaceRequestIdBody.workspaceId,
       },

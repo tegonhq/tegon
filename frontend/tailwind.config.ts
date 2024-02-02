@@ -21,6 +21,17 @@ const config = {
         '2xl': '1400px',
       },
     },
+    fontSize: {
+      xs: '0.75rem',
+      sm: '0.8125rem',
+      base: '0.9375',
+      lg: '1.125rem',
+      xl: '1.25rem',
+      '2xl': '1.5rem',
+      '3xl': '2.25rem',
+      '4xl': '2.441rem',
+      '5xl': '3.052rem',
+    },
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],

@@ -25,7 +25,8 @@ generator nestjsDto {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id String @id @unique
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   email     String   @unique

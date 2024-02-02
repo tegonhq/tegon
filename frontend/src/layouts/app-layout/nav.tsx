@@ -15,7 +15,7 @@ interface NavProps {
     label?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     icon: any;
-    variant: 'default' | 'ghost';
+    href: string;
   }>;
 }
 
@@ -31,12 +31,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
             <Tooltip key={index} delayDuration={0}>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href={link.href}
                   className={cn(
-                    buttonVariants({ variant: link.variant, size: 'icon' }),
+                    buttonVariants({ variant: 'ghost', size: 'icon' }),
                     'h-9 w-9 text-base px-1',
-                    link.variant === 'default' &&
-                      'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white',
                   )}
                 >
                   <link.icon className="h-4 w-4" />
@@ -55,26 +53,16 @@ export function Nav({ links, isCollapsed }: NavProps) {
           ) : (
             <Link
               key={index}
-              href="#"
+              href={link.href}
               className={cn(
-                buttonVariants({ variant: link.variant, size: 'sm' }),
-                link.variant === 'default' &&
-                  'dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white',
-                'justify-start text-sm',
+                buttonVariants({ variant: 'ghost', size: 'sm' }),
+                'justify-start text-sm text-gray-700 dark:text-gray-300',
               )}
             >
               <link.icon className="mr-3 h-4 w-4 text-muted-foreground" />
               {link.title}
               {link.label && (
-                <span
-                  className={cn(
-                    'ml-auto',
-                    link.variant === 'default' &&
-                      'text-background dark:text-white',
-                  )}
-                >
-                  {link.label}
-                </span>
+                <span className={cn('ml-auto')}>{link.label}</span>
               )}
             </Link>
           ),

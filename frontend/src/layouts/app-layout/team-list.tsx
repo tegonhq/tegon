@@ -20,8 +20,6 @@ import { Separator } from 'components/ui/separator';
 
 import { Nav } from './nav';
 
-// import { TeamSettingsDropdown } from './team-settings-dropdown';
-
 interface TeamListProps {
   isCollapsed?: boolean;
 }
@@ -32,12 +30,12 @@ export function TeamList({ isCollapsed }: TeamListProps) {
   return (
     <div
       ref={containerRef}
-      className="h-full space-y-2 overflow-y-auto mt-4 m-2"
+      className="h-full space-y-1 overflow-y-auto mt-4 m-2"
     >
       {isCollapsed ? (
         <Separator />
       ) : (
-        <div className="px-3 text-xs text-muted-foreground font-medium">
+        <div className="px-3 text-xs text-gray-400 dark:text-gray-500 font-medium">
           Your teams
         </div>
       )}
@@ -49,7 +47,7 @@ export function TeamList({ isCollapsed }: TeamListProps) {
             {
               title: 'Poozle',
               icon: RiTeamFill,
-              variant: 'ghost',
+              href: '/poozle',
             },
           ]}
         />
@@ -58,38 +56,37 @@ export function TeamList({ isCollapsed }: TeamListProps) {
       {!isCollapsed && (
         <Accordion
           type="single"
-          collapsible={false}
+          collapsible
           defaultValue="item-1"
-          className="w-full"
+          className="w-full text-gray-700 dark:text-gray-300 mt-0"
         >
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-900 dark:hover:text-gray-50 rounded-md">
+            <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50 rounded-md">
               <div className="w-full justify-start px-3 flex items-center">
-                <RiTeamFill size={16} className="text-blue-500" />
+                <RiTeamFill
+                  size={18}
+                  className="text-gray-500 dark:text-muted-foreground dark:bg-gray-800 bg-gray-100 p-[2px] rounded-md"
+                />
 
                 <div className="flex justify-start items-center text-sm ml-3">
                   Poozle
                   <RiArrowRightSFill className="arrow-right-icon ml-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
                 </div>
               </div>
-
-              {/* <div>
-              <TeamSettingsDropdown />
-            </div> */}
             </AccordionTrigger>
             <AccordionContent className="flex flex-col justify-center items-start w-full">
               <Button
-                size="xs"
+                size="sm"
                 variant="ghost"
-                className="w-full text-sm flex justify-start px-5 mt-1"
+                className="w-full text-sm flex justify-start px-5"
               >
                 <RiSwapLine className="mr-3 arrow-right-icon ml-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
                 Triage
               </Button>
               <Button
-                size="xs"
+                size="sm"
                 variant="ghost"
-                className="w-full text-sm flex justify-start px-5 mt-1"
+                className="w-full text-sm flex justify-start px-5"
               >
                 <RiStackFill className="mr-3 arrow-right-icon ml-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
                 Issues
@@ -98,25 +95,25 @@ export function TeamList({ isCollapsed }: TeamListProps) {
               <div className="pl-8 w-full">
                 <div className="border-l pl-3 w-full">
                   <Button
-                    size="xs"
+                    size="sm"
                     variant="ghost"
-                    className="w-full text-sm flex justify-start mt-1 px-2"
+                    className="w-full text-sm flex justify-start px-2"
                   >
                     Active
                   </Button>
                   <Button
-                    size="xs"
+                    size="sm"
                     variant="ghost"
-                    className="w-full text-sm flex justify-start mt-1 px-2"
+                    className="w-full text-sm flex justify-start px-2"
                   >
                     Backlog
                   </Button>
                 </div>
               </div>
               <Button
-                size="xs"
+                size="sm"
                 variant="ghost"
-                className="w-full text-sm flex justify-start px-5 mt-1"
+                className="w-full text-sm flex justify-start px-5"
               >
                 <RiApps2Fill className="mr-3 arrow-right-icon ml-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
                 Projects
