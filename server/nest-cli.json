@@ -3,13 +3,6 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "plugins": [ {
-        "name": "@nestjs/swagger",
-        "options": {
-          "introspectComments": true,
-          "controllerKeyOfComment": "description",
-          "dtoFileNameSuffix": [ ".interface.ts", ".entity.ts", ".dto.ts" ]
-        }
-      } ]
+
   }
 }

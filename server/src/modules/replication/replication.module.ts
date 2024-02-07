@@ -3,10 +3,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import { SyncModule } from 'modules/sync/sync.module';
+
 import ReplicationService from './replication.service';
 
 @Module({
-  imports: [],
+  imports: [SyncModule],
   controllers: [],
   providers: [ReplicationService, ConfigService],
   exports: [],

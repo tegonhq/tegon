@@ -3,6 +3,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { SyncGateway } from 'modules/sync/sync.gateway';
 import { Client } from 'pg';
 import {
   LogicalReplicationService,
@@ -16,7 +17,10 @@ const REPLICATION_SLOT_NAME = 'repl';
 export default class ReplicationService {
   client: Client;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private syncGateway: SyncGateway,
+  ) {
     this.client = new Client({
       connectionString: this.configService.get('REPLICATION_DATABASE_URL'),
     });
@@ -66,6 +70,10 @@ export default class ReplicationService {
       // log contains change data in JSON format
       console.log(log.change[0].columnvalues);
       console.log(log.change[0].columnnames);
+
+      this.syncGateway.wss
+        .to('react')
+        .emit('message', JSON.stringify(log.change));
     });
   }
 }

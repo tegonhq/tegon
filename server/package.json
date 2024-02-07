@@ -58,7 +58,9 @@
     "@nestjs/jwt": "10.2.0",
     "@nestjs/passport": "10.0.3",
     "@nestjs/platform-express": "10.3.1",
+    "@nestjs/platform-socket.io": "^10.3.1",
     "@nestjs/swagger": "7.2.0",
+    "@nestjs/websockets": "^10.3.1",
     "@prisma/client": "^5.8.1",
     "@vegardit/prisma-generator-nestjs-dto": "^1.5.1",
     "bcrypt": "5.1.1",
@@ -70,7 +72,7 @@
     "passport-jwt": "4.0.1",
     "pg": "^8.11.3",
     "pg-logical-replication": "^2.0.3",
-    "reflect-metadata": "0.2.1",
+    "reflect-metadata": "^0.2.1",
     "rxjs": "7.8.1",
     "supertokens-node": "^16.7.1"
   },
