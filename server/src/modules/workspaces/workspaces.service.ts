@@ -72,7 +72,6 @@ export default class WorkspacesService {
     });
   }
 
-
   async deleteWorkspace(
     WorkspaceRequestIdBody: WorkspaceRequestIdBody,
   ): Promise<Workspace> {

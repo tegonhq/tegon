@@ -15,6 +15,7 @@ import SyncActionsService from '../modules/syncActions/syncActions.service';
 @Injectable()
 export class SyncActionsInterceptor implements NestInterceptor {
   constructor(private syncActionService: SyncActionsService) {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const controller = context.getClass().name;
     const handler = context.getHandler().name;
@@ -22,13 +23,18 @@ export class SyncActionsInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap((data) => {
         const [action, entity] = this.splitHandlerName(handler);
-        console.log(controller, action, entity);
+
         if (
           action &&
           controller !== 'syncActionsController' &&
           controller !== 'syncActionsService'
         ) {
-          this.syncActionService.createSyncAction(action, controller, entity, data);
+          this.syncActionService.createSyncAction(
+            action,
+            controller,
+            entity,
+            data,
+          );
         }
       }),
     );

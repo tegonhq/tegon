@@ -3,12 +3,13 @@
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SyncGateway } from 'modules/sync/sync.gateway';
 import { Client } from 'pg';
 import {
   LogicalReplicationService,
   Wal2JsonPlugin,
 } from 'pg-logical-replication';
+
+import { SyncGateway } from 'modules/sync/sync.gateway';
 
 const REPLICATION_SLOT_NAME = 'repl';
 // const REPLICATION_SLOT_PLUGIN = 'wal2json';
@@ -67,12 +68,12 @@ export default class ReplicationService {
       });
 
     service.on('data', (_lsn, log) => {
+      console.log(_lsn);
       // log contains change data in JSON format
-      console.log(log.change[0].columnvalues);
-      console.log(log.change[0].columnnames);
+      console.log(JSON.stringify(log));
 
       this.syncGateway.wss
-        .to('react')
+        .to('d81f6173-60cf-46bc-bcca-4ab2921a52c3')
         .emit('message', JSON.stringify(log.change));
     });
   }

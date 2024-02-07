@@ -39,11 +39,10 @@ import { AppService } from './app.service';
     TeamsModule,
     LabelsModule,
     TemplatesModule,
+    WorkflowsModule,
 
     ReplicationModule,
-    WorkflowsModule,
     SyncActionsModule,
-
     SyncModule,
   ],
   controllers: [AppController],

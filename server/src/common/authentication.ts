@@ -20,7 +20,10 @@ async function getKey(jwt: string) {
   return key!.getPublicKey();
 }
 
-export async function hasValidHeader(authHeaderValue: string) {
+export async function hasValidHeader(
+  authHeaderValue: string,
+  throwError: boolean = true,
+) {
   // this for users to call from their APIs
 
   authHeaderValue =
@@ -29,29 +32,40 @@ export async function hasValidHeader(authHeaderValue: string) {
       : authHeaderValue.split('Bearer ')[1];
 
   if (authHeaderValue === undefined) {
-    throw new UnauthorizedException({
-      message: 'Unauthorised',
-    });
-  } else {
-    if (authHeaderValue === process.env.MASTER_TOKEN) {
-      return true;
-    }
-
-    const publicKey = await getKey(authHeaderValue);
-
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const response: any = verify(authHeaderValue, publicKey, {});
-      if (response.source !== 'microservice') {
-        throw new UnauthorizedException({
-          message: 'Unauthorised',
-        });
-      }
-    } catch (e) {
+    if (throwError) {
       throw new UnauthorizedException({
         message: 'Unauthorised',
       });
     }
+
+    return false;
+  }
+
+  if (authHeaderValue === process.env.MASTER_TOKEN) {
+    return true;
+  }
+
+  const publicKey = await getKey(authHeaderValue);
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const response: any = verify(authHeaderValue, publicKey, {});
+    if (response.source !== 'microservice') {
+      if (throwError) {
+        throw new UnauthorizedException({
+          message: 'Unauthorised',
+        });
+      }
+
+      return false;
+    }
+  } catch (e) {
+    if (throwError) {
+      throw new UnauthorizedException({
+        message: 'Unauthorised',
+      });
+    }
+    return false;
   }
 
   return false;
