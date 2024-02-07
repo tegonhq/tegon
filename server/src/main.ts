@@ -11,6 +11,8 @@ import supertokens from 'supertokens-node';
 
 import type { CorsConfig } from 'common/configs/config.interface';
 
+import ReplicationService from 'modules/replication/replication.service';
+
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -19,10 +21,12 @@ async function bootstrap() {
   // Validation
   app.useGlobalPipes(new ValidationPipe());
 
+  // Initiate replication service
+  const replicationService = app.get(ReplicationService);
+  replicationService.init();
+
   // enable shutdown hook
   app.enableShutdownHooks();
-
-  // Cors
 
   // Prisma Client Exception Filter for unhandled exceptions
   const { httpAdapter } = app.get(HttpAdapterHost);
@@ -32,7 +36,6 @@ async function bootstrap() {
   const corsConfig = configService.get<CorsConfig>('cors');
 
   // Swagger Api
-
   const options = new DocumentBuilder()
     .setTitle('Tegon server')
     .setDescription('Tegon server API configuration')

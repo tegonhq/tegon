@@ -3,6 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { Template } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+
 import {
   CreateTemplateInput,
   UpdateTemplateInput,
@@ -18,23 +19,25 @@ export default class TemplatesService {
     userId: string,
     templateData: CreateTemplateInput,
   ): Promise<Template> {
-
     const template = await this.prisma.template.create({
-      data:{
+      data: {
         ...templateData,
-        createdById: userId
-      }
-    })
+        createdById: userId,
+      },
+    });
 
     return template;
   }
 
   async getAllTemplates(requestIdParams: RequestIdParams): Promise<Template[]> {
     const whereClause = {
-      ...(requestIdParams.workspaceId && { workspaceId: requestIdParams.workspaceId, teamId: null }),
+      ...(requestIdParams.workspaceId && {
+        workspaceId: requestIdParams.workspaceId,
+        teamId: null,
+      }),
       ...(requestIdParams.teamId && { teamId: requestIdParams.teamId }),
     };
-  
+
     return await this.prisma.template.findMany({
       where: whereClause,
     });
@@ -46,7 +49,7 @@ export default class TemplatesService {
     return await this.prisma.template.findUnique({
       where: {
         id: TemplateRequestIdParams.templateId,
-      }
+      },
     });
   }
 
@@ -64,11 +67,10 @@ export default class TemplatesService {
     });
   }
 
-  async deleteTemplate(templateRequestIdParams: TemplateRequestIdParams){
+  async deleteTemplate(templateRequestIdParams: TemplateRequestIdParams) {
     return await this.prisma.template.delete({
       where: {
-        id:
-        templateRequestIdParams.templateId,
+        id: templateRequestIdParams.templateId,
       },
     });
   }

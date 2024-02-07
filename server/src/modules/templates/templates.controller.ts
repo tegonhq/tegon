@@ -1,17 +1,29 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Template } from '@prisma/client';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 import { AuthGuard } from 'modules/auth/auth.guard';
-import TemplatesService from './templates.service';
+import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+
 import {
   CreateTemplateInput,
   UpdateTemplateInput,
   TemplateRequestIdParams,
   RequestIdParams,
 } from './templates.interface';
-import { Template } from '@prisma/client';
+import TemplatesService from './templates.service';
 
 @Controller({
   version: '1',
@@ -55,10 +67,7 @@ export class TemplatesController {
     templateId: TemplateRequestIdParams,
     @Body() templateData: UpdateTemplateInput,
   ): Promise<Template> {
-    return await this.templatesService.updateTemplate(
-      templateId,
-      templateData,
-    );
+    return await this.templatesService.updateTemplate(templateId, templateData);
   }
 
   @Delete(':templateId')
@@ -67,8 +76,6 @@ export class TemplatesController {
     @Param()
     templateId: TemplateRequestIdParams,
   ): Promise<Template> {
-    return await this.templatesService.deleteTemplate(
-      templateId,
-    );
+    return await this.templatesService.deleteTemplate(templateId);
   }
 }

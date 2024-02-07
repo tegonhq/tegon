@@ -10,18 +10,18 @@ export class CreateLabelInput {
 
   @IsOptional()
   @IsString()
-  description?: string
+  description?: string;
 
   @IsOptional()
   @IsString()
-  groupId?: string
+  groupId?: string;
 
   @IsString()
-  workspaceId: string
+  workspaceId: string;
 
   @IsOptional()
   @IsString()
-  teamId?: string
+  teamId?: string;
 }
 
 export class UpdateLabelInput {
@@ -35,11 +35,11 @@ export class UpdateLabelInput {
 
   @IsOptional()
   @IsString()
-  description?: string
+  description?: string;
 
   @IsOptional()
   @IsString()
-  groupId?: string
+  groupId?: string;
 }
 
 export class LabelRequestIdParams {

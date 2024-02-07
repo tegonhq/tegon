@@ -9,8 +9,8 @@ import { User } from '@@generated/user/entities';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
-import { UsersService } from './users.service';
 import { UpdateUserBody, UserIdParams } from './user.interface';
+import { UsersService } from './users.service';
 
 @Controller({
   version: '1',
@@ -24,10 +24,7 @@ export class UsersController {
   @UseGuards(new AuthGuard())
   async getUser(@SessionDecorator() session: SessionContainer): Promise<User> {
     const userId = session.getUserId();
-    console.log(userId);
     const user = await this.usersService.getUser(userId);
-
-    console.log(user);
 
     return user;
   }
@@ -35,11 +32,14 @@ export class UsersController {
   @Post(':userId')
   @UseGuards(new AuthGuard())
   async updateUser(
-      @Param() userIdBody: UserIdParams,
-      @Body()
-      updateUserBody: UpdateUserBody,
+    @Param() userIdBody: UserIdParams,
+    @Body()
+    updateUserBody: UpdateUserBody,
   ): Promise<User> {
-    const user = await this.usersService.updateUser(userIdBody.userId, updateUserBody);
+    const user = await this.usersService.updateUser(
+      userIdBody.userId,
+      updateUserBody,
+    );
 
     return user;
   }

@@ -3,6 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { Team } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+
 import {
   UpdateTeamInput,
   TeamRequestIdBody,
@@ -13,28 +14,29 @@ import {
 export default class TeamsService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllTeams(workspaceId: WorkspaceRequestIdBody, userId: string): Promise<Team[]> {
+  async getAllTeams(
+    workspaceId: WorkspaceRequestIdBody,
+    userId: string,
+  ): Promise<Team[]> {
     return await this.prisma.team.findMany({
       where: {
-        userId: userId,
-        workspaceId: workspaceId.workspaceId
+        userId,
+        workspaceId: workspaceId.workspaceId,
       },
       include: {
-        user: true
-      }
+        user: true,
+      },
     });
   }
 
-  async getTeam(
-    TeamRequestIdBody: TeamRequestIdBody,
-  ): Promise<Team> {
+  async getTeam(TeamRequestIdBody: TeamRequestIdBody): Promise<Team> {
     return await this.prisma.team.findUnique({
       where: {
         id: TeamRequestIdBody.teamId,
       },
       include: {
-        user: true
-      }
+        user: true,
+      },
     });
   }
 
@@ -55,8 +57,7 @@ export default class TeamsService {
   async deleteTeam(teamRequestIdBody: TeamRequestIdBody): Promise<Team> {
     return await this.prisma.team.delete({
       where: {
-        id:
-        teamRequestIdBody.teamId,
+        id: teamRequestIdBody.teamId,
       },
     });
   }

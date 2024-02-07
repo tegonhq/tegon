@@ -8,16 +8,18 @@ import {
 } from '@remixicon/react';
 import { cn } from 'lib/utils';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 import { Button, buttonVariants } from 'components/ui/button';
 
-import { ACCOUNT_LINKS, WORKSPACE_LINKS } from './constants';
+import { ACCOUNT_LINKS, WORKSPACE_LINKS } from './settings-layout-constants';
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {}
 
 export function SidebarNav({ className, ...props }: SidebarNavProps) {
-  const pathname = usePathname();
+  const router = useRouter();
+  const { workspaceSlug, settingsSection = WORKSPACE_LINKS[0].href } =
+    router.query;
 
   return (
     <nav className={cn('flex flex-col', className)} {...props}>
@@ -44,10 +46,12 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
             {WORKSPACE_LINKS.map((item) => (
               <Link
                 key={item.href}
-                href={item.href}
+                href={`/${workspaceSlug}/settings/${item.href}`}
                 className={cn(
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
-                  'justify-start text-sm w-full px-2 text-gray-700 dark:text-gray-300',
+                  settingsSection === item.href &&
+                    'bg-gray-100 dark:bg-gray-800',
+                  'justify-start text-sm w-full px-2 text-gray-700 dark:text-gray-300 mt-1',
                 )}
               >
                 {item.title}
@@ -68,10 +72,10 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
             {ACCOUNT_LINKS.map((item) => (
               <Link
                 key={item.href}
-                href={item.href}
+                href={`/${workspaceSlug}/settings/${item.href}`}
                 className={cn(
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
-                  'justify-start text-sm w-full px-2 text-gray-700 dark:text-gray-300',
+                  'justify-start text-sm w-full px-2 text-gray-700 dark:text-gray-300 mt-1',
                 )}
               >
                 {item.title}

@@ -42,7 +42,7 @@ export function SignForm() {
           { shouldFocus: true },
         );
       } else {
-        router.replace(redirectToPath ? (redirectToPath as string) : '/teams');
+        router.replace(redirectToPath ? (redirectToPath as string) : '/');
       }
     },
   });

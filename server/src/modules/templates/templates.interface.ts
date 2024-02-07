@@ -8,6 +8,8 @@ export class CreateTemplateInput {
   @IsString()
   type: string;
 
+  // TODO: Manoj change this when you have finalised the issue thing
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   templateData: Record<string, any>;
 
   @IsString()
@@ -23,6 +25,8 @@ export class UpdateTemplateInput {
   @IsString()
   name?: string;
 
+  // TODO: Manoj change this when you have finalised the issue thing
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   templateData: Record<string, any>;
 }
 
@@ -34,9 +38,9 @@ export class TemplateRequestIdParams {
 export class RequestIdParams {
   @IsOptional()
   @IsString()
-  workspaceId: string
+  workspaceId: string;
 
   @IsOptional()
   @IsString()
-  teamId: string
+  teamId: string;
 }

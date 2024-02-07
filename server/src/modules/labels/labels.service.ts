@@ -3,6 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { Label } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+
 import {
   CreateLabelInput,
   UpdateLabelInput,
@@ -14,15 +15,13 @@ import {
 export default class LabelsService {
   constructor(private prisma: PrismaService) {}
 
-  async createLabel(
-    labelData: CreateLabelInput,
-  ): Promise<Label> {
+  async createLabel(labelData: CreateLabelInput): Promise<Label> {
     const label = await this.prisma.label.create({
       data: {
-        ...labelData
+        ...labelData,
       },
       include: {
-        group: true
+        group: true,
       },
     });
 
@@ -31,26 +30,26 @@ export default class LabelsService {
 
   async getAllLabels(requestIdParams: RequestIdParams): Promise<Label[]> {
     const whereClause = {
-      ...(requestIdParams.workspaceId && { workspaceId: requestIdParams.workspaceId, teamId: null }),
+      ...(requestIdParams.workspaceId && {
+        workspaceId: requestIdParams.workspaceId,
+        teamId: null,
+      }),
       ...(requestIdParams.teamId && { teamId: requestIdParams.teamId }),
     };
-  
+
     return await this.prisma.label.findMany({
       where: whereClause,
     });
-
   }
 
-  async getLabel(
-    LabelRequestIdParams: LabelRequestIdParams,
-  ): Promise<Label> {
+  async getLabel(LabelRequestIdParams: LabelRequestIdParams): Promise<Label> {
     return await this.prisma.label.findUnique({
       where: {
         id: LabelRequestIdParams.labelId,
       },
       include: {
         group: true,
-        labels: true
+        labels: true,
       },
     });
   }
@@ -69,11 +68,10 @@ export default class LabelsService {
     });
   }
 
-  async deleteLabel(labelRequestIdParams: LabelRequestIdParams){
+  async deleteLabel(labelRequestIdParams: LabelRequestIdParams) {
     return await this.prisma.label.delete({
       where: {
-        id:
-        labelRequestIdParams.labelId,
+        id: labelRequestIdParams.labelId,
       },
     });
   }

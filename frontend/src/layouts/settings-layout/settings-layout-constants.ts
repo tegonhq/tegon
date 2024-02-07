@@ -3,37 +3,41 @@
 export const WORKSPACE_LINKS = [
   {
     title: 'Overview',
-    href: '/overview',
+    href: 'overview',
   },
   {
-    title: 'Label',
-    href: '/label',
+    title: 'Labels',
+    href: 'labels',
+  },
+  {
+    title: 'Templates',
+    href: 'templates',
   },
   {
     title: 'Members',
-    href: '/members',
+    href: 'members',
   },
   {
     title: 'Emojis',
-    href: '/emojis',
+    href: 'emojis',
   },
   {
     title: 'Integrations',
-    href: '/integrations',
+    href: 'integrations',
   },
 ];
 
 export const ACCOUNT_LINKS = [
   {
     title: 'Profile',
-    href: '/Profile',
+    href: 'Profile',
   },
   {
     title: 'Preferences',
-    href: '/preferences',
+    href: 'preferences',
   },
   {
     title: 'API',
-    href: '/api',
+    href: 'api',
   },
 ];

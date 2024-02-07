@@ -68,6 +68,8 @@
     "nestjs-prisma": "0.22.0",
     "passport": "0.7.0",
     "passport-jwt": "4.0.1",
+    "pg": "^8.11.3",
+    "pg-logical-replication": "^2.0.3",
     "reflect-metadata": "0.2.1",
     "rxjs": "7.8.1",
     "supertokens-node": "^16.7.1"
@@ -83,6 +85,7 @@
     "@types/express": "4.17.21",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.11.5",
+    "@types/pg": "^8.11.0",
     "@types/supertest": "6.0.2",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",

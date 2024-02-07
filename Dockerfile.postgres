@@ -1,0 +1,40 @@
+FROM postgres:15
+
+WORKDIR /
+
+ARG USE_POSTGIS=false
+ENV PROTOC_VERSION=1.4
+
+# To keep this simple we are just going to copy the config straight into the
+# image.
+COPY config/postgresql.conf /usr/share/postgresql/postgresql.conf.sample
+
+RUN apt-get update \
+  && apt-get install -f -y --no-install-recommends \
+  ca-certificates \
+  software-properties-common \
+  build-essential \
+  pkg-config \
+  git \
+  postgresql-server-dev-15 \
+  && add-apt-repository "deb http://ftp.debian.org/debian testing main contrib" \
+  && apt-get update && apt-get install -f -y --no-install-recommends \
+  libprotobuf-c-dev=$PROTOC_VERSION.* \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install the decoderbuffs plugin.
+RUN git clone https://github.com/hughcapet/postgres-decoderbufs \
+  && cd /postgres-decoderbufs \
+  && git fetch origin pg15_compat \
+  && git checkout pg15_compat \
+  && make && make install \
+  && cd / \
+  && rm -rf postgres-decoderbufs
+
+# Install the wal2json plugin.
+RUN git clone https://github.com/eulerto/wal2json \
+  && cd /wal2json \
+  && make && make install \
+  && cd / \
+  && rm -rf wal2json
+

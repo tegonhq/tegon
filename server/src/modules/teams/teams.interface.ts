@@ -10,7 +10,7 @@ export class CreateTeamInput {
 
   @IsOptional()
   @IsString()
-  icon?: string
+  icon?: string;
 }
 
 export class UpdateTeamInput {
@@ -24,7 +24,7 @@ export class UpdateTeamInput {
 
   @IsOptional()
   @IsString()
-  icon?: string
+  icon?: string;
 }
 
 export class TeamRequestIdBody {

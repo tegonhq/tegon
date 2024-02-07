@@ -52,9 +52,9 @@ export default class WorkspacesService {
       },
       include: {
         UsersOnWorkspaces: {
-          include:{
-            user: true
-          }
+          include: {
+            user: true,
+          },
         },
       },
     });

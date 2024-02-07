@@ -1,17 +1,28 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Team } from '@prisma/client';
+import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
-import { SessionContainer } from 'supertokens-node/recipe/session';
 
-import TeamsService from './teams.service';
 import {
   UpdateTeamInput,
   TeamRequestIdBody,
   WorkspaceRequestIdBody,
 } from './teams.interface';
-import { Team } from '@prisma/client';
+import TeamsService from './teams.service';
 
 @Controller({
   version: '1',
@@ -25,7 +36,7 @@ export class TeamsController {
   @UseGuards(new AuthGuard())
   async getAllTeams(
     @SessionDecorator() session: SessionContainer,
-    @Query() workspaceId: WorkspaceRequestIdBody
+    @Query() workspaceId: WorkspaceRequestIdBody,
   ): Promise<Team[]> {
     const userId = session.getUserId();
     return await this.teamsService.getAllTeams(workspaceId, userId);
@@ -47,10 +58,7 @@ export class TeamsController {
     teamId: TeamRequestIdBody,
     @Body() teamData: UpdateTeamInput,
   ): Promise<Team> {
-    return await this.teamsService.updateTeam(
-      teamId,
-      teamData,
-    );
+    return await this.teamsService.updateTeam(teamId, teamData);
   }
 
   @Delete(':teamId')
@@ -59,8 +67,6 @@ export class TeamsController {
     @Param()
     teamId: TeamRequestIdBody,
   ): Promise<Team> {
-    return await this.teamsService.deleteTeam(
-      teamId
-    );
+    return await this.teamsService.deleteTeam(teamId);
   }
 }

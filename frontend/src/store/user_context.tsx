@@ -3,17 +3,17 @@
 import { createContext } from 'react';
 
 interface Workspace {
+  name: string;
   slug: string;
-  id: string;
-  anonymousDataCollection: boolean;
-  initialSetupComplete: boolean;
+  icon: string;
 }
 
 export interface User {
   fullname: string;
   email: string;
   id: string;
-  Workspace: Workspace[];
+  username: string;
+  workspaces: Workspace[];
 }
 
 export const UserContext = createContext<User>(undefined);

@@ -3,20 +3,20 @@
 import { RiArrowLeftSLine, RiSideBarFill } from '@remixicon/react';
 
 import { Button } from 'components/ui/button';
-import { Drawer, DrawerContent, DrawerTrigger } from 'components/ui/drawer';
+import { Sheet, SheetContent, SheetTrigger } from 'components/ui/sheet';
 
 import { SidebarNav } from './sidebar-nav';
 
 export function SideDrawer() {
   return (
-    <Drawer direction="left">
+    <Sheet>
       <div className="block md:hidden">
         <header className="flex px-2 py-3 w-full border-b items-center">
-          <DrawerTrigger asChild>
+          <SheetTrigger asChild>
             <Button variant="ghost" className="">
               <RiSideBarFill size={20} />
             </Button>
-          </DrawerTrigger>
+          </SheetTrigger>
 
           <Button
             variant="ghost"
@@ -31,10 +31,10 @@ export function SideDrawer() {
           </Button>
         </header>
 
-        <DrawerContent>
+        <SheetContent side="left" className="p-0">
           <SidebarNav />
-        </DrawerContent>
+        </SheetContent>
       </div>
-    </Drawer>
+    </Sheet>
   );
 }

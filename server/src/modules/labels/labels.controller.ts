@@ -1,15 +1,27 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Label } from '@prisma/client';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
-import LabelsService from './labels.service';
+
 import {
   CreateLabelInput,
   UpdateLabelInput,
   LabelRequestIdParams,
   RequestIdParams,
 } from './labels.interface';
-import { Label } from '@prisma/client';
+import LabelsService from './labels.service';
 
 @Controller({
   version: '1',
@@ -21,9 +33,7 @@ export class LabelsController {
 
   @Post()
   @UseGuards(new AuthGuard())
-  async createLabel(
-    @Body() labelData: CreateLabelInput,
-  ): Promise<Label> {
+  async createLabel(@Body() labelData: CreateLabelInput): Promise<Label> {
     return await this.labelsService.createLabel(labelData);
   }
 
@@ -51,10 +61,7 @@ export class LabelsController {
     labelId: LabelRequestIdParams,
     @Body() labelData: UpdateLabelInput,
   ): Promise<Label> {
-    return await this.labelsService.updateLabel(
-      labelId,
-      labelData,
-    );
+    return await this.labelsService.updateLabel(labelId, labelData);
   }
 
   @Delete(':labelId')
@@ -63,8 +70,6 @@ export class LabelsController {
     @Param()
     labelId: LabelRequestIdParams,
   ): Promise<Label> {
-    return await this.labelsService.deleteLabel(
-      labelId,
-    );
+    return await this.labelsService.deleteLabel(labelId);
   }
 }

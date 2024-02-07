@@ -3,7 +3,7 @@
 
 import { AuthLayout } from 'layouts/auth-layout';
 
-import { LoggedInGuard } from 'components/wrappers/login-guard';
+import { AuthGuard } from 'components/wrappers/auth-guard';
 
 import { SignForm } from './signin-form';
 
@@ -28,5 +28,5 @@ export function SignIn() {
 }
 
 SignIn.getLayout = function getLayout(page: React.ReactElement) {
-  return <LoggedInGuard>{page}</LoggedInGuard>;
+  return <AuthGuard>{page}</AuthGuard>;
 };

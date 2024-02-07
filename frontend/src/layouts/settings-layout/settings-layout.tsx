@@ -7,7 +7,7 @@ import {
 } from 'components/ui/resizable';
 import { TooltipProvider } from 'components/ui/tooltip';
 
-import { SideDrawer } from './side-drawer';
+import { SideDrawer } from './side-sheet';
 import { SidebarNav } from './sidebar-nav';
 
 interface SettingsProps {
@@ -16,8 +16,8 @@ interface SettingsProps {
 
 export function SettingsLayout({ children }: SettingsProps) {
   return (
-    <div className="md:flex flex-col flex-grow">
-      <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={0}>
+      <div className="md:flex flex-col flex-grow">
         <div className="hidden md:block h-full">
           <ResizablePanelGroup
             direction="horizontal"
@@ -42,7 +42,8 @@ export function SettingsLayout({ children }: SettingsProps) {
         </div>
 
         <SideDrawer />
-      </TooltipProvider>
-    </div>
+        <div className="px-4 flex md:hidden pt-4"> {children} </div>
+      </div>
+    </TooltipProvider>
   );
 }

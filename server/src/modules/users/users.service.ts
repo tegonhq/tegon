@@ -2,33 +2,45 @@
 
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { UpdateUserBody } from './user.interface';
+
+import { UpdateUserBody, userSerializer } from './user.interface';
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async getUser(id: string) {
-    return await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         id,
       },
       include: {
-        UsersOnWorkspaces: true,
+        UsersOnWorkspaces: {
+          include: {
+            workspace: true,
+          },
+        },
       },
     });
+
+    return userSerializer(user);
   }
 
   async updateUser(id: string, updateData: UpdateUserBody) {
-    return await this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: {
-        id
+        id,
       },
       data: {
-        ...updateData
+        ...updateData,
       },
       include: {
-        UsersOnWorkspaces: true
-      }
-    })
+        UsersOnWorkspaces: {
+          include: {
+            workspace: true,
+          },
+        },
+      },
+    });
+    return userSerializer(user);
   }
 }

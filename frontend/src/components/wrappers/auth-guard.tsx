@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/router';
 import React, { cloneElement } from 'react';
+import Session from 'supertokens-web-js/recipe/session';
 
 import { Loader } from 'components/ui/loader';
 
@@ -9,30 +10,25 @@ interface Props {
   children: React.ReactElement;
 }
 
-export function LoggedInGuard(props: Props): React.ReactElement {
+export function AuthGuard(props: Props): React.ReactElement {
   const { children } = props;
   const router = useRouter();
   const [isLoading, setLoading] = React.useState(true);
-  const [data, setData] = React.useState(undefined);
 
   React.useEffect(() => {
-    fetchUserData();
+    checkForSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchUserData = async () => {
-    const response = await fetch('/api/v1/users');
-
-    if (response.status === 200) {
-      setData(response);
-
-      router.replace('/teams');
+  async function checkForSession() {
+    if (await Session.doesSessionExist()) {
+      router.replace('/');
     } else {
+      setLoading(false);
     }
+  }
 
-    setLoading(false);
-  };
-
-  if (!isLoading && !data) {
+  if (!isLoading) {
     return cloneElement(children);
   }
 

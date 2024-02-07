@@ -1,11 +1,31 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Button } from 'components/ui/button';
+import { useRouter } from 'next/router';
+import * as React from 'react';
+import { SessionAuth } from 'supertokens-auth-react/recipe/session';
+
+import { Loader } from 'components/ui/loader';
+import { UserDataWrapper } from 'components/wrappers/user-data';
+
+import { UserContext } from 'store/user_context';
 
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Button> Click me</Button>
-    </main>
-  );
+  const context = React.useContext(UserContext);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (context?.workspaces.length > 0) {
+      router.replace(`/${context.workspaces[0].slug}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [context?.workspaces]);
+  return <Loader />;
 }
+
+Home.getLayout = function getLayout(page: React.ReactElement) {
+  return (
+    <SessionAuth>
+      <UserDataWrapper>{page}</UserDataWrapper>
+    </SessionAuth>
+  );
+};
