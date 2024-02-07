@@ -71,4 +71,15 @@ export default class WorkspacesService {
       },
     });
   }
+
+
+  async deleteWorkspace(
+    WorkspaceRequestIdBody: WorkspaceRequestIdBody,
+  ): Promise<Workspace> {
+    return await this.prisma.workspace.delete({
+      where: {
+        id: WorkspaceRequestIdBody.workspaceId,
+      },
+    });
+  }
 }

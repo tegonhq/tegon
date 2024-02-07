@@ -26,7 +26,7 @@ services:
     networks:
       - tegon
     restart: unless-stopped
-
+    
 networks:
   app_network:
     driver: bridge
@@ -34,3 +34,5 @@ networks:
 
 volumes:
   postgres-data:
+  kafka-volume:
+  zookeeper-volume:

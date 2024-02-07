@@ -59,6 +59,8 @@ Table Team {
   userId String [not null]
   Label Label [not null]
   Template Template [not null]
+  Workflow Workflow [not null]
+  TeamPreference TeamPreference [not null]
 }
 
 Table Label {
@@ -94,6 +96,58 @@ Table Template {
   teamId String
 }
 
+Table Workflow {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deleted DateTime
+  name String [not null]
+  position Int [not null]
+  color String [not null]
+  type String [not null]
+  team Team
+  teamId String [not null]
+}
+
+Table TeamPreference {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deleted DateTime
+  team Team
+  teamId String [not null]
+  preference Preference [not null]
+  value String [not null]
+}
+
+Table SyncAction {
+  id BigInt [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  deleted DateTime
+  modelName String [not null]
+  modelId String [not null]
+  action ActionType [not null]
+  data Json [not null]
+}
+
+Enum Preference {
+  ISSUE_ESTIMATES
+  PRIORITIES
+}
+
+Enum IssueEstimateValues {
+  EXPONENTIAL
+  FIBONACCI
+  LINEAR
+  T_SHIRT
+}
+
+Enum Priorities {
+  NO_PRIORITY_FIRST
+  NO_PRIORITY_LAST
+}
+
 Enum Role {
   ADMIN
   USER
@@ -102,6 +156,12 @@ Enum Role {
 Enum Status {
   ACTIVE
   SUSPENDED
+}
+
+Enum ActionType {
+  I
+  U
+  D
 }
 
 Ref: UsersOnWorkspaces.userId > User.id
@@ -123,3 +183,7 @@ Ref: Template.createdById > User.id
 Ref: Template.workspaceId > Workspace.id
 
 Ref: Template.teamId > Team.id
+
+Ref: Workflow.teamId > Team.id
+
+Ref: TeamPreference.teamId > Team.id

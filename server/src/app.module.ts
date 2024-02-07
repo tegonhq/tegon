@@ -2,6 +2,8 @@
 
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { SyncActionsInterceptor } from 'interceptors/syncActions.interceptor';
 import { PrismaModule } from 'nestjs-prisma';
 
 import config from 'common/configs/config';
@@ -9,14 +11,16 @@ import { loggingMiddleware } from 'common/middleware/logging.middleware';
 
 import { AuthModule } from 'modules/auth/auth.module';
 import { LabelsModule } from 'modules/labels/labels.module';
-import { ReplicationModule } from 'modules/replication/replication.module';
 import { TeamsModule } from 'modules/teams/teams.module';
 import { TemplatesModule } from 'modules/templates/templates.module';
 import { UsersModule } from 'modules/users/users.module';
+import { WorkflowsModule } from 'modules/workflows/workflows.module';
 import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SyncActionsModule } from 'modules/syncActions/syncActions.moduels';
+import { ReplicationModule } from 'modules/replication/replication.module';
 
 @Module({
   imports: [
@@ -36,8 +40,13 @@ import { AppService } from './app.service';
     TemplatesModule,
 
     ReplicationModule,
+    WorkflowsModule,
+    SyncActionsModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    { provide: APP_INTERCEPTOR, useClass: SyncActionsInterceptor },
+  ],
 })
 export class AppModule {}

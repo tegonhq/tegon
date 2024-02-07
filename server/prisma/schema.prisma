@@ -81,12 +81,14 @@ model Team {
   identifier String
   icon       String?
 
-  workspace   Workspace  @relation(fields: [workspaceId], references: [id])
-  workspaceId String
-  user        User       @relation(fields: [userId], references: [id])
-  userId      String
-  Label       Label[]
-  Template    Template[]
+  workspace      Workspace        @relation(fields: [workspaceId], references: [id])
+  workspaceId    String
+  user           User             @relation(fields: [userId], references: [id])
+  userId         String
+  Label          Label[]
+  Template       Template[]
+  Workflow       Workflow[]
+  TeamPreference TeamPreference[]
 }
 
 model Label {
@@ -126,6 +128,63 @@ model Template {
   teamId      String?
 }
 
+model Workflow {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deleted   DateTime?
+
+  name     String
+  position Int
+  color    String
+  type     String
+
+  team   Team?  @relation(fields: [teamId], references: [id])
+  teamId String
+}
+
+model TeamPreference {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deleted   DateTime?
+
+  team   Team?  @relation(fields: [teamId], references: [id])
+  teamId String
+
+  preference Preference
+  value      String
+}
+
+model SyncAction {
+  id        BigInt    @id
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deleted   DateTime?
+
+  modelName String
+  modelId   String
+  action    ActionType
+  data      Json
+}
+
+enum Preference {
+  ISSUE_ESTIMATES
+  PRIORITIES
+}
+
+enum IssueEstimateValues {
+  EXPONENTIAL
+  FIBONACCI
+  LINEAR
+  T_SHIRT
+}
+
+enum Priorities {
+  NO_PRIORITY_FIRST
+  NO_PRIORITY_LAST
+}
+
 enum Role {
   ADMIN
   USER
@@ -134,4 +193,10 @@ enum Role {
 enum Status {
   ACTIVE
   SUSPENDED
+}
+
+enum ActionType {
+  I
+  U
+  D
 }

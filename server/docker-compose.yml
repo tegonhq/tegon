@@ -22,7 +22,6 @@ services:
       - .env
     volumes:
       - postgres:/var/lib/postgresql/data
-
 volumes:
   postgres:
     name: tegon-db

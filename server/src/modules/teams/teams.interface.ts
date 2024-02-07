@@ -1,4 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Preference } from '@prisma/client';
 import { IsOptional, IsString } from 'class-validator';
 
 export class CreateTeamInput {
@@ -35,4 +36,24 @@ export class TeamRequestIdBody {
 export class WorkspaceRequestIdBody {
   @IsString()
   workspaceId: string;
+}
+
+export class CreatePreferenceInput {
+  @IsString()
+  preference: Preference;
+
+  @IsString()
+  value: IssueEstimateValues | Priorities;
+}
+
+enum IssueEstimateValues {
+  EXPONENTIAL,
+  FIBONACCI,
+  LINEAR,
+  T_SHIRT,
+}
+
+enum Priorities {
+  NO_PRIORITY_FIRST,
+  NO_PRIORITY_LAST,
 }

@@ -61,4 +61,16 @@ export default class TeamsService {
       },
     });
   }
+
+  async createPreference(
+    teamRequestIdBody: TeamRequestIdBody,
+    preferenceData: UpdateTeamInput,
+  ) {
+    console.log(teamRequestIdBody, preferenceData);
+    return await this.prisma.team.findUnique({
+      where: {
+        id: teamRequestIdBody.teamId,
+      },
+    });
+  }
 }

@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Workspace } from '@prisma/client';
 import { SessionContainer } from 'supertokens-node/recipe/session';
@@ -61,6 +61,17 @@ export class WorkspacesController {
     return await this.workspacesService.updateWorkspace(
       workspaceId,
       workspaceData,
+    );
+  }
+
+  @Delete(':workspaceId')
+  @UseGuards(new AuthGuard())
+  async deleteWorkspace(
+    @Param()
+    workspaceId: WorkspaceRequestIdBody,
+  ): Promise<Workspace> {
+    return await this.workspacesService.deleteWorkspace(
+      workspaceId
     );
   }
 }

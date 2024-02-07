@@ -69,4 +69,14 @@ export class TeamsController {
   ): Promise<Team> {
     return await this.teamsService.deleteTeam(teamId);
   }
+
+  @Post(':teamId/preference')
+  @UseGuards(new AuthGuard())
+  async createPreference(
+    @Param()
+    teamId: TeamRequestIdBody,
+    @Body() preferenceData: UpdateTeamInput,
+  ): Promise<Team> {
+    return await this.teamsService.createPreference(teamId, preferenceData);
+  }
 }
