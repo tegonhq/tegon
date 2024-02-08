@@ -29,6 +29,7 @@ Table Workspace {
   Team Team [not null]
   Label Label [not null]
   Template Template [not null]
+  SyncAction SyncAction [not null]
 }
 
 Table UsersOnWorkspaces {
@@ -66,7 +67,7 @@ Table Team {
 Table Label {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   deleted DateTime
   name String [not null]
   color String [not null]
@@ -83,7 +84,7 @@ Table Label {
 Table Template {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   deleted DateTime
   name String [not null]
   type String [not null]
@@ -99,7 +100,7 @@ Table Template {
 Table Workflow {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   deleted DateTime
   name String [not null]
   position Int [not null]
@@ -112,7 +113,7 @@ Table Workflow {
 Table TeamPreference {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   deleted DateTime
   team Team
   teamId String [not null]
@@ -121,14 +122,20 @@ Table TeamPreference {
 }
 
 Table SyncAction {
-  id BigInt [pk]
+  id String [pk]
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   deleted DateTime
   modelName String [not null]
   modelId String [not null]
   action ActionType [not null]
-  data Json [not null]
+  sequenceId Int [not null]
+  workspace Workspace [not null]
+  workspaceId String [not null]
+
+  indexes {
+    (modelId, action) [unique]
+  }
 }
 
 Enum Preference {
@@ -187,3 +194,5 @@ Ref: Template.teamId > Team.id
 Ref: Workflow.teamId > Team.id
 
 Ref: TeamPreference.teamId > Team.id
+
+Ref: SyncAction.workspaceId > Workspace.id

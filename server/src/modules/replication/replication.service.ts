@@ -10,6 +10,12 @@ import {
 } from 'pg-logical-replication';
 
 import { SyncGateway } from 'modules/sync/sync.gateway';
+import {
+  logChangeType,
+  logType,
+  tablesToSendMessagesFor,
+} from './replication.interface';
+import SyncActionsService from 'modules/syncActions/syncActions.service';
 
 const REPLICATION_SLOT_NAME = 'tegon_replication_slot';
 const REPLICATION_SLOT_PLUGIN = 'wal2json';
@@ -22,6 +28,7 @@ export default class ReplicationService {
   constructor(
     private configService: ConfigService,
     private syncGateway: SyncGateway,
+    private syncActionsService: SyncActionsService,
   ) {
     this.client = new Client({
       user: configService.get('POSTGRES_USER'),
@@ -100,10 +107,37 @@ export default class ReplicationService {
         this.logger.log('Replication server connected');
       });
 
-    service.on('data', (_lsn, log) => {
-      this.syncGateway.wss
-        .to('d81f6173-60cf-46bc-bcca-4ab2921a52c3')
-        .emit('message', JSON.stringify(log.change));
+    service.on('data', (_lsn: string, log: logType) => {
+
+      // log contains change data in JSON format
+      if (log.change) {
+        log.change.forEach(async (change: logChangeType) => {
+          if (
+            change.schema === 'tegon' &&
+            tablesToSendMessagesFor.has(change.table.toLocaleLowerCase())
+            ) {
+
+            const {  columnvalues } = change;
+            const syncActionData =
+              await this.syncActionsService.createSyncAction(
+                _lsn,
+                change.kind,
+                change.table,
+                columnvalues[0],
+              );
+
+            this.syncGateway.wss
+              .to(syncActionData.workspaceId)
+              .emit('message', JSON.stringify(syncActionData));
+          }
+        });
+      } else {
+        console.log('No change data in log');
+      }
+
+      // this.syncGateway.wss
+      //   .to('clsbx5j830000wkbcuvmz7gtf')
+      //   .emit('message', JSON.stringify(log.change));
     });
   }
 }

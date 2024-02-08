@@ -1,28 +1,47 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
-import { ActionType, SyncAction } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
-
-import { CreateSyncActionDto } from '@@generated/syncAction/dto';
+import {
+  convertLsnToInt,
+  convertToActionType,
+  getModelData,
+  getWorkspaceId,
+} from './syncActions.utils';
 
 @Injectable()
 export default class SyncActionsService {
   constructor(private prisma: PrismaService) {}
   async createSyncAction(
-    action: ActionType,
+    lsn: string,
+    action: string,
     modelName: string,
     modelId: string,
-    syncActionData: CreateSyncActionDto['data'],
-  ): Promise<SyncAction> {
-    return await this.prisma.syncAction.create({
-      data: {
-        id: Date.now(),
-        action,
+  ) {
+    const syncActionData = await this.prisma.syncAction.upsert({
+      where: {
+        modelId_action: {
+          modelId,
+          action: convertToActionType(action),
+        },
+      },
+      update: {
+        sequenceId: convertLsnToInt(lsn),
+      },
+      create: {
+        action: convertToActionType(action),
         modelName,
         modelId,
-        data: syncActionData,
+        workspaceId: getWorkspaceId(this.prisma, modelName, modelId),
+        sequenceId: convertLsnToInt(lsn),
       },
     });
+
+    const modelData = await getModelData(this.prisma, modelName, modelId);
+
+    return {
+      data: modelData,
+      ...syncActionData,
+    };
   }
 }

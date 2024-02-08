@@ -3,6 +3,7 @@ import {UsersOnWorkspaces} from '../../usersOnWorkspaces/entities/usersOnWorkspa
 import {Team} from '../../team/entities/team.entity'
 import {Label} from '../../label/entities/label.entity'
 import {Template} from '../../template/entities/template.entity'
+import {SyncAction} from '../../syncAction/entities/syncAction.entity'
 
 
 export class Workspace {
@@ -17,4 +18,5 @@ UsersOnWorkspaces?: UsersOnWorkspaces[] ;
 Team?: Team[] ;
 Label?: Label[] ;
 Template?: Template[] ;
+SyncAction?: SyncAction[] ;
 }

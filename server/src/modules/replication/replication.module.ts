@@ -6,11 +6,12 @@ import { ConfigService } from '@nestjs/config';
 import { SyncModule } from 'modules/sync/sync.module';
 
 import ReplicationService from './replication.service';
+import SyncActionsService from 'modules/syncActions/syncActions.service';
 
 @Module({
   imports: [SyncModule],
   controllers: [],
-  providers: [ReplicationService, ConfigService],
+  providers: [ReplicationService, ConfigService, SyncActionsService],
   exports: [],
 })
 export class ReplicationModule {}

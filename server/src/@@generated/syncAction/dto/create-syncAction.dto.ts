@@ -1,16 +1,15 @@
 
-import {Prisma,ActionType} from '@prisma/client'
+import {ActionType} from '@prisma/client'
 import {ApiProperty} from '@nestjs/swagger'
 
 
 
 
 export class CreateSyncActionDto {
-  id: bigint;
-deleted?: Date;
+  deleted?: Date;
 modelName: string;
 modelId: string;
 @ApiProperty({ enum: ActionType})
 action: ActionType;
-data: Prisma.InputJsonValue;
+sequenceId: number;
 }

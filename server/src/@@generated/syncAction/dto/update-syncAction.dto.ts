@@ -1,5 +1,5 @@
 
-import {Prisma,ActionType} from '@prisma/client'
+import {ActionType} from '@prisma/client'
 import {ApiProperty} from '@nestjs/swagger'
 
 
@@ -11,5 +11,5 @@ modelName?: string;
 modelId?: string;
 @ApiProperty({ enum: ActionType})
 action?: ActionType;
-data?: Prisma.InputJsonValue;
+sequenceId?: number;
 }

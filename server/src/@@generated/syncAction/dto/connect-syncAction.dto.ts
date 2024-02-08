@@ -1,5 +1,5 @@
 
   export class ConnectSyncActionDto {
-    id: bigint;
+    id: string;
   }
   

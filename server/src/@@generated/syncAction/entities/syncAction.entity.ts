@@ -1,14 +1,17 @@
 
-import {Prisma,ActionType} from '@prisma/client'
+import {ActionType} from '@prisma/client'
+import {Workspace} from '../../workspace/entities/workspace.entity'
 
 
 export class SyncAction {
-  id: bigint ;
+  id: string ;
 createdAt: Date ;
 updatedAt: Date ;
 deleted: Date  | null;
 modelName: string ;
 modelId: string ;
 action: ActionType ;
-data: Prisma.JsonValue ;
+sequenceId: number ;
+workspace?: Workspace ;
+workspaceId: string ;
 }

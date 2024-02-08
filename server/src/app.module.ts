@@ -2,8 +2,8 @@
 
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { SyncActionsInterceptor } from 'interceptors/syncActions.interceptor';
+// import { APP_INTERCEPTOR } from '@nestjs/core';
+// import { SyncActionsInterceptor } from 'interceptors/syncActions.interceptor';
 import { PrismaModule } from 'nestjs-prisma';
 
 import config from 'common/configs/config';
@@ -48,7 +48,7 @@ import { AppService } from './app.service';
   controllers: [AppController],
   providers: [
     AppService,
-    { provide: APP_INTERCEPTOR, useClass: SyncActionsInterceptor },
+    // { provide: APP_INTERCEPTOR, useClass: SyncActionsInterceptor },
   ],
 })
 export class AppModule {}

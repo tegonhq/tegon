@@ -3,14 +3,13 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
-
 import SyncActionsService from './syncActions.service';
-import { SyncActionsInterceptor } from '../../interceptors/syncActions.interceptor';
 
 @Module({
   imports: [PrismaModule, HttpModule],
   controllers: [],
-  providers: [SyncActionsService, PrismaService, SyncActionsInterceptor],
+  //TODO: Add respective models used in the service. For now using prismaService
+  providers: [SyncActionsService, PrismaService], 
   exports: [SyncActionsService],
 })
 export class SyncActionsModule {}

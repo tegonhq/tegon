@@ -43,7 +43,7 @@ model User {
 }
 
 model Workspace {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
@@ -56,6 +56,7 @@ model Workspace {
   Team              Team[]
   Label             Label[]
   Template          Template[]
+  SyncAction        SyncAction[]
 }
 
 model UsersOnWorkspaces {
@@ -72,7 +73,7 @@ model UsersOnWorkspaces {
 }
 
 model Team {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
@@ -92,9 +93,9 @@ model Team {
 }
 
 model Label {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
   name        String
@@ -111,9 +112,9 @@ model Label {
 }
 
 model Template {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
   name         String
@@ -129,9 +130,9 @@ model Template {
 }
 
 model Workflow {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
   name     String
@@ -144,9 +145,9 @@ model Workflow {
 }
 
 model TeamPreference {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
   team   Team?  @relation(fields: [teamId], references: [id])
@@ -157,15 +158,20 @@ model TeamPreference {
 }
 
 model SyncAction {
-  id        BigInt    @id
+  id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  modelName String
-  modelId   String
-  action    ActionType
-  data      Json
+  modelName  String
+  modelId    String
+  action     ActionType
+  sequenceId Int
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+
+  @@unique([modelId, action])
 }
 
 enum Preference {

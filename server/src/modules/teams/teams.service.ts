@@ -66,7 +66,6 @@ export default class TeamsService {
     teamRequestIdBody: TeamRequestIdBody,
     preferenceData: UpdateTeamInput,
   ) {
-    console.log(teamRequestIdBody, preferenceData);
     return await this.prisma.team.findUnique({
       where: {
         id: teamRequestIdBody.teamId,
