@@ -1,9 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { RiLoader4Line } from '@remixicon/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from 'lib/utils';
-import { RiLoader4Line } from '@remixicon/react';
-
 import * as React from 'react';
 
 const loaderVariants = cva(
@@ -30,7 +29,6 @@ export interface LoaderProps
 
 const Loader = React.forwardRef<HTMLButtonElement, LoaderProps>(
   ({ height = 300, size }) => {
-    console.log(height);
     return (
       <div
         className={cn(loaderVariants({ size }), `h-[${height}px]`, 'w-full')}
