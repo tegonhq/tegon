@@ -1,3 +1,5 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { ActionType } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 

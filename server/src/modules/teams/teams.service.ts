@@ -64,7 +64,7 @@ export default class TeamsService {
 
   async createPreference(
     teamRequestIdBody: TeamRequestIdBody,
-    preferenceData: UpdateTeamInput,
+    _preferenceData: UpdateTeamInput,
   ) {
     return await this.prisma.team.findUnique({
       where: {

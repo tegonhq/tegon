@@ -2,6 +2,7 @@
 
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
+
 import {
   convertLsnToInt,
   convertToActionType,
@@ -43,5 +44,34 @@ export default class SyncActionsService {
       data: modelData,
       ...syncActionData,
     };
+  }
+
+  async getBootstrap(models: string, workspaceId: string) {
+    const syncActionsData = await this.prisma.syncAction.findMany({
+      where: {
+        workspaceId,
+        modelName: {
+          in: models.split(','),
+        },
+      },
+      orderBy: {
+        sequenceId: 'desc',
+      },
+      distinct: ['modelName', 'workspaceId'],
+    });
+
+    return Promise.all(
+      syncActionsData.map(async (actionData) => {
+        const data = await getModelData(
+          this.prisma,
+          actionData.modelName,
+          actionData.modelId,
+        );
+        return {
+          data,
+          ...actionData,
+        };
+      }),
+    );
   }
 }

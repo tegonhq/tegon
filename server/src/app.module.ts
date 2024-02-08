@@ -13,7 +13,7 @@ import { AuthModule } from 'modules/auth/auth.module';
 import { LabelsModule } from 'modules/labels/labels.module';
 import { ReplicationModule } from 'modules/replication/replication.module';
 import { SyncModule } from 'modules/sync/sync.module';
-import { SyncActionsModule } from 'modules/syncActions/syncActions.moduels';
+import { SyncActionsModule } from 'modules/syncActions/syncActions.module';
 import { TeamsModule } from 'modules/teams/teams.module';
 import { TemplatesModule } from 'modules/templates/templates.module';
 import { UsersModule } from 'modules/users/users.module';

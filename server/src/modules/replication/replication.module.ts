@@ -4,9 +4,9 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { SyncModule } from 'modules/sync/sync.module';
+import SyncActionsService from 'modules/syncActions/syncActions.service';
 
 import ReplicationService from './replication.service';
-import SyncActionsService from 'modules/syncActions/syncActions.service';
 
 @Module({
   imports: [SyncModule],

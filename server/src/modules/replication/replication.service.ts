@@ -10,12 +10,13 @@ import {
 } from 'pg-logical-replication';
 
 import { SyncGateway } from 'modules/sync/sync.gateway';
+import SyncActionsService from 'modules/syncActions/syncActions.service';
+
 import {
   logChangeType,
   logType,
   tablesToSendMessagesFor,
 } from './replication.interface';
-import SyncActionsService from 'modules/syncActions/syncActions.service';
 
 const REPLICATION_SLOT_NAME = 'tegon_replication_slot';
 const REPLICATION_SLOT_PLUGIN = 'wal2json';
@@ -41,7 +42,7 @@ export default class ReplicationService {
 
   async init() {
     await this.createReplicationSlot();
-    // await this.setupReplication();
+    await this.setupReplication();
   }
 
   async deleteSlot() {
@@ -108,16 +109,14 @@ export default class ReplicationService {
       });
 
     service.on('data', (_lsn: string, log: logType) => {
-
       // log contains change data in JSON format
       if (log.change) {
         log.change.forEach(async (change: logChangeType) => {
           if (
             change.schema === 'tegon' &&
             tablesToSendMessagesFor.has(change.table.toLocaleLowerCase())
-            ) {
-
-            const {  columnvalues } = change;
+          ) {
+            const { columnvalues } = change;
             const syncActionData =
               await this.syncActionsService.createSyncAction(
                 _lsn,
@@ -134,10 +133,6 @@ export default class ReplicationService {
       } else {
         console.log('No change data in log');
       }
-
-      // this.syncGateway.wss
-      //   .to('clsbx5j830000wkbcuvmz7gtf')
-      //   .emit('message', JSON.stringify(log.change));
     });
   }
 }
