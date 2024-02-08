@@ -5,7 +5,10 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
-import { BootstrapRequestQuery } from './syncActions.interface';
+import {
+  BootstrapRequestQuery,
+  DeltaRequestQuery,
+} from './syncActions.interface';
 import SyncActionsService from './syncActions.service';
 
 @Controller({
@@ -22,6 +25,15 @@ export class SyncActionsController {
     return await this.syncActionsService.getBootstrap(
       BootstrapQuery.models,
       BootstrapQuery.workspaceId,
+    );
+  }
+
+  @Get('delta')
+  @UseGuards(new AuthGuard())
+  async getDelta(@Query() deltaQuery: DeltaRequestQuery) {
+    return await this.syncActionsService.getDelta(
+      parseInt(deltaQuery.lastSequenceId),
+      deltaQuery.workspaceId,
     );
   }
 }

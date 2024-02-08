@@ -57,7 +57,34 @@ export default class SyncActionsService {
       orderBy: {
         sequenceId: 'desc',
       },
-      distinct: ['modelName', 'workspaceId'],
+      distinct: ['modelName', 'workspaceId', 'modelId'],
+    });
+
+    return Promise.all(
+      syncActionsData.map(async (actionData) => {
+        const data = await getModelData(
+          this.prisma,
+          actionData.modelName,
+          actionData.modelId,
+        );
+        return {
+          data,
+          ...actionData,
+        };
+      }),
+    );
+  }
+
+  async getDelta(lastSequenceId: number, workspaceId: string) {
+    const syncActionsData = await this.prisma.syncAction.findMany({
+      where: {
+        workspaceId,
+        sequenceId: { gte: lastSequenceId },
+      },
+      orderBy: {
+        sequenceId: 'desc',
+      },
+      distinct: ['modelId', 'modelName', 'workspaceId'],
     });
 
     return Promise.all(

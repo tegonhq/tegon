@@ -9,3 +9,11 @@ export class BootstrapRequestQuery {
   @IsString()
   models: string;
 }
+
+export class DeltaRequestQuery {
+  @IsString()
+  workspaceId: string;
+
+  @IsString()
+  lastSequenceId: string;
+}
