@@ -13,12 +13,16 @@ import { hasValidHeader } from 'common/authentication';
 
 import { ClientMetadata } from './sync.interface';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: ['http://localhost:3000'],
+  },
+})
 export class SyncGateway implements OnGatewayInit, OnGatewayConnection {
   @WebSocketServer() wss: Server;
 
   private readonly clientsMetadata: Record<string, ClientMetadata> = {};
-  private readonly logger: Logger = new Logger('OwnerGateway');
+  private readonly logger: Logger = new Logger('SyncGateway');
 
   afterInit() {
     this.logger.log('Websocket Module initiated');
@@ -26,10 +30,13 @@ export class SyncGateway implements OnGatewayInit, OnGatewayConnection {
 
   async handleConnection(client: Socket) {
     this.logger.log(`Connection is made by ${client.id}`);
+    console.log('ASdf');
 
-    const { query, headers } = client.handshake;
+    const { query } = client.handshake;
 
-    const isValid = await hasValidHeader(headers['authorization'], false);
+    const isValid = query.accessToken
+      ? await hasValidHeader(`Bearer ${query.accessToken as string}`, false)
+      : false;
 
     if (!isValid) {
       client.disconnect(true);
