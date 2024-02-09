@@ -5,9 +5,10 @@
 import * as SheetPrimitive from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from 'lib/utils';
 import { Inter } from 'next/font/google';
 import * as React from 'react';
+
+import { cn } from 'lib/utils';
 
 // Inter as default font
 const fontSans = Inter({

@@ -3,14 +3,15 @@
 import 'styles/globals.css';
 import type { NextComponentType } from 'next';
 
-import { frontendConfig } from 'lib/config';
-import { useGetQueryClient } from 'lib/react-query-client';
-import { cn } from 'lib/utils';
 import { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 import { Inter } from 'next/font/google';
 import * as React from 'react';
 import { Hydrate, QueryClientProvider } from 'react-query';
 import SuperTokensReact, { SuperTokensWrapper } from 'supertokens-auth-react';
+
+import { frontendConfig } from 'lib/config';
+import { useGetQueryClient } from 'lib/react-query-client';
+import { cn } from 'lib/utils';
 
 import { ThemeProvider } from 'components/theme-provider';
 

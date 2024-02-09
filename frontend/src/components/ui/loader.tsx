@@ -2,8 +2,9 @@
 
 import { RiLoader4Line } from '@remixicon/react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from 'lib/utils';
 import * as React from 'react';
+
+import { cn } from 'lib/utils';
 
 const loaderVariants = cva(
   'flex items-center justify-center whitespace-nowrap',

@@ -10,7 +10,7 @@ import {
 } from 'pg-logical-replication';
 
 import { SyncGateway } from 'modules/sync/sync.gateway';
-import SyncActionsService from 'modules/syncActions/syncActions.service';
+import SyncActionsService from 'modules/sync-actions/sync-actions.service';
 
 import {
   logChangeType,

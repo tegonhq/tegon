@@ -6,6 +6,7 @@ interface Workspace {
   name: string;
   slug: string;
   icon: string;
+  id: string;
 }
 
 export interface User {

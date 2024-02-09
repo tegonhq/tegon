@@ -8,7 +8,7 @@ import {
   convertToActionType,
   getModelData,
   getWorkspaceId,
-} from './syncActions.utils';
+} from './sync-actions.utils';
 
 @Injectable()
 export default class SyncActionsService {

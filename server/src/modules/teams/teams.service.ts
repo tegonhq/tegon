@@ -64,6 +64,7 @@ export default class TeamsService {
 
   async createPreference(
     teamRequestIdBody: TeamRequestIdBody,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _preferenceData: UpdateTeamInput,
   ) {
     return await this.prisma.team.findUnique({

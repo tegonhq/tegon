@@ -1,7 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { XHRErrorResponse, ajaxGet } from 'lib/ajax';
 import { UseQueryResult, useQuery } from 'react-query';
+
+import { XHRErrorResponse, ajaxGet } from 'lib/ajax';
 
 import { User } from 'store/user_context';
 

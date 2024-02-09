@@ -30,13 +30,10 @@ export class SyncGateway implements OnGatewayInit, OnGatewayConnection {
 
   async handleConnection(client: Socket) {
     this.logger.log(`Connection is made by ${client.id}`);
-    console.log('ASdf');
 
-    const { query } = client.handshake;
+    const { query, headers } = client.handshake;
 
-    const isValid = query.accessToken
-      ? await hasValidHeader(`Bearer ${query.accessToken as string}`, false)
-      : false;
+    const isValid = await hasValidHeader(headers['authorization'], false);
 
     if (!isValid) {
       client.disconnect(true);

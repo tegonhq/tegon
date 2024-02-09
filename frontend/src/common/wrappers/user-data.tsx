@@ -6,7 +6,7 @@ import { useGetUserQuery } from 'services/users/get-user';
 
 import { UserContext } from 'store/user_context';
 
-import { Loader } from '../ui/loader';
+import { Loader } from '../../components/ui/loader';
 
 interface Props {
   children: React.ReactElement;

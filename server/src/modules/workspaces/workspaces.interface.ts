@@ -21,10 +21,6 @@ export class UpdateWorkspaceInput {
 
   @IsOptional()
   @IsString()
-  slug?: string;
-
-  @IsOptional()
-  @IsString()
   icon: string;
 }
 

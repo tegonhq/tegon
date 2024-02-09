@@ -2,8 +2,9 @@
 
 'use client';
 
-import { cn } from 'lib/utils';
 import Link from 'next/link';
+
+import { cn } from 'lib/utils';
 
 import { buttonVariants } from 'components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from 'components/ui/tooltip';

@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiEditBoxLine, RiSearch2Line } from '@remixicon/react';
+
 import { cn } from 'lib/utils';
 
 import { Button } from 'components/ui/button';

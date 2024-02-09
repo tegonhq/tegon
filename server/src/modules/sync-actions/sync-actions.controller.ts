@@ -8,14 +8,14 @@ import { AuthGuard } from 'modules/auth/auth.guard';
 import {
   BootstrapRequestQuery,
   DeltaRequestQuery,
-} from './syncActions.interface';
-import SyncActionsService from './syncActions.service';
+} from './sync-actions.interface';
+import SyncActionsService from './sync-actions.service';
 
 @Controller({
   version: '1',
-  path: 'syncActions',
+  path: 'sync_actions',
 })
-@ApiTags('SyncActions')
+@ApiTags('Sync Actions')
 export class SyncActionsController {
   constructor(private syncActionsService: SyncActionsService) {}
 

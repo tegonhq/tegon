@@ -1,8 +1,9 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { ajaxPost } from 'lib/ajax';
 import { useMutation } from 'react-query';
 import { z } from 'zod';
+
+import { ajaxPost } from 'lib/ajax';
 
 export interface SignInParams {
   email: string;

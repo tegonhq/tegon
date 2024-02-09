@@ -12,7 +12,7 @@ import { useMemo } from 'react';
 import { Workspace, WorkspaceStore, workspaceStore } from 'store/workspace';
 
 export interface Global {
-  workspace: Workspace;
+  workspace: typeof Workspace;
 }
 
 const GlobalStore: IAnyStateTreeNode = types
