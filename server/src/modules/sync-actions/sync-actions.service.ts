@@ -6,7 +6,9 @@ import { PrismaService } from 'nestjs-prisma';
 import {
   convertLsnToInt,
   convertToActionType,
+  getLastSequenceId,
   getModelData,
+  getSyncActionsData,
   getWorkspaceId,
 } from './sync-actions.utils';
 
@@ -33,7 +35,7 @@ export default class SyncActionsService {
         action: convertToActionType(action),
         modelName,
         modelId,
-        workspaceId: getWorkspaceId(this.prisma, modelName, modelId),
+        workspaceId: await getWorkspaceId(this.prisma, modelName, modelId),
         sequenceId: convertLsnToInt(lsn),
       },
     });
@@ -47,7 +49,7 @@ export default class SyncActionsService {
   }
 
   async getBootstrap(models: string, workspaceId: string) {
-    const syncActionsData = await this.prisma.syncAction.findMany({
+    const syncActions = await this.prisma.syncAction.findMany({
       where: {
         workspaceId,
         modelName: {
@@ -55,50 +57,32 @@ export default class SyncActionsService {
         },
       },
       orderBy: {
-        sequenceId: 'desc',
+        sequenceId: 'asc',
       },
-      distinct: ['modelName', 'workspaceId', 'modelId'],
+      distinct: ['modelName', 'workspaceId', 'modelId', 'action'],
     });
 
-    return Promise.all(
-      syncActionsData.map(async (actionData) => {
-        const data = await getModelData(
-          this.prisma,
-          actionData.modelName,
-          actionData.modelId,
-        );
-        return {
-          data,
-          ...actionData,
-        };
-      }),
-    );
+    return {
+      syncActions: await getSyncActionsData(this.prisma, syncActions),
+      lastSequenceId: await await getLastSequenceId(this.prisma, workspaceId)
+    }
   }
 
   async getDelta(lastSequenceId: number, workspaceId: string) {
-    const syncActionsData = await this.prisma.syncAction.findMany({
+    const syncActions = await this.prisma.syncAction.findMany({
       where: {
         workspaceId,
-        sequenceId: { gte: lastSequenceId },
+        sequenceId: { gt: lastSequenceId },
       },
       orderBy: {
-        sequenceId: 'desc',
+        sequenceId: 'asc',
       },
-      distinct: ['modelId', 'modelName', 'workspaceId'],
+      distinct: ['modelId', 'modelName', 'workspaceId', 'action'],
     });
 
-    return Promise.all(
-      syncActionsData.map(async (actionData) => {
-        const data = await getModelData(
-          this.prisma,
-          actionData.modelName,
-          actionData.modelId,
-        );
-        return {
-          data,
-          ...actionData,
-        };
-      }),
-    );
+    return {
+      syncActions: await getSyncActionsData(this.prisma, syncActions),
+      lastSequenceId: await await getLastSequenceId(this.prisma, workspaceId)
+    }
   }
 }

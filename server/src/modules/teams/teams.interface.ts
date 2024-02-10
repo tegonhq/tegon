@@ -28,17 +28,17 @@ export class UpdateTeamInput {
   icon?: string;
 }
 
-export class TeamRequestIdBody {
+export class TeamRequestParams {
   @IsString()
   teamId: string;
 }
 
-export class WorkspaceRequestIdBody {
+export class WorkspaceRequestParams {
   @IsString()
   workspaceId: string;
 }
 
-export class CreatePreferenceInput {
+export class PreferenceInput {
   @IsString()
   preference: Preference;
 

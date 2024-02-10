@@ -155,6 +155,8 @@ model TeamPreference {
 
   preference Preference
   value      String
+
+  @@unique([teamId, preference])
 }
 
 model SyncAction {
@@ -177,18 +179,6 @@ model SyncAction {
 enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
-}
-
-enum IssueEstimateValues {
-  EXPONENTIAL
-  FIBONACCI
-  LINEAR
-  T_SHIRT
-}
-
-enum Priorities {
-  NO_PRIORITY_FIRST
-  NO_PRIORITY_LAST
 }
 
 enum Role {

@@ -114,6 +114,7 @@ export default class ReplicationService {
         log.change.forEach(async (change: logChangeType) => {
           if (
             change.schema === 'tegon' &&
+            change.kind !== 'delete' &&
             tablesToSendMessagesFor.has(change.table.toLocaleLowerCase())
           ) {
             const { columnvalues } = change;

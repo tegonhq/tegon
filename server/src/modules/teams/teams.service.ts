@@ -6,8 +6,10 @@ import { PrismaService } from 'nestjs-prisma';
 
 import {
   UpdateTeamInput,
-  TeamRequestIdBody,
-  WorkspaceRequestIdBody,
+  TeamRequestParams,
+  WorkspaceRequestParams,
+  PreferenceInput,
+  CreateTeamInput,
 } from './teams.interface';
 
 @Injectable()
@@ -15,7 +17,7 @@ export default class TeamsService {
   constructor(private prisma: PrismaService) {}
 
   async getAllTeams(
-    workspaceId: WorkspaceRequestIdBody,
+    workspaceId: WorkspaceRequestParams,
     userId: string,
   ): Promise<Team[]> {
     return await this.prisma.team.findMany({
@@ -29,10 +31,10 @@ export default class TeamsService {
     });
   }
 
-  async getTeam(TeamRequestIdBody: TeamRequestIdBody): Promise<Team> {
+  async getTeam(TeamRequestParams: TeamRequestParams): Promise<Team> {
     return await this.prisma.team.findUnique({
       where: {
-        id: TeamRequestIdBody.teamId,
+        id: TeamRequestParams.teamId,
       },
       include: {
         user: true,
@@ -40,8 +42,22 @@ export default class TeamsService {
     });
   }
 
+  async createTeam(
+    WorkspaceRequestParams: WorkspaceRequestParams,
+    userId: string,
+    teamData: CreateTeamInput
+  ): Promise<Team> {
+    return await this.prisma.team.create({
+      data: {
+        workspaceId: WorkspaceRequestParams.workspaceId, 
+        userId,
+        ...teamData
+      }
+    })
+  }
+
   async updateTeam(
-    teamRequestIdBody: TeamRequestIdBody,
+    teamRequestParams: TeamRequestParams,
     teamData: UpdateTeamInput,
   ): Promise<Team> {
     return await this.prisma.team.update({
@@ -49,28 +65,41 @@ export default class TeamsService {
         ...teamData,
       },
       where: {
-        id: teamRequestIdBody.teamId,
+        id: teamRequestParams.teamId,
       },
     });
   }
 
-  async deleteTeam(teamRequestIdBody: TeamRequestIdBody): Promise<Team> {
-    return await this.prisma.team.delete({
+  async deleteTeam(teamRequestParams: TeamRequestParams): Promise<Team> {
+    return await this.prisma.team.update({
       where: {
-        id: teamRequestIdBody.teamId,
+        id: teamRequestParams.teamId,
       },
+      data: {
+        deleted: new Date()
+      }
     });
   }
 
-  async createPreference(
-    teamRequestIdBody: TeamRequestIdBody,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _preferenceData: UpdateTeamInput,
+  async createUpdatePreference(
+    teamRequestParams: TeamRequestParams,
+    preferenceData: PreferenceInput,
   ) {
-    return await this.prisma.team.findUnique({
-      where: {
-        id: teamRequestIdBody.teamId,
+    return await this.prisma.teamPreference.upsert({
+      where:{
+        teamId_preference:{
+          teamId: teamRequestParams.teamId,
+          preference: preferenceData.preference
+        }
       },
-    });
+      update:{
+        value: preferenceData.value.toString()
+      },
+      create: {
+        teamId: teamRequestParams.teamId,
+        preference: preferenceData.preference,
+        value: preferenceData.value.toString()
+      }
+    })
   }
 }

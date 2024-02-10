@@ -26,13 +26,11 @@ export default class WorkflowsService {
   }
 
   async createWorkflow(workflowData: CreateWorkflowInput): Promise<Workflow> {
-    const label = await this.prisma.workflow.create({
+    return await this.prisma.workflow.create({
       data: {
         ...workflowData,
       },
     });
-
-    return label;
   }
 
   async getWorkflow(

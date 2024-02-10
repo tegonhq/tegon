@@ -119,6 +119,10 @@ Table TeamPreference {
   teamId String [not null]
   preference Preference [not null]
   value String [not null]
+
+  indexes {
+    (teamId, preference) [unique]
+  }
 }
 
 Table SyncAction {
@@ -141,18 +145,6 @@ Table SyncAction {
 Enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
-}
-
-Enum IssueEstimateValues {
-  EXPONENTIAL
-  FIBONACCI
-  LINEAR
-  T_SHIRT
-}
-
-Enum Priorities {
-  NO_PRIORITY_FIRST
-  NO_PRIORITY_LAST
 }
 
 Enum Role {
