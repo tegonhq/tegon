@@ -94,7 +94,6 @@ export class TeamsController {
     teamRequestParams: TeamRequestParams,
     @Body() preferenceData: PreferenceInput,
   ): Promise<TeamPreference> {
-    console.log(teamRequestParams, preferenceData)
     return await this.teamsService.createUpdatePreference(
       teamRequestParams,
       preferenceData,

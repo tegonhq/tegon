@@ -12,9 +12,10 @@ Table User {
   role Role [not null]
   initialSetupComplete Boolean [not null, default: false]
   anonymousDataCollection Boolean [not null, default: false]
-  UsersOnWorkspaces UsersOnWorkspaces [not null]
+  usersOnWorkspaces UsersOnWorkspaces [not null]
   template Template [not null]
   team Team [not null]
+  createdBy Issue [not null]
 }
 
 Table Workspace {
@@ -25,11 +26,11 @@ Table Workspace {
   name String [not null]
   slug String [unique, not null]
   icon String
-  UsersOnWorkspaces UsersOnWorkspaces [not null]
-  Team Team [not null]
-  Label Label [not null]
-  Template Template [not null]
-  SyncAction SyncAction [not null]
+  usersOnWorkspaces UsersOnWorkspaces [not null]
+  team Team [not null]
+  label Label [not null]
+  template Template [not null]
+  syncAction SyncAction [not null]
 }
 
 Table UsersOnWorkspaces {
@@ -58,10 +59,11 @@ Table Team {
   workspaceId String [not null]
   user User [not null]
   userId String [not null]
-  Label Label [not null]
-  Template Template [not null]
-  Workflow Workflow [not null]
-  TeamPreference TeamPreference [not null]
+  issue Issue [not null]
+  label Label [not null]
+  template Template [not null]
+  workflow Workflow [not null]
+  teamPreference TeamPreference [not null]
 }
 
 Table Label {
@@ -142,6 +144,35 @@ Table SyncAction {
   }
 }
 
+Table Issue {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  title String [not null]
+  number Int [not null]
+  description String [not null]
+  priority Int
+  dueDate DateTime
+  sortOrder Int [not null]
+  subIssueSortOrder Int
+  team Team [not null]
+  teamId String [not null]
+  createdBy User [not null]
+  createdById String [not null]
+  subscriberIds String[] [not null]
+  assigneeIds String[] [not null]
+  labelIds String[] [not null]
+  stateId String [not null]
+  parent Issue
+  parentId String
+  subIssue Issue [not null]
+
+  indexes {
+    (teamId, number) [unique]
+  }
+}
+
 Enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
@@ -188,3 +219,9 @@ Ref: Workflow.teamId > Team.id
 Ref: TeamPreference.teamId > Team.id
 
 Ref: SyncAction.workspaceId > Workspace.id
+
+Ref: Issue.teamId > Team.id
+
+Ref: Issue.createdById > User.id
+
+Ref: Issue.parentId - Issue.id

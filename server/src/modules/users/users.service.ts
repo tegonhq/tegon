@@ -14,7 +14,7 @@ export class UsersService {
         id,
       },
       include: {
-        UsersOnWorkspaces: {
+        usersOnWorkspaces: {
           include: {
             workspace: true,
           },
@@ -34,7 +34,7 @@ export class UsersService {
         ...updateData,
       },
       include: {
-        UsersOnWorkspaces: {
+        usersOnWorkspaces: {
           include: {
             workspace: true,
           },

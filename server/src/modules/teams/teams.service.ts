@@ -45,15 +45,15 @@ export default class TeamsService {
   async createTeam(
     WorkspaceRequestParams: WorkspaceRequestParams,
     userId: string,
-    teamData: CreateTeamInput
+    teamData: CreateTeamInput,
   ): Promise<Team> {
     return await this.prisma.team.create({
       data: {
-        workspaceId: WorkspaceRequestParams.workspaceId, 
+        workspaceId: WorkspaceRequestParams.workspaceId,
         userId,
-        ...teamData
-      }
-    })
+        ...teamData,
+      },
+    });
   }
 
   async updateTeam(
@@ -76,8 +76,8 @@ export default class TeamsService {
         id: teamRequestParams.teamId,
       },
       data: {
-        deleted: new Date()
-      }
+        deleted: new Date(),
+      },
     });
   }
 
@@ -86,20 +86,20 @@ export default class TeamsService {
     preferenceData: PreferenceInput,
   ) {
     return await this.prisma.teamPreference.upsert({
-      where:{
-        teamId_preference:{
+      where: {
+        teamId_preference: {
           teamId: teamRequestParams.teamId,
-          preference: preferenceData.preference
-        }
+          preference: preferenceData.preference,
+        },
       },
-      update:{
-        value: preferenceData.value.toString()
+      update: {
+        value: preferenceData.value.toString(),
       },
       create: {
         teamId: teamRequestParams.teamId,
         preference: preferenceData.preference,
-        value: preferenceData.value.toString()
-      }
-    })
+        value: preferenceData.value.toString(),
+      },
+    });
   }
 }

@@ -21,14 +21,14 @@ export default class WorkspacesService {
     const workspace = await this.prisma.workspace.create({
       data: {
         ...workspaceData,
-        UsersOnWorkspaces: {
+        usersOnWorkspaces: {
           create: {
             userId,
           },
         },
       },
       include: {
-        UsersOnWorkspaces: true,
+        usersOnWorkspaces: true,
       },
     });
 
@@ -38,7 +38,7 @@ export default class WorkspacesService {
   async getAllWorkspaces(userId: string): Promise<Workspace[]> {
     return await this.prisma.workspace.findMany({
       where: {
-        UsersOnWorkspaces: { every: { userId } },
+        usersOnWorkspaces: { every: { userId } },
       },
     });
   }
@@ -51,7 +51,7 @@ export default class WorkspacesService {
         id: WorkspaceRequestIdBody.workspaceId,
       },
       include: {
-        UsersOnWorkspaces: {
+        usersOnWorkspaces: {
           include: {
             user: true,
           },

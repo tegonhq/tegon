@@ -14,4 +14,12 @@ export interface logType {
   change: logChangeType[];
 }
 
-export const tablesToSendMessagesFor = new Map([['workspace', true], ['team', true], ['teampreference', true]]);
+export const tablesToSendMessagesFor = new Map([
+  ['workspace', true],
+  ['team', true],
+  ['teampreference', true],
+  ['issue', true],
+  ['label', true],
+  ['workflow', true],
+  ['template', true],
+]);

@@ -14,9 +14,9 @@ deleted: Date  | null;
 name: string ;
 slug: string ;
 icon: string  | null;
-UsersOnWorkspaces?: UsersOnWorkspaces[] ;
-Team?: Team[] ;
-Label?: Label[] ;
-Template?: Template[] ;
-SyncAction?: SyncAction[] ;
+usersOnWorkspaces?: UsersOnWorkspaces[] ;
+team?: Team[] ;
+label?: Label[] ;
+template?: Template[] ;
+syncAction?: SyncAction[] ;
 }

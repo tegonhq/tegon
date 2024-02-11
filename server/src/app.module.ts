@@ -22,6 +22,7 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { IssuesModule } from 'modules/issues/issues.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { AppService } from './app.service';
     LabelsModule,
     TemplatesModule,
     WorkflowsModule,
+    IssuesModule,
 
     ReplicationModule,
     SyncActionsModule,

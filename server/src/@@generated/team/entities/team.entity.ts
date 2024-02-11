@@ -1,6 +1,7 @@
 
 import {Workspace} from '../../workspace/entities/workspace.entity'
 import {User} from '../../user/entities/user.entity'
+import {Issue} from '../../issue/entities/issue.entity'
 import {Label} from '../../label/entities/label.entity'
 import {Template} from '../../template/entities/template.entity'
 import {Workflow} from '../../workflow/entities/workflow.entity'
@@ -19,8 +20,9 @@ workspace?: Workspace ;
 workspaceId: string ;
 user?: User ;
 userId: string ;
-Label?: Label[] ;
-Template?: Template[] ;
-Workflow?: Workflow[] ;
-TeamPreference?: TeamPreference[] ;
+issue?: Issue[] ;
+label?: Label[] ;
+template?: Template[] ;
+workflow?: Workflow[] ;
+teamPreference?: TeamPreference[] ;
 }

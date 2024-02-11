@@ -119,11 +119,28 @@ export default class ReplicationService {
           ) {
             const { columnvalues } = change;
             const syncActionData =
-              await this.syncActionsService.createSyncAction(
+              await this.syncActionsService.upsertSyncAction(
                 _lsn,
                 change.kind,
                 change.table,
                 columnvalues[0],
+              );
+
+            this.syncGateway.wss
+              .to(syncActionData.workspaceId)
+              .emit('message', JSON.stringify(syncActionData));
+          } else if (
+            change.schema === 'tegon' &&
+            change.kind === 'delete' &&
+            tablesToSendMessagesFor.has(change.table.toLocaleLowerCase())
+          ) {
+            const modelId = change.oldkeys.keyvalues[0];
+            const syncActionData =
+              await this.syncActionsService.upsertSyncAction(
+                _lsn,
+                change.kind,
+                change.table,
+                modelId,
               );
 
             this.syncGateway.wss

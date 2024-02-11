@@ -15,7 +15,7 @@ import {
 @Injectable()
 export default class SyncActionsService {
   constructor(private prisma: PrismaService) {}
-  async createSyncAction(
+  async upsertSyncAction(
     lsn: string,
     action: string,
     modelName: string,
@@ -30,6 +30,7 @@ export default class SyncActionsService {
       },
       update: {
         sequenceId: convertLsnToInt(lsn),
+        action: convertToActionType(action),
       },
       create: {
         action: convertToActionType(action),
@@ -64,8 +65,8 @@ export default class SyncActionsService {
 
     return {
       syncActions: await getSyncActionsData(this.prisma, syncActions),
-      lastSequenceId: await await getLastSequenceId(this.prisma, workspaceId)
-    }
+      lastSequenceId: await await getLastSequenceId(this.prisma, workspaceId),
+    };
   }
 
   async getDelta(lastSequenceId: number, workspaceId: string) {
@@ -82,7 +83,7 @@ export default class SyncActionsService {
 
     return {
       syncActions: await getSyncActionsData(this.prisma, syncActions),
-      lastSequenceId: await await getLastSequenceId(this.prisma, workspaceId)
-    }
+      lastSequenceId: await await getLastSequenceId(this.prisma, workspaceId),
+    };
   }
 }

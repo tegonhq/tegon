@@ -37,9 +37,10 @@ model User {
   initialSetupComplete    Boolean @default(false)
   anonymousDataCollection Boolean @default(false)
 
-  UsersOnWorkspaces UsersOnWorkspaces[]
+  usersOnWorkspaces UsersOnWorkspaces[]
   template          Template[]
   team              Team[]
+  createdBy         Issue[]
 }
 
 model Workspace {
@@ -52,11 +53,11 @@ model Workspace {
   slug String  @unique
   icon String?
 
-  UsersOnWorkspaces UsersOnWorkspaces[]
-  Team              Team[]
-  Label             Label[]
-  Template          Template[]
-  SyncAction        SyncAction[]
+  usersOnWorkspaces UsersOnWorkspaces[]
+  team              Team[]
+  label             Label[]
+  template          Template[]
+  syncAction        SyncAction[]
 }
 
 model UsersOnWorkspaces {
@@ -86,10 +87,11 @@ model Team {
   workspaceId    String
   user           User             @relation(fields: [userId], references: [id])
   userId         String
-  Label          Label[]
-  Template       Template[]
-  Workflow       Workflow[]
-  TeamPreference TeamPreference[]
+  issue          Issue[]
+  label          Label[]
+  template       Template[]
+  workflow       Workflow[]
+  teamPreference TeamPreference[]
 }
 
 model Label {
@@ -140,8 +142,8 @@ model Workflow {
   color    String
   type     String
 
-  team   Team?  @relation(fields: [teamId], references: [id])
-  teamId String
+  team    Team?   @relation(fields: [teamId], references: [id])
+  teamId  String
 }
 
 model TeamPreference {
@@ -174,6 +176,35 @@ model SyncAction {
   workspaceId String
 
   @@unique([modelId, action])
+}
+
+model Issue {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  title             String
+  number            Int
+  description       String
+  priority          Int?
+  dueDate           DateTime?
+  sortOrder         Int
+  subIssueSortOrder Int?
+
+  team          Team     @relation(fields: [teamId], references: [id])
+  teamId        String
+  createdBy     User     @relation(fields: [createdById], references: [id])
+  createdById   String
+  subscriberIds String[]
+  assigneeIds   String[]
+  labelIds      String[]
+  stateId       String
+  parent        Issue?   @relation("Report", fields: [parentId], references: [id])
+  parentId      String?
+  subIssue      Issue[]  @relation("Report")
+
+  @@unique([teamId, number])
 }
 
 enum Preference {

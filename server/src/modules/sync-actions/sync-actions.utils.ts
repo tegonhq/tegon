@@ -30,29 +30,44 @@ export async function getWorkspaceId(
   switch (modelName.toLocaleLowerCase()) {
     case 'workspace':
       return modelId;
+
     case 'team':
       const team = await prisma.team.findUnique({
-        where: {
-          id: modelId,
-        },
+        where: { id: modelId },
       });
       return team.workspaceId;
 
     case 'teampreference':
       const teamPreference = await prisma.teamPreference.findUnique({
-        where: {
-          id: modelId,
-        },
-        include: {
-          team: {
-            include: {
-              workspace: true,
-            },
-          },
-        },
+        where: { id: modelId },
+        include: { team: true },
       });
-
       return teamPreference.team.workspaceId;
+
+    case 'issue':
+      const issue = await prisma.issue.findUnique({
+        where: { id: modelId },
+        include: { team: true },
+      });
+      return issue.team.workspaceId;
+
+    case 'label':
+      const label = await prisma.label.findUnique({
+        where: { id: modelId },
+      });
+      return label.workspaceId;
+
+    case 'workflow':
+      const workflow = await prisma.label.findUnique({
+        where: { id: modelId },
+      });
+      return workflow.workspaceId;
+
+    case 'template':
+      const template = await prisma.label.findUnique({
+        where: { id: modelId },
+      });
+      return template.workspaceId;
 
     default:
       return '';
@@ -66,25 +81,26 @@ export async function getModelData(
 ) {
   switch (modelName.toLocaleLowerCase()) {
     case 'workspace':
-      return await prisma.workspace.findUnique({
-        where: {
-          id: modelId,
-        },
-      });
+      return await prisma.workspace.findUnique({ where: { id: modelId } });
 
     case 'team':
-      return await prisma.team.findUnique({
-        where: {
-          id: modelId,
-        },
-      });
-      
+      return await prisma.team.findUnique({ where: { id: modelId } });
+
     case 'teampreference':
-      return await prisma.teamPreference.findUnique({
-        where: {
-          id: modelId,
-        },
-      });
+      return await prisma.teamPreference.findUnique({ where: { id: modelId } });
+
+    case 'issue':
+      return await prisma.issue.findUnique({ where: { id: modelId } });
+
+    case 'label':
+      return await prisma.label.findUnique({ where: { id: modelId } });
+
+    case 'workflow':
+      return await prisma.workflow.findUnique({ where: { id: modelId } });
+
+    case 'template':
+      return await prisma.template.findUnique({ where: { id: modelId } });
+
     default:
       return {};
   }

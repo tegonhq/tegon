@@ -29,7 +29,7 @@ export function userSerializer(user: User) {
     initialSetupComplete: user.initialSetupComplete,
     anonymousDataCollection: user.anonymousDataCollection,
 
-    workspaces: user.UsersOnWorkspaces.map(
+    workspaces: user.usersOnWorkspaces.map(
       (uWorkspace) => uWorkspace.workspace,
     ),
   };

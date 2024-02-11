@@ -14,6 +14,7 @@ export class CreateWorkflowInput {
   @IsString()
   type: string;
 
+  // TODO(Manoj): Move this to query params
   @IsString()
   teamId: string;
 }
