@@ -76,7 +76,7 @@ export default class TeamsService {
         id: teamRequestParams.teamId,
       },
       data: {
-        deleted: new Date(),
+        deleted: new Date().toISOString(),
       },
     });
   }

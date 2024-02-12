@@ -167,10 +167,48 @@ Table Issue {
   parent Issue
   parentId String
   subIssue Issue [not null]
+  comments IssueComment [not null]
 
   indexes {
     (teamId, number) [unique]
   }
+}
+
+Table IssueComment {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  body String [not null]
+  userId String [not null]
+  reactions Reaction [not null]
+  reactionsData Json[] [not null]
+  issue Issue [not null]
+  issueId String [not null]
+  parent IssueComment
+  parentId String
+  replies IssueComment [not null]
+}
+
+Table Reaction {
+  id String [pk]
+  reactedAt DateTime [default: `now()`, not null]
+  deleted DateTime
+  userId String [not null]
+  comment IssueComment [not null]
+  commentId String [not null]
+  emoji Emoji [not null]
+  emojiId String [not null]
+
+  indexes {
+    (emojiId, commentId, userId) [unique]
+  }
+}
+
+Table Emoji {
+  id String [pk]
+  name String [unique, not null]
+  reactions Reaction [not null]
 }
 
 Enum Preference {
@@ -225,3 +263,11 @@ Ref: Issue.teamId > Team.id
 Ref: Issue.createdById > User.id
 
 Ref: Issue.parentId - Issue.id
+
+Ref: IssueComment.issueId > Issue.id
+
+Ref: IssueComment.parentId - IssueComment.id
+
+Ref: Reaction.commentId > IssueComment.id
+
+Ref: Reaction.emojiId > Emoji.id

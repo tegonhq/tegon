@@ -22,4 +22,5 @@ export const tablesToSendMessagesFor = new Map([
   ['label', true],
   ['workflow', true],
   ['template', true],
+  ['issuecomment', true],
 ]);

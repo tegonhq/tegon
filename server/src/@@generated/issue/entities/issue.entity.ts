@@ -1,6 +1,7 @@
 
 import {Team} from '../../team/entities/team.entity'
 import {User} from '../../user/entities/user.entity'
+import {IssueComment} from '../../issueComment/entities/issueComment.entity'
 
 
 export class Issue {
@@ -26,4 +27,5 @@ stateId: string ;
 parent?: Issue  | null;
 parentId: string  | null;
 subIssue?: Issue[] ;
+comments?: IssueComment[] ;
 }

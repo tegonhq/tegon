@@ -21,7 +21,7 @@ import {
   IssueRequestParams,
   TeamRequestParams,
   UpdateIssueInput,
-} from './issue.interface';
+} from './issues.interface';
 import IssuesService from './issues.service';
 
 @Controller({

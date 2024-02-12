@@ -10,6 +10,8 @@ import config from 'common/configs/config';
 import { loggingMiddleware } from 'common/middleware/logging.middleware';
 
 import { AuthModule } from 'modules/auth/auth.module';
+import { IssueCommentsModule } from 'modules/issue-comments/issue-comments.module';
+import { IssuesModule } from 'modules/issues/issues.module';
 import { LabelsModule } from 'modules/labels/labels.module';
 import { ReplicationModule } from 'modules/replication/replication.module';
 import { SyncModule } from 'modules/sync/sync.module';
@@ -22,7 +24,6 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { IssuesModule } from 'modules/issues/issues.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { IssuesModule } from 'modules/issues/issues.module';
     TemplatesModule,
     WorkflowsModule,
     IssuesModule,
+    IssueCommentsModule,
 
     ReplicationModule,
     SyncActionsModule,

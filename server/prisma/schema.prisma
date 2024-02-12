@@ -142,8 +142,8 @@ model Workflow {
   color    String
   type     String
 
-  team    Team?   @relation(fields: [teamId], references: [id])
-  teamId  String
+  team   Team?  @relation(fields: [teamId], references: [id])
+  teamId String
 }
 
 model TeamPreference {
@@ -204,7 +204,51 @@ model Issue {
   parentId      String?
   subIssue      Issue[]  @relation("Report")
 
+  comments IssueComment[]
+
   @@unique([teamId, number])
+}
+
+model IssueComment {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  body   String
+  userId String
+
+  reactions     Reaction[]
+  reactionsData Json[]
+  issue         Issue         @relation(fields: [issueId], references: [id])
+  issueId       String
+  parent        IssueComment? @relation("Report", fields: [parentId], references: [id])
+  parentId      String?
+
+  replies IssueComment[] @relation("Report")
+}
+
+model Reaction {
+  id        String    @id @default(uuid())
+  reactedAt DateTime  @default(now())
+  deleted   DateTime?
+
+  userId String
+
+  comment   IssueComment @relation(fields: [commentId], references: [id])
+  commentId String
+  emoji     Emoji        @relation(fields: [emojiId], references: [id])
+  emojiId   String
+
+  @@unique([emojiId, commentId, userId])
+}
+
+model Emoji {
+  id        String     @id @default(uuid())
+  name      String
+  reactions Reaction[]
+
+  @@unique([name])
 }
 
 enum Preference {

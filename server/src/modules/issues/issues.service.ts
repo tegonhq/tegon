@@ -9,7 +9,7 @@ import {
   IssueRequestParams,
   TeamRequestParams,
   UpdateIssueInput,
-} from './issue.interface';
+} from './issues.interface';
 
 @Injectable()
 export default class IssuesService {
@@ -21,17 +21,20 @@ export default class IssuesService {
     issueData: CreateIssueInput,
   ): Promise<Issue> {
     const { parentId, ...otherIssueData } = issueData;
-    const lastNumber = (await this.prisma.issue.findFirst({
-      where: { teamId: teamRequestParams.teamId },
-      orderBy: { number: 'desc' },
-    }))?.number ?? 0;
+    const lastNumber =
+      (
+        await this.prisma.issue.findFirst({
+          where: { teamId: teamRequestParams.teamId },
+          orderBy: { number: 'desc' },
+        })
+      )?.number ?? 0;
 
     return await this.prisma.issue.create({
       data: {
         ...otherIssueData,
         createdBy: { connect: { id: userId } },
         team: { connect: { id: teamRequestParams.teamId } },
-        number: lastNumber+1,
+        number: lastNumber + 1,
         ...(parentId && { parent: { connect: { id: parentId } } }),
       },
     });
@@ -63,7 +66,7 @@ export default class IssuesService {
         teamId: teamRequestParams.teamId,
       },
       data: {
-        deleted: Date(),
+        deleted: new Date().toISOString(),
       },
     });
   }

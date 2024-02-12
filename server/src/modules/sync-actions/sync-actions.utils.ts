@@ -58,19 +58,27 @@ export async function getWorkspaceId(
       return label.workspaceId;
 
     case 'workflow':
-      const workflow = await prisma.label.findUnique({
+      const workflow = await prisma.workflow.findUnique({
         where: { id: modelId },
+        include: { team: true },
       });
-      return workflow.workspaceId;
+      return workflow.team.workspaceId;
 
     case 'template':
-      const template = await prisma.label.findUnique({
+      const template = await prisma.template.findUnique({
         where: { id: modelId },
       });
       return template.workspaceId;
 
+    case 'issuecomment':
+      const issuecomment = await prisma.issueComment.findUnique({
+        where: { id: modelId },
+        include: { issue: { include: { team: true } } },
+      });
+      return issuecomment.issue.team.workspaceId;
+
     default:
-      return '';
+      return undefined;
   }
 }
 
@@ -101,8 +109,10 @@ export async function getModelData(
     case 'template':
       return await prisma.template.findUnique({ where: { id: modelId } });
 
+    case 'issuecomment':
+      return await prisma.issueComment.findUnique({ where: { id: modelId } });
     default:
-      return {};
+      return undefined;
   }
 }
 

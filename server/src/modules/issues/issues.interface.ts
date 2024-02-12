@@ -56,7 +56,7 @@ export class CreateIssueInput {
   parentId?: string;
 
   @IsArray()
-  subscriberIds: string[]
+  subscriberIds: string[];
 }
 
 export class UpdateIssueInput {
@@ -102,5 +102,5 @@ export class UpdateIssueInput {
 
   @IsOptional()
   @IsArray()
-  subscriberIds: string[]
+  subscriberIds: string[];
 }
