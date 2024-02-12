@@ -1,3 +1,4 @@
+/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 'use client';
@@ -45,5 +46,19 @@ const AvatarFallback = React.forwardRef<
   />
 ));
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
+
+// Function to get the first two letters
+export const getInitials = (name: string) => {
+  if (!name) {
+    return '';
+  }
+  const words = name.split(' ');
+  return words
+    .map((word) => word.charAt(0))
+    .filter((char) => char !== '')
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+};
 
 export { Avatar, AvatarImage, AvatarFallback };

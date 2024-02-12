@@ -3,7 +3,12 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { Avatar, AvatarFallback, AvatarImage } from 'components/ui/avatar';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  getInitials,
+} from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
 import {
   DropdownMenu,
@@ -33,7 +38,7 @@ export const WorkspaceDropdown = observer(
               <Avatar className="h-[20px] w-[30px] ">
                 <AvatarImage />
                 <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-xs rounded-sm">
-                  BO
+                  {getInitials(workspaceStore?.workspace?.name)}
                 </AvatarFallback>
               </Avatar>
               {!isCollapsed && (
