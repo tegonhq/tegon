@@ -23,7 +23,7 @@ export class SyncActionsController {
   @UseGuards(new AuthGuard())
   async getBootstrap(@Query() BootstrapQuery: BootstrapRequestQuery) {
     return await this.syncActionsService.getBootstrap(
-      BootstrapQuery.models,
+      BootstrapQuery.modelName,
       BootstrapQuery.workspaceId,
     );
   }
@@ -32,6 +32,7 @@ export class SyncActionsController {
   @UseGuards(new AuthGuard())
   async getDelta(@Query() deltaQuery: DeltaRequestQuery) {
     return await this.syncActionsService.getDelta(
+      deltaQuery.modelName,
       parseInt(deltaQuery.lastSequenceId),
       deltaQuery.workspaceId,
     );

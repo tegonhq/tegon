@@ -3,30 +3,25 @@
 import 'styles/globals.css';
 import type { NextComponentType } from 'next';
 
+import { useGetQueryClient } from 'lib/react-query-client';
+import { cn } from 'lib/utils';
 import { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 import { Inter } from 'next/font/google';
 import * as React from 'react';
 import { Hydrate, QueryClientProvider } from 'react-query';
-import SuperTokensReact, { SuperTokensWrapper } from 'supertokens-auth-react';
+import { SuperTokensWrapper } from 'supertokens-auth-react';
 
-import { frontendConfig } from 'lib/config';
-import { useGetQueryClient } from 'lib/react-query-client';
-import { cn } from 'lib/utils';
+import { init } from 'common/init-config';
 
 import { ThemeProvider } from 'components/theme-provider';
-
-// Initialise Supertokens
-if (typeof window !== 'undefined') {
-  // we only want to call this init function on the frontend, so we check typeof window !== 'undefined'
-
-  SuperTokensReact.init(frontendConfig());
-}
 
 // Inter as default font
 export const fontSans = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
 });
+
+init();
 
 export const MyApp: NextComponentType<
   AppContext,

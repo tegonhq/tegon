@@ -1,3 +1,4 @@
+/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
@@ -69,13 +70,11 @@ export default class SyncActionsService {
     };
   }
 
-  async getBootstrap(models: string, workspaceId: string) {
+  async getBootstrap(modelName: string, workspaceId: string) {
     let syncActions = await this.prisma.syncAction.findMany({
       where: {
         workspaceId,
-        modelName: {
-          in: models.split(','),
-        },
+        modelName,
       },
       orderBy: {
         sequenceId: 'asc',
@@ -99,11 +98,16 @@ export default class SyncActionsService {
     };
   }
 
-  async getDelta(lastSequenceId: number, workspaceId: string) {
+  async getDelta(
+    modelName: string,
+    lastSequenceId: number,
+    workspaceId: string,
+  ) {
     const syncActions = await this.prisma.syncAction.findMany({
       where: {
         workspaceId,
         sequenceId: { gt: lastSequenceId },
+        modelName,
       },
       orderBy: {
         sequenceId: 'asc',
@@ -113,7 +117,7 @@ export default class SyncActionsService {
 
     return {
       syncActions: await getSyncActionsData(this.prisma, syncActions),
-      lastSequenceId: await await getLastSequenceId(this.prisma, workspaceId),
+      lastSequenceId: await getLastSequenceId(this.prisma, workspaceId),
     };
   }
 }

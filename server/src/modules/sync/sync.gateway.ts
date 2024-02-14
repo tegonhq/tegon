@@ -9,13 +9,13 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 
-import { hasValidHeader } from 'common/authentication';
-
 import { ClientMetadata } from './sync.interface';
+import { isValidAuthentication } from './sync.utils';
 
 @WebSocketGateway({
   cors: {
-    origin: ['http://localhost:3000'],
+    origin: process.env.FRONTEND_HOST.split(',') || '',
+    credentials: true,
   },
 })
 export class SyncGateway implements OnGatewayInit, OnGatewayConnection {
@@ -32,8 +32,7 @@ export class SyncGateway implements OnGatewayInit, OnGatewayConnection {
     this.logger.log(`Connection is made by ${client.id}`);
 
     const { query, headers } = client.handshake;
-
-    const isValid = await hasValidHeader(headers['authorization'], false);
+    const isValid = await isValidAuthentication(headers);
 
     if (!isValid) {
       client.disconnect(true);

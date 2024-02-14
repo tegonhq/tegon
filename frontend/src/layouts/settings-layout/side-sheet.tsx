@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiArrowLeftSLine, RiSideBarFill } from '@remixicon/react';
+import { useRouter } from 'next/router';
 
 import { Button } from 'components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from 'components/ui/sheet';
@@ -8,6 +9,8 @@ import { Sheet, SheetContent, SheetTrigger } from 'components/ui/sheet';
 import { SidebarNav } from './sidebar-nav';
 
 export function SideDrawer() {
+  const { query, replace } = useRouter();
+
   return (
     <Sheet>
       <div className="block md:hidden">
@@ -22,6 +25,9 @@ export function SideDrawer() {
             variant="ghost"
             size="sm"
             className="text-sm flex justify-start px-1 pr-2"
+            onClick={() => {
+              replace(`/${query.workspaceSlug}`);
+            }}
           >
             <RiArrowLeftSLine
               className="mr-2 text-muted-foreground"

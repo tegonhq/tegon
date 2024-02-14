@@ -6,10 +6,9 @@ import {
   RiArrowLeftSLine,
   RiBuilding4Fill,
 } from '@remixicon/react';
+import { cn } from 'lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
-import { cn } from 'lib/utils';
 
 import { Button, buttonVariants } from 'components/ui/button';
 
@@ -18,15 +17,17 @@ import { ACCOUNT_LINKS, WORKSPACE_LINKS } from './settings-layout-constants';
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {}
 
 export function SidebarNav({ className, ...props }: SidebarNavProps) {
-  const router = useRouter();
-  const { workspaceSlug, settingsSection = WORKSPACE_LINKS[0].href } =
-    router.query;
+  const { query, replace } = useRouter();
+  const { workspaceSlug, settingsSection = WORKSPACE_LINKS[0].href } = query;
 
   return (
     <nav className={cn('flex flex-col', className)} {...props}>
       <Button
         variant="ghost"
         size="xl"
+        onClick={() => {
+          replace(`/${query.workspaceSlug}`);
+        }}
         className=" group px-3 py-4 text-lg bg-transparent hover:bg-transparent dark:hover:bg-transparent flex justify-start"
       >
         <RiArrowLeftSLine

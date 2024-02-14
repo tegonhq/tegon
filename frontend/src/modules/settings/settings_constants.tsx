@@ -1,11 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Label } from './labels';
+import { Labels } from './labels';
 import { Overview } from './overview';
 
 export const SECTION_COMPONENTS = {
   overview: Overview,
-  labels: Label,
+  labels: Labels,
 };
 
 type StringKeys<T> = {

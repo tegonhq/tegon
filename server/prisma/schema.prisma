@@ -108,9 +108,9 @@ model Label {
   workspaceId String
   team        Team?     @relation(fields: [teamId], references: [id])
   teamId      String?
-  group       Label?    @relation("Report", fields: [groupId], references: [id])
+  group       Label?    @relation("Group", fields: [groupId], references: [id])
   groupId     String?
-  labels      Label[]   @relation("Report")
+  labels      Label[]   @relation("Group")
 }
 
 model Template {

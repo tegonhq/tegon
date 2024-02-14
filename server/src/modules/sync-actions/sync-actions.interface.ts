@@ -7,12 +7,15 @@ export class BootstrapRequestQuery {
   workspaceId: string;
 
   @IsString()
-  models: string;
+  modelName: string;
 }
 
 export class DeltaRequestQuery {
   @IsString()
   workspaceId: string;
+
+  @IsString()
+  modelName: string;
 
   @IsString()
   lastSequenceId: string;

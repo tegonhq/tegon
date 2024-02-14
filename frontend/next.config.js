@@ -39,6 +39,7 @@ module.exports = {
   publicRuntimeConfig: {
     // Will be available on both server and client
     NEXT_PUBLIC_BASE_HOST: process.env.NEXT_PUBLIC_BASE_HOST,
+    NEXT_PUBLIC_SYNC_SERVER: process.env.NEXT_PUBLIC_SYNC_SERVER,
   },
   output: 'standalone',
 };

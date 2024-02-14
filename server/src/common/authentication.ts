@@ -24,8 +24,6 @@ export async function hasValidHeader(
   authHeaderValue: string,
   throwError: boolean = true,
 ) {
-  // this for users to call from their APIs
-
   authHeaderValue =
     authHeaderValue === undefined
       ? undefined
@@ -45,20 +43,11 @@ export async function hasValidHeader(
     return true;
   }
 
-  const publicKey = await getKey(authHeaderValue);
-
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const response: any = verify(authHeaderValue, publicKey, {});
-    if (response.source !== 'microservice') {
-      if (throwError) {
-        throw new UnauthorizedException({
-          message: 'Unauthorised',
-        });
-      }
+    const publicKey = await getKey(authHeaderValue);
+    verify(authHeaderValue, publicKey, {});
 
-      return false;
-    }
+    return true;
   } catch (e) {
     if (throwError) {
       throw new UnauthorizedException({

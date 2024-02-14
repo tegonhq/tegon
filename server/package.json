@@ -66,6 +66,7 @@
     "bcrypt": "5.1.1",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.1",
+    "cookie": "^0.6.0",
     "jwks-rsa": "^3.1.0",
     "nestjs-prisma": "0.22.0",
     "passport": "0.7.0",

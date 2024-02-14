@@ -1,7 +1,9 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 import React from 'react';
+import { signOut } from 'supertokens-auth-react/recipe/session';
 
 import {
   Avatar,
@@ -28,14 +30,15 @@ export interface WorkspaceDropdownProps {
 
 export const WorkspaceDropdown = observer(
   ({ isCollapsed }: WorkspaceDropdownProps) => {
-    const { store: workspaceStore } = useWorkspaceStore();
+    const workspaceStore = useWorkspaceStore();
+    const { query, replace } = useRouter();
 
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="px-1">
+          <Button variant="ghost" className="px-2">
             <div className="flex justify-between">
-              <Avatar className="h-[20px] w-[30px] ">
+              <Avatar className="h-[20px] w-[25px] ">
                 <AvatarImage />
                 <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-xs rounded-sm">
                   {getInitials(workspaceStore?.workspace?.name)}
@@ -49,7 +52,11 @@ export const WorkspaceDropdown = observer(
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-60" align="start">
           <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                replace(`/${query.workspaceSlug}/settings`);
+              }}
+            >
               Workspace settings
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
             </DropdownMenuItem>
@@ -59,7 +66,13 @@ export const WorkspaceDropdown = observer(
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={async () => {
+              await signOut();
+
+              replace('/auth/signin');
+            }}
+          >
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>

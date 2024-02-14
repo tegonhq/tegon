@@ -5,7 +5,6 @@ import * as React from 'react';
 import { SessionAuth } from 'supertokens-auth-react/recipe/session';
 
 import { cn } from 'lib/utils';
-import { Websocket } from 'modules/sync/sync';
 
 import { DataSyncWrapper } from 'common/wrappers/data-sync';
 import { UserDataWrapper } from 'common/wrappers/user-data';
@@ -35,68 +34,65 @@ export function AppLayout({ defaultCollapsed = false, children }: LayoutProps) {
         <SessionAuth>
           <UserDataWrapper>
             <DataSyncWrapper>
-              <>
-                <ResizablePanelGroup
-                  direction="horizontal"
-                  onLayout={(sizes: number[]) => {
-                    document.cookie = `react-resizable-panels:layout=${JSON.stringify(
-                      sizes,
+              <ResizablePanelGroup
+                direction="horizontal"
+                onLayout={(sizes: number[]) => {
+                  document.cookie = `react-resizable-panels:layout=${JSON.stringify(
+                    sizes,
+                  )}`;
+                }}
+                className="h-full max-h-[100%] items-stretch"
+              >
+                <ResizablePanel
+                  defaultSize={16}
+                  collapsedSize={4}
+                  collapsible={true}
+                  minSize={4}
+                  maxSize={18}
+                  onExpand={() => {
+                    setIsCollapsed(false);
+                    document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
+                      false,
                     )}`;
                   }}
-                  className="h-full max-h-[100%] items-stretch"
+                  onCollapse={() => {
+                    setIsCollapsed(true);
+                    document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
+                      true,
+                    )}`;
+                  }}
+                  className={cn(
+                    isCollapsed &&
+                      'min-w-[50px] transition-all duration-300 ease-in-out',
+                  )}
                 >
-                  <ResizablePanel
-                    defaultSize={14}
-                    collapsedSize={4}
-                    collapsible={true}
-                    minSize={4}
-                    maxSize={18}
-                    onExpand={() => {
-                      setIsCollapsed(false);
-                      document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-                        false,
-                      )}`;
-                    }}
-                    onCollapse={() => {
-                      setIsCollapsed(true);
-                      document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-                        true,
-                      )}`;
-                    }}
-                    className={cn(
-                      isCollapsed &&
-                        'min-w-[50px] transition-all duration-300 ease-in-out',
-                    )}
-                  >
-                    <Header isCollapsed={isCollapsed} />
-                    <Nav
-                      isCollapsed={isCollapsed}
-                      links={[
-                        {
-                          title: 'Inbox',
-                          icon: RiInbox2Fill,
-                          href: '/inbox',
-                        },
-                        {
-                          title: 'My issues',
-                          icon: RiFocusMode,
-                          href: '/my-issues',
-                        },
-                        {
-                          title: 'Settings',
-                          icon: RiSettings2Fill,
-                          href: '/settings',
-                        },
-                      ]}
-                    />
+                  <Header isCollapsed={isCollapsed} />
+                  <Nav
+                    isCollapsed={isCollapsed}
+                    links={[
+                      {
+                        title: 'Inbox',
+                        icon: RiInbox2Fill,
+                        href: '/inbox',
+                      },
+                      {
+                        title: 'My issues',
+                        icon: RiFocusMode,
+                        href: '/my-issues',
+                      },
+                      {
+                        title: 'Settings',
+                        icon: RiSettings2Fill,
+                        href: '/settings',
+                      },
+                    ]}
+                  />
 
-                    <TeamList isCollapsed={isCollapsed} />
-                  </ResizablePanel>
-                  <ResizableHandle withHandle />
-                  <ResizablePanel minSize={30}>{children}</ResizablePanel>
-                </ResizablePanelGroup>
-                <Websocket />
-              </>
+                  <TeamList isCollapsed={isCollapsed} />
+                </ResizablePanel>
+                <ResizableHandle withHandle />
+                <ResizablePanel minSize={30}>{children}</ResizablePanel>
+              </ResizablePanelGroup>
             </DataSyncWrapper>
           </UserDataWrapper>
         </SessionAuth>
