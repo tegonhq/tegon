@@ -69,9 +69,12 @@ export default class LabelsService {
   }
 
   async deleteLabel(labelRequestIdParams: LabelRequestIdParams) {
-    return await this.prisma.label.delete({
+    return await this.prisma.label.update({
       where: {
         id: labelRequestIdParams.labelId,
+      },
+      data: {
+        deleted: new Date().toISOString(),
       },
     });
   }

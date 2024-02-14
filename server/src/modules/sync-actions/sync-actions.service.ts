@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
+import { SyncAction } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -20,26 +21,45 @@ export default class SyncActionsService {
     action: string,
     modelName: string,
     modelId: string,
+    isDeleted: boolean,
   ) {
-    const syncActionData = await this.prisma.syncAction.upsert({
-      where: {
-        modelId_action: {
+    const workspaceId = await getWorkspaceId(this.prisma, modelName, modelId);
+    const sequenceId = convertLsnToInt(lsn);
+    const actionType = convertToActionType(action);
+
+    let syncActionData: SyncAction;
+
+    if (isDeleted) {
+      syncActionData = await this.prisma.syncAction.create({
+        data: {
+          action: 'D',
           modelId,
-          action: convertToActionType(action),
+          modelName,
+          workspaceId,
+          sequenceId,
         },
-      },
-      update: {
-        sequenceId: convertLsnToInt(lsn),
-        action: convertToActionType(action),
-      },
-      create: {
-        action: convertToActionType(action),
-        modelName,
-        modelId,
-        workspaceId: await getWorkspaceId(this.prisma, modelName, modelId),
-        sequenceId: convertLsnToInt(lsn),
-      },
-    });
+      });
+    } else {
+      syncActionData = await this.prisma.syncAction.upsert({
+        where: {
+          modelId_action: {
+            modelId,
+            action: actionType,
+          },
+        },
+        update: {
+          sequenceId,
+          action: actionType,
+        },
+        create: {
+          action: actionType,
+          modelName,
+          modelId,
+          workspaceId,
+          sequenceId,
+        },
+      });
+    }
 
     const modelData = await getModelData(this.prisma, modelName, modelId);
 
@@ -50,7 +70,7 @@ export default class SyncActionsService {
   }
 
   async getBootstrap(models: string, workspaceId: string) {
-    const syncActions = await this.prisma.syncAction.findMany({
+    let syncActions = await this.prisma.syncAction.findMany({
       where: {
         workspaceId,
         modelName: {
@@ -63,9 +83,19 @@ export default class SyncActionsService {
       distinct: ['modelName', 'workspaceId', 'modelId', 'action'],
     });
 
+    const deleteModelIds = new Set(
+      syncActions
+        .filter((action) => action.action === 'D')
+        .map((action) => action.modelId),
+    );
+
+    syncActions = syncActions.filter(
+      (action) => !deleteModelIds.has(action.modelId),
+    );
+
     return {
       syncActions: await getSyncActionsData(this.prisma, syncActions),
-      lastSequenceId: await await getLastSequenceId(this.prisma, workspaceId),
+      lastSequenceId: await getLastSequenceId(this.prisma, workspaceId),
     };
   }
 

@@ -36,6 +36,9 @@ export class CreateIssueInput {
   @IsNumber()
   sortOrder: number;
 
+  @IsNumber()
+  estimate: number;
+
   @IsOptional()
   @IsNumber()
   subIssueSortOrder?: number;
@@ -45,8 +48,8 @@ export class CreateIssueInput {
   labelIds?: string[];
 
   @IsOptional()
-  @IsArray()
-  assigneeIds?: string[];
+  @IsString()
+  assigneeId?: string;
 
   @IsString()
   stateId: string;
@@ -85,12 +88,16 @@ export class UpdateIssueInput {
   subIssueSortOrder?: number;
 
   @IsOptional()
-  @IsArray()
-  labels?: string[];
+  @IsNumber()
+  estimate: number;
 
   @IsOptional()
   @IsArray()
-  assignees?: string[];
+  labelIds?: string[];
+
+  @IsOptional()
+  @IsString()
+  assigneeId?: string;
 
   @IsOptional()
   @IsString()

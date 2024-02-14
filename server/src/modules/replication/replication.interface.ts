@@ -23,4 +23,5 @@ export const tablesToSendMessagesFor = new Map([
   ['workflow', true],
   ['template', true],
   ['issuecomment', true],
+  ['issuehistory', true],
 ]);

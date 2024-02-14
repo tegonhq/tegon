@@ -68,9 +68,12 @@ export default class TemplatesService {
   }
 
   async deleteTemplate(templateRequestIdParams: TemplateRequestIdParams) {
-    return await this.prisma.template.delete({
+    return await this.prisma.template.update({
       where: {
         id: templateRequestIdParams.templateId,
+      },
+      data: {
+        deleted: new Date().toISOString(),
       },
     });
   }

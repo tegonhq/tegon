@@ -77,6 +77,13 @@ export async function getWorkspaceId(
       });
       return issuecomment.issue.team.workspaceId;
 
+    case 'issuehistory':
+      const issueHistory = await prisma.issueHistory.findUnique({
+        where: { id: modelId },
+        include: { issue: { include: { team: true } } },
+      });
+      return issueHistory.issue.team.workspaceId;
+
     default:
       return undefined;
   }
@@ -111,6 +118,9 @@ export async function getModelData(
 
     case 'issuecomment':
       return await prisma.issueComment.findUnique({ where: { id: modelId } });
+
+    case 'issuehistory':
+      return await prisma.issueHistory.findUnique({ where: { id: modelId } });
     default:
       return undefined;
   }

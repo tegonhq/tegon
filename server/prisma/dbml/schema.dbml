@@ -156,18 +156,20 @@ Table Issue {
   dueDate DateTime
   sortOrder Int [not null]
   subIssueSortOrder Int
+  estimate Int
   team Team [not null]
   teamId String [not null]
   createdBy User [not null]
   createdById String [not null]
   subscriberIds String[] [not null]
-  assigneeIds String[] [not null]
+  assigneeId String
   labelIds String[] [not null]
   stateId String [not null]
   parent Issue
   parentId String
   subIssue Issue [not null]
   comments IssueComment [not null]
+  history IssueHistory [not null]
 
   indexes {
     (teamId, number) [unique]
@@ -209,6 +211,29 @@ Table Emoji {
   id String [pk]
   name String [unique, not null]
   reactions Reaction [not null]
+}
+
+Table IssueHistory {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  userId String [not null]
+  issue Issue [not null]
+  issueId String [not null]
+  addedLabelIds String[] [not null]
+  removedLabelIds String[] [not null]
+  fromPriority Int
+  toPriority Int
+  fromStateId String
+  toStateId String
+  fromEstimate Int
+  toEstimate Int
+  fromAssigneeId String
+  toAssigneeId String
+  fromParentId String
+  toParentId String
+  relationChanges Json[] [not null]
 }
 
 Enum Preference {
@@ -271,3 +296,5 @@ Ref: IssueComment.parentId - IssueComment.id
 Ref: Reaction.commentId > IssueComment.id
 
 Ref: Reaction.emojiId > Emoji.id
+
+Ref: IssueHistory.issueId > Issue.id

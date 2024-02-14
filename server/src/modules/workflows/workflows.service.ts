@@ -60,9 +60,12 @@ export default class WorkflowsService {
   async deleteWorkflow(
     workflowRequestIdBody: WorkflowRequestIdBody,
   ): Promise<Workflow> {
-    return await this.prisma.workflow.delete({
+    return await this.prisma.workflow.update({
       where: {
         id: workflowRequestIdBody.workflowId,
+      },
+      data: {
+        deleted: new Date().toISOString(),
       },
     });
   }

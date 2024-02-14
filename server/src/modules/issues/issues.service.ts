@@ -4,16 +4,22 @@ import { Injectable } from '@nestjs/common';
 import { Issue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
+import IssuesHistoryService from 'modules/issue-history/issue-history.service';
+
 import {
   CreateIssueInput,
   IssueRequestParams,
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
+import { getIssueDiff } from './issues.utils';
 
 @Injectable()
 export default class IssuesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private issueHistoryService: IssuesHistoryService,
+  ) {}
 
   async createIssue(
     teamRequestParams: TeamRequestParams,
@@ -29,7 +35,7 @@ export default class IssuesService {
         })
       )?.number ?? 0;
 
-    return await this.prisma.issue.create({
+    const issue = await this.prisma.issue.create({
       data: {
         ...otherIssueData,
         createdBy: { connect: { id: userId } },
@@ -38,29 +44,51 @@ export default class IssuesService {
         ...(parentId && { parent: { connect: { id: parentId } } }),
       },
     });
+
+    await this.issueHistoryService.upsertIssueHistory(
+      userId,
+      issue.id,
+      await getIssueDiff(issue, null),
+    );
+
+    return issue;
   }
 
   async updateIssue(
+    userId: string,
     teamRequestParams: TeamRequestParams,
     issueData: UpdateIssueInput,
     issueParams: IssueRequestParams,
   ): Promise<Issue> {
-    return await this.prisma.issue.update({
-      where: {
-        id: issueParams.issueId,
-        teamId: teamRequestParams.teamId,
-      },
-      data: {
-        ...issueData,
-      },
-    });
+    const [currentIssue, updatedIssue] = await this.prisma.$transaction([
+      this.prisma.issue.findUnique({
+        where: { id: issueParams.issueId },
+      }),
+      this.prisma.issue.update({
+        where: {
+          id: issueParams.issueId,
+          teamId: teamRequestParams.teamId,
+        },
+        data: {
+          ...issueData,
+        },
+      }),
+    ]);
+
+    await this.issueHistoryService.upsertIssueHistory(
+      userId,
+      updatedIssue.id,
+      await getIssueDiff(updatedIssue, currentIssue),
+    );
+
+    return updatedIssue;
   }
 
   async deleteIssue(
     teamRequestParams: TeamRequestParams,
     issueParams: IssueRequestParams,
   ): Promise<Issue> {
-    return await this.prisma.issue.update({
+    const deleteIssue = await this.prisma.issue.update({
       where: {
         id: issueParams.issueId,
         teamId: teamRequestParams.teamId,
@@ -69,6 +97,9 @@ export default class IssuesService {
         deleted: new Date().toISOString(),
       },
     });
+
+    await this.issueHistoryService.deleteIssueHistory(deleteIssue.id);
+    return deleteIssue;
   }
 
   async deleteIssuePermenant(

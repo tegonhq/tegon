@@ -46,11 +46,14 @@ export class IssuesController {
   @Post(':issueId')
   @UseGuards(new AuthGuard())
   async updateIssue(
+    @SessionDecorator() session: SessionContainer,
     @Param() issueParams: IssueRequestParams,
     @Query() teamParams: TeamRequestParams,
     @Body() issueData: UpdateIssueInput,
   ): Promise<Issue> {
+    const userId = session.getUserId();
     return await this.issuesService.updateIssue(
+      userId,
       teamParams,
       issueData,
       issueParams,
@@ -63,9 +66,6 @@ export class IssuesController {
     @Param() issueParams: IssueRequestParams,
     @Query() teamParams: TeamRequestParams,
   ): Promise<Issue> {
-    return await this.issuesService.deleteIssuePermenant(
-      teamParams,
-      issueParams,
-    );
+    return await this.issuesService.deleteIssue(teamParams, issueParams);
   }
 }

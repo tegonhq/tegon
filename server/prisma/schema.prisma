@@ -191,13 +191,14 @@ model Issue {
   dueDate           DateTime?
   sortOrder         Int
   subIssueSortOrder Int?
+  estimate          Int?
 
   team          Team     @relation(fields: [teamId], references: [id])
   teamId        String
   createdBy     User     @relation(fields: [createdById], references: [id])
   createdById   String
   subscriberIds String[]
-  assigneeIds   String[]
+  assigneeId    String?
   labelIds      String[]
   stateId       String
   parent        Issue?   @relation("Report", fields: [parentId], references: [id])
@@ -205,6 +206,7 @@ model Issue {
   subIssue      Issue[]  @relation("Report")
 
   comments IssueComment[]
+  history  IssueHistory[]
 
   @@unique([teamId, number])
 }
@@ -249,6 +251,31 @@ model Emoji {
   reactions Reaction[]
 
   @@unique([name])
+}
+
+model IssueHistory {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  userId  String
+  issue   Issue  @relation(fields: [issueId], references: [id])
+  issueId String
+
+  addedLabelIds   String[]
+  removedLabelIds   String[]
+  fromPriority    Int?
+  toPriority      Int?
+  fromStateId     String?
+  toStateId       String?
+  fromEstimate    Int?
+  toEstimate      Int?
+  fromAssigneeId  String?
+  toAssigneeId    String?
+  fromParentId    String?
+  toParentId      String?
+  relationChanges Json[]
 }
 
 enum Preference {

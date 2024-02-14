@@ -1,8 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
 import { IssueComment } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
 
 import {
   CommentInput,
@@ -15,7 +15,7 @@ import {
 } from './issue-comments.interface';
 
 @Injectable()
-export default class IssuesService {
+export default class IssueCommentsService {
   constructor(private prisma: PrismaService) {}
 
   async createIssueComment(
@@ -168,7 +168,7 @@ export default class IssuesService {
   }
 }
 
-function isReactionDataTypeArray(obj: any): obj is reactionDataType[] {
+function isReactionDataTypeArray(obj: unknown): obj is reactionDataType[] {
   return (
     Array.isArray(obj) &&
     obj.every(

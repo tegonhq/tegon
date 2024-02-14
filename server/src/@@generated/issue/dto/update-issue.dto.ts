@@ -13,8 +13,9 @@ priority?: number;
 dueDate?: Date;
 sortOrder?: number;
 subIssueSortOrder?: number;
+estimate?: number;
 subscriberIds?: string[];
-assigneeIds?: string[];
+assigneeId?: string;
 labelIds?: string[];
 stateId?: string;
 }

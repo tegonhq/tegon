@@ -117,30 +117,19 @@ export default class ReplicationService {
             change.kind !== 'delete' &&
             tablesToSendMessagesFor.has(change.table.toLocaleLowerCase())
           ) {
-            const { columnvalues } = change;
+            const { columnvalues, columnnames } = change;
+            const deletedIndex = columnnames.indexOf('deleted');
+            let isDeleted = false;
+            if (columnvalues[deletedIndex]) {
+              isDeleted = true;
+            }
             const syncActionData =
               await this.syncActionsService.upsertSyncAction(
                 _lsn,
                 change.kind,
                 change.table,
                 columnvalues[0],
-              );
-
-            this.syncGateway.wss
-              .to(syncActionData.workspaceId)
-              .emit('message', JSON.stringify(syncActionData));
-          } else if (
-            change.schema === 'tegon' &&
-            change.kind === 'delete' &&
-            tablesToSendMessagesFor.has(change.table.toLocaleLowerCase())
-          ) {
-            const modelId = change.oldkeys.keyvalues[0];
-            const syncActionData =
-              await this.syncActionsService.upsertSyncAction(
-                _lsn,
-                change.kind,
-                change.table,
-                modelId,
+                isDeleted,
               );
 
             this.syncGateway.wss
