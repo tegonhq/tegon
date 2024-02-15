@@ -7,7 +7,7 @@ import { io } from 'socket.io-client';
 
 import { saveSocketData } from 'common/database-balancer';
 
-import { useWorkspaceStore } from 'store/workspace';
+import { useWorkspaceStore, workspaceStore } from 'store/workspace';
 
 import { Loader } from '../../components/ui/loader';
 

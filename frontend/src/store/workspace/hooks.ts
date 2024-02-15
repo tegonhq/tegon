@@ -1,15 +1,14 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { useRouter } from 'next/router';
 import * as React from 'react';
 
+import { useCurrentWorkspace } from 'common/hooks/get-workspace';
 import { BootstrapResponse, SyncActionRecord } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
-import { UserContext } from 'store/user_context';
 
-import { workspaceStore } from './store';
+import { initializeWorkspaceStore, workspaceStore } from './store';
 
 export async function saveWorkspaceData(data: BootstrapResponse) {
   await Promise.all(
@@ -31,29 +30,35 @@ export async function saveWorkspaceData(data: BootstrapResponse) {
 }
 
 export function useWorkspaceStore() {
-  const {
-    query: { workspaceSlug },
-  } = useRouter();
-  const userContext = React.useContext(UserContext);
+  const workspace = useCurrentWorkspace();
 
   React.useEffect(() => {
-    if (workspaceStore && !workspaceStore.lastSequenceId) {
+    initStore();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const initStore = async () => {
+    const workspaceData = await tegonDatabase.workspace.get({
+      id: workspace.id,
+    });
+    const lastSequenceData = await tegonDatabase.sequence.get({
+      id: 'workspace',
+    });
+    initializeWorkspaceStore(workspaceData, lastSequenceData?.lastSequenceId);
+
+    if (!lastSequenceData) {
       callBootstrap();
     }
 
-    if (workspaceStore?.lastSequenceId) {
+    if (lastSequenceData?.lastSequenceId) {
       callDeltaSync();
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workspaceSlug, workspaceStore]);
+  };
 
   const callBootstrap = React.useCallback(async () => {
-    const currentWorkspace = userContext.workspaces.find(
-      (workspace) => workspace.slug === workspaceSlug,
-    );
     const response = await fetch(
-      `/api/v1/sync_actions/bootstrap?workspaceId=${currentWorkspace.id}&modelName=Workspace`,
+      `/api/v1/sync_actions/bootstrap?workspaceId=${workspace.id}&modelName=Workspace`,
     );
     const bootstrapData = await response.json();
     await saveWorkspaceData(bootstrapData);
@@ -61,11 +66,8 @@ export function useWorkspaceStore() {
   }, []);
 
   const callDeltaSync = React.useCallback(async () => {
-    const currentWorkspace = userContext.workspaces.find(
-      (workspace) => workspace.slug === workspaceSlug,
-    );
     const response = await fetch(
-      `/api/v1/sync_actions/delta?workspaceId=${currentWorkspace.id}&modelName=Workspace&lastSequenceId=${workspaceStore.lastSequenceId}`,
+      `/api/v1/sync_actions/delta?workspaceId=${workspace.id}&modelName=Workspace&lastSequenceId=${workspaceStore.lastSequenceId}`,
     );
     const deltaSyncData = await response.json();
 

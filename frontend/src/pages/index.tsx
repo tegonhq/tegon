@@ -8,7 +8,7 @@ import { UserDataWrapper } from 'common/wrappers/user-data';
 
 import { Loader } from 'components/ui/loader';
 
-import { UserContext } from 'store/user_context';
+import { UserContext } from 'store/user-context';
 
 export default function Home() {
   const context = React.useContext(UserContext);

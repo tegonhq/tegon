@@ -1,15 +1,11 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import {
-  types,
-  IAnyStateTreeNode,
-  Instance,
-  applySnapshot,
-} from 'mobx-state-tree';
-import { useMemo } from 'react';
+import { types, IAnyStateTreeNode, Instance } from 'mobx-state-tree';
+import { createContext, useContext } from 'react';
 
-import { Workspace, WorkspaceStore, workspaceStore } from 'store/workspace';
+import { LabelStore } from 'store/label';
+import { Workspace, WorkspaceStore } from 'store/workspace';
 
 export interface Global {
   workspace: typeof Workspace;
@@ -18,6 +14,7 @@ export interface Global {
 const GlobalStore: IAnyStateTreeNode = types
   .model('GlobalModel', {
     workspace: types.maybe(WorkspaceStore),
+    labels: types.maybe(LabelStore),
   })
   .views(() => ({}));
 
@@ -25,29 +22,15 @@ export type GlobalStoreType = Instance<typeof WorkspaceStore>;
 
 export let globalStore: GlobalStoreType | undefined;
 
-export function initializeStore(snapshot: Global | undefined) {
-  const _store =
-    globalStore ?? GlobalStore.create({ workspace: workspaceStore });
+const RootStoreContext = createContext<null | GlobalStoreType>(null);
 
-  // If your page has Next.js data fetching methods that use a Mobx store, it will
-  // get hydrated here, check `pages/ssg.tsx` and `pages/ssr.tsx` for more details
-  if (snapshot) {
-    applySnapshot(_store, snapshot);
-  }
-  // For SSG and SSR always create a new store
-  if (typeof window === 'undefined') {
-    return _store;
-  }
-  // Create the store once in the client
-  if (!workspaceStore) {
-    globalStore = _store;
-  }
+export const Provider = RootStoreContext.Provider;
 
-  return workspaceStore;
-}
-
-export function useGlobalStore(initialState: Global | undefined) {
-  const store = useMemo(() => initializeStore(initialState), [initialState]);
+export function useRootStore() {
+  const store = useContext(RootStoreContext);
+  if (store === null) {
+    throw new Error('Store cannot be null, please add a context provider');
+  }
   return store;
 }
 

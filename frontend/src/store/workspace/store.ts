@@ -37,5 +37,28 @@ export const WorkspaceStore: IAnyStateTreeNode = types
 
 export type WorkspaceStoreType = Instance<typeof WorkspaceStore>;
 
-export const workspaceStore: WorkspaceStoreType | undefined =
-  WorkspaceStore.create({ workspace: undefined, lastSequenceId: undefined });
+export function initializeWorkspaceStore(
+  workspace: WorkspaceType,
+  lastSequenceId: number,
+) {
+  const _store =
+    workspaceStore ?? WorkspaceStore.create({ workspace, lastSequenceId });
+
+  // If your page has Next.js data fetching methods that use a Mobx store, it will
+  // get hydrated here, check `pages/ssg.tsx` and `pages/ssr.tsx` for more details
+  // if (snapshot) {
+  //   applySnapshot(_store, snapshot);
+  // }
+  // For SSG and SSR always create a new store
+  if (typeof window === 'undefined') {
+    return _store;
+  }
+  // Create the store once in the client
+  if (!workspaceStore) {
+    workspaceStore = _store;
+  }
+
+  return workspaceStore;
+}
+
+export let workspaceStore: WorkspaceStoreType = WorkspaceStore.create();

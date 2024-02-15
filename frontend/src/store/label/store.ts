@@ -32,7 +32,27 @@ export const LabelStore: IAnyStateTreeNode = types
 
 export type LabelStoreType = Instance<typeof LabelStore>;
 
-export const labelStore: LabelStoreType | undefined = LabelStore.create({
-  labels: [],
-  lastSequenceId: undefined,
-});
+export function initialiseLabelStore(
+  labels: LabelType[],
+  lastSequenceId: number,
+) {
+  const _store = labelStore ?? LabelStore.create({ labels, lastSequenceId });
+
+  // If your page has Next.js data fetching methods that use a Mobx store, it will
+  // get hydrated here, check `pages/ssg.tsx` and `pages/ssr.tsx` for more details
+  // if (snapshot) {
+  //   applySnapshot(_store, snapshot);
+  // }
+  // For SSG and SSR always create a new store
+  if (typeof window === 'undefined') {
+    return _store;
+  }
+  // Create the store once in the client
+  if (!labelStore) {
+    labelStore = _store;
+  }
+
+  return labelStore;
+}
+
+export let labelStore: LabelStoreType = LabelStore.create();

@@ -5,11 +5,11 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 222 47% 11%;
     --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
@@ -27,11 +27,11 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 222 47% 11%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 222 47% 11%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
     --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
@@ -48,52 +48,6 @@
     --ring: 224.3 76.3% 48%;
   }
 }
-
-/* :root {
-  --background: 0 0% 100%;
-  --foreground: 210 24% 5%;
-  --card: 216 33% 100%;
-  --card-foreground: 210 24% 5%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 210 24% 5%;
-  --primary: 212 92% 43%;
-  --primary-foreground: 216 33% 97%;
-  --secondary: 214 15% 96.1%;
-  --secondary-foreground: 210 24% 15%;
-  --muted: 214 15% 96.1%;
-  --muted-foreground: 211 12% 43%;
-  --accent: 214 15% 96.1%;
-  --accent-foreground: 210 24% 15%;
-  --destructive: 360 83% 62%;
-  --destructive-foreground: 216 33% 97%;
-  --border: 214 15% 91%;
-  --input: 214 15% 91%;
-  --ring: 212 92% 43%;
-  --radius: 0.5rem;
-}
-
-.dark {
-  --background: 210 24% 10%;
-  --foreground: 216 33% 97%;
-  --card: 210 24% 10%;
-  --card-foreground: 216 33% 97%;
-  --popover: 210 24% 10%;
-  --popover-foreground: 216 33% 97%;
-  --primary: 208 88% 62%;
-  --primary-foreground: 210 24% 15%;
-  --secondary: 210 24% 20%;
-  --secondary-foreground: 216 33% 97%;
-  --muted: 210 24% 20%;
-  --muted-foreground: 211 13% 65%;
-  --accent: 210 24% 20%;
-  --accent-foreground: 216 33% 97%;
-  --destructive: 354 85% 65%;
-  --destructive-foreground: 216 33% 97%;
-  --border: 210 24% 20%;
-  --input: 210 24% 20%;
-  --ring: 210 83% 53%;
-  --radius: 0.5rem;
-} */
 
 @layer base {
   * {

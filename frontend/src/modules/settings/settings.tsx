@@ -8,7 +8,7 @@ import { SettingsLayout } from 'layouts/settings-layout';
 import {
   SECTION_COMPONENTS_KEYS,
   SECTION_COMPONENTS,
-} from './settings_constants';
+} from './settings-constants';
 
 export function Settings() {
   const router = useRouter();

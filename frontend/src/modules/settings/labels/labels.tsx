@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { observer } from 'mobx-react-lite';
+import * as React from 'react';
 
 import { LabelType } from 'common/types/label';
 
@@ -11,9 +12,11 @@ import { Separator } from 'components/ui/separator';
 import { useLabelStore } from 'store/label';
 
 import { Label } from './label';
+import { NewLabel } from './new-label';
 
 export const Labels = observer(() => {
   const labelStore = useLabelStore();
+  const [showNewLabelCreation, setNewLabelCreation] = React.useState(false);
 
   return (
     <div>
@@ -37,10 +40,22 @@ export const Labels = observer(() => {
           </div>
 
           <div className="flex gap-3">
-            <Button variant="outline"> New group </Button>
-            <Button> New label </Button>
+            <Button
+              disabled={showNewLabelCreation}
+              onClick={() => {
+                setNewLabelCreation(true);
+              }}
+            >
+              New label
+            </Button>
           </div>
         </div>
+
+        {showNewLabelCreation && (
+          <div className="my-3">
+            <NewLabel onCancel={() => setNewLabelCreation(false)} />
+          </div>
+        )}
       </div>
 
       <div>

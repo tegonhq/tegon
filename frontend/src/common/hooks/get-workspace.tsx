@@ -3,7 +3,7 @@
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { UserContext } from 'store/user_context';
+import { UserContext } from 'store/user-context';
 
 export function useCurrentWorkspace() {
   const {
@@ -20,5 +20,5 @@ export function useCurrentWorkspace() {
     [workspaceSlug],
   );
 
-  return { workspace: currentWorkspace };
+  return currentWorkspace;
 }

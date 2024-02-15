@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { useGetUserQuery } from 'services/users/get-user';
 
-import { UserContext } from 'store/user_context';
+import { UserContext } from 'store/user-context';
 
 import { Loader } from '../../components/ui/loader';
 
