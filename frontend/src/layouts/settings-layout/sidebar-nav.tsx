@@ -6,9 +6,10 @@ import {
   RiArrowLeftSLine,
   RiBuilding4Fill,
 } from '@remixicon/react';
-import { cn } from 'lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+
+import { cn } from 'lib/utils';
 
 import { Button, buttonVariants } from 'components/ui/button';
 

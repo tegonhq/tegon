@@ -3,13 +3,14 @@
 import 'styles/globals.css';
 import type { NextComponentType } from 'next';
 
-import { useGetQueryClient } from 'lib/react-query-client';
-import { cn } from 'lib/utils';
 import { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 import { Inter } from 'next/font/google';
 import * as React from 'react';
 import { Hydrate, QueryClientProvider } from 'react-query';
 import { SuperTokensWrapper } from 'supertokens-auth-react';
+
+import { useGetQueryClient } from 'lib/react-query-client';
+import { cn } from 'lib/utils';
 
 import { init } from 'common/init-config';
 

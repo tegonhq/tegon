@@ -1,9 +1,10 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiFocusMode, RiInbox2Fill, RiSettings2Fill } from '@remixicon/react';
-import { cn } from 'lib/utils';
 import * as React from 'react';
 import { SessionAuth } from 'supertokens-auth-react/recipe/session';
+
+import { cn } from 'lib/utils';
 
 import { DataSyncWrapper } from 'common/wrappers/data-sync';
 import { UserDataWrapper } from 'common/wrappers/user-data';

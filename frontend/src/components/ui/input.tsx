@@ -1,7 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { cn } from 'lib/utils';
 import * as React from 'react';
+
+import { cn } from 'lib/utils';
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}

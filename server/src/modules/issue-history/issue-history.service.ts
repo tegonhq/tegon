@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
@@ -19,6 +20,8 @@ export default class IssuesHistoryService {
       where: { issueId },
       orderBy: { createdAt: 'desc' },
     });
+
+    // TODO (harshith): Check this unused var
     const { relationChanges, removedLabelIds, addedLabelIds, ...otherData } =
       issueData;
     if (lastIssueHistory && lastIssueHistory.userId === userId) {
@@ -40,6 +43,7 @@ export default class IssuesHistoryService {
         where: { id: lastIssueHistory.id },
         data: {
           ...Object.fromEntries(
+            // TODO (harshith): Check this unused var
             Object.entries(otherData).filter(([_, value]) => {
               return value !== null;
             }),

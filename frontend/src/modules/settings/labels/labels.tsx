@@ -12,9 +12,9 @@ import { Separator } from 'components/ui/separator';
 
 import { useLabelStore } from 'store/label';
 
+import { EditLabel } from './edit-label';
 import { Label } from './label';
 import { NewLabel } from './new-label';
-import { EditLabel } from './edit-label';
 
 export const Labels = observer(() => {
   const labelStore = useLabelStore();

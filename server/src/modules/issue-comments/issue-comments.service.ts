@@ -40,9 +40,7 @@ export default class IssueCommentsService {
       where: {
         id: issueCommentParams.issueCommentId,
       },
-      data: {
-        ...commentData,
-      },
+      data: commentData,
     });
   }
 
