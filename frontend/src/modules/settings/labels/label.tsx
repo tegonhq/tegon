@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiMoreFill, RiPencilFill } from '@remixicon/react';
+import * as React from 'react';
 
 import { LabelType } from 'common/types/label';
 
@@ -8,9 +9,10 @@ import { Button } from 'components/ui/button';
 
 interface LabelProps {
   label: LabelType;
+  setEditLabelState: (labelId: string) => void;
 }
 
-export function Label({ label }: LabelProps) {
+export function Label({ label, setEditLabelState }: LabelProps) {
   return (
     <div className="border border-slate-200 dark:border-slate-700 group flex justify-between mb-2 text-sm rounded-md bg-slate-100/80 dark:bg-slate-800 p-2 px-4">
       <div className="flex items-center justify-center gap-3">
@@ -26,6 +28,7 @@ export function Label({ label }: LabelProps) {
           <RiPencilFill
             className="text-slate-500 hover:text-black dark:hover:text-white"
             size={16}
+            onClick={() => setEditLabelState(label.id)}
           />
         </Button>
         <Button variant="ghost" size="xs" className="!p-0 !bg-transparent h-4">

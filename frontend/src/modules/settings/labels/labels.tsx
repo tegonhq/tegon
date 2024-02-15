@@ -1,3 +1,4 @@
+/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { observer } from 'mobx-react-lite';
@@ -13,10 +14,13 @@ import { useLabelStore } from 'store/label';
 
 import { Label } from './label';
 import { NewLabel } from './new-label';
+import { EditLabel } from './edit-label';
 
 export const Labels = observer(() => {
   const labelStore = useLabelStore();
   const [showNewLabelCreation, setNewLabelCreation] = React.useState(false);
+  const [editLabelState, setEditLabelState] = React.useState(undefined);
+  const [searchValue, setSearchValue] = React.useState('');
 
   return (
     <div>
@@ -36,7 +40,10 @@ export const Labels = observer(() => {
         </p>
         <div className="flex justify-between">
           <div className="flex">
-            <Input placeholder="Filter by name" />
+            <Input
+              placeholder="Filter by name"
+              onChange={(e) => setSearchValue(e.currentTarget.value)}
+            />
           </div>
 
           <div className="flex gap-3">
@@ -59,9 +66,27 @@ export const Labels = observer(() => {
       </div>
 
       <div>
-        {labelStore.labels.map((label: LabelType) => (
-          <Label key={label.name} label={label} />
-        ))}
+        {labelStore.labels
+          .filter((label: LabelType) => label.name.includes(searchValue))
+          .map((label: LabelType) => {
+            if (editLabelState === label.id) {
+              return (
+                <EditLabel
+                  key={label.name}
+                  label={label}
+                  onCancel={() => setEditLabelState(undefined)}
+                />
+              );
+            }
+
+            return (
+              <Label
+                key={label.name}
+                label={label}
+                setEditLabelState={(labelId) => setEditLabelState(labelId)}
+              />
+            );
+          })}
       </div>
     </div>
   );

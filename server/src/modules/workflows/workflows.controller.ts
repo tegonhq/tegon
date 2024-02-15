@@ -25,7 +25,7 @@ import WorkflowsService from './workflows.service';
 
 @Controller({
   version: '1',
-  path: 'workflows',
+  path: ':teamId/workflows',
 })
 @ApiTags('Workflows')
 export class WorkflowsController {
@@ -33,7 +33,7 @@ export class WorkflowsController {
 
   @Post()
   @UseGuards(new AuthGuard())
-  async createLabel(
+  async createWorkflow(
     @Body() workflowData: CreateWorkflowInput,
   ): Promise<Workflow> {
     return await this.workflowsService.createWorkflow(workflowData);
@@ -42,7 +42,7 @@ export class WorkflowsController {
   @Get()
   @UseGuards(new AuthGuard())
   async getAllWorkflows(
-    @Query() teamId: TeamRequestIdBody,
+    @Param() teamId: TeamRequestIdBody,
   ): Promise<Workflow[]> {
     return await this.workflowsService.getAllWorkflows(teamId);
   }

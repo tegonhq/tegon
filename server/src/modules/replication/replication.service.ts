@@ -138,7 +138,7 @@ export default class ReplicationService {
           }
         });
       } else {
-        console.log('No change data in log');
+        this.logger.log('No change data in log');
       }
     });
   }
