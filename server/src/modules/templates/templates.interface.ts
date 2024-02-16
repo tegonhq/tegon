@@ -1,12 +1,13 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { IsOptional, IsString } from 'class-validator';
+import { TemplateCategory } from '@prisma/client';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class CreateTemplateInput {
   @IsString()
   name: string;
 
-  @IsString()
-  type: string;
+  @IsEnum(TemplateCategory)
+  category: TemplateCategory;
 
   // TODO: Manoj change this when you have finalised the issue thing
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

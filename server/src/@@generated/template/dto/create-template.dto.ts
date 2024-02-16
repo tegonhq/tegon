@@ -1,5 +1,6 @@
 
-import {Prisma} from '@prisma/client'
+import {Prisma,TemplateCategory} from '@prisma/client'
+import {ApiProperty} from '@nestjs/swagger'
 
 
 
@@ -7,6 +8,7 @@ import {Prisma} from '@prisma/client'
 export class CreateTemplateDto {
   deleted?: Date;
 name: string;
-type: string;
+@ApiProperty({ enum: TemplateCategory})
+category: TemplateCategory;
 templateData: Prisma.InputJsonValue;
 }

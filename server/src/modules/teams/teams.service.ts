@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
-import { Team } from '@prisma/client';
+import { Team, UsersOnTeams } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -10,6 +10,7 @@ import {
   WorkspaceRequestParams,
   PreferenceInput,
   CreateTeamInput,
+  TeamMemberInput,
 } from './teams.interface';
 
 @Injectable()
@@ -17,27 +18,20 @@ export default class TeamsService {
   constructor(private prisma: PrismaService) {}
 
   async getAllTeams(
-    workspaceId: WorkspaceRequestParams,
+    workspaceParams: WorkspaceRequestParams,
     userId: string,
   ): Promise<Team[]> {
-    return await this.prisma.team.findMany({
-      where: {
-        userId,
-        workspaceId: workspaceId.workspaceId,
-      },
-      include: {
-        user: true,
-      },
+    const teams = await this.prisma.usersOnTeams.findMany({
+      where: { userId, team: { workspaceId: workspaceParams.workspaceId } },
+      select: { team: true },
     });
+    return teams.map((userOnTeam) => userOnTeam.team);
   }
 
   async getTeam(TeamRequestParams: TeamRequestParams): Promise<Team> {
     return await this.prisma.team.findUnique({
       where: {
         id: TeamRequestParams.teamId,
-      },
-      include: {
-        user: true,
       },
     });
   }
@@ -47,13 +41,15 @@ export default class TeamsService {
     userId: string,
     teamData: CreateTeamInput,
   ): Promise<Team> {
-    return await this.prisma.team.create({
+    const team = await this.prisma.team.create({
       data: {
         workspaceId: WorkspaceRequestParams.workspaceId,
-        userId,
         ...teamData,
       },
     });
+
+    await this.addTeamMember(team.id, userId);
+    return team;
   }
 
   async updateTeam(
@@ -99,6 +95,35 @@ export default class TeamsService {
         teamId: teamRequestParams.teamId,
         preference: preferenceData.preference,
         value: preferenceData.value.toString(),
+      },
+    });
+  }
+
+  async addTeamMember(teamId: string, userId: string): Promise<UsersOnTeams> {
+    return await this.prisma.usersOnTeams.create({
+      data: { teamId: teamId, userId: userId },
+      include: { user: true },
+    });
+  }
+
+  async getTeamMembers(teamRequestParams: TeamRequestParams): Promise<UsersOnTeams[]> { 
+    return await this.prisma.usersOnTeams.findMany({
+      where: { teamId: teamRequestParams.teamId },
+      include: { user: true },
+    });
+  }
+  
+
+  async removeTeamMember(
+    teamRequestParams: TeamRequestParams,
+    teamMemberData: TeamMemberInput,
+  ): Promise<UsersOnTeams> {
+    return await this.prisma.usersOnTeams.delete({
+      where: {
+        userId_teamId: {
+          userId: teamMemberData.userId,
+          teamId: teamRequestParams.teamId,
+        },
       },
     });
   }

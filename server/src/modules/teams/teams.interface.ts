@@ -31,6 +31,10 @@ export class UpdateTeamInput {
 export class TeamRequestParams {
   @IsString()
   teamId: string;
+
+  @IsOptional()
+  @IsString()
+  usersOnTeamId?: string
 }
 
 export class WorkspaceRequestParams {
@@ -44,6 +48,11 @@ export class PreferenceInput {
 
   @IsString()
   value: IssueEstimateValues | Priorities;
+}
+
+export class TeamMemberInput {
+  @IsString()
+  userId: string
 }
 
 enum IssueEstimateValues {

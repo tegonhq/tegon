@@ -14,8 +14,8 @@ Table User {
   anonymousDataCollection Boolean [not null, default: false]
   usersOnWorkspaces UsersOnWorkspaces [not null]
   template Template [not null]
-  team Team [not null]
   createdBy Issue [not null]
+  usersOnTeams UsersOnTeams [not null]
 }
 
 Table Workspace {
@@ -57,13 +57,26 @@ Table Team {
   icon String
   workspace Workspace [not null]
   workspaceId String [not null]
-  user User [not null]
-  userId String [not null]
   issue Issue [not null]
   label Label [not null]
   template Template [not null]
   workflow Workflow [not null]
   teamPreference TeamPreference [not null]
+  usersOnTeam UsersOnTeams [not null]
+}
+
+Table UsersOnTeams {
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  team Team [not null]
+  userId String [not null]
+  teamId String [not null]
+  status Status [not null, default: 'ACTIVE']
+
+  indexes {
+    (userId, teamId) [pk]
+  }
 }
 
 Table Label {
@@ -89,7 +102,7 @@ Table Template {
   updatedAt DateTime [not null]
   deleted DateTime
   name String [not null]
-  type String [not null]
+  category TemplateCategory [not null]
   templateData Json [not null]
   createdBy User [not null]
   createdById String [not null]
@@ -107,7 +120,7 @@ Table Workflow {
   name String [not null]
   position Int [not null]
   color String [not null]
-  type String [not null]
+  category WorkflowCategory [not null]
   team Team
   teamId String [not null]
 }
@@ -257,13 +270,29 @@ Enum ActionType {
   D
 }
 
+Enum WorkflowCategory {
+  BACKLOG
+  UNSTARTED
+  STARTED
+  COMPLETED
+  CANCELED
+}
+
+Enum TemplateCategory {
+  ISSUE
+  PROJECT
+  DOCUMENT
+}
+
 Ref: UsersOnWorkspaces.userId > User.id
 
 Ref: UsersOnWorkspaces.workspaceId > Workspace.id
 
 Ref: Team.workspaceId > Workspace.id
 
-Ref: Team.userId > User.id
+Ref: UsersOnTeams.userId > User.id
+
+Ref: UsersOnTeams.teamId > Team.id
 
 Ref: Label.workspaceId > Workspace.id
 

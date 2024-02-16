@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { WorkflowCategory } from '@prisma/client';
+import { IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class CreateWorkflowInput {
   @IsString()
@@ -11,8 +12,8 @@ export class CreateWorkflowInput {
   @IsString()
   color: string;
 
-  @IsString()
-  type: string;
+  @IsEnum(WorkflowCategory)
+  category: WorkflowCategory;
 
   // TODO(Manoj): Move this to query params
   @IsString()

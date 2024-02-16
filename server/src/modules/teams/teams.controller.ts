@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Team, TeamPreference } from '@prisma/client';
+import { Team, TeamPreference, UsersOnTeams } from '@prisma/client';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -23,6 +23,7 @@ import {
   PreferenceInput,
   WorkspaceRequestParams,
   CreateTeamInput,
+  TeamMemberInput,
 } from './teams.interface';
 import TeamsService from './teams.service';
 
@@ -99,4 +100,42 @@ export class TeamsController {
       preferenceData,
     );
   }
+
+  @Post(':teamId/add_member')
+  @UseGuards(new AuthGuard())
+  async addTeamMember(
+    @Param()
+    teamRequestParams: TeamRequestParams,
+    @Body() teamMemberData: TeamMemberInput,
+  ): Promise<UsersOnTeams> {
+    return await this.teamsService.addTeamMember(
+      teamRequestParams.teamId,
+      teamMemberData.userId,
+    );
+  }
+
+  @Get(':teamId/members')
+  @UseGuards(new AuthGuard())
+  async getTeamMembers(
+    @Param()
+    teamRequestParams: TeamRequestParams,
+  ): Promise<UsersOnTeams[]> {
+    return await this.teamsService.getTeamMembers(
+      teamRequestParams,
+    );
+  }
+
+  @Delete(':teamId/remove_member')
+  @UseGuards(new AuthGuard())
+  async removeTeamMemeber(
+    @Param()
+    teamRequestParams: TeamRequestParams,
+    @Body() teamMemberData: TeamMemberInput,
+  ): Promise<UsersOnTeams> {
+    return await this.teamsService.removeTeamMember(
+      teamRequestParams,
+      teamMemberData
+    );
+  }
+
 }

@@ -1,4 +1,5 @@
 
+import {WorkflowCategory} from '@prisma/client'
 import {Team} from '../../team/entities/team.entity'
 
 
@@ -10,7 +11,7 @@ deleted: Date  | null;
 name: string ;
 position: number ;
 color: string ;
-type: string ;
+category: WorkflowCategory ;
 team?: Team  | null;
 teamId: string  | null;
 }

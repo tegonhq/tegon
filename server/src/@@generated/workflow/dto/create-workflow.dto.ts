@@ -1,5 +1,6 @@
 
-
+import {WorkflowCategory} from '@prisma/client'
+import {ApiProperty} from '@nestjs/swagger'
 
 
 
@@ -9,5 +10,6 @@ export class CreateWorkflowDto {
 name: string;
 position: number;
 color: string;
-type: string;
+@ApiProperty({ enum: WorkflowCategory})
+category: WorkflowCategory;
 }

@@ -1,5 +1,5 @@
 
-import {Prisma} from '@prisma/client'
+import {Prisma,TemplateCategory} from '@prisma/client'
 import {User} from '../../user/entities/user.entity'
 import {Workspace} from '../../workspace/entities/workspace.entity'
 import {Team} from '../../team/entities/team.entity'
@@ -11,7 +11,7 @@ createdAt: Date ;
 updatedAt: Date ;
 deleted: Date  | null;
 name: string ;
-type: string ;
+category: TemplateCategory ;
 templateData: Prisma.JsonValue ;
 createdBy?: User ;
 createdById: string ;

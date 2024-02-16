@@ -39,8 +39,8 @@ model User {
 
   usersOnWorkspaces UsersOnWorkspaces[]
   template          Template[]
-  team              Team[]
   createdBy         Issue[]
+  usersOnTeams      UsersOnTeams[]
 }
 
 model Workspace {
@@ -85,13 +85,25 @@ model Team {
 
   workspace      Workspace        @relation(fields: [workspaceId], references: [id])
   workspaceId    String
-  user           User             @relation(fields: [userId], references: [id])
-  userId         String
   issue          Issue[]
   label          Label[]
   template       Template[]
   workflow       Workflow[]
   teamPreference TeamPreference[]
+  usersOnTeam    UsersOnTeams[]
+}
+
+model UsersOnTeams {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id])
+  userId String
+  teamId String
+  status Status @default(ACTIVE)
+
+  @@id([userId, teamId])
 }
 
 model Label {
@@ -120,7 +132,7 @@ model Template {
   deleted   DateTime?
 
   name         String
-  type         String
+  category     TemplateCategory
   templateData Json
 
   createdBy   User      @relation(fields: [createdById], references: [id])
@@ -140,7 +152,7 @@ model Workflow {
   name     String
   position Int
   color    String
-  type     String
+  category WorkflowCategory
 
   team   Team?  @relation(fields: [teamId], references: [id])
   teamId String
@@ -264,7 +276,7 @@ model IssueHistory {
   issueId String
 
   addedLabelIds   String[]
-  removedLabelIds   String[]
+  removedLabelIds String[]
   fromPriority    Int?
   toPriority      Int?
   fromStateId     String?
@@ -297,4 +309,18 @@ enum ActionType {
   I
   U
   D
+}
+
+enum WorkflowCategory {
+  BACKLOG
+  UNSTARTED
+  STARTED
+  COMPLETED
+  CANCELED
+}
+
+enum TemplateCategory {
+  ISSUE
+  PROJECT
+  DOCUMENT
 }
