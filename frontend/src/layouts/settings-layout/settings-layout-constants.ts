@@ -10,16 +10,8 @@ export const WORKSPACE_LINKS = [
     href: 'labels',
   },
   {
-    title: 'Templates',
-    href: 'templates',
-  },
-  {
     title: 'Members',
     href: 'members',
-  },
-  {
-    title: 'Emojis',
-    href: 'emojis',
   },
   {
     title: 'Integrations',
@@ -39,5 +31,24 @@ export const ACCOUNT_LINKS = [
   {
     title: 'API',
     href: 'api',
+  },
+];
+
+export const TEAM_LINKS = [
+  {
+    title: 'General',
+    href: 'general',
+  },
+  {
+    title: 'Members',
+    href: 'members',
+  },
+  {
+    title: 'Workflow',
+    href: 'workflow',
+  },
+  {
+    title: 'Labels',
+    href: 'labels',
   },
 ];

@@ -65,7 +65,7 @@ export function TeamList({ isCollapsed }: TeamListProps) {
               <div className="w-full justify-start px-3 flex items-center">
                 <RiTeamFill
                   size={18}
-                  className="text-slate-500 dark:text-muted-foreground dark:bg-slate-800 bg-slate-100 p-[2px] rounded-md"
+                  className="text-slate-500 dark:text-muted-foreground p-[2px] rounded-md"
                 />
 
                 <div className="flex justify-start items-center text-sm ml-3">
