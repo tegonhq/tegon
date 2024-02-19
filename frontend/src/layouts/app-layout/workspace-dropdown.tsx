@@ -41,11 +41,11 @@ export const WorkspaceDropdown = observer(
               <Avatar className="h-[20px] w-[25px] ">
                 <AvatarImage />
                 <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-xs rounded-sm">
-                  {getInitials(workspaceStore?.workspace?.name)}
+                  {getInitials(workspaceStore.workspace.name)}
                 </AvatarFallback>
               </Avatar>
               {!isCollapsed && (
-                <div className="ml-2"> {workspaceStore?.workspace?.name}</div>
+                <div className="ml-2"> {workspaceStore.workspace.name}</div>
               )}
             </div>
           </Button>
@@ -54,7 +54,7 @@ export const WorkspaceDropdown = observer(
           <DropdownMenuGroup>
             <DropdownMenuItem
               onClick={() => {
-                replace(`/${query.workspaceSlug}/settings`);
+                replace(`/${query.workspaceSlug}/settings/overview`);
               }}
             >
               Workspace settings

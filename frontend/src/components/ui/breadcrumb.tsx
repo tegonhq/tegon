@@ -3,7 +3,7 @@
 import { RiArrowRightSLine } from '@remixicon/react';
 import * as React from 'react';
 
-import { cn, getValidChildren } from 'lib/utils';
+import { cn, getValidChildren } from 'common/lib/utils';
 
 export interface BreadcrumbProps extends React.ComponentPropsWithoutRef<'nav'> {
   /* The visual separator between each breadcrumb item */

@@ -305,14 +305,6 @@ enum Status {
   SUSPENDED
 }
 
-enum WorkflowSection {
-  BACKLOG
-  UNSTARTED
-  STARTED
-  COMPLETED
-  CANCELED
-}
-
 enum ActionType {
   I
   U

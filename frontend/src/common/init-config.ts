@@ -2,14 +2,7 @@
 
 import SuperTokensReact from 'supertokens-auth-react';
 
-import { frontendConfig } from 'lib/config';
-
-import { tegonDatabase } from 'store/database';
-import {
-  subscribeToLabelChanges,
-  subscribeToSequenceChanges,
-  subscribeToWorkspaceChanges,
-} from 'store/subscribe';
+import { frontendConfig } from 'common/lib/config';
 
 // Init all loosely held configs
 export function init() {
@@ -19,14 +12,4 @@ export function init() {
 
     SuperTokensReact.init(frontendConfig());
   }
-
-  // Once the indexedDB database is ready initiate hooks to keep the mobx-store upto date
-  tegonDatabase.on('ready', () => {
-    // subscribe to workspace changes
-    subscribeToWorkspaceChanges(tegonDatabase);
-    // Subscribe to labels
-    subscribeToLabelChanges(tegonDatabase);
-    // Subscribe to last sequence Id
-    subscribeToSequenceChanges(tegonDatabase);
-  });
 }

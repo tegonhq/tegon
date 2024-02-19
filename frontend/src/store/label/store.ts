@@ -4,7 +4,9 @@ import { IAnyStateTreeNode, Instance, types } from 'mobx-state-tree';
 
 import { LabelType } from 'common/types/label';
 
-import { Label } from './models';
+import { tegonDatabase } from 'store/database';
+
+import { Label, modelName } from './models';
 
 export const LabelStore: IAnyStateTreeNode = types
   .model({
@@ -32,11 +34,25 @@ export const LabelStore: IAnyStateTreeNode = types
 
 export type LabelStoreType = Instance<typeof LabelStore>;
 
-export function initialiseLabelStore(
-  labels: LabelType[],
-  lastSequenceId: number,
-) {
-  const _store = labelStore ?? LabelStore.create({ labels, lastSequenceId });
+export let labelStore: LabelStoreType;
+
+export async function initialiseLabelStore(workspaceId: string) {
+  let _store = labelStore;
+  if (!_store) {
+    const labelsData = await tegonDatabase.label
+      .where({
+        workspaceId,
+      })
+      .toArray();
+    const lastSequenceData = await tegonDatabase.sequence.get({
+      id: modelName,
+    });
+
+    _store = LabelStore.create({
+      labels: labelsData,
+      lastSequenceId: lastSequenceData?.lastSequenceId,
+    });
+  }
 
   // If your page has Next.js data fetching methods that use a Mobx store, it will
   // get hydrated here, check `pages/ssg.tsx` and `pages/ssr.tsx` for more details
@@ -54,5 +70,3 @@ export function initialiseLabelStore(
 
   return labelStore;
 }
-
-export let labelStore: LabelStoreType = LabelStore.create();

@@ -1,11 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-/** Copyright (c) 2023, Poozle, all rights reserved. **/
-
 import { useMutation } from 'react-query';
 
-import { ajaxPost } from 'lib/ajax';
-
+import { ajaxPost } from 'common/lib/ajax';
 import { LabelType } from 'common/types/label';
 
 export interface CreateLabelParams {

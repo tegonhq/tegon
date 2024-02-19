@@ -6,7 +6,7 @@ import { Inter } from 'next/font/google';
 import * as React from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
 
-import { cn } from 'lib/utils';
+import { cn } from 'common/lib/utils';
 
 // Inter as default font
 export const fontSans = Inter({

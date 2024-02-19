@@ -56,7 +56,7 @@ module.exports = {
         pathGroupsExcludedImportTypes: ['builtin'],
         pathGroups: [
           {
-            pattern: '@@generated{/**,}',
+            pattern: '+(lib){/**,}',
             group: 'internal',
           },
           {

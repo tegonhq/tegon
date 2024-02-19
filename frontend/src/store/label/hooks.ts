@@ -6,14 +6,17 @@ import * as React from 'react';
 import { useCurrentWorkspace } from 'common/hooks/get-workspace';
 import { BootstrapResponse, SyncActionRecord } from 'common/types/data-loader';
 
+import { useBootstrapRecords } from 'services/sync/bootstrap-sync';
+import { useDeltaRecords } from 'services/sync/delta-sync';
+
 import { tegonDatabase } from 'store/database';
 
-import { initialiseLabelStore, labelStore } from './store';
+import { modelName } from './models';
+import { labelStore } from './store';
 
 export async function saveLabelData(data: BootstrapResponse) {
   await Promise.all(
     data.syncActions.map(async (record: SyncActionRecord) => {
-      console.log(record);
       switch (record.action) {
         case 'I': {
           return await tegonDatabase.label.put({
@@ -51,13 +54,28 @@ export async function saveLabelData(data: BootstrapResponse) {
   );
 
   await tegonDatabase.sequence.put({
-    id: 'label',
+    id: modelName,
     lastSequenceId: data.lastSequenceId,
   });
 }
 
+function onBootstrapRecords(data: BootstrapResponse) {
+  saveLabelData(data);
+}
+
 export function useLabelStore() {
   const workspace = useCurrentWorkspace();
+  const { refetch: fetchBootstrapRecords } = useBootstrapRecords({
+    modelName,
+    workspaceId: workspace.id,
+    onSuccess: onBootstrapRecords,
+  });
+  const { refetch: fetchDeltaRecords } = useDeltaRecords({
+    modelName,
+    workspaceId: workspace.id,
+    lastSequenceId: labelStore.lastSequenceId,
+    onSuccess: onBootstrapRecords,
+  });
 
   React.useEffect(() => {
     initStore();
@@ -66,42 +84,22 @@ export function useLabelStore() {
   }, []);
 
   const initStore = async () => {
-    const labelsData = await tegonDatabase.label
-      .where({
-        workspaceId: workspace.id,
-      })
-      .toArray();
-    const lastSequenceData = await tegonDatabase.sequence.get({
-      id: 'label',
-    });
-
-    initialiseLabelStore(labelsData, lastSequenceData?.lastSequenceId);
-
-    if (!lastSequenceData) {
+    if (!labelStore.lastSequenceId) {
       callBootstrap();
     }
 
-    if (lastSequenceData?.lastSequenceId) {
+    if (labelStore.lastSequenceId) {
       callDeltaSync();
     }
   };
 
   const callBootstrap = React.useCallback(async () => {
-    const response = await fetch(
-      `/api/v1/sync_actions/bootstrap?workspaceId=${workspace.id}&modelName=Label`,
-    );
-    const bootstrapData = await response.json();
-    await saveLabelData(bootstrapData);
+    fetchBootstrapRecords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const callDeltaSync = React.useCallback(async () => {
-    const response = await fetch(
-      `/api/v1/sync_actions/delta?workspaceId=${workspace.id}&modelName=Label&lastSequenceId=${labelStore.lastSequenceId}`,
-    );
-    const deltaSyncData = await response.json();
-
-    await saveLabelData(deltaSyncData);
+    fetchDeltaRecords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [labelStore?.lastSequenceId]);
 

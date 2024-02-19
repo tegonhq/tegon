@@ -3,7 +3,7 @@
 import { useMutation } from 'react-query';
 import { z } from 'zod';
 
-import { ajaxPost } from 'lib/ajax';
+import { ajaxPost } from 'common/lib/ajax';
 
 export interface SignInParams {
   email: string;

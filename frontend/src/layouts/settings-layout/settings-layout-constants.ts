@@ -36,8 +36,8 @@ export const ACCOUNT_LINKS = [
 
 export const TEAM_LINKS = [
   {
-    title: 'General',
-    href: 'general',
+    title: 'Overview',
+    href: 'overview',
   },
   {
     title: 'Members',

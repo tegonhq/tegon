@@ -9,12 +9,13 @@ import * as React from 'react';
 import { Hydrate, QueryClientProvider } from 'react-query';
 import { SuperTokensWrapper } from 'supertokens-auth-react';
 
-import { useGetQueryClient } from 'lib/react-query-client';
-import { cn } from 'lib/utils';
-
 import { init } from 'common/init-config';
+import { useGetQueryClient } from 'common/lib/react-query-client';
+import { cn } from 'common/lib/utils';
+import { IDBToMSTProvider } from 'common/wrappers/idb-to-mst-provider';
 
 import { ThemeProvider } from 'components/theme-provider';
+import { TooltipProvider } from 'components/ui/tooltip';
 
 // Inter as default font
 export const fontSans = Inter({
@@ -43,18 +44,22 @@ export const MyApp: NextComponentType<
         enableSystem
         disableTransitionOnChange
       >
-        <QueryClientProvider client={queryClientRef.current}>
-          <Hydrate state={dehydratedState}>
-            <div
-              className={cn(
-                'min-h-screen bg-background font-sans antialiased flex',
-                fontSans.variable,
-              )}
-            >
-              {getLayout(<Component {...pageProps} />)}
-            </div>
-          </Hydrate>
-        </QueryClientProvider>
+        <TooltipProvider delayDuration={0}>
+          <IDBToMSTProvider>
+            <QueryClientProvider client={queryClientRef.current}>
+              <Hydrate state={dehydratedState}>
+                <div
+                  className={cn(
+                    'min-h-screen bg-background font-sans antialiased flex',
+                    fontSans.variable,
+                  )}
+                >
+                  {getLayout(<Component {...pageProps} />)}
+                </div>
+              </Hydrate>
+            </QueryClientProvider>
+          </IDBToMSTProvider>
+        </TooltipProvider>
       </ThemeProvider>
     </SuperTokensWrapper>
   );

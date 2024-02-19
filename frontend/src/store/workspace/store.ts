@@ -4,7 +4,9 @@ import { IAnyStateTreeNode, Instance, flow, types } from 'mobx-state-tree';
 
 import { WorkspaceType } from 'common/types/workspace';
 
-import { Workspace } from './models';
+import { tegonDatabase } from 'store/database';
+
+import { Workspace, modelName } from './models';
 
 export const WorkspaceStore: IAnyStateTreeNode = types
   .model({
@@ -37,13 +39,22 @@ export const WorkspaceStore: IAnyStateTreeNode = types
 
 export type WorkspaceStoreType = Instance<typeof WorkspaceStore>;
 
-export function initializeWorkspaceStore(
-  workspace: WorkspaceType,
-  lastSequenceId: number,
-) {
-  const _store =
-    workspaceStore ?? WorkspaceStore.create({ workspace, lastSequenceId });
+export async function initialiseWorkspaceStore(workspaceId: string) {
+  let _store = workspaceStore;
 
+  if (!_store) {
+    const workspace = await tegonDatabase.workspace.get({
+      id: workspaceId,
+    });
+    const lastSequenceData = await tegonDatabase.sequence.get({
+      id: modelName,
+    });
+
+    _store = WorkspaceStore.create({
+      workspace,
+      lastSequenceId: lastSequenceData?.lastSequenceId,
+    });
+  }
   // If your page has Next.js data fetching methods that use a Mobx store, it will
   // get hydrated here, check `pages/ssg.tsx` and `pages/ssr.tsx` for more details
   // if (snapshot) {
@@ -61,4 +72,4 @@ export function initializeWorkspaceStore(
   return workspaceStore;
 }
 
-export let workspaceStore: WorkspaceStoreType = WorkspaceStore.create();
+export let workspaceStore: WorkspaceStoreType;

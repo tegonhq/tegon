@@ -2,7 +2,7 @@
 
 import { UseQueryResult, useQuery } from 'react-query';
 
-import { XHRErrorResponse, ajaxGet } from 'lib/ajax';
+import { XHRErrorResponse, ajaxGet } from 'common/lib/ajax';
 
 import { User } from 'store/user-context';
 

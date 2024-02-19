@@ -14,3 +14,5 @@ export const Label = types.model({
   teamId: types.union(types.null, types.string),
   groupId: types.union(types.null, types.string),
 });
+
+export const modelName = 'Label';

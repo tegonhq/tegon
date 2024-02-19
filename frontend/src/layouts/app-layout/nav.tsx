@@ -4,7 +4,7 @@
 
 import Link from 'next/link';
 
-import { cn } from 'lib/utils';
+import { cn } from 'common/lib/utils';
 
 import { buttonVariants } from 'components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from 'components/ui/tooltip';

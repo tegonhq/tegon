@@ -2,7 +2,7 @@
 
 import { RiEditBoxLine, RiSearch2Line } from '@remixicon/react';
 
-import { cn } from 'lib/utils';
+import { cn } from 'common/lib/utils';
 
 import { Button } from 'components/ui/button';
 import { Separator } from 'components/ui/separator';

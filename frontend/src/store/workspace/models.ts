@@ -9,3 +9,5 @@ export const Workspace = types.model({
   name: types.string,
   slug: types.string,
 });
+
+export const modelName = 'Workspace';

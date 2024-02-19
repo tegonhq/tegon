@@ -57,6 +57,11 @@ module.exports = {
         pathGroupsExcludedImportTypes: ['builtin'],
         pathGroups: [
           {
+            pattern: '+(modules){/**,}',
+            group: 'internal',
+            position: 'after',
+          },
+          {
             pattern: '+(common|wrappers|layouts){/**,}',
             group: 'internal',
             position: 'after',
