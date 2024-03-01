@@ -9,6 +9,8 @@ import { SequenceType } from 'common/types/sequence';
 import { TeamType, WorkflowType } from 'common/types/team';
 import { WorkspaceType } from 'common/types/workspace';
 
+import { MODELS } from './models';
+
 export class TegonDatabase extends Dexie {
   workspace: Dexie.Table<WorkspaceType, string>;
   sequence: Dexie.Table<SequenceType, string>;
@@ -18,20 +20,22 @@ export class TegonDatabase extends Dexie {
 
   constructor() {
     super('TegonDatabase');
+
     this.version(1).stores({
-      workspace: 'id,createdAt,updatedAt,name,slug',
+      [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug',
       sequence: 'id,lastSequenceId',
-      label:
+      [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',
-      team: 'id,createdAt,updatedAt,name,identifier,workspaceId',
-      workflow: 'id,createdAt,updatedAt,name,position,color,category,teamId',
+      [MODELS.Team]: 'id,createdAt,updatedAt,name,identifier,workspaceId',
+      [MODELS.Workflow]:
+        'id,createdAt,updatedAt,name,position,color,category,teamId',
     });
 
-    this.workspace = this.table('workspace');
+    this.workspace = this.table(MODELS.Workspace);
     this.sequence = this.table('sequence');
-    this.label = this.table('label');
-    this.team = this.table('team');
-    this.workflow = this.table('workflow');
+    this.label = this.table(MODELS.Label);
+    this.team = this.table(MODELS.Team);
+    this.workflow = this.table(MODELS.Workflow);
   }
 }
 

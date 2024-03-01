@@ -4,15 +4,10 @@ import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { useCurrentWorkspace } from 'common/hooks/get-workspace';
-
 import { Loader } from 'components/ui/loader';
 
 import { tegonDatabase } from 'store/database';
-import { initialiseLabelStore } from 'store/label';
-import { initialiseTeamStore } from 'store/team';
 import { initializeWorkflowStore } from 'store/workflow';
-import { initialiseWorkspaceStore } from 'store/workspace';
 
 export const TeamStoreProvider = observer(
   ({ children }: { children: React.ReactNode }) => {

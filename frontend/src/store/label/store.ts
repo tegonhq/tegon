@@ -14,7 +14,7 @@ export const LabelStore: IAnyStateTreeNode = types
     lastSequenceId: types.union(types.undefined, types.number),
   })
   .actions((self) => ({
-    updateStore(label: LabelType, id: string) {
+    update(label: LabelType, id: string) {
       const indexToUpdate = self.labels.findIndex((obj) => obj.id === id);
 
       if (indexToUpdate !== -1) {
@@ -25,6 +25,13 @@ export const LabelStore: IAnyStateTreeNode = types
         };
       } else {
         self.labels.push(label);
+      }
+    },
+    delete(id: string) {
+      const indexToDelete = self.labels.findIndex((obj) => obj.id === id);
+
+      if (indexToDelete !== -1) {
+        self.labels.splice(indexToDelete, 1);
       }
     },
     updateLastSequenceId(lastSequenceId: number) {

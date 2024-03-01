@@ -10,16 +10,18 @@ import { TeamType } from 'common/types/team';
 import { useTeamStore } from 'store/team';
 
 export function useCurrentTeam(): TeamType | undefined {
-  const { query } = useRouter();
+  const {
+    query: { teamIdentifier },
+  } = useRouter();
   const teamStore = useTeamStore();
 
   const getTeam = () => {
-    if (!query.teamIdentifier) {
+    if (!teamIdentifier) {
       return undefined;
     }
 
     const team = teamStore.teams.find((team: TeamType) => {
-      return team.identifier === query.teamIdentifier;
+      return team.identifier === teamIdentifier;
     });
 
     return team;
@@ -27,7 +29,7 @@ export function useCurrentTeam(): TeamType | undefined {
 
   const team = React.useMemo(
     () => computed(() => getTeam()),
-    [query.teamIdentifier, teamStore],
+    [teamIdentifier, teamStore],
   ).get();
 
   return team;

@@ -17,14 +17,31 @@ import { teamStore } from './store';
 export async function saveTeamData(data: BootstrapResponse) {
   await Promise.all(
     data.syncActions.map(async (record: SyncActionRecord) => {
-      return await tegonDatabase.team.put({
+      const team = {
         id: record.data.id,
         createdAt: record.data.createdAt,
         updatedAt: record.data.updatedAt,
         name: record.data.name,
         identifier: record.data.identifier,
         workspaceId: record.data.workspaceId,
-      });
+      };
+
+      switch (record.action) {
+        case 'I': {
+          await tegonDatabase.team.put(team);
+          return await teamStore.update(team, record.data.id);
+        }
+
+        case 'U': {
+          await tegonDatabase.team.put(team);
+          return await teamStore.update(team, record.data.id);
+        }
+
+        case 'D': {
+          await tegonDatabase.team.delete(record.data.id);
+          return await teamStore.delete(record.data.id);
+        }
+      }
     }),
   );
 

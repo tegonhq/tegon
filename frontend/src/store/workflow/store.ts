@@ -14,7 +14,7 @@ export const WorkflowStore: IAnyStateTreeNode = types
     lastSequenceId: types.union(types.undefined, types.number),
   })
   .actions((self) => ({
-    updateStore(team: WorkflowType, id: string) {
+    update(team: WorkflowType, id: string) {
       const indexToUpdate = self.workflows.findIndex((obj) => obj.id === id);
 
       if (indexToUpdate !== -1) {
@@ -27,7 +27,13 @@ export const WorkflowStore: IAnyStateTreeNode = types
         self.workflows.push(team);
       }
     },
+    delete(id: string) {
+      const indexToDelete = self.workflows.findIndex((obj) => obj.id === id);
 
+      if (indexToDelete !== -1) {
+        self.workflows.splice(indexToDelete, 1);
+      }
+    },
     updateLastSequenceId(lastSequenceId: number) {
       self.lastSequenceId = lastSequenceId;
     },

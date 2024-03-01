@@ -1,12 +1,27 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+
+import { WorkflowCategoryEnum, WorkflowType } from 'common/types/team';
+
 import { Separator } from 'components/ui/separator';
 
 import { useWorkflowStore } from 'store/workflow';
 
-export function Workflow() {
+import { WorkflowCategory } from './workflow-category';
+
+export const Workflow = observer(() => {
   const workflowStore = useWorkflowStore();
-  console.log(workflowStore.workflows.toJSON());
+
+  const getWorkflows = React.useCallback(
+    (categoryName: string) => {
+      return workflowStore.workflows.filter(
+        (workflow: WorkflowType) => workflow.category === categoryName,
+      );
+    },
+    [workflowStore.workflows],
+  );
 
   return (
     <div>
@@ -26,6 +41,29 @@ export function Workflow() {
           available workflow statuses.
         </p>
       </div>
+
+      <div className="mt-4 flex flex-col">
+        <WorkflowCategory
+          categoryName={WorkflowCategoryEnum.BACKLOG}
+          workflows={getWorkflows(WorkflowCategoryEnum.BACKLOG)}
+        />
+        <WorkflowCategory
+          categoryName={WorkflowCategoryEnum.UNSTARTED}
+          workflows={getWorkflows(WorkflowCategoryEnum.UNSTARTED)}
+        />
+        <WorkflowCategory
+          categoryName={WorkflowCategoryEnum.STARTED}
+          workflows={getWorkflows(WorkflowCategoryEnum.STARTED)}
+        />
+        <WorkflowCategory
+          categoryName={WorkflowCategoryEnum.COMPLETED}
+          workflows={getWorkflows(WorkflowCategoryEnum.COMPLETED)}
+        />
+        <WorkflowCategory
+          categoryName={WorkflowCategoryEnum.CANCELED}
+          workflows={getWorkflows(WorkflowCategoryEnum.CANCELED)}
+        />
+      </div>
     </div>
   );
-}
+});

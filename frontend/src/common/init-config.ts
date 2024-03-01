@@ -4,8 +4,7 @@ import SuperTokensReact from 'supertokens-auth-react';
 
 import { frontendConfig } from 'common/lib/config';
 
-// Init all loosely held configs
-export function init() {
+export function initSuperTokens() {
   // Initialise Supertokens
   if (typeof window !== 'undefined') {
     // we only want to call this init function on the frontend, so we check typeof window !== 'undefined'

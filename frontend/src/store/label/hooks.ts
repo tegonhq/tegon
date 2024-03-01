@@ -17,37 +17,32 @@ import { labelStore } from './store';
 export async function saveLabelData(data: BootstrapResponse) {
   await Promise.all(
     data.syncActions.map(async (record: SyncActionRecord) => {
+      const label = {
+        id: record.data.id,
+        createdAt: record.data.createdAt,
+        updatedAt: record.data.updatedAt,
+        name: record.data.name,
+        color: record.data.color,
+        description: record.data.description,
+        workspaceId: record.data.workspaceId,
+        teamId: record.data.teamId,
+        groupId: record.data.groupId,
+      };
+
       switch (record.action) {
         case 'I': {
-          return await tegonDatabase.label.put({
-            id: record.data.id,
-            createdAt: record.data.createdAt,
-            updatedAt: record.data.updatedAt,
-            name: record.data.name,
-            color: record.data.color,
-            description: record.data.description,
-            workspaceId: record.data.workspaceId,
-            teamId: record.data.teamId,
-            groupId: record.data.groupId,
-          });
+          await tegonDatabase.label.put(label);
+          return await labelStore.update(label, record.data.id);
         }
 
         case 'U': {
-          return await tegonDatabase.label.put({
-            id: record.data.id,
-            createdAt: record.data.createdAt,
-            updatedAt: record.data.updatedAt,
-            name: record.data.name,
-            color: record.data.color,
-            description: record.data.description,
-            workspaceId: record.data.workspaceId,
-            teamId: record.data.teamId,
-            groupId: record.data.groupId,
-          });
+          await tegonDatabase.label.put(label);
+          return await labelStore.update(label, record.data.id);
         }
 
         case 'D': {
-          return await tegonDatabase.label.delete(record.data.id);
+          await tegonDatabase.label.delete(record.data.id);
+          return await labelStore.delete(record.data.id);
         }
       }
     }),

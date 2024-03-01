@@ -27,6 +27,7 @@ export const WorkspaceStoreProvider = observer(
     // All data related to workspace
     const initWorkspaceBasedStores = React.useCallback(async () => {
       setLoading(true);
+
       await initialiseWorkspaceStore(currentWorkspace.id);
       await initialiseLabelStore(currentWorkspace.id);
       await initialiseTeamStore(currentWorkspace.id);
@@ -35,7 +36,7 @@ export const WorkspaceStoreProvider = observer(
     }, [currentWorkspace.id]);
 
     if (loading) {
-      return <Loader />;
+      return <Loader text="Loading workspace" />;
     }
 
     return <>{children}</>;

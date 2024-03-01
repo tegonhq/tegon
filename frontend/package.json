@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "dexie": "^3.2.4",
+    "dexie-observable": "^4.0.1-beta.13",
     "http-proxy": "^1.18.1",
     "lucide-react": "^0.316.0",
     "mobx": "^6.12.0",

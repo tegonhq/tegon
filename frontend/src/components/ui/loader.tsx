@@ -26,15 +26,21 @@ export interface LoaderProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof loaderVariants> {
   height?: number;
+  text?: string;
 }
 
 const Loader = React.forwardRef<HTMLButtonElement, LoaderProps>(
-  ({ height = 300, size }) => {
+  ({ height = 300, size, text }) => {
     return (
       <div
-        className={cn(loaderVariants({ size }), `h-[${height}px]`, 'w-full')}
+        className={cn(
+          loaderVariants({ size }),
+          `h-[${height}px]`,
+          'w-full flex flex-col',
+        )}
       >
         <RiLoader4Line className="animate-spin mr-2" />
+        {text && <p className="text-sm text-muted-foreground mt-2">{text}</p>}
       </div>
     );
   },

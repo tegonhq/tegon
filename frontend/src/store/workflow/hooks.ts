@@ -17,16 +17,34 @@ import { workflowStore } from './store';
 export async function saveWorkflowData(data: BootstrapResponse) {
   await Promise.all(
     data.syncActions.map(async (record: SyncActionRecord) => {
-      return await tegonDatabase.workflow.put({
+      const workflow = {
         id: record.data.id,
         createdAt: record.data.createdAt,
         updatedAt: record.data.updatedAt,
         name: record.data.name,
         position: record.data.position,
-        teamId: record.data.teamId,
+        workflowId: record.data.teamId,
         color: record.data.color,
         category: record.data.category,
-      });
+        teamId: record.data.teamId,
+      };
+
+      switch (record.action) {
+        case 'I': {
+          await tegonDatabase.workflow.put(workflow);
+          return await workflowStore.update(workflow, record.data.id);
+        }
+
+        case 'U': {
+          await tegonDatabase.workflow.put(workflow);
+          return await workflowStore.update(workflow, record.data.id);
+        }
+
+        case 'D': {
+          await tegonDatabase.workflow.delete(record.data.id);
+          return await workflowStore.delete(record.data.id);
+        }
+      }
     }),
   );
 
@@ -51,7 +69,7 @@ export function useWorkflowStore() {
   const { refetch: syncWorkflowRecords } = useDeltaRecords({
     modelName,
     workspaceId: workspace.id,
-    lastSequenceId: workflowStore.lastSequenceId,
+    lastSequenceId: workflowStore?.lastSequenceId,
     onSuccess: onBootstrapRecords,
   });
 

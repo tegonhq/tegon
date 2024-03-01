@@ -14,24 +14,9 @@ export const WorkspaceStore: IAnyStateTreeNode = types
     lastSequenceId: types.union(types.undefined, types.number),
   })
   .actions((self) => ({
-    updateWorkspace(workspace: WorkspaceType) {
+    update(workspace: WorkspaceType) {
       self.workspace = workspace;
     },
-    updateWorkspaceAPI: flow(function* (workspaceId, workspaceName) {
-      try {
-        yield fetch(`/api/v1/workspaces/${workspaceId}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: workspaceName,
-          }),
-        });
-      } catch (error) {
-        console.error('Error updating user:', error);
-      }
-    }),
     updateLastSequenceId(lastSequenceId: number) {
       self.lastSequenceId = lastSequenceId;
     },

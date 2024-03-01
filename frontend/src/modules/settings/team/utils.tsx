@@ -11,7 +11,6 @@ import { useTeamStore } from 'store/team';
 export function useTeam(): TeamType | undefined {
   const { query } = useRouter();
   const teamStore = useTeamStore();
-  console.log(teamStore);
 
   const getTeam = () => {
     if (!query.teamIdentifier) {
@@ -25,6 +24,5 @@ export function useTeam(): TeamType | undefined {
 
   const team = React.useMemo(() => getTeam(), [query.teamIdentifier]);
 
-  console.log(team);
   return team;
 }

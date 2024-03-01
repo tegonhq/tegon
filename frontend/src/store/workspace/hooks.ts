@@ -17,13 +17,18 @@ import { workspaceStore } from './store';
 export async function saveWorkspaceData(data: BootstrapResponse) {
   await Promise.all(
     data.syncActions.map(async (record: SyncActionRecord) => {
-      return await tegonDatabase.workspace.put({
+      const workspace = {
         id: record.data.id,
         createdAt: record.data.createdAt,
         updatedAt: record.data.updatedAt,
         name: record.data.name,
         slug: record.data.slug,
-      });
+      };
+
+      await tegonDatabase.workspace.put(workspace);
+
+      // Update the store
+      return await workspaceStore.update(workspace);
     }),
   );
 
@@ -47,7 +52,7 @@ export function useWorkspaceStore() {
   const { refetch: fetchDeltaRecords } = useDeltaRecords({
     modelName,
     workspaceId: workspace.id,
-    lastSequenceId: workspaceStore.lastSequenceId,
+    lastSequenceId: workspaceStore?.lastSequenceId,
     onSuccess: onBootstrapRecords,
   });
 

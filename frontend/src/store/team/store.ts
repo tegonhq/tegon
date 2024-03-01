@@ -14,7 +14,7 @@ export const TeamStore: IAnyStateTreeNode = types
     lastSequenceId: types.union(types.undefined, types.number),
   })
   .actions((self) => ({
-    updateStore(team: TeamType, id: string) {
+    update(team: TeamType, id: string) {
       const indexToUpdate = self.teams.findIndex((obj) => obj.id === id);
 
       if (indexToUpdate !== -1) {
@@ -25,6 +25,13 @@ export const TeamStore: IAnyStateTreeNode = types
         };
       } else {
         self.teams.push(team);
+      }
+    },
+    delete(id: string) {
+      const indexToDelete = self.teams.findIndex((obj) => obj.id === id);
+
+      if (indexToDelete !== -1) {
+        self.teams.splice(indexToDelete, 1);
       }
     },
     updateLastSequenceId(lastSequenceId: number) {
@@ -49,7 +56,7 @@ export async function initialiseTeamStore(workspaceId: string) {
     });
     _store = TeamStore.create({
       teams,
-      lastSequenceId: lastSequenceData.lastSequenceId,
+      lastSequenceId: lastSequenceData?.lastSequenceId,
     });
   }
   // If your page has Next.js data fetching methods that use a Mobx store, it will
