@@ -3,6 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { Issue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+import OpenAI from 'openai';
 
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 
@@ -12,7 +13,12 @@ import {
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
-import { getIssueDiff } from './issues.utils';
+import { getIssueDiff, getIssueTitle } from './issues.utils';
+
+
+const openaiClient = new OpenAI({
+    apiKey: process.env['OPENAI_API_KEY'],
+  });
 
 @Injectable()
 export default class IssuesService {
@@ -35,8 +41,11 @@ export default class IssuesService {
         })
       )?.number ?? 0;
 
+    const issueTitle = await getIssueTitle(openaiClient, otherIssueData.description)
+
     const issue = await this.prisma.issue.create({
       data: {
+        title: issueTitle,
         ...otherIssueData,
         createdBy: { connect: { id: userId } },
         team: { connect: { id: teamRequestParams.teamId } },
