@@ -3,6 +3,8 @@
 import { Issue } from '@prisma/client';
 
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
+import OpenAI from 'openai';
+import { titlePrompt } from './issues.interface';
 
 export async function getIssueDiff(
   newIssueData: Issue,
@@ -58,4 +60,19 @@ function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
 
 function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+export async function getIssueTitle(
+  openaiClient: OpenAI,
+  description: string,
+): Promise<string> {
+  const chatCompletion: OpenAI.Chat.ChatCompletion =
+    await openaiClient.chat.completions.create({
+      messages: [
+        { role: 'system', content: titlePrompt },
+        { role: 'user', content: description },
+      ],
+      model: 'gpt-3.5-turbo',
+    });
+  return chatCompletion.choices[0].message.content;
 }
