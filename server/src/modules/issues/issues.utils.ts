@@ -1,9 +1,10 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Issue } from '@prisma/client';
+import OpenAI from 'openai';
 
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
-import OpenAI from 'openai';
+
 import { titlePrompt } from './issues.interface';
 
 export async function getIssueDiff(

@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Team, TeamPreference, UsersOnTeams } from '@prisma/client';
+import { Team, TeamPreference, UsersOnWorkspaces } from '@prisma/client';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -34,16 +34,6 @@ import TeamsService from './teams.service';
 @ApiTags('Teams')
 export class TeamsController {
   constructor(private teamsService: TeamsService) {}
-
-  @Get()
-  @UseGuards(new AuthGuard())
-  async getAllTeams(
-    @SessionDecorator() session: SessionContainer,
-    @Query() workspaceId: WorkspaceRequestParams,
-  ): Promise<Team[]> {
-    const userId = session.getUserId();
-    return await this.teamsService.getAllTeams(workspaceId, userId);
-  }
 
   @Get(':teamId')
   @UseGuards(new AuthGuard())
@@ -104,12 +94,13 @@ export class TeamsController {
   @Post(':teamId/add_member')
   @UseGuards(new AuthGuard())
   async addTeamMember(
-    @Param()
-    teamRequestParams: TeamRequestParams,
+    @Param() teamRequestParams: TeamRequestParams,
+    @Query() workspaceRequestParams: WorkspaceRequestParams,
     @Body() teamMemberData: TeamMemberInput,
-  ): Promise<UsersOnTeams> {
+  ): Promise<UsersOnWorkspaces> {
     return await this.teamsService.addTeamMember(
       teamRequestParams.teamId,
+      workspaceRequestParams.workspaceId,
       teamMemberData.userId,
     );
   }
@@ -119,10 +110,8 @@ export class TeamsController {
   async getTeamMembers(
     @Param()
     teamRequestParams: TeamRequestParams,
-  ): Promise<UsersOnTeams[]> {
-    return await this.teamsService.getTeamMembers(
-      teamRequestParams,
-    );
+  ): Promise<UsersOnWorkspaces[]> {
+    return await this.teamsService.getTeamMembers(teamRequestParams);
   }
 
   @Delete(':teamId/remove_member')
@@ -130,12 +119,13 @@ export class TeamsController {
   async removeTeamMemeber(
     @Param()
     teamRequestParams: TeamRequestParams,
+    @Query() workspaceRequestParams: WorkspaceRequestParams,
     @Body() teamMemberData: TeamMemberInput,
-  ): Promise<UsersOnTeams> {
+  ): Promise<UsersOnWorkspaces> {
     return await this.teamsService.removeTeamMember(
       teamRequestParams,
-      teamMemberData
+      workspaceRequestParams,
+      teamMemberData,
     );
   }
-
 }

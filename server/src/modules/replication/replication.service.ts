@@ -123,12 +123,16 @@ export default class ReplicationService {
             if (columnvalues[deletedIndex]) {
               isDeleted = true;
             }
+            let index = 0;
+            if (columnnames[index] !== 'id') {
+              index = columnnames.indexOf('id');
+            }
             const syncActionData =
               await this.syncActionsService.upsertSyncAction(
                 _lsn,
                 change.kind,
                 change.table,
-                columnvalues[0],
+                columnvalues[index],
                 isDeleted,
               );
 

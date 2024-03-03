@@ -15,10 +15,9 @@ import {
 } from './issues.interface';
 import { getIssueDiff, getIssueTitle } from './issues.utils';
 
-
 const openaiClient = new OpenAI({
-    apiKey: process.env['OPENAI_API_KEY'],
-  });
+  apiKey: process.env['OPENAI_API_KEY'],
+});
 
 @Injectable()
 export default class IssuesService {
@@ -41,7 +40,10 @@ export default class IssuesService {
         })
       )?.number ?? 0;
 
-    const issueTitle = await getIssueTitle(openaiClient, otherIssueData.description)
+    const issueTitle = await getIssueTitle(
+      openaiClient,
+      otherIssueData.description,
+    );
 
     const issue = await this.prisma.issue.create({
       data: {
