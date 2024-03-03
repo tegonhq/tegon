@@ -1,10 +1,9 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { User } from '@@generated/user/entities';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SessionContainer } from 'supertokens-node/recipe/session';
-
-import { User } from '@@generated/user/entities';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';

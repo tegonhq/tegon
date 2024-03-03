@@ -40,7 +40,6 @@ model User {
   usersOnWorkspaces UsersOnWorkspaces[]
   template          Template[]
   createdBy         Issue[]
-  usersOnTeams      UsersOnTeams[]
 }
 
 model Workspace {
@@ -61,6 +60,7 @@ model Workspace {
 }
 
 model UsersOnWorkspaces {
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -68,9 +68,10 @@ model UsersOnWorkspaces {
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   userId      String
   workspaceId String
+  teamIds     String[]
   status      Status    @default(ACTIVE)
 
-  @@id([userId, workspaceId])
+  @@unique([userId, workspaceId])
 }
 
 model Team {
@@ -90,20 +91,6 @@ model Team {
   template       Template[]
   workflow       Workflow[]
   teamPreference TeamPreference[]
-  usersOnTeam    UsersOnTeams[]
-}
-
-model UsersOnTeams {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user   User   @relation(fields: [userId], references: [id])
-  team   Team   @relation(fields: [teamId], references: [id])
-  userId String
-  teamId String
-  status Status @default(ACTIVE)
-
-  @@id([userId, teamId])
 }
 
 model Label {

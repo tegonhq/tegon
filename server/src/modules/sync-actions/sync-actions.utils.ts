@@ -31,6 +31,12 @@ export async function getWorkspaceId(
     case 'workspace':
       return modelId;
 
+    case 'usersonworkspaces':
+      const usersOnWorkspace = await prisma.usersOnWorkspaces.findUnique({
+        where: { id: modelId },
+      });
+      return usersOnWorkspace.workspaceId;
+
     case 'team':
       const team = await prisma.team.findUnique({
         where: { id: modelId },
@@ -97,6 +103,11 @@ export async function getModelData(
   switch (modelName.toLocaleLowerCase()) {
     case 'workspace':
       return await prisma.workspace.findUnique({ where: { id: modelId } });
+
+    case 'usersonworkspaces':
+      return await prisma.usersOnWorkspaces.findUnique({
+        where: { id: modelId },
+      });
 
     case 'team':
       return await prisma.team.findUnique({ where: { id: modelId } });
