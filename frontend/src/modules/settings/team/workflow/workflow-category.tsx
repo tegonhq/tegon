@@ -16,7 +16,7 @@ export function WorkflowCategory({
 }: WorkspaceCategory) {
   return (
     <div className="flex flex-col mt-6">
-      <div className="flex justify-between items-center w-full mb-4">
+      <div className="flex justify-between items-center w-full mb-2">
         <h3 className="text-sm text-muted-foreground capitalize">
           {capitalizeFirstLetter(categoryName)}
         </h3>

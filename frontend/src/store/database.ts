@@ -4,6 +4,7 @@
 
 import Dexie from 'dexie';
 
+import { IssueType } from 'common/types/issue';
 import { LabelType } from 'common/types/label';
 import { SequenceType } from 'common/types/sequence';
 import { TeamType, WorkflowType } from 'common/types/team';
@@ -12,11 +13,12 @@ import { WorkspaceType } from 'common/types/workspace';
 import { MODELS } from './models';
 
 export class TegonDatabase extends Dexie {
-  workspace: Dexie.Table<WorkspaceType, string>;
-  sequence: Dexie.Table<SequenceType, string>;
-  label: Dexie.Table<LabelType, string>;
-  team: Dexie.Table<TeamType, string>;
-  workflow: Dexie.Table<WorkflowType, string>;
+  workspaces: Dexie.Table<WorkspaceType, string>;
+  sequences: Dexie.Table<SequenceType, string>;
+  labels: Dexie.Table<LabelType, string>;
+  teams: Dexie.Table<TeamType, string>;
+  workflows: Dexie.Table<WorkflowType, string>;
+  issues: Dexie.Table<IssueType, string>;
 
   constructor() {
     super('TegonDatabase');
@@ -29,13 +31,16 @@ export class TegonDatabase extends Dexie {
       [MODELS.Team]: 'id,createdAt,updatedAt,name,identifier,workspaceId',
       [MODELS.Workflow]:
         'id,createdAt,updatedAt,name,position,color,category,teamId',
+      [MODELS.Issue]:
+        'id,createdAt,updatedAt,title,number,description,priority,dueDate,sortOrder,estimate,teamId,createdById,assigneeId,labelIds,parentId,stateId',
     });
 
-    this.workspace = this.table(MODELS.Workspace);
-    this.sequence = this.table('sequence');
-    this.label = this.table(MODELS.Label);
-    this.team = this.table(MODELS.Team);
-    this.workflow = this.table(MODELS.Workflow);
+    this.workspaces = this.table(MODELS.Workspace);
+    this.sequences = this.table('sequence');
+    this.labels = this.table(MODELS.Label);
+    this.teams = this.table(MODELS.Team);
+    this.workflows = this.table(MODELS.Workflow);
+    this.issues = this.table(MODELS.Issue);
   }
 }
 

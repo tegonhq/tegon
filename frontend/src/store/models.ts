@@ -7,4 +7,5 @@ export enum MODELS {
 
   // Team
   Workflow = 'Workflow',
+  Issue = 'Issue',
 }

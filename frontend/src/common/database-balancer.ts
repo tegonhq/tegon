@@ -1,9 +1,10 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { saveLabelData } from 'store/label';
+import { saveIssuesData } from 'store/issues';
+import { saveLabelData } from 'store/labels';
 import { MODELS } from 'store/models';
-import { saveTeamData } from 'store/team';
-import { saveWorkflowData } from 'store/workflow';
+import { saveTeamData } from 'store/teams';
+import { saveWorkflowData } from 'store/workflows';
 import { saveWorkspaceData } from 'store/workspace';
 
 import { SyncActionRecord } from './types/data-loader';
@@ -36,6 +37,13 @@ export async function saveSocketData(data: SyncActionRecord[]) {
 
         case MODELS.Workspace: {
           return await saveWorkspaceData({
+            syncActions: [record],
+            lastSequenceId: record.sequenceId,
+          });
+        }
+
+        case MODELS.Issue: {
+          return await saveIssuesData({
             syncActions: [record],
             lastSequenceId: record.sequenceId,
           });

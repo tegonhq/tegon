@@ -51,12 +51,15 @@ export async function initializeWorkflowStore(teamId: string) {
   let _store = workflowStore;
 
   if (!workflowStore) {
-    const workflows = await tegonDatabase.workflow
-      .where({
-        teamId,
-      })
-      .toArray();
-    const lastSequenceData = await tegonDatabase.sequence.get({
+    const workflows = teamId
+      ? await tegonDatabase.workflows
+          .where({
+            teamId,
+          })
+          .toArray()
+      : [];
+
+    const lastSequenceData = await tegonDatabase.sequences.get({
       id: modelName,
     });
 

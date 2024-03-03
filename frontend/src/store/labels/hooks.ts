@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 
-import { useCurrentWorkspace } from 'common/hooks/get-workspace';
+import { useCurrentWorkspace } from 'common/hooks/use-current-workspace';
 import { BootstrapResponse, SyncActionRecord } from 'common/types/data-loader';
 
 import { useBootstrapRecords } from 'services/sync/bootstrap-sync';
@@ -12,64 +12,63 @@ import { useDeltaRecords } from 'services/sync/delta-sync';
 import { tegonDatabase } from 'store/database';
 
 import { modelName } from './models';
-import { workflowStore } from './store';
+import { labelStore } from './store';
 
-export async function saveWorkflowData(data: BootstrapResponse) {
+export async function saveLabelData(data: BootstrapResponse) {
   await Promise.all(
     data.syncActions.map(async (record: SyncActionRecord) => {
-      const workflow = {
+      const label = {
         id: record.data.id,
         createdAt: record.data.createdAt,
         updatedAt: record.data.updatedAt,
         name: record.data.name,
-        position: record.data.position,
-        workflowId: record.data.teamId,
         color: record.data.color,
-        category: record.data.category,
+        description: record.data.description,
+        workspaceId: record.data.workspaceId,
         teamId: record.data.teamId,
+        groupId: record.data.groupId,
       };
 
       switch (record.action) {
         case 'I': {
-          await tegonDatabase.workflow.put(workflow);
-          return await workflowStore.update(workflow, record.data.id);
+          await tegonDatabase.labels.put(label);
+          return await labelStore.update(label, record.data.id);
         }
 
         case 'U': {
-          await tegonDatabase.workflow.put(workflow);
-          return await workflowStore.update(workflow, record.data.id);
+          await tegonDatabase.labels.put(label);
+          return await labelStore.update(label, record.data.id);
         }
 
         case 'D': {
-          await tegonDatabase.workflow.delete(record.data.id);
-          return await workflowStore.delete(record.data.id);
+          await tegonDatabase.labels.delete(record.data.id);
+          return await labelStore.delete(record.data.id);
         }
       }
     }),
   );
 
-  await tegonDatabase.sequence.put({
+  await tegonDatabase.sequences.put({
     id: modelName,
     lastSequenceId: data.lastSequenceId,
   });
 }
 
 function onBootstrapRecords(data: BootstrapResponse) {
-  saveWorkflowData(data);
+  saveLabelData(data);
 }
 
-export function useWorkflowStore() {
+export function useLabelStore() {
   const workspace = useCurrentWorkspace();
-
-  const { refetch: bootstrapWorkflowRecords } = useBootstrapRecords({
+  const { refetch: fetchBootstrapRecords } = useBootstrapRecords({
     modelName,
     workspaceId: workspace.id,
     onSuccess: onBootstrapRecords,
   });
-  const { refetch: syncWorkflowRecords } = useDeltaRecords({
+  const { refetch: fetchDeltaRecords } = useDeltaRecords({
     modelName,
     workspaceId: workspace.id,
-    lastSequenceId: workflowStore?.lastSequenceId,
+    lastSequenceId: labelStore.lastSequenceId,
     onSuccess: onBootstrapRecords,
   });
 
@@ -80,24 +79,24 @@ export function useWorkflowStore() {
   }, []);
 
   const initStore = async () => {
-    if (!workflowStore.lastSequenceId) {
+    if (!labelStore.lastSequenceId) {
       callBootstrap();
     }
 
-    if (workflowStore.lastSequenceId) {
+    if (labelStore.lastSequenceId) {
       callDeltaSync();
     }
   };
 
   const callBootstrap = React.useCallback(async () => {
-    bootstrapWorkflowRecords();
+    fetchBootstrapRecords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const callDeltaSync = React.useCallback(async () => {
-    syncWorkflowRecords();
+    fetchDeltaRecords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workflowStore?.lastSequenceId]);
+  }, [labelStore?.lastSequenceId]);
 
-  return workflowStore;
+  return labelStore;
 }

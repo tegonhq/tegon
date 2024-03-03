@@ -7,7 +7,8 @@ import * as React from 'react';
 import { Loader } from 'components/ui/loader';
 
 import { tegonDatabase } from 'store/database';
-import { initializeWorkflowStore } from 'store/workflow';
+import { initializeIssuesStore } from 'store/issues';
+import { initializeWorkflowStore } from 'store/workflows';
 
 export const TeamStoreProvider = observer(
   ({ children }: { children: React.ReactNode }) => {
@@ -28,11 +29,12 @@ export const TeamStoreProvider = observer(
     const initTeamBasedStored = React.useCallback(async () => {
       setLoading(true);
 
-      const teamData = await tegonDatabase.team.get({
+      const teamData = await tegonDatabase.teams.get({
         identifier: teamIdentifier,
       });
 
-      await initializeWorkflowStore(teamData.id);
+      await initializeWorkflowStore(teamData?.id);
+      await initializeIssuesStore(teamData?.id);
 
       setLoading(false);
     }, [teamIdentifier]);

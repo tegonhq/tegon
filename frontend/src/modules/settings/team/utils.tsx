@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { TeamType } from 'common/types/team';
 
-import { useTeamStore } from 'store/team';
+import { useTeamStore } from 'store/teams';
 
 export function useTeam(): TeamType | undefined {
   const { query } = useRouter();

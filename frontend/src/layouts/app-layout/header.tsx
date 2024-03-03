@@ -2,9 +2,12 @@
 
 import { RiEditBoxLine, RiSearch2Line } from '@remixicon/react';
 
+import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
+
 import { cn } from 'common/lib/utils';
 
 import { Button } from 'components/ui/button';
+import { Dialog, DialogTrigger } from 'components/ui/dialog';
 import { Separator } from 'components/ui/separator';
 
 import { ProfileDropdown } from './profile-dropdown';
@@ -28,18 +31,22 @@ export function Header({ isCollapsed }: HeaderProps) {
       </div>
       {isCollapsed && <Separator className="mt-2" />}
       <div className={cn('flex mt-4 gap-2', isCollapsed && 'flex-col')}>
-        <Button
-          variant="outline"
-          size="sm"
-          className={cn(
-            'flex-grow justify-start',
-            isCollapsed && 'justify-center px-0',
-          )}
-        >
-          <RiEditBoxLine size={16} className="text-muted-foreground" />
-          {!isCollapsed && <div className="ml-3 text-sm"> New Issue </div>}
-        </Button>
-
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className={cn(
+                'flex-grow justify-start',
+                isCollapsed && 'justify-center px-0',
+              )}
+            >
+              <RiEditBoxLine size={16} className="text-muted-foreground" />
+              {!isCollapsed && <div className="ml-3 text-sm"> New Issue </div>}
+            </Button>
+          </DialogTrigger>
+          <NewIssueDialog />
+        </Dialog>
         <Button
           variant="outline"
           size="sm"

@@ -12,23 +12,46 @@ import { useDeltaRecords } from 'services/sync/delta-sync';
 import { tegonDatabase } from 'store/database';
 
 import { modelName } from './models';
-import { workspaceStore } from './store';
+import { issuesStore } from './store';
 
-export async function saveWorkspaceData(data: BootstrapResponse) {
+export async function saveIssuesData(data: BootstrapResponse) {
   await Promise.all(
     data.syncActions.map(async (record: SyncActionRecord) => {
-      const workspace = {
+      const issue = {
         id: record.data.id,
         createdAt: record.data.createdAt,
         updatedAt: record.data.updatedAt,
-        name: record.data.name,
-        slug: record.data.slug,
+        title: record.data.title,
+        number: record.data.number,
+        description: record.data.description,
+        priority: record.data.priority,
+        dueDate: record.data.dueDate,
+        sortOrder: record.data.sortOrder,
+        estimate: record.data.estimate,
+        teamId: record.data.teamId,
+        createdById: record.data.createdById,
+        assigneeId: record.data.assigneeId,
+        labelIds: record.data.labelIds,
+        parentId: record.data.parentId,
+        stateId: record.data.stateId,
       };
 
-      await tegonDatabase.workspaces.put(workspace);
+      switch (record.action) {
+        case 'I': {
+          await tegonDatabase.issues.put(issue);
+          return await issuesStore.update(issue, record.data.id);
+        }
 
-      // Update the store
-      return await workspaceStore.update(workspace);
+        case 'U': {
+          await tegonDatabase.issues.put(issue);
+          return await issuesStore.update(issue, record.data.id);
+        }
+
+        case 'D': {
+          await tegonDatabase.issues.delete(record.data.id);
+          return await issuesStore.delete(record.data.id);
+        }
+      }
     }),
   );
 
@@ -39,20 +62,22 @@ export async function saveWorkspaceData(data: BootstrapResponse) {
 }
 
 function onBootstrapRecords(data: BootstrapResponse) {
-  saveWorkspaceData(data);
+  saveIssuesData(data);
 }
 
-export function useWorkspaceStore() {
+export function useIssuesStore() {
   const workspace = useCurrentWorkspace();
-  const { refetch: fetchBootstrapRecords } = useBootstrapRecords({
+
+  const { refetch: bootstrapIssuesRecords } = useBootstrapRecords({
     modelName,
     workspaceId: workspace.id,
     onSuccess: onBootstrapRecords,
   });
-  const { refetch: fetchDeltaRecords } = useDeltaRecords({
+
+  const { refetch: syncIssuesRecords } = useDeltaRecords({
     modelName,
     workspaceId: workspace.id,
-    lastSequenceId: workspaceStore?.lastSequenceId,
+    lastSequenceId: issuesStore?.lastSequenceId,
     onSuccess: onBootstrapRecords,
   });
 
@@ -63,24 +88,24 @@ export function useWorkspaceStore() {
   }, []);
 
   const initStore = async () => {
-    if (!workspaceStore.lastSequenceId) {
+    if (!issuesStore.lastSequenceId) {
       callBootstrap();
     }
 
-    if (workspaceStore.lastSequenceId) {
+    if (issuesStore.lastSequenceId) {
       callDeltaSync();
     }
   };
 
   const callBootstrap = React.useCallback(async () => {
-    fetchBootstrapRecords();
+    bootstrapIssuesRecords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const callDeltaSync = React.useCallback(async () => {
-    fetchDeltaRecords();
+    syncIssuesRecords();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workspaceStore?.lastSequenceId]);
+  }, [issuesStore?.lastSequenceId]);
 
-  return workspaceStore;
+  return issuesStore;
 }

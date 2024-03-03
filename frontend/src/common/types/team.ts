@@ -22,7 +22,7 @@ export interface WorkflowType {
   createdAt: string;
   updatedAt: string;
 
-  name: string;
+  name: 'Backlog' | 'Todo' | 'In Progress' | 'In Review' | 'Done' | 'Canceled';
   position: number;
   color: string;
   category: WorkflowCategoryEnum;

@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useCurrentTeam } from 'common/hooks/get-current-team';
+import { useCurrentTeam } from 'common/hooks/use-current-team';
 
 import { Button } from 'components/ui/button';
 import {
@@ -20,7 +20,7 @@ import {
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
 
-import { useTeamStore } from 'store/team';
+import { useTeamStore } from 'store/teams';
 
 import { OverviewSchema } from './overview.interface';
 

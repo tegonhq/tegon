@@ -3,12 +3,12 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { useCurrentWorkspace } from 'common/hooks/get-workspace';
+import { useCurrentWorkspace } from 'common/hooks/use-current-workspace';
 
 import { Loader } from 'components/ui/loader';
 
-import { initialiseLabelStore } from 'store/label';
-import { initialiseTeamStore } from 'store/team';
+import { initialiseLabelStore } from 'store/labels';
+import { initialiseTeamStore } from 'store/teams';
 import { initialiseWorkspaceStore } from 'store/workspace';
 
 export const WorkspaceStoreProvider = observer(

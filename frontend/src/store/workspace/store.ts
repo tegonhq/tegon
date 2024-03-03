@@ -28,10 +28,10 @@ export async function initialiseWorkspaceStore(workspaceId: string) {
   let _store = workspaceStore;
 
   if (!_store) {
-    const workspace = await tegonDatabase.workspace.get({
+    const workspace = await tegonDatabase.workspaces.get({
       id: workspaceId,
     });
-    const lastSequenceData = await tegonDatabase.sequence.get({
+    const lastSequenceData = await tegonDatabase.sequences.get({
       id: modelName,
     });
 

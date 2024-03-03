@@ -46,12 +46,12 @@ export let teamStore: TeamStoreType;
 export async function initialiseTeamStore(workspaceId: string) {
   let _store = teamStore;
   if (!_store) {
-    const teams = await tegonDatabase.team
+    const teams = await tegonDatabase.teams
       .where({
         workspaceId,
       })
       .toArray();
-    const lastSequenceData = await tegonDatabase.sequence.get({
+    const lastSequenceData = await tegonDatabase.sequences.get({
       id: modelName,
     });
     _store = TeamStore.create({

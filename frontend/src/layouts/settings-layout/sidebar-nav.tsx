@@ -46,11 +46,11 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
       <div className="px-4 py-3">
         <div className="flex flex-col items-start justify-start w-full">
           <div className="flex items-center mb-1">
-            <RiBuilding4Fill size={16} className="text-muted-foreground" />
+            <RiBuilding4Fill size={18} className="text-muted-foreground" />
             <div className="text-muted-foreground text-sm ml-4">Workspace</div>
           </div>
 
-          <div className="pl-6 flex flex-col w-full">
+          <div className="pl-7 flex flex-col w-full">
             {WORKSPACE_LINKS.map((item) => (
               <Link
                 key={item.href}
@@ -73,11 +73,11 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
       <div className="px-4 py-3">
         <div className="flex flex-col items-start justify-start w-full">
           <div className="flex items-center mb-1">
-            <RiAccountCircleFill size={16} className="text-muted-foreground" />
+            <RiAccountCircleFill size={18} className="text-muted-foreground" />
             <div className="text-muted-foreground text-sm ml-4">My Account</div>
           </div>
 
-          <div className="pl-6 flex flex-col w-full">
+          <div className="pl-7 flex flex-col w-full">
             {ACCOUNT_LINKS.map((item) => (
               <Link
                 key={item.href}

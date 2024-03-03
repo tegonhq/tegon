@@ -46,12 +46,12 @@ export let labelStore: LabelStoreType;
 export async function initialiseLabelStore(workspaceId: string) {
   let _store = labelStore;
   if (!_store) {
-    const labelsData = await tegonDatabase.label
+    const labelsData = await tegonDatabase.labels
       .where({
         workspaceId,
       })
       .toArray();
-    const lastSequenceData = await tegonDatabase.sequence.get({
+    const lastSequenceData = await tegonDatabase.sequences.get({
       id: modelName,
     });
 

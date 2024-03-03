@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { generateHexColor } from 'common/color-utils';
-import { useCurrentWorkspace } from 'common/hooks/get-workspace';
+import { useCurrentWorkspace } from 'common/hooks/use-current-workspace';
 
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
@@ -33,7 +33,7 @@ export function NewLabel({ onCancel }: NewLabelProps) {
   };
 
   return (
-    <div className="border border-slate-200 dark:border-slate-800 group flex justify-between mb-2 text-sm rounded-md bg-slate-100/80 dark:bg-slate-900 p-2 px-4">
+    <div className="border border-slate-100 dark:border-slate-800 group flex justify-between mb-2 text-sm rounded-md bg-slate-100/80 dark:bg-slate-900 p-2 px-4">
       <div className="flex items-center justify-center gap-3 w-full">
         <div
           className="h-3 w-3 rounded-full"

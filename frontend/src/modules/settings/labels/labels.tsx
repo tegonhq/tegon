@@ -10,7 +10,7 @@ import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
 
-import { useLabelStore } from 'store/label';
+import { useLabelStore } from 'store/labels';
 
 import { EditLabel } from './edit-label';
 import { Label } from './label';

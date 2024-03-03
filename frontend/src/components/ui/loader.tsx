@@ -39,7 +39,7 @@ const Loader = React.forwardRef<HTMLButtonElement, LoaderProps>(
           'w-full flex flex-col',
         )}
       >
-        <RiLoader4Line className="animate-spin mr-2" />
+        <RiLoader4Line size={18} className="animate-spin mr-2" />
         {text && <p className="text-sm text-muted-foreground mt-2">{text}</p>}
       </div>
     );

@@ -1,38 +1,57 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiLoader3Line, RiPencilFill } from '@remixicon/react';
+import {
+  RiCheckboxCircleFill,
+  RiCircleLine,
+  RiCloseCircleFill,
+  RiLoader3Line,
+  RiProgress4Line,
+  RiProgress6Line,
+} from '@remixicon/react';
 
-import { WorkflowCategoryEnum, WorkflowType } from 'common/types/team';
-
-import { Button } from 'components/ui/button';
+import { WorkflowType } from 'common/types/team';
 
 interface WorkflowItemProps {
   workflow: WorkflowType;
 }
 
-const CATEGORY_ICONS = {
+export const WORKFLOW_CATEGORY_ICONS = {
   Backlog: RiLoader3Line,
+  Todo: RiCircleLine,
+  'In Progress': RiProgress4Line,
+  'In Review': RiProgress6Line,
+  Done: RiCheckboxCircleFill,
+  Duplicate: RiCloseCircleFill,
+  Canceled: RiCloseCircleFill,
 };
 
 export function WorkflowItem({ workflow }: WorkflowItemProps) {
+  const CategoryIcon =
+    WORKFLOW_CATEGORY_ICONS[workflow.name] ??
+    WORKFLOW_CATEGORY_ICONS['Backlog'];
+
   return (
     <div
       key={workflow.name}
-      className="w-full border border-slate-200 dark:border-slate-800 group flex justify-between mb-2 text-sm rounded-md bg-slate-100/80 dark:bg-slate-900 p-2 px-2"
+      className="w-full border border-slate-100 dark:border-slate-800 group flex justify-between mb-2 text-sm rounded-md bg-slate-100/80 dark:bg-slate-900 p-2 px-2"
     >
-      <div className="flex">
-        <RiLoader3Line size={18} className="text-muted-foreground" />
+      <div className="flex items-center">
+        <CategoryIcon
+          size={18}
+          className="text-muted-foreground"
+          color={workflow.color}
+        />
         <h3 className="pl-2"> {workflow.name} </h3>
       </div>
 
-      <div className="hidden group-hover:flex items-center justify-center gap-4">
+      {/* <div className="hidden group-hover:flex items-center justify-center gap-4">
         <Button variant="ghost" size="xs" className="!p-0 !bg-transparent h-4">
           <RiPencilFill
             className="text-slate-500 hover:text-black dark:hover:text-white"
             size={16}
           />
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }

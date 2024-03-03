@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 
-import { useCurrentWorkspace } from 'common/hooks/get-workspace';
+import { useCurrentWorkspace } from 'common/hooks/use-current-workspace';
 import { BootstrapResponse, SyncActionRecord } from 'common/types/data-loader';
 
 import { useBootstrapRecords } from 'services/sync/bootstrap-sync';
@@ -28,24 +28,24 @@ export async function saveTeamData(data: BootstrapResponse) {
 
       switch (record.action) {
         case 'I': {
-          await tegonDatabase.team.put(team);
+          await tegonDatabase.teams.put(team);
           return await teamStore.update(team, record.data.id);
         }
 
         case 'U': {
-          await tegonDatabase.team.put(team);
+          await tegonDatabase.teams.put(team);
           return await teamStore.update(team, record.data.id);
         }
 
         case 'D': {
-          await tegonDatabase.team.delete(record.data.id);
+          await tegonDatabase.teams.delete(record.data.id);
           return await teamStore.delete(record.data.id);
         }
       }
     }),
   );
 
-  await tegonDatabase.sequence.put({
+  await tegonDatabase.sequences.put({
     id: modelName,
     lastSequenceId: data.lastSequenceId,
   });

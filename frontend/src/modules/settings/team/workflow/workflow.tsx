@@ -7,7 +7,7 @@ import { WorkflowCategoryEnum, WorkflowType } from 'common/types/team';
 
 import { Separator } from 'components/ui/separator';
 
-import { useWorkflowStore } from 'store/workflow';
+import { useWorkflowStore } from 'store/workflows';
 
 import { WorkflowCategory } from './workflow-category';
 
