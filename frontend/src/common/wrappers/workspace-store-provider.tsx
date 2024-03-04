@@ -3,7 +3,7 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { useCurrentWorkspace } from 'common/hooks/use-current-workspace';
+import { useCurrentWorkspace } from 'hooks/use-current-workspace';
 
 import { Loader } from 'components/ui/loader';
 

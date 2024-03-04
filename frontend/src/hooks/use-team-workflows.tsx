@@ -35,33 +35,3 @@ export function useTeamWorkflows(): WorkflowType[] | undefined {
 
   return workflows;
 }
-
-export function useTeamWorkflow(workflowId: string): WorkflowType | undefined {
-  const currentTeam = useCurrentTeam();
-  const workflowStore = useWorkflowStore();
-
-  const getWorkflows = () => {
-    if (!currentTeam) {
-      return [];
-    }
-
-    const workflows = workflowStore.workflows.filter(
-      (workflow: WorkflowType) => {
-        return workflow.teamId === currentTeam.id;
-      },
-    );
-
-    return workflows;
-  };
-
-  const workflows = React.useMemo(
-    () => computed(() => getWorkflows()),
-    [currentTeam, workflowStore],
-  ).get();
-
-  if (!workflowId) {
-    return undefined;
-  }
-
-  return workflows.find((workflow: WorkflowType) => workflow.id === workflowId);
-}

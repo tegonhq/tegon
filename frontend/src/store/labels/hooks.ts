@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 
-import { useCurrentWorkspace } from 'common/hooks/use-current-workspace';
+import { useCurrentWorkspace } from 'hooks/use-current-workspace';
 import { BootstrapResponse, SyncActionRecord } from 'common/types/data-loader';
 
 import { useBootstrapRecords } from 'services/sync/bootstrap-sync';

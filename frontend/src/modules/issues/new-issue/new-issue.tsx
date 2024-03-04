@@ -16,6 +16,7 @@ import { Textarea } from 'components/ui/textarea';
 
 import { NewIssueSchema } from './new-issues-type';
 import { IssueStatus } from '../components/issue-status/issue-status';
+import { IssueLabel } from '../components/issue-label/issue-label';
 
 export function NewIssue() {
   const form = useForm<z.infer<typeof NewIssueSchema>>({
@@ -47,8 +48,9 @@ export function NewIssue() {
               )}
             />
 
-            <div>
+            <div className="flex gap-2">
               <IssueStatus />
+              <IssueLabel defaultLabelIds={[]} />
             </div>
           </div>
 

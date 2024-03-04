@@ -2,8 +2,8 @@
 
 import { observer } from 'mobx-react-lite';
 
-import { useTeamIssues } from 'common/hooks/use-team-issues';
-import { useTeamWorkflows } from 'common/hooks/use-team-workflows';
+import { useTeamIssues } from 'hooks/use-team-issues';
+import { useTeamWorkflows } from 'hooks/use-team-workflows';
 import { IssueType } from 'common/types/issue';
 
 import { IssuesCategory } from './issues-category';

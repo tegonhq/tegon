@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { generateHexColor } from 'common/color-utils';
-import { useCurrentWorkspace } from 'common/hooks/use-current-workspace';
+import { useCurrentWorkspace } from 'hooks/use-current-workspace';
 
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';

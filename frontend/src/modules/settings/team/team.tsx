@@ -3,7 +3,7 @@
 
 import { useRouter } from 'next/router';
 
-import { useCurrentTeam } from 'common/hooks/use-current-team';
+import { useCurrentTeam } from 'hooks/use-current-team';
 import { TeamStoreProvider } from 'common/wrappers/team-store-provider';
 import { SettingsLayout } from 'layouts/settings-layout';
 

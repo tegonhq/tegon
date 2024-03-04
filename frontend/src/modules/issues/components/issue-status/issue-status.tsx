@@ -1,12 +1,10 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Check } from 'lucide-react';
 import * as React from 'react';
 
 import { WORKFLOW_CATEGORY_ICONS } from 'modules/settings/team/workflow/workflow-item';
 
-import { useTeamWorkflows } from 'common/hooks/use-team-workflows';
-import { cn } from 'common/lib/utils';
+import { useTeamWorkflows } from 'hooks/use-team-workflows';
 
 import { Button } from 'components/ui/button';
 import {
@@ -41,7 +39,7 @@ export function IssueStatus({ defaultStateId }: IssueStatusProps) {
             role="combobox"
             size="sm"
             aria-expanded={open}
-            className="justify-between text-xs font-normal"
+            className="justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary"
           >
             <CategoryIcon
               size={18}

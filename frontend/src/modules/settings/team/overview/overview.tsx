@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useCurrentTeam } from 'common/hooks/use-current-team';
+import { useCurrentTeam } from 'hooks/use-current-team';
 
 import { Button } from 'components/ui/button';
 import {
