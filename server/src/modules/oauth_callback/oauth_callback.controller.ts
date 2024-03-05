@@ -25,12 +25,10 @@ export class OAuthCallbackController {
   async getRedirectURL(@Body() body: BodyInterface) {
 
     return await this.oAuthCallbackService.getRedirectURL(
-      body.integrationAccountName,
       body.workspaceId,
       body.integrationOAuthAppId,
       body.config ?? {},
       body.redirectURL,
-      body.linkId,
       body.accountIdentifier,
       body.integrationKeys,
     );

@@ -25,22 +25,20 @@ const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/api/v1/oauth/callback`
 export class OAuthCallbackService {
   session: Record<string, SessionRecord> = {};
   private readonly logger = new Logger(OAuthCallbackService.name);
- 
+
   constructor(
     private prisma: PrismaService,
     // private integrationOAuthService: IntegrationOAuthService,
     // private integrationAccountService: IntegrationAccountService,
   ) {}
 
-  async getIntegrationDefinition(
-    integrationDefinitionId: string,
-  ) {
+  async getIntegrationDefinition(integrationDefinitionId: string) {
     let integrationDefinition: IntegrationDefinition;
 
     try {
       integrationDefinition =
         await this.prisma.integrationDefinition.findUnique({
-          where: {id: integrationDefinitionId}
+          where: { id: integrationDefinitionId },
         });
     } catch (e) {
       throw new BadRequestException({
@@ -58,21 +56,13 @@ export class OAuthCallbackService {
   }
 
   async getRedirectURL(
-    integrationAccountName: string,
     workspaceId: string,
     integrationDefinitionId: string,
     externalConfig: Record<string, string>,
     redirectURL: string,
-    linkId?: string,
     accountIdentifier?: string,
     integrationKeys?: string,
   ) {
-    if (!integrationAccountName || !redirectURL) {
-      throw new BadRequestException({
-        error: 'Kindly pass both integrationAccountName and redirectURL',
-      });
-    }
-
     this.logger.log(
       `We got OAuth request for ${workspaceId}: ${integrationDefinitionId}`,
     );
@@ -104,10 +94,9 @@ export class OAuthCallbackService {
       const uniqueId = new Date().getTime().toString(36);
       this.session[uniqueId] = {
         integrationDefinitionId: integrationDefinition.id,
-        integrationAccountName,
         config: externalConfig,
         redirectURL,
-        linkId,
+        workspaceId,
         accountIdentifier,
         integrationKeys,
       };
@@ -163,28 +152,16 @@ export class OAuthCallbackService {
       );
     }
 
-    if (
-      !sessionRecord.integrationDefinitionId ||
-      !sessionRecord.integrationAccountName
-    ) {
-      const errorMessage = 'No integrationName or integrationOAuthID found';
-
-      res.redirect(
-        `${sessionRecord.redirectURL}?success=false&error=${errorMessage}`,
-      );
-    }
-
-    const integrationOAuth =
-      await this.integrationOAuthService.getIntegrationOAuthAppWithId({
-        integrationOAuthAppId: sessionRecord.integrationDefinitionId,
-      });
+    const integrationDefinition = await this.prisma.integrationDefinition.findUnique(
+      { where: { id: sessionRecord.integrationDefinitionId } },
+    );
 
     const template = (await getTemplate(
-      integrationOAuth,
+      integrationDefinition,
     )) as ProviderTemplateOAuth2;
 
-    if (integrationOAuth === null) {
-      const errorMessage = 'No matching OAuth integration found';
+    if (integrationDefinition === null) {
+      const errorMessage = 'No matching integration definition found';
 
       res.redirect(
         `${sessionRecord.redirectURL}?success=false&error=${errorMessage}`,
@@ -205,7 +182,7 @@ export class OAuthCallbackService {
 
     if (template.token_request_auth_method === 'basic') {
       headers['Authorization'] = `Basic ${Buffer.from(
-        `${integrationOAuth.clientId}:${integrationOAuth.clientSecret}`,
+        `${integrationDefinition.clientId}:${integrationDefinition.clientSecret}`,
       ).toString('base64')}`;
     }
 
@@ -220,9 +197,9 @@ export class OAuthCallbackService {
       const simpleOAuthClient = new simpleOauth2.AuthorizationCode(
         getSimpleOAuth2ClientConfig(
           {
-            client_id: integrationOAuth.clientId,
-            client_secret: integrationOAuth.clientSecret,
-            scopes: integrationOAuth.scopes,
+            client_id: integrationDefinition.clientId,
+            client_secret: integrationDefinition.clientSecret,
+            scopes: integrationDefinition.scopes,
           },
           template,
           sessionRecord.config,
@@ -253,8 +230,8 @@ export class OAuthCallbackService {
           ...integrationConfiguration,
           scope: tokensResponse.token.scope,
           refresh_token: tokensResponse.token.refresh_token,
-          client_id: integrationOAuth.clientId,
-          client_secret: integrationOAuth.clientSecret,
+          client_id: integrationDefinition.clientId,
+          client_secret: integrationDefinition.clientSecret,
         };
       } else {
         integrationConfiguration = {
@@ -264,18 +241,16 @@ export class OAuthCallbackService {
       }
 
       await this.integrationAccountService.createIntegrationAccountWithLink(
-        integrationOAuth.integrationDefinitionId,
+        integrationDefinition.id,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         integrationConfiguration as any,
-        sessionRecord.integrationAccountName,
         integrationConfiguration.api_key ? 'Api Key' : 'OAuth2',
-        integrationOAuth.workspaceId,
-        sessionRecord.linkId,
+        sessionRecord.workspaceId,
         sessionRecord.accountIdentifier,
       );
 
       res.redirect(
-        `${sessionRecord.redirectURL}?success=true&integrationName=${integrationOAuth.integrationDefinition.name}${accountIdentifier}${integrationKeys}`,
+        `${sessionRecord.redirectURL}?success=true&integrationName=${integrationDefinition.name}${accountIdentifier}${integrationKeys}`,
       );
     } catch (e) {
       res.redirect(

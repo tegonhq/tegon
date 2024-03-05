@@ -10,10 +10,9 @@ export interface RedirectURLParams {
 
 export interface SessionRecord {
   integrationDefinitionId: string;
-  integrationAccountName: string;
   config: Record<string, string>;
   redirectURL: string;
-  linkId?: string;
+  workspaceId: string;
   accountIdentifier?: string;
   integrationKeys?: string;
 }
@@ -21,9 +20,6 @@ export interface SessionRecord {
 export class BodyInterface {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config?: any;
-
-  @IsString()
-  integrationAccountName: string;
 
   @IsString()
   redirectURL: string;
