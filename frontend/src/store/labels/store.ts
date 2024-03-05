@@ -5,10 +5,13 @@ import { IAnyStateTreeNode, Instance, types } from 'mobx-state-tree';
 import { LabelType } from 'common/types/label';
 
 import { tegonDatabase } from 'store/database';
+import { MODELS } from 'store/models';
 
-import { Label, modelName } from './models';
+import { Label } from './models';
 
-export const LabelStore: IAnyStateTreeNode = types
+const modelName = MODELS.Label;
+
+export const LabelsStore: IAnyStateTreeNode = types
   .model({
     labels: types.array(Label),
     lastSequenceId: types.union(types.undefined, types.number),
@@ -39,12 +42,12 @@ export const LabelStore: IAnyStateTreeNode = types
     },
   }));
 
-export type LabelStoreType = Instance<typeof LabelStore>;
+export type LabelsStoreType = Instance<typeof LabelsStore>;
 
-export let labelStore: LabelStoreType;
+export let labelsStore: LabelsStoreType;
 
 export async function initialiseLabelStore(workspaceId: string) {
-  let _store = labelStore;
+  let _store = labelsStore;
   if (!_store) {
     const labelsData = await tegonDatabase.labels
       .where({
@@ -55,7 +58,7 @@ export async function initialiseLabelStore(workspaceId: string) {
       id: modelName,
     });
 
-    _store = LabelStore.create({
+    _store = LabelsStore.create({
       labels: labelsData,
       lastSequenceId: lastSequenceData?.lastSequenceId,
     });
@@ -71,9 +74,9 @@ export async function initialiseLabelStore(workspaceId: string) {
     return _store;
   }
   // Create the store once in the client
-  if (!labelStore) {
-    labelStore = _store;
+  if (!labelsStore) {
+    labelsStore = _store;
   }
 
-  return labelStore;
+  return labelsStore;
 }

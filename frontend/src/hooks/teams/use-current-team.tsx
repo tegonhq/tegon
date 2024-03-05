@@ -7,13 +7,13 @@ import * as React from 'react';
 
 import { TeamType } from 'common/types/team';
 
-import { useTeamStore } from 'store/teams';
+import { useTeamsStore } from './use-teams-store';
 
 export function useCurrentTeam(): TeamType | undefined {
   const {
     query: { teamIdentifier },
   } = useRouter();
-  const teamStore = useTeamStore();
+  const teamStore = useTeamsStore();
 
   const getTeam = () => {
     if (!teamIdentifier) {

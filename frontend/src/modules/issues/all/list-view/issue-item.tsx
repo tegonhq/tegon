@@ -2,9 +2,10 @@
 
 import { WORKFLOW_CATEGORY_ICONS } from 'modules/settings/team/workflow/workflow-item';
 
-import { useCurrentTeam } from 'hooks/use-current-team';
-import { useTeamWorkflows } from 'hooks/use-team-workflows';
 import { IssueType } from 'common/types/issue';
+
+import { useCurrentTeam } from 'hooks/teams/use-current-team';
+import { useTeamWorkflows } from 'hooks/workflows/use-team-workflows';
 
 interface IssueItemProps {
   issue: IssueType;

@@ -16,8 +16,7 @@ import {
 } from 'components/ui/form';
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
-
-import { useWorkspaceStore } from 'store/workspace';
+import { useWorkspaceStore } from 'hooks/workspace';
 
 import { OverviewSchema } from './overview.interface';
 

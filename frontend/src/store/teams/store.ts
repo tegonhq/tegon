@@ -8,7 +8,7 @@ import { tegonDatabase } from 'store/database';
 
 import { Team, modelName } from './models';
 
-export const TeamStore: IAnyStateTreeNode = types
+export const TeamsStore: IAnyStateTreeNode = types
   .model({
     teams: types.array(Team),
     lastSequenceId: types.union(types.undefined, types.number),
@@ -39,12 +39,12 @@ export const TeamStore: IAnyStateTreeNode = types
     },
   }));
 
-export type TeamStoreType = Instance<typeof TeamStore>;
+export type TeamsStoreType = Instance<typeof TeamsStore>;
 
-export let teamStore: TeamStoreType;
+export let teamsStore: TeamsStoreType;
 
-export async function initialiseTeamStore(workspaceId: string) {
-  let _store = teamStore;
+export async function initialiseTeamsStore(workspaceId: string) {
+  let _store = teamsStore;
   if (!_store) {
     const teams = await tegonDatabase.teams
       .where({
@@ -54,7 +54,7 @@ export async function initialiseTeamStore(workspaceId: string) {
     const lastSequenceData = await tegonDatabase.sequences.get({
       id: modelName,
     });
-    _store = TeamStore.create({
+    _store = TeamsStore.create({
       teams,
       lastSequenceId: lastSequenceData?.lastSequenceId,
     });
@@ -69,9 +69,9 @@ export async function initialiseTeamStore(workspaceId: string) {
     return _store;
   }
   // Create the store once in the client
-  if (!teamStore) {
-    teamStore = _store;
+  if (!teamsStore) {
+    teamsStore = _store;
   }
 
-  return teamStore;
+  return teamsStore;
 }

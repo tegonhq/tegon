@@ -6,13 +6,12 @@ import * as React from 'react';
 
 import { WorkflowType } from 'common/types/team';
 
-import { useWorkflowStore } from 'store/workflows';
-
-import { useCurrentTeam } from './use-current-team';
+import { useWorkflowsStore } from './use-workflows-store';
+import { useCurrentTeam } from '../teams/use-current-team';
 
 export function useTeamWorkflows(): WorkflowType[] | undefined {
   const currentTeam = useCurrentTeam();
-  const workflowStore = useWorkflowStore();
+  const workflowStore = useWorkflowsStore();
 
   const getWorkflows = () => {
     if (!currentTeam) {

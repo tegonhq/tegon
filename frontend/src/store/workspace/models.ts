@@ -10,4 +10,11 @@ export const Workspace = types.model({
   slug: types.string,
 });
 
-export const modelName = 'Workspace';
+export const UsersOnWorkspace = types.model({
+  id: types.string,
+  createdAt: types.string,
+  updatedAt: types.string,
+  userId: types.string,
+  workspaceId: types.string,
+  teamIds: types.array(types.string),
+});

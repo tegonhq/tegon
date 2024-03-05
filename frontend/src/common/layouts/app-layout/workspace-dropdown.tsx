@@ -21,8 +21,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
-
-import { useWorkspaceStore } from 'store/workspace';
+import { useWorkspaceStore } from 'hooks/workspace';
 
 export interface WorkspaceDropdownProps {
   isCollapsed: boolean;

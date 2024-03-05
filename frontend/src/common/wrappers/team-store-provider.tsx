@@ -8,7 +8,7 @@ import { Loader } from 'components/ui/loader';
 
 import { tegonDatabase } from 'store/database';
 import { initializeIssuesStore } from 'store/issues';
-import { initializeWorkflowStore } from 'store/workflows';
+import { initializeWorkflowsStore } from 'store/workflows';
 
 export const TeamStoreProvider = observer(
   ({ children }: { children: React.ReactNode }) => {
@@ -33,7 +33,7 @@ export const TeamStoreProvider = observer(
         identifier: teamIdentifier,
       });
 
-      await initializeWorkflowStore(teamData?.id);
+      await initializeWorkflowsStore(teamData?.id);
       await initializeIssuesStore(teamData?.id);
 
       setLoading(false);

@@ -1,18 +1,13 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import * as React from 'react';
-
-import { useCurrentWorkspace } from 'hooks/use-current-workspace';
 import { BootstrapResponse, SyncActionRecord } from 'common/types/data-loader';
 
-import { useBootstrapRecords } from 'services/sync/bootstrap-sync';
-import { useDeltaRecords } from 'services/sync/delta-sync';
+import { useStoreManagement } from 'hooks/use-store-management';
 
 import { tegonDatabase } from 'store/database';
-
-import { modelName } from './models';
-import { issuesStore } from './store';
+import { issuesStore } from 'store/issues';
+import { MODELS } from 'store/models';
 
 export async function saveIssuesData(data: BootstrapResponse) {
   await Promise.all(
@@ -56,56 +51,15 @@ export async function saveIssuesData(data: BootstrapResponse) {
   );
 
   await tegonDatabase.sequences.put({
-    id: modelName,
+    id: MODELS.Issue,
     lastSequenceId: data.lastSequenceId,
   });
 }
 
-function onBootstrapRecords(data: BootstrapResponse) {
-  saveIssuesData(data);
-}
-
 export function useIssuesStore() {
-  const workspace = useCurrentWorkspace();
-
-  const { refetch: bootstrapIssuesRecords } = useBootstrapRecords({
-    modelName,
-    workspaceId: workspace.id,
-    onSuccess: onBootstrapRecords,
+  return useStoreManagement({
+    store: issuesStore,
+    modelName: MODELS.Issue,
+    onSaveData: saveIssuesData,
   });
-
-  const { refetch: syncIssuesRecords } = useDeltaRecords({
-    modelName,
-    workspaceId: workspace.id,
-    lastSequenceId: issuesStore?.lastSequenceId,
-    onSuccess: onBootstrapRecords,
-  });
-
-  React.useEffect(() => {
-    initStore();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const initStore = async () => {
-    if (!issuesStore.lastSequenceId) {
-      callBootstrap();
-    }
-
-    if (issuesStore.lastSequenceId) {
-      callDeltaSync();
-    }
-  };
-
-  const callBootstrap = React.useCallback(async () => {
-    bootstrapIssuesRecords();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const callDeltaSync = React.useCallback(async () => {
-    syncIssuesRecords();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [issuesStore?.lastSequenceId]);
-
-  return issuesStore;
 }

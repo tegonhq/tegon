@@ -15,13 +15,12 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 import { buttonVariants } from 'components/ui/button';
-
-import { useTeamStore } from 'store/teams';
+import { useTeamsStore } from 'hooks/teams';
 
 import { TEAM_LINKS } from './settings-layout-constants';
 
 export const TeamSettingsList = observer(() => {
-  const teamStore = useTeamStore();
+  const teamStore = useTeamsStore();
   const { query } = useRouter();
   const { workspaceSlug, settingsSection, teamIdentifier } = query;
 

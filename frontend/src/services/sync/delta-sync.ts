@@ -12,14 +12,14 @@ export const GetDeltaRecords = 'getDeltaRecords';
 
 export function getDeltaRecords(
   workspaceId: string,
-  modelName: string,
+  modelNames: string[],
   lastSequenceId: number,
 ) {
   return ajaxGet({
     url: `/api/v1/sync_actions/delta`,
     query: {
       workspaceId,
-      modelName,
+      modelNames: modelNames.join(','),
       lastSequenceId,
     },
   });
@@ -27,7 +27,7 @@ export function getDeltaRecords(
 
 export interface QueryParams {
   workspaceId: string;
-  modelName: string;
+  modelNames: string[];
   lastSequenceId: number;
   onSuccess?: (data: BootstrapResponse) => void;
 }
@@ -35,12 +35,12 @@ export interface QueryParams {
 export function useDeltaRecords({
   workspaceId,
   lastSequenceId,
-  modelName,
+  modelNames,
   onSuccess,
 }: QueryParams): UseQueryResult<BootstrapResponse, XHRErrorResponse> {
   return useQuery(
-    [GetDeltaRecords, modelName, lastSequenceId, workspaceId],
-    () => getDeltaRecords(workspaceId, modelName, lastSequenceId),
+    [GetDeltaRecords, modelNames, lastSequenceId, workspaceId],
+    () => getDeltaRecords(workspaceId, modelNames, lastSequenceId),
     {
       retry: 1,
       staleTime: 1,

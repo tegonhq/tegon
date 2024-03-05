@@ -5,13 +5,12 @@ import * as React from 'react';
 
 import { LabelType } from 'common/types/label';
 
-import { useLabelStore } from 'store/labels';
-
-import { useCurrentTeam } from './use-current-team';
-import { useCurrentWorkspace } from './use-current-workspace';
+import { useLabelsStore } from './use-labels-store';
+import { useCurrentTeam } from '../teams/use-current-team';
+import { useCurrentWorkspace } from '../workspace/use-current-workspace';
 
 export function useTeamLabels() {
-  const labelsStore = useLabelStore();
+  const labelsStore = useLabelsStore();
   const currentWorkspace = useCurrentWorkspace();
   const currentTeam = useCurrentTeam();
 

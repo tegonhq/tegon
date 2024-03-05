@@ -3,5 +3,11 @@
 import { z } from 'zod';
 
 export const NewIssueSchema = z.object({
-  description: z.string().min(2).max(50),
+  description: z.string(),
+
+  stateId: z.string(),
+
+  labelIds: z.array(z.string()),
+  priority: z.number(),
+  assigneeId: z.string(),
 });

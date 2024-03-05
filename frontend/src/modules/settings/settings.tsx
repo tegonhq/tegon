@@ -3,7 +3,7 @@
 
 import { useRouter } from 'next/router';
 
-import { SettingsLayout } from 'layouts/settings-layout';
+import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import {
   SECTION_COMPONENTS_KEYS,

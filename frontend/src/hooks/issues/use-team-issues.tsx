@@ -6,9 +6,8 @@ import * as React from 'react';
 
 import { IssueType } from 'common/types/issue';
 
-import { useIssuesStore } from 'store/issues';
-
-import { useCurrentTeam } from './use-current-team';
+import { useIssuesStore } from './use-issues-store';
+import { useCurrentTeam } from '../teams/use-current-team';
 
 export function useTeamIssues(): IssueType[] | undefined {
   const currentTeam = useCurrentTeam();

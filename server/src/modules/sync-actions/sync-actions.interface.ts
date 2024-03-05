@@ -15,8 +15,8 @@ export class DeltaRequestQuery {
   @IsString()
   workspaceId: string;
 
-  @IsEnum(ModelName)
-  modelName: ModelName;
+  @IsString()
+  modelNames: string;
 
   @IsString()
   lastSequenceId: string;

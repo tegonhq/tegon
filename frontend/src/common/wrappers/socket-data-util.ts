@@ -1,13 +1,14 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { saveIssuesData } from 'store/issues';
-import { saveLabelData } from 'store/labels';
-import { MODELS } from 'store/models';
-import { saveTeamData } from 'store/teams';
-import { saveWorkflowData } from 'store/workflows';
-import { saveWorkspaceData } from 'store/workspace';
+import { SyncActionRecord } from 'common/types/data-loader';
 
-import { SyncActionRecord } from './types/data-loader';
+import { saveIssuesData } from 'hooks/issues/use-issues-store';
+import { saveLabelData } from 'hooks/labels/use-labels-store';
+import { saveTeamData } from 'hooks/teams/use-teams-store';
+import { saveWorkflowData } from 'hooks/workflows/use-workflows-store';
+import { saveWorkspaceData } from 'hooks/workspace/use-workspace-store';
+
+import { MODELS } from 'store/models';
 
 // Saves the data from the socket and call explicitly functions from individual models
 export async function saveSocketData(data: SyncActionRecord[]) {

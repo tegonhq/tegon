@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { AppLayout } from 'layouts/app-layout';
+import { AppLayout } from 'common/layouts/app-layout';
 
 export default function WorkspaceHome() {
   return (

@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { AppLayout } from 'common/layouts/app-layout';
 import { TeamStoreProvider } from 'common/wrappers/team-store-provider';
-import { AppLayout } from 'layouts/app-layout';
 
 import { Header } from './header';
 import { ListView } from './list-view';

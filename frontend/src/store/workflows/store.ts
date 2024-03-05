@@ -5,10 +5,13 @@ import { IAnyStateTreeNode, Instance, types } from 'mobx-state-tree';
 import { WorkflowType } from 'common/types/team';
 
 import { tegonDatabase } from 'store/database';
+import { MODELS } from 'store/models';
 
-import { Workflow, modelName } from './models';
+import { Workflow } from './models';
 
-export const WorkflowStore: IAnyStateTreeNode = types
+const modelName = MODELS.Workflow;
+
+export const WorkflowsStore: IAnyStateTreeNode = types
   .model({
     workflows: types.array(Workflow),
     lastSequenceId: types.union(types.undefined, types.number),
@@ -39,18 +42,18 @@ export const WorkflowStore: IAnyStateTreeNode = types
     },
   }));
 
-export type WorkflowStoreType = Instance<typeof WorkflowStore>;
+export type WorkflowsStoreType = Instance<typeof WorkflowsStore>;
 
-export let workflowStore: WorkflowStoreType;
+export let workflowsStore: WorkflowsStoreType;
 
 export async function resetWorkflowStore() {
-  workflowStore = undefined;
+  workflowsStore = undefined;
 }
 
-export async function initializeWorkflowStore(teamId: string) {
-  let _store = workflowStore;
+export async function initializeWorkflowsStore(teamId: string) {
+  let _store = workflowsStore;
 
-  if (!workflowStore) {
+  if (!workflowsStore) {
     const workflows = teamId
       ? await tegonDatabase.workflows
           .where({
@@ -63,7 +66,7 @@ export async function initializeWorkflowStore(teamId: string) {
       id: modelName,
     });
 
-    _store = WorkflowStore.create({
+    _store = WorkflowsStore.create({
       workflows,
       lastSequenceId: lastSequenceData?.lastSequenceId,
     });
@@ -79,9 +82,9 @@ export async function initializeWorkflowStore(teamId: string) {
     return _store;
   }
   // Create the store once in the client
-  if (!workflowStore) {
-    workflowStore = _store;
+  if (!workflowsStore) {
+    workflowsStore = _store;
   }
 
-  return workflowStore;
+  return workflowsStore;
 }

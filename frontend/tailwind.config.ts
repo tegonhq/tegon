@@ -32,6 +32,16 @@ const config = {
       '4xl': '2.441rem',
       '5xl': '3.052rem',
     },
+    borderWidth: {
+      DEFAULT: '0.5px',
+      '0': '0',
+      '1': '1px',
+      '2': '2px',
+      '3': '3px',
+      '4': '4px',
+      '6': '6px',
+      '8': '8px',
+    },
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],

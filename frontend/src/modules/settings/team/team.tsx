@@ -3,11 +3,11 @@
 
 import { useRouter } from 'next/router';
 
-import { useCurrentTeam } from 'hooks/use-current-team';
+import { SettingsLayout } from 'common/layouts/settings-layout';
 import { TeamStoreProvider } from 'common/wrappers/team-store-provider';
-import { SettingsLayout } from 'layouts/settings-layout';
 
 import { Loader } from 'components/ui/loader';
+import { useCurrentTeam } from 'hooks/teams/use-current-team';
 
 import { SECTION_COMPONENTS_KEYS, SECTION_COMPONENTS } from './team-constants';
 

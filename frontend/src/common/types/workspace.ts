@@ -7,3 +7,13 @@ export interface WorkspaceType {
   slug: string;
   name: string;
 }
+
+export interface UsersOnWorkspaceType {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+
+  userId: string;
+  workspaceId: string;
+  teamIds: string[];
+}

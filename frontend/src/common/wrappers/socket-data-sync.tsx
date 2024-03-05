@@ -5,10 +5,9 @@ import getConfig from 'next/config';
 import * as React from 'react';
 import { Socket, io } from 'socket.io-client';
 
-import { saveSocketData } from 'common/database-balancer';
+import { useWorkspaceStore } from 'hooks/workspace';
 
-import { useWorkspaceStore } from 'store/workspace';
-
+import { saveSocketData } from './socket-data-util';
 import { Loader } from '../../components/ui/loader';
 
 interface Props {

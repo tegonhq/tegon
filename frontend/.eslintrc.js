@@ -67,7 +67,7 @@ module.exports = {
             position: 'after',
           },
           {
-            pattern: '+(components){/**,}',
+            pattern: '+(components|hooks){/**,}',
             group: 'internal',
             position: 'after',
           },

@@ -1,8 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 'use client';
 
+import { AuthLayout } from 'common/layouts/auth-layout';
 import { AuthGuard } from 'common/wrappers/auth-guard';
-import { AuthLayout } from 'layouts/auth-layout';
 
 import { SignForm } from './signin-form';
 

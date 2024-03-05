@@ -3,10 +3,10 @@
 import * as React from 'react';
 
 import { generateHexColor } from 'common/color-utils';
-import { useCurrentWorkspace } from 'hooks/use-current-workspace';
 
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
+import { useCurrentWorkspace } from 'hooks/workspace/use-current-workspace';
 
 import { useCreateLabelMutation } from 'services/labels/create-label';
 

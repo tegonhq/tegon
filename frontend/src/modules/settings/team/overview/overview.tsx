@@ -6,8 +6,6 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useCurrentTeam } from 'hooks/use-current-team';
-
 import { Button } from 'components/ui/button';
 import {
   Form,
@@ -19,14 +17,14 @@ import {
 } from 'components/ui/form';
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
-
-import { useTeamStore } from 'store/teams';
+import { useTeamsStore } from 'hooks/teams';
+import { useCurrentTeam } from 'hooks/teams/use-current-team';
 
 import { OverviewSchema } from './overview.interface';
 
 export const Overview = observer(() => {
   const currentTeam = useCurrentTeam();
-  const teamStore = useTeamStore();
+  const teamStore = useTeamsStore();
 
   const form = useForm<z.infer<typeof OverviewSchema>>({
     resolver: zodResolver(OverviewSchema),

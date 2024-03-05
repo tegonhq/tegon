@@ -20,5 +20,3 @@ export const Issue = types.model({
   parentId: types.union(types.string, types.null),
   stateId: types.string,
 });
-
-export const modelName = 'Issue';

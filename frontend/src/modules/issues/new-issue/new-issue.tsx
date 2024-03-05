@@ -14,16 +14,34 @@ import {
 } from 'components/ui/form';
 import { Textarea } from 'components/ui/textarea';
 
+import {
+  CreateIssueParams,
+  useCreateIssueMutation,
+} from 'services/issues/create-issue';
+
 import { NewIssueSchema } from './new-issues-type';
-import { IssueStatus } from '../components/issue-status/issue-status';
-import { IssueLabel } from '../components/issue-label/issue-label';
+import { IssueAssignee } from '../components/issue-assignee';
+import { IssueLabel } from '../components/issue-label';
+import { IssuePriority } from '../components/issue-priority';
+import { IssueStatus } from '../components/issue-status';
+import { useCurrentTeam } from 'hooks/teams';
 
 export function NewIssue() {
+  const { mutate: createIssue, isLoading } = useCreateIssueMutation({
+    onSuccess: () => {},
+  });
+  const team = useCurrentTeam();
   const form = useForm<z.infer<typeof NewIssueSchema>>({
     resolver: zodResolver(NewIssueSchema),
+    defaultValues: {
+      labelIds: [],
+      priority: 0,
+    },
   });
 
-  const onSubmit = () => {};
+  const onSubmit = (values: CreateIssueParams) => {
+    createIssue({ ...values, teamId: team.id });
+  };
 
   return (
     <div className="flex flex-col">
@@ -48,14 +66,80 @@ export function NewIssue() {
               )}
             />
 
-            <div className="flex gap-2">
-              <IssueStatus />
-              <IssueLabel defaultLabelIds={[]} />
+            <div className="flex gap-2 items-center">
+              <FormField
+                control={form.control}
+                name="stateId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <IssueStatus
+                        onChange={field.onChange}
+                        value={field.value}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="labelIds"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <IssueLabel
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="priority"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <IssuePriority
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="assigneeId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <IssueAssignee
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
 
           <div className="flex items-center justify-end p-2 border-t">
-            <Button type="submit">Create issue</Button>
+            <Button type="submit" isLoading={isLoading}>
+              Create issue
+            </Button>
           </div>
         </form>
       </Form>

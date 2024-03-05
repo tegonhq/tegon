@@ -70,11 +70,11 @@ export default class SyncActionsService {
     };
   }
 
-  async getBootstrap(modelName: ModelName, workspaceId: string) {
+  async getBootstrap(modelNames: string, workspaceId: string) {
     let syncActions = await this.prisma.syncAction.findMany({
       where: {
         workspaceId,
-        modelName,
+        modelName: { in: modelNames.split(',') as ModelName[] },
       },
       orderBy: {
         sequenceId: 'asc',
@@ -99,7 +99,7 @@ export default class SyncActionsService {
   }
 
   async getDelta(
-    modelName: ModelName,
+    modelNames: string,
     lastSequenceId: number,
     workspaceId: string,
   ) {
@@ -107,7 +107,7 @@ export default class SyncActionsService {
       where: {
         workspaceId,
         sequenceId: { gt: lastSequenceId },
-        modelName,
+        modelName: { in: modelNames.split(',') as ModelName[] },
       },
       orderBy: {
         sequenceId: 'asc',

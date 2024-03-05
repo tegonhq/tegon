@@ -10,30 +10,30 @@ import { BootstrapResponse } from 'common/types/data-loader';
  */
 export const GetBootstrapRecords = 'getBootstrapRecords';
 
-export function getBootstrapRecords(workspaceId: string, modelName: string) {
+export function getBootstrapRecords(workspaceId: string, modelNames: string[]) {
   return ajaxGet({
     url: `/api/v1/sync_actions/bootstrap`,
     query: {
       workspaceId,
-      modelName,
+      modelNames: modelNames.join(','),
     },
   });
 }
 
 export interface QueryParams {
   workspaceId: string;
-  modelName: string;
+  modelNames: string[];
   onSuccess?: (data: BootstrapResponse) => void;
 }
 
 export function useBootstrapRecords({
   workspaceId,
-  modelName,
+  modelNames,
   onSuccess,
 }: QueryParams): UseQueryResult<BootstrapResponse, XHRErrorResponse> {
   return useQuery(
-    [GetBootstrapRecords, modelName, workspaceId],
-    () => getBootstrapRecords(workspaceId, modelName),
+    [GetBootstrapRecords, modelNames, workspaceId],
+    () => getBootstrapRecords(workspaceId, modelNames),
     {
       retry: 1,
       staleTime: 1,

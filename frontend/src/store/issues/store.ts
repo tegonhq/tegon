@@ -5,8 +5,11 @@ import { IAnyStateTreeNode, Instance, types } from 'mobx-state-tree';
 import { IssueType } from 'common/types/issue';
 
 import { tegonDatabase } from 'store/database';
+import { MODELS } from 'store/models';
 
-import { Issue, modelName } from './models';
+import { Issue } from './models';
+
+const modelName = MODELS.Issue;
 
 export const IssuesStore: IAnyStateTreeNode = types
   .model({

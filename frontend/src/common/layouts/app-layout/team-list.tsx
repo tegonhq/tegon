@@ -3,9 +3,9 @@
 import {
   RiAccountBoxFill,
   RiArrowRightSFill,
+  RiExchangeFill,
   RiFunctionFill,
   RiStackFill,
-  RiSwapLine,
   RiTeamFill,
 } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
@@ -20,8 +20,7 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 import { Separator } from 'components/ui/separator';
-
-import { useTeamStore } from 'store/teams';
+import { useTeamsStore } from 'hooks/teams';
 
 import { Nav } from './nav';
 import { TeamListItem } from './team-list-item';
@@ -32,7 +31,7 @@ interface TeamListProps {
 
 export const TeamList = observer(({ isCollapsed }: TeamListProps) => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
-  const teamStore = useTeamStore();
+  const teamStore = useTeamsStore();
 
   return (
     <div
@@ -88,7 +87,7 @@ export const TeamList = observer(({ isCollapsed }: TeamListProps) => {
                   <TeamListItem
                     name="Triage"
                     team={team}
-                    Icon={RiSwapLine}
+                    Icon={RiExchangeFill}
                     href="triage"
                   />
                   <TeamListItem
@@ -98,8 +97,8 @@ export const TeamList = observer(({ isCollapsed }: TeamListProps) => {
                     href="all"
                   />
 
-                  <div className="pl-[2.1rem] w-full">
-                    <div className="border-l pl-3 w-full">
+                  <div className="pl-[2rem] w-full">
+                    <div className="border-l-2 pl-4 w-full">
                       <TeamListItem
                         subList
                         name="Active"
