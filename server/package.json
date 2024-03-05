@@ -77,6 +77,7 @@
     "pg-logical-replication": "^2.0.3",
     "reflect-metadata": "^0.2.1",
     "rxjs": "7.8.1",
+    "simple-oauth2": "^5.0.0",
     "supertokens-node": "^16.7.1"
   },
   "devDependencies": {
