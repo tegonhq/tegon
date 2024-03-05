@@ -63,6 +63,10 @@ Table Team {
   template Template [not null]
   workflow Workflow [not null]
   teamPreference TeamPreference [not null]
+
+  indexes {
+    (name, identifier, workspaceId) [unique]
+  }
 }
 
 Table Label {
@@ -131,7 +135,7 @@ Table SyncAction {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deleted DateTime
-  modelName String [not null]
+  modelName ModelName [not null]
   modelId String [not null]
   action ActionType [not null]
   sequenceId Int [not null]
@@ -248,6 +252,19 @@ Enum Role {
 Enum Status {
   ACTIVE
   SUSPENDED
+}
+
+Enum ModelName {
+  Workspace
+  Team
+  TeamPreference
+  Issue
+  Label
+  Workflow
+  Template
+  IssueComment
+  IssueHistory
+  UsersOnWorkspaces
 }
 
 Enum ActionType {

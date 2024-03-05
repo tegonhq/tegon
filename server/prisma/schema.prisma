@@ -91,6 +91,8 @@ model Team {
   template       Template[]
   workflow       Workflow[]
   teamPreference TeamPreference[]
+
+  @@unique([name, identifier, workspaceId])
 }
 
 model Label {
@@ -166,7 +168,7 @@ model SyncAction {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  modelName  String
+  modelName  ModelName
   modelId    String
   action     ActionType
   sequenceId Int
@@ -290,6 +292,18 @@ enum Role {
 enum Status {
   ACTIVE
   SUSPENDED
+}
+enum ModelName {
+  Workspace
+  Team
+  TeamPreference
+  Issue
+  Label
+  Workflow
+  Template
+  IssueComment
+  IssueHistory
+  UsersOnWorkspaces
 }
 
 enum ActionType {

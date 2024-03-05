@@ -1,5 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { ModelName } from '@prisma/client';
+
 export interface logChangeType {
   kind: string;
   schema: string;
@@ -15,14 +17,14 @@ export interface logType {
 }
 
 export const tablesToSendMessagesFor = new Map([
-  ['workspace', true],
-  ['team', true],
-  ['teampreference', true],
-  ['issue', true],
-  ['label', true],
-  ['workflow', true],
-  ['template', true],
-  ['issuecomment', true],
-  ['issuehistory', true],
-  ['usersonworkspaces', true],
+  [ModelName.Workspace, true],
+  [ModelName.Team, true],
+  [ModelName.TeamPreference, true],
+  [ModelName.Issue, true],
+  [ModelName.Label, true],
+  [ModelName.Workflow, true],
+  [ModelName.Template, true],
+  [ModelName.IssueComment, true],
+  [ModelName.IssueHistory, true],
+  [ModelName.UsersOnWorkspaces, true],
 ]);

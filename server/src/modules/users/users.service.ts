@@ -25,6 +25,22 @@ export class UsersService {
     return userSerializer(user);
   }
 
+  async getUserById(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        fullname: true,
+      },
+    });
+
+    return user;
+  }
+
   async updateUser(id: string, updateData: UpdateUserBody) {
     const user = await this.prisma.user.update({
       where: {

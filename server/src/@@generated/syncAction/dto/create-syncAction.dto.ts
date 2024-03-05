@@ -1,5 +1,5 @@
 
-import {ActionType} from '@prisma/client'
+import {ModelName,ActionType} from '@prisma/client'
 import {ApiProperty} from '@nestjs/swagger'
 
 
@@ -7,7 +7,8 @@ import {ApiProperty} from '@nestjs/swagger'
 
 export class CreateSyncActionDto {
   deleted?: Date;
-modelName: string;
+@ApiProperty({ enum: ModelName})
+modelName: ModelName;
 modelId: string;
 @ApiProperty({ enum: ActionType})
 action: ActionType;

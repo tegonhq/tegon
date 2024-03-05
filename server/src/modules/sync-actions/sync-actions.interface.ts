@@ -1,21 +1,22 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { IsString } from 'class-validator';
+import { ModelName } from '@prisma/client';
+import { IsEnum, IsString } from 'class-validator';
 
 export class BootstrapRequestQuery {
   @IsString()
   workspaceId: string;
 
-  @IsString()
-  modelName: string;
+  @IsEnum(ModelName)
+  modelName: ModelName;
 }
 
 export class DeltaRequestQuery {
   @IsString()
   workspaceId: string;
 
-  @IsString()
-  modelName: string;
+  @IsEnum(ModelName)
+  modelName: ModelName;
 
   @IsString()
   lastSequenceId: string;

@@ -39,9 +39,10 @@ export default class TeamsService {
 
     await this.addTeamMember(
       team.id,
-      userId,
       workspaceRequestParams.workspaceId,
+      userId,
     );
+
     return team;
   }
 

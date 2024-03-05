@@ -28,6 +28,14 @@ export class UsersController {
     return user;
   }
 
+  @Get(':userId')
+  @UseGuards(new AuthGuard())
+  async getUserById(@Param() userIdBody: UserIdParams): Promise<User> {
+    const user = await this.usersService.getUser(userIdBody.userId);
+
+    return user;
+  }
+
   @Post(':userId')
   @UseGuards(new AuthGuard())
   async updateUser(
