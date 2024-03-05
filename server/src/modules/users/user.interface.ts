@@ -18,14 +18,14 @@ export class UpdateUserBody {
 
 export class UserIdsBody {
   @IsArray()
-  userIds: string[]
+  userIds: string[];
 }
 
 export interface PublicUser {
-  id: string,
-  username: string,
-  fullname: string,
-  email: string,
+  id: string;
+  username: string;
+  fullname: string;
+  email: string;
 }
 
 export function userSerializer(user: User) {

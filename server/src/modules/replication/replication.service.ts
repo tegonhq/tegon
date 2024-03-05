@@ -3,7 +3,7 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ModelName } from '@prisma/client';
+// import { string } from '@prisma/client';
 import { Client } from 'pg';
 import {
   LogicalReplicationService,
@@ -116,7 +116,7 @@ export default class ReplicationService {
           if (
             change.schema === 'tegon' &&
             change.kind !== 'delete' &&
-            tablesToSendMessagesFor.has(change.table as ModelName)
+            tablesToSendMessagesFor.has(change.table as string)
           ) {
             const { columnvalues, columnnames } = change;
             const deletedIndex = columnnames.indexOf('deleted');
@@ -132,7 +132,7 @@ export default class ReplicationService {
               await this.syncActionsService.upsertSyncAction(
                 _lsn,
                 change.kind,
-                change.table as ModelName,
+                change.table as string,
                 columnvalues[index],
                 isDeleted,
               );

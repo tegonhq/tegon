@@ -6,6 +6,8 @@ import { IssueType } from 'common/types/issue';
 import { WorkflowType } from 'common/types/team';
 
 import { IssueItem } from './issue-item';
+import { useUsersData } from 'hooks/users';
+import { User } from 'store/user-context';
 
 interface IssuesCategoryProps {
   workflow: WorkflowType;
@@ -16,10 +18,6 @@ export function IssuesCategory({ workflow, issues }: IssuesCategoryProps) {
   const CategoryIcon =
     WORKFLOW_CATEGORY_ICONS[workflow.name] ??
     WORKFLOW_CATEGORY_ICONS['Backlog'];
-
-  if (issues.length === 0) {
-    return null;
-  }
 
   return (
     <div className="flex flex-col">

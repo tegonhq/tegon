@@ -98,7 +98,7 @@ export const TeamList = observer(({ isCollapsed }: TeamListProps) => {
                   />
 
                   <div className="pl-[2rem] w-full">
-                    <div className="border-l-2 pl-4 w-full">
+                    <div className="border-l-1 pl-4 w-full">
                       <TeamListItem
                         subList
                         name="Active"

@@ -8,7 +8,12 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
-import { PublicUser, UpdateUserBody, UserIdParams, UserIdsBody } from './user.interface';
+import {
+  PublicUser,
+  UpdateUserBody,
+  UserIdParams,
+  UserIdsBody,
+} from './user.interface';
 import { UsersService } from './users.service';
 
 @Controller({
@@ -30,8 +35,8 @@ export class UsersController {
 
   @Post()
   @UseGuards(new AuthGuard())
-  async getUserById(@Body() userIdBody: UserIdsBody): Promise<PublicUser[]> {
-    return await this.usersService.getUsersbyId(userIdBody.userIds);
+  async getUsersById(@Body() userIdsBody: UserIdsBody): Promise<PublicUser[]> {
+    return await this.usersService.getUsersbyId(userIdsBody.userIds);
   }
 
   @Post(':userId')

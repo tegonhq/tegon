@@ -3,43 +3,23 @@
 import { RiPriceTagFill } from '@remixicon/react';
 import * as React from 'react';
 
+import { cn } from 'common/lib/utils';
 import { LabelType } from 'common/types/label';
 
 import { Button } from 'components/ui/button';
-import { Checkbox } from 'components/ui/checkbox';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from 'components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useTeamLabels } from 'hooks/labels/use-team-labels';
-import { cn } from 'common/lib/utils';
+
+import { IssueLabelDropdownContent } from '../components/issue-label-dropdown-content';
 
 interface IssueLabelProps {
   value: string[];
   onChange?: (value: string[]) => void;
 }
 
-export function IssueLabel({ value = [], onChange }: IssueLabelProps) {
+export function IssueLabelDropdown({ value = [], onChange }: IssueLabelProps) {
   const [open, setOpen] = React.useState(false);
   const labels = useTeamLabels();
-
-  const onValueChange = (checked: boolean, id: string) => {
-    if (checked && !value.includes(id)) {
-      onChange && onChange([...value, id]);
-    }
-
-    if (!checked && value.includes(id)) {
-      const newIds = [...value];
-      const indexToDelete = newIds.indexOf(id);
-
-      newIds.splice(indexToDelete, 1);
-      onChange && onChange(newIds);
-    }
-  };
 
   const labelTitle = () => {
     if (value.length === 1) {
@@ -88,37 +68,11 @@ export function IssueLabel({ value = [], onChange }: IssueLabelProps) {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
-          <Command>
-            <CommandInput placeholder="Set label..." />
-            <CommandEmpty>No label found.</CommandEmpty>
-            <CommandGroup>
-              {labels.map((label: LabelType) => {
-                return (
-                  <CommandItem
-                    key={label.name}
-                    className="my-1"
-                    value={label.name}
-                  >
-                    <div className="flex gap-2 items-center ">
-                      <Checkbox
-                        id={label.name}
-                        checked={value.includes(label.id)}
-                        onCheckedChange={(value: boolean) =>
-                          onValueChange(value, label.id)
-                        }
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        {label.name}
-                      </label>
-                    </div>
-                  </CommandItem>
-                );
-              })}
-            </CommandGroup>
-          </Command>
+          <IssueLabelDropdownContent
+            onChange={onChange}
+            value={value}
+            labels={labels}
+          />
         </PopoverContent>
       </Popover>
     </div>

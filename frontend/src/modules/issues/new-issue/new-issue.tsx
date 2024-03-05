@@ -13,18 +13,18 @@ import {
   FormMessage,
 } from 'components/ui/form';
 import { Textarea } from 'components/ui/textarea';
+import { useCurrentTeam } from 'hooks/teams';
 
 import {
   CreateIssueParams,
   useCreateIssueMutation,
 } from 'services/issues/create-issue';
 
+import { IssueAssigneeDropdown } from './issue-assignee-dropdown';
+import { IssueLabelDropdown } from './issue-label-dropdown';
+import { IssuePriorityDropdown } from './issue-priority-dropdown';
+import { IssueStatusDropdown } from './issue-status-dropdown';
 import { NewIssueSchema } from './new-issues-type';
-import { IssueAssignee } from '../components/issue-assignee';
-import { IssueLabel } from '../components/issue-label';
-import { IssuePriority } from '../components/issue-priority';
-import { IssueStatus } from '../components/issue-status';
-import { useCurrentTeam } from 'hooks/teams';
 
 export function NewIssue() {
   const { mutate: createIssue, isLoading } = useCreateIssueMutation({
@@ -73,7 +73,7 @@ export function NewIssue() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <IssueStatus
+                      <IssueStatusDropdown
                         onChange={field.onChange}
                         value={field.value}
                       />
@@ -89,7 +89,7 @@ export function NewIssue() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <IssueLabel
+                      <IssueLabelDropdown
                         value={field.value}
                         onChange={field.onChange}
                       />
@@ -106,7 +106,7 @@ export function NewIssue() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <IssuePriority
+                      <IssuePriorityDropdown
                         value={field.value}
                         onChange={field.onChange}
                       />
@@ -123,7 +123,7 @@ export function NewIssue() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <IssueAssignee
+                      <IssueAssigneeDropdown
                         value={field.value}
                         onChange={field.onChange}
                       />

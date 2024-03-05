@@ -1,10 +1,10 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
+import { User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import { PublicUser, UpdateUserBody, userSerializer } from './user.interface';
-import { User } from '@prisma/client';
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
@@ -27,9 +27,9 @@ export class UsersService {
   }
 
   async getUsersbyId(ids: string[]): Promise<PublicUser[]> {
-    const user = await this.prisma.user.findMany({
+    return await this.prisma.user.findMany({
       where: {
-        id: {in: ids}
+        id: { in: ids },
       },
       select: {
         id: true,
@@ -38,8 +38,6 @@ export class UsersService {
         email: true,
       },
     });
-
-    return user;
   }
 
   async updateUser(id: string, updateData: UpdateUserBody) {

@@ -7,7 +7,7 @@ import { useStoreManagement } from 'hooks/use-store-management';
 
 import { tegonDatabase } from 'store/database';
 import { MODELS } from 'store/models';
-import { workspaceStore } from 'store/workspace';
+import { WorkspaceStoreType, workspaceStore } from 'store/workspace';
 
 export async function saveWorkspaceData(data: BootstrapResponse) {
   await Promise.all(
@@ -49,7 +49,7 @@ export async function saveWorkspaceData(data: BootstrapResponse) {
   });
 }
 
-export function useWorkspaceStore() {
+export function useWorkspaceStore(): WorkspaceStoreType {
   return useStoreManagement({
     store: workspaceStore,
     modelName: [MODELS.Workspace, MODELS.UsersOnWorkspaces],

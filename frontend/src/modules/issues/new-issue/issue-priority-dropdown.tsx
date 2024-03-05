@@ -3,14 +3,9 @@
 import * as React from 'react';
 
 import { Button } from 'components/ui/button';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from 'components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
+
+import { IssuePriorityDropdownContent } from '../components/issue-priority-dropdown-content';
 
 interface IssuePriorityProps {
   value?: number;
@@ -19,7 +14,7 @@ interface IssuePriorityProps {
 
 const Priorities = ['No priority', 'Urgent', 'High', 'Medium', 'Low'];
 
-export function IssuePriority({ value, onChange }: IssuePriorityProps) {
+export function IssuePriorityDropdown({ value, onChange }: IssuePriorityProps) {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -37,25 +32,11 @@ export function IssuePriority({ value, onChange }: IssuePriorityProps) {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
-          <Command>
-            <CommandInput placeholder="Set priority..." />
-            <CommandGroup>
-              {Priorities.map((priority, index) => {
-                return (
-                  <CommandItem
-                    key={priority}
-                    value={`${index}`}
-                    onSelect={(currentValue) => {
-                      onChange && onChange(parseInt(currentValue, 10));
-                      setOpen(false);
-                    }}
-                  >
-                    {priority}
-                  </CommandItem>
-                );
-              })}
-            </CommandGroup>
-          </Command>
+          <IssuePriorityDropdownContent
+            onChange={onChange}
+            onClose={() => setOpen(false)}
+            Priorities={Priorities}
+          />
         </PopoverContent>
       </Popover>
     </div>
