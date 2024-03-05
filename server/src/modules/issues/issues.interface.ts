@@ -37,6 +37,7 @@ export class CreateIssueInput {
   @IsNumber()
   sortOrder: number;
 
+  @IsOptional()
   @IsNumber()
   estimate: number;
 

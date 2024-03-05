@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { User } from '@@generated/user/entities';
-import { IsString } from 'class-validator';
+import { IsArray, IsString } from 'class-validator';
 
 export class UserIdParams {
   @IsString()
@@ -14,6 +14,18 @@ export class UpdateUserBody {
 
   @IsString()
   username: string;
+}
+
+export class UserIdsBody {
+  @IsArray()
+  userIds: string[]
+}
+
+export interface PublicUser {
+  id: string,
+  username: string,
+  fullname: string,
+  email: string,
 }
 
 export function userSerializer(user: User) {

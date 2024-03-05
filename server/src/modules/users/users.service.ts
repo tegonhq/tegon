@@ -3,12 +3,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 
-import { UpdateUserBody, userSerializer } from './user.interface';
+import { PublicUser, UpdateUserBody, userSerializer } from './user.interface';
+import { User } from '@prisma/client';
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async getUser(id: string) {
+  async getUser(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: {
         id,
@@ -25,16 +26,16 @@ export class UsersService {
     return userSerializer(user);
   }
 
-  async getUserById(id: string) {
-    const user = await this.prisma.user.findUnique({
+  async getUsersbyId(ids: string[]): Promise<PublicUser[]> {
+    const user = await this.prisma.user.findMany({
       where: {
-        id,
+        id: {in: ids}
       },
       select: {
         id: true,
         username: true,
-        email: true,
         fullname: true,
+        email: true,
       },
     });
 
