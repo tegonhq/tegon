@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { ActionType, SyncAction } from '@prisma/client';
+import { ActionType, ModelName, SyncAction } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 export function convertToActionType(action: string): ActionType {
@@ -24,7 +24,7 @@ export function convertLsnToInt(lsn: string) {
 
 export async function getWorkspaceId(
   prisma: PrismaService,
-  modelName: string,
+  modelName: ModelName,
   modelId: string,
 ): Promise<string> {
   switch (modelName.toLocaleLowerCase()) {
@@ -97,7 +97,7 @@ export async function getWorkspaceId(
 
 export async function getModelData(
   prisma: PrismaService,
-  modelName: string,
+  modelName: ModelName,
   modelId: string,
 ) {
   switch (modelName.toLocaleLowerCase()) {

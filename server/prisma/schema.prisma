@@ -168,7 +168,7 @@ model SyncAction {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  modelName  String
+  modelName  ModelName
   modelId    String
   action     ActionType
   sequenceId Int
@@ -294,18 +294,18 @@ enum Status {
   SUSPENDED
 }
 
-// enum ModelName {
-//   Workspace
-//   Team
-//   TeamPreference
-//   Issue
-//   Label
-//   Workflow
-//   Template
-//   IssueComment
-//   IssueHistory
-//   UsersOnWorkspaces
-// }
+enum ModelName {
+  Workspace
+  Team
+  TeamPreference
+  Issue
+  Label
+  Workflow
+  Template
+  IssueComment
+  IssueHistory
+  UsersOnWorkspaces
+}
 
 enum ActionType {
   I

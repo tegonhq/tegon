@@ -2,7 +2,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
-import { ActionType, SyncAction } from '@prisma/client';
+import { ActionType, ModelName, SyncAction } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -20,7 +20,7 @@ export default class SyncActionsService {
   async upsertSyncAction(
     lsn: string,
     action: string,
-    modelName: string,
+    modelName: ModelName,
     modelId: string,
     isDeleted: boolean,
   ) {
@@ -74,7 +74,7 @@ export default class SyncActionsService {
     let syncActions = await this.prisma.syncAction.findMany({
       where: {
         workspaceId,
-        modelName: { in: modelNames.split(',') as string[] },
+        modelName: { in: modelNames.split(',') as ModelName[] },
       },
       orderBy: {
         sequenceId: 'asc',
@@ -107,7 +107,7 @@ export default class SyncActionsService {
       where: {
         workspaceId,
         sequenceId: { gt: lastSequenceId },
-        modelName: { in: modelNames.split(',') },
+        modelName: { in: modelNames.split(',') as ModelName[] },
       },
       orderBy: {
         sequenceId: 'asc',

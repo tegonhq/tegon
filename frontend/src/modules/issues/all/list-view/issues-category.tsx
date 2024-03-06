@@ -6,8 +6,6 @@ import { IssueType } from 'common/types/issue';
 import { WorkflowType } from 'common/types/team';
 
 import { IssueItem } from './issue-item';
-import { useUsersData } from 'hooks/users';
-import { User } from 'store/user-context';
 
 interface IssuesCategoryProps {
   workflow: WorkflowType;

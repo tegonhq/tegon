@@ -33,7 +33,7 @@ export function WorkflowItem({ workflow }: WorkflowItemProps) {
   return (
     <div
       key={workflow.name}
-      className="w-full border border-slate-100 dark:border-slate-800 group flex justify-between mb-2 text-sm rounded-md bg-slate-100/80 dark:bg-slate-900 p-2 px-2"
+      className="w-full border border-slate-200 dark:border-slate-800 group flex justify-between mb-2 text-sm rounded-md bg-slate-100/80 dark:bg-slate-900 p-2 px-2"
     >
       <div className="flex items-center">
         <CategoryIcon

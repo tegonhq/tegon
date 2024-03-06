@@ -60,7 +60,7 @@ export function IssueLabelDropdown({ value = [], onChange }: IssueLabelProps) {
             aria-expanded={open}
             className={cn(
               'flex items-center justify-between text-xs font-normal',
-              value.length > 0 && 'text-white',
+              value.length > 0 && 'text-foreground',
               value.length === 0 && 'text-muted-foreground',
             )}
           >

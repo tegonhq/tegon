@@ -39,7 +39,7 @@ export const MyApp: NextComponentType<
     <SuperTokensWrapper>
       <ThemeProvider
         attribute="class"
-        defaultTheme="light"
+        defaultTheme="dark"
         enableSystem
         disableTransitionOnChange
       >

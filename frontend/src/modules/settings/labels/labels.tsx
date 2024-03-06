@@ -9,15 +9,14 @@ import { LabelType } from 'common/types/label';
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
-
-import { useLabelStore } from 'store/labels';
+import { useLabelsStore } from 'hooks/labels';
 
 import { EditLabel } from './edit-label';
 import { Label } from './label';
 import { NewLabel } from './new-label';
 
 export const Labels = observer(() => {
-  const labelStore = useLabelStore();
+  const labelStore = useLabelsStore();
   const [showNewLabelCreation, setNewLabelCreation] = React.useState(false);
   const [editLabelState, setEditLabelState] = React.useState(undefined);
   const [searchValue, setSearchValue] = React.useState('');

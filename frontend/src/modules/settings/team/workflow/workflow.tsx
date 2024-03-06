@@ -6,13 +6,12 @@ import * as React from 'react';
 import { WorkflowCategoryEnum, WorkflowType } from 'common/types/team';
 
 import { Separator } from 'components/ui/separator';
-
-import { useWorkflowStore } from 'store/workflows';
+import { useWorkflowsStore } from 'hooks/workflows';
 
 import { WorkflowCategory } from './workflow-category';
 
 export const Workflow = observer(() => {
-  const workflowStore = useWorkflowStore();
+  const workflowStore = useWorkflowsStore();
 
   const getWorkflows = React.useCallback(
     (categoryName: string) => {

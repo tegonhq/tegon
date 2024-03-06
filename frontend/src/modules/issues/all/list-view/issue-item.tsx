@@ -16,13 +16,13 @@ export function IssueItem({ issue }: IssueItemProps) {
   const team = useCurrentTeam();
 
   return (
-    <div className="pl-9 p-3 flex justify-between text-sm hover:bg-slate-100/50 dark:hover:bg-slate-900/50 border-b-[0.5px]">
+    <div className="pl-9 p-3 flex justify-between cursor-default text-sm hover:bg-slate-100/50 dark:hover:bg-slate-900/50 border-b-[0.5px]">
       <div className="flex items-center">
-        <div className="pr-3 text-muted-foreground min-w-[60px]">{`${team.identifier}-${issue.number}`}</div>
+        <div className="pr-3 text-muted-foreground min-w-[68px]">{`${team.identifier}-${issue.number}`}</div>
         <div className="pr-3">
           <IssueStatusDropdown value={issue.stateId} />
         </div>
-        <div className="font-medium max-w-[500px] ">
+        <div className="font-medium max-w-[400px] ">
           <div className="truncate">{issue.title}</div>
         </div>
       </div>
