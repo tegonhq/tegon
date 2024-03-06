@@ -19,7 +19,7 @@ import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 import {
   CreateWorkspaceInput,
   UpdateWorkspaceInput,
-  WorkspaceRequestIdBody,
+  WorkspaceIdRequestBody,
 } from './workspaces.interface';
 import WorkspacesService from './workspaces.service';
 
@@ -54,7 +54,7 @@ export class WorkspacesController {
   @UseGuards(new AuthGuard())
   async getWorkspace(
     @Param()
-    workspaceId: WorkspaceRequestIdBody,
+    workspaceId: WorkspaceIdRequestBody,
   ): Promise<Workspace> {
     return await this.workspacesService.getWorkspace(workspaceId);
   }
@@ -63,7 +63,7 @@ export class WorkspacesController {
   @UseGuards(new AuthGuard())
   async updateWorkspace(
     @Param()
-    workspaceId: WorkspaceRequestIdBody,
+    workspaceId: WorkspaceIdRequestBody,
     @Body() workspaceData: UpdateWorkspaceInput,
   ): Promise<Workspace> {
     return await this.workspacesService.updateWorkspace(
@@ -76,7 +76,7 @@ export class WorkspacesController {
   @UseGuards(new AuthGuard())
   async deleteWorkspace(
     @Param()
-    workspaceId: WorkspaceRequestIdBody,
+    workspaceId: WorkspaceIdRequestBody,
   ): Promise<Workspace> {
     return await this.workspacesService.deleteWorkspace(workspaceId);
   }

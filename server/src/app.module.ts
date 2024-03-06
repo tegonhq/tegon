@@ -22,6 +22,9 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { IntegrationAccountModule } from 'modules/integration_account/integration_account.module';
+import { IntegrationDefinitionModule } from 'modules/integration_definition/integration_definition.module';
+import { OAuthCallbackModule } from 'modules/oauth_callback/oauth_callback.module';
 
 @Module({
   imports: [
@@ -46,6 +49,10 @@ import { AppService } from './app.service';
     ReplicationModule,
     SyncActionsModule,
     SyncModule,
+
+    IntegrationDefinitionModule,
+    OAuthCallbackModule,
+    IntegrationAccountModule,
   ],
   controllers: [AppController],
   providers: [

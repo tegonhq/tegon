@@ -7,7 +7,7 @@ import { PrismaService } from 'nestjs-prisma';
 import {
   CreateWorkspaceInput,
   UpdateWorkspaceInput,
-  WorkspaceRequestIdBody,
+  WorkspaceIdRequestBody,
 } from './workspaces.interface';
 
 @Injectable()
@@ -44,11 +44,11 @@ export default class WorkspacesService {
   }
 
   async getWorkspace(
-    WorkspaceRequestIdBody: WorkspaceRequestIdBody,
+    WorkspaceIdRequestBody: WorkspaceIdRequestBody,
   ): Promise<Workspace> {
     return await this.prisma.workspace.findUnique({
       where: {
-        id: WorkspaceRequestIdBody.workspaceId,
+        id: WorkspaceIdRequestBody.workspaceId,
       },
       include: {
         usersOnWorkspaces: {
@@ -61,23 +61,23 @@ export default class WorkspacesService {
   }
 
   async updateWorkspace(
-    WorkspaceRequestIdBody: WorkspaceRequestIdBody,
+    WorkspaceIdRequestBody: WorkspaceIdRequestBody,
     workspaceData: UpdateWorkspaceInput,
   ): Promise<Workspace> {
     return await this.prisma.workspace.update({
       data: workspaceData,
       where: {
-        id: WorkspaceRequestIdBody.workspaceId,
+        id: WorkspaceIdRequestBody.workspaceId,
       },
     });
   }
 
   async deleteWorkspace(
-    WorkspaceRequestIdBody: WorkspaceRequestIdBody,
+    WorkspaceIdRequestBody: WorkspaceIdRequestBody,
   ): Promise<Workspace> {
     return await this.prisma.workspace.delete({
       where: {
-        id: WorkspaceRequestIdBody.workspaceId,
+        id: WorkspaceIdRequestBody.workspaceId,
       },
     });
   }

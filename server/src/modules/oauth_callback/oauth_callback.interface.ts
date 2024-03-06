@@ -1,4 +1,4 @@
-/** Copyright (c) 2022, Poozle, all rights reserved. **/
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { IsOptional, IsString } from 'class-validator';
 
@@ -41,7 +41,7 @@ export class BodyInterface {
   accountIdentifier?: string;
 
   @IsString()
-  integrationOAuthAppId: string;
+  integrationDefinitionId: string;
 }
 
 export type CallbackParams = Record<string, string>;

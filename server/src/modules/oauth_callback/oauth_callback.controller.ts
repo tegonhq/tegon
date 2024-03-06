@@ -1,11 +1,6 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Query,
-  Res,
-} from '@nestjs/common';
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { BodyInterface, CallbackParams } from './oauth_callback.interface';
@@ -17,20 +12,14 @@ import { OAuthCallbackService } from './oauth_callback.service';
 })
 @ApiTags('OAuth Utils')
 export class OAuthCallbackController {
-  constructor(
-    private oAuthCallbackService: OAuthCallbackService,
-  ) {}
+  constructor(private oAuthCallbackService: OAuthCallbackService) {}
 
   @Post()
   async getRedirectURL(@Body() body: BodyInterface) {
-
     return await this.oAuthCallbackService.getRedirectURL(
       body.workspaceId,
-      body.integrationOAuthAppId,
-      body.config ?? {},
+      body.integrationDefinitionId,
       body.redirectURL,
-      body.accountIdentifier,
-      body.integrationKeys,
     );
   }
 

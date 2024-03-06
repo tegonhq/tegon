@@ -1,6 +1,8 @@
-/** Copyright (c) 2023, Poozle, all rights reserved. **/
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { BadRequestException } from '@nestjs/common';
+import { IntegrationDefinition } from '@prisma/client';
+
 import {
   OAuthAuthorizationMethod,
   OAuthBodyFormat,
@@ -8,8 +10,6 @@ import {
   ProviderTemplate,
   ProviderTemplateOAuth2,
 } from './oauth_callback.interface';
-import { IntegrationDefinition } from '@prisma/client';
-
 
 /**
  * A helper function to interpolate a string.
@@ -65,12 +65,12 @@ export function getSimpleOAuth2ClientConfig(
 export async function getTemplate(
   integrationDefinition: IntegrationDefinition,
 ): Promise<ProviderTemplate> {
+  const spec =
+    typeof integrationDefinition.spec === 'string'
+      ? JSON.parse(integrationDefinition.spec)
+      : integrationDefinition.spec;
 
-  const spec = typeof integrationDefinition.spec === 'string' 
-    ? JSON.parse(integrationDefinition.spec) 
-    : integrationDefinition.spec;
-    
-  const template: ProviderTemplate = spec['OAuth2'] as ProviderTemplate;
+  const template: ProviderTemplate = spec.auth_specification.OAuth2 as ProviderTemplate;
 
   if (!template) {
     throw new BadRequestException({

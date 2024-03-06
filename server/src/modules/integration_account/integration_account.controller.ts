@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/** Copyright (c) 2023, Poozle, all rights reserved. **/
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { IntegrationAccount } from '@@generated/integrationAccount/entities';
 import {
-  All,
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -11,7 +9,6 @@ import {
   Param,
   Post,
   Query,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -19,19 +16,13 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Method } from 'axios';
-
-import { IntegrationAccount } from '@@generated/integrationAccount/entities';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
 import {
   CreateIntegrationAccountBody,
-  CreateIntegrationAccountWithLinkBody,
   IntegrationAccountRequestIdBody,
-  IntegrationAccountWithLinkRequestIdBody,
   IntegrationAccountsRequestBody,
-  IntegrationCheckBody,
   UpdateIntegrationAccountBody,
 } from './integration_account.interface';
 import { IntegrationAccountService } from './integration_account.service';
@@ -52,9 +43,7 @@ import { IntegrationAccountService } from './integration_account.service';
   description: 'Not authorised',
 })
 export class IntegrationAccountController {
-  constructor(
-    private integrationAccountService: IntegrationAccountService,
-  ) {}
+  constructor(private integrationAccountService: IntegrationAccountService) {}
 
   /**
    * Get all integration accounts in a workspace
@@ -99,23 +88,6 @@ export class IntegrationAccountController {
   }
 
   /**
-   * Check credentials for a integration definition
-   */
-  @Post('check')
-  @UseGuards(new AuthGuard())
-  async checkCredentialsForIntegrationAccount(
-    @Body()
-    integrationCheckBody: IntegrationCheckBody,
-  ): CheckResponse {
-    return await this.integrationAccountService.checkForIntegrationCredentails(
-      integrationCheckBody.integrationDefinitionId,
-      integrationCheckBody.config,
-      integrationCheckBody.authType,
-      integrationCheckBody.workspaceId,
-    );
-  }
-
-  /**
    * Update a integration account in workspace
    */
   @Post(':integrationAccountId')
@@ -143,58 +115,6 @@ export class IntegrationAccountController {
   ): Promise<IntegrationAccount> {
     return await this.integrationAccountService.createIntegrationAccount(
       createIntegrationAccountBody,
-    );
-  }
-
-  /**
-   * Get integration account for a link
-   */
-  @Post('link/:linkId')
-  async createIntegrationAccountWithLink(
-    @Param()
-    integrationAccountWithLinkRequestIdBody: IntegrationAccountWithLinkRequestIdBody,
-    @Body()
-    createIntegrationAccountBody: CreateIntegrationAccountWithLinkBody,
-  ): Promise<IntegrationAccount> {
-    const link = await this.linkService.getLink(
-      integrationAccountWithLinkRequestIdBody,
-    );
-
-    if (link.expired) {
-      throw new BadRequestException('Link has expired');
-    }
-
-    return await this.integrationAccountService.createIntegrationAccountWithLink(
-      createIntegrationAccountBody.integrationDefinitionId,
-      createIntegrationAccountBody.config,
-      createIntegrationAccountBody.integrationAccountName,
-      createIntegrationAccountBody.authType,
-      link.workspaceId,
-      link.linkId,
-      createIntegrationAccountBody.accountIdentifier,
-    );
-  }
-
-  /**
-   * Proxy all the calls to the integration directly
-   */
-  @All(':integrationAccountId/proxy/*')
-  @UseGuards(new AuthGuard())
-  async proxy(
-    @Body()
-    body: any,
-    @Query()
-    query: any,
-    @Req() request: Request,
-    @Param()
-    integrationAccountIdRequestIdBody: any,
-  ): Promise<any> {
-    return await this.integrationAccountService.runProxyCommand(
-      integrationAccountIdRequestIdBody.integrationAccountId,
-      body,
-      request.method as Method,
-      integrationAccountIdRequestIdBody['0'],
-      query,
     );
   }
 }

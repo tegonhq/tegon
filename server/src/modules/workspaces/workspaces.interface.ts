@@ -24,7 +24,7 @@ export class UpdateWorkspaceInput {
   icon: string;
 }
 
-export class WorkspaceRequestIdBody {
+export class WorkspaceIdRequestBody {
   @IsString()
   workspaceId: string;
 }

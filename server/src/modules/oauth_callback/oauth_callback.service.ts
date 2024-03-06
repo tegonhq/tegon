@@ -1,11 +1,12 @@
-/* eslint-disable dot-location */
-/** Copyright (c) 2022, Poozle, all rights reserved. **/
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { IntegrationDefinition } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
 import * as simpleOauth2 from 'simple-oauth2';
 
-// import { IntegrationAccountService } from 'modules/integration_account/integration_account.service';
-// import { IntegrationOAuthService } from 'modules/integration_oauth/integration_oauth.service';
+import { CreateIntegrationAccountBody } from 'modules/integration_account/integration_account.interface';
+import { IntegrationAccountService } from 'modules/integration_account/integration_account.service';
 
 import {
   CallbackParams,
@@ -16,10 +17,9 @@ import {
   getSimpleOAuth2ClientConfig,
   getTemplate,
 } from './oauth_callback.utils';
-import { PrismaService } from 'nestjs-prisma';
-import { IntegrationDefinition } from '@prisma/client';
 
 const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/api/v1/oauth/callback`;
+
 
 @Injectable()
 export class OAuthCallbackService {
@@ -28,8 +28,7 @@ export class OAuthCallbackService {
 
   constructor(
     private prisma: PrismaService,
-    // private integrationOAuthService: IntegrationOAuthService,
-    // private integrationAccountService: IntegrationAccountService,
+    private integrationAccountService: IntegrationAccountService,
   ) {}
 
   async getIntegrationDefinition(integrationDefinitionId: string) {
@@ -58,10 +57,7 @@ export class OAuthCallbackService {
   async getRedirectURL(
     workspaceId: string,
     integrationDefinitionId: string,
-    externalConfig: Record<string, string>,
     redirectURL: string,
-    accountIdentifier?: string,
-    integrationKeys?: string,
   ) {
     this.logger.log(
       `We got OAuth request for ${workspaceId}: ${integrationDefinitionId}`,
@@ -71,6 +67,9 @@ export class OAuthCallbackService {
       integrationDefinitionId,
     );
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const spec = integrationDefinition.spec as Record<string, any>;
+    const externalConfig = spec.auth_specification['OAuth2'];
     const template = await getTemplate(integrationDefinition);
 
     let additionalAuthParams: Record<string, string> = {};
@@ -94,11 +93,9 @@ export class OAuthCallbackService {
       const uniqueId = new Date().getTime().toString(36);
       this.session[uniqueId] = {
         integrationDefinitionId: integrationDefinition.id,
-        config: externalConfig,
         redirectURL,
         workspaceId,
-        accountIdentifier,
-        integrationKeys,
+        config: externalConfig
       };
 
       let scopes = integrationDefinition.scopes.split(',');
@@ -140,21 +137,22 @@ export class OAuthCallbackService {
 
     const sessionRecord = this.session[params.state];
 
+
     /**
      * Delete the session once it's used
      */
     delete this.session[params.state];
 
     if (!sessionRecord) {
-      const errorMessage = 'No session found';
-      res.redirect(
-        `${sessionRecord.redirectURL}?success=false&error=${errorMessage}`,
-      );
+      throw new BadRequestException({
+        error: 'No session found',
+      });
     }
 
-    const integrationDefinition = await this.prisma.integrationDefinition.findUnique(
-      { where: { id: sessionRecord.integrationDefinitionId } },
-    );
+    const integrationDefinition =
+      await this.prisma.integrationDefinition.findUnique({
+        where: { id: sessionRecord.integrationDefinitionId },
+      });
 
     const template = (await getTemplate(
       integrationDefinition,
@@ -240,14 +238,12 @@ export class OAuthCallbackService {
         };
       }
 
-      await this.integrationAccountService.createIntegrationAccountWithLink(
-        integrationDefinition.id,
+      await this.integrationAccountService.createIntegrationAccount({
+        integrationDefinitionId: integrationDefinition.id,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        integrationConfiguration as any,
-        integrationConfiguration.api_key ? 'Api Key' : 'OAuth2',
-        sessionRecord.workspaceId,
-        sessionRecord.accountIdentifier,
-      );
+        config: integrationConfiguration as any,
+        workspaceId: sessionRecord.workspaceId,
+      } as CreateIntegrationAccountBody);
 
       res.redirect(
         `${sessionRecord.redirectURL}?success=true&integrationName=${integrationDefinition.name}${accountIdentifier}${integrationKeys}`,
