@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { ReactElement } from 'react';
+import type { ReactElement } from 'react';
 
 import { Logo } from 'components/dynamic-logo';
 

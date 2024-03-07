@@ -15,6 +15,8 @@ export function IssueTitle({ defaultValue }: IssueTitleProps) {
     <Textarea
       className="border-0 pl-0 font-medium resize-none no-scrollbar overflow-hidden outline-none focus-visible:ring-0 text-xl"
       value={value}
+      rows={1}
+      cols={1}
       placeholder="Issue title"
       onChange={(e) => {
         setValue(e.currentTarget.value);

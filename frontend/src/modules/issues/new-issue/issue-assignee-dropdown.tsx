@@ -15,7 +15,7 @@ import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useUsersData } from 'hooks/users/use-users-data';
 
-import { User } from 'store/user-context';
+import type { User } from 'store/user-context';
 
 import { IssueAssigneeDropdownContent } from '../components/issue-assignee-dropdown-content';
 

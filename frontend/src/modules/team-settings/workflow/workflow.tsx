@@ -3,7 +3,7 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { WorkflowCategoryEnum, WorkflowType } from 'common/types/team';
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { Separator } from 'components/ui/separator';
 import { useWorkflowsStore } from 'hooks/workflows';

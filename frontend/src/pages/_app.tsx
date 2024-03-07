@@ -2,8 +2,8 @@
 
 import 'styles/globals.css';
 import type { NextComponentType } from 'next';
+import type { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 
-import { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 import { Inter } from 'next/font/google';
 import * as React from 'react';
 import { Hydrate, QueryClientProvider } from 'react-query';

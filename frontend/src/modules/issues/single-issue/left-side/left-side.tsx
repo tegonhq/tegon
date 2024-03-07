@@ -15,7 +15,7 @@ export function LeftSide() {
       <Header />
       <div className="grow pl-8 p-4">
         <IssueTitle defaultValue={issue.title} />
-        <IssueDescription defaultValue={issue.description} />
+        <IssueDescription />
 
         <Separator className="my-4" />
       </div>

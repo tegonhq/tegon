@@ -37,6 +37,7 @@
     "mobx-state-tree": "^5.4.1",
     "next": "14.1.0",
     "next-themes": "^0.2.1",
+    "novel": "^0.2.10",
     "qs": "^6.12.0",
     "react": "^18",
     "react-dom": "^18",
@@ -49,6 +50,7 @@
     "supertokens-web-js": "^0.8.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "use-debounce": "^10.0.0",
     "uuid": "^9.0.1",
     "vaul": "^0.8.9",
     "zod": "^3.22.4"

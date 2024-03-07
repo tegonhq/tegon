@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { UsersOnWorkspaceType } from 'common/types/workspace';
+import type { UsersOnWorkspaceType } from 'common/types/workspace';
 
 import { useWorkspaceStore } from 'hooks/workspace';
 

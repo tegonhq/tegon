@@ -15,7 +15,7 @@ import {
   CommandItem,
 } from 'components/ui/command';
 
-import { User } from 'store/user-context';
+import type { User } from 'store/user-context';
 
 interface IssueAssigneeDropdownContentProps {
   onChange?: (assigneeId: string) => void;

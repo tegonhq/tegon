@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiFocusMode, RiInbox2Fill, RiSettings2Fill } from '@remixicon/react';
+import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { cn } from 'common/lib/utils';
@@ -23,6 +24,9 @@ interface LayoutProps {
 
 export function AppLayout({ defaultCollapsed = false, children }: LayoutProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
+  const {
+    query: { workspaceSlug },
+  } = useRouter();
 
   return (
     <AllProviders>
@@ -76,7 +80,7 @@ export function AppLayout({ defaultCollapsed = false, children }: LayoutProps) {
                 {
                   title: 'Settings',
                   icon: RiSettings2Fill,
-                  href: '/settings',
+                  href: `/${workspaceSlug}/settings/overview`,
                 },
               ]}
             />

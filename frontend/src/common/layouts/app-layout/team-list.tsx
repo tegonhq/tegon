@@ -11,7 +11,7 @@ import {
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { TeamType } from 'common/types/team';
+import type { TeamType } from 'common/types/team';
 
 import {
   Accordion,

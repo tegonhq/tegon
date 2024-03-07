@@ -5,18 +5,12 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from 'components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from 'components/ui/form';
+import { Form, FormControl, FormField, FormItem } from 'components/ui/form';
 import { Textarea } from 'components/ui/textarea';
 import { useCurrentTeam } from 'hooks/teams';
 
 import {
-  CreateIssueParams,
+  type CreateIssueParams,
   useCreateIssueMutation,
 } from 'services/issues/create-issue';
 
@@ -60,8 +54,6 @@ export function NewIssue() {
                       {...field}
                     />
                   </FormControl>
-
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -78,8 +70,6 @@ export function NewIssue() {
                         value={field.value}
                       />
                     </FormControl>
-
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -94,8 +84,6 @@ export function NewIssue() {
                         onChange={field.onChange}
                       />
                     </FormControl>
-
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -111,8 +99,6 @@ export function NewIssue() {
                         onChange={field.onChange}
                       />
                     </FormControl>
-
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -128,8 +114,6 @@ export function NewIssue() {
                         onChange={field.onChange}
                       />
                     </FormControl>
-
-                    <FormMessage />
                   </FormItem>
                 )}
               />

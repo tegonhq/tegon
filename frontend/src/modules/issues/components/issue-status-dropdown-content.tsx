@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/settings/team/workflow/workflow-item';
+import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
 
 import { WorkflowType } from 'common/types/team';
 

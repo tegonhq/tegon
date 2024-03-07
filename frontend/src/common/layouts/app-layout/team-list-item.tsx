@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 
-import { TeamType } from 'common/types/team';
+import type { TeamType } from 'common/types/team';
 
 import { Button } from 'components/ui/button';
 

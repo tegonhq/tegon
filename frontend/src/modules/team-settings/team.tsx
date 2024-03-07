@@ -9,7 +9,10 @@ import { TeamStoreProvider } from 'common/wrappers/team-store-provider';
 import { Loader } from 'components/ui/loader';
 import { useCurrentTeam } from 'hooks/teams/use-current-team';
 
-import { SECTION_COMPONENTS_KEYS, SECTION_COMPONENTS } from './team-constants';
+import {
+  type SECTION_COMPONENTS_KEYS,
+  SECTION_COMPONENTS,
+} from './team-constants';
 
 export function TeamSettings() {
   const router = useRouter();

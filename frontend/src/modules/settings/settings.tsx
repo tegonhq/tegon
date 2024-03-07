@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import {
-  SECTION_COMPONENTS_KEYS,
+  type SECTION_COMPONENTS_KEYS,
   SECTION_COMPONENTS,
 } from './settings-constants';
 

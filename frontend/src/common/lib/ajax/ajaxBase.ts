@@ -1,8 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import type request from 'superagent';
-
-import { Primitive } from 'zod';
+import type { Primitive } from 'zod';
 
 /**
  * Integration of Native Promise Interface.

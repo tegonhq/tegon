@@ -1,9 +1,9 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/settings/team/workflow/workflow-item';
+import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
 
-import { IssueType } from 'common/types/issue';
-import { WorkflowType } from 'common/types/team';
+import type { IssueType } from 'common/types/issue';
+import type { WorkflowType } from 'common/types/team';
 
 import { IssueItem } from './issue-item';
 
