@@ -260,6 +260,8 @@ Table IntegrationAccount {
   updatedAt DateTime [not null]
   deleted DateTime
   integrationConfiguration Json [not null]
+  installationId String
+  settings Json [not null]
   integrationDefinition IntegrationDefinition [not null]
   integrationDefinitionId String [not null]
   workspace Workspace [not null]

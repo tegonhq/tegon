@@ -10,6 +10,8 @@ createdAt: Date ;
 updatedAt: Date ;
 deleted: Date  | null;
 integrationConfiguration: Prisma.JsonValue ;
+installationId: string  | null;
+settings: Prisma.JsonValue ;
 integrationDefinition?: IntegrationDefinition ;
 integrationDefinitionId: string ;
 workspace?: Workspace ;

@@ -19,13 +19,14 @@ export class IntegrationAccountService {
   ) {
     const { integrationDefinitionId, config, workspaceId } =
       createIntegrationAccountBody;
-      
+
     const integrationAccount =
       await this.prismaService.integrationAccount.create({
         data: {
           integrationDefinition: { connect: { id: integrationDefinitionId } },
           workspace: { connect: { id: workspaceId } },
           integrationConfiguration: config,
+          installationId: createIntegrationAccountBody.installationId
         },
         include: {
           integrationDefinition: true,

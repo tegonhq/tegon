@@ -303,6 +303,8 @@ model IntegrationAccount {
   deleted   DateTime?
 
   integrationConfiguration Json
+  installationId           String?
+  settings                 Json
 
   integrationDefinition   IntegrationDefinition @relation(references: [id], fields: [integrationDefinitionId])
   integrationDefinitionId String

@@ -14,11 +14,14 @@ import {
   SessionRecord,
 } from './oauth_callback.interface';
 import {
+  getInstallationId,
   getSimpleOAuth2ClientConfig,
   getTemplate,
 } from './oauth_callback.utils';
 
-const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/api/v1/oauth/callback`;
+// const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/api/v1/oauth/callback`;
+
+const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/v1/oauth/callback`;
 
 
 @Injectable()
@@ -204,6 +207,7 @@ export class OAuthCallbackService {
         ),
       );
 
+      // const {code, ...otherParams} = params
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const tokensResponse: any = await simpleOAuthClient.getToken(
         {
@@ -215,17 +219,15 @@ export class OAuthCallbackService {
           headers,
         },
       );
+      let integrationConfiguration
 
-      let integrationConfiguration = {
-        ...sessionRecord.config,
-      };
-
+      const installationId = getInstallationId(integrationDefinition.name, params, tokensResponse)
       if (
         tokensResponse.token.access_token &&
         tokensResponse.token.refresh_token
       ) {
         integrationConfiguration = {
-          ...integrationConfiguration,
+          // ...otherParams,
           scope: tokensResponse.token.scope,
           refresh_token: tokensResponse.token.refresh_token,
           client_id: integrationDefinition.clientId,
@@ -233,16 +235,18 @@ export class OAuthCallbackService {
         };
       } else {
         integrationConfiguration = {
-          ...integrationConfiguration,
+          // ...otherParams,
           api_key: tokensResponse.token.access_token,
         };
       }
 
+      console.log(installationId)
       await this.integrationAccountService.createIntegrationAccount({
         integrationDefinitionId: integrationDefinition.id,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         config: integrationConfiguration as any,
         workspaceId: sessionRecord.workspaceId,
+        installationId
       } as CreateIntegrationAccountBody);
 
       res.redirect(
