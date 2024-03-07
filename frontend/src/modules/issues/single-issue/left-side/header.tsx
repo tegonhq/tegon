@@ -32,11 +32,15 @@ export function Header() {
                 size={14}
                 className="shrink-0 text-muted-foreground h-4 w-4"
               />
-              <span className="inline-block font-medium">{team.name}</span>
+              <span className="inline-block">{team.name}</span>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <BreadcrumbLink as={Link} href="/docs/primitives/accordion">
+            <BreadcrumbLink
+              as={Link}
+              href="/docs/primitives/accordion"
+              className="font-medium"
+            >
               {issueId}
             </BreadcrumbLink>
           </BreadcrumbItem>

@@ -8,6 +8,7 @@ import type { AjaxBaseConfig, XHRErrorResponse } from './ajaxBase';
 
 import qs, { ParsedQs } from 'qs';
 import request from 'superagent';
+import { Primitive } from 'zod';
 
 import { onError, onSuccess } from './ajaxResponse';
 

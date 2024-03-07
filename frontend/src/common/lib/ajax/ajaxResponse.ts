@@ -4,8 +4,6 @@
 
 import type { AjaxBaseConfig, XHRErrorResponse } from './ajaxBase';
 
-import normalize from 'normalize-object';
-
 import { triggerError, triggerSuccess } from './ajaxEvents';
 import { isServer } from '../common';
 
@@ -78,7 +76,7 @@ export function onError<T, E>({
   /** Transform Payload Keys into camelCase */
   const error = {
     ...rawError,
-    ...(errors ? { errors: normalize(errors, 'camel') } : {}),
+    ...(errors ? { errors } : {}),
   };
 
   if (onError) {

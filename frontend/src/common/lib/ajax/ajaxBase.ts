@@ -2,6 +2,8 @@
 
 import type request from 'superagent';
 
+import { Primitive } from 'zod';
+
 /**
  * Integration of Native Promise Interface.
  */

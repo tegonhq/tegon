@@ -31,39 +31,19 @@ export function FilterDropdown() {
           <CommandInput placeholder="Filter..." />
 
           <CommandGroup>
-            <CommandItem
-              key="Status"
-              value="Status"
-              onSelect={(currentValue) => {}}
-            >
+            <CommandItem key="Status" value="Status" onSelect={() => {}}>
               Status
             </CommandItem>
-            <CommandItem
-              key="Assignee"
-              value="Assignee"
-              onSelect={(currentValue) => {}}
-            >
+            <CommandItem key="Assignee" value="Assignee" onSelect={() => {}}>
               Assignee
             </CommandItem>
-            <CommandItem
-              key="Creator"
-              value="Creator"
-              onSelect={(currentValue) => {}}
-            >
+            <CommandItem key="Creator" value="Creator" onSelect={() => {}}>
               Creator
             </CommandItem>
-            <CommandItem
-              key="Priority"
-              value="Priority"
-              onSelect={(currentValue) => {}}
-            >
+            <CommandItem key="Priority" value="Priority" onSelect={() => {}}>
               Priority
             </CommandItem>
-            <CommandItem
-              key="Label"
-              value="Label"
-              onSelect={(currentValue) => {}}
-            >
+            <CommandItem key="Label" value="Label" onSelect={() => {}}>
               Label
             </CommandItem>
           </CommandGroup>

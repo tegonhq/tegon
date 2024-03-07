@@ -17,14 +17,12 @@ import {
 } from 'components/ui/form';
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
-import { useTeamsStore } from 'hooks/teams';
 import { useCurrentTeam } from 'hooks/teams/use-current-team';
 
 import { OverviewSchema } from './overview.interface';
 
 export const Overview = observer(() => {
   const currentTeam = useCurrentTeam();
-  const teamStore = useTeamsStore();
 
   const form = useForm<z.infer<typeof OverviewSchema>>({
     resolver: zodResolver(OverviewSchema),
@@ -34,7 +32,9 @@ export const Overview = observer(() => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof OverviewSchema>) {}
+  async function onSubmit(values: z.infer<typeof OverviewSchema>) {
+    console.log(values);
+  }
 
   return (
     <div>
