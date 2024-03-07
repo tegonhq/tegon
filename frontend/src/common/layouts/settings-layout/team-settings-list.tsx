@@ -39,10 +39,10 @@ export const TeamSettingsList = observer(() => {
               collapsible
               key={team.identifier}
               defaultValue="item-1"
-              className="w-full text-slate-700 dark:text-slate-300 mt-0"
+              className="w-full text-gray-700 dark:text-gray-300 mt-0"
             >
               <AccordionItem value="item-1">
-                <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50 rounded-md">
+                <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-50 rounded-md">
                   <div className="w-full justify-start flex items-center">
                     <div className="flex justify-start items-center text-sm">
                       <RiArrowRightSFill className="arrow-right-icon mx-2 h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200" />
@@ -61,7 +61,7 @@ export const TeamSettingsList = observer(() => {
                         'justify-start text-sm w-full px-2 !text-muted-foreground mt-1',
                         team.identifier === teamIdentifier &&
                           settingsSection === item.href &&
-                          'bg-slate-100 dark:bg-slate-800',
+                          'bg-gray-100 dark:bg-gray-800',
                       )}
                     >
                       {item.title}

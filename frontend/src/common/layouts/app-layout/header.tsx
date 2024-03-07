@@ -19,7 +19,7 @@ interface HeaderProps {
 
 export function Header({ isCollapsed }: HeaderProps) {
   return (
-    <div className="flex flex-col m-2 text-slate-700 dark:text-slate-300">
+    <div className="flex flex-col m-2 text-gray-700 dark:text-gray-300">
       <div
         className={cn(
           'flex justify-between items-center',

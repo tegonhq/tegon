@@ -19,7 +19,7 @@ export function IssuesCategory({ workflow, issues }: IssuesCategoryProps) {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center w-full pl-8 p-2 bg-slate-100 dark:bg-slate-900">
+      <div className="flex items-center w-full pl-8 p-2 bg-gray-100 dark:bg-gray-800/60">
         <CategoryIcon
           size={18}
           className="text-muted-foreground"

@@ -41,7 +41,7 @@ export const TeamList = observer(({ isCollapsed }: TeamListProps) => {
       {isCollapsed ? (
         <Separator />
       ) : (
-        <div className="px-3 text-xs text-slate-400 dark:text-slate-500 font-medium">
+        <div className="px-3 text-xs text-gray-400 dark:text-gray-500 font-medium">
           Your teams
         </div>
       )}
@@ -67,10 +67,10 @@ export const TeamList = observer(({ isCollapsed }: TeamListProps) => {
               key={team.identifier}
               collapsible
               defaultValue="item-1"
-              className="w-full text-slate-700 dark:text-slate-300 mt-0"
+              className="w-full text-gray-700 dark:text-gray-300 mt-0"
             >
               <AccordionItem value="item-1">
-                <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50 rounded-md">
+                <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-50 rounded-md">
                   <div className="w-full justify-start px-3 flex items-center">
                     <RiAccountBoxFill
                       size={16}

@@ -33,7 +33,7 @@ export function WorkflowItem({ workflow }: WorkflowItemProps) {
   return (
     <div
       key={workflow.name}
-      className="w-full border border-slate-200 dark:border-slate-800 group flex justify-between mb-2 text-sm rounded-md bg-slate-100/80 dark:bg-slate-900 p-2 px-2"
+      className="w-full border border-gray-200 dark:border-gray-800 group flex justify-between mb-2 text-sm rounded-md bg-gray-100/80 dark:bg-gray-800 p-2 px-2"
     >
       <div className="flex items-center">
         <CategoryIcon
@@ -47,7 +47,7 @@ export function WorkflowItem({ workflow }: WorkflowItemProps) {
       {/* <div className="hidden group-hover:flex items-center justify-center gap-4">
         <Button variant="ghost" size="xs" className="!p-0 !bg-transparent h-4">
           <RiPencilFill
-            className="text-slate-500 hover:text-black dark:hover:text-white"
+            className="text-gray-500 hover:text-black dark:hover:text-white"
             size={16}
           />
         </Button>

@@ -119,7 +119,7 @@ export const BreadcrumbLink = React.forwardRef<
 
   return (
     <Comp
-      className={cn('text-sm font-medium aria-[current]:opacity-60', className)}
+      className={cn('text-sm aria-[current]:opacity-60', className)}
       aria-current={isCurrentPage ? 'page' : undefined}
       {...props}
       ref={forwardedRef}
@@ -136,7 +136,7 @@ export const BreadcrumbSeparator = React.forwardRef<
 >(({ className, ...props }, forwardedRef) => {
   return (
     <span
-      className={cn('mx-2 opacity-50', className)}
+      className={cn('mx-1 opacity-50', className)}
       role="presentation"
       {...props}
       ref={forwardedRef}

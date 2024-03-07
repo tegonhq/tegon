@@ -2,3 +2,4 @@
 
 export * from './use-issues-store';
 export * from './use-team-issues';
+export * from './use-issue-data';

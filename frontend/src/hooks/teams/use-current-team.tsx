@@ -11,17 +11,21 @@ import { useTeamsStore } from './use-teams-store';
 
 export function useCurrentTeam(): TeamType | undefined {
   const {
-    query: { teamIdentifier },
+    query: { teamIdentifier, issueId },
   } = useRouter();
   const teamStore = useTeamsStore();
 
   const getTeam = () => {
-    if (!teamIdentifier) {
+    if (!teamIdentifier && !issueId) {
       return undefined;
     }
 
+    const identifier = teamIdentifier
+      ? teamIdentifier
+      : (issueId as string).split('-')[0];
+
     const team = teamStore.teams.find((team: TeamType) => {
-      return team.identifier === teamIdentifier;
+      return team.identifier === identifier;
     });
 
     return team;
@@ -29,7 +33,7 @@ export function useCurrentTeam(): TeamType | undefined {
 
   const team = React.useMemo(
     () => computed(() => getTeam()),
-    [teamIdentifier, teamStore],
+    [teamIdentifier, issueId, teamStore],
   ).get();
 
   return team;

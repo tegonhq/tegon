@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import dayjs from 'dayjs';
+import { useRouter } from 'next/router';
 
 import { IssueType } from 'common/types/issue';
 
@@ -14,9 +15,18 @@ interface IssueItemProps {
 
 export function IssueItem({ issue }: IssueItemProps) {
   const team = useCurrentTeam();
+  const {
+    replace,
+    query: { workspaceSlug },
+  } = useRouter();
 
   return (
-    <div className="pl-9 p-3 flex justify-between cursor-default text-sm hover:bg-slate-100/50 dark:hover:bg-slate-900/50 border-b-[0.5px]">
+    <div
+      className="pl-9 p-3 flex justify-between cursor-default text-sm hover:bg-gray-100/50 dark:hover:bg-gray-800/20 border-b-[0.5px]"
+      onClick={() => {
+        replace(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
+      }}
+    >
       <div className="flex items-center">
         <div className="pr-3 text-muted-foreground min-w-[68px]">{`${team.identifier}-${issue.number}`}</div>
         <div className="pr-3">

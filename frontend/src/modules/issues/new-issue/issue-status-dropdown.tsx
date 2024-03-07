@@ -32,6 +32,7 @@ export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {
   const CategoryIcon = workflow
     ? WORKFLOW_CATEGORY_ICONS[workflow.name]
     : WORKFLOW_CATEGORY_ICONS['Backlog'];
+  console.log(workflow);
   return (
     <div>
       <Popover open={open} onOpenChange={setOpen}>

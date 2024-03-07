@@ -57,7 +57,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
               href={link.href}
               className={cn(
                 buttonVariants({ variant: 'ghost', size: 'sm' }),
-                'justify-start text-sm text-slate-700 dark:text-slate-300',
+                'justify-start text-sm text-gray-700 dark:text-gray-300',
               )}
             >
               <link.icon className="mr-3 h-4 w-4 text-muted-foreground" />

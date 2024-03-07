@@ -15,29 +15,31 @@ export const TeamStoreProvider = observer(
     const [loading, setLoading] = React.useState(true);
 
     const {
-      query: { teamIdentifier },
+      query: { teamIdentifier, issueId },
     } = useRouter();
 
     React.useEffect(() => {
-      if (teamIdentifier) {
+      if (teamIdentifier || issueId) {
         initTeamBasedStored();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [teamIdentifier]);
+    }, [teamIdentifier, issueId]);
 
     // All data related to team
     const initTeamBasedStored = React.useCallback(async () => {
       setLoading(true);
 
       const teamData = await tegonDatabase.teams.get({
-        identifier: teamIdentifier,
+        identifier: teamIdentifier
+          ? teamIdentifier
+          : (issueId as string).split('-')[0],
       });
 
       await initializeWorkflowsStore(teamData?.id);
       await initializeIssuesStore(teamData?.id);
 
       setLoading(false);
-    }, [teamIdentifier]);
+    }, [teamIdentifier, issueId]);
 
     if (loading) {
       return <Loader />;
