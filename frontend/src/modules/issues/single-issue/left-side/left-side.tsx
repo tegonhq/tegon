@@ -4,6 +4,7 @@ import { Separator } from 'components/ui/separator';
 import { useIssueData } from 'hooks/issues';
 
 import { Header } from './header';
+import { IssueActivity } from './issue-activity';
 import { IssueDescription } from './issue-description';
 import { IssueTitle } from './issue-title';
 
@@ -17,7 +18,9 @@ export function LeftSide() {
         <IssueTitle defaultValue={issue.title} />
         <IssueDescription value={issue.description} />
 
-        <Separator className="my-4" />
+        <Separator className="my-3" />
+
+        <IssueActivity />
       </div>
     </div>
   );

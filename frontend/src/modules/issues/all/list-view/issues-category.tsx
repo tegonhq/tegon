@@ -17,6 +17,10 @@ export function IssuesCategory({ workflow, issues }: IssuesCategoryProps) {
     WORKFLOW_CATEGORY_ICONS[workflow.name] ??
     WORKFLOW_CATEGORY_ICONS['Backlog'];
 
+  if (issues.length === 0) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center w-full pl-8 p-2 bg-gray-100 dark:bg-gray-800/60">
