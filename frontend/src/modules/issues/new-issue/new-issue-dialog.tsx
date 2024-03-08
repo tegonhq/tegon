@@ -4,7 +4,11 @@ import { DialogContent, DialogHeader, DialogTitle } from 'components/ui/dialog';
 
 import { NewIssue } from './new-issue';
 
-export function NewIssueDialog() {
+interface NewIssueDialogProps {
+  onClose: () => void;
+}
+
+export function NewIssueDialog({ onClose }: NewIssueDialogProps) {
   return (
     <DialogContent className="sm:max-w-[600px]">
       <DialogHeader className="p-3 pb-0">
@@ -13,7 +17,7 @@ export function NewIssueDialog() {
         </DialogTitle>
       </DialogHeader>
 
-      <NewIssue />
+      <NewIssue onClose={onClose} />
     </DialogContent>
   );
 }

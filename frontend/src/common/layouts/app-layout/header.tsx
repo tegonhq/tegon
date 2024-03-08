@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiEditBoxLine, RiSearch2Line } from '@remixicon/react';
+import * as React from 'react';
 
 import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
 
@@ -18,6 +19,8 @@ interface HeaderProps {
 }
 
 export function Header({ isCollapsed }: HeaderProps) {
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+
   return (
     <div className="flex flex-col m-2 text-gray-700 dark:text-gray-300">
       <div
@@ -31,7 +34,7 @@ export function Header({ isCollapsed }: HeaderProps) {
       </div>
       {isCollapsed && <Separator className="mt-2" />}
       <div className={cn('flex mt-4 gap-2', isCollapsed && 'flex-col')}>
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={(open) => setDialogOpen(open)}>
           <DialogTrigger asChild>
             <Button
               variant="outline"
@@ -45,7 +48,7 @@ export function Header({ isCollapsed }: HeaderProps) {
               {!isCollapsed && <div className="ml-3 text-sm"> New Issue </div>}
             </Button>
           </DialogTrigger>
-          <NewIssueDialog />
+          <NewIssueDialog onClose={() => setDialogOpen(false)} />
         </Dialog>
         <Button
           variant="outline"

@@ -1,5 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { mergeAttributes } from '@tiptap/core';
+import Heading from '@tiptap/extension-heading';
 import { cx } from 'class-variance-authority';
 import {
   TiptapLink,
@@ -12,8 +14,6 @@ import {
 
 // TODO I am using cx here to get tailwind autocomplete working, idk if someone else can write a regex to just capture the class key in objects
 
-// You can overwrite the placeholder with your own configuration
-const placeholder = Placeholder;
 const tiptapLink = TiptapLink.configure({
   HTMLAttributes: {
     class: cx(
@@ -29,9 +29,9 @@ const taskList = TaskList.configure({
 });
 const taskItem = TaskItem.configure({
   HTMLAttributes: {
-    class: cx('flex items-center gap-2'),
+    class: cx('flex items-center gap-2 editor-checkbox mb-2'),
   },
-  nested: true,
+  nested: false,
 });
 
 const horizontalRule = HorizontalRule.configure({
@@ -40,15 +40,34 @@ const horizontalRule = HorizontalRule.configure({
   },
 });
 
+const heading = Heading.extend({
+  renderHTML({ node, HTMLAttributes }) {
+    const hasLevel = this.options.levels.includes(node.attrs.level);
+    const level: 1 | 2 | 3 = hasLevel
+      ? node.attrs.level
+      : this.options.levels[0];
+    const levelMap = { 1: 'text-xl', 2: 'text-lg', 3: 'text-base' };
+
+    return [
+      `h${level}`,
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+        class: `h${node.attrs.level}-style ${levelMap[level]}`,
+      }),
+      0,
+    ];
+  },
+}).configure({ levels: [1, 2, 3] });
+
 const starterKit = StarterKit.configure({
+  heading: false,
   bulletList: {
     HTMLAttributes: {
-      class: cx('list-disc list-outside leading-3 -mt-2'),
+      class: cx('list-disc list-outside leading-3 pl-4'),
     },
   },
   orderedList: {
     HTMLAttributes: {
-      class: cx('list-decimal list-outside ml-4 leading-3 -mt-2'),
+      class: cx('list-decimal list-outside pl-4 leading-3'),
     },
   },
   listItem: {
@@ -58,7 +77,7 @@ const starterKit = StarterKit.configure({
   },
   blockquote: {
     HTMLAttributes: {
-      class: cx('border-l-4 border-primary'),
+      class: cx('border-l-4 border-gray-400 dark:border-gray-500'),
     },
   },
   codeBlock: {
@@ -80,6 +99,23 @@ const starterKit = StarterKit.configure({
   gapcursor: false,
 });
 
+const placeholder = Placeholder.configure({
+  placeholder: ({ node }) => {
+    if (node.type.name === 'heading') {
+      return `Heading ${node.attrs.level}`;
+    }
+    if (node.type.name === 'image' || node.type.name === 'table') {
+      return '';
+    }
+    if (node.type.name === 'codeBlock') {
+      return 'Type in your code here...';
+    }
+
+    return 'Add description...';
+  },
+  includeChildren: true,
+});
+
 export const defaultExtensions = [
   starterKit,
   placeholder,
@@ -87,4 +123,5 @@ export const defaultExtensions = [
   taskList,
   taskItem,
   horizontalRule,
+  heading,
 ];

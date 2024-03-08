@@ -50,13 +50,13 @@ export function IssueAssigneeDropdown({
             size="lg"
             aria-expanded={open}
             className={cn(
-              'flex items-center border-0 p-0 !bg-transparent justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary text-muted-foreground',
+              'flex items-center border dark:bg-transparent border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
               value && 'text-foreground',
             )}
           >
             {value ? (
               <>
-                <Avatar className="h-[20px] w-[25px]">
+                <Avatar className="h-[20px] w-[30px]">
                   <AvatarImage />
                   <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm mr-2">
                     {getInitials(getUserData(value).fullname)}

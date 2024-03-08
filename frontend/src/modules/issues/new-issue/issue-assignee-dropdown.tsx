@@ -52,7 +52,7 @@ export function IssueAssigneeDropdown({
           >
             {value ? (
               <>
-                <Avatar className="h-[20px] w-[25px]">
+                <Avatar className="h-[20px] w-[30px]">
                   <AvatarImage />
                   <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm mr-2">
                     {getInitials(getUserData(value).fullname)}

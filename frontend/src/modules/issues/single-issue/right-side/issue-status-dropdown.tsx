@@ -40,7 +40,7 @@ export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {
             role="combobox"
             size="lg"
             aria-expanded={open}
-            className="flex items-center !bg-transparent hover:bg-transparent shadow-none p-0 border-0 justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary "
+            className="flex items-center border border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 dark:bg-transparent shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
           >
             <CategoryIcon
               size={18}

@@ -5,25 +5,18 @@ import { Inter } from 'next/font/google';
 import {
   EditorInstance,
   EditorRoot,
-  EditorBubble,
   EditorCommand,
   EditorCommandItem,
   EditorCommandEmpty,
   EditorContent,
 } from 'novel';
 import { ImageResizer, handleCommandNavigation } from 'novel/extensions';
-import React, { useState } from 'react';
+import * as React from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 import { cn } from 'common/lib/utils';
 
-import { Separator } from 'components/ui/separator';
-
 import { defaultExtensions } from './editor-extensions';
-import { ColorSelector } from './selectors/color-selector';
-import { LinkSelector } from './selectors/link-selector';
-import { NodeSelector } from './selectors/node-selector';
-import { TextButtons } from './selectors/text-buttons';
 import { slashCommand, suggestionItems } from './slash-command';
 
 // Inter as default font
@@ -33,21 +26,21 @@ export const fontSans = Inter({
 });
 
 interface IssueDescriptionProps {
-  defaultValue: string;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
 const extensions = [...defaultExtensions, slashCommand];
 
-export const IssueDescription = () => {
-  const [openNode, setOpenNode] = useState(false);
-  const [openColor, setOpenColor] = useState(false);
-  const [openLink, setOpenLink] = useState(false);
-
+export const IssueDescription = ({
+  value,
+  onChange,
+}: IssueDescriptionProps) => {
   const debouncedUpdates = useDebouncedCallback(
     async (editor: EditorInstance) => {
       const json = editor.getJSON();
 
-      window.localStorage.setItem('novel-content', JSON.stringify(json));
+      onChange && onChange(JSON.stringify(json));
     },
     500,
   );
@@ -56,8 +49,9 @@ export const IssueDescription = () => {
     <div className="relative w-full max-w-screen-lg">
       <EditorRoot>
         <EditorContent
+          initialContent={value ? JSON.parse(value) : undefined}
           extensions={extensions}
-          className="relative min-h-[100px] w-full max-w-screen-lg text-sm text-gray-300 sm:rounded-lg"
+          className="relative min-h-[50px] w-full max-w-screen-lg mb-[40px] text-base text-gray-800 dark:text-gray-300 sm:rounded-lg"
           editorProps={{
             handleDOMEvents: {
               keydown: (_view, event) => handleCommandNavigation(event),
@@ -73,7 +67,7 @@ export const IssueDescription = () => {
         >
           <EditorCommand
             className={cn(
-              'z-50 h-auto font-sans max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all',
+              'z-50 h-auto font-sans max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background backdrop-blur-md dark:bg-gray-700/20 px-1 py-2 shadow-md transition-all',
               fontSans.variable,
             )}
           >
@@ -99,23 +93,6 @@ export const IssueDescription = () => {
               </EditorCommandItem>
             ))}
           </EditorCommand>
-
-          <EditorBubble
-            tippyOptions={{
-              placement: 'top',
-            }}
-            className="flex w-fit items-center max-w-[90vw] overflow-hidden rounded border border-muted bg-background shadow-xl"
-          >
-            <Separator orientation="vertical" />
-            <NodeSelector open={openNode} onOpenChange={setOpenNode} />
-            <Separator orientation="vertical" />
-
-            <LinkSelector open={openLink} onOpenChange={setOpenLink} />
-            <Separator orientation="vertical" />
-            <TextButtons />
-            <Separator orientation="vertical" />
-            <ColorSelector open={openColor} onOpenChange={setOpenColor} />
-          </EditorBubble>
         </EditorContent>
       </EditorRoot>
     </div>

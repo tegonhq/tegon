@@ -26,7 +26,7 @@ export function IssuePriorityDropdown({ value, onChange }: IssuePriorityProps) {
             role="combobox"
             size="lg"
             aria-expanded={open}
-            className="flex items-center border-0 p-0 !bg-transparent justify-between font-normal focus-visible:ring-1 focus-visible:border-primary"
+            className="flex items-center border dark:bg-transparent border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
           >
             {Priorities[value]}
           </Button>

@@ -6,7 +6,6 @@ import { z } from 'zod';
 
 import { Button } from 'components/ui/button';
 import { Form, FormControl, FormField, FormItem } from 'components/ui/form';
-import { Textarea } from 'components/ui/textarea';
 import { useCurrentTeam } from 'hooks/teams';
 
 import {
@@ -19,8 +18,13 @@ import { IssueLabelDropdown } from './issue-label-dropdown';
 import { IssuePriorityDropdown } from './issue-priority-dropdown';
 import { IssueStatusDropdown } from './issue-status-dropdown';
 import { NewIssueSchema } from './new-issues-type';
+import { IssueDescription } from '../single-issue/left-side/issue-description';
 
-export function NewIssue() {
+interface NewIssueProps {
+  onClose: () => void;
+}
+
+export function NewIssue({ onClose }: NewIssueProps) {
   const { mutate: createIssue, isLoading } = useCreateIssueMutation({
     onSuccess: () => {},
   });
@@ -35,6 +39,7 @@ export function NewIssue() {
 
   const onSubmit = (values: CreateIssueParams) => {
     createIssue({ ...values, teamId: team.id });
+    onClose();
   };
 
   return (
@@ -48,11 +53,7 @@ export function NewIssue() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
-                      className="!border-0 p-0 shadow-none text-md focus-visible:ring-0"
-                      placeholder="Add description..."
-                      {...field}
-                    />
+                    <IssueDescription {...field} />
                   </FormControl>
                 </FormItem>
               )}

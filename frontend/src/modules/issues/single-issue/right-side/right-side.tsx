@@ -11,7 +11,7 @@ export function RightSide() {
   const issue = useIssueData();
 
   return (
-    <div className="bg-gray-100 border-l dark:bg-gray-800/50 flex flex-col">
+    <div className="bg-background border-l dark:bg-gray-800/50 flex flex-col">
       <Header />
       <div className="grow pl-8 p-4 mt-2 flex flex-col">
         <div className="flex justify-start items-center text-sm mb-4">

@@ -13,9 +13,9 @@ export function LeftSide() {
   return (
     <div className="col-span-2">
       <Header />
-      <div className="grow pl-8 p-4">
+      <div className="grow pl-8 p-4 flex flex-col gap-4">
         <IssueTitle defaultValue={issue.title} />
-        <IssueDescription />
+        <IssueDescription value={issue.description} />
 
         <Separator className="my-4" />
       </div>
