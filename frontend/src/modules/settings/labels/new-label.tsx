@@ -12,9 +12,10 @@ import { useCreateLabelMutation } from 'services/labels/create-label';
 
 interface NewLabelProps {
   onCancel: () => void;
+  teamId?: string;
 }
 
-export function NewLabel({ onCancel }: NewLabelProps) {
+export function NewLabel({ onCancel, teamId }: NewLabelProps) {
   const [labelName, setLabelName] = React.useState('');
   const workspace = useCurrentWorkspace();
   const color = React.useMemo(() => generateHexColor(), []);
@@ -29,6 +30,7 @@ export function NewLabel({ onCancel }: NewLabelProps) {
       name: labelName,
       workspaceId: workspace.id,
       color,
+      teamId,
     });
   };
 

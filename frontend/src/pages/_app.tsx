@@ -14,6 +14,7 @@ import { useGetQueryClient } from 'common/lib/react-query-client';
 import { cn } from 'common/lib/utils';
 
 import { ThemeProvider } from 'components/theme-provider';
+import { Toaster } from 'components/ui/toaster';
 import { TooltipProvider } from 'components/ui/tooltip';
 
 // Inter as default font
@@ -54,6 +55,7 @@ export const MyApp: NextComponentType<
               >
                 {getLayout(<Component {...pageProps} />)}
               </div>
+              <Toaster />
             </Hydrate>
           </QueryClientProvider>
         </TooltipProvider>

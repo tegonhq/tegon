@@ -11,6 +11,7 @@ export interface CreateLabelParams {
   workspaceId: string;
 
   groupId?: string;
+  teamId?: string;
 }
 
 export function createLabel(params: CreateLabelParams) {

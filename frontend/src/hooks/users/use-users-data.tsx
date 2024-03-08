@@ -1,3 +1,4 @@
+/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import * as React from 'react';
@@ -8,7 +9,7 @@ import { useWorkspaceStore } from 'hooks/workspace';
 
 import { useGetUsersQuery } from 'services/users/get-users';
 
-export function useUsersData() {
+export function useUsersData(teamId?: string) {
   const workspaceStore = useWorkspaceStore();
   const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
   const {
@@ -16,7 +17,15 @@ export function useUsersData() {
     isLoading,
     refetch,
   } = useGetUsersQuery(
-    usersOnWorkspace.map((uOW: UsersOnWorkspaceType) => uOW.userId),
+    usersOnWorkspace
+      .filter((uOW: UsersOnWorkspaceType) => {
+        if (teamId) {
+          return uOW.teamIds.includes(teamId);
+        }
+
+        return true;
+      })
+      .map((uOW: UsersOnWorkspaceType) => uOW.userId),
   );
 
   React.useEffect(() => {

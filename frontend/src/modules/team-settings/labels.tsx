@@ -4,19 +4,22 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
+import { EditLabel } from 'modules/settings/labels/edit-label';
+import { Label } from 'modules/settings/labels/label';
+import { NewLabel } from 'modules/settings/labels/new-label';
+
 import type { LabelType } from 'common/types/label';
 
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
 import { useLabelsStore } from 'hooks/labels';
-
-import { EditLabel } from './edit-label';
-import { Label } from './label';
-import { NewLabel } from './new-label';
+import { useCurrentTeam } from 'hooks/teams';
 
 export const Labels = observer(() => {
   const labelStore = useLabelsStore();
+  const currentTeam = useCurrentTeam();
+
   const [showNewLabelCreation, setNewLabelCreation] = React.useState(false);
   const [editLabelState, setEditLabelState] = React.useState(undefined);
   const [searchValue, setSearchValue] = React.useState('');
@@ -24,18 +27,19 @@ export const Labels = observer(() => {
   return (
     <div>
       <div className="flex flex-col">
-        <h2 className="text-2xl"> Workspace Labels </h2>
-        <p className="text-sm text-muted-foreground">Manage workspace labels</p>
+        <h2 className="text-2xl"> Labels </h2>
+        <p className="text-sm text-muted-foreground">
+          Manage team {currentTeam.name} specific labels
+        </p>
       </div>
 
       <Separator className="my-4" />
 
       <div className="my-4">
         <p className="my-4 text-sm text-muted-foreground">
-          Use labels and label groups to help organize and filter issues in your
-          workspace. Labels created in this section are available for all teams
-          to use. To create labels or label groups that only apply to certain
-          teams, add them in the team-specific label settings.
+          Use labels to help organize and filter issues in your team. Labels
+          created in this section are specific to this team, so they can be
+          customized to your team’s needs.
         </p>
         <div className="flex justify-between">
           <div className="flex">
@@ -59,7 +63,10 @@ export const Labels = observer(() => {
 
         {showNewLabelCreation && (
           <div className="my-3">
-            <NewLabel onCancel={() => setNewLabelCreation(false)} />
+            <NewLabel
+              onCancel={() => setNewLabelCreation(false)}
+              teamId={currentTeam.id}
+            />
           </div>
         )}
       </div>
@@ -68,7 +75,8 @@ export const Labels = observer(() => {
         {labelStore.labels
           .filter(
             (label: LabelType) =>
-              label.name.includes(searchValue) && !label.teamId,
+              label.name.includes(searchValue) &&
+              label.teamId === currentTeam.id,
           )
           .map((label: LabelType) => {
             if (editLabelState === label.id) {

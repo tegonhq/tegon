@@ -3,7 +3,7 @@
 import { RiMoreFill, RiPencilFill } from '@remixicon/react';
 import * as React from 'react';
 
-import { LabelType } from 'common/types/label';
+import type { LabelType } from 'common/types/label';
 
 import { Button } from 'components/ui/button';
 

@@ -3,22 +3,24 @@
 import { RiPriceTagFill } from '@remixicon/react';
 import * as React from 'react';
 
+import { IssueLabelDropdownContent } from 'modules/issues/components';
+
 import { cn } from 'common/lib/utils';
 import type { LabelType } from 'common/types/label';
 
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
-import { useTeamLabels } from 'hooks/labels/use-team-labels';
 
-import { IssueLabelDropdownContent } from '../components/issue-label-dropdown-content';
+import { useTeamLabels } from 'hooks/labels';
 
-interface IssueLabelProps {
-  value: string[];
+interface IssueLabelsProps {
+  value?: string[];
   onChange?: (value: string[]) => void;
 }
 
-export function IssueLabelDropdown({ value = [], onChange }: IssueLabelProps) {
+export function IssueLabels({ value, onChange }: IssueLabelsProps) {
   const [open, setOpen] = React.useState(false);
+
   const labels = useTeamLabels();
 
   const labelTitle = () => {
@@ -50,31 +52,28 @@ export function IssueLabelDropdown({ value = [], onChange }: IssueLabelProps) {
   };
 
   return (
-    <div>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            size="xs"
-            aria-expanded={open}
-            className={cn(
-              'flex items-center justify-between text-xs font-normal',
-              value.length > 0 && 'text-foreground',
-              value.length === 0 && 'text-muted-foreground',
-            )}
-          >
-            {labelTitle()}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
-          <IssueLabelDropdownContent
-            onChange={onChange}
-            value={value}
-            labels={labels}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          size="lg"
+          aria-expanded={open}
+          className={cn(
+            'flex items-center border dark:bg-transparent border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+            value && 'text-foreground',
+          )}
+        >
+          {labelTitle()}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0" align="start">
+        <IssueLabelDropdownContent
+          value={value}
+          labels={labels}
+          onChange={onChange}
+        />
+      </PopoverContent>
+    </Popover>
   );
 }

@@ -41,45 +41,43 @@ export function IssueAssigneeDropdown({
   }
 
   return (
-    <div>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            size="lg"
-            aria-expanded={open}
-            className={cn(
-              'flex items-center border dark:bg-transparent border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
-              value && 'text-foreground',
-            )}
-          >
-            {value ? (
-              <>
-                <Avatar className="h-[20px] w-[30px]">
-                  <AvatarImage />
-                  <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm mr-2">
-                    {getInitials(getUserData(value).fullname)}
-                  </AvatarFallback>
-                </Avatar>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          size="lg"
+          aria-expanded={open}
+          className={cn(
+            'flex items-center border dark:bg-transparent border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+            value && 'text-foreground',
+          )}
+        >
+          {value ? (
+            <>
+              <Avatar className="h-[20px] w-[30px]">
+                <AvatarImage />
+                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm mr-2">
+                  {getInitials(getUserData(value).fullname)}
+                </AvatarFallback>
+              </Avatar>
 
-                {getUserData(value).fullname}
-              </>
-            ) : (
-              <>
-                <RiAccountCircleLine size={14} className="mr-1" /> Assignee
-              </>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
-          <IssueAssigneeDropdownContent
-            onClose={() => setOpen(false)}
-            usersData={usersData}
-            onChange={onChange}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
+              {getUserData(value).fullname}
+            </>
+          ) : (
+            <>
+              <RiAccountCircleLine size={14} className="mr-1" /> Assignee
+            </>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0" align="start">
+        <IssueAssigneeDropdownContent
+          onClose={() => setOpen(false)}
+          usersData={usersData}
+          onChange={onChange}
+        />
+      </PopoverContent>
+    </Popover>
   );
 }

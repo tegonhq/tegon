@@ -16,12 +16,24 @@ import {
 } from 'components/ui/form';
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
+import { useToast } from 'components/ui/use-toast';
 import { useWorkspaceStore } from 'hooks/workspace';
+
+import { useUpdateWorkspaceMutation } from 'services/workspace/update-workspace';
 
 import { OverviewSchema } from './overview.interface';
 
 export const Overview = observer(() => {
   const workspaceStore = useWorkspaceStore();
+  const { toast } = useToast();
+  const { mutate: updateWorkspace } = useUpdateWorkspaceMutation({
+    onSuccess: () => {
+      toast({
+        title: 'Saved!',
+        description: 'Your workspace information has been updated',
+      });
+    },
+  });
 
   const form = useForm<z.infer<typeof OverviewSchema>>({
     resolver: zodResolver(OverviewSchema),
@@ -31,10 +43,10 @@ export const Overview = observer(() => {
   });
 
   async function onSubmit(values: z.infer<typeof OverviewSchema>) {
-    await workspaceStore.updateWorkspaceAPI(
-      workspaceStore.workspace.id,
-      values.name,
-    );
+    updateWorkspace({
+      workspaceId: workspaceStore.workspace.id,
+      name: values.name,
+    });
   }
 
   return (

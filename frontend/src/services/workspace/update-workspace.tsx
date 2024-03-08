@@ -3,33 +3,27 @@
 import { useMutation } from 'react-query';
 
 import { ajaxPost } from 'common/lib/ajax';
-import type { IssueType } from 'common/types/issue';
+import type { WorkspaceType } from 'common/types/workspace';
 
-export interface CreateIssueParams {
-  title: string;
-  description: string;
-  priority?: number;
-
-  labelIds?: string[];
-  stateId: string;
-  assigneeId?: string;
-  teamId: string;
+export interface UpdateWorkspaceParams {
+  name: string;
+  workspaceId: string;
 }
 
-export function createIssue({ teamId, ...otherParams }: CreateIssueParams) {
+export function updateWorkspace({ workspaceId, name }: UpdateWorkspaceParams) {
   return ajaxPost({
-    url: `/api/v1/issues?teamId=${teamId}`,
-    data: { ...otherParams, sortOrder: 0, estimate: 0, subscriberIds: [] },
+    url: `/api/v1/workspaces/${workspaceId}`,
+    data: { name },
   });
 }
 
 export interface MutationParams {
   onMutate?: () => void;
-  onSuccess?: (data: IssueType) => void;
+  onSuccess?: (data: WorkspaceType) => void;
   onError?: (error: string) => void;
 }
 
-export function useCreateIssueMutation({
+export function useUpdateWorkspaceMutation({
   onMutate,
   onSuccess,
   onError,
@@ -45,11 +39,11 @@ export function useCreateIssueMutation({
     onError && onError(errorText);
   };
 
-  const onMutationSuccess = (data: IssueType) => {
+  const onMutationSuccess = (data: WorkspaceType) => {
     onSuccess && onSuccess(data);
   };
 
-  return useMutation(createIssue, {
+  return useMutation(updateWorkspace, {
     onError: onMutationError,
     onMutate: onMutationTriggered,
     onSuccess: onMutationSuccess,

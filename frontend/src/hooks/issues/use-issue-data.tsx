@@ -4,7 +4,7 @@ import { computed } from 'mobx';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { IssueType } from 'common/types/issue';
+import type { IssueType } from 'common/types/issue';
 
 import { useCurrentTeam } from 'hooks/teams';
 
