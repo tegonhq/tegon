@@ -9,7 +9,7 @@ import {
   RiProgress6Line,
 } from '@remixicon/react';
 
-import { WorkflowType } from 'common/types/team';
+import type { WorkflowType } from 'common/types/team';
 
 interface WorkflowItemProps {
   workflow: WorkflowType;

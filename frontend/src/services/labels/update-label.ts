@@ -3,7 +3,7 @@
 import { useMutation } from 'react-query';
 
 import { ajaxPost } from 'common/lib/ajax';
-import { LabelType } from 'common/types/label';
+import type { LabelType } from 'common/types/label';
 
 export interface CreateLabelParams {
   name: string;

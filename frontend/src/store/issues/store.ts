@@ -1,8 +1,8 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { IAnyStateTreeNode, Instance, types } from 'mobx-state-tree';
+import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 
-import { IssueType } from 'common/types/issue';
+import type { IssueType } from 'common/types/issue';
 
 import { tegonDatabase } from 'store/database';
 import { MODELS } from 'store/models';

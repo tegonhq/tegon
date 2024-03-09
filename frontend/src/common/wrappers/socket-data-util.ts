@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { SyncActionRecord } from 'common/types/data-loader';
+import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { saveIssuesData } from 'hooks/issues/use-issues-store';
 import { saveLabelData } from 'hooks/labels/use-labels-store';

@@ -1,13 +1,16 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { BootstrapResponse, SyncActionRecord } from 'common/types/data-loader';
+import type {
+  BootstrapResponse,
+  SyncActionRecord,
+} from 'common/types/data-loader';
 
 import { useStoreManagement } from 'hooks/use-store-management';
 
 import { tegonDatabase } from 'store/database';
 import { MODELS } from 'store/models';
-import { WorkspaceStoreType, workspaceStore } from 'store/workspace';
+import { type WorkspaceStoreType, workspaceStore } from 'store/workspace';
 
 export async function saveWorkspaceData(data: BootstrapResponse) {
   await Promise.all(

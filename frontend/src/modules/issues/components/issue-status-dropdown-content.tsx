@@ -2,7 +2,7 @@
 
 import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
 
-import { WorkflowType } from 'common/types/team';
+import type { WorkflowType } from 'common/types/team';
 
 import {
   Command,

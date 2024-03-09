@@ -3,7 +3,7 @@
 import { computed } from 'mobx';
 import * as React from 'react';
 
-import { LabelType } from 'common/types/label';
+import type { LabelType } from 'common/types/label';
 
 import { useLabelsStore } from './use-labels-store';
 import { useCurrentTeam } from '../teams/use-current-team';

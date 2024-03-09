@@ -5,7 +5,7 @@ import { computed } from 'mobx';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { TeamType } from 'common/types/team';
+import type { TeamType } from 'common/types/team';
 
 import { useTeamsStore } from './use-teams-store';
 

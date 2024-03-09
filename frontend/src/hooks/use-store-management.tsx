@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { BootstrapResponse } from 'common/types/data-loader';
+import type { BootstrapResponse } from 'common/types/data-loader';
 
 import { useBootstrapRecords } from 'services/sync/bootstrap-sync';
 import { useDeltaRecords } from 'services/sync/delta-sync';

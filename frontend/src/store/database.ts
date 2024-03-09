@@ -4,11 +4,14 @@
 
 import Dexie from 'dexie';
 
-import { IssueType } from 'common/types/issue';
-import { LabelType } from 'common/types/label';
-import { SequenceType } from 'common/types/sequence';
-import { TeamType, WorkflowType } from 'common/types/team';
-import { UsersOnWorkspaceType, WorkspaceType } from 'common/types/workspace';
+import type { IssueType } from 'common/types/issue';
+import type { LabelType } from 'common/types/label';
+import type { SequenceType } from 'common/types/sequence';
+import type { TeamType, WorkflowType } from 'common/types/team';
+import type {
+  UsersOnWorkspaceType,
+  WorkspaceType,
+} from 'common/types/workspace';
 
 import { MODELS } from './models';
 

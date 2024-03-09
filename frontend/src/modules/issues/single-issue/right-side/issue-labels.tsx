@@ -10,7 +10,6 @@ import type { LabelType } from 'common/types/label';
 
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
-
 import { useTeamLabels } from 'hooks/labels';
 
 interface IssueLabelsProps {

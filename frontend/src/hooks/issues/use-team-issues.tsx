@@ -4,7 +4,7 @@
 import { computed } from 'mobx';
 import * as React from 'react';
 
-import { IssueType } from 'common/types/issue';
+import type { IssueType } from 'common/types/issue';
 
 import { useIssuesStore } from './use-issues-store';
 import { useCurrentTeam } from '../teams/use-current-team';

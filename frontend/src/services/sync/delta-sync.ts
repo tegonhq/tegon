@@ -1,9 +1,9 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { UseQueryResult, useQuery } from 'react-query';
+import { type UseQueryResult, useQuery } from 'react-query';
 
-import { XHRErrorResponse, ajaxGet } from 'common/lib/ajax';
-import { BootstrapResponse } from 'common/types/data-loader';
+import { type XHRErrorResponse, ajaxGet } from 'common/lib/ajax';
+import type { BootstrapResponse } from 'common/types/data-loader';
 
 /**
  * Query Key for Get Delta records.

@@ -1,8 +1,11 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { IAnyStateTreeNode, Instance, types } from 'mobx-state-tree';
+import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 
-import { UsersOnWorkspaceType, WorkspaceType } from 'common/types/workspace';
+import type {
+  UsersOnWorkspaceType,
+  WorkspaceType,
+} from 'common/types/workspace';
 
 import { tegonDatabase } from 'store/database';
 import { MODELS } from 'store/models';

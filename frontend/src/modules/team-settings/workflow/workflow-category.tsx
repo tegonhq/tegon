@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { capitalizeFirstLetter } from 'common/lib/common';
-import { WorkflowCategoryEnum, WorkflowType } from 'common/types/team';
+import type { WorkflowCategoryEnum, WorkflowType } from 'common/types/team';
 
 import { WorkflowItem } from './workflow-item';
 

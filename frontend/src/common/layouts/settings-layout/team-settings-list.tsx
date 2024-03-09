@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { cn } from 'common/lib/utils';
-import { TeamType } from 'common/types/team';
+import type { TeamType } from 'common/types/team';
 
 import {
   Accordion,

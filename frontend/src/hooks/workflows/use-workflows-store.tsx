@@ -1,7 +1,10 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { BootstrapResponse, SyncActionRecord } from 'common/types/data-loader';
+import type {
+  BootstrapResponse,
+  SyncActionRecord,
+} from 'common/types/data-loader';
 
 import { useStoreManagement } from 'hooks/use-store-management';
 

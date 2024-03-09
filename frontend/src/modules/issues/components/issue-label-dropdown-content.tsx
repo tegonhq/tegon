@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { LabelType } from 'common/types/label';
+import type { LabelType } from 'common/types/label';
 
 import { Checkbox } from 'components/ui/checkbox';
 import {

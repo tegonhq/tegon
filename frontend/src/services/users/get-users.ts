@@ -1,10 +1,10 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { UseQueryResult, useQuery } from 'react-query';
+import { type UseQueryResult, useQuery } from 'react-query';
 
-import { XHRErrorResponse, ajaxPost } from 'common/lib/ajax';
+import { type XHRErrorResponse, ajaxPost } from 'common/lib/ajax';
 
-import { User } from 'store/user-context';
+import type { User } from 'store/user-context';
 
 /**
  * Query Key for Get user.

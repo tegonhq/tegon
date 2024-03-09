@@ -4,7 +4,7 @@
 import { computed } from 'mobx';
 import * as React from 'react';
 
-import { WorkflowType } from 'common/types/team';
+import type { WorkflowType } from 'common/types/team';
 
 import { useWorkflowsStore } from './use-workflows-store';
 import { useCurrentTeam } from '../teams/use-current-team';
