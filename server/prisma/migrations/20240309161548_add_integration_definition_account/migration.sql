@@ -21,6 +21,8 @@ CREATE TABLE "IntegrationAccount" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
     "integrationConfiguration" JSONB NOT NULL,
+    "installationId" TEXT,
+    "settings" JSONB,
     "integrationDefinitionId" TEXT NOT NULL,
     "workspaceId" TEXT NOT NULL,
 

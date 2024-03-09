@@ -82,16 +82,20 @@ export async function getTemplate(
   return template;
 }
 
-export function getInstallationId(integrationName: string, params: CallbackParams, response: any){
-  console.log(integrationName)
-  switch(integrationName){
+export function getInstallationId(
+  integrationName: string,
+  params: CallbackParams,
+  response: any,
+) {
+  console.log(integrationName);
+  switch (integrationName) {
     case 'Github':
-      return params.installation_id
-    
+      return params.installation_id;
+
     case 'Slack':
-      return response.team.id
+      return response.team.id;
 
     default:
-      return undefined
+      return undefined;
   }
 }

@@ -23,7 +23,6 @@ import {
 
 const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/v1/oauth/callback`;
 
-
 @Injectable()
 export class OAuthCallbackService {
   session: Record<string, SessionRecord> = {};
@@ -98,7 +97,7 @@ export class OAuthCallbackService {
         integrationDefinitionId: integrationDefinition.id,
         redirectURL,
         workspaceId,
-        config: externalConfig
+        config: externalConfig,
       };
 
       let scopes = integrationDefinition.scopes.split(',');
@@ -139,7 +138,6 @@ export class OAuthCallbackService {
     }
 
     const sessionRecord = this.session[params.state];
-
 
     /**
      * Delete the session once it's used
@@ -219,9 +217,13 @@ export class OAuthCallbackService {
           headers,
         },
       );
-      let integrationConfiguration
+      let integrationConfiguration;
 
-      const installationId = getInstallationId(integrationDefinition.name, params, tokensResponse)
+      const installationId = getInstallationId(
+        integrationDefinition.name,
+        params,
+        tokensResponse,
+      );
       if (
         tokensResponse.token.access_token &&
         tokensResponse.token.refresh_token
@@ -240,13 +242,13 @@ export class OAuthCallbackService {
         };
       }
 
-      console.log(installationId)
+      console.log(installationId);
       await this.integrationAccountService.createIntegrationAccount({
         integrationDefinitionId: integrationDefinition.id,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         config: integrationConfiguration as any,
         workspaceId: sessionRecord.workspaceId,
-        installationId
+        installationId,
       } as CreateIntegrationAccountBody);
 
       res.redirect(

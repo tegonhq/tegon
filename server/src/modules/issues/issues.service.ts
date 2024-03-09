@@ -10,8 +10,10 @@ import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import {
   CreateIssueInput,
   IssueRequestParams,
+  LinkIssueData,
   TeamRequestParams,
   UpdateIssueInput,
+  // UpdateLinkIssueData,
 } from './issues.interface';
 import { getIssueDiff, getIssueTitle } from './issues.utils';
 
@@ -30,6 +32,8 @@ export default class IssuesService {
     teamRequestParams: TeamRequestParams,
     userId: string,
     issueData: CreateIssueInput,
+    isLinkedIssue?: Boolean,
+    linkIssuedata?: LinkIssueData,
   ): Promise<Issue> {
     const { parentId, ...otherIssueData } = issueData;
     const lastNumber =
@@ -53,6 +57,9 @@ export default class IssuesService {
         team: { connect: { id: teamRequestParams.teamId } },
         number: lastNumber + 1,
         ...(parentId && { parent: { connect: { id: parentId } } }),
+        ...(isLinkedIssue && {
+          linkedIssues: { create: { ...linkIssuedata } },
+        }),
       },
     });
 
@@ -70,7 +77,10 @@ export default class IssuesService {
     teamRequestParams: TeamRequestParams,
     issueData: UpdateIssueInput,
     issueParams: IssueRequestParams,
+    isLinkedIssue?: Boolean,
+    linkIssuedata?: LinkIssueData,
   ): Promise<Issue> {
+    const { parentId, ...otherIssueData } = issueData;
     const [currentIssue, updatedIssue] = await this.prisma.$transaction([
       this.prisma.issue.findUnique({
         where: { id: issueParams.issueId },
@@ -81,7 +91,17 @@ export default class IssuesService {
           teamId: teamRequestParams.teamId,
         },
         data: {
-          ...issueData,
+          ...otherIssueData,
+          ...(parentId && { parent: { connect: { id: parentId } } }),
+          ...(isLinkedIssue && {
+            linkedIssues: {
+              upsert: {
+                where: { url: linkIssuedata.url },
+                update: { ...linkIssuedata },
+                create: { ...linkIssuedata },
+              },
+            },
+          }),
         },
       }),
     ]);

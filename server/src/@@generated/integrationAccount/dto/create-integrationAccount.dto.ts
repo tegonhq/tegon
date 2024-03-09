@@ -8,5 +8,5 @@ export class CreateIntegrationAccountDto {
   deleted?: Date;
 integrationConfiguration: Prisma.InputJsonValue;
 installationId?: string;
-settings: Prisma.InputJsonValue;
+settings?: Prisma.InputJsonValue;
 }

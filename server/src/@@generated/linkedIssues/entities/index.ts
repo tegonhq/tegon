@@ -1,0 +1,2 @@
+
+export * from './linkedIssues.entity';

@@ -3,6 +3,7 @@
 import {
   IsArray,
   IsDate,
+  IsJSON,
   IsNumber,
   IsOptional,
   IsString,
@@ -112,6 +113,22 @@ export class UpdateIssueInput {
   @IsOptional()
   @IsArray()
   subscriberIds: string[];
+}
+
+export class LinkIssueData {
+  @IsString()
+  title: string;
+
+  @IsString()
+  url: string;
+
+  @IsOptional()
+  @IsJSON()
+  source?: Record<string, string|number>;
+
+  @IsOptional()
+  @IsJSON()
+  sourceData?: Record<string, string|number>;
 }
 
 export const titlePrompt = ` You have deep expertise in project management and task management for software teams. Whenever a text is provided to you, you have to create an issue title for software development tasks based on the description text.

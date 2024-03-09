@@ -207,10 +207,28 @@ model Issue {
   parentId      String?
   subIssue      Issue[]  @relation("Report")
 
-  comments IssueComment[]
-  history  IssueHistory[]
+  comments     IssueComment[]
+  history      IssueHistory[]
+  linkedIssues LinkedIssues[]
 
   @@unique([teamId, number])
+}
+
+model LinkedIssues {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  title      String
+  url        String
+  source     Json?
+  sourceData Json?
+
+  issue   Issue  @relation(fields: [issueId], references: [id])
+  issueId String
+
+  @@unique([url])
 }
 
 model IssueComment {
@@ -222,12 +240,13 @@ model IssueComment {
   body   String
   userId String
 
-  reactions     Reaction[]
-  reactionsData Json[]
-  issue         Issue         @relation(fields: [issueId], references: [id])
-  issueId       String
-  parent        IssueComment? @relation("Report", fields: [parentId], references: [id])
-  parentId      String?
+  reactions      Reaction[]
+  reactionsData  Json[]
+  issue          Issue         @relation(fields: [issueId], references: [id])
+  issueId        String
+  parent         IssueComment? @relation("Report", fields: [parentId], references: [id])
+  parentId       String?
+  sourceMetadata Json?
 
   replies IssueComment[] @relation("Report")
 }
@@ -304,7 +323,7 @@ model IntegrationAccount {
 
   integrationConfiguration Json
   installationId           String?
-  settings                 Json
+  settings                 Json?
 
   integrationDefinition   IntegrationDefinition @relation(references: [id], fields: [integrationDefinitionId])
   integrationDefinitionId String
@@ -347,6 +366,7 @@ enum ActionType {
 }
 
 enum WorkflowCategory {
+  TRIAGE
   BACKLOG
   UNSTARTED
   STARTED

@@ -9,4 +9,5 @@ export class CreateIssueCommentDto {
 body: string;
 userId: string;
 reactionsData: Prisma.InputJsonValue[];
+sourceMetadata?: Prisma.InputJsonValue;
 }

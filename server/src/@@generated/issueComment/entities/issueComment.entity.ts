@@ -17,5 +17,6 @@ issue?: Issue ;
 issueId: string ;
 parent?: IssueComment  | null;
 parentId: string  | null;
+sourceMetadata: Prisma.JsonValue  | null;
 replies?: IssueComment[] ;
 }

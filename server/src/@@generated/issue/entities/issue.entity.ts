@@ -3,6 +3,7 @@ import {Team} from '../../team/entities/team.entity'
 import {User} from '../../user/entities/user.entity'
 import {IssueComment} from '../../issueComment/entities/issueComment.entity'
 import {IssueHistory} from '../../issueHistory/entities/issueHistory.entity'
+import {LinkedIssues} from '../../linkedIssues/entities/linkedIssues.entity'
 
 
 export class Issue {
@@ -31,4 +32,5 @@ parentId: string  | null;
 subIssue?: Issue[] ;
 comments?: IssueComment[] ;
 history?: IssueHistory[] ;
+linkedIssues?: LinkedIssues[] ;
 }

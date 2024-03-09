@@ -26,7 +26,7 @@ export class IntegrationAccountService {
           integrationDefinition: { connect: { id: integrationDefinitionId } },
           workspace: { connect: { id: workspaceId } },
           integrationConfiguration: config,
-          installationId: createIntegrationAccountBody.installationId
+          installationId: createIntegrationAccountBody.installationId,
         },
         include: {
           integrationDefinition: true,

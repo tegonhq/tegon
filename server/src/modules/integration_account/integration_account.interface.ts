@@ -6,6 +6,10 @@ import { WorkspaceIdRequestBody } from 'modules/workspaces/workspaces.interface'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Config = Record<string, any>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Settings = Record<string, any>;
+
 export class IntegrationAccountRequestIdBody {
   /**
    * Unique identifier for Integration Account
@@ -62,6 +66,10 @@ export class CreateIntegrationAccountBody extends WorkspaceIdRequestBody {
   @IsString()
   @IsOptional()
   installationId: string;
+
+  @IsObject()
+  @IsOptional()
+  settings: Settings
 }
 
 export class UpdateIntegrationAccountBody {
