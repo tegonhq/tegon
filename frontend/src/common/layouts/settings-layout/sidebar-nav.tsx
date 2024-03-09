@@ -81,7 +81,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
             {ACCOUNT_LINKS.map((item) => (
               <Link
                 key={item.href}
-                href={`/${workspaceSlug}/settings/${item.href}`}
+                href={`/${workspaceSlug}/settings/account/${item.href}`}
                 className={cn(
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
                   'justify-start text-sm w-full px-2 text-gray-700 dark:text-gray-300 mt-1',

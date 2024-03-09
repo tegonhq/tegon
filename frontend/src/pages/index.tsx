@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 import { SessionAuth } from 'supertokens-auth-react/recipe/session';
 
-import { UserDataWrapper } from 'common/wrappers/user-data';
+import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
 
 import { Loader } from 'components/ui/loader';
 

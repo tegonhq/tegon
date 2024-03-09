@@ -6,12 +6,11 @@ import type { TeamType } from 'common/types/team';
 
 import { tegonDatabase } from 'store/database';
 
-import { Team, modelName } from './models';
+import { Team } from './models';
 
 export const TeamsStore: IAnyStateTreeNode = types
   .model({
     teams: types.array(Team),
-    lastSequenceId: types.union(types.undefined, types.number),
   })
   .actions((self) => ({
     update(team: TeamType, id: string) {
@@ -34,9 +33,6 @@ export const TeamsStore: IAnyStateTreeNode = types
         self.teams.splice(indexToDelete, 1);
       }
     },
-    updateLastSequenceId(lastSequenceId: number) {
-      self.lastSequenceId = lastSequenceId;
-    },
   }));
 
 export type TeamsStoreType = Instance<typeof TeamsStore>;
@@ -51,12 +47,9 @@ export async function initialiseTeamsStore(workspaceId: string) {
         workspaceId,
       })
       .toArray();
-    const lastSequenceData = await tegonDatabase.sequences.get({
-      id: modelName,
-    });
+
     _store = TeamsStore.create({
       teams,
-      lastSequenceId: lastSequenceData?.lastSequenceId,
     });
   }
   // If your page has Next.js data fetching methods that use a Mobx store, it will

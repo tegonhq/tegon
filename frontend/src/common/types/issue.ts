@@ -18,3 +18,23 @@ export interface IssueType {
   parentId?: string;
   stateId: string;
 }
+
+export interface IssueHistoryType {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+  issueId: string;
+  addedLabelIds: string[];
+  removedLabelIds: string[];
+  fromPriority?: number;
+  toPriority?: number;
+  fromStateId?: string;
+  toStateId?: string;
+  fromEstimate?: number;
+  toEstimate?: number;
+  fromAssigneeId?: string;
+  toAssigneeId?: string;
+  fromParentId?: string;
+  toParentId?: string;
+}

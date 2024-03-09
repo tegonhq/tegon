@@ -23,7 +23,7 @@ export function IssueLabels({ value, onChange }: IssueLabelsProps) {
   const labels = useTeamLabels();
 
   const labelTitle = () => {
-    if (value.length === 1) {
+    if (value.length === 1 && labels.length > 0) {
       const label = labels.find((label: LabelType) => label.id === value[0]);
       return (
         <>
@@ -33,7 +33,7 @@ export function IssueLabels({ value, onChange }: IssueLabelsProps) {
       );
     }
 
-    if (value.length > 1) {
+    if (value.length > 1 && labels.length > 0) {
       return (
         <>
           <RiPriceTagFill size={14} className="text-muted-foreground mr-2" />

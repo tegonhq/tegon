@@ -6,8 +6,6 @@ import type {
   SyncActionRecord,
 } from 'common/types/data-loader';
 
-import { useStoreManagement } from 'hooks/use-store-management';
-
 import { tegonDatabase } from 'store/database';
 import { MODELS } from 'store/models';
 import { type WorkspaceStoreType, workspaceStore } from 'store/workspace';
@@ -28,7 +26,9 @@ export async function saveWorkspaceData(data: BootstrapResponse) {
         await tegonDatabase.usersOnWorkspaces.put(userOnWorkspace);
 
         // Update the store
-        return await workspaceStore.updateUsers(userOnWorkspace);
+        return (
+          workspaceStore && (await workspaceStore.updateUsers(userOnWorkspace))
+        );
       }
 
       const workspace = {
@@ -42,20 +42,11 @@ export async function saveWorkspaceData(data: BootstrapResponse) {
       await tegonDatabase.workspaces.put(workspace);
 
       // Update the store
-      return await workspaceStore.update(workspace);
+      return workspaceStore && (await workspaceStore.update(workspace));
     }),
   );
-
-  await tegonDatabase.sequences.put({
-    id: MODELS.Workspace,
-    lastSequenceId: data.lastSequenceId,
-  });
 }
 
 export function useWorkspaceStore(): WorkspaceStoreType {
-  return useStoreManagement({
-    store: workspaceStore,
-    modelName: [MODELS.Workspace, MODELS.UsersOnWorkspaces],
-    onSaveData: saveWorkspaceData,
-  });
+  return workspaceStore;
 }

@@ -4,9 +4,8 @@
 
 import Dexie from 'dexie';
 
-import type { IssueType } from 'common/types/issue';
+import type { IssueType, IssueHistoryType } from 'common/types/issue';
 import type { LabelType } from 'common/types/label';
-import type { SequenceType } from 'common/types/sequence';
 import type { TeamType, WorkflowType } from 'common/types/team';
 import type {
   UsersOnWorkspaceType,
@@ -17,11 +16,11 @@ import { MODELS } from './models';
 
 export class TegonDatabase extends Dexie {
   workspaces: Dexie.Table<WorkspaceType, string>;
-  sequences: Dexie.Table<SequenceType, string>;
   labels: Dexie.Table<LabelType, string>;
   teams: Dexie.Table<TeamType, string>;
   workflows: Dexie.Table<WorkflowType, string>;
   issues: Dexie.Table<IssueType, string>;
+  issueHistory: Dexie.Table<IssueHistoryType, string>;
   usersOnWorkspaces: Dexie.Table<UsersOnWorkspaceType, string>;
 
   constructor() {
@@ -29,7 +28,6 @@ export class TegonDatabase extends Dexie {
 
     this.version(1).stores({
       [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug',
-      sequence: 'id,lastSequenceId',
       [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',
       [MODELS.Team]: 'id,createdAt,updatedAt,name,identifier,workspaceId',
@@ -39,15 +37,17 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,title,number,description,priority,dueDate,sortOrder,estimate,teamId,createdById,assigneeId,labelIds,parentId,stateId',
       [MODELS.UsersOnWorkspaces]:
         'id,createdAt,updatedAt,userId,workspaceId,teamIds',
+      [MODELS.IssueHistory]:
+        'id,createdAt,updatedAt,userId,issueId,assedLabelIds,removedLabelIds,fromPriority,toPriority,fromStateId,toStateId,fromEstimate,toEstimate,fromAssigneeId,toAssigneeId,fromParentId,toParentId',
     });
 
     this.workspaces = this.table(MODELS.Workspace);
-    this.sequences = this.table('sequence');
     this.labels = this.table(MODELS.Label);
     this.teams = this.table(MODELS.Team);
     this.workflows = this.table(MODELS.Workflow);
     this.issues = this.table(MODELS.Issue);
     this.usersOnWorkspaces = this.table(MODELS.UsersOnWorkspaces);
+    this.issueHistory = this.table(MODELS.IssueHistory);
   }
 }
 

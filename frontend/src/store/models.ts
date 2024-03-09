@@ -9,4 +9,5 @@ export enum MODELS {
   // Team
   Workflow = 'Workflow',
   Issue = 'Issue',
+  IssueHistory = 'IssueHistory',
 }

@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { SyncActionRecord } from 'common/types/data-loader';
 
+import { saveIssueHistoryData } from 'hooks/issues';
 import { saveIssuesData } from 'hooks/issues/use-issues-store';
 import { saveLabelData } from 'hooks/labels/use-labels-store';
 import { saveTeamData } from 'hooks/teams/use-teams-store';
@@ -45,6 +45,20 @@ export async function saveSocketData(data: SyncActionRecord[]) {
 
         case MODELS.Issue: {
           return await saveIssuesData({
+            syncActions: [record],
+            lastSequenceId: record.sequenceId,
+          });
+        }
+
+        case MODELS.UsersOnWorkspaces: {
+          return await saveWorkspaceData({
+            syncActions: [record],
+            lastSequenceId: record.sequenceId,
+          });
+        }
+
+        case MODELS.IssueHistory: {
+          return await saveIssueHistoryData({
             syncActions: [record],
             lastSequenceId: record.sequenceId,
           });

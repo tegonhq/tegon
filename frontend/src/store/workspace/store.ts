@@ -8,16 +8,12 @@ import type {
 } from 'common/types/workspace';
 
 import { tegonDatabase } from 'store/database';
-import { MODELS } from 'store/models';
 
 import { UsersOnWorkspace, Workspace } from './models';
-
-const modelName = MODELS.Workspace;
 
 export const WorkspaceStore: IAnyStateTreeNode = types
   .model({
     workspace: types.union(Workspace, types.undefined),
-    lastSequenceId: types.union(types.undefined, types.number),
     usersOnWorkspaces: types.array(UsersOnWorkspace),
   })
   .actions((self) => ({
@@ -50,9 +46,6 @@ export const WorkspaceStore: IAnyStateTreeNode = types
         self.usersOnWorkspaces.splice(indexToDelete, 1);
       }
     },
-    updateLastSequenceId(lastSequenceId: number) {
-      self.lastSequenceId = lastSequenceId;
-    },
   }));
 
 export type WorkspaceStoreType = Instance<typeof WorkspaceStore>;
@@ -64,9 +57,7 @@ export async function initialiseWorkspaceStore(workspaceId: string) {
     const workspace = await tegonDatabase.workspaces.get({
       id: workspaceId,
     });
-    const lastSequenceData = await tegonDatabase.sequences.get({
-      id: modelName,
-    });
+
     const usersOnWorkspaces = await tegonDatabase.usersOnWorkspaces
       .where({
         workspaceId,
@@ -75,7 +66,6 @@ export async function initialiseWorkspaceStore(workspaceId: string) {
 
     _store = WorkspaceStore.create({
       workspace,
-      lastSequenceId: lastSequenceData?.lastSequenceId,
       usersOnWorkspaces,
     });
   }

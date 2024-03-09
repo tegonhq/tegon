@@ -22,15 +22,11 @@ export const WORKSPACE_LINKS = [
 export const ACCOUNT_LINKS = [
   {
     title: 'Profile',
-    href: 'Profile',
+    href: 'profile',
   },
   {
     title: 'Preferences',
     href: 'preferences',
-  },
-  {
-    title: 'API',
-    href: 'api',
   },
 ];
 

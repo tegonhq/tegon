@@ -6,11 +6,8 @@ import type {
   SyncActionRecord,
 } from 'common/types/data-loader';
 
-import { useStoreManagement } from 'hooks/use-store-management';
-
 import { tegonDatabase } from 'store/database';
 import { issuesStore } from 'store/issues';
-import { MODELS } from 'store/models';
 
 export async function saveIssuesData(data: BootstrapResponse) {
   await Promise.all(
@@ -37,32 +34,27 @@ export async function saveIssuesData(data: BootstrapResponse) {
       switch (record.action) {
         case 'I': {
           await tegonDatabase.issues.put(issue);
-          return await issuesStore.update(issue, record.data.id);
+          return (
+            issuesStore && (await issuesStore.update(issue, record.data.id))
+          );
         }
 
         case 'U': {
           await tegonDatabase.issues.put(issue);
-          return await issuesStore.update(issue, record.data.id);
+          return (
+            issuesStore && (await issuesStore.update(issue, record.data.id))
+          );
         }
 
         case 'D': {
           await tegonDatabase.issues.delete(record.data.id);
-          return await issuesStore.delete(record.data.id);
+          return issuesStore && (await issuesStore.delete(record.data.id));
         }
       }
     }),
   );
-
-  await tegonDatabase.sequences.put({
-    id: MODELS.Issue,
-    lastSequenceId: data.lastSequenceId,
-  });
 }
 
 export function useIssuesStore() {
-  return useStoreManagement({
-    store: issuesStore,
-    modelName: MODELS.Issue,
-    onSaveData: saveIssuesData,
-  });
+  return issuesStore;
 }

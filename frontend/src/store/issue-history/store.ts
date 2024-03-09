@@ -6,59 +6,63 @@ import type { IssueType } from 'common/types/issue';
 
 import { tegonDatabase } from 'store/database';
 
-import { Issue } from './models';
+import { IssueHistory } from './models';
 
-export const IssuesStore: IAnyStateTreeNode = types
+export const IssueHistoryStore: IAnyStateTreeNode = types
   .model({
-    issues: types.array(Issue),
+    issueHistories: types.array(IssueHistory),
   })
   .actions((self) => ({
     update(issue: IssueType, id: string) {
-      const indexToUpdate = self.issues.findIndex((obj) => obj.id === id);
+      const indexToUpdate = self.issueHistories.findIndex(
+        (obj) => obj.id === id,
+      );
 
       if (indexToUpdate !== -1) {
         // Update the object at the found index with the new data
-        self.issues[indexToUpdate] = {
-          ...self.issues[indexToUpdate],
+        self.issueHistories[indexToUpdate] = {
+          ...self.issueHistories[indexToUpdate],
           ...issue,
           // TODO fix the any and have a type with Issuetype
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any;
       } else {
-        self.issues.push(issue);
+        self.issueHistories.push(issue);
       }
     },
     delete(id: string) {
-      const indexToDelete = self.issues.findIndex((obj) => obj.id === id);
+      const indexToDelete = self.issueHistories.findIndex(
+        (obj) => obj.id === id,
+      );
 
       if (indexToDelete !== -1) {
-        self.issues.splice(indexToDelete, 1);
+        self.issueHistories.splice(indexToDelete, 1);
       }
     },
   }));
 
-export type IssuesStoreType = Instance<typeof IssuesStore>;
+export type IssueHistoryStoreType = Instance<typeof IssueHistoryStore>;
 
-export let issuesStore: IssuesStoreType;
+export let issueHistoryStore: IssueHistoryStoreType;
 
-export async function resetIssuesStore() {
-  issuesStore = undefined;
+export async function resetIssueHistoryStore() {
+  issueHistoryStore = undefined;
 }
 
-export async function initializeIssuesStore(teamId: string) {
-  let _store = issuesStore;
+export async function initializeIssueHistoryStore(issueId: string) {
+  let _store = issueHistoryStore;
 
-  if (!issuesStore) {
-    const issues = teamId
-      ? await tegonDatabase.issues
+  if (!issueHistoryStore) {
+    const issueHistories = issueId
+      ? await tegonDatabase.issueHistory
           .where({
-            teamId,
+            issueId,
           })
           .toArray()
       : [];
 
-    _store = IssuesStore.create({
-      issues,
+    _store = IssueHistoryStore.create({
+      issueHistories,
     });
   }
 
@@ -72,9 +76,9 @@ export async function initializeIssuesStore(teamId: string) {
     return _store;
   }
   // Create the store once in the client
-  if (!issuesStore) {
-    issuesStore = _store;
+  if (!issueHistoryStore) {
+    issueHistoryStore = _store;
   }
 
-  return issuesStore;
+  return issueHistoryStore;
 }

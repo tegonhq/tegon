@@ -5,11 +5,8 @@ import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 import type { LabelType } from 'common/types/label';
 
 import { tegonDatabase } from 'store/database';
-import { MODELS } from 'store/models';
 
 import { Label } from './models';
-
-const modelName = MODELS.Label;
 
 export const LabelsStore: IAnyStateTreeNode = types
   .model({
@@ -37,9 +34,6 @@ export const LabelsStore: IAnyStateTreeNode = types
         self.labels.splice(indexToDelete, 1);
       }
     },
-    updateLastSequenceId(lastSequenceId: number) {
-      self.lastSequenceId = lastSequenceId;
-    },
   }));
 
 export type LabelsStoreType = Instance<typeof LabelsStore>;
@@ -54,13 +48,9 @@ export async function initialiseLabelStore(workspaceId: string) {
         workspaceId,
       })
       .toArray();
-    const lastSequenceData = await tegonDatabase.sequences.get({
-      id: modelName,
-    });
 
     _store = LabelsStore.create({
       labels: labelsData,
-      lastSequenceId: lastSequenceData?.lastSequenceId,
     });
   }
 

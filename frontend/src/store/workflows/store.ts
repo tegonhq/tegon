@@ -5,11 +5,8 @@ import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 import type { WorkflowType } from 'common/types/team';
 
 import { tegonDatabase } from 'store/database';
-import { MODELS } from 'store/models';
 
 import { Workflow } from './models';
-
-const modelName = MODELS.Workflow;
 
 export const WorkflowsStore: IAnyStateTreeNode = types
   .model({
@@ -62,13 +59,8 @@ export async function initializeWorkflowsStore(teamId: string) {
           .toArray()
       : [];
 
-    const lastSequenceData = await tegonDatabase.sequences.get({
-      id: modelName,
-    });
-
     _store = WorkflowsStore.create({
       workflows,
-      lastSequenceId: lastSequenceData?.lastSequenceId,
     });
   }
 

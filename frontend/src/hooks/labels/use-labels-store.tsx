@@ -6,11 +6,8 @@ import type {
   SyncActionRecord,
 } from 'common/types/data-loader';
 
-import { useStoreManagement } from 'hooks/use-store-management';
-
 import { tegonDatabase } from 'store/database';
 import { labelsStore } from 'store/labels';
-import { MODELS } from 'store/models';
 
 export async function saveLabelData(data: BootstrapResponse) {
   await Promise.all(
@@ -30,32 +27,27 @@ export async function saveLabelData(data: BootstrapResponse) {
       switch (record.action) {
         case 'I': {
           await tegonDatabase.labels.put(label);
-          return await labelsStore.update(label, record.data.id);
+          return (
+            labelsStore && (await labelsStore.update(label, record.data.id))
+          );
         }
 
         case 'U': {
           await tegonDatabase.labels.put(label);
-          return await labelsStore.update(label, record.data.id);
+          return (
+            labelsStore && (await labelsStore.update(label, record.data.id))
+          );
         }
 
         case 'D': {
           await tegonDatabase.labels.delete(record.data.id);
-          return await labelsStore.delete(record.data.id);
+          return labelsStore && (await labelsStore.delete(record.data.id));
         }
       }
     }),
   );
-
-  await tegonDatabase.sequences.put({
-    id: MODELS.Label,
-    lastSequenceId: data.lastSequenceId,
-  });
 }
 
 export function useLabelsStore() {
-  return useStoreManagement({
-    store: labelsStore,
-    modelName: MODELS.Label,
-    onSaveData: saveLabelData,
-  });
+  return labelsStore;
 }

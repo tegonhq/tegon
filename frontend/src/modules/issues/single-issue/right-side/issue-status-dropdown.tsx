@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { IssueStatusDropdownContent } from 'modules/issues/components';
@@ -14,50 +15,56 @@ interface IssueStatusProps {
   onChange?: (newStatus: string) => void;
 }
 
-export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {
-  const [open, setOpen] = React.useState(false);
-  const workflows = useTeamWorkflows();
-  const workflow = value
-    ? workflows.find((workflow) => workflow.id === value)
-    : workflows[0];
+export const IssueStatusDropdown = observer(
+  ({ value, onChange }: IssueStatusProps) => {
+    const [open, setOpen] = React.useState(false);
+    const workflows = useTeamWorkflows();
+    const workflow = value
+      ? workflows.find((workflow) => workflow.id === value)
+      : workflows[0];
 
-  React.useEffect(() => {
-    if (!value) {
-      onChange && onChange(workflows[0].id);
+    React.useEffect(() => {
+      if (!value) {
+        onChange && onChange(workflows[0].id);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    if (!workflow) {
+      return null;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  const CategoryIcon = workflow
-    ? WORKFLOW_CATEGORY_ICONS[workflow.name]
-    : WORKFLOW_CATEGORY_ICONS['Backlog'];
-  return (
-    <div>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            size="lg"
-            aria-expanded={open}
-            className="flex items-center border border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 dark:bg-transparent shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
-          >
-            <CategoryIcon
-              size={18}
-              className="text-muted-foreground mr-2"
-              color={workflow.color}
+    const CategoryIcon = workflow
+      ? WORKFLOW_CATEGORY_ICONS[workflow.name]
+      : WORKFLOW_CATEGORY_ICONS['Backlog'];
+    return (
+      <div>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              size="lg"
+              aria-expanded={open}
+              className="flex items-center border border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 dark:bg-transparent shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
+            >
+              <CategoryIcon
+                size={18}
+                className="text-muted-foreground mr-2"
+                color={workflow.color}
+              />
+              {workflow.name}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0" align="start">
+            <IssueStatusDropdownContent
+              onChange={onChange}
+              onClose={() => setOpen(false)}
+              workflows={workflows}
             />
-            {workflow.name}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
-          <IssueStatusDropdownContent
-            onChange={onChange}
-            onClose={() => setOpen(false)}
-            workflows={workflows}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-}
+          </PopoverContent>
+        </Popover>
+      </div>
+    );
+  },
+);

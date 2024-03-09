@@ -6,10 +6,7 @@ import type {
   SyncActionRecord,
 } from 'common/types/data-loader';
 
-import { useStoreManagement } from 'hooks/use-store-management';
-
 import { tegonDatabase } from 'store/database';
-import { MODELS } from 'store/models';
 import { teamsStore } from 'store/teams';
 
 export async function saveTeamData(data: BootstrapResponse) {
@@ -27,32 +24,23 @@ export async function saveTeamData(data: BootstrapResponse) {
       switch (record.action) {
         case 'I': {
           await tegonDatabase.teams.put(team);
-          return await teamsStore.update(team, record.data.id);
+          return teamsStore && (await teamsStore.update(team, record.data.id));
         }
 
         case 'U': {
           await tegonDatabase.teams.put(team);
-          return await teamsStore.update(team, record.data.id);
+          return teamsStore && (await teamsStore.update(team, record.data.id));
         }
 
         case 'D': {
           await tegonDatabase.teams.delete(record.data.id);
-          return await teamsStore.delete(record.data.id);
+          return teamsStore && (await teamsStore.delete(record.data.id));
         }
       }
     }),
   );
-
-  await tegonDatabase.sequences.put({
-    id: MODELS.Team,
-    lastSequenceId: data.lastSequenceId,
-  });
 }
 
 export function useTeamsStore() {
-  return useStoreManagement({
-    modelName: MODELS.Team,
-    onSaveData: saveTeamData,
-    store: teamsStore,
-  });
+  return teamsStore;
 }
