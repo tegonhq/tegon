@@ -6,6 +6,7 @@ import * as React from 'react';
 
 import { Loader } from 'components/ui/loader';
 
+import { initializeCommentsStore, resetCommentsStore } from './comments';
 import { tegonDatabase } from './database';
 import {
   initializeIssueHistoryStore,
@@ -33,6 +34,7 @@ export const IssueStoreProvider = observer(
     React.useEffect(() => {
       return () => {
         resetIssueHistoryStore();
+        resetCommentsStore();
       };
     }, []);
 
@@ -51,6 +53,7 @@ export const IssueStoreProvider = observer(
       await initializeWorkflowsStore(teamData?.id);
       await initializeIssuesStore(teamData?.id);
       await initializeIssueHistoryStore(issueData?.id);
+      await initializeCommentsStore(issueData?.id);
 
       setLoading(false);
     }, [issueId]);

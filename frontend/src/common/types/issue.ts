@@ -40,3 +40,14 @@ export interface IssueHistoryType {
 }
 
 export const Priorities = ['No priority', 'Urgent', 'High', 'Medium', 'Low'];
+
+export interface IssueCommentType {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+
+  body: string;
+  userId: string;
+
+  issueId: string;
+}

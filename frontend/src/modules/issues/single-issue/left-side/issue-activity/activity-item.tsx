@@ -5,6 +5,7 @@ import * as React from 'react';
 import type { IssueHistoryType } from 'common/types/issue';
 
 import type { User } from 'store/user-context';
+
 import { LabelActivity } from './label-activity';
 import { PriorityActivity } from './priority-activity';
 import { StatusActivity } from './status-activity';

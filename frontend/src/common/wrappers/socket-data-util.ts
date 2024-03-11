@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import type { SyncActionRecord } from 'common/types/data-loader';
+import { saveCommentsData } from 'hooks/comments';
 
 import { saveIssueHistoryData } from 'hooks/issues';
 import { saveIssuesData } from 'hooks/issues/use-issues-store';
@@ -59,6 +60,13 @@ export async function saveSocketData(data: SyncActionRecord[]) {
 
         case MODELS.IssueHistory: {
           return await saveIssueHistoryData({
+            syncActions: [record],
+            lastSequenceId: record.sequenceId,
+          });
+        }
+
+        case MODELS.IssueComment: {
+          return await saveCommentsData({
             syncActions: [record],
             lastSequenceId: record.sequenceId,
           });

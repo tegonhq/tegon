@@ -9,7 +9,7 @@ interface TimelineContentProps {
 }
 
 const TimelineContent: React.FC<TimelineContentProps> = ({ children }) => (
-  <div>{children}</div>
+  <div className="w-full">{children}</div>
 );
 TimelineContent.displayName = 'TimelineContent';
 

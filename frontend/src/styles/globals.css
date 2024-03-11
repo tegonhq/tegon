@@ -99,7 +99,8 @@
 .editor-checkbox span:after {
   @apply dark:border-gray-800 border-gray-100;
 
-  left: 4px;
+  left: 5px;
+  top: 1px;
   width: 5px;
   height: 10px;
   border-width: 0 1px 1px 0;

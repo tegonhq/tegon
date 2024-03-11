@@ -4,7 +4,11 @@
 
 import Dexie from 'dexie';
 
-import type { IssueType, IssueHistoryType } from 'common/types/issue';
+import type {
+  IssueType,
+  IssueHistoryType,
+  IssueCommentType,
+} from 'common/types/issue';
 import type { LabelType } from 'common/types/label';
 import type { TeamType, WorkflowType } from 'common/types/team';
 import type {
@@ -21,6 +25,7 @@ export class TegonDatabase extends Dexie {
   workflows: Dexie.Table<WorkflowType, string>;
   issues: Dexie.Table<IssueType, string>;
   issueHistory: Dexie.Table<IssueHistoryType, string>;
+  comments: Dexie.Table<IssueCommentType, string>;
   usersOnWorkspaces: Dexie.Table<UsersOnWorkspaceType, string>;
 
   constructor() {
@@ -39,6 +44,7 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,userId,workspaceId,teamIds',
       [MODELS.IssueHistory]:
         'id,createdAt,updatedAt,userId,issueId,assedLabelIds,removedLabelIds,fromPriority,toPriority,fromStateId,toStateId,fromEstimate,toEstimate,fromAssigneeId,toAssigneeId,fromParentId,toParentId',
+      [MODELS.IssueComment]: 'id,createdAt,updatedAt,userId,issueId,body',
     });
 
     this.workspaces = this.table(MODELS.Workspace);
@@ -48,6 +54,7 @@ export class TegonDatabase extends Dexie {
     this.issues = this.table(MODELS.Issue);
     this.usersOnWorkspaces = this.table(MODELS.UsersOnWorkspaces);
     this.issueHistory = this.table(MODELS.IssueHistory);
+    this.comments = this.table(MODELS.IssueComment);
   }
 }
 
