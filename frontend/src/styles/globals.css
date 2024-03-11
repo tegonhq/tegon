@@ -109,7 +109,7 @@
 }
 
 .tiptap p.is-editor-empty:first-child::before {
-  @apply text-gray-500 dark:text-gray-600;
+  @apply text-gray-500 dark:text-gray-600 text-base;
 
   content: attr(data-placeholder);
   float: left;

@@ -4,6 +4,8 @@ import * as React from 'react';
 
 import { IssuePriorityDropdownContent } from 'modules/issues/components';
 
+import { Priorities } from 'common/types/issue';
+
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 
@@ -11,8 +13,6 @@ interface IssuePriorityProps {
   value?: number;
   onChange?: (priority: number) => void;
 }
-
-const Priorities = ['No priority', 'Urgent', 'High', 'Medium', 'Low'];
 
 export function IssuePriorityDropdown({ value, onChange }: IssuePriorityProps) {
   const [open, setOpen] = React.useState(false);

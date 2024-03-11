@@ -38,3 +38,5 @@ export interface IssueHistoryType {
   fromParentId?: string;
   toParentId?: string;
 }
+
+export const Priorities = ['No priority', 'Urgent', 'High', 'Medium', 'Low'];

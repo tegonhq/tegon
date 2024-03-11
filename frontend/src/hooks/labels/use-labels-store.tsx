@@ -7,7 +7,7 @@ import type {
 } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
-import { labelsStore } from 'store/labels';
+import { labelsStore, type LabelsStoreType } from 'store/labels';
 
 export async function saveLabelData(data: BootstrapResponse) {
   await Promise.all(
@@ -48,6 +48,6 @@ export async function saveLabelData(data: BootstrapResponse) {
   );
 }
 
-export function useLabelsStore() {
+export function useLabelsStore(): LabelsStoreType {
   return labelsStore;
 }

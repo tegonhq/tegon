@@ -28,6 +28,14 @@ export const RightSide = observer(() => {
     updateIssue({ id: issue.id, labelIds, teamId: issue.teamId });
   };
 
+  const priorityChange = (priority: number) => {
+    updateIssue({
+      id: issue.id,
+      priority,
+      teamId: issue.teamId,
+    });
+  };
+
   return (
     <div className="bg-background border-l dark:bg-gray-800/50 flex flex-col">
       <Header />
@@ -47,7 +55,10 @@ export const RightSide = observer(() => {
             Priority
           </div>
           <div>
-            <IssuePriorityDropdown value={issue.priority} />
+            <IssuePriorityDropdown
+              value={issue.priority}
+              onChange={priorityChange}
+            />
           </div>
         </div>
 

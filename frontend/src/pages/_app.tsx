@@ -4,6 +4,8 @@ import 'styles/globals.css';
 import type { NextComponentType } from 'next';
 import type { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
 import { Inter } from 'next/font/google';
 import * as React from 'react';
 import { Hydrate, QueryClientProvider } from 'react-query';
@@ -24,6 +26,8 @@ export const fontSans = Inter({
 });
 
 initSuperTokens();
+
+TimeAgo.addDefaultLocale(en);
 
 export const MyApp: NextComponentType<
   AppContext,

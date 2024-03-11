@@ -28,12 +28,14 @@ export function LeftSide() {
   return (
     <div className="col-span-2">
       <Header />
-      <div className="grow pl-8 p-4 flex flex-col gap-4">
+      <div className="grow px-8 py-4 flex flex-col gap-4">
         <IssueTitle defaultValue={issue.title} />
-        <IssueDescription
-          value={issue.description}
-          onChange={onDescriptionChange}
-        />
+        <div className="mt-2">
+          <IssueDescription
+            value={issue.description}
+            onChange={onDescriptionChange}
+          />
+        </div>
 
         <Separator className="my-3" />
 
