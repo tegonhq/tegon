@@ -95,6 +95,7 @@ export default class ReplicationService {
 
   async setupReplication() {
     const clientConfig = {
+      host: this.configService.get('DB_HOST'),
       database: this.configService.get('POSTGRES_DB'),
       user: this.configService.get('POSTGRES_USER'),
       password: this.configService.get('POSTGRES_PASSWORD'),
