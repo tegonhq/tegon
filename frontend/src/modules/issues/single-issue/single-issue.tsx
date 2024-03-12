@@ -11,7 +11,6 @@ export function SingleIssue() {
   return (
     <main className="grid grid-cols-3 h-full">
       <LeftSide />
-
       <RightSide />
     </main>
   );

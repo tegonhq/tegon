@@ -51,8 +51,6 @@ export const IssueActivity = observer(() => {
     return 0;
   });
 
-  console.log(comments);
-
   const issueCreatedUser =
     usersData && usersData.find((user: User) => user.id === issue.createdById);
 
@@ -70,7 +68,7 @@ export const IssueActivity = observer(() => {
         <div> Activity</div>
       </div>
 
-      <div className="mt-2">
+      <div className="my-2">
         <Timeline>
           <TimelineItem className="mb-2" hasMore={false}>
             <div className="flex items-center text-xs text-muted-foreground">

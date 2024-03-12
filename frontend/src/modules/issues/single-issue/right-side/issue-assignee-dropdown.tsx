@@ -74,6 +74,7 @@ export function IssueAssigneeDropdown({
       <PopoverContent className="w-[200px] p-0" align="start">
         <IssueAssigneeDropdownContent
           onClose={() => setOpen(false)}
+          value={value}
           usersData={usersData}
           onChange={onChange}
         />

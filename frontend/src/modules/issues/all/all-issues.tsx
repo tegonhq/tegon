@@ -6,11 +6,13 @@ import { TeamStoreProvider } from 'store/team-store-provider';
 
 import { Header } from './header';
 import { ListView } from './list-view';
+import { Filters } from './filters';
 
 export function AllIssues() {
   return (
     <main className="flex flex-col">
       <Header />
+      <Filters />
       <div className="grow">
         <ListView />
       </div>

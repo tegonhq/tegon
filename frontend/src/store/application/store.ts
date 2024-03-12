@@ -4,26 +4,18 @@ import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 
 interface UpdateBody {
   filters: string;
-  workspaceId: string;
-  teamIdentifier: string;
 }
 
 export const ApplicationStore: IAnyStateTreeNode = types
   .model({
     filters: types.string,
-    workspaceId: types.string,
-    teamIdentifier: types.string,
+    identifier: types.string,
   })
   .actions((self) => ({
     update(updateBody: UpdateBody) {
       self.filters = updateBody.filters;
-      self.workspaceId = updateBody.workspaceId;
-      self.teamIdentifier = updateBody.teamIdentifier;
 
-      localStorage.setItem(
-        `filters/${updateBody.workspaceId}/${updateBody.teamIdentifier}`,
-        updateBody.filters,
-      );
+      localStorage.setItem(`filters/${self.identifier}`, updateBody.filters);
     },
   }));
 
@@ -33,4 +25,22 @@ export let applicationStore: ApplicationStoreType;
 
 export async function resetApplicationStore() {
   applicationStore = undefined;
+}
+
+export async function initApplicationStore(identifier: string) {
+  const data = localStorage.getItem(`filters/${identifier}`);
+
+  if (data) {
+    applicationStore = ApplicationStore.create({
+      filters: data,
+      identifier,
+    });
+  } else {
+    applicationStore = ApplicationStore.create({
+      filters: JSON.stringify({}),
+      identifier,
+    });
+  }
+
+  return applicationStore;
 }

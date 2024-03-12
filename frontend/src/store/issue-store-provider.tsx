@@ -25,7 +25,10 @@ export const IssueStoreProvider = observer(
 
     React.useEffect(() => {
       if (issueId) {
-        initTeamBasedStored();
+        resetIssueHistoryStore();
+        resetCommentsStore();
+
+        initIssueBasedStored();
       }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,7 +42,7 @@ export const IssueStoreProvider = observer(
     }, []);
 
     // All data related to team
-    const initTeamBasedStored = React.useCallback(async () => {
+    const initIssueBasedStored = React.useCallback(async () => {
       setLoading(true);
       const id = (issueId as string).split('-')[1];
       const identifier = (issueId as string).split('-')[0];

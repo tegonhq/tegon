@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { observer } from 'mobx-react-lite';
+import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
@@ -10,9 +11,12 @@ import { tegonDatabase } from 'store/database';
 import { initializeIssuesStore } from 'store/issues';
 import { initializeWorkflowsStore } from 'store/workflows';
 
+import { initApplicationStore } from './application';
+
 export const TeamStoreProvider = observer(
   ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = React.useState(true);
+    const pathname = usePathname();
 
     const {
       query: { teamIdentifier },
@@ -20,23 +24,25 @@ export const TeamStoreProvider = observer(
 
     React.useEffect(() => {
       if (teamIdentifier) {
-        initTeamBasedStored();
+        initTeamBasedStore();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [teamIdentifier]);
 
     // All data related to team
-    const initTeamBasedStored = React.useCallback(async () => {
+    const initTeamBasedStore = React.useCallback(async () => {
       setLoading(true);
 
       const teamData = await tegonDatabase.teams.get({
         identifier: teamIdentifier,
       });
 
+      await initApplicationStore(pathname);
       await initializeWorkflowsStore(teamData?.id);
       await initializeIssuesStore(teamData?.id);
 
       setLoading(false);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [teamIdentifier]);
 
     if (loading) {

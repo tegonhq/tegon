@@ -73,6 +73,7 @@ export function IssueAssigneeDropdown({
             onClose={() => setOpen(false)}
             usersData={usersData}
             onChange={onChange}
+            value={value}
           />
         </PopoverContent>
       </Popover>
