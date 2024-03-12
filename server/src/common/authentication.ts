@@ -46,7 +46,6 @@ export async function hasValidHeader(
   try {
     const publicKey = await getKey(authHeaderValue);
     verify(authHeaderValue, publicKey, {});
-
     return true;
   } catch (e) {
     if (throwError) {
