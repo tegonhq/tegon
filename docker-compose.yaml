@@ -53,6 +53,8 @@ services:
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_SCHEMA=${DB_SCHEMA}
+    ports:
+      - 3001:3001
 
   webapp:
     image: "poozlehq/tegon-webapp:${VERSION}"

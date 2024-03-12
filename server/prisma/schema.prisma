@@ -196,8 +196,8 @@ model Issue {
 
   team          Team     @relation(fields: [teamId], references: [id])
   teamId        String
-  createdBy     User     @relation(fields: [createdById], references: [id])
-  createdById   String
+  createdBy     User?     @relation(fields: [createdById], references: [id])
+  createdById   String?
   subscriberIds String[]
   assigneeId    String?
   labelIds      String[]
