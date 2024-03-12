@@ -56,6 +56,7 @@
   body {
     @apply bg-background text-foreground;
     @apply antialiased;
+    overflow: hidden;
   }
 }
 

@@ -9,6 +9,7 @@ import { useCurrentTeam } from 'hooks/teams/use-current-team';
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
 import { IssueAssigneeDropdown } from './issue-assignee-dropdown';
+import { IssueLabels } from './issue-labels';
 import { IssueStatusDropdown } from './issue-status-dropdown';
 
 interface IssueItemProps {
@@ -50,6 +51,9 @@ export function IssueItem({ issue }: IssueItemProps) {
         </div>
       </div>
       <div className="flex gap-2 items-center">
+        <div>
+          <IssueLabels labelIds={issue.labelIds} />
+        </div>
         <div className="text-muted-foreground text-sm">
           {dayjs(issue.createdAt).format('DD MMM')}
         </div>

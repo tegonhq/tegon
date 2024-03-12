@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import type { SyncActionRecord } from 'common/types/data-loader';
-import { saveCommentsData } from 'hooks/comments';
 
+import { saveCommentsData } from 'hooks/comments';
 import { saveIssueHistoryData } from 'hooks/issues';
 import { saveIssuesData } from 'hooks/issues/use-issues-store';
 import { saveLabelData } from 'hooks/labels/use-labels-store';

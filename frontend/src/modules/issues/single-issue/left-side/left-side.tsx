@@ -28,7 +28,7 @@ export function LeftSide() {
   return (
     <div className="col-span-2">
       <Header />
-      <div className="grow px-8 py-4 flex flex-col gap-4">
+      <div className="grow px-8 py-4 flex flex-col gap-4 overflow-y-auto h-[calc(100vh_-_52px)]">
         <IssueTitle defaultValue={issue.title} />
         <div className="mt-2">
           <IssueDescription

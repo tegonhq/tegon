@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import * as React from 'react';
+import ReactTimeAgo from 'react-time-ago';
 
 import { type IssueCommentType } from 'common/types/issue';
 
@@ -13,7 +14,6 @@ import {
 import { TimelineItem } from 'components/ui/timeline';
 
 import type { User } from 'store/user-context';
-import ReactTimeAgo from 'react-time-ago';
 
 interface CommentActivityProps {
   comment: IssueCommentType;
