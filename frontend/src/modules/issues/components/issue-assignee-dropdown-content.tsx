@@ -63,13 +63,15 @@ export function IssueAssigneeDropdownContent({
             onClose();
           }}
         >
-          <Checkbox
-            id="no-user"
-            checked={value.includes('no-user')}
-            onCheckedChange={(value: boolean) =>
-              onValueChange(value, 'no-user')
-            }
-          />
+          {multiple && (
+            <Checkbox
+              id="no-user"
+              checked={value.includes('no-user')}
+              onCheckedChange={(value: boolean) =>
+                onValueChange(value, 'no-user')
+              }
+            />
+          )}
           <RiAccountCircleLine size={14} className="min-w-[25px] mr-1" /> No
           Assignee
         </CommandItem>

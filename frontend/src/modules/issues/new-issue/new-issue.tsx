@@ -13,11 +13,13 @@ import {
   useCreateIssueMutation,
 } from 'services/issues/create-issue';
 
-import { IssueAssigneeDropdown } from './issue-assignee-dropdown';
-import { IssueLabelDropdown } from './issue-label-dropdown';
-import { IssuePriorityDropdown } from './issue-priority-dropdown';
-import { IssueStatusDropdown } from './issue-status-dropdown';
 import { NewIssueSchema } from './new-issues-type';
+import {
+  IssueAssigneeDropdown,
+  IssueLabelDropdown,
+  IssuePriorityDropdown,
+  IssueStatusDropdown,
+} from '../components';
 import { IssueDescription } from '../single-issue/left-side/issue-description';
 
 interface NewIssueProps {

@@ -1,7 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiAccountCircleLine } from '@remixicon/react';
 import * as React from 'react';
+
+import { IssueAssigneeDropdownContent } from 'modules/issues/components';
 
 import { cn } from 'common/lib/utils';
 
@@ -17,11 +18,9 @@ import { useUsersData } from 'hooks/users/use-users-data';
 
 import type { User } from 'store/user-context';
 
-import { IssueAssigneeDropdownContent } from '../components/issue-assignee-dropdown-content';
-
 interface IssueAssigneeDropdownProps {
-  value?: string;
-  onChange?: (assigneeId: string) => void;
+  value?: string[];
+  onChange?: (assigneeIds: string[]) => void;
 }
 
 export function IssueAssigneeDropdown({
@@ -30,10 +29,14 @@ export function IssueAssigneeDropdown({
 }: IssueAssigneeDropdownProps) {
   const [open, setOpen] = React.useState(false);
 
-  const { usersData } = useUsersData();
+  const { usersData, isLoading } = useUsersData();
 
   function getUserData(userId: string) {
     return usersData.find((userData: User) => userData.id === userId);
+  }
+
+  if (isLoading) {
+    return null;
   }
 
   return (
@@ -46,24 +49,20 @@ export function IssueAssigneeDropdown({
             size="xs"
             aria-expanded={open}
             className={cn(
-              'flex items-center justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary text-muted-foreground',
+              'flex items-center justify-between !bg-transparent hover:bg-transparent p-0 border-0 text-xs font-normal focus-visible:ring-1 focus-visible:border-primary text-muted-foreground',
               value && 'text-foreground',
             )}
           >
-            {value ? (
-              <>
-                <Avatar className="h-[20px] w-[30px]">
-                  <AvatarImage />
-                  <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm mr-2">
-                    {getInitials(getUserData(value).fullname)}
-                  </AvatarFallback>
-                </Avatar>
-
-                {getUserData(value).fullname}
-              </>
+            {value.length > 1 ? (
+              <>{value.length} Assignee</>
             ) : (
               <>
-                <RiAccountCircleLine size={14} className="mr-1" /> Assignee
+                <Avatar className="h-[20px] w-[25px]">
+                  <AvatarImage />
+                  <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+                    {getInitials(getUserData(value[0]).fullname)}
+                  </AvatarFallback>
+                </Avatar>
               </>
             )}
           </Button>
@@ -74,6 +73,7 @@ export function IssueAssigneeDropdown({
             usersData={usersData}
             onChange={onChange}
             value={value}
+            multiple
           />
         </PopoverContent>
       </Popover>

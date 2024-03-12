@@ -4,15 +4,15 @@ import { AppLayout } from 'common/layouts/app-layout';
 
 import { TeamStoreProvider } from 'store/team-store-provider';
 
+import { FiltersView } from './filters-view';
 import { Header } from './header';
 import { ListView } from './list-view';
-import { Filters } from './filters';
 
 export function AllIssues() {
   return (
     <main className="flex flex-col">
       <Header />
-      <Filters />
+      <FiltersView />
       <div className="grow">
         <ListView />
       </div>

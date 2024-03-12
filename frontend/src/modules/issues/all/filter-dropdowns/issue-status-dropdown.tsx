@@ -2,36 +2,37 @@
 
 import * as React from 'react';
 
+import { IssueStatusDropdownContent } from 'modules/issues/components';
 import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
+
+import type { WorkflowType } from 'common/types/team';
 
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useTeamWorkflows } from 'hooks/workflows/use-team-workflows';
 
-import { IssueStatusDropdownContent } from '../components/issue-status-dropdown-content';
-
 interface IssueStatusProps {
-  value?: string;
-  onChange?: (newStatus: string) => void;
+  value?: string[];
+  onChange?: (newStatus: string[]) => void;
 }
 
 export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {
   const [open, setOpen] = React.useState(false);
   const workflows = useTeamWorkflows();
-  const workflow = value
-    ? workflows.find((workflow) => workflow.id === value)
-    : workflows[0];
 
-  React.useEffect(() => {
-    if (!value) {
-      onChange(workflows[0].id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const getWorkflowData = (workflowId: string) => {
+    const workflow = value
+      ? workflows.find((workflow) => workflow.id === workflowId)
+      : workflows[0];
 
-  const CategoryIcon = workflow
-    ? WORKFLOW_CATEGORY_ICONS[workflow.name]
-    : WORKFLOW_CATEGORY_ICONS['Backlog'];
+    return workflow;
+  };
+
+  const getWorkflowIcon = (workflowName: WorkflowType['name']) => {
+    const WorkflowIcon = WORKFLOW_CATEGORY_ICONS[workflowName];
+
+    return <WorkflowIcon />;
+  };
 
   return (
     <div>
@@ -42,14 +43,11 @@ export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {
             role="combobox"
             size="xs"
             aria-expanded={open}
-            className="flex items-center justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
+            className="flex items-center !bg-transparent hover:bg-transparent shadow-none p-0 border-0 justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
           >
-            <CategoryIcon
-              size={16}
-              className="text-muted-foreground mr-2"
-              color={workflow.color}
-            />
-            {workflow.name}
+            {value.length > 1
+              ? `${value.length} statues`
+              : getWorkflowData(value[0]).name}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
@@ -57,6 +55,8 @@ export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {
             onChange={onChange}
             onClose={() => setOpen(false)}
             workflows={workflows}
+            value={value}
+            multiple
           />
         </PopoverContent>
       </Popover>

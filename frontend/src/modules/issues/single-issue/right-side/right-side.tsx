@@ -2,15 +2,22 @@
 
 import { observer } from 'mobx-react-lite';
 
+import {
+  IssueAssigneeDropdown,
+  IssueAssigneeDropdownVariant,
+  IssueLabelDropdown,
+  IssueLabelDropdownVariant,
+  IssuePriorityDropdown,
+  IssuePriorityDropdownVariant,
+  IssueStatusDropdown,
+  IssueStatusDropdownVariant,
+} from 'modules/issues/components';
+
 import { useIssueData } from 'hooks/issues';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
 import { Header } from './header';
-import { IssueAssigneeDropdown } from './issue-assignee-dropdown';
-import { IssueLabels } from './issue-labels';
-import { IssuePriorityDropdown } from './issue-priority-dropdown';
-import { IssueStatusDropdown } from './issue-status-dropdown';
 
 export const RightSide = observer(() => {
   const issue = useIssueData();
@@ -46,6 +53,7 @@ export const RightSide = observer(() => {
             <IssueStatusDropdown
               value={issue.stateId}
               onChange={statusChange}
+              variant={IssueStatusDropdownVariant.LINK}
             />
           </div>
         </div>
@@ -58,6 +66,7 @@ export const RightSide = observer(() => {
             <IssuePriorityDropdown
               value={issue.priority}
               onChange={priorityChange}
+              variant={IssuePriorityDropdownVariant.LINK}
             />
           </div>
         </div>
@@ -70,6 +79,7 @@ export const RightSide = observer(() => {
             <IssueAssigneeDropdown
               value={issue.assigneeId}
               onChange={assigneeChange}
+              variant={IssueAssigneeDropdownVariant.LINK}
             />
           </div>
         </div>
@@ -77,7 +87,11 @@ export const RightSide = observer(() => {
         <div className="flex justify-start items-center text-sm">
           <div className="text-muted-foreground w-[95px] text-left">Labels</div>
           <div>
-            <IssueLabels value={issue.labelIds} onChange={labelsChange} />
+            <IssueLabelDropdown
+              value={issue.labelIds}
+              onChange={labelsChange}
+              variant={IssueLabelDropdownVariant.LINK}
+            />
           </div>
         </div>
       </div>

@@ -2,15 +2,20 @@
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 
+import {
+  IssueAssigneeDropdown,
+  IssueAssigneeDropdownVariant,
+  IssueStatusDropdown,
+  IssueStatusDropdownVariant,
+} from 'modules/issues/components';
+
 import type { IssueType } from 'common/types/issue';
 
 import { useCurrentTeam } from 'hooks/teams/use-current-team';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
-import { IssueAssigneeDropdown } from './issue-assignee-dropdown';
 import { IssueLabels } from './issue-labels';
-import { IssueStatusDropdown } from './issue-status-dropdown';
 
 interface IssueItemProps {
   issue: IssueType;
@@ -44,7 +49,11 @@ export function IssueItem({ issue }: IssueItemProps) {
           onClick={openIssue}
         >{`${team.identifier}-${issue.number}`}</div>
         <div className="pr-3">
-          <IssueStatusDropdown value={issue.stateId} onChange={statusChange} />
+          <IssueStatusDropdown
+            value={issue.stateId}
+            onChange={statusChange}
+            variant={IssueStatusDropdownVariant.NO_BACKGROUND}
+          />
         </div>
         <div className="font-medium max-w-[400px]" onClick={openIssue}>
           <div className="truncate">{issue.title}</div>
@@ -60,6 +69,7 @@ export function IssueItem({ issue }: IssueItemProps) {
         <IssueAssigneeDropdown
           value={issue.assigneeId}
           onChange={assigneeChange}
+          variant={IssueAssigneeDropdownVariant.NO_BACKGROUND}
         />
       </div>
     </div>

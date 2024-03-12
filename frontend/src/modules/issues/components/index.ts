@@ -4,3 +4,7 @@ export * from './issue-label-dropdown-content';
 export * from './issue-assignee-dropdown-content';
 export * from './issue-priority-dropdown-content';
 export * from './issue-status-dropdown-content';
+export * from './issue-assignee-dropdown';
+export * from './issue-label-dropdown';
+export * from './issue-status-dropdown';
+export * from './issue-priority-dropdown';

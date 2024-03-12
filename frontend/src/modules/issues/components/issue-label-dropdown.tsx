@@ -12,14 +12,59 @@ import { useTeamLabels } from 'hooks/labels/use-team-labels';
 
 import { IssueLabelDropdownContent } from '../components/issue-label-dropdown-content';
 
+export enum IssueLabelDropdownVariant {
+  DEFAULT = 'DEFAULT',
+  LINK = 'LINK',
+}
+
 interface IssueLabelProps {
   value: string[];
   onChange?: (value: string[]) => void;
+  variant?: IssueLabelDropdownVariant;
 }
 
-export function IssueLabelDropdown({ value = [], onChange }: IssueLabelProps) {
+export function IssueLabelDropdown({
+  value = [],
+  onChange,
+  variant = IssueLabelDropdownVariant.DEFAULT,
+}: IssueLabelProps) {
   const [open, setOpen] = React.useState(false);
   const labels = useTeamLabels();
+
+  function getTrigger() {
+    if (variant === IssueLabelDropdownVariant.LINK) {
+      return (
+        <Button
+          variant="outline"
+          role="combobox"
+          size="lg"
+          aria-expanded={open}
+          className={cn(
+            'flex items-center border dark:bg-transparent border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+            value && 'text-foreground',
+          )}
+        >
+          {labelTitle()}
+        </Button>
+      );
+    }
+
+    return (
+      <Button
+        variant="outline"
+        role="combobox"
+        size="xs"
+        aria-expanded={open}
+        className={cn(
+          'flex items-center justify-between text-xs font-normal',
+          value.length > 0 && 'text-foreground',
+          value.length === 0 && 'text-muted-foreground',
+        )}
+      >
+        {labelTitle()}
+      </Button>
+    );
+  }
 
   const labelTitle = () => {
     if (value.length === 1) {
@@ -52,21 +97,7 @@ export function IssueLabelDropdown({ value = [], onChange }: IssueLabelProps) {
   return (
     <div>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            size="xs"
-            aria-expanded={open}
-            className={cn(
-              'flex items-center justify-between text-xs font-normal',
-              value.length > 0 && 'text-foreground',
-              value.length === 0 && 'text-muted-foreground',
-            )}
-          >
-            {labelTitle()}
-          </Button>
-        </PopoverTrigger>
+        <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
           <IssueLabelDropdownContent
             onChange={onChange}

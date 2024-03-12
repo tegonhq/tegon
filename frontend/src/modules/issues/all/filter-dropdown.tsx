@@ -64,12 +64,10 @@ export function FilterDropdown() {
         ? JSON.parse(applicationStore.filters)
         : {};
 
-      if (filter === 'status') {
-        filters = { ...filters, status: value };
-      }
-
-      if (filter === 'assignee') {
-        filters = { ...filters, assignee: value };
+      if (value.length === 0) {
+        delete filters[filter];
+      } else {
+        filters = { ...filters, [filter]: value };
       }
 
       applicationStore.update({ filters: JSON.stringify(filters) });
