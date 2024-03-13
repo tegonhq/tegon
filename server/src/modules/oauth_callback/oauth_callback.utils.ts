@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { BadRequestException } from '@nestjs/common';
-import { IntegrationDefinition } from '@prisma/client';
+import { IntegrationDefinition, IntegrationName } from '@prisma/client';
 
 import {
   CallbackParams,
@@ -71,7 +71,8 @@ export async function getTemplate(
       ? JSON.parse(integrationDefinition.spec)
       : integrationDefinition.spec;
 
-  const template: ProviderTemplate = spec.auth_specification.OAuth2 as ProviderTemplate;
+  const template: ProviderTemplate = 
+  spec.auth_specification.OAuth2 as ProviderTemplate;
 
   if (!template) {
     throw new BadRequestException({
@@ -82,18 +83,22 @@ export async function getTemplate(
   return template;
 }
 
-export function getInstallationId(
-  integrationName: string,
+export function getAccountId(
+  integrationName: IntegrationName,
   params: CallbackParams,
   response: any,
 ) {
   console.log(integrationName);
   switch (integrationName) {
-    case 'Github':
+    case IntegrationName.Github:
       return params.installation_id;
 
-    case 'Slack':
+    case IntegrationName.Slack:
       return response.team.id;
+
+    case IntegrationName.GithubPersonal:
+      console.log(params, response);
+      return undefined;
 
     default:
       return undefined;

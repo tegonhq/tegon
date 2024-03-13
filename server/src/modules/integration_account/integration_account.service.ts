@@ -9,10 +9,11 @@ import {
   IntegrationAccountRequestIdBody,
   UpdateIntegrationAccountBody,
 } from './integration_account.interface';
+import { storeIntegrationRelatedData } from './integration_account.utils';
 
 @Injectable()
 export class IntegrationAccountService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
   async createIntegrationAccount(
     createIntegrationAccountBody: CreateIntegrationAccountBody,
@@ -20,18 +21,26 @@ export class IntegrationAccountService {
     const { integrationDefinitionId, config, workspaceId } =
       createIntegrationAccountBody;
 
-    const integrationAccount =
-      await this.prismaService.integrationAccount.create({
-        data: {
-          integrationDefinition: { connect: { id: integrationDefinitionId } },
-          workspace: { connect: { id: workspaceId } },
-          integrationConfiguration: config,
-          installationId: createIntegrationAccountBody.installationId,
-        },
-        include: {
-          integrationDefinition: true,
-        },
-      });
+    const integrationAccount = await this.prisma.integrationAccount.create({
+      data: {
+        integrationDefinition: { connect: { id: integrationDefinitionId } },
+        workspace: { connect: { id: workspaceId } },
+        integrationConfiguration: config,
+        accountId: createIntegrationAccountBody.accountId,
+        integratedBy: {connect: {id: createIntegrationAccountBody.userId}}
+      },
+      include: {
+        integrationDefinition: true,
+      },
+    });
+
+    await storeIntegrationRelatedData(
+      this.prisma,
+      integrationAccount,
+      integrationAccount.integrationDefinition.name,
+      createIntegrationAccountBody.userId,
+      createIntegrationAccountBody.workspaceId,
+    );
 
     return integrationAccount;
   }
@@ -39,7 +48,7 @@ export class IntegrationAccountService {
   async getIntegrationAccountWithId(
     integrationAccountRequestIdBody: IntegrationAccountRequestIdBody,
   ) {
-    return await this.prismaService.integrationAccount.findUnique({
+    return await this.prisma.integrationAccount.findUnique({
       where: {
         id: integrationAccountRequestIdBody.integrationAccountId,
       },
@@ -52,7 +61,7 @@ export class IntegrationAccountService {
   async deleteIntegrationAccount(
     integrationAccountRequestIdBody: IntegrationAccountRequestIdBody,
   ) {
-    return await this.prismaService.integrationAccount.update({
+    return await this.prisma.integrationAccount.update({
       where: {
         id: integrationAccountRequestIdBody.integrationAccountId,
       },
@@ -65,19 +74,18 @@ export class IntegrationAccountService {
   async getIntegrationAccount(
     integrationAccountRequestBody: IntegrationAccountRequestBody,
   ) {
-    const integrationAccount =
-      await this.prismaService.integrationAccount.findUnique({
-        where: {
-          workspaceId: integrationAccountRequestBody.workspaceId,
-          id: integrationAccountRequestBody.integrationAccountId,
-        },
-      });
+    const integrationAccount = await this.prisma.integrationAccount.findUnique({
+      where: {
+        workspaceId: integrationAccountRequestBody.workspaceId,
+        id: integrationAccountRequestBody.integrationAccountId,
+      },
+    });
 
     return integrationAccount;
   }
 
   async getIntegrationAccountsForWorkspace(workspaceId: string) {
-    return await this.prismaService.integrationAccount.findMany({
+    return await this.prisma.integrationAccount.findMany({
       where: {
         workspace: {
           id: workspaceId,
@@ -98,7 +106,7 @@ export class IntegrationAccountService {
     integrationAccountId: string,
     updateIntegrationAccountBody: UpdateIntegrationAccountBody,
   ) {
-    return await this.prismaService.integrationAccount.update({
+    return await this.prisma.integrationAccount.update({
       data: {
         integrationConfiguration: updateIntegrationAccountBody.config,
       },

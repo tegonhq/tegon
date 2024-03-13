@@ -14,7 +14,7 @@ import {
   SessionRecord,
 } from './oauth_callback.interface';
 import {
-  getInstallationId,
+  getAccountId,
   getSimpleOAuth2ClientConfig,
   getTemplate,
 } from './oauth_callback.utils';
@@ -60,6 +60,7 @@ export class OAuthCallbackService {
     workspaceId: string,
     integrationDefinitionId: string,
     redirectURL: string,
+    userId: string,
   ) {
     this.logger.log(
       `We got OAuth request for ${workspaceId}: ${integrationDefinitionId}`,
@@ -98,6 +99,7 @@ export class OAuthCallbackService {
         redirectURL,
         workspaceId,
         config: externalConfig,
+        userId,
       };
 
       let scopes = integrationDefinition.scopes.split(',');
@@ -219,7 +221,7 @@ export class OAuthCallbackService {
       );
       let integrationConfiguration;
 
-      const installationId = getInstallationId(
+      const accountId = getAccountId(
         integrationDefinition.name,
         params,
         tokensResponse,
@@ -232,6 +234,7 @@ export class OAuthCallbackService {
           // ...otherParams,
           scope: tokensResponse.token.scope,
           refresh_token: tokensResponse.token.refresh_token,
+          access_token: tokensResponse.token.access_token,
           client_id: integrationDefinition.clientId,
           client_secret: integrationDefinition.clientSecret,
         };
@@ -242,13 +245,13 @@ export class OAuthCallbackService {
         };
       }
 
-      console.log(installationId);
       await this.integrationAccountService.createIntegrationAccount({
         integrationDefinitionId: integrationDefinition.id,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         config: integrationConfiguration as any,
         workspaceId: sessionRecord.workspaceId,
-        installationId,
+        accountId,
+        userId: sessionRecord.userId,
       } as CreateIntegrationAccountBody);
 
       res.redirect(

@@ -7,6 +7,6 @@ import {Prisma} from '@prisma/client'
 export class UpdateIntegrationAccountDto {
   deleted?: Date;
 integrationConfiguration?: Prisma.InputJsonValue;
-installationId?: string;
+accountId?: string;
 settings?: Prisma.InputJsonValue;
 }

@@ -15,6 +15,7 @@ Table User {
   usersOnWorkspaces UsersOnWorkspaces [not null]
   template Template [not null]
   createdBy Issue [not null]
+  integrationAccount IntegrationAccount [not null]
 }
 
 Table Workspace {
@@ -43,6 +44,7 @@ Table UsersOnWorkspaces {
   workspaceId String [not null]
   teamIds String[] [not null]
   status Status [not null, default: 'ACTIVE']
+  externalAccountMappings Json
 
   indexes {
     (userId, workspaceId) [unique]
@@ -155,12 +157,13 @@ Table Issue {
   deleted DateTime
   title String [not null]
   number Int [not null]
-  description String [not null]
+  description String
   priority Int
   dueDate DateTime
-  sortOrder Int [not null]
+  sortOrder Int
   subIssueSortOrder Int
   estimate Int
+  sourceMetadata Json
   team Team [not null]
   teamId String [not null]
   createdBy User
@@ -238,9 +241,10 @@ Table IssueHistory {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deleted DateTime
-  userId String [not null]
+  userId String
   issue Issue [not null]
   issueId String [not null]
+  sourceMetaData Json
   addedLabelIds String[] [not null]
   removedLabelIds String[] [not null]
   fromPriority Int
@@ -261,7 +265,7 @@ Table IntegrationDefinition {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deleted DateTime
-  name String [not null]
+  name IntegrationName [not null]
   icon String [not null]
   spec Json [not null]
   clientId String [not null]
@@ -276,8 +280,10 @@ Table IntegrationAccount {
   updatedAt DateTime [not null]
   deleted DateTime
   integrationConfiguration Json [not null]
-  installationId String
+  accountId String
   settings Json
+  integratedBy User [not null]
+  integratedById String [not null]
   integrationDefinition IntegrationDefinition [not null]
   integrationDefinitionId String [not null]
   workspace Workspace [not null]
@@ -333,6 +339,12 @@ Enum TemplateCategory {
   DOCUMENT
 }
 
+Enum IntegrationName {
+  Github
+  GithubPersonal
+  Slack
+}
+
 Ref: UsersOnWorkspaces.userId > User.id
 
 Ref: UsersOnWorkspaces.workspaceId > Workspace.id
@@ -374,6 +386,8 @@ Ref: Reaction.commentId > IssueComment.id
 Ref: Reaction.emojiId > Emoji.id
 
 Ref: IssueHistory.issueId > Issue.id
+
+Ref: IntegrationAccount.integratedById > User.id
 
 Ref: IntegrationAccount.integrationDefinitionId > IntegrationDefinition.id
 

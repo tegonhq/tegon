@@ -32,8 +32,8 @@ export default class IssuesService {
     teamRequestParams: TeamRequestParams,
     issueData: CreateIssueInput,
     userId?: string,
-    isLinkedIssue?: Boolean,
     linkIssuedata?: LinkIssueData,
+    linkMetaData?: Record<string, string>,
   ): Promise<Issue> {
     const { parentId, ...otherIssueData } = issueData;
     const lastNumber =
@@ -44,10 +44,15 @@ export default class IssuesService {
         })
       )?.number ?? 0;
 
-    const issueTitle = await getIssueTitle(
-      openaiClient,
-      otherIssueData.description,
-    );
+    let issueTitle;
+    if (!issueData.title) {
+      issueTitle = await getIssueTitle(
+        openaiClient,
+        otherIssueData.description,
+      );
+    } else {
+      issueTitle = issueData.title;
+    }
 
     const issue = await this.prisma.issue.create({
       data: {
@@ -57,9 +62,10 @@ export default class IssuesService {
         number: lastNumber + 1,
         ...(userId && { createdBy: { connect: { id: userId } } }),
         ...(parentId && { parent: { connect: { id: parentId } } }),
-        ...(isLinkedIssue && {
+        ...(linkIssuedata && {
           linkedIssues: { create: { ...linkIssuedata } },
         }),
+        ...(linkMetaData && { sourceMetadata: { ...linkMetaData } }),
       },
     });
 
@@ -67,6 +73,7 @@ export default class IssuesService {
       userId,
       issue.id,
       await getIssueDiff(issue, null),
+      linkMetaData,
     );
 
     return issue;
@@ -77,10 +84,21 @@ export default class IssuesService {
     issueData: UpdateIssueInput,
     issueParams: IssueRequestParams,
     userId?: string,
-    isLinkedIssue?: Boolean,
     linkIssuedata?: LinkIssueData,
+    linkMetaData?: Record<string, string>
   ): Promise<Issue> {
     const { parentId, ...otherIssueData } = issueData;
+
+    let issueTitle;
+    if (!issueData.title && issueData.description) {
+      issueTitle = await getIssueTitle(
+        openaiClient,
+        otherIssueData.description,
+      );
+    } else if (issueData.title) {
+      issueTitle = otherIssueData.title;
+    }
+
     const [currentIssue, updatedIssue] = await this.prisma.$transaction([
       this.prisma.issue.findUnique({
         where: { id: issueParams.issueId },
@@ -92,8 +110,9 @@ export default class IssuesService {
         },
         data: {
           ...otherIssueData,
+          ...(issueTitle && {title: issueTitle}),
           ...(parentId && { parent: { connect: { id: parentId } } }),
-          ...(isLinkedIssue && {
+          ...(linkIssuedata && {
             linkedIssues: {
               upsert: {
                 where: { url: linkIssuedata.url },
@@ -110,6 +129,7 @@ export default class IssuesService {
       userId,
       updatedIssue.id,
       await getIssueDiff(updatedIssue, currentIssue),
+      linkMetaData
     );
 
     return updatedIssue;

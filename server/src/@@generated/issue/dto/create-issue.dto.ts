@@ -1,5 +1,5 @@
 
-
+import {Prisma} from '@prisma/client'
 
 
 
@@ -8,12 +8,13 @@ export class CreateIssueDto {
   deleted?: Date;
 title: string;
 number: number;
-description: string;
+description?: string;
 priority?: number;
 dueDate?: Date;
-sortOrder: number;
+sortOrder?: number;
 subIssueSortOrder?: number;
 estimate?: number;
+sourceMetadata?: Prisma.InputJsonValue;
 subscriberIds: string[];
 assigneeId?: string;
 labelIds: string[];

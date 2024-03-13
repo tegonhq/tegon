@@ -4,9 +4,10 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
-import GithubService from './github.service';
-import IssuesService from 'modules/issues/issues.service';
 import { IssuesModule } from 'modules/issues/issues.module';
+import IssuesService from 'modules/issues/issues.service';
+
+import GithubService from './github.service';
 
 @Module({
   imports: [PrismaModule, HttpModule, IssuesModule],

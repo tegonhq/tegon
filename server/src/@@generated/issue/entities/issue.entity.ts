@@ -1,4 +1,5 @@
 
+import {Prisma} from '@prisma/client'
 import {Team} from '../../team/entities/team.entity'
 import {User} from '../../user/entities/user.entity'
 import {IssueComment} from '../../issueComment/entities/issueComment.entity'
@@ -13,12 +14,13 @@ updatedAt: Date ;
 deleted: Date  | null;
 title: string ;
 number: number ;
-description: string ;
+description: string  | null;
 priority: number  | null;
 dueDate: Date  | null;
-sortOrder: number ;
+sortOrder: number  | null;
 subIssueSortOrder: number  | null;
 estimate: number  | null;
+sourceMetadata: Prisma.JsonValue  | null;
 team?: Team ;
 teamId: string ;
 createdBy?: User  | null;

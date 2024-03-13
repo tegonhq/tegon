@@ -3,7 +3,11 @@
 import { Body, Controller, Param, Post, Headers } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { WebhookEventBody, WebhookEventHeaders, WebhookEventParams } from './webhooks.interface';
+import {
+  WebhookEventBody,
+  WebhookEventHeaders,
+  WebhookEventParams,
+} from './webhooks.interface';
 import WebhookService from './webhooks.service';
 
 @Controller({
@@ -18,9 +22,13 @@ export class WebhookController {
   async webhookEvents(
     @Param() webhookEventParams: WebhookEventParams,
     @Headers() eventHeaders: WebhookEventHeaders,
-    @Body() eventBody: WebhookEventBody
+    @Body() eventBody: WebhookEventBody,
   ) {
-    this.webhookService.handleEvents(webhookEventParams, eventHeaders, eventBody);
+    this.webhookService.handleEvents(
+      webhookEventParams,
+      eventHeaders,
+      eventBody,
+    );
     return { status: 200 };
   }
 }

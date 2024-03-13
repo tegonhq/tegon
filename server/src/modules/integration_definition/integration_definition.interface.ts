@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { IsJSON, IsOptional, IsString } from 'class-validator';
+import { IntegrationName } from '@prisma/client';
+import { IsJSON, IsObject, IsOptional, IsString } from 'class-validator';
 
 import { WorkspaceIdRequestBody } from 'modules/workspaces/workspaces.interface';
 
@@ -42,8 +43,8 @@ export class IntegrationDefinitionSpec {
 }
 
 export class IntegrationDefinitionCreateBody extends WorkspaceIdRequestBody {
-  @IsString()
-  name: string;
+  @IsObject()
+  name: IntegrationName;
 
   @IsString()
   icon: string;

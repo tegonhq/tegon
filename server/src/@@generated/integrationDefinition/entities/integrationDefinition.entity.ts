@@ -1,5 +1,5 @@
 
-import {Prisma} from '@prisma/client'
+import {Prisma,IntegrationName} from '@prisma/client'
 import {IntegrationAccount} from '../../integrationAccount/entities/integrationAccount.entity'
 
 
@@ -8,7 +8,7 @@ export class IntegrationDefinition {
 createdAt: Date ;
 updatedAt: Date ;
 deleted: Date  | null;
-name: string ;
+name: IntegrationName ;
 icon: string ;
 spec: Prisma.JsonValue ;
 clientId: string ;

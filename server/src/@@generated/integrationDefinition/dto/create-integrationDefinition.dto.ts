@@ -1,12 +1,14 @@
 
-import {Prisma} from '@prisma/client'
+import {Prisma,IntegrationName} from '@prisma/client'
+import {ApiProperty} from '@nestjs/swagger'
 
 
 
 
 export class CreateIntegrationDefinitionDto {
   deleted?: Date;
-name: string;
+@ApiProperty({ enum: IntegrationName})
+name: IntegrationName;
 icon: string;
 spec: Prisma.InputJsonValue;
 clientId: string;

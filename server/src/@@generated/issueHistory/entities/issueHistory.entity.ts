@@ -8,9 +8,10 @@ export class IssueHistory {
 createdAt: Date ;
 updatedAt: Date ;
 deleted: Date  | null;
-userId: string ;
+userId: string  | null;
 issue?: Issue ;
 issueId: string ;
+sourceMetaData: Prisma.JsonValue  | null;
 addedLabelIds: string[] ;
 removedLabelIds: string[] ;
 fromPriority: number  | null;

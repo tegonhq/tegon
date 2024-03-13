@@ -40,6 +40,7 @@ model User {
   usersOnWorkspaces UsersOnWorkspaces[]
   template          Template[]
   createdBy         Issue[]
+  integrationAccount IntegrationAccount[]
 }
 
 model Workspace {
@@ -65,12 +66,13 @@ model UsersOnWorkspaces {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user        User      @relation(fields: [userId], references: [id])
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  userId      String
-  workspaceId String
-  teamIds     String[]
-  status      Status    @default(ACTIVE)
+  user                    User      @relation(fields: [userId], references: [id])
+  workspace               Workspace @relation(fields: [workspaceId], references: [id])
+  userId                  String
+  workspaceId             String
+  teamIds                 String[]
+  status                  Status    @default(ACTIVE)
+  externalAccountMappings Json?
 
   @@unique([userId, workspaceId])
 }
@@ -188,16 +190,17 @@ model Issue {
 
   title             String
   number            Int
-  description       String
+  description       String?
   priority          Int?
   dueDate           DateTime?
-  sortOrder         Int
+  sortOrder         Int?
   subIssueSortOrder Int?
   estimate          Int?
+  sourceMetadata    Json?
 
   team          Team     @relation(fields: [teamId], references: [id])
   teamId        String
-  createdBy     User?     @relation(fields: [createdById], references: [id])
+  createdBy     User?    @relation(fields: [createdById], references: [id])
   createdById   String?
   subscriberIds String[]
   assigneeId    String?
@@ -281,9 +284,10 @@ model IssueHistory {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  userId  String
-  issue   Issue  @relation(fields: [issueId], references: [id])
-  issueId String
+  userId         String?
+  issue          Issue   @relation(fields: [issueId], references: [id])
+  issueId        String
+  sourceMetaData Json?
 
   addedLabelIds   String[]
   removedLabelIds String[]
@@ -306,7 +310,7 @@ model IntegrationDefinition {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name         String
+  name         IntegrationName
   icon         String
   spec         Json
   clientId     String
@@ -323,9 +327,12 @@ model IntegrationAccount {
   deleted   DateTime?
 
   integrationConfiguration Json
-  installationId           String?
+  // Unique Identifier for each connected app or personal account
+  accountId                String?
   settings                 Json?
 
+  integratedBy             User   @relation(references: [id], fields: [integratedById])
+  integratedById           String
   integrationDefinition   IntegrationDefinition @relation(references: [id], fields: [integrationDefinitionId])
   integrationDefinitionId String
   workspace               Workspace             @relation(references: [id], fields: [workspaceId])
@@ -379,4 +386,10 @@ enum TemplateCategory {
   ISSUE
   PROJECT
   DOCUMENT
+}
+
+enum IntegrationName {
+  Github
+  GithubPersonal
+  Slack
 }

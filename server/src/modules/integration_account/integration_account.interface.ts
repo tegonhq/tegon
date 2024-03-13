@@ -65,11 +65,15 @@ export class CreateIntegrationAccountBody extends WorkspaceIdRequestBody {
 
   @IsString()
   @IsOptional()
-  installationId: string;
+  accountId: string;
 
   @IsObject()
   @IsOptional()
-  settings: Settings
+  settings: Settings;
+
+  @IsString()
+  @IsOptional()
+  userId: string;
 }
 
 export class UpdateIntegrationAccountBody {

@@ -4,7 +4,11 @@ import { Injectable } from '@nestjs/common';
 
 import GithubService from 'modules/integrations/github/github.service';
 
-import { WebhookEventBody, WebhookEventHeaders, WebhookEventParams } from './webhooks.interface';
+import {
+  WebhookEventBody,
+  WebhookEventHeaders,
+  WebhookEventParams,
+} from './webhooks.interface';
 
 @Injectable()
 export default class WebhookService {
@@ -13,7 +17,7 @@ export default class WebhookService {
   async handleEvents(
     webhookEventParams: WebhookEventParams,
     eventHeaders: WebhookEventHeaders,
-    eventBody: WebhookEventBody
+    eventBody: WebhookEventBody,
   ) {
     switch (webhookEventParams.eventSource) {
       case 'github':

@@ -15,6 +15,7 @@ export interface SessionRecord {
   workspaceId: string;
   accountIdentifier?: string;
   integrationKeys?: string;
+  userId?: string;
 }
 
 export class BodyInterface {

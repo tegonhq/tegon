@@ -151,7 +151,7 @@ export async function getSyncActionsData(
 
       return {
         data,
-        ...actionData
+        ...actionData,
       };
     }),
   );

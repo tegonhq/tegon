@@ -20,12 +20,12 @@ import { SyncActionsModule } from 'modules/sync-actions/sync-actions.module';
 import { TeamsModule } from 'modules/teams/teams.module';
 import { TemplatesModule } from 'modules/templates/templates.module';
 import { UsersModule } from 'modules/users/users.module';
+import { WebhooksModule } from 'modules/webhooks/webhooks.module';
 import { WorkflowsModule } from 'modules/workflows/workflows.module';
 import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { WebhooksModule } from 'modules/webhooks/webhooks.module';
 
 @Module({
   imports: [

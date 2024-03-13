@@ -15,6 +15,7 @@ export default class IssuesHistoryService {
     userId: string,
     issueId: string,
     issueData: IssueHistoryData,
+    sourceData?: Record<string, string>,
   ): Promise<IssueHistory> {
     const lastIssueHistory = await this.prisma.issueHistory.findFirst({
       where: { issueId },
@@ -48,7 +49,7 @@ export default class IssuesHistoryService {
               return value !== null;
             }),
           ),
-
+          sourceMetaData: sourceData,
           addedLabelIds: updatedLabels,
           removedLabelIds: removedUpdatedLabels,
         },
@@ -60,6 +61,7 @@ export default class IssuesHistoryService {
         addedLabelIds,
         removedLabelIds,
         userId,
+        sourceMetaData: sourceData,
         issue: { connect: { id: issueId } },
       },
     });

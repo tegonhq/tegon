@@ -4,6 +4,8 @@ export class WebhookEventParams {
   eventSource: string;
 }
 
-export type WebhookEventBody = Record<string, any>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type WebhookEventBody = Record<string, any>;
 
-export type WebhookEventHeaders = Record<string, any>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type WebhookEventHeaders = Record<string, any>;
