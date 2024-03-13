@@ -1,16 +1,13 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import type {
-  BootstrapResponse,
-  SyncActionRecord,
-} from 'common/types/data-loader';
+import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { commentsStore } from 'store/comments';
 import { tegonDatabase } from 'store/database';
 
-export async function saveCommentsData(data: BootstrapResponse) {
+export async function saveCommentsData(data: SyncActionRecord[]) {
   await Promise.all(
-    data.syncActions.map(async (record: SyncActionRecord) => {
+    data.map(async (record: SyncActionRecord) => {
       const comment = {
         id: record.data.id,
         createdAt: record.data.createdAt,

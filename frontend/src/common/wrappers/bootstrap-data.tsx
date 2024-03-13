@@ -36,9 +36,10 @@ export function BootstrapWrapper({ children }: Props) {
   const { refetch: syncIssuesRecords } = useDeltaRecords({
     modelNames: Object.values(MODELS),
     workspaceId: workspace.id,
-    lastSequenceId: lastSequenceId ? parseInt(lastSequenceId) : undefined,
+    lastSequenceId,
     onSuccess: (data: BootstrapResponse) => {
       saveSocketData(data.syncActions);
+      localStorage.setItem('lastSequenceId', `${data.lastSequenceId}`);
     },
   });
 

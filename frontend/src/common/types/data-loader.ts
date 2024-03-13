@@ -14,10 +14,10 @@ export interface SyncActionRecord {
   modelId: string;
   action: Action;
   workspaceId: string;
-  sequenceId: number;
+  sequenceId: string;
 }
 
 export interface BootstrapResponse {
   syncActions: SyncActionRecord[];
-  lastSequenceId: number;
+  lastSequenceId: string;
 }

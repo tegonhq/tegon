@@ -3,9 +3,9 @@
 import * as React from 'react';
 
 import { IssueStatusDropdownContent } from 'modules/issues/components';
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
+// import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
 
-import type { WorkflowType } from 'common/types/team';
+// import type { WorkflowType } from 'common/types/team';
 
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
@@ -28,11 +28,11 @@ export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {
     return workflow;
   };
 
-  const getWorkflowIcon = (workflowName: WorkflowType['name']) => {
-    const WorkflowIcon = WORKFLOW_CATEGORY_ICONS[workflowName];
+  // const getWorkflowIcon = (workflowName: WorkflowType['name']) => {
+  //   const WorkflowIcon = WORKFLOW_CATEGORY_ICONS[workflowName];
 
-    return <WorkflowIcon />;
-  };
+  //   return <WorkflowIcon />;
+  // };
 
   return (
     <div>

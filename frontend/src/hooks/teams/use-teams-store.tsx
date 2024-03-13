@@ -1,17 +1,14 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import type {
-  BootstrapResponse,
-  SyncActionRecord,
-} from 'common/types/data-loader';
+import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
 import { teamsStore } from 'store/teams';
 
-export async function saveTeamData(data: BootstrapResponse) {
+export async function saveTeamData(data: SyncActionRecord[]) {
   await Promise.all(
-    data.syncActions.map(async (record: SyncActionRecord) => {
+    data.map(async (record: SyncActionRecord) => {
       const team = {
         id: record.data.id,
         createdAt: record.data.createdAt,

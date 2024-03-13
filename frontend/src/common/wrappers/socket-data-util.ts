@@ -17,59 +17,35 @@ export async function saveSocketData(data: SyncActionRecord[]) {
     data.map(async (record: SyncActionRecord) => {
       switch (record.modelName) {
         case MODELS.Label: {
-          return await saveLabelData({
-            syncActions: [record],
-            lastSequenceId: record.sequenceId,
-          });
+          return await saveLabelData([record]);
         }
 
         case MODELS.Team: {
-          return await saveTeamData({
-            syncActions: [record],
-            lastSequenceId: record.sequenceId,
-          });
+          return await saveTeamData([record]);
         }
 
         case MODELS.Workflow: {
-          return await saveWorkflowData({
-            syncActions: [record],
-            lastSequenceId: record.sequenceId,
-          });
+          return await saveWorkflowData([record]);
         }
 
         case MODELS.Workspace: {
-          return await saveWorkspaceData({
-            syncActions: [record],
-            lastSequenceId: record.sequenceId,
-          });
+          return await saveWorkspaceData([record]);
         }
 
         case MODELS.Issue: {
-          return await saveIssuesData({
-            syncActions: [record],
-            lastSequenceId: record.sequenceId,
-          });
+          return await saveIssuesData([record]);
         }
 
         case MODELS.UsersOnWorkspaces: {
-          return await saveWorkspaceData({
-            syncActions: [record],
-            lastSequenceId: record.sequenceId,
-          });
+          return await saveWorkspaceData([record]);
         }
 
         case MODELS.IssueHistory: {
-          return await saveIssueHistoryData({
-            syncActions: [record],
-            lastSequenceId: record.sequenceId,
-          });
+          return await saveIssueHistoryData([record]);
         }
 
         case MODELS.IssueComment: {
-          return await saveCommentsData({
-            syncActions: [record],
-            lastSequenceId: record.sequenceId,
-          });
+          return await saveCommentsData([record]);
         }
       }
     }),

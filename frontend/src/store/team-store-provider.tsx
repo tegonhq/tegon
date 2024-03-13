@@ -13,8 +13,13 @@ import { initializeWorkflowsStore } from 'store/workflows';
 
 import { initApplicationStore } from './application';
 
+interface TeamStoreProviderProps {
+  defaultFilters?: string;
+  children: React.ReactNode;
+}
+
 export const TeamStoreProvider = observer(
-  ({ children }: { children: React.ReactNode }) => {
+  ({ children, defaultFilters }: TeamStoreProviderProps) => {
     const [loading, setLoading] = React.useState(true);
     const pathname = usePathname();
 
@@ -37,7 +42,7 @@ export const TeamStoreProvider = observer(
         identifier: teamIdentifier,
       });
 
-      await initApplicationStore(pathname);
+      await initApplicationStore(pathname, defaultFilters);
       await initializeWorkflowsStore(teamData?.id);
       await initializeIssuesStore(teamData?.id);
 

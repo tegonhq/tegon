@@ -11,7 +11,6 @@ import { Workflow } from './models';
 export const WorkflowsStore: IAnyStateTreeNode = types
   .model({
     workflows: types.array(Workflow),
-    lastSequenceId: types.union(types.undefined, types.number),
   })
   .actions((self) => ({
     update(team: WorkflowType, id: string) {
@@ -33,9 +32,6 @@ export const WorkflowsStore: IAnyStateTreeNode = types
       if (indexToDelete !== -1) {
         self.workflows.splice(indexToDelete, 1);
       }
-    },
-    updateLastSequenceId(lastSequenceId: number) {
-      self.lastSequenceId = lastSequenceId;
     },
   }));
 

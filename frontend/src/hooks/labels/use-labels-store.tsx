@@ -1,17 +1,14 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import type {
-  BootstrapResponse,
-  SyncActionRecord,
-} from 'common/types/data-loader';
+import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
 import { labelsStore, type LabelsStoreType } from 'store/labels';
 
-export async function saveLabelData(data: BootstrapResponse) {
+export async function saveLabelData(data: SyncActionRecord[]) {
   await Promise.all(
-    data.syncActions.map(async (record: SyncActionRecord) => {
+    data.map(async (record: SyncActionRecord) => {
       const label = {
         id: record.data.id,
         createdAt: record.data.createdAt,

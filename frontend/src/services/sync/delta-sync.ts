@@ -13,7 +13,7 @@ export const GetDeltaRecords = 'getDeltaRecords';
 export function getDeltaRecords(
   workspaceId: string,
   modelNames: string[],
-  lastSequenceId: number,
+  lastSequenceId: string,
 ) {
   return ajaxGet({
     url: `/api/v1/sync_actions/delta`,
@@ -28,7 +28,7 @@ export function getDeltaRecords(
 export interface QueryParams {
   workspaceId: string;
   modelNames: string[];
-  lastSequenceId: number;
+  lastSequenceId: string;
   onSuccess?: (data: BootstrapResponse) => void;
 }
 

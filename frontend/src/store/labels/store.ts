@@ -11,7 +11,6 @@ import { Label } from './models';
 export const LabelsStore: IAnyStateTreeNode = types
   .model({
     labels: types.array(Label),
-    lastSequenceId: types.union(types.undefined, types.number),
   })
   .actions((self) => ({
     update(label: LabelType, id: string) {

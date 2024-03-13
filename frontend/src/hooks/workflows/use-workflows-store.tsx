@@ -1,17 +1,14 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import type {
-  BootstrapResponse,
-  SyncActionRecord,
-} from 'common/types/data-loader';
+import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
 import { workflowsStore } from 'store/workflows';
 
-export async function saveWorkflowData(data: BootstrapResponse) {
+export async function saveWorkflowData(data: SyncActionRecord[]) {
   await Promise.all(
-    data.syncActions.map(async (record: SyncActionRecord) => {
+    data.map(async (record: SyncActionRecord) => {
       const workflow = {
         id: record.data.id,
         createdAt: record.data.createdAt,

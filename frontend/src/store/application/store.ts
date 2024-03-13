@@ -27,7 +27,10 @@ export async function resetApplicationStore() {
   applicationStore = undefined;
 }
 
-export async function initApplicationStore(identifier: string) {
+export async function initApplicationStore(
+  identifier: string,
+  defaultFilters?: string,
+) {
   const data = localStorage.getItem(`filters/${identifier}`);
 
   if (data) {
@@ -37,7 +40,7 @@ export async function initApplicationStore(identifier: string) {
     });
   } else {
     applicationStore = ApplicationStore.create({
-      filters: JSON.stringify({}),
+      filters: JSON.stringify(defaultFilters ? defaultFilters : {}),
       identifier,
     });
   }
