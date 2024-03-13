@@ -12,7 +12,7 @@ export class SupertokensService {
       appInfo: {
         appName: 'Tegon',
         apiDomain: process.env.BACKEND_HOST,
-        websiteDomain: process.env.FRONTEND_HOST,
+        websiteDomain: process.env.FRONTEND_HOST.split(',')[0] || '',
         apiBasePath: '/auth',
         websiteBasePath: '/auth',
       },

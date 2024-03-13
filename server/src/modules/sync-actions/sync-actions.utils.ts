@@ -148,9 +148,10 @@ export async function getSyncActionsData(
         actionData.modelName,
         actionData.modelId,
       );
+
       return {
         data,
-        ...actionData,
+        ...actionData
       };
     }),
   );
@@ -159,7 +160,7 @@ export async function getSyncActionsData(
 export async function getLastSequenceId(
   prisma: PrismaService,
   workspaceId: string,
-): Promise<number> {
+): Promise<bigint> {
   const lastSyncAction = await prisma.syncAction.findFirst({
     where: {
       workspaceId,

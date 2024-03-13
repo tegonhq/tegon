@@ -33,7 +33,7 @@ export class SyncActionsController {
   async getDelta(@Query() deltaQuery: DeltaRequestQuery) {
     return await this.syncActionsService.getDelta(
       deltaQuery.modelNames,
-      parseInt(deltaQuery.lastSequenceId),
+      BigInt(deltaQuery.lastSequenceId),
       deltaQuery.workspaceId,
     );
   }

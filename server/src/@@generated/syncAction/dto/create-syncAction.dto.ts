@@ -12,5 +12,5 @@ modelName: ModelName;
 modelId: string;
 @ApiProperty({ enum: ActionType})
 action: ActionType;
-sequenceId: number;
+sequenceId: bigint;
 }

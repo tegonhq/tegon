@@ -35,7 +35,7 @@ export class SyncGateway implements OnGatewayInit, OnGatewayConnection {
     const isValid = isValidAuthentication(headers);
 
     if (!isValid) {
-      this.logger.log(`Connection disconnected ${client.id}`)
+      this.logger.log(`Connection disconnected ${client.id}`);
       client.disconnect(true);
       return;
     }

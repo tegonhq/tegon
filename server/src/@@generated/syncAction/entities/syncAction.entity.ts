@@ -11,7 +11,7 @@ deleted: Date  | null;
 modelName: ModelName ;
 modelId: string ;
 action: ActionType ;
-sequenceId: number ;
+sequenceId: bigint ;
 workspace?: Workspace ;
 workspaceId: string ;
 }

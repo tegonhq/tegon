@@ -138,7 +138,7 @@ Table SyncAction {
   modelName ModelName [not null]
   modelId String [not null]
   action ActionType [not null]
-  sequenceId Int [not null]
+  sequenceId BigInt [not null]
   workspace Workspace [not null]
   workspaceId String [not null]
 

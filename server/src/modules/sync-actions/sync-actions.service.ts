@@ -100,7 +100,7 @@ export default class SyncActionsService {
 
   async getDelta(
     modelNames: string,
-    lastSequenceId: number,
+    lastSequenceId: bigint,
     workspaceId: string,
   ) {
     const syncActions = await this.prisma.syncAction.findMany({
