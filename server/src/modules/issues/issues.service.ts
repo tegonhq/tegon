@@ -30,8 +30,8 @@ export default class IssuesService {
 
   async createIssue(
     teamRequestParams: TeamRequestParams,
-    userId: string,
     issueData: CreateIssueInput,
+    userId?: string,
     isLinkedIssue?: Boolean,
     linkIssuedata?: LinkIssueData,
   ): Promise<Issue> {
@@ -53,9 +53,9 @@ export default class IssuesService {
       data: {
         title: issueTitle,
         ...otherIssueData,
-        createdBy: { connect: { id: userId } },
         team: { connect: { id: teamRequestParams.teamId } },
         number: lastNumber + 1,
+        ...(userId && { createdBy: { connect: { id: userId } } }),
         ...(parentId && { parent: { connect: { id: parentId } } }),
         ...(isLinkedIssue && {
           linkedIssues: { create: { ...linkIssuedata } },
@@ -73,10 +73,10 @@ export default class IssuesService {
   }
 
   async updateIssue(
-    userId: string,
     teamRequestParams: TeamRequestParams,
     issueData: UpdateIssueInput,
     issueParams: IssueRequestParams,
+    userId?: string,
     isLinkedIssue?: Boolean,
     linkIssuedata?: LinkIssueData,
   ): Promise<Issue> {

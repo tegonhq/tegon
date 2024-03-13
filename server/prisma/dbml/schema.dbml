@@ -163,8 +163,8 @@ Table Issue {
   estimate Int
   team Team [not null]
   teamId String [not null]
-  createdBy User [not null]
-  createdById String [not null]
+  createdBy User
+  createdById String
   subscriberIds String[] [not null]
   assigneeId String
   labelIds String[] [not null]
@@ -188,6 +188,7 @@ Table LinkedIssues {
   deleted DateTime
   title String [not null]
   url String [unique, not null]
+  sourceId String [not null]
   source Json
   sourceData Json
   issue Issue [not null]

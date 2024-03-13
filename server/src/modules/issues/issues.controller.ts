@@ -40,7 +40,7 @@ export class IssuesController {
     @Body() issueData: CreateIssueInput,
   ): Promise<Issue> {
     const userId = session.getUserId();
-    return await this.issuesService.createIssue(teamParams, userId, issueData);
+    return await this.issuesService.createIssue(teamParams, issueData, userId);
   }
 
   @Post(':issueId')
@@ -53,10 +53,10 @@ export class IssuesController {
   ): Promise<Issue> {
     const userId = session.getUserId();
     return await this.issuesService.updateIssue(
-      userId,
       teamParams,
       issueData,
       issueParams,
+      userId,
     );
   }
 
