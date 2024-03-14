@@ -17,6 +17,10 @@ export interface IssueType {
   labelIds: string[];
   parentId?: string;
   stateId: string;
+
+  // for frontend usage
+  children?: IssueType[];
+  parent?: IssueType;
 }
 
 export interface IssueHistoryType {
@@ -50,4 +54,5 @@ export interface IssueCommentType {
   userId: string;
 
   issueId: string;
+  parentId: string;
 }

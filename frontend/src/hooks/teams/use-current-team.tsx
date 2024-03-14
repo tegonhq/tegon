@@ -38,3 +38,22 @@ export function useCurrentTeam(): TeamType | undefined {
 
   return team;
 }
+
+export function useTeam(teamIdentifier: string): TeamType | undefined {
+  const teamStore = useTeamsStore();
+
+  const getTeam = () => {
+    const team = teamStore.teams.find((team: TeamType) => {
+      return team.identifier === teamIdentifier;
+    });
+
+    return team;
+  };
+
+  const team = React.useMemo(
+    () => computed(() => getTeam()),
+    [teamIdentifier, teamStore],
+  ).get();
+
+  return team;
+}

@@ -8,15 +8,17 @@ import type { IssueCommentType } from 'common/types/issue';
 export interface CreateIssueCommentParams {
   body: string;
   issueId: string;
+  parentId?: string;
 }
 
 export function createIssueComment({
   issueId,
   body,
+  parentId,
 }: CreateIssueCommentParams) {
   return ajaxPost({
     url: `/api/v1/issue-comments?issueId=${issueId}`,
-    data: { body },
+    data: { body, parentId },
   });
 }
 

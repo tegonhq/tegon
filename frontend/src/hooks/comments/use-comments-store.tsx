@@ -16,6 +16,7 @@ export async function saveCommentsData(data: SyncActionRecord[]) {
         issueId: record.data.issueId,
         userId: record.data.userId,
         body: record.data.body,
+        parentId: record.data.parentId,
       };
 
       switch (record.action) {

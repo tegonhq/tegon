@@ -14,6 +14,7 @@ export interface CreateIssueParams {
   stateId: string;
   assigneeId?: string;
   teamId: string;
+  parentId?: string;
 }
 
 export function createIssue({ teamId, ...otherParams }: CreateIssueParams) {

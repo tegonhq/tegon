@@ -9,4 +9,5 @@ export const Comment = types.model({
   userId: types.string,
   issueId: types.string,
   body: types.string,
+  parentId: types.union(types.string, types.null),
 });

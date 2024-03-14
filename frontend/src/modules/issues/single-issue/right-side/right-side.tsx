@@ -14,6 +14,7 @@ import {
 } from 'modules/issues/components';
 
 import { useIssueData } from 'hooks/issues';
+import { useCurrentTeam } from 'hooks/teams';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
@@ -22,6 +23,7 @@ import { Header } from './header';
 export const RightSide = observer(() => {
   const issue = useIssueData();
   const { mutate: updateIssue } = useUpdateIssueMutation({});
+  const currentTeam = useCurrentTeam();
 
   const statusChange = (stateId: string) => {
     updateIssue({ id: issue.id, stateId, teamId: issue.teamId });
@@ -54,6 +56,7 @@ export const RightSide = observer(() => {
               value={issue.stateId}
               onChange={statusChange}
               variant={IssueStatusDropdownVariant.LINK}
+              teamIdentfier={currentTeam.identifier}
             />
           </div>
         </div>

@@ -30,8 +30,7 @@ export function IssuesCategory({ workflow, issues }: IssuesCategoryProps) {
           color={workflow.color}
         />
         <h3 className="pl-2 text-sm font-medium">
-          {' '}
-          {workflow.name}{' '}
+          {workflow.name}
           <span className="text-muted-foreground ml-2">{issues.length}</span>
         </h3>
       </div>

@@ -22,9 +22,21 @@ export function useIssueData() {
       return undefined;
     }
 
-    return issuesStore.issues.find((issue: IssueType) => {
+    const issue = issuesStore.issues.find((issue: IssueType) => {
       return `${issue.number}` === (issueId as string).split('-')[1];
     });
+
+    const computedIssue = { ...issue };
+
+    computedIssue.parent = issuesStore.issues.find((is: IssueType) => {
+      return is.id === issue.parentId;
+    });
+
+    computedIssue.children = issuesStore.issues.filter((is: IssueType) => {
+      return is.parentId === issue.id;
+    });
+
+    return computedIssue;
   };
 
   const issue = React.useMemo(

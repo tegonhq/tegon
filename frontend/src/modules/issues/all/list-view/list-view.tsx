@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import type { IssueType } from 'common/types/issue';
@@ -13,7 +14,10 @@ import { IssuesCategory } from './issues-category';
 import { filterIssues } from './list-view-utils';
 
 export const ListView = observer(() => {
-  const workflows = useTeamWorkflows();
+  const {
+    query: { teamIdentifier },
+  } = useRouter();
+  const workflows = useTeamWorkflows(teamIdentifier as string);
   const applicationStore = useApplicationStore();
   const issues = useTeamIssues();
 

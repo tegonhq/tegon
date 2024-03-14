@@ -8,29 +8,39 @@ import * as React from 'react';
 import { Loader } from 'components/ui/loader';
 
 import { tegonDatabase } from 'store/database';
-import { initializeIssuesStore } from 'store/issues';
-import { initializeWorkflowsStore } from 'store/workflows';
+import { initializeIssuesStore, resetIssuesStore } from 'store/issues';
+import { initializeWorkflowsStore, resetWorkflowStore } from 'store/workflows';
 
 import { initApplicationStore } from './application';
 
 interface TeamStoreProviderProps {
   defaultFilters?: string;
   children: React.ReactNode;
+  teamIdentifier?: string;
 }
 
 export const TeamStoreProvider = observer(
-  ({ children, defaultFilters }: TeamStoreProviderProps) => {
+  ({
+    children,
+    defaultFilters,
+    teamIdentifier: passedTeamIdentifier,
+  }: TeamStoreProviderProps) => {
     const [loading, setLoading] = React.useState(true);
     const pathname = usePathname();
 
     const {
-      query: { teamIdentifier },
+      query: { teamIdentifier: queryTeamIdentifier },
     } = useRouter();
+
+    const teamIdentifier = passedTeamIdentifier
+      ? passedTeamIdentifier
+      : queryTeamIdentifier;
 
     React.useEffect(() => {
       if (teamIdentifier) {
         initTeamBasedStore();
       }
+
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [teamIdentifier]);
 
@@ -41,6 +51,10 @@ export const TeamStoreProvider = observer(
       const teamData = await tegonDatabase.teams.get({
         identifier: teamIdentifier,
       });
+
+      // Reset before creating the store
+      resetWorkflowStore();
+      resetIssuesStore();
 
       await initApplicationStore(pathname, defaultFilters);
       await initializeWorkflowsStore(teamData?.id);

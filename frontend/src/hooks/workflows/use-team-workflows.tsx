@@ -7,20 +7,22 @@ import * as React from 'react';
 import type { WorkflowType } from 'common/types/team';
 
 import { useWorkflowsStore } from './use-workflows-store';
-import { useCurrentTeam } from '../teams/use-current-team';
+import { useTeam } from '../teams/use-current-team';
 
-export function useTeamWorkflows(): WorkflowType[] | undefined {
-  const currentTeam = useCurrentTeam();
+export function useTeamWorkflows(
+  teamIdentfier: string,
+): WorkflowType[] | undefined {
+  const team = useTeam(teamIdentfier);
   const workflowStore = useWorkflowsStore();
 
   const getWorkflows = () => {
-    if (!currentTeam) {
+    if (!team) {
       return [];
     }
 
     const workflows = workflowStore.workflows.filter(
       (workflow: WorkflowType) => {
-        return workflow.teamId === currentTeam.id;
+        return workflow.teamId === team.id;
       },
     );
 
@@ -29,7 +31,7 @@ export function useTeamWorkflows(): WorkflowType[] | undefined {
 
   const workflows = React.useMemo(
     () => computed(() => getWorkflows()),
-    [currentTeam, workflowStore],
+    [team, workflowStore],
   ).get();
 
   return workflows;

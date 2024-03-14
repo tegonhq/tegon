@@ -8,6 +8,7 @@ import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow
 import { type IssueHistoryType } from 'common/types/issue';
 
 import { TimelineItem } from 'components/ui/timeline';
+import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
 
 interface StatusActivityProps {
@@ -20,7 +21,8 @@ export function StatusActivity({
   username,
   showTime = false,
 }: StatusActivityProps) {
-  const workflows = useTeamWorkflows();
+  const currentTeam = useCurrentTeam();
+  const workflows = useTeamWorkflows(currentTeam.identifier);
   const fromWorkflow = workflows.find(
     (workflow) => workflow.id === issueHistory.fromStateId,
   );
@@ -39,7 +41,7 @@ export function StatusActivity({
       <div className="flex items-center text-xs text-muted-foreground">
         <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
           <CategoryIcon
-            size={16}
+            size={14}
             className="text-muted-foreground"
             color={toWorfklow.color}
           />

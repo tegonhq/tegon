@@ -44,7 +44,8 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,userId,workspaceId,teamIds',
       [MODELS.IssueHistory]:
         'id,createdAt,updatedAt,userId,issueId,assedLabelIds,removedLabelIds,fromPriority,toPriority,fromStateId,toStateId,fromEstimate,toEstimate,fromAssigneeId,toAssigneeId,fromParentId,toParentId',
-      [MODELS.IssueComment]: 'id,createdAt,updatedAt,userId,issueId,body',
+      [MODELS.IssueComment]:
+        'id,createdAt,updatedAt,userId,issueId,body,parentId',
     });
 
     this.workspaces = this.table(MODELS.Workspace);

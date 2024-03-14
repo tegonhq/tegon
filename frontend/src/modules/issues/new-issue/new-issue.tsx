@@ -4,9 +4,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { cn } from 'common/lib/utils';
+
 import { Button } from 'components/ui/button';
 import { Form, FormControl, FormField, FormItem } from 'components/ui/form';
-import { useCurrentTeam } from 'hooks/teams';
+import { useTeam } from 'hooks/teams';
 
 import {
   type CreateIssueParams,
@@ -24,13 +26,16 @@ import { IssueDescription } from '../single-issue/left-side/issue-description';
 
 interface NewIssueProps {
   onClose: () => void;
+  teamIdentfier: string;
+  parentId?: string;
 }
 
-export function NewIssue({ onClose }: NewIssueProps) {
+export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
   const { mutate: createIssue, isLoading } = useCreateIssueMutation({
     onSuccess: () => {},
   });
-  const team = useCurrentTeam();
+  const team = useTeam(teamIdentfier);
+
   const form = useForm<z.infer<typeof NewIssueSchema>>({
     resolver: zodResolver(NewIssueSchema),
     defaultValues: {
@@ -40,12 +45,18 @@ export function NewIssue({ onClose }: NewIssueProps) {
   });
 
   const onSubmit = (values: CreateIssueParams) => {
-    createIssue({ ...values, teamId: team.id });
+    createIssue({ ...values, teamId: team.id, parentId });
     onClose();
   };
 
   return (
-    <div className="flex flex-col">
+    <div
+      className={cn(
+        'flex flex-col',
+        parentId &&
+          'bg-background backdrop-blur-md dark:bg-gray-700/20 shadow-md rounded-md py-1 pt-3 px-2',
+      )}
+    >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="p-3 pt-0 ">
@@ -71,6 +82,7 @@ export function NewIssue({ onClose }: NewIssueProps) {
                       <IssueStatusDropdown
                         onChange={field.onChange}
                         value={field.value}
+                        teamIdentfier={teamIdentfier}
                       />
                     </FormControl>
                   </FormItem>
@@ -123,8 +135,22 @@ export function NewIssue({ onClose }: NewIssueProps) {
             </div>
           </div>
 
-          <div className="flex items-center justify-end p-2 border-t">
-            <Button type="submit" isLoading={isLoading}>
+          <div
+            className={cn(
+              'flex items-center justify-end p-2',
+              !parentId && 'border-t gap-2',
+              parentId && 'gap-2',
+            )}
+          >
+            <Button
+              size="sm"
+              variant="secondary"
+              isLoading={isLoading}
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" size="sm" isLoading={isLoading}>
               Create issue
             </Button>
           </div>

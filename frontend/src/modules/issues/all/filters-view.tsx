@@ -5,6 +5,7 @@ import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
 import { Separator } from 'components/ui/separator';
+import { useCurrentTeam } from 'hooks/teams';
 import { useApplicationStore } from 'hooks/use-application-store';
 
 import { IssueAssigneeDropdown } from './filter-dropdowns/issue-assignee-dropdown';
@@ -13,6 +14,7 @@ import { IssueStatusDropdown } from './filter-dropdowns/issue-status-dropdown';
 
 export const FiltersView = observer(() => {
   const applicationStore = useApplicationStore();
+  const team = useCurrentTeam();
   const filters = JSON.parse(applicationStore.filters);
 
   const onChange = (value: string | string[], filter: string) => {
@@ -64,6 +66,7 @@ export const FiltersView = observer(() => {
             <IssueStatusDropdown
               value={filters['status']}
               onChange={(value: string[]) => onChange(value, 'status')}
+              teamIdentifier={team.identifier}
             />
           </div>
           <Separator className="bg-background w-[2px]" orientation="vertical" />

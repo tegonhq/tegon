@@ -2,10 +2,15 @@
 
 import * as React from 'react';
 
+import { cn } from 'common/lib/utils';
+
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 
-import { IssuePriorityDropdownContent } from '../components/issue-priority-dropdown-content';
+import {
+  IssuePriorityDropdownContent,
+  PriorityIcons,
+} from './issue-priority-dropdown-content';
 
 export enum IssuePriorityDropdownVariant {
   NO_BACKGROUND = 'NO_BACKGROUND',
@@ -27,6 +32,7 @@ export function IssuePriorityDropdown({
   variant = IssuePriorityDropdownVariant.DEFAULT,
 }: IssuePriorityProps) {
   const [open, setOpen] = React.useState(false);
+  const PriorityIcon = PriorityIcons[value];
 
   function getTrigger() {
     if (variant === IssuePriorityDropdownVariant.NO_BACKGROUND) {
@@ -36,9 +42,15 @@ export function IssuePriorityDropdown({
           role="combobox"
           size="xs"
           aria-expanded={open}
-          className="flex items-center justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary"
+          className="flex items-center px-0 !bg-transparent hover:bg-transparent border-none justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary"
         >
-          {Priorities[value]}
+          <PriorityIcon.icon
+            size={PriorityIcon.size}
+            className={cn(
+              'mr-2 text-muted-foreground',
+              value === 1 && 'text-amber-600',
+            )}
+          />
         </Button>
       );
     }
@@ -52,6 +64,14 @@ export function IssuePriorityDropdown({
           aria-expanded={open}
           className="flex items-center border dark:bg-transparent border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
         >
+          <PriorityIcon.icon
+            size={PriorityIcon.size}
+            className={cn(
+              'mr-2 text-muted-foreground',
+              value === 1 && 'text-amber-600',
+            )}
+          />
+
           {Priorities[value]}
         </Button>
       );
@@ -65,6 +85,14 @@ export function IssuePriorityDropdown({
         aria-expanded={open}
         className="flex items-center justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary"
       >
+        <PriorityIcon.icon
+          size={PriorityIcon.size}
+          className={cn(
+            'mr-2 text-muted-foreground',
+            value === 1 && 'text-amber-600',
+          )}
+        />
+
         {Priorities[value]}
       </Button>
     );
@@ -79,6 +107,7 @@ export function IssuePriorityDropdown({
             onChange={onChange}
             onClose={() => setOpen(false)}
             Priorities={Priorities}
+            value={value}
           />
         </PopoverContent>
       </Popover>

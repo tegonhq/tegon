@@ -62,6 +62,14 @@ export const IssueActivity = observer(() => {
     return null;
   }
 
+  function getChildComments(issueCommentId: string) {
+    return activities.filter(
+      (activity) =>
+        activity.type === ActivityType.Comment &&
+        activity.parentId === issueCommentId,
+    );
+  }
+
   return (
     <>
       <div>
@@ -96,23 +104,39 @@ export const IssueActivity = observer(() => {
           {activities.length > 0 &&
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             activities.map((activity: any) => {
-              if (activity.type === ActivityType.Comment) {
+              if (
+                activity.type === ActivityType.Comment &&
+                !activity.parentId
+              ) {
                 return (
-                  <CommentActivity
-                    comment={activity}
+                  <TimelineItem
+                    className="my-2 w-full"
+                    key={`${activity.id}-comment`}
+                    hasMore
+                  >
+                    <CommentActivity
+                      comment={activity}
+                      key={activity.id}
+                      user={getUserData(activity.userId)}
+                      childComments={getChildComments(activity.id)}
+                      allowReply
+                      getUserData={getUserData}
+                    />
+                  </TimelineItem>
+                );
+              }
+
+              if (activity.type === ActivityType.Default) {
+                return (
+                  <ActivityItem
+                    issueHistory={activity}
                     key={activity.id}
                     user={getUserData(activity.userId)}
                   />
                 );
               }
 
-              return (
-                <ActivityItem
-                  issueHistory={activity}
-                  key={activity.id}
-                  user={getUserData(activity.userId)}
-                />
-              );
+              return null;
             })}
 
           <IssueComment />

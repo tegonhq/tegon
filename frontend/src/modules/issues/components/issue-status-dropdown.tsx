@@ -19,15 +19,18 @@ interface IssueStatusProps {
   value?: string;
   onChange?: (newStatus: string) => void;
   variant?: IssueStatusDropdownVariant;
+  teamIdentfier: string;
 }
 
 export function IssueStatusDropdown({
   value,
   onChange,
   variant = IssueStatusDropdownVariant.DEFAULT,
+  teamIdentfier,
 }: IssueStatusProps) {
   const [open, setOpen] = React.useState(false);
-  const workflows = useTeamWorkflows();
+  const workflows = useTeamWorkflows(teamIdentfier);
+
   const workflow = value
     ? workflows.find((workflow) => workflow.id === value)
     : workflows[0];

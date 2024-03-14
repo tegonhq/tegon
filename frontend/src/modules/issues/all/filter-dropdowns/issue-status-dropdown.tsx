@@ -14,11 +14,16 @@ import { useTeamWorkflows } from 'hooks/workflows/use-team-workflows';
 interface IssueStatusProps {
   value?: string[];
   onChange?: (newStatus: string[]) => void;
+  teamIdentifier: string;
 }
 
-export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {
+export function IssueStatusDropdown({
+  value,
+  onChange,
+  teamIdentifier,
+}: IssueStatusProps) {
   const [open, setOpen] = React.useState(false);
-  const workflows = useTeamWorkflows();
+  const workflows = useTeamWorkflows(teamIdentifier);
 
   const getWorkflowData = (workflowId: string) => {
     const workflow = value

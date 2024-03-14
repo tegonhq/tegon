@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class IssueCommentRequestParams {
   @IsString()
@@ -15,6 +15,10 @@ export class IssueRequestParams {
 export class CommentInput {
   @IsString()
   body: string;
+
+  @IsOptional()
+  @IsString()
+  parentId?: string;
 }
 
 export class ReactionInput {
@@ -29,11 +33,13 @@ export class ReactionRequestParams {
   @IsString()
   reactionId: string;
 }
+
 export interface commentReactionType {
   id: string;
   reactedAt: string;
   userId: string;
 }
+
 export interface reactionDataType {
   emoji: string;
   reactions: commentReactionType[];
