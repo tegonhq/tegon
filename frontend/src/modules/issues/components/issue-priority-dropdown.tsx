@@ -48,7 +48,7 @@ export function IssuePriorityDropdown({
             size={PriorityIcon.size}
             className={cn(
               'mr-2 text-muted-foreground',
-              value === 1 && 'text-amber-600',
+              value === 1 && 'text-orange-600',
             )}
           />
         </Button>
@@ -68,7 +68,7 @@ export function IssuePriorityDropdown({
             size={PriorityIcon.size}
             className={cn(
               'mr-2 text-muted-foreground',
-              value === 1 && 'text-amber-600',
+              value === 1 && 'text-orange-600',
             )}
           />
 
@@ -89,7 +89,7 @@ export function IssuePriorityDropdown({
           size={PriorityIcon.size}
           className={cn(
             'mr-2 text-muted-foreground',
-            value === 1 && 'text-amber-600',
+            value === 1 && 'text-orange-600',
           )}
         />
 

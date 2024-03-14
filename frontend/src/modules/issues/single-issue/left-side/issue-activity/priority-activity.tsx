@@ -35,7 +35,7 @@ export function PriorityActivity({
             size={14}
             className={cn(
               'text-muted-foreground',
-              issueHistory.toPriority === 1 && 'text-amber-600',
+              issueHistory.toPriority === 1 && 'text-orange-600',
             )}
           />
         </div>

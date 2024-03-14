@@ -1,8 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { RiArrowRightSLine } from '@remixicon/react';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 
+import { IssueLabels } from 'modules/issues/all/list-view/issue-labels';
 import {
   IssueAssigneeDropdown,
   IssueAssigneeDropdownVariant,
@@ -18,13 +18,11 @@ import { useCurrentTeam } from 'hooks/teams/use-current-team';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
-import { IssueLabels } from './issue-labels';
-
-interface IssueItemProps {
+interface SubIssueItemProps {
   issue: IssueType;
 }
 
-export function IssueItem({ issue }: IssueItemProps) {
+export function SubIssueItem({ issue }: SubIssueItemProps) {
   const team = useCurrentTeam();
   const {
     replace,
@@ -49,7 +47,7 @@ export function IssueItem({ issue }: IssueItemProps) {
   };
 
   return (
-    <div className="pl-8 p-3 flex justify-between cursor-default text-sm hover:bg-gray-100/50 dark:hover:bg-gray-800/20 border-b-[0.5px]">
+    <div className="p-3 flex justify-between cursor-default text-sm hover:bg-gray-100/50 dark:hover:bg-gray-800/20">
       <div className="flex items-center">
         <IssuePriorityDropdown
           value={issue.priority}
@@ -71,16 +69,6 @@ export function IssueItem({ issue }: IssueItemProps) {
         <div className="font-medium max-w-[400px]" onClick={openIssue}>
           <div className="truncate">{issue.title}</div>
         </div>
-
-        {issue.parentId && (
-          <div
-            className="font-medium max-w-[200px] text-muted-foreground flex items-center"
-            onClick={openIssue}
-          >
-            <RiArrowRightSLine size={14} className="mx-2" />
-            <div className="truncate ">{issue.parent?.title}</div>
-          </div>
-        )}
       </div>
       <div className="flex gap-2 items-center">
         <div>

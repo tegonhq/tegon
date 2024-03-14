@@ -51,9 +51,6 @@ export const IssueActivity = observer(() => {
     return 0;
   });
 
-  const issueCreatedUser =
-    usersData && usersData.find((user: User) => user.id === issue.createdById);
-
   function getUserData(userId: string) {
     return usersData.find((user: User) => user.id === userId);
   }
@@ -61,6 +58,9 @@ export const IssueActivity = observer(() => {
   if (isLoading) {
     return null;
   }
+
+  const issueCreatedUser =
+    usersData && usersData.find((user: User) => user.id === issue.createdById);
 
   function getChildComments(issueCommentId: string) {
     return activities.filter(

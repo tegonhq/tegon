@@ -16,6 +16,7 @@ import { Header } from './header';
 import { IssueActivity } from './issue-activity';
 import { IssueDescription } from './issue-description';
 import { IssueTitle } from './issue-title';
+import { SubIssueView } from './sub-issue-view';
 
 export function LeftSide() {
   const issue = useIssueData();
@@ -65,6 +66,9 @@ export function LeftSide() {
               + Add sub-issues
             </Button>
           </div>
+          {issue.children.length > 0 && (
+            <SubIssueView childIssues={issue.children} />
+          )}
         </div>
 
         <Separator className="my-1" />
