@@ -48,12 +48,27 @@ export function StatusActivity({
         </div>
 
         <div className="flex items-center">
-          <span className="text-foreground mr-2 font-medium">{username}</span>
-          changed status from
-          <span className="text-foreground mx-2 font-medium">
-            {fromWorkflow.name}
-          </span>
-          <span> to </span>
+          {fromWorkflow ? (
+            <>
+              <span className="text-foreground mr-2 font-medium">
+                {username}
+              </span>
+              changed status from
+              <span className="text-foreground mx-2 font-medium">
+                {fromWorkflow.name}
+              </span>
+              <span> to </span>
+            </>
+          ) : (
+            <>
+              <span className="text-foreground mr-2 font-medium">
+                {username}
+              </span>
+              changed status
+              <span className="ml-1"> to </span>
+            </>
+          )}
+
           <span className="text-foreground mx-2 font-medium">
             {toWorfklow.name}
           </span>

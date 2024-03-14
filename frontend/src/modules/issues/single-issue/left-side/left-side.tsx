@@ -1,11 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 import { NewIssue } from 'modules/issues/new-issue/new-issue';
 
-import { Button } from 'components/ui/button';
 import { Separator } from 'components/ui/separator';
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
@@ -16,9 +16,10 @@ import { Header } from './header';
 import { IssueActivity } from './issue-activity';
 import { IssueDescription } from './issue-description';
 import { IssueTitle } from './issue-title';
+import { ParentIssueView } from './parent-issue-view';
 import { SubIssueView } from './sub-issue-view';
 
-export function LeftSide() {
+export const LeftSide = observer(() => {
   const issue = useIssueData();
   const team = useCurrentTeam();
   const [newIssueState, setNewIssueState] = React.useState(false);
@@ -38,37 +39,19 @@ export function LeftSide() {
       <Header />
       <div className="grow px-8 py-6 flex flex-col gap-4 overflow-y-auto h-[calc(100vh_-_52px)]">
         <div>
-          {issue.parentId && (
-            <div className="max-w-[400px] mb-1 border-1 bg-background backdrop-blur-md dark:bg-gray-700/20 shadow-2xl p-2 rounded-md flex gap-2 text-sm">
-              <div className="text-muted-foreground">
-                {team.identifier}-{issue.parent.number}
-              </div>
-
-              <div className="font-medium max-w-[400px]">
-                <div className="truncate">{issue.parent.title}</div>
-              </div>
-            </div>
-          )}
+          {issue.parentId && <ParentIssueView issue={issue} />}
 
           <IssueTitle defaultValue={issue.title} />
           <IssueDescription
             value={issue.description}
             onChange={onDescriptionChange}
           />
-          <div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-muted-foreground -ml-4"
-              onClick={() => setNewIssueState(true)}
-              disabled={newIssueState}
-            >
-              + Add sub-issues
-            </Button>
-          </div>
-          {issue.children.length > 0 && (
-            <SubIssueView childIssues={issue.children} />
-          )}
+
+          <SubIssueView
+            childIssues={issue.children}
+            setNewIssueState={() => setNewIssueState(true)}
+            newIssueState={newIssueState}
+          />
         </div>
 
         <Separator className="my-1" />
@@ -90,4 +73,4 @@ export function LeftSide() {
       </div>
     </div>
   );
-}
+});

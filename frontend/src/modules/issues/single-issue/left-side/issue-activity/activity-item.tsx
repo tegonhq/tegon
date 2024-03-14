@@ -62,7 +62,7 @@ export function ActivityItem({ issueHistory, user }: ActivityItemProps) {
       setShowTime = false;
     }
 
-    if (issueHistory.toPriority) {
+    if (issueHistory.toStateId) {
       localItems.push(
         <StatusActivity
           username={user.username}

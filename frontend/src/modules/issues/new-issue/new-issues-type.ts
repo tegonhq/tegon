@@ -9,5 +9,5 @@ export const NewIssueSchema = z.object({
 
   labelIds: z.array(z.string()),
   priority: z.number(),
-  assigneeId: z.string(),
+  assigneeId: z.optional(z.string()),
 });

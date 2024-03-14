@@ -107,7 +107,7 @@ export function IssueAssigneeDropdown({
             </>
           ) : (
             <>
-              <RiAccountCircleLine size={14} className="mr-1" /> Assignee
+              <RiAccountCircleLine size={14} className="mr-1" /> No Assignee
             </>
           )}
         </Button>
@@ -138,7 +138,7 @@ export function IssueAssigneeDropdown({
           </>
         ) : (
           <>
-            <RiAccountCircleLine size={14} className="mr-1" /> Assignee
+            <RiAccountCircleLine size={14} className="mr-1" /> No Assignee
           </>
         )}
       </Button>

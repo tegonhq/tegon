@@ -13,7 +13,8 @@ import {
 } from 'components/ui/avatar';
 import { Timeline, TimelineItem } from 'components/ui/timeline';
 import { useCommentsStore } from 'hooks/comments';
-import { useIssueData, useIssueHistoryStore } from 'hooks/issues';
+import { useIssueData } from 'hooks/issues';
+import { useIssueHistory } from 'hooks/issues/use-issue-history';
 import { useUsersData } from 'hooks/users';
 
 import type { User } from 'store/user-context';
@@ -30,7 +31,7 @@ enum ActivityType {
 export const IssueActivity = observer(() => {
   const issue = useIssueData();
   const { usersData, isLoading } = useUsersData(issue.teamId);
-  const { issueHistories } = useIssueHistoryStore();
+  const issueHistories = useIssueHistory(issue.id);
   const { comments } = useCommentsStore();
   const activities = [
     ...comments.map((comment: IssueCommentType) => ({

@@ -42,6 +42,10 @@ export function IssueStatusDropdown({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const CategoryIcon = workflow
+    ? WORKFLOW_CATEGORY_ICONS[workflow.name]
+    : WORKFLOW_CATEGORY_ICONS['Backlog'];
+
   function getTrigger() {
     if (variant === IssueStatusDropdownVariant.NO_BACKGROUND) {
       return (
@@ -98,9 +102,6 @@ export function IssueStatusDropdown({
     );
   }
 
-  const CategoryIcon = workflow
-    ? WORKFLOW_CATEGORY_ICONS[workflow.name]
-    : WORKFLOW_CATEGORY_ICONS['Backlog'];
   return (
     <div>
       <Popover open={open} onOpenChange={setOpen}>

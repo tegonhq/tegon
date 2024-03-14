@@ -47,7 +47,7 @@ export function SubIssueItem({ issue }: SubIssueItemProps) {
   };
 
   return (
-    <div className="p-3 flex justify-between cursor-default text-sm hover:bg-gray-100/50 dark:hover:bg-gray-800/20">
+    <div className="p-2 flex justify-between cursor-default text-sm hover:bg-gray-100/50 dark:hover:bg-gray-800/20 rounded-md">
       <div className="flex items-center">
         <IssuePriorityDropdown
           value={issue.priority}
