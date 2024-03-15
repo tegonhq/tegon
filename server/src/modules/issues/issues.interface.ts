@@ -1,5 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { Issue } from '@@generated/issue/entities';
+import { Team, User } from '@prisma/client';
 import {
   IsArray,
   IsDate,
@@ -133,6 +135,11 @@ export class LinkIssueData {
   @IsOptional()
   @IsJSON()
   sourceData?: Record<string, string | number>;
+}
+
+export interface IssueWithRelations extends Issue {
+  team?: Team;
+  createdBy?: User;
 }
 
 export const titlePrompt = ` You have deep expertise in project management and task management for software teams. Whenever a text is provided to you, you have to create an issue title for software development tasks based on the description text.

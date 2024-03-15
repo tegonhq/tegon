@@ -16,7 +16,7 @@ export async function storeIntegrationRelatedData(
 ): Promise<undefined> {
   const integrationConfig =
     integrationAccount.integrationConfiguration as Config;
-    console.log()
+  console.log();
   switch (integrationName) {
     case IntegrationName.Github:
       const githubSettings = await getGithubSettings(
@@ -26,7 +26,7 @@ export async function storeIntegrationRelatedData(
       if (githubSettings) {
         await prisma.integrationAccount.update({
           where: { id: integrationAccount.id },
-          data: { settings: githubSettings },
+          data: { settings: { [IntegrationName.Github]: githubSettings } },
         });
       }
 
@@ -39,10 +39,10 @@ export async function storeIntegrationRelatedData(
         },
       });
 
-      const accountMapping =
-        usersonworkspaces.externalAccountMappings as Record<string, string>;
-      accountMapping[IntegrationName.Github] =
-        integrationAccount.accountId;
+      let accountMapping =
+        (usersonworkspaces.externalAccountMappings as Record<string, string>) ||
+        {};
+      accountMapping[IntegrationName.Github] = integrationAccount.accountId;
 
       await prisma.usersOnWorkspaces.update({
         where: {

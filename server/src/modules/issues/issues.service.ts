@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Issue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
@@ -15,18 +15,26 @@ import {
   UpdateIssueInput,
   // UpdateLinkIssueData,
 } from './issues.interface';
-import { getIssueDiff, getIssueTitle } from './issues.utils';
+import { getIssueDiff, getIssueTitle, handleTwoWaySync } from './issues.utils';
 
 const openaiClient = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
 });
 
 @Injectable()
-export default class IssuesService {
+export default class IssuesService implements OnModuleInit {
   constructor(
     private prisma: PrismaService,
     private issueHistoryService: IssuesHistoryService,
   ) {}
+
+  async onModuleInit() {
+    const issue = await this.prisma.issue.findUnique({
+      where: { id: '159f9434-df20-427d-b696-6ad2f9e9cea4' },
+      include: { team: true },
+    });
+    await handleTwoWaySync(this.prisma, issue);
+  }
 
   async createIssue(
     teamRequestParams: TeamRequestParams,
@@ -67,6 +75,9 @@ export default class IssuesService {
         }),
         ...(linkMetaData && { sourceMetadata: { ...linkMetaData } }),
       },
+      include: {
+        team: true,
+      },
     });
 
     await this.issueHistoryService.upsertIssueHistory(
@@ -75,6 +86,8 @@ export default class IssuesService {
       await getIssueDiff(issue, null),
       linkMetaData,
     );
+
+    await handleTwoWaySync(this.prisma, issue);
 
     return issue;
   }
@@ -85,7 +98,7 @@ export default class IssuesService {
     issueParams: IssueRequestParams,
     userId?: string,
     linkIssuedata?: LinkIssueData,
-    linkMetaData?: Record<string, string>
+    linkMetaData?: Record<string, string>,
   ): Promise<Issue> {
     const { parentId, ...otherIssueData } = issueData;
 
@@ -110,7 +123,7 @@ export default class IssuesService {
         },
         data: {
           ...otherIssueData,
-          ...(issueTitle && {title: issueTitle}),
+          ...(issueTitle && { title: issueTitle }),
           ...(parentId && { parent: { connect: { id: parentId } } }),
           ...(linkIssuedata && {
             linkedIssues: {
@@ -129,7 +142,7 @@ export default class IssuesService {
       userId,
       updatedIssue.id,
       await getIssueDiff(updatedIssue, currentIssue),
-      linkMetaData
+      linkMetaData,
     );
 
     return updatedIssue;

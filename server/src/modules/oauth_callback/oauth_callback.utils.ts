@@ -71,8 +71,8 @@ export async function getTemplate(
       ? JSON.parse(integrationDefinition.spec)
       : integrationDefinition.spec;
 
-  const template: ProviderTemplate = 
-  spec.auth_specification.OAuth2 as ProviderTemplate;
+  const template: ProviderTemplate =
+    spec.auth_specification.OAuth2 as ProviderTemplate;
 
   if (!template) {
     throw new BadRequestException({
@@ -83,12 +83,11 @@ export async function getTemplate(
   return template;
 }
 
-export function getAccountId(
+export async function getAccountId(
   integrationName: IntegrationName,
   params: CallbackParams,
   response: any,
-) {
-  console.log(integrationName);
+): Promise<string> {
   switch (integrationName) {
     case IntegrationName.Github:
       return params.installation_id;
@@ -97,7 +96,16 @@ export function getAccountId(
       return response.team.id;
 
     case IntegrationName.GithubPersonal:
-      console.log(params, response);
+      if (response.token.access_token) {
+        const accessToken = response.token.access_token;
+        const userResponse = await fetch('https://api.github.com/user', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        const userData = await userResponse.json();
+        return userData.id.toString();
+      }
       return undefined;
 
     default:

@@ -37,9 +37,9 @@ model User {
   initialSetupComplete    Boolean @default(false)
   anonymousDataCollection Boolean @default(false)
 
-  usersOnWorkspaces UsersOnWorkspaces[]
-  template          Template[]
-  createdBy         Issue[]
+  usersOnWorkspaces  UsersOnWorkspaces[]
+  template           Template[]
+  createdBy          Issue[]
   integrationAccount IntegrationAccount[]
 }
 
@@ -241,18 +241,36 @@ model IssueComment {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  body   String
-  userId String
-
-  reactions      Reaction[]
-  reactionsData  Json[]
-  issue          Issue         @relation(fields: [issueId], references: [id])
-  issueId        String
-  parent         IssueComment? @relation("Report", fields: [parentId], references: [id])
-  parentId       String?
+  body           String
+  userId         String?
   sourceMetadata Json?
 
-  replies IssueComment[] @relation("Report")
+  reactions     Reaction[]
+  reactionsData Json[]
+  issue         Issue         @relation(fields: [issueId], references: [id])
+  issueId       String
+  parent        IssueComment? @relation("Report", fields: [parentId], references: [id])
+  parentId      String?
+
+  replies       IssueComment[]  @relation("Report")
+  linkedComment LinkedComment[]
+}
+
+model LinkedComment {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  url        String
+  sourceId   String
+  source     Json?
+  sourceData Json?
+
+  comment   IssueComment @relation(fields: [commentId], references: [id])
+  commentId String
+
+  @@unique([url])
 }
 
 model Reaction {
@@ -331,8 +349,8 @@ model IntegrationAccount {
   accountId                String?
   settings                 Json?
 
-  integratedBy             User   @relation(references: [id], fields: [integratedById])
-  integratedById           String
+  integratedBy            User                  @relation(references: [id], fields: [integratedById])
+  integratedById          String
   integrationDefinition   IntegrationDefinition @relation(references: [id], fields: [integrationDefinitionId])
   integrationDefinitionId String
   workspace               Workspace             @relation(references: [id], fields: [workspaceId])

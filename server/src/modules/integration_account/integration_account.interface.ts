@@ -1,5 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import {
+  IntegrationAccount,
+  IntegrationDefinition,
+  IntegrationName,
+  Workspace,
+} from '@prisma/client';
 import { IsObject, IsOptional, IsString } from 'class-validator';
 
 import { WorkspaceIdRequestBody } from 'modules/workspaces/workspaces.interface';
@@ -7,8 +13,32 @@ import { WorkspaceIdRequestBody } from 'modules/workspaces/workspaces.interface'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Config = Record<string, any>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Settings = Record<string, any>;
+export type GithubRepositories = {
+  id: string;
+  fulllName: string;
+};
+
+export type GithubRepositoryMappings = {
+  teamId: string;
+  default: boolean;
+  githubRepoId: string;
+  bidirectional: boolean;
+  githubRepoFullName: string;
+};
+
+export type GithubSettings = {
+  orgLogin: string;
+  orgAvatarURL: string;
+  repositories: GithubRepositories[];
+  repositoryMappings?: GithubRepositoryMappings[];
+};
+
+// export type Settings = Record<string, any>;
+export type Settings = {
+  [IntegrationName.Github]?: GithubSettings;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [IntegrationName.Slack]?: Record<string, any>;
+};
 
 export class IntegrationAccountRequestIdBody {
   /**
@@ -95,4 +125,9 @@ export class UpdateIntegrationAccountBody {
    */
   @IsObject()
   config: Config;
+}
+
+export interface IntegrationAccountWithRelations extends IntegrationAccount {
+  workspace: Workspace;
+  integrationDefinition: IntegrationDefinition;
 }

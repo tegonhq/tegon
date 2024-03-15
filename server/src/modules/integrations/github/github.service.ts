@@ -9,11 +9,11 @@ import {
   WebhookEventHeaders,
 } from 'modules/webhooks/webhooks.interface';
 
-import { handleIssues } from './github.utils';
+import { handleIssueComments, handleIssues } from './github.utils';
 import { eventsToListen } from './github.interface';
 
 @Injectable()
-export default class GithubService{
+export default class GithubService {
   constructor(
     private prisma: PrismaService,
     private issuesService: IssuesService,
@@ -25,11 +25,15 @@ export default class GithubService{
   ) {
     const eventType = eventHeaders['x-github-event'];
     console.log(eventType);
-    console.log(eventBody)
-    if (eventsToListen.has(eventType)) {
+    console.log(eventBody);
+    if (
+      eventsToListen.has(eventType) &&
+      eventBody.sender.login !== 'tegon-bot[bot]'
+    ) {
       const integrationAccount = await this.prisma.integrationAccount.findFirst(
         {
           where: { accountId: eventBody.installation.id.toString() },
+          include: { workspace: true, integrationDefinition: true },
         },
       );
       switch (eventType) {
@@ -40,6 +44,11 @@ export default class GithubService{
             eventBody,
             integrationAccount,
           );
+
+          break;
+
+        case 'issue_comment':
+          handleIssueComments(this.prisma, eventBody, integrationAccount);
           break;
 
         default:

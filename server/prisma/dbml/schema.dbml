@@ -204,15 +204,29 @@ Table IssueComment {
   updatedAt DateTime [not null]
   deleted DateTime
   body String [not null]
-  userId String [not null]
+  userId String
+  sourceMetadata Json
   reactions Reaction [not null]
   reactionsData Json[] [not null]
   issue Issue [not null]
   issueId String [not null]
   parent IssueComment
   parentId String
-  sourceMetadata Json
   replies IssueComment [not null]
+  linkedComment LinkedComment [not null]
+}
+
+Table LinkedComment {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  url String [unique, not null]
+  sourceId String [not null]
+  source Json
+  sourceData Json
+  comment IssueComment [not null]
+  commentId String [not null]
 }
 
 Table Reaction {
@@ -380,6 +394,8 @@ Ref: LinkedIssues.issueId > Issue.id
 Ref: IssueComment.issueId > Issue.id
 
 Ref: IssueComment.parentId - IssueComment.id
+
+Ref: LinkedComment.commentId > IssueComment.id
 
 Ref: Reaction.commentId > IssueComment.id
 

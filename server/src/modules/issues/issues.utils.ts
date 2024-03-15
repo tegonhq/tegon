@@ -1,11 +1,16 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Issue } from '@prisma/client';
+import { IntegrationName, Issue, Prisma } from '@prisma/client';
 import OpenAI from 'openai';
 
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 
-import { titlePrompt } from './issues.interface';
+import { IssueWithRelations, titlePrompt } from './issues.interface';
+import { PrismaService } from 'nestjs-prisma';
+import {
+  createGithubIssue,
+  sendGithubFirstComment,
+} from 'modules/integrations/github/github.utils';
 
 export async function getIssueDiff(
   newIssueData: Issue,
@@ -76,4 +81,64 @@ export async function getIssueTitle(
       model: 'gpt-3.5-turbo',
     });
   return chatCompletion.choices[0].message.content;
+}
+
+export async function handleTwoWaySync(
+  prisma: PrismaService,
+  issue: IssueWithRelations,
+) {
+  console.log('here');
+  console.log(issue.teamId);
+
+  const integrationAccount = await prisma.integrationAccount.findFirst({
+    where: {
+      settings: {
+        path: ['Github', 'repositoryMappings'],
+        array_contains: {
+          teamId: issue.teamId,
+          bidirectional: true,
+        },
+      } as Prisma.JsonFilter,
+    },
+    include: {
+      integrationDefinition: true,
+      workspace: true,
+    },
+  });
+  console.log(integrationAccount);
+
+  if (integrationAccount) {
+    // Two-way sync is enabled for this team
+    // Perform the necessary sync operations here
+    // ...
+
+    const githubIssue = await createGithubIssue(
+      prisma,
+      issue,
+      integrationAccount,
+    );
+
+    // Create a linkedIssue using Prisma
+    await prisma.linkedIssues.create({
+      data: {
+        title: githubIssue.title,
+        url: githubIssue.url,
+        sourceId: githubIssue.id.toString(),
+        source: { type: IntegrationName.Github },
+        sourceData: { id: githubIssue.id.toString(), title: githubIssue.title },
+        issueId: issue.id,
+      },
+    });
+
+    await sendGithubFirstComment(
+      prisma,
+      integrationAccount,
+      issue,
+      githubIssue.id.toString(),
+    );
+  } else {
+    console.log('integration account not found');
+  }
+
+  return issue;
 }
