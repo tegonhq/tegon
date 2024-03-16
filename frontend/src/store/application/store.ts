@@ -17,33 +17,17 @@ export const ApplicationStore: IAnyStateTreeNode = types
 
       localStorage.setItem(`filters/${self.identifier}`, updateBody.filters);
     },
+    load(identifier: string, defaultFilters: string) {
+      const data = localStorage.getItem(`filters/${identifier}`);
+
+      if (data) {
+        self.filters = data;
+        self.identifier = identifier;
+      } else {
+        self.filters = JSON.stringify(defaultFilters ? defaultFilters : {});
+        self.identifier = identifier;
+      }
+    },
   }));
 
 export type ApplicationStoreType = Instance<typeof ApplicationStore>;
-
-export let applicationStore: ApplicationStoreType;
-
-export async function resetApplicationStore() {
-  applicationStore = undefined;
-}
-
-export async function initApplicationStore(
-  identifier: string,
-  defaultFilters?: string,
-) {
-  const data = localStorage.getItem(`filters/${identifier}`);
-
-  if (data) {
-    applicationStore = ApplicationStore.create({
-      filters: data,
-      identifier,
-    });
-  } else {
-    applicationStore = ApplicationStore.create({
-      filters: JSON.stringify(defaultFilters ? defaultFilters : {}),
-      identifier,
-    });
-  }
-
-  return applicationStore;
-}

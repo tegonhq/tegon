@@ -11,7 +11,8 @@ import {
   CommandItem,
 } from 'components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
-import { useApplicationStore } from 'hooks/use-application-store';
+
+import { useContextStore } from 'store/global-context-provider';
 
 import {
   IssueAssigneeFilter,
@@ -53,7 +54,7 @@ type KeyType = keyof typeof ContentMap;
 
 export function FilterDropdown() {
   const [open, setOpen] = React.useState(false);
-  const applicationStore = useApplicationStore();
+  const { applicationStore } = useContextStore();
   const [filter, setFilter] = React.useState<KeyType>(undefined);
 
   const ContentComponent = filter ? ContentMap[filter] : ContentMap.status;

@@ -20,7 +20,8 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 import { Separator } from 'components/ui/separator';
-import { useTeamsStore } from 'hooks/teams';
+
+import { useContextStore } from 'store/global-context-provider';
 
 import { Nav } from './nav';
 import { TeamListItem } from './team-list-item';
@@ -31,7 +32,7 @@ interface TeamListProps {
 
 export const TeamList = observer(({ isCollapsed }: TeamListProps) => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
-  const teamStore = useTeamsStore();
+  const { teamsStore } = useContextStore();
 
   return (
     <div
@@ -61,7 +62,7 @@ export const TeamList = observer(({ isCollapsed }: TeamListProps) => {
 
       {!isCollapsed && (
         <>
-          {teamStore.teams.map((team: TeamType) => (
+          {teamsStore.teams.map((team: TeamType) => (
             <Accordion
               type="single"
               key={team.identifier}

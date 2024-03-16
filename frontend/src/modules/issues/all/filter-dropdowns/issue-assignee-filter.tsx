@@ -4,8 +4,9 @@ import { observer } from 'mobx-react-lite';
 
 import { IssueAssigneeDropdownContent } from 'modules/issues/components';
 
-import { useApplicationStore } from 'hooks/use-application-store';
 import { useUsersData } from 'hooks/users';
+
+import { useContextStore } from 'store/global-context-provider';
 
 interface IssueAssigneeFilterProps {
   onChange?: (assigneeId: string) => void;
@@ -15,7 +16,7 @@ interface IssueAssigneeFilterProps {
 export const IssueAssigneeFilter = observer(
   ({ onChange, onClose }: IssueAssigneeFilterProps) => {
     const { usersData } = useUsersData();
-    const applicationStore = useApplicationStore();
+    const { applicationStore } = useContextStore();
 
     const assigneeFilters = JSON.parse(applicationStore.filters).assignee ?? [];
 

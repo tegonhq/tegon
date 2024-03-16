@@ -6,21 +6,22 @@ import * as React from 'react';
 
 import type { WorkflowType } from 'common/types/team';
 
-import { useWorkflowsStore } from './use-workflows-store';
+import { useContextStore } from 'store/global-context-provider';
+
 import { useTeam } from '../teams/use-current-team';
 
 export function useTeamWorkflows(
   teamIdentfier: string,
 ): WorkflowType[] | undefined {
   const team = useTeam(teamIdentfier);
-  const workflowStore = useWorkflowsStore();
+  const { workflowsStore } = useContextStore();
 
   const getWorkflows = () => {
     if (!team) {
       return [];
     }
 
-    const workflows = workflowStore.workflows.filter(
+    const workflows = workflowsStore.workflows.filter(
       (workflow: WorkflowType) => {
         return workflow.teamId === team.id;
       },
@@ -31,7 +32,7 @@ export function useTeamWorkflows(
 
   const workflows = React.useMemo(
     () => computed(() => getWorkflows()),
-    [team, workflowStore],
+    [team, workflowsStore],
   ).get();
 
   return workflows;

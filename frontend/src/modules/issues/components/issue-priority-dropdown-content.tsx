@@ -5,7 +5,7 @@ import {
   RiErrorWarningFill,
   RiSubtractLine,
 } from '@remixicon/react';
-import { Signal, SignalHigh, SignalMedium } from 'lucide-react';
+import { SignalHigh, SignalLow, SignalMedium } from 'lucide-react';
 
 import {
   Command,
@@ -24,9 +24,9 @@ interface IssuePriorityDropdownContentProps {
 export const PriorityIcons = [
   { icon: RiSubtractLine, size: 18 },
   { icon: RiErrorWarningFill, size: 18 },
-  { icon: Signal, size: 18 },
   { icon: SignalHigh, size: 18 },
   { icon: SignalMedium, size: 18 },
+  { icon: SignalLow, size: 18 },
 ];
 
 export function IssuePriorityDropdownContent({

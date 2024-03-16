@@ -1,6 +1,11 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
+import {
+  type IAnyStateTreeNode,
+  type Instance,
+  types,
+  flow,
+} from 'mobx-state-tree';
 
 import type {
   UsersOnWorkspaceType,
@@ -16,11 +21,11 @@ export const WorkspaceStore: IAnyStateTreeNode = types
     workspace: types.union(Workspace, types.undefined),
     usersOnWorkspaces: types.array(UsersOnWorkspace),
   })
-  .actions((self) => ({
-    update(workspace: WorkspaceType) {
+  .actions((self) => {
+    const update = (workspace: WorkspaceType) => {
       self.workspace = workspace;
-    },
-    updateUsers(userRecord: UsersOnWorkspaceType, id: string) {
+    };
+    const updateUsers = (userRecord: UsersOnWorkspaceType, id: string) => {
       const indexToUpdate = self.usersOnWorkspaces.findIndex(
         (obj) => obj.id === id,
       );
@@ -36,8 +41,8 @@ export const WorkspaceStore: IAnyStateTreeNode = types
       } else {
         self.usersOnWorkspaces.push(userRecord);
       }
-    },
-    deleteUser(id: string) {
+    };
+    const deleteUser = (id: string) => {
       const indexToDelete = self.usersOnWorkspaces.findIndex(
         (obj) => obj.id === id,
       );
@@ -45,45 +50,21 @@ export const WorkspaceStore: IAnyStateTreeNode = types
       if (indexToDelete !== -1) {
         self.usersOnWorkspaces.splice(indexToDelete, 1);
       }
-    },
-  }));
+    };
+
+    const load = flow(function* (workspaceId: string) {
+      self.workspace = yield tegonDatabase.workspaces.get({
+        id: workspaceId,
+      });
+
+      self.usersOnWorkspaces = yield tegonDatabase.usersOnWorkspaces
+        .where({
+          workspaceId,
+        })
+        .toArray();
+    });
+
+    return { update, updateUsers, deleteUser, load };
+  });
 
 export type WorkspaceStoreType = Instance<typeof WorkspaceStore>;
-
-export async function initialiseWorkspaceStore(workspaceId: string) {
-  let _store = workspaceStore;
-
-  if (!_store) {
-    const workspace = await tegonDatabase.workspaces.get({
-      id: workspaceId,
-    });
-
-    const usersOnWorkspaces = await tegonDatabase.usersOnWorkspaces
-      .where({
-        workspaceId,
-      })
-      .toArray();
-
-    _store = WorkspaceStore.create({
-      workspace,
-      usersOnWorkspaces,
-    });
-  }
-  // If your page has Next.js data fetching methods that use a Mobx store, it will
-  // get hydrated here, check `pages/ssg.tsx` and `pages/ssr.tsx` for more details
-  // if (snapshot) {
-  //   applySnapshot(_store, snapshot);
-  // }
-  // For SSG and SSR always create a new store
-  if (typeof window === 'undefined') {
-    return _store;
-  }
-  // Create the store once in the client
-  if (!workspaceStore) {
-    workspaceStore = _store;
-  }
-
-  return workspaceStore;
-}
-
-export let workspaceStore: WorkspaceStoreType;

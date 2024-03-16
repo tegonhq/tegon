@@ -1,6 +1,11 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
+import {
+  type IAnyStateTreeNode,
+  type Instance,
+  types,
+  flow,
+} from 'mobx-state-tree';
 
 import type { LabelType } from 'common/types/label';
 
@@ -11,9 +16,10 @@ import { Label } from './models';
 export const LabelsStore: IAnyStateTreeNode = types
   .model({
     labels: types.array(Label),
+    workspaceId: types.union(types.string, types.undefined),
   })
-  .actions((self) => ({
-    update(label: LabelType, id: string) {
+  .actions((self) => {
+    const update = (label: LabelType, id: string) => {
       const indexToUpdate = self.labels.findIndex((obj) => obj.id === id);
 
       if (indexToUpdate !== -1) {
@@ -21,51 +27,36 @@ export const LabelsStore: IAnyStateTreeNode = types
         self.labels[indexToUpdate] = {
           ...self.labels[indexToUpdate],
           ...label,
-        };
+          // TODO fix the any and have a type with Issuetype
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any;
       } else {
         self.labels.push(label);
       }
-    },
-    delete(id: string) {
+    };
+    const deleteById = (id: string) => {
       const indexToDelete = self.labels.findIndex((obj) => obj.id === id);
 
       if (indexToDelete !== -1) {
         self.labels.splice(indexToDelete, 1);
       }
-    },
-  }));
+    };
+
+    const load = flow(function* (workspaceId: string) {
+      self.workspaceId = workspaceId;
+
+      const labels = workspaceId
+        ? yield tegonDatabase.labels
+            .where({
+              workspaceId,
+            })
+            .toArray()
+        : [];
+
+      self.labels = labels;
+    });
+
+    return { update, deleteById, load };
+  });
 
 export type LabelsStoreType = Instance<typeof LabelsStore>;
-
-export let labelsStore: LabelsStoreType;
-
-export async function initialiseLabelStore(workspaceId: string) {
-  let _store = labelsStore;
-  if (!_store) {
-    const labelsData = await tegonDatabase.labels
-      .where({
-        workspaceId,
-      })
-      .toArray();
-
-    _store = LabelsStore.create({
-      labels: labelsData,
-    });
-  }
-
-  // If your page has Next.js data fetching methods that use a Mobx store, it will
-  // get hydrated here, check `pages/ssg.tsx` and `pages/ssr.tsx` for more details
-  // if (snapshot) {
-  //   applySnapshot(_store, snapshot);
-  // }
-  // For SSG and SSR always create a new store
-  if (typeof window === 'undefined') {
-    return _store;
-  }
-  // Create the store once in the client
-  if (!labelsStore) {
-    labelsStore = _store;
-  }
-
-  return labelsStore;
-}

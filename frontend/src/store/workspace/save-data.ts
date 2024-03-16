@@ -1,13 +1,16 @@
-/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import type { WorkspaceStoreType } from './store';
 
 import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
 import { MODELS } from 'store/models';
-import { type WorkspaceStoreType, workspaceStore } from 'store/workspace';
 
-export async function saveWorkspaceData(data: SyncActionRecord[]) {
+export async function saveWorkspaceData(
+  data: SyncActionRecord[],
+  workspaceStore: WorkspaceStoreType,
+) {
   await Promise.all(
     data.map(async (record: SyncActionRecord) => {
       if (record.modelName === MODELS.UsersOnWorkspaces) {
@@ -42,8 +45,4 @@ export async function saveWorkspaceData(data: SyncActionRecord[]) {
       return workspaceStore && (await workspaceStore.update(workspace));
     }),
   );
-}
-
-export function useWorkspaceStore(): WorkspaceStoreType {
-  return workspaceStore;
 }

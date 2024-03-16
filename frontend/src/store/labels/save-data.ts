@@ -1,12 +1,15 @@
-/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import type { LabelsStoreType } from './store';
 
 import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
-import { labelsStore, type LabelsStoreType } from 'store/labels';
 
-export async function saveLabelData(data: SyncActionRecord[]) {
+export async function saveLabelData(
+  data: SyncActionRecord[],
+  labelsStore: LabelsStoreType,
+) {
   await Promise.all(
     data.map(async (record: SyncActionRecord) => {
       const label = {
@@ -43,8 +46,4 @@ export async function saveLabelData(data: SyncActionRecord[]) {
       }
     }),
   );
-}
-
-export function useLabelsStore(): LabelsStoreType {
-  return labelsStore;
 }

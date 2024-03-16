@@ -42,7 +42,7 @@ export function IssuePriorityDropdown({
           role="combobox"
           size="xs"
           aria-expanded={open}
-          className="flex items-center px-0 !bg-transparent hover:bg-transparent border-none justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary"
+          className="flex items-center px-0 shadow-none !bg-transparent hover:bg-transparent border-none justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary"
         >
           <PriorityIcon.icon
             size={PriorityIcon.size}

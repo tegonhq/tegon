@@ -8,6 +8,8 @@ export const Comment = types.model({
   updatedAt: types.string,
   userId: types.string,
   issueId: types.string,
-  body: types.string,
-  parentId: types.union(types.string, types.null),
+  body: types.union(types.string, types.undefined),
+  parentId: types.union(types.string, types.null, types.undefined),
 });
+
+export const CommentArray = types.array(Comment);

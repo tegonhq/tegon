@@ -6,7 +6,7 @@ import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
 
 import { BootstrapWrapper } from './bootstrap-data';
 import { SocketDataSyncWrapper } from './socket-data-sync';
-import { WorkspaceStoreProvider } from '../../store/workspace-store-provider';
+import { WorkspaceStoreInit } from '../../store/workspace-store-provider';
 
 export const AllProviders = ({
   children,
@@ -17,9 +17,9 @@ export const AllProviders = ({
     <SessionAuth>
       <UserDataWrapper>
         <BootstrapWrapper>
-          <WorkspaceStoreProvider>
+          <WorkspaceStoreInit>
             <SocketDataSyncWrapper>{children}</SocketDataSyncWrapper>
-          </WorkspaceStoreProvider>
+          </WorkspaceStoreInit>
         </BootstrapWrapper>
       </UserDataWrapper>
     </SessionAuth>

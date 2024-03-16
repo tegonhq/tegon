@@ -1,12 +1,15 @@
-/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import type { WorkflowsStoreType } from './store';
 
 import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
-import { workflowsStore } from 'store/workflows';
 
-export async function saveWorkflowData(data: SyncActionRecord[]) {
+export async function saveWorkflowData(
+  data: SyncActionRecord[],
+  workflowsStore: WorkflowsStoreType,
+) {
   await Promise.all(
     data.map(async (record: SyncActionRecord) => {
       const workflow = {
@@ -47,8 +50,4 @@ export async function saveWorkflowData(data: SyncActionRecord[]) {
       }
     }),
   );
-}
-
-export function useWorkflowsStore() {
-  return workflowsStore;
 }

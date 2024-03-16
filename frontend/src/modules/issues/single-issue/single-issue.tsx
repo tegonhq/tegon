@@ -2,14 +2,14 @@
 
 import { AppLayout } from 'common/layouts/app-layout';
 
-import { IssueStoreProvider } from 'store/issue-store-provider';
+import { IssueStoreInit } from 'store/issue-store-provider';
 
 import { LeftSide } from './left-side/left-side';
 import { RightSide } from './right-side/right-side';
 
 export function SingleIssue() {
   return (
-    <main className="grid grid-cols-3 h-full">
+    <main className="grid grid-cols-4 h-full">
       <LeftSide />
       <RightSide />
     </main>
@@ -19,7 +19,7 @@ export function SingleIssue() {
 SingleIssue.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <AppLayout>
-      <IssueStoreProvider>{page}</IssueStoreProvider>
+      <IssueStoreInit>{page}</IssueStoreInit>
     </AppLayout>
   );
 };

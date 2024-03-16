@@ -6,14 +6,15 @@ import { observer } from 'mobx-react-lite';
 
 import { Separator } from 'components/ui/separator';
 import { useCurrentTeam } from 'hooks/teams';
-import { useApplicationStore } from 'hooks/use-application-store';
+
+import { useContextStore } from 'store/global-context-provider';
 
 import { IssueAssigneeDropdown } from './filter-dropdowns/issue-assignee-dropdown';
 import { IssueLabelDropdown } from './filter-dropdowns/issue-label-dropdown';
 import { IssueStatusDropdown } from './filter-dropdowns/issue-status-dropdown';
 
 export const FiltersView = observer(() => {
-  const applicationStore = useApplicationStore();
+  const { applicationStore } = useContextStore();
   const team = useCurrentTeam();
   const filters = JSON.parse(applicationStore.filters);
 

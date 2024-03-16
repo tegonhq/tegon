@@ -26,6 +26,7 @@ export function ActivityItem({ issueHistory, user }: ActivityItemProps) {
   const getItems = () => {
     const localItems = [];
     let setShowTime = true;
+    let index = 0;
 
     if (issueHistory.removedLabelIds.length > 0) {
       localItems.push(
@@ -34,8 +35,10 @@ export function ActivityItem({ issueHistory, user }: ActivityItemProps) {
           issueHistory={issueHistory}
           added={false}
           showTime={setShowTime}
+          key={index}
         />,
       );
+      index = index + 1;
       setShowTime = false;
     }
 
@@ -46,8 +49,11 @@ export function ActivityItem({ issueHistory, user }: ActivityItemProps) {
           issueHistory={issueHistory}
           added
           showTime={setShowTime}
+          key={index}
         />,
       );
+      index = index + 1;
+
       setShowTime = false;
     }
 
@@ -57,8 +63,11 @@ export function ActivityItem({ issueHistory, user }: ActivityItemProps) {
           username={user.username}
           issueHistory={issueHistory}
           showTime={setShowTime}
+          key={index}
         />,
       );
+      index = index + 1;
+
       setShowTime = false;
     }
 
@@ -68,8 +77,11 @@ export function ActivityItem({ issueHistory, user }: ActivityItemProps) {
           username={user.username}
           issueHistory={issueHistory}
           showTime={setShowTime}
+          key={index}
         />,
       );
+      index = index + 1;
+
       setShowTime = false;
     }
 

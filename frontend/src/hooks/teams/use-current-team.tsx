@@ -7,13 +7,13 @@ import * as React from 'react';
 
 import type { TeamType } from 'common/types/team';
 
-import { useTeamsStore } from './use-teams-store';
+import { useContextStore } from 'store/global-context-provider';
 
 export function useCurrentTeam(): TeamType | undefined {
   const {
     query: { teamIdentifier, issueId },
   } = useRouter();
-  const teamStore = useTeamsStore();
+  const { teamsStore } = useContextStore();
 
   const getTeam = () => {
     if (!teamIdentifier && !issueId) {
@@ -24,7 +24,7 @@ export function useCurrentTeam(): TeamType | undefined {
       ? teamIdentifier
       : (issueId as string).split('-')[0];
 
-    const team = teamStore.teams.find((team: TeamType) => {
+    const team = teamsStore.teams.find((team: TeamType) => {
       return team.identifier === identifier;
     });
 
@@ -33,17 +33,17 @@ export function useCurrentTeam(): TeamType | undefined {
 
   const team = React.useMemo(
     () => computed(() => getTeam()),
-    [teamIdentifier, issueId, teamStore],
+    [teamIdentifier, issueId, teamsStore],
   ).get();
 
   return team;
 }
 
 export function useTeam(teamIdentifier: string): TeamType | undefined {
-  const teamStore = useTeamsStore();
+  const { teamsStore } = useContextStore();
 
   const getTeam = () => {
-    const team = teamStore.teams.find((team: TeamType) => {
+    const team = teamsStore.teams.find((team: TeamType) => {
       return team.identifier === teamIdentifier;
     });
 
@@ -52,7 +52,7 @@ export function useTeam(teamIdentifier: string): TeamType | undefined {
 
   const team = React.useMemo(
     () => computed(() => getTeam()),
-    [teamIdentifier, teamStore],
+    [teamIdentifier, teamsStore],
   ).get();
 
   return team;

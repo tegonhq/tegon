@@ -13,11 +13,13 @@ import type { LabelType } from 'common/types/label';
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
-import { useLabelsStore } from 'hooks/labels';
 import { useCurrentTeam } from 'hooks/teams';
 
+import { useContextStore } from 'store/global-context-provider';
+
 export const Labels = observer(() => {
-  const labelStore = useLabelsStore();
+  const { labelsStore } = useContextStore();
+
   const currentTeam = useCurrentTeam();
 
   const [showNewLabelCreation, setNewLabelCreation] = React.useState(false);
@@ -72,7 +74,7 @@ export const Labels = observer(() => {
       </div>
 
       <div>
-        {labelStore.labels
+        {labelsStore.labels
           .filter(
             (label: LabelType) =>
               label.name.includes(searchValue) &&

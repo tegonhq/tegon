@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import { RiArrowRightSLine } from '@remixicon/react';
 import dayjs from 'dayjs';
+import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 
 import {
@@ -12,28 +13,30 @@ import {
   IssueStatusDropdownVariant,
 } from 'modules/issues/components';
 
-import type { IssueType } from 'common/types/issue';
-
 import { useCurrentTeam } from 'hooks/teams/use-current-team';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
+import { useContextStore } from 'store/global-context-provider';
+
 import { IssueLabels } from './issue-labels';
 
 interface IssueItemProps {
-  issue: IssueType;
+  issueId: string;
 }
 
-export function IssueItem({ issue }: IssueItemProps) {
+export const IssueItem = observer(({ issueId }: IssueItemProps) => {
   const team = useCurrentTeam();
   const {
-    replace,
+    push,
     query: { workspaceSlug },
   } = useRouter();
   const { mutate: updateIssue } = useUpdateIssueMutation({});
+  const { issuesStore } = useContextStore();
+  const issue = issuesStore.getIssueById(issueId);
 
   const openIssue = () => {
-    replace(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
+    push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
   };
 
   const statusChange = (stateId: string) => {
@@ -97,4 +100,4 @@ export function IssueItem({ issue }: IssueItemProps) {
       </div>
     </div>
   );
-}
+});

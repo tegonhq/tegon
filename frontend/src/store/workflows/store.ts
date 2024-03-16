@@ -1,6 +1,11 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
+import {
+  type IAnyStateTreeNode,
+  type Instance,
+  types,
+  flow,
+} from 'mobx-state-tree';
 
 import type { WorkflowType } from 'common/types/team';
 
@@ -11,68 +16,47 @@ import { Workflow } from './models';
 export const WorkflowsStore: IAnyStateTreeNode = types
   .model({
     workflows: types.array(Workflow),
+    teamId: types.union(types.string, types.undefined),
   })
-  .actions((self) => ({
-    update(team: WorkflowType, id: string) {
+  .actions((self) => {
+    const update = (workflow: WorkflowType, id: string) => {
       const indexToUpdate = self.workflows.findIndex((obj) => obj.id === id);
 
       if (indexToUpdate !== -1) {
         // Update the object at the found index with the new data
         self.workflows[indexToUpdate] = {
           ...self.workflows[indexToUpdate],
-          ...team,
-        };
+          ...workflow,
+          // TODO fix the any and have a type with Issuetype
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any;
       } else {
-        self.workflows.push(team);
+        self.workflows.push(workflow);
       }
-    },
-    delete(id: string) {
+    };
+    const deleteById = (id: string) => {
       const indexToDelete = self.workflows.findIndex((obj) => obj.id === id);
 
       if (indexToDelete !== -1) {
         self.workflows.splice(indexToDelete, 1);
       }
-    },
-  }));
+    };
+
+    const load = flow(function* (teamId: string) {
+      self.teamId = teamId;
+
+      const workflows = teamId
+        ? yield tegonDatabase.workflows
+            .where({
+              teamId,
+            })
+            .toArray()
+        : [];
+
+      self.workflows = workflows;
+    });
+
+    return { update, deleteById, load };
+  });
 
 export type WorkflowsStoreType = Instance<typeof WorkflowsStore>;
-
-export let workflowsStore: WorkflowsStoreType;
-
-export async function resetWorkflowStore() {
-  workflowsStore = undefined;
-}
-
-export async function initializeWorkflowsStore(teamId: string) {
-  let _store = workflowsStore;
-
-  if (!workflowsStore) {
-    const workflows = teamId
-      ? await tegonDatabase.workflows
-          .where({
-            teamId,
-          })
-          .toArray()
-      : [];
-
-    _store = WorkflowsStore.create({
-      workflows,
-    });
-  }
-
-  // If your page has Next.js data fetching methods that use a Mobx store, it will
-  // get hydrated here, check `pages/ssg.tsx` and `pages/ssr.tsx` for more details
-  // if (snapshot) {
-  //   applySnapshot(_store, snapshot);
-  // }
-  // For SSG and SSR always create a new store
-  if (typeof window === 'undefined') {
-    return _store;
-  }
-  // Create the store once in the client
-  if (!workflowsStore) {
-    workflowsStore = _store;
-  }
-
-  return workflowsStore;
-}

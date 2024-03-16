@@ -19,6 +19,8 @@ import { ThemeProvider } from 'components/theme-provider';
 import { Toaster } from 'components/ui/toaster';
 import { TooltipProvider } from 'components/ui/tooltip';
 
+import { StoreContext, storeContextStore } from 'store/global-context-provider';
+
 // Inter as default font
 export const fontSans = Inter({
   subsets: ['latin'],
@@ -49,19 +51,21 @@ export const MyApp: NextComponentType<
         disableTransitionOnChange
       >
         <TooltipProvider delayDuration={0}>
-          <QueryClientProvider client={queryClientRef.current}>
-            <Hydrate state={dehydratedState}>
-              <div
-                className={cn(
-                  'min-h-screen bg-background font-sans antialiased flex',
-                  fontSans.variable,
-                )}
-              >
-                {getLayout(<Component {...pageProps} />)}
-              </div>
-              <Toaster />
-            </Hydrate>
-          </QueryClientProvider>
+          <StoreContext.Provider value={storeContextStore}>
+            <QueryClientProvider client={queryClientRef.current}>
+              <Hydrate state={dehydratedState}>
+                <div
+                  className={cn(
+                    'min-h-screen bg-background font-sans antialiased flex',
+                    fontSans.variable,
+                  )}
+                >
+                  {getLayout(<Component {...pageProps} />)}
+                </div>
+                <Toaster />
+              </Hydrate>
+            </QueryClientProvider>
+          </StoreContext.Provider>
         </TooltipProvider>
       </ThemeProvider>
     </SuperTokensWrapper>

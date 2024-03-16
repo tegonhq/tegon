@@ -15,12 +15,14 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 import { buttonVariants } from 'components/ui/button';
-import { useTeamsStore } from 'hooks/teams';
+
+import { useWorkspaceContextStore } from 'store/workspace-store-provider';
 
 import { TEAM_LINKS } from './settings-layout-constants';
 
 export const TeamSettingsList = observer(() => {
-  const teamStore = useTeamsStore();
+  const { teamsStore } = useWorkspaceContextStore();
+
   const { query } = useRouter();
   const { workspaceSlug, settingsSection, teamIdentifier } = query;
 
@@ -33,7 +35,7 @@ export const TeamSettingsList = observer(() => {
         </div>
 
         <div className="flex flex-col w-full">
-          {teamStore.teams.map((team: TeamType) => (
+          {teamsStore.teams.map((team: TeamType) => (
             <Accordion
               type="single"
               collapsible

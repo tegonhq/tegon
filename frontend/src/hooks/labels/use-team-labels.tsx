@@ -5,12 +5,13 @@ import * as React from 'react';
 
 import type { LabelType } from 'common/types/label';
 
-import { useLabelsStore } from './use-labels-store';
+import { useContextStore } from 'store/global-context-provider';
+
 import { useCurrentTeam } from '../teams/use-current-team';
 import { useCurrentWorkspace } from '../workspace/use-current-workspace';
 
 export function useTeamLabels() {
-  const labelsStore = useLabelsStore();
+  const { labelsStore } = useContextStore();
   const currentWorkspace = useCurrentWorkspace();
   const currentTeam = useCurrentTeam();
 
@@ -32,11 +33,11 @@ export function useTeamLabels() {
     return labels;
   };
 
-  const workflows = React.useMemo(
+  const labels = React.useMemo(
     () => computed(() => getLabels()),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTeam, currentWorkspace, labelsStore],
   ).get();
 
-  return workflows;
+  return labels;
 }

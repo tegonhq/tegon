@@ -1,11 +1,15 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import type { CommentsStoreType } from './store';
+
 import type { SyncActionRecord } from 'common/types/data-loader';
 
-import { commentsStore } from 'store/comments';
 import { tegonDatabase } from 'store/database';
 
-export async function saveCommentsData(data: SyncActionRecord[]) {
+export async function saveCommentsData(
+  data: SyncActionRecord[],
+  commentsStore: CommentsStoreType,
+) {
   await Promise.all(
     data.map(async (record: SyncActionRecord) => {
       const comment = {
@@ -43,8 +47,4 @@ export async function saveCommentsData(data: SyncActionRecord[]) {
       }
     }),
   );
-}
-
-export function useCommentsStore() {
-  return commentsStore;
 }

@@ -6,18 +6,14 @@ import * as React from 'react';
 
 import { Loader } from 'components/ui/loader';
 
-import { initializeCommentsStore, resetCommentsStore } from './comments';
 import { tegonDatabase } from './database';
-import {
-  initializeIssueHistoryStore,
-  resetIssueHistoryStore,
-} from './issue-history';
-import { initializeIssuesStore } from './issues';
-import { initializeWorkflowsStore } from './workflows';
+import { useContextStore } from './global-context-provider';
 
-export const IssueStoreProvider = observer(
+export const IssueStoreInit = observer(
   ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = React.useState(true);
+    const { issuesHistoryStore, commentsStore, issuesStore, workflowsStore } =
+      useContextStore();
 
     const {
       query: { issueId },
@@ -25,44 +21,35 @@ export const IssueStoreProvider = observer(
 
     React.useEffect(() => {
       if (issueId) {
-        resetIssueHistoryStore();
-        resetCommentsStore();
-
         initIssueBasedStored();
       }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [issueId]);
 
-    React.useEffect(() => {
-      return () => {
-        resetIssueHistoryStore();
-        resetCommentsStore();
-      };
-    }, []);
-
     // All data related to team
     const initIssueBasedStored = React.useCallback(async () => {
       setLoading(true);
       const id = (issueId as string).split('-')[1];
       const identifier = (issueId as string).split('-')[0];
-      const teamData = await tegonDatabase.teams.get({
-        identifier,
-      });
       const issueData = await tegonDatabase.issues.get({
         number: parseInt(id),
       });
+      const teamData = await tegonDatabase.teams.get({
+        identifier,
+      });
 
-      await initializeWorkflowsStore(teamData?.id);
-      await initializeIssuesStore(teamData?.id);
-      await initializeIssueHistoryStore(issueData?.id);
-      await initializeCommentsStore(issueData?.id);
+      await issuesStore.load(teamData.id);
+      await workflowsStore.load(teamData?.id);
+      await issuesHistoryStore.load(issueData.id);
+      await commentsStore.load(issueData.id);
 
       setLoading(false);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [issueId]);
 
     if (loading) {
-      return <Loader text="Loading issue" className="h-full" />;
+      return <Loader text="Loading issue data" className="h-full" />;
     }
 
     return <>{children}</>;

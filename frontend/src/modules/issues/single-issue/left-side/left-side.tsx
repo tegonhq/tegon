@@ -35,7 +35,7 @@ export const LeftSide = observer(() => {
   }, 1000);
 
   return (
-    <div className="col-span-2">
+    <div className="col-span-3">
       <Header />
       <div className="grow px-8 py-6 flex flex-col gap-4 overflow-y-auto h-[calc(100vh_-_52px)]">
         <div>

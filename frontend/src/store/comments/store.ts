@@ -1,80 +1,62 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
+import {
+  type IAnyStateTreeNode,
+  type Instance,
+  types,
+  flow,
+} from 'mobx-state-tree';
 
-import type { IssueType } from 'common/types/issue';
+import type { IssueCommentType } from 'common/types/issue';
 
 import { tegonDatabase } from 'store/database';
 
-import { Comment } from './models';
+import { CommentArray } from './models';
 
 export const CommentsStore: IAnyStateTreeNode = types
   .model({
-    comments: types.array(Comment),
+    comments: CommentArray,
+    issueId: types.union(types.string, types.undefined),
   })
-  .actions((self) => ({
-    update(issue: IssueType, id: string) {
+  .actions((self) => {
+    const update = (comment: IssueCommentType, id: string) => {
       const indexToUpdate = self.comments.findIndex((obj) => obj.id === id);
 
       if (indexToUpdate !== -1) {
         // Update the object at the found index with the new data
         self.comments[indexToUpdate] = {
           ...self.comments[indexToUpdate],
-          ...issue,
+          ...comment,
           // TODO fix the any and have a type with Issuetype
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any;
       } else {
-        self.comments.push(issue);
+        self.comments.push(comment);
       }
-    },
-    delete(id: string) {
+    };
+    const deleteById = (id: string) => {
       const indexToDelete = self.comments.findIndex((obj) => obj.id === id);
 
       if (indexToDelete !== -1) {
         self.comments.splice(indexToDelete, 1);
       }
-    },
-  }));
+    };
+
+    const load = flow(function* (issueId: string) {
+      self.issueId = issueId;
+
+      const comments = issueId
+        ? yield tegonDatabase.comments
+            .where({
+              issueId,
+            })
+            .toArray()
+        : [];
+
+      self.comments = CommentArray.create(comments);
+    });
+
+    return { update, deleteById, load };
+  });
 
 export type CommentsStoreType = Instance<typeof CommentsStore>;
-
-export let commentsStore: CommentsStoreType;
-
-export async function resetCommentsStore() {
-  commentsStore = undefined;
-}
-
-export async function initializeCommentsStore(issueId: string) {
-  let _store = commentsStore;
-
-  if (!commentsStore) {
-    const comments = issueId
-      ? await tegonDatabase.comments
-          .where({
-            issueId,
-          })
-          .toArray()
-      : [];
-
-    _store = CommentsStore.create({
-      comments,
-    });
-  }
-
-  // If your page has Next.js data fetching methods that use a Mobx store, it will
-  // get hydrated here, check `pages/ssg.tsx` and `pages/ssr.tsx` for more details
-  // if (snapshot) {
-  //   applySnapshot(_store, snapshot);
-  // }
-  // For SSG and SSR always create a new store
-  if (typeof window === 'undefined') {
-    return _store;
-  }
-  // Create the store once in the client
-  if (!commentsStore) {
-    commentsStore = _store;
-  }
-
-  return commentsStore;
-}

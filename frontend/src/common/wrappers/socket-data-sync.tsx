@@ -5,7 +5,8 @@ import getConfig from 'next/config';
 import * as React from 'react';
 import { Socket, io } from 'socket.io-client';
 
-import { useWorkspaceStore } from 'hooks/workspace';
+import { useContextStore } from 'store/global-context-provider';
+import { MODELS } from 'store/models';
 
 import { saveSocketData } from './socket-data-util';
 import { Loader } from '../../components/ui/loader';
@@ -18,7 +19,17 @@ interface Props {
 export const SocketDataSyncWrapper: React.FC<Props> = observer(
   (props: Props) => {
     const { children } = props;
-    const workspaceStore = useWorkspaceStore();
+
+    const {
+      commentsStore,
+      issuesHistoryStore,
+      issuesStore,
+      workflowsStore,
+      workspaceStore,
+      teamsStore,
+      labelsStore,
+    } = useContextStore();
+
     const [socket, setSocket] = React.useState<Socket | undefined>(undefined);
 
     const { publicRuntimeConfig } = getConfig();
@@ -44,8 +55,20 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
       });
       setSocket(socket);
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const MODEL_STORE_MAP = {
+        [MODELS.Label]: labelsStore,
+        [MODELS.Workspace]: workspaceStore,
+        [MODELS.UsersOnWorkspaces]: workspaceStore,
+        [MODELS.Team]: teamsStore,
+        [MODELS.Workflow]: workflowsStore,
+        [MODELS.Issue]: issuesStore,
+        [MODELS.IssueHistory]: issuesHistoryStore,
+        [MODELS.IssueComment]: commentsStore,
+      };
+
       socket.on('message', (newMessage: string) => {
-        saveSocketData([JSON.parse(newMessage)]);
+        saveSocketData([JSON.parse(newMessage)], MODEL_STORE_MAP);
       });
     }
 

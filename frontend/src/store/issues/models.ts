@@ -2,7 +2,7 @@
 
 import { types } from 'mobx-state-tree';
 
-export const Issue = types.model({
+export const Issue = types.model('Issue', {
   id: types.string,
   createdAt: types.string,
   updatedAt: types.string,
@@ -20,3 +20,5 @@ export const Issue = types.model({
   parentId: types.union(types.string, types.null),
   stateId: types.string,
 });
+
+export const IssuesMap = types.map(Issue);

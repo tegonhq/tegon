@@ -9,7 +9,7 @@ import { SettingsLayout } from 'common/layouts/settings-layout';
 import { Loader } from 'components/ui/loader';
 
 import { UserContext } from 'store/user-context';
-import { WorkspaceStoreProvider } from 'store/workspace-store-provider';
+import { WorkspaceStoreInit } from 'store/workspace-store-provider';
 
 import {
   SECTION_COMPONENTS,
@@ -41,7 +41,7 @@ export function PersonalSettings() {
 PersonalSettings.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <SettingsLayout>
-      <WorkspaceStoreProvider>{page}</WorkspaceStoreProvider>
+      <WorkspaceStoreInit>{page}</WorkspaceStoreInit>
     </SettingsLayout>
   );
 };

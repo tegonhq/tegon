@@ -1,12 +1,15 @@
-/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import type { TeamsStoreType } from './store';
 
 import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
-import { teamsStore } from 'store/teams';
 
-export async function saveTeamData(data: SyncActionRecord[]) {
+export async function saveTeamData(
+  data: SyncActionRecord[],
+  teamsStore: TeamsStoreType,
+) {
   await Promise.all(
     data.map(async (record: SyncActionRecord) => {
       const team = {
@@ -36,8 +39,4 @@ export async function saveTeamData(data: SyncActionRecord[]) {
       }
     }),
   );
-}
-
-export function useTeamsStore() {
-  return teamsStore;
 }

@@ -21,7 +21,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
-import { useWorkspaceStore } from 'hooks/workspace';
+
+import { useContextStore } from 'store/global-context-provider';
 
 export interface WorkspaceDropdownProps {
   isCollapsed: boolean;
@@ -29,7 +30,7 @@ export interface WorkspaceDropdownProps {
 
 export const WorkspaceDropdown = observer(
   ({ isCollapsed }: WorkspaceDropdownProps) => {
-    const workspaceStore = useWorkspaceStore();
+    const { workspaceStore } = useContextStore();
     const { query, replace } = useRouter();
 
     return (

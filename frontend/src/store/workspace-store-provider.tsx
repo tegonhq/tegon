@@ -6,13 +6,12 @@ import * as React from 'react';
 import { Loader } from 'components/ui/loader';
 import { useCurrentWorkspace } from 'hooks/workspace';
 
-import { initialiseLabelStore } from 'store/labels';
-import { initialiseTeamsStore } from 'store/teams';
-import { initialiseWorkspaceStore } from 'store/workspace';
+import { useContextStore } from './global-context-provider';
 
-export const WorkspaceStoreProvider = observer(
+export const WorkspaceStoreInit = observer(
   ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = React.useState(true);
+    const { workspaceStore, teamsStore, labelsStore } = useContextStore();
 
     const currentWorkspace = useCurrentWorkspace();
 
@@ -27,11 +26,12 @@ export const WorkspaceStoreProvider = observer(
     const initWorkspaceBasedStores = React.useCallback(async () => {
       setLoading(true);
 
-      await initialiseWorkspaceStore(currentWorkspace.id);
-      await initialiseLabelStore(currentWorkspace.id);
-      await initialiseTeamsStore(currentWorkspace.id);
+      await workspaceStore.load(currentWorkspace.id);
+      await labelsStore.load(currentWorkspace.id);
+      await teamsStore.load(currentWorkspace.id);
 
       setLoading(false);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentWorkspace.id]);
 
     if (loading) {

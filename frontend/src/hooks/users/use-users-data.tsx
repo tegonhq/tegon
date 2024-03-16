@@ -5,12 +5,12 @@ import * as React from 'react';
 
 import type { UsersOnWorkspaceType } from 'common/types/workspace';
 
-import { useWorkspaceStore } from 'hooks/workspace';
-
 import { useGetUsersQuery } from 'services/users/get-users';
 
+import { useContextStore } from 'store/global-context-provider';
+
 export function useUsersData(teamId?: string) {
-  const workspaceStore = useWorkspaceStore();
+  const { workspaceStore } = useContextStore();
   const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
   const {
     data: usersData,

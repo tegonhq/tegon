@@ -1,51 +1,69 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import type { SyncActionRecord } from 'common/types/data-loader';
 
-import { saveCommentsData } from 'hooks/comments';
-import { saveIssueHistoryData } from 'hooks/issues';
-import { saveIssuesData } from 'hooks/issues/use-issues-store';
-import { saveLabelData } from 'hooks/labels/use-labels-store';
-import { saveTeamData } from 'hooks/teams/use-teams-store';
-import { saveWorkflowData } from 'hooks/workflows/use-workflows-store';
-import { saveWorkspaceData } from 'hooks/workspace/use-workspace-store';
-
+import { saveCommentsData } from 'store/comments';
+import { saveIssueHistoryData } from 'store/issue-history';
+import { saveIssuesData } from 'store/issues';
+import { saveLabelData } from 'store/labels';
 import { MODELS } from 'store/models';
+import { saveTeamData } from 'store/teams';
+import { saveWorkflowData } from 'store/workflows';
+import { saveWorkspaceData } from 'store/workspace';
 
 // Saves the data from the socket and call explicitly functions from individual models
-export async function saveSocketData(data: SyncActionRecord[]) {
+export async function saveSocketData(
+  data: SyncActionRecord[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  MODEL_STORE_MAP: Record<string, any>,
+) {
   await Promise.all(
     data.map(async (record: SyncActionRecord) => {
       switch (record.modelName) {
         case MODELS.Label: {
-          return await saveLabelData([record]);
+          return await saveLabelData([record], MODEL_STORE_MAP[MODELS.Label]);
         }
 
         case MODELS.Team: {
-          return await saveTeamData([record]);
+          return await saveTeamData([record], MODEL_STORE_MAP[MODELS.Team]);
         }
 
         case MODELS.Workflow: {
-          return await saveWorkflowData([record]);
+          return await saveWorkflowData(
+            [record],
+            MODEL_STORE_MAP[MODELS.Workflow],
+          );
         }
 
         case MODELS.Workspace: {
-          return await saveWorkspaceData([record]);
+          return await saveWorkspaceData(
+            [record],
+            MODEL_STORE_MAP[MODELS.Workspace],
+          );
         }
 
         case MODELS.Issue: {
-          return await saveIssuesData([record]);
+          return await saveIssuesData([record], MODEL_STORE_MAP[MODELS.Issue]);
         }
 
         case MODELS.UsersOnWorkspaces: {
-          return await saveWorkspaceData([record]);
+          return await saveWorkspaceData(
+            [record],
+            MODEL_STORE_MAP[MODELS.UsersOnWorkspaces],
+          );
         }
 
         case MODELS.IssueHistory: {
-          return await saveIssueHistoryData([record]);
+          return await saveIssueHistoryData(
+            [record],
+            MODEL_STORE_MAP[MODELS.IssueHistory],
+          );
         }
 
         case MODELS.IssueComment: {
-          return await saveCommentsData([record]);
+          return await saveCommentsData(
+            [record],
+            MODEL_STORE_MAP[MODELS.IssueComment],
+          );
         }
       }
     }),

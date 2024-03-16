@@ -17,14 +17,16 @@ import {
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
 import { useToast } from 'components/ui/use-toast';
-import { useWorkspaceStore } from 'hooks/workspace';
 
 import { useUpdateWorkspaceMutation } from 'services/workspace/update-workspace';
+
+import { useContextStore } from 'store/global-context-provider';
 
 import { OverviewSchema } from './overview.interface';
 
 export const Overview = observer(() => {
-  const workspaceStore = useWorkspaceStore();
+  const { workspaceStore } = useContextStore();
+
   const { toast } = useToast();
   const { mutate: updateWorkspace } = useUpdateWorkspaceMutation({
     onSuccess: () => {

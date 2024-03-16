@@ -7,9 +7,9 @@ import * as React from 'react';
 import { AppLayout } from 'common/layouts/app-layout';
 
 import { Loader } from 'components/ui/loader';
-import { useApplicationStore } from 'hooks/use-application-store';
 
-import { TeamStoreProvider } from 'store/team-store-provider';
+import { useContextStore } from 'store/global-context-provider';
+import { TeamStoreInit } from 'store/team-store-provider';
 import { UserContext } from 'store/user-context';
 
 import { FiltersView } from '../all/filters-view';
@@ -18,7 +18,7 @@ import { ListView } from '../all/list-view';
 
 export function MyIssues() {
   const user = React.useContext(UserContext);
-  const applicationStore = useApplicationStore();
+  const { applicationStore } = useContextStore();
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
@@ -39,7 +39,7 @@ export function MyIssues() {
 MyIssues.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <AppLayout>
-      <TeamStoreProvider>{page}</TeamStoreProvider>
+      <TeamStoreInit>{page}</TeamStoreInit>
     </AppLayout>
   );
 };

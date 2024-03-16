@@ -9,7 +9,8 @@ import type { LabelType } from 'common/types/label';
 
 import { Badge } from 'components/ui/badge';
 import { TimelineItem } from 'components/ui/timeline';
-import { useLabelsStore } from 'hooks/labels';
+
+import { useContextStore } from 'store/global-context-provider';
 
 interface LabelActivityProps {
   issueHistory: IssueHistoryType;
@@ -23,7 +24,7 @@ export function LabelActivity({
   username,
   showTime = false,
 }: LabelActivityProps) {
-  const labelsStore = useLabelsStore();
+  const { labelsStore } = useContextStore();
 
   const getLabel = React.useCallback((labelId: string) => {
     return labelsStore.labels.find((label: LabelType) => label.id === labelId);

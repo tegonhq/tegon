@@ -1,11 +1,15 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import type { IssueHistoryStoreType } from './store';
+
 import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
-import { issueHistoryStore } from 'store/issue-history';
 
-export async function saveIssueHistoryData(data: SyncActionRecord[]) {
+export async function saveIssueHistoryData(
+  data: SyncActionRecord[],
+  issueHistoryStore: IssueHistoryStoreType,
+) {
   await Promise.all(
     data.map(async (record: SyncActionRecord) => {
       const issueHistory = {
@@ -55,8 +59,4 @@ export async function saveIssueHistoryData(data: SyncActionRecord[]) {
       }
     }),
   );
-}
-
-export function useIssueHistoryStore() {
-  return issueHistoryStore;
 }

@@ -1,80 +1,84 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
+import {
+  type IAnyStateTreeNode,
+  type Instance,
+  types,
+  flow,
+} from 'mobx-state-tree';
 
 import type { IssueType } from 'common/types/issue';
 
 import { tegonDatabase } from 'store/database';
 
-import { Issue } from './models';
+import { Issue, IssuesMap } from './models';
 
 export const IssuesStore: IAnyStateTreeNode = types
-  .model({
-    issues: types.array(Issue),
+  .model('IssuesStore', {
+    issuesMap: IssuesMap,
+    teamId: types.union(types.string, types.undefined),
   })
-  .actions((self) => ({
-    update(issue: IssueType, id: string) {
-      const indexToUpdate = self.issues.findIndex((obj) => obj.id === id);
+  .actions((self) => {
+    const update = (issue: IssueType, id: string) => {
+      self.issuesMap.set(id, Issue.create(issue));
+    };
+    const deleteById = (id: string) => {
+      self.issuesMap.delete(id);
+    };
 
-      if (indexToUpdate !== -1) {
-        // Update the object at the found index with the new data
-        self.issues[indexToUpdate] = {
-          ...self.issues[indexToUpdate],
-          ...issue,
-          // TODO fix the any and have a type with Issuetype
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any;
-      } else {
-        self.issues.push(issue);
-      }
+    const load = flow(function* (teamId: string) {
+      self.teamId = teamId;
+
+      const issues = teamId
+        ? yield tegonDatabase.issues
+            .where({
+              teamId,
+            })
+            .toArray()
+        : [];
+
+      issues.forEach((issue: IssueType) => {
+        self.issuesMap.set(issue.id, Issue.create(issue));
+      });
+    });
+
+    return { update, deleteById, load };
+  })
+  .views((self) => ({
+    getIssuesForState(stateId: string, teamId: string) {
+      return Array.from(self.issuesMap.values()).filter(
+        (issue: IssueType) =>
+          issue.teamId === teamId && issue.stateId === stateId,
+      );
     },
-    delete(id: string) {
-      const indexToDelete = self.issues.findIndex((obj) => obj.id === id);
+    getIssueById(issueId: string): IssueType {
+      const issue = self.issuesMap.get(issueId);
 
-      if (indexToDelete !== -1) {
-        self.issues.splice(indexToDelete, 1);
-      }
+      return {
+        ...issue,
+        parent: issue.parentId ? self.issuesMap.get(issue.parentId) : undefined,
+        children: Array.from(self.issuesMap.values()).filter(
+          (is: IssueType) => is.parentId === issue.id,
+        ),
+      };
+    },
+    getIssueByNumber(issueNumberWithIdentifier: string): IssueType {
+      const issueNumber = parseInt(
+        (issueNumberWithIdentifier as string).split('-')[1],
+      );
+
+      const issue = Array.from(self.issuesMap.values()).find(
+        (issue: IssueType) => issue.number === issueNumber,
+      );
+
+      return {
+        ...issue,
+        parent: issue.parentId ? self.issuesMap.get(issue.parentId) : undefined,
+        children: Array.from(self.issuesMap.values()).filter(
+          (is: IssueType) => is.parentId === issue.id,
+        ),
+      };
     },
   }));
 
 export type IssuesStoreType = Instance<typeof IssuesStore>;
-
-export let issuesStore: IssuesStoreType;
-
-export async function resetIssuesStore() {
-  issuesStore = undefined;
-}
-
-export async function initializeIssuesStore(teamId: string) {
-  let _store = issuesStore;
-
-  if (!issuesStore) {
-    const issues = teamId
-      ? await tegonDatabase.issues
-          .where({
-            teamId,
-          })
-          .toArray()
-      : [];
-
-    _store = IssuesStore.create({
-      issues,
-    });
-  }
-
-  // If your page has Next.js data fetching methods that use a Mobx store, it will
-  // get hydrated here, check `pages/ssg.tsx` and `pages/ssr.tsx` for more details
-  // if (snapshot) {
-  //   applySnapshot(_store, snapshot);
-  // }
-  // For SSG and SSR always create a new store
-  if (typeof window === 'undefined') {
-    return _store;
-  }
-  // Create the store once in the client
-  if (!issuesStore) {
-    issuesStore = _store;
-  }
-
-  return issuesStore;
-}
