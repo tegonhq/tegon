@@ -20,7 +20,6 @@ export async function storeIntegrationRelatedData(
 ): Promise<undefined> {
   const integrationConfig =
     integrationAccount.integrationConfiguration as Config;
-  console.log();
   switch (integrationName) {
     case IntegrationName.Github:
       const githubSettings = await getGithubSettings(

@@ -6,6 +6,7 @@ import { PrismaService } from 'nestjs-prisma';
 
 import {
   CommentInput,
+  IssueCommentAction,
   IssueCommentRequestParams,
   IssueRequestParams,
   ReactionInput,
@@ -13,6 +14,7 @@ import {
   commentReactionType,
   reactionDataType,
 } from './issue-comments.interface';
+import { handleTwoWaySync } from './issue-comments.utils';
 
 @Injectable()
 export default class IssueCommentsService {
@@ -23,38 +25,73 @@ export default class IssueCommentsService {
     userId: string,
     commentData: CommentInput,
   ): Promise<IssueComment> {
-    return await this.prisma.issueComment.create({
+    const issueComment = await this.prisma.issueComment.create({
       data: {
         ...commentData,
         userId,
         issueId: issueRequestParams.issueId,
       },
+      include: {
+        issue: { include: { team: true } },
+      },
     });
+
+    await handleTwoWaySync(
+      this.prisma,
+      issueComment,
+      IssueCommentAction.CREATED,
+      userId,
+    );
+    return issueComment;
   }
 
   async updateIssueComment(
     issueCommentParams: IssueCommentRequestParams,
     commentData: CommentInput,
   ): Promise<IssueComment> {
-    return await this.prisma.issueComment.update({
+    const issueComment = await this.prisma.issueComment.update({
       where: {
         id: issueCommentParams.issueCommentId,
       },
       data: commentData,
+      include: {
+        issue: { include: { team: true } },
+      },
     });
+
+    await handleTwoWaySync(
+      this.prisma,
+      issueComment,
+      IssueCommentAction.UPDATED,
+      issueComment.userId,
+    );
+
+    return issueComment;
   }
 
   async deleteIssueComment(
     issueCommentParams: IssueCommentRequestParams,
   ): Promise<IssueComment> {
-    return await this.prisma.issueComment.update({
+    const issueComment = await this.prisma.issueComment.update({
       where: {
         id: issueCommentParams.issueCommentId,
       },
       data: {
         deleted: new Date().toISOString(),
       },
+      include: {
+        issue: { include: { team: true } },
+      },
     });
+
+    await handleTwoWaySync(
+      this.prisma,
+      issueComment,
+      IssueCommentAction.DELETED,
+      issueComment.userId,
+    );
+
+    return issueComment;
   }
 
   async createCommentReaction(

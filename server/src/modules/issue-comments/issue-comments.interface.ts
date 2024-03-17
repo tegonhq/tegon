@@ -1,6 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { IssueComment } from '@@generated/issueComment/entities';
 import { IsOptional, IsString } from 'class-validator';
+import { IssueWithRelations } from 'modules/issues/issues.interface';
 
 export class IssueCommentRequestParams {
   @IsString()
@@ -43,4 +45,14 @@ export interface commentReactionType {
 export interface reactionDataType {
   emoji: string;
   reactions: commentReactionType[];
+}
+
+export enum IssueCommentAction {
+  CREATED,
+  UPDATED,
+  DELETED,
+}
+
+export interface IssueCommentWithRelations extends IssueComment {
+  issue: IssueWithRelations;
 }

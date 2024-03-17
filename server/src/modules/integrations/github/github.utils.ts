@@ -32,6 +32,10 @@ import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import { PostRequestBody, labelDataType } from './github.interface';
 import { Specification } from 'modules/integration_definition/integration_definition.interface';
+import {
+  IssueCommentAction,
+  IssueCommentWithRelations,
+} from 'modules/issue-comments/issue-comments.interface';
 
 async function getState(
   prisma: PrismaService,
@@ -203,10 +207,8 @@ export async function handleIssues(
   integrationAccount: IntegrationAccountWithRelations,
 ) {
   const accountSettings = integrationAccount.settings as Settings;
-  console.log(accountSettings);
 
   const teamId = getTeamId(eventBody.repository.id.toString(), accountSettings);
-  console.log(teamId);
 
   if (teamId) {
     switch (eventBody.action) {
@@ -332,6 +334,13 @@ export async function handleIssueComments(
 
   switch (eventBody.action) {
     case 'created':
+      const linkedComment = await prisma.linkedComment.findFirst({
+        where: { sourceId: eventBody.comment.id.toString() },
+        include: { comment: true },
+      });
+      if (linkedComment) {
+        return linkedComment.comment;
+      }
       return await prisma.issueComment.create({
         data: {
           body: eventBody.comment.body,
@@ -358,7 +367,7 @@ export async function handleIssueComments(
         },
       });
 
-    case 'edited':
+    case 'edited': {
       const linkedComment = await prisma.linkedComment.findFirst({
         where: { sourceId: eventBody.comment.id.toString() },
       });
@@ -383,6 +392,29 @@ export async function handleIssueComments(
         });
       }
       return undefined;
+    }
+
+    case 'deleted': {
+      const linkedComment = await prisma.linkedComment.findFirst({
+        where: { sourceId: eventBody.comment.id.toString() },
+      });
+      if (linkedComment) {
+        return await prisma.issueComment.update({
+          where: { id: linkedComment.commentId },
+          data: {
+            deleted: new Date().toISOString(),
+            linkedComment: {
+              update: {
+                where: { id: linkedComment.id },
+                data: {
+                  deleted: new Date().toISOString(),
+                },
+              },
+            },
+          },
+        });
+      }
+    }
   }
 
   return { eventBody, integrationAccount };
@@ -445,7 +477,7 @@ export async function getAccessToken(
   const currentDate = new Date();
   if (
     !config.access_expires_in ||
-    currentDate >= new Date(config.access_expires_in)
+    currentDate >= new Date(Number(config.access_expires_in))
   ) {
     const url = `https://github.com/login/oauth/access_token?client_id=${config.client_id}&client_secret=${config.client_secret}&refresh_token=${config.refresh_token}&grant_type=refresh_token`;
     const response = await axios.post(url, {});
@@ -454,18 +486,15 @@ export async function getAccessToken(
     config.refresh_token = tokens.get('refresh_token');
     config.access_token = tokens.get('access_token');
 
-    config.access_expires_in = new Date(
-      currentDate.getTime() + Number(tokens.get('expires_in')) * 1000,
-    )
-      .getTime()
-      .toString();
-
-    config.refresh_expires_in = new Date(
+    config.access_expires_in = (
       currentDate.getTime() +
-        Number(tokens.get('refresh_token_expires_in')) * 1000,
-    )
-      .getTime()
-      .toString();
+      Number(tokens.get('expires_in')) * 1000
+    ).toString();
+
+    config.refresh_expires_in = (
+      currentDate.getTime() +
+      Number(tokens.get('refresh_token_expires_in')) * 1000
+    ).toString();
 
     await prisma.integrationAccount.update({
       where: { id: integrationAccount.id },
@@ -481,7 +510,6 @@ export async function sendGithubComment(
   body: string,
 ) {
   const url = `${linkedIssue.url}/comments`;
-  console.log(url);
   const response = await postRequest(url, accessToken, { body });
   return response;
 }
@@ -647,4 +675,70 @@ export async function upsertGithubIssue(
   }
 
   return undefined;
+}
+
+export async function upsertGithubIssueComment(
+  prisma: PrismaService,
+  issueComment: IssueCommentWithRelations,
+  integrationAccount: IntegrationAccountWithRelations,
+  userId: string,
+  action: IssueCommentAction,
+) {
+  const userGithubIntegrationAccount = await getGithubUserIntegrationAccount(
+    prisma,
+    userId,
+    issueComment.issue.team.workspaceId,
+  );
+
+  const accessToken = userGithubIntegrationAccount
+    ? await getAccessToken(prisma, userGithubIntegrationAccount)
+    : await getBotAccessToken(prisma, integrationAccount);
+
+  switch (action) {
+    case IssueCommentAction.CREATED:
+      const linkedIssue = await prisma.linkedIssues.findFirst({
+        where: { issueId: issueComment.issueId },
+      });
+
+      if (linkedIssue) {
+        const url = `${linkedIssue.url}/comments`;
+        const githubIssueComment = await postRequest(url, accessToken, {
+          body: issueComment.body,
+        });
+        prisma.linkedComment.create({
+          data: {
+            sourceId: githubIssueComment.id,
+            url: githubIssueComment.url,
+            source: { type: IntegrationName.Github },
+            sourceData: {
+              id: githubIssueComment.id,
+              body: githubIssueComment.body,
+              displayUserName: githubIssueComment.user.login,
+            },
+            commentId: issueComment.id,
+          },
+        });
+        return githubIssueComment;
+      }
+      return undefined;
+
+    case IssueCommentAction.UPDATED:
+      const linkedComment = await prisma.linkedComment.findFirst({
+        where: {
+          commentId: issueComment.id,
+          source: { path: ['type'], equals: IntegrationName.Github },
+        },
+      });
+      if (linkedComment) {
+        return await postRequest(linkedComment.url, accessToken, {
+          body: issueComment.body,
+        });
+      }
+      return undefined;
+
+    case IssueCommentAction.DELETED:
+      return undefined;
+  }
+
+  return { prisma, issueComment, integrationAccount, userId };
 }
