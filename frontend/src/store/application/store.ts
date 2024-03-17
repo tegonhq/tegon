@@ -6,9 +6,20 @@ interface UpdateBody {
   filters: string;
 }
 
+interface UpdateDisplaySettingsBody {
+  grouping?: string;
+  showSubIssues?: boolean;
+  showEmptyGroups?: boolean;
+}
+
 export const ApplicationStore: IAnyStateTreeNode = types
   .model({
     filters: types.string,
+    displaySettings: types.model({
+      grouping: types.string,
+      showSubIssues: types.boolean,
+      showEmptyGroups: types.boolean,
+    }),
     identifier: types.string,
   })
   .actions((self) => ({
@@ -16,6 +27,9 @@ export const ApplicationStore: IAnyStateTreeNode = types
       self.filters = updateBody.filters;
 
       localStorage.setItem(`filters/${self.identifier}`, updateBody.filters);
+    },
+    updateDisplaySettings(updateBody: UpdateDisplaySettingsBody) {
+      self.displaySettings = { ...self.displaySettings, ...updateBody };
     },
     load(identifier: string, defaultFilters: string) {
       const data = localStorage.getItem(`filters/${identifier}`);

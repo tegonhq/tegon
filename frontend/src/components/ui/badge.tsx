@@ -35,4 +35,17 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   );
 }
 
-export { Badge, badgeVariants };
+interface BadgeColorProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+}
+
+function BadgeColor({ className, ...otherProps }: BadgeColorProps) {
+  return (
+    <span
+      className={cn('rounded-full', `w-[8px] h-[8px]`, className)}
+      {...otherProps}
+    ></span>
+  );
+}
+
+export { Badge, badgeVariants, BadgeColor };

@@ -45,10 +45,41 @@ export const IssuesStore: IAnyStateTreeNode = types
     return { update, deleteById, load };
   })
   .views((self) => ({
-    getIssuesForState(stateId: string, teamId: string) {
-      return Array.from(self.issuesMap.values()).filter(
-        (issue: IssueType) =>
-          issue.teamId === teamId && issue.stateId === stateId,
+    getIssuesForState(stateId: string, teamId: string, showSubIssues: boolean) {
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
+        showSubIssues
+          ? issue.teamId === teamId && issue.stateId === stateId
+          : issue.teamId === teamId &&
+            issue.stateId === stateId &&
+            !issue.parentId,
+      );
+    },
+    getIssuesForUser(showSubIssues: boolean, userId?: string) {
+      if (userId) {
+        return Array.from(self.issuesMap.values()).filter(
+          (issue: IssueType) => {
+            if (!showSubIssues) {
+              return issue.assigneeId === userId && !issue.parentId;
+            }
+
+            return issue.assigneeId === userId;
+          },
+        );
+      }
+
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
+        if (!showSubIssues) {
+          return !issue.assigneeId && !issue.parentId;
+        }
+
+        return !issue.assigneeId;
+      });
+    },
+    getIssuesForPriority(priority: number, showSubIssues: boolean) {
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
+        showSubIssues
+          ? issue.priority === priority
+          : issue.priority === priority && !issue.parentId,
       );
     },
     getIssueById(issueId: string): IssueType {

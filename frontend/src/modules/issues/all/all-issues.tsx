@@ -13,7 +13,7 @@ export const AllIssues = () => {
     <main className="flex flex-col">
       <Header />
       <FiltersView />
-      <div className="grow overflow-y-auto h-[calc(100vh_-_52px)]">
+      <div className="grow overflow-y-auto h-[calc(100vh_-_55px)]">
         <ListView />
       </div>
     </main>

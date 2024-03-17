@@ -4,22 +4,27 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import type { WorkflowType } from 'common/types/team';
-
 import { useContextStore } from 'store/global-context-provider';
 
-import { IssuesCategory } from './issues-category';
+import { AssigneeView } from './views/assignee';
+import { CategoryView } from './views/category';
+import { PriorityView } from './views/priority';
+
+const VIEW_MAP = {
+  status: CategoryView,
+  assignee: AssigneeView,
+  priority: PriorityView,
+};
 
 export const ListView = observer(() => {
-  const {
-    workflowsStore: { workflows },
-  } = useContextStore();
+  const { applicationStore } = useContextStore();
+  const grouping = applicationStore.displaySettings.grouping;
+
+  const ViewComponent = VIEW_MAP[grouping as keyof typeof VIEW_MAP];
 
   return (
     <div>
-      {workflows.map((workflow: WorkflowType) => (
-        <IssuesCategory key={workflow.id} workflow={workflow} />
-      ))}
+      <ViewComponent />
     </div>
   );
 });

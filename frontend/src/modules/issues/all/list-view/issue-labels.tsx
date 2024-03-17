@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 
 import type { LabelType } from 'common/types/label';
 
-import { Badge } from 'components/ui/badge';
+import { Badge, BadgeColor } from 'components/ui/badge';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -14,8 +14,6 @@ interface IssueLabelsProps {
 
 export const IssueLabels = observer(({ labelIds }: IssueLabelsProps) => {
   const { labelsStore } = useContextStore();
-
-  console.log(labelsStore.labels.toJSON(), labelIds);
 
   const getLabels = () => {
     const labels = labelsStore.labels.filter((label: LabelType) =>
@@ -28,8 +26,12 @@ export const IssueLabels = observer(({ labelIds }: IssueLabelsProps) => {
           <Badge
             variant="outline"
             key={label.name}
-            className="text-muted-foreground"
+            className="text-muted-foreground flex items-center"
           >
+            <BadgeColor
+              style={{ backgroundColor: label.color }}
+              className="mr-2"
+            />
             {label.name}
           </Badge>
         ))}

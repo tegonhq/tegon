@@ -51,10 +51,10 @@ export const FiltersView = observer(() => {
   }
 
   return (
-    <div className="py-4 pl-8 px-4 text-xs flex gap-4">
+    <div className="py-4 pl-8 px-4 text-xs flex gap-4 border-b">
       {/* Status  */}
       {filters['status'] && filters['status'].length > 0 && (
-        <div className="flex">
+        <div className="flex border rounded-md">
           <div className="px-2 p-1 rounded-md rounded-r-none transparent hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700/50 dark:text-gray-50 dark:hover:text-gray-100">
             Status
           </div>

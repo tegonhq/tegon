@@ -1,9 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiEqualizerFill, RiNotification3Fill } from '@remixicon/react';
-
-import { Button } from 'components/ui/button';
-
+import { DisplayPopover } from './display-popover';
 import { FilterDropdown } from './filter-dropdown';
 
 export function Header() {
@@ -14,17 +11,7 @@ export function Header() {
         <FilterDropdown />
       </div>
       <div className="flex gap-4 items-center">
-        <Button size="xs" variant="outline" className="text-xs">
-          <RiEqualizerFill size={14} className="mr-2 text-muted-foreground" />
-          Display
-        </Button>
-        <Button size="xs" variant="outline" className="text-xs">
-          <RiNotification3Fill
-            size={14}
-            className="mr-2 text-muted-foreground"
-          />
-          Notification
-        </Button>
+        <DisplayPopover />
       </div>
     </header>
   );

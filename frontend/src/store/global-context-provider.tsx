@@ -53,6 +53,11 @@ export const storeContextStore = StoreContextModel.create({
   applicationStore: {
     filters: JSON.stringify({}),
     identifier: '',
+    displaySettings: {
+      grouping: 'status',
+      showSubIssues: true,
+      showEmptyGroups: false,
+    },
   },
 });
 

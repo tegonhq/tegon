@@ -3,6 +3,7 @@
 import * as React from 'react';
 
 import { cn } from 'common/lib/utils';
+import { Priorities } from 'common/types/issue';
 
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
@@ -23,8 +24,6 @@ interface IssuePriorityProps {
   onChange?: (priority: number) => void;
   variant?: IssuePriorityDropdownVariant;
 }
-
-const Priorities = ['No priority', 'Urgent', 'High', 'Medium', 'Low'];
 
 export function IssuePriorityDropdown({
   value,

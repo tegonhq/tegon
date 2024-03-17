@@ -20,8 +20,8 @@
     --accent-foreground: 229 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 97.4%;
-    --input: 214.3 31.8% 97.4%;
+    --border: 214.3 31.8% 95.4%;
+    --input: 214.3 31.8% 95.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
   }
@@ -57,6 +57,8 @@
     @apply bg-background text-foreground;
     @apply antialiased;
     overflow: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-color) transparent;
   }
 
   svg {
