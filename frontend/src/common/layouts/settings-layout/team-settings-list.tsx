@@ -16,12 +16,12 @@ import {
 } from 'components/ui/accordion';
 import { buttonVariants } from 'components/ui/button';
 
-import { useWorkspaceContextStore } from 'store/workspace-store-provider';
+import { useContextStore } from 'store/global-context-provider';
 
 import { TEAM_LINKS } from './settings-layout-constants';
 
 export const TeamSettingsList = observer(() => {
-  const { teamsStore } = useWorkspaceContextStore();
+  const { teamsStore } = useContextStore();
 
   const { query } = useRouter();
   const { workspaceSlug, settingsSection, teamIdentifier } = query;

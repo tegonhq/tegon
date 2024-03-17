@@ -75,7 +75,7 @@ export function AppLayout({ defaultCollapsed = false, children }: LayoutProps) {
                 {
                   title: 'My issues',
                   icon: RiFocusMode,
-                  href: '/my-issues',
+                  href: `/${workspaceSlug}/my-issues`,
                 },
                 {
                   title: 'Settings',

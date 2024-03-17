@@ -11,6 +11,7 @@ import { useCurrentWorkspace } from 'hooks/workspace';
 import { useBootstrapRecords } from 'services/sync/bootstrap-sync';
 import { useDeltaRecords } from 'services/sync/delta-sync';
 
+import { useContextStore } from 'store/global-context-provider';
 import { MODELS } from 'store/models';
 
 import { saveSocketData } from './socket-data-util';
@@ -23,12 +24,32 @@ export function BootstrapWrapper({ children }: Props) {
   const workspace = useCurrentWorkspace();
   const [loading, setLoading] = React.useState(true);
   const lastSequenceId = localStorage && localStorage.getItem('lastSequenceId');
+  const {
+    commentsStore,
+    issuesHistoryStore,
+    issuesStore,
+    workflowsStore,
+    workspaceStore,
+    teamsStore,
+    labelsStore,
+  } = useContextStore();
+
+  const MODEL_STORE_MAP = {
+    [MODELS.Label]: labelsStore,
+    [MODELS.Workspace]: workspaceStore,
+    [MODELS.UsersOnWorkspaces]: workspaceStore,
+    [MODELS.Team]: teamsStore,
+    [MODELS.Workflow]: workflowsStore,
+    [MODELS.Issue]: issuesStore,
+    [MODELS.IssueHistory]: issuesHistoryStore,
+    [MODELS.IssueComment]: commentsStore,
+  };
 
   const { refetch: bootstrapIssuesRecords } = useBootstrapRecords({
     modelNames: Object.values(MODELS),
     workspaceId: workspace.id,
     onSuccess: (data: BootstrapResponse) => {
-      saveSocketData(data.syncActions);
+      saveSocketData(data.syncActions, MODEL_STORE_MAP);
       localStorage.setItem('lastSequenceId', `${data.lastSequenceId}`);
     },
   });
@@ -38,7 +59,7 @@ export function BootstrapWrapper({ children }: Props) {
     workspaceId: workspace.id,
     lastSequenceId,
     onSuccess: (data: BootstrapResponse) => {
-      saveSocketData(data.syncActions);
+      saveSocketData(data.syncActions, MODEL_STORE_MAP);
       localStorage.setItem('lastSequenceId', `${data.lastSequenceId}`);
     },
   });
