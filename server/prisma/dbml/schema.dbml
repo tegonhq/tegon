@@ -177,7 +177,7 @@ Table Issue {
   subIssue Issue [not null]
   comments IssueComment [not null]
   history IssueHistory [not null]
-  linkedIssues LinkedIssues [not null]
+  linkedIssue LinkedIssues [not null]
 
   indexes {
     (teamId, number) [unique]

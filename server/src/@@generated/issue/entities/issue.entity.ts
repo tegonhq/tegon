@@ -34,5 +34,5 @@ parentId: string  | null;
 subIssue?: Issue[] ;
 comments?: IssueComment[] ;
 history?: IssueHistory[] ;
-linkedIssues?: LinkedIssues[] ;
+linkedIssue?: LinkedIssues[] ;
 }

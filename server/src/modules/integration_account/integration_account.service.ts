@@ -13,7 +13,7 @@ import { storeIntegrationRelatedData } from './integration_account.utils';
 
 @Injectable()
 export class IntegrationAccountService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async createIntegrationAccount(
     createIntegrationAccountBody: CreateIntegrationAccountBody,
@@ -27,7 +27,7 @@ export class IntegrationAccountService {
         workspace: { connect: { id: workspaceId } },
         integrationConfiguration: config,
         accountId: createIntegrationAccountBody.accountId,
-        integratedBy: { connect: { id: userId } }
+        integratedBy: { connect: { id: userId } },
       },
       include: {
         integrationDefinition: true,

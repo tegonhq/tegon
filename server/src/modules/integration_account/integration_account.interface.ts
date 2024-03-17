@@ -33,9 +33,14 @@ export type GithubSettings = {
   repositoryMappings?: GithubRepositoryMappings[];
 };
 
+export type GithubPersonalSettings = {
+  login: string;
+};
+
 // export type Settings = Record<string, any>;
 export type Settings = {
   [IntegrationName.Github]?: GithubSettings;
+  [IntegrationName.GithubPersonal]?: GithubPersonalSettings;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [IntegrationName.Slack]?: Record<string, any>;
 };

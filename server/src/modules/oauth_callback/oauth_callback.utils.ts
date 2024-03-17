@@ -11,6 +11,7 @@ import {
   ProviderTemplate,
   ProviderTemplateOAuth2,
 } from './oauth_callback.interface';
+import { getGithubUser } from 'modules/integrations/github/github.utils';
 
 /**
  * A helper function to interpolate a string.
@@ -71,8 +72,8 @@ export async function getTemplate(
       ? JSON.parse(integrationDefinition.spec)
       : integrationDefinition.spec;
 
-  const template: ProviderTemplate =
-    spec.auth_specification.OAuth2 as ProviderTemplate;
+  const template: ProviderTemplate = spec.auth_specification
+    .OAuth2 as ProviderTemplate;
 
   if (!template) {
     throw new BadRequestException({
@@ -98,12 +99,7 @@ export async function getAccountId(
     case IntegrationName.GithubPersonal:
       if (response.token.access_token) {
         const accessToken = response.token.access_token;
-        const userResponse = await fetch('https://api.github.com/user', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        const userData = await userResponse.json();
+        const userData = await getGithubUser(accessToken);
         return userData.id.toString();
       }
       return undefined;

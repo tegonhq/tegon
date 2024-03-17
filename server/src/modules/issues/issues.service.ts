@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Issue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
@@ -9,32 +9,29 @@ import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 
 import {
   CreateIssueInput,
+  IssueAction,
   IssueRequestParams,
   LinkIssueData,
   TeamRequestParams,
   UpdateIssueInput,
-  // UpdateLinkIssueData,
 } from './issues.interface';
-import { getIssueDiff, getIssueTitle, handleTwoWaySync } from './issues.utils';
+import {
+  getIssueDiff,
+  getIssueTitle,
+  getLastIssueNumber,
+  handleTwoWaySync,
+} from './issues.utils';
 
 const openaiClient = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
 });
 
 @Injectable()
-export default class IssuesService implements OnModuleInit {
+export default class IssuesService {
   constructor(
     private prisma: PrismaService,
     private issueHistoryService: IssuesHistoryService,
   ) {}
-
-  async onModuleInit() {
-    const issue = await this.prisma.issue.findUnique({
-      where: { id: '159f9434-df20-427d-b696-6ad2f9e9cea4' },
-      include: { team: true },
-    });
-    await handleTwoWaySync(this.prisma, issue);
-  }
 
   async createIssue(
     teamRequestParams: TeamRequestParams,
@@ -44,23 +41,11 @@ export default class IssuesService implements OnModuleInit {
     linkMetaData?: Record<string, string>,
   ): Promise<Issue> {
     const { parentId, ...otherIssueData } = issueData;
-    const lastNumber =
-      (
-        await this.prisma.issue.findFirst({
-          where: { teamId: teamRequestParams.teamId },
-          orderBy: { number: 'desc' },
-        })
-      )?.number ?? 0;
-
-    let issueTitle;
-    if (!issueData.title) {
-      issueTitle = await getIssueTitle(
-        openaiClient,
-        otherIssueData.description,
-      );
-    } else {
-      issueTitle = issueData.title;
-    }
+    const lastNumber = await getLastIssueNumber(
+      this.prisma,
+      teamRequestParams.teamId,
+    );
+    const issueTitle = await getIssueTitle(openaiClient, issueData);
 
     const issue = await this.prisma.issue.create({
       data: {
@@ -80,14 +65,8 @@ export default class IssuesService implements OnModuleInit {
       },
     });
 
-    await this.issueHistoryService.upsertIssueHistory(
-      userId,
-      issue.id,
-      await getIssueDiff(issue, null),
-      linkMetaData,
-    );
-
-    await handleTwoWaySync(this.prisma, issue);
+    await this.createIssueHistory(issue, userId, linkMetaData);
+    await handleTwoWaySync(this.prisma, issue, IssueAction.CREATED, userId);
 
     return issue;
   }
@@ -101,16 +80,7 @@ export default class IssuesService implements OnModuleInit {
     linkMetaData?: Record<string, string>,
   ): Promise<Issue> {
     const { parentId, ...otherIssueData } = issueData;
-
-    let issueTitle;
-    if (!issueData.title && issueData.description) {
-      issueTitle = await getIssueTitle(
-        openaiClient,
-        otherIssueData.description,
-      );
-    } else if (issueData.title) {
-      issueTitle = otherIssueData.title;
-    }
+    const issueTitle = await getIssueTitle(openaiClient, issueData);
 
     const [currentIssue, updatedIssue] = await this.prisma.$transaction([
       this.prisma.issue.findUnique({
@@ -135,14 +105,23 @@ export default class IssuesService implements OnModuleInit {
             },
           }),
         },
+        include: {
+          team: true,
+        },
       }),
     ]);
 
-    await this.issueHistoryService.upsertIssueHistory(
+    await this.updateIssueHistory(
+      updatedIssue,
+      currentIssue,
       userId,
-      updatedIssue.id,
-      await getIssueDiff(updatedIssue, currentIssue),
       linkMetaData,
+    );
+    await handleTwoWaySync(
+      this.prisma,
+      updatedIssue,
+      IssueAction.CREATED,
+      userId,
     );
 
     return updatedIssue;
@@ -162,7 +141,8 @@ export default class IssuesService implements OnModuleInit {
       },
     });
 
-    await this.issueHistoryService.deleteIssueHistory(deleteIssue.id);
+    await this.deleteIssueHistory(deleteIssue.id);
+
     return deleteIssue;
   }
 
@@ -176,5 +156,36 @@ export default class IssuesService implements OnModuleInit {
         teamId: teamRequestParams.teamId,
       },
     });
+  }
+
+  private async createIssueHistory(
+    issue: Issue,
+    userId?: string,
+    linkMetaData?: Record<string, string>,
+  ): Promise<void> {
+    await this.issueHistoryService.upsertIssueHistory(
+      userId,
+      issue.id,
+      await getIssueDiff(issue, null),
+      linkMetaData,
+    );
+  }
+
+  private async updateIssueHistory(
+    updatedIssue: Issue,
+    currentIssue: Issue | null,
+    userId?: string,
+    linkMetaData?: Record<string, string>,
+  ): Promise<void> {
+    await this.issueHistoryService.upsertIssueHistory(
+      userId,
+      updatedIssue.id,
+      await getIssueDiff(updatedIssue, currentIssue),
+      linkMetaData,
+    );
+  }
+
+  private async deleteIssueHistory(issueId: string): Promise<void> {
+    await this.issueHistoryService.deleteIssueHistory(issueId);
   }
 }

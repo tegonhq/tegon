@@ -210,9 +210,9 @@ model Issue {
   parentId      String?
   subIssue      Issue[]  @relation("Report")
 
-  comments     IssueComment[]
-  history      IssueHistory[]
-  linkedIssues LinkedIssues[]
+  comments    IssueComment[]
+  history     IssueHistory[]
+  linkedIssue LinkedIssues[]
 
   @@unique([teamId, number])
 }

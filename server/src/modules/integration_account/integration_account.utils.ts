@@ -3,7 +3,11 @@
 import { IntegrationAccount, IntegrationName } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
-import { getGithubSettings } from 'modules/integrations/github/github.utils';
+import {
+  getAccessToken,
+  getGithubSettings,
+  getGithubUser,
+} from 'modules/integrations/github/github.utils';
 
 import { Config } from './integration_account.interface';
 
@@ -23,6 +27,7 @@ export async function storeIntegrationRelatedData(
         integrationAccount.accountId,
         integrationConfig.access_token,
       );
+
       if (githubSettings) {
         await prisma.integrationAccount.update({
           where: { id: integrationAccount.id },
@@ -49,6 +54,19 @@ export async function storeIntegrationRelatedData(
           userId_workspaceId: { userId, workspaceId },
         },
         data: { externalAccountMappings: accountMapping },
+      });
+
+      const userData = await getGithubUser(
+        await getAccessToken(prisma, integrationAccount),
+      );
+
+      await prisma.integrationAccount.update({
+        where: { id: integrationAccount.id },
+        data: {
+          settings: {
+            [IntegrationName.GithubPersonal]: { login: userData.login },
+          },
+        },
       });
 
       break;

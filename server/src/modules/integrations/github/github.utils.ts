@@ -5,6 +5,7 @@ import {
   IntegrationName,
   Issue,
   LinkedIssues,
+  WorkflowCategory,
 } from '@prisma/client';
 import path from 'path';
 import axios from 'axios';
@@ -520,7 +521,7 @@ export async function getBotAccessToken(
     const token = jwt.sign(payload, privateKey, {
       algorithm: 'RS256',
     });
-    console.log(token);
+
     const url = `https://api.github.com/app/installations/${integrationAccount.accountId}/access_tokens`;
 
     const accessResponse = await postRequest(url, token, {});
@@ -536,7 +537,7 @@ export async function getBotAccessToken(
   return config.access_token;
 }
 
-async function getGithubUserId(
+async function getGithubUserIntegrationAccount(
   prisma: PrismaService,
   userId: string,
   workspaceId: string,
@@ -544,11 +545,18 @@ async function getGithubUserId(
   const usersOnWorkspaces = await prisma.usersOnWorkspaces.findUnique({
     where: { userId_workspaceId: { userId, workspaceId } },
   });
+
   const accountMapping = usersOnWorkspaces.externalAccountMappings as Record<
     string,
     string
   >;
-  return accountMapping[IntegrationName.Github] || null;
+
+  if (accountMapping) {
+    return await prisma.integrationAccount.findFirst({
+      where: { accountId: accountMapping[IntegrationName.Github] },
+    });
+  }
+  return null;
 }
 
 async function getGithubLabels(
@@ -568,35 +576,75 @@ async function getGithubLabels(
   return labels;
 }
 
-export async function createGithubIssue(
+export async function getGithubUser(token: string) {
+  return await getReponse('https://api.github.com/user', token);
+}
+
+export async function upsertGithubIssue(
   prisma: PrismaService,
   issue: IssueWithRelations,
   integrationAccount: IntegrationAccountWithRelations,
+  userId: string,
 ) {
-  const accessToken = await getBotAccessToken(prisma, integrationAccount);
   const IntegrationSettings = integrationAccount.settings as Settings;
 
-  // Find the default repository mapping
-  const defaultRepo = IntegrationSettings[
-    IntegrationName.Github
-  ].repositoryMappings.find((repo: GithubRepositoryMappings) => repo.default);
+  const stateCategory = (
+    await prisma.workflow.findUnique({
+      where: { id: issue.stateId },
+      select: { category: true },
+    })
+  ).category as WorkflowCategory;
 
-  if (defaultRepo) {
-    const url = `https://api.github.com/repos/${defaultRepo.githubRepoFullName}/issues`;
+  const assigneeGithubUser = await getGithubUserIntegrationAccount(
+    prisma,
+    issue.assigneeId,
+    issue.team.workspaceId,
+  );
 
-    const issueBody = {
-      title: issue.title,
-      body: issue.description,
-      labels: await getGithubLabels(prisma, issue.labelIds),
-      assignee: await getGithubUserId(
-        prisma,
-        issue.assigneeId,
-        issue.team.workspaceId,
-      ),
-    };
+  const issueBody = {
+    title: issue.title,
+    body: issue.description,
+    labels: await getGithubLabels(prisma, issue.labelIds),
+    assignees: [(assigneeGithubUser.settings as Settings).GithubPersonal.login],
+    state:
+      stateCategory === WorkflowCategory.COMPLETED
+        ? 'closed'
+        : stateCategory === WorkflowCategory.CANCELED
+          ? 'not_planned'
+          : 'open',
+  };
 
-    return await postRequest(url, accessToken, issueBody);
+  const linkedIssue = await prisma.linkedIssues.findFirst({
+    where: {
+      issueId: issue.id,
+      source: { path: ['type'], equals: IntegrationName.Github },
+    },
+  });
+
+  if (linkedIssue) {
+    const userGithubIntegrationAccount = await getGithubUserIntegrationAccount(
+      prisma,
+      userId,
+      issue.team.workspaceId,
+    );
+
+    const accessToken = userGithubIntegrationAccount
+      ? await getAccessToken(prisma, userGithubIntegrationAccount)
+      : await getBotAccessToken(prisma, integrationAccount);
+
+    return await postRequest(linkedIssue.url, accessToken, issueBody);
   } else {
-    return null;
+    const accessToken = await getBotAccessToken(prisma, integrationAccount);
+
+    const defaultRepo = IntegrationSettings[
+      IntegrationName.Github
+    ].repositoryMappings.find((repo: GithubRepositoryMappings) => repo.default);
+
+    if (defaultRepo) {
+      const url = `https://api.github.com/repos/${defaultRepo.githubRepoFullName}/issues`;
+      return await postRequest(url, accessToken, issueBody);
+    }
   }
+
+  return undefined;
 }
