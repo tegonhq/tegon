@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiAccountCircleLine } from '@remixicon/react';
+import { RiAccountCircleFill } from '@remixicon/react';
 import * as React from 'react';
 
 import { cn } from 'common/lib/utils';
@@ -57,22 +57,21 @@ export function IssueAssigneeDropdown({
           size="xs"
           aria-expanded={open}
           className={cn(
-            'flex items-center justify-between !bg-transparent hover:bg-transparent p-0 border-0 text-xs font-normal focus-visible:ring-1 focus-visible:border-primary text-muted-foreground',
-            value && 'text-foreground',
+            'flex items-center justify-between text-foreground !bg-transparent hover:bg-transparent shadow-none p-0 border-0 text-xs font-normal focus-visible:ring-1 focus-visible:border-primary',
           )}
         >
           {value ? (
             <>
-              <Avatar className="h-[20px] w-[25px]">
+              <Avatar className="h-[20px] w-[25px] flex items-center">
                 <AvatarImage />
-                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.7rem] rounded-sm">
                   {getInitials(getUserData(value).fullname)}
                 </AvatarFallback>
               </Avatar>
             </>
           ) : (
             <>
-              <RiAccountCircleLine
+              <RiAccountCircleFill
                 size={18}
                 className="mr-1 text-muted-foreground"
               />
@@ -90,8 +89,7 @@ export function IssueAssigneeDropdown({
           size="lg"
           aria-expanded={open}
           className={cn(
-            'flex items-center border dark:bg-transparent border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
-            value && 'text-foreground',
+            'flex items-center border text-foreground dark:bg-transparent border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
           )}
         >
           {value ? (
@@ -107,7 +105,7 @@ export function IssueAssigneeDropdown({
             </>
           ) : (
             <>
-              <RiAccountCircleLine size={14} className="mr-1" /> No Assignee
+              <RiAccountCircleFill size={14} className="mr-1" /> No Assignee
             </>
           )}
         </Button>
@@ -121,13 +119,12 @@ export function IssueAssigneeDropdown({
         size="xs"
         aria-expanded={open}
         className={cn(
-          'flex items-center justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary text-muted-foreground',
-          value && 'text-foreground',
+          'flex items-center justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary text-foreground',
         )}
       >
         {value ? (
           <>
-            <Avatar className="h-[20px] w-[30px]">
+            <Avatar className="h-[20px] w-[30px] flex items-center">
               <AvatarImage />
               <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm mr-2">
                 {getInitials(getUserData(value).fullname)}
@@ -138,7 +135,7 @@ export function IssueAssigneeDropdown({
           </>
         ) : (
           <>
-            <RiAccountCircleLine size={14} className="mr-1" /> No Assignee
+            <RiAccountCircleFill size={14} className="mr-1" /> No Assignee
           </>
         )}
       </Button>

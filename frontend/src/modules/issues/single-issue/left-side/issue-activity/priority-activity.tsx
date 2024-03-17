@@ -32,7 +32,7 @@ export function PriorityActivity({
       <div className="flex items-center text-xs text-muted-foreground">
         <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
           <PriorityIcon.icon
-            size={14}
+            size={18}
             className={cn(
               'text-muted-foreground',
               issueHistory.toPriority === 1 && 'text-orange-600',

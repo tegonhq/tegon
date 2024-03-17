@@ -40,7 +40,7 @@ export function CommentActivity({
     <div className="flex items-start text-xs text-muted-foreground">
       <Avatar className="h-[20px] w-[25px] mr-3 text-foreground">
         <AvatarImage />
-        <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-xs rounded-sm">
+        <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
           {getInitials(user.fullname)}
         </AvatarFallback>
       </Avatar>

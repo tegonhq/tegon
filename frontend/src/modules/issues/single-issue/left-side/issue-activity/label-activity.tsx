@@ -77,7 +77,7 @@ export function LabelActivity({
     >
       <div className="flex items-center text-xs text-muted-foreground">
         <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
-          <RiPriceTagFill size={14} className="text-muted-foreground" />
+          <RiPriceTagFill size={18} className="text-muted-foreground" />
         </div>
 
         <div className="flex items-center">

@@ -41,7 +41,7 @@ export function StatusActivity({
       <div className="flex items-center text-xs text-muted-foreground">
         <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
           <CategoryIcon
-            size={14}
+            size={18}
             className="text-muted-foreground"
             color={toWorfklow.color}
           />

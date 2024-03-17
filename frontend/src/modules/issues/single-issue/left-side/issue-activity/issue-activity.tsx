@@ -86,7 +86,7 @@ export const IssueActivity = observer(() => {
             <div className="flex items-center text-xs text-muted-foreground">
               <Avatar className="h-[20px] w-[25px] mr-4 text-foreground">
                 <AvatarImage />
-                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-xs rounded-sm">
+                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
                   {getInitials(issueCreatedUser.fullname)}
                 </AvatarFallback>
               </Avatar>

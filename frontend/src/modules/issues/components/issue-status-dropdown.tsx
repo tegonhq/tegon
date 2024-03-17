@@ -57,7 +57,7 @@ export function IssueStatusDropdown({
           className="flex items-center !bg-transparent hover:bg-transparent shadow-none p-0 border-0 justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
         >
           <CategoryIcon
-            size={16}
+            size={18}
             className="text-muted-foreground"
             color={workflow.color}
           />
@@ -72,7 +72,7 @@ export function IssueStatusDropdown({
           role="combobox"
           size="lg"
           aria-expanded={open}
-          className="flex items-center border border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 dark:bg-transparent shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
+          className="flex items-center border border-transparent hover:bg-gray-50 hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 dark:bg-transparent shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
         >
           <CategoryIcon
             size={18}
@@ -90,10 +90,10 @@ export function IssueStatusDropdown({
         role="combobox"
         size="xs"
         aria-expanded={open}
-        className="flex items-center justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
+        className="flex items-center justify-between shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
       >
         <CategoryIcon
-          size={16}
+          size={18}
           className="text-muted-foreground mr-2"
           color={workflow.color}
         />
