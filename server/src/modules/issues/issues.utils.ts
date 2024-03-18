@@ -140,7 +140,6 @@ export async function handleTwoWaySync(
 
         await prisma.linkedIssue.create({
           data: {
-            title: githubIssue.title,
             url: githubIssue.url,
             sourceId: githubIssue.id.toString(),
             source: { type: IntegrationName.Github },

@@ -110,7 +110,6 @@ async function getIssueData(
   );
 
   const linkIssueData = {
-    title: `#${eventBody.issue.number} ${eventBody.issue.title}`,
     url: eventBody.issue.url,
     sourceId: eventBody.issue.id.toString(),
     source: { type: IntegrationName.Github },

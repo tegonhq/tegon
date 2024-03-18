@@ -63,7 +63,6 @@ CREATE TABLE "LinkedIssue" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deleted" TIMESTAMP(3),
-    "title" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "sourceId" TEXT NOT NULL,
     "source" JSONB,

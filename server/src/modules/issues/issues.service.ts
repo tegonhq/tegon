@@ -56,9 +56,9 @@ export default class IssuesService {
         ...(userId && { createdBy: { connect: { id: userId } } }),
         ...(parentId && { parent: { connect: { id: parentId } } }),
         ...(linkIssuedata && {
-          linkedIssues: { create: { ...linkIssuedata } },
+          linkedIssue: { create: linkIssuedata },
         }),
-        ...(linkMetaData && { sourceMetadata: { ...linkMetaData } }),
+        ...(linkMetaData && { sourceMetadata: linkMetaData }),
       },
       include: {
         team: true,
@@ -98,11 +98,11 @@ export default class IssuesService {
           ...(issueTitle && { title: issueTitle }),
           ...(parentId && { parent: { connect: { id: parentId } } }),
           ...(linkIssuedata && {
-            linkedIssues: {
+            linkedIssue: {
               upsert: {
                 where: { url: linkIssuedata.url },
-                update: { ...linkIssuedata },
-                create: { ...linkIssuedata },
+                update: linkIssuedata,
+                create: linkIssuedata,
               },
             },
           }),

@@ -225,7 +225,6 @@ model LinkedIssue {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  title      String
   url        String
   sourceId   String
   source     Json?

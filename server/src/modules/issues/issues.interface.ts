@@ -124,9 +124,6 @@ export class UpdateIssueInput {
 
 export class LinkIssueData {
   @IsString()
-  title: string;
-
-  @IsString()
   url: string;
 
   @IsString()

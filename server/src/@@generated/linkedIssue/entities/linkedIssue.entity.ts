@@ -8,7 +8,6 @@ export class LinkedIssue {
 createdAt: Date ;
 updatedAt: Date ;
 deleted: Date  | null;
-title: string ;
 url: string ;
 sourceId: string ;
 source: Prisma.JsonValue  | null;

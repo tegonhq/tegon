@@ -191,7 +191,6 @@ Table LinkedIssue {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deleted DateTime
-  title String [not null]
   url String [unique, not null]
   sourceId String [not null]
   source Json
