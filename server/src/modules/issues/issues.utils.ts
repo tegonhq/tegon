@@ -1,8 +1,13 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { IntegrationName, Issue, Prisma } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
 
+import {
+  sendGithubFirstComment,
+  upsertGithubIssue,
+} from 'modules/integrations/github/github.utils';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 
 import {
@@ -12,11 +17,6 @@ import {
   UpdateIssueInput,
   titlePrompt,
 } from './issues.interface';
-import { PrismaService } from 'nestjs-prisma';
-import {
-  sendGithubFirstComment,
-  upsertGithubIssue,
-} from 'modules/integrations/github/github.utils';
 
 export async function getIssueDiff(
   newIssueData: Issue,
@@ -114,7 +114,7 @@ export async function handleTwoWaySync(
   const integrationAccount = await prisma.integrationAccount.findFirst({
     where: {
       settings: {
-        path: ['Github', 'repositoryMappings'],
+        path: [IntegrationName.Github, 'repositoryMappings'],
         array_contains: [{ teamId: issue.teamId, bidirectional: true }],
       } as Prisma.JsonFilter,
     },
@@ -138,7 +138,7 @@ export async function handleTwoWaySync(
           userId,
         );
 
-        await prisma.linkedIssues.create({
+        await prisma.linkedIssue.create({
           data: {
             title: githubIssue.title,
             url: githubIssue.url,

@@ -24,6 +24,7 @@ import {
   IntegrationAccountRequestIdBody,
   IntegrationAccountsRequestBody,
   UpdateIntegrationAccountBody,
+  UpdateIntegrationAccountSettingsBody,
 } from './integration_account.interface';
 import { IntegrationAccountService } from './integration_account.service';
 
@@ -101,6 +102,23 @@ export class IntegrationAccountController {
     return await this.integrationAccountService.updateIntegrationAccount(
       integrationAccountIdRequestIdBody.integrationAccountId,
       updateIntegrationAccountBody,
+    );
+  }
+
+  /**
+   * Update a integration account in workspace
+   */
+  @Post(':integrationAccountId/settings')
+  @UseGuards(new AuthGuard())
+  async updateIntegrationAccountSettings(
+    @Param()
+    integrationAccountIdRequestIdBody: IntegrationAccountRequestIdBody,
+    @Body()
+    updateIntegrationAccountSettingsBody: UpdateIntegrationAccountSettingsBody,
+  ): Promise<IntegrationAccount> {
+    return await this.integrationAccountService.updateIntegrationAccountSettings(
+      integrationAccountIdRequestIdBody.integrationAccountId,
+      updateIntegrationAccountSettingsBody,
     );
   }
 

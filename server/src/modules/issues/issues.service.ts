@@ -50,9 +50,9 @@ export default class IssuesService {
     const issue = await this.prisma.issue.create({
       data: {
         title: issueTitle,
-        ...otherIssueData,
-        team: { connect: { id: teamRequestParams.teamId } },
         number: lastNumber + 1,
+        team: { connect: { id: teamRequestParams.teamId } },
+        ...otherIssueData,
         ...(userId && { createdBy: { connect: { id: userId } } }),
         ...(parentId && { parent: { connect: { id: parentId } } }),
         ...(linkIssuedata && {
@@ -66,7 +66,9 @@ export default class IssuesService {
     });
 
     await this.createIssueHistory(issue, userId, linkMetaData);
-    await handleTwoWaySync(this.prisma, issue, IssueAction.CREATED, userId);
+    if (issueData.isBidirectional) {
+      await handleTwoWaySync(this.prisma, issue, IssueAction.CREATED, userId);
+    }
 
     return issue;
   }
@@ -117,12 +119,14 @@ export default class IssuesService {
       userId,
       linkMetaData,
     );
-    await handleTwoWaySync(
-      this.prisma,
-      updatedIssue,
-      IssueAction.CREATED,
-      userId,
-    );
+    if (updatedIssue.isBidirectional) {
+      await handleTwoWaySync(
+        this.prisma,
+        updatedIssue,
+        IssueAction.CREATED,
+        userId,
+      );
+    }
 
     return updatedIssue;
   }

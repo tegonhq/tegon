@@ -53,12 +53,13 @@ model Workspace {
   slug String  @unique
   icon String?
 
-  usersOnWorkspaces  UsersOnWorkspaces[]
-  team               Team[]
-  label              Label[]
-  template           Template[]
-  syncAction         SyncAction[]
-  integrationAccount IntegrationAccount[]
+  usersOnWorkspaces     UsersOnWorkspaces[]
+  team                  Team[]
+  label                 Label[]
+  template              Template[]
+  syncAction            SyncAction[]
+  integrationAccount    IntegrationAccount[]
+  integrationDefinition IntegrationDefinition[]
 }
 
 model UsersOnWorkspaces {
@@ -197,6 +198,7 @@ model Issue {
   subIssueSortOrder Int?
   estimate          Int?
   sourceMetadata    Json?
+  isBidirectional   Boolean?
 
   team          Team     @relation(fields: [teamId], references: [id])
   teamId        String
@@ -212,12 +214,12 @@ model Issue {
 
   comments    IssueComment[]
   history     IssueHistory[]
-  linkedIssue LinkedIssues[]
+  linkedIssue LinkedIssue[]
 
   @@unique([teamId, number])
 }
 
-model LinkedIssues {
+model LinkedIssue {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -334,6 +336,8 @@ model IntegrationDefinition {
   clientId     String
   clientSecret String
   scopes       String
+  workspace    Workspace       @relation(references: [id], fields: [workspaceId])
+  workspaceId  String
 
   IntegrationAccount IntegrationAccount[]
 }
@@ -355,6 +359,8 @@ model IntegrationAccount {
   integrationDefinitionId String
   workspace               Workspace             @relation(references: [id], fields: [workspaceId])
   workspaceId             String
+
+  @@unique([accountId, integrationDefinitionId, workspaceId])
 }
 
 enum Preference {
@@ -383,6 +389,9 @@ enum ModelName {
   IssueComment
   IssueHistory
   UsersOnWorkspaces
+  IntegrationDefinition
+  IntegrationAccount
+  LinkedIssue
 }
 
 enum ActionType {

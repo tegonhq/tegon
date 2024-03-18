@@ -29,7 +29,7 @@ export interface Specification {
   auth_specification: Record<string, AuthSpecification>;
   other_inputs?: GenericInputSpecification;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  other_data?: Record<string, any>
+  other_data?: Record<string, any>;
 }
 
 export class IntegrationDefinitionRequestIdBody {

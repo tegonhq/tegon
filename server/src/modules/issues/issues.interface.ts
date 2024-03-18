@@ -4,6 +4,7 @@ import { Issue } from '@@generated/issue/entities';
 import { Team, User } from '@prisma/client';
 import {
   IsArray,
+  IsBoolean,
   IsDate,
   IsJSON,
   IsNumber,
@@ -66,6 +67,9 @@ export class CreateIssueInput {
 
   @IsArray()
   subscriberIds: string[];
+
+  @IsBoolean()
+  isBidirectional: boolean;
 }
 
 export class UpdateIssueInput {

@@ -24,7 +24,7 @@ export default class WebhookService {
         await this.githubService.handleEvents(eventHeaders, eventBody);
         break;
       default:
-        console.log(`Invalid event source ${webhookEventParams.eventSource}`);
+        console.warn(`Invalid event source ${webhookEventParams.eventSource}`);
     }
   }
 }

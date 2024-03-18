@@ -15,6 +15,7 @@ sortOrder?: number;
 subIssueSortOrder?: number;
 estimate?: number;
 sourceMetadata?: Prisma.InputJsonValue;
+isBidirectional?: boolean;
 subscriberIds: string[];
 assigneeId?: string;
 labelIds: string[];

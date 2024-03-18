@@ -9,8 +9,8 @@ import {
   WebhookEventHeaders,
 } from 'modules/webhooks/webhooks.interface';
 
-import { handleIssueComments, handleIssues } from './github.utils';
 import { eventsToListen } from './github.interface';
+import { handleIssueComments, handleIssues } from './github.utils';
 
 @Injectable()
 export default class GithubService {
@@ -24,8 +24,6 @@ export default class GithubService {
     eventBody: WebhookEventBody,
   ) {
     const eventType = eventHeaders['x-github-event'];
-    console.log(eventType);
-    console.log(eventBody);
     if (
       eventsToListen.has(eventType) &&
       eventBody.sender.login !== 'tegon-bot[bot]'
@@ -51,8 +49,11 @@ export default class GithubService {
           handleIssueComments(this.prisma, eventBody, integrationAccount);
           break;
 
+        case 'installation_repositories':
+          break;
+
         default:
-          console.log(`couldn't find eventType ${eventType}`);
+          console.warn(`couldn't find eventType ${eventType}`);
       }
     }
   }

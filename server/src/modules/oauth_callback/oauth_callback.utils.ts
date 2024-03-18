@@ -3,6 +3,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { IntegrationDefinition, IntegrationName } from '@prisma/client';
 
+import { getGithubUser } from 'modules/integrations/github/github.utils';
 import {
   CallbackParams,
   OAuthAuthorizationMethod,
@@ -11,7 +12,6 @@ import {
   ProviderTemplate,
   ProviderTemplateOAuth2,
 } from './oauth_callback.interface';
-import { getGithubUser } from 'modules/integrations/github/github.utils';
 
 /**
  * A helper function to interpolate a string.

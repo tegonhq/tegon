@@ -1,17 +1,17 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import fs from 'fs/promises';
+import path from 'path';
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
+import { PrismaService } from 'nestjs-prisma';
 import {
   IntegrationAccount,
   IntegrationName,
   Issue,
-  LinkedIssues,
+  LinkedIssue,
   WorkflowCategory,
 } from '@prisma/client';
-import path from 'path';
-import axios from 'axios';
-import fs from 'fs/promises';
-import jwt from 'jsonwebtoken';
-import { PrismaService } from 'nestjs-prisma';
 
 import {
   GithubRepositoryMappings,
@@ -19,6 +19,7 @@ import {
   IntegrationAccountWithRelations,
   Settings,
 } from 'modules/integration_account/integration_account.interface';
+import { Specification } from 'modules/integration_definition/integration_definition.interface';
 import {
   CreateIssueInput,
   IssueRequestParams,
@@ -31,7 +32,6 @@ import IssuesService from 'modules/issues/issues.service';
 import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import { PostRequestBody, labelDataType } from './github.interface';
-import { Specification } from 'modules/integration_definition/integration_definition.interface';
 import {
   IssueCommentAction,
   IssueCommentWithRelations,
@@ -74,8 +74,8 @@ function getTeamId(repoId: string, accountSettings: Settings) {
 async function getLinkedIssue(
   prisma: PrismaService,
   sourceIssueId: string,
-): Promise<LinkedIssues> {
-  const linkedIssue = await prisma.linkedIssues.findFirst({
+): Promise<LinkedIssue> {
+  const linkedIssue = await prisma.linkedIssue.findFirst({
     where: { sourceId: sourceIssueId.toString() },
     include: { issue: true },
   });
@@ -90,7 +90,7 @@ async function getUserId(
     where: { accountId: userData.id.toString() },
   });
 
-  return integrationAccount.integratedById || null;
+  return integrationAccount?.integratedById || null;
 }
 
 async function getIssueData(
@@ -120,7 +120,7 @@ async function getIssueData(
   const issueInput = {
     title: eventBody.issue.title,
     description: eventBody.issue.body,
-    stateId: stateId,
+    stateId,
     ...(issueLabelIds && { labelIds: issueLabelIds }),
   } as CreateIssueInput;
 
@@ -133,7 +133,7 @@ async function getIssueData(
   return { linkIssueData, issueInput, sourceMetadata, userId };
 }
 
-async function getOrCreateLabelIds(
+export async function getOrCreateLabelIds(
   prisma: PrismaService,
   labels: labelDataType[],
   teamId: string,
@@ -141,9 +141,11 @@ async function getOrCreateLabelIds(
 ): Promise<string[]> {
   return await Promise.all(
     labels.map(async (labelData: labelDataType) => {
-      // Try to find an existing label with the same name and color
+      // Try to find an existing label with the same name (case-insensitive) and color
       let label = await prisma.label.findFirst({
-        where: { name: labelData.name, color: `#${labelData.color}` },
+        where: {
+          name: { equals: labelData.name, mode: 'insensitive' },
+        },
       });
 
       // If no matching label was found, create a new one
@@ -186,7 +188,7 @@ export async function sendGithubFirstComment(
       sourceMetadata: issue.sourceMetadata,
     },
   });
-  const linkedIssue = await prisma.linkedIssues.update({
+  const linkedIssue = await prisma.linkedIssue.update({
     where: { id: (await getLinkedIssue(prisma, issueSourceId)).id },
     data: {
       source: {
@@ -325,10 +327,15 @@ export async function handleIssueComments(
   eventBody: WebhookEventBody,
   integrationAccount: IntegrationAccountWithRelations,
 ) {
-  const { issueId, source: linkedIssueSource } = await getLinkedIssue(
-    prisma,
-    eventBody.issue.id,
-  );
+  const linkedIssue = await getLinkedIssue(prisma, eventBody.issue.id);
+  if (!linkedIssue) {
+    console.warn(
+      `No linked issue found for GitHub issue ID: ${eventBody.issue.id}`,
+    );
+    return undefined;
+  }
+
+  const { issueId, source: linkedIssueSource } = linkedIssue;
   const parentId = (linkedIssueSource as Record<string, string>)
     .syncedCommentId;
 
@@ -414,10 +421,12 @@ export async function handleIssueComments(
           },
         });
       }
+      return undefined;
     }
-  }
 
-  return { eventBody, integrationAccount };
+    default:
+      return undefined;
+  }
 }
 
 async function getReponse(url: string, token: string) {
@@ -447,6 +456,22 @@ async function postRequest(url: string, token: string, body: PostRequestBody) {
   }
 }
 
+export async function deleteRequest(url: string, token: string) {
+  try {
+    const response = await axios.delete(url, {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${token}`,
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error making DELETE request to ${url}: ${error.message}`);
+    throw error;
+  }
+}
+
 export async function getGithubSettings(installationId: string, token: string) {
   const orgUrl = `https://api.github.com/user/orgs`;
   const orgs = await getReponse(orgUrl, token);
@@ -463,14 +488,14 @@ export async function getGithubSettings(installationId: string, token: string) {
     } as GithubSettings;
   }
 
-  return {};
+  return {} as GithubSettings;
 }
 
 export async function getAccessToken(
   prisma: PrismaService,
   integrationAccount: IntegrationAccount,
 ) {
-  let config = integrationAccount.integrationConfiguration as Record<
+  const config = integrationAccount.integrationConfiguration as Record<
     string,
     string
   >;
@@ -505,7 +530,7 @@ export async function getAccessToken(
 }
 
 export async function sendGithubComment(
-  linkedIssue: LinkedIssues,
+  linkedIssue: LinkedIssue,
   accessToken: string,
   body: string,
 ) {
@@ -530,10 +555,11 @@ export async function getBotAccessToken(
   ) {
     const spec = integrationAccount.integrationDefinition
       .spec as unknown as Specification;
+
     const appId = spec.other_data.app_id;
     const privateKeyPath = path.join(
       __dirname,
-      '../../../../certs/' + appId + '.pem',
+      `../../../../certs/${appId}.pem`,
     );
     const privateKey = await fs.readFile(privateKeyPath, 'utf8');
 
@@ -642,7 +668,7 @@ export async function upsertGithubIssue(
           : 'open',
   };
 
-  const linkedIssue = await prisma.linkedIssues.findFirst({
+  const linkedIssue = await prisma.linkedIssue.findFirst({
     where: {
       issueId: issue.id,
       source: { path: ['type'], equals: IntegrationName.Github },
@@ -661,17 +687,16 @@ export async function upsertGithubIssue(
       : await getBotAccessToken(prisma, integrationAccount);
 
     return await postRequest(linkedIssue.url, accessToken, issueBody);
-  } else {
-    const accessToken = await getBotAccessToken(prisma, integrationAccount);
+  }
+  const accessToken = await getBotAccessToken(prisma, integrationAccount);
 
-    const defaultRepo = IntegrationSettings[
-      IntegrationName.Github
-    ].repositoryMappings.find((repo: GithubRepositoryMappings) => repo.default);
+  const defaultRepo = IntegrationSettings[
+    IntegrationName.Github
+  ].repositoryMappings.find((repo: GithubRepositoryMappings) => repo.default);
 
-    if (defaultRepo) {
-      const url = `https://api.github.com/repos/${defaultRepo.githubRepoFullName}/issues`;
-      return await postRequest(url, accessToken, issueBody);
-    }
+  if (defaultRepo) {
+    const url = `https://api.github.com/repos/${defaultRepo.githubRepoFullName}/issues`;
+    return await postRequest(url, accessToken, issueBody);
   }
 
   return undefined;
@@ -696,7 +721,7 @@ export async function upsertGithubIssueComment(
 
   switch (action) {
     case IssueCommentAction.CREATED:
-      const linkedIssue = await prisma.linkedIssues.findFirst({
+      const linkedIssue = await prisma.linkedIssue.findFirst({
         where: { issueId: issueComment.issueId },
       });
 
@@ -705,18 +730,23 @@ export async function upsertGithubIssueComment(
         const githubIssueComment = await postRequest(url, accessToken, {
           body: issueComment.body,
         });
-        prisma.linkedComment.create({
+        const sourceMetadata = {
+          id: githubIssueComment.id,
+          body: githubIssueComment.body,
+          displayUserName: githubIssueComment.user.login,
+        };
+        await prisma.linkedComment.create({
           data: {
-            sourceId: githubIssueComment.id,
+            sourceId: githubIssueComment.id.toString(),
             url: githubIssueComment.url,
             source: { type: IntegrationName.Github },
-            sourceData: {
-              id: githubIssueComment.id,
-              body: githubIssueComment.body,
-              displayUserName: githubIssueComment.user.login,
-            },
+            sourceData: sourceMetadata,
             commentId: issueComment.id,
           },
+        });
+        await prisma.issueComment.update({
+          where: { id: issueComment.id },
+          data: { sourceMetadata },
         });
         return githubIssueComment;
       }
@@ -737,8 +767,24 @@ export async function upsertGithubIssueComment(
       return undefined;
 
     case IssueCommentAction.DELETED:
+      // const deletedLinkedComment = await prisma.linkedComment.findFirst({
+      //   where: {
+      //     commentId: issueComment.id,
+      //     source: { path: ['type'], equals: IntegrationName.Github },
+      //   },
+      // });
+      // if (deletedLinkedComment) {
+      //   const deleteResponse = await deleteRequest(
+      //     deletedLinkedComment.url,
+      //     accessToken,
+      //   );
+
+      //   await prisma.linkedComment.update({
+      //     where: { id: deletedLinkedComment.id },
+      //     data: { deleted: new Date().toISOString() },
+      //   });
+      //   return deleteResponse;
+      // }
       return undefined;
   }
-
-  return { prisma, issueComment, integrationAccount, userId };
 }

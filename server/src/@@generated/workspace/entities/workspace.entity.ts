@@ -5,6 +5,7 @@ import {Label} from '../../label/entities/label.entity'
 import {Template} from '../../template/entities/template.entity'
 import {SyncAction} from '../../syncAction/entities/syncAction.entity'
 import {IntegrationAccount} from '../../integrationAccount/entities/integrationAccount.entity'
+import {IntegrationDefinition} from '../../integrationDefinition/entities/integrationDefinition.entity'
 
 
 export class Workspace {
@@ -21,4 +22,5 @@ label?: Label[] ;
 template?: Template[] ;
 syncAction?: SyncAction[] ;
 integrationAccount?: IntegrationAccount[] ;
+integrationDefinition?: IntegrationDefinition[] ;
 }

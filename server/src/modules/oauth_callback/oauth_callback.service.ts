@@ -31,7 +31,7 @@ export class OAuthCallbackService {
   constructor(
     private prisma: PrismaService,
     private integrationAccountService: IntegrationAccountService,
-  ) { }
+  ) {}
 
   async getIntegrationDefinition(integrationDefinitionId: string) {
     let integrationDefinition: IntegrationDefinition;
@@ -124,7 +124,7 @@ export class OAuthCallbackService {
         redirectURL: authorizationUri,
       };
     } catch (e) {
-      console.log(e);
+      console.warn(e);
       throw new BadRequestException({
         error: e.message,
       });

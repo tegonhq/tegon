@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { IntegrationAccount, IntegrationName } from '@prisma/client';
+import { IntegrationName, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -9,11 +9,14 @@ import {
   getGithubUser,
 } from 'modules/integrations/github/github.utils';
 
-import { Config } from './integration_account.interface';
+import {
+  Config,
+  IntegrationAccountWithRelations,
+} from './integration_account.interface';
 
 export async function storeIntegrationRelatedData(
   prisma: PrismaService,
-  integrationAccount: IntegrationAccount,
+  integrationAccount: IntegrationAccountWithRelations,
   integrationName: IntegrationName,
   userId: string,
   workspaceId: string,
@@ -30,7 +33,9 @@ export async function storeIntegrationRelatedData(
       if (githubSettings) {
         await prisma.integrationAccount.update({
           where: { id: integrationAccount.id },
-          data: { settings: { [IntegrationName.Github]: githubSettings } },
+          data: {
+            settings: { [IntegrationName.Github]: githubSettings },
+          } as unknown as Prisma.JsonObject,
         });
       }
 
@@ -43,7 +48,7 @@ export async function storeIntegrationRelatedData(
         },
       });
 
-      let accountMapping =
+      const accountMapping =
         (usersonworkspaces.externalAccountMappings as Record<string, string>) ||
         {};
       accountMapping[IntegrationName.Github] = integrationAccount.accountId;

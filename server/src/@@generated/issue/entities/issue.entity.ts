@@ -4,7 +4,7 @@ import {Team} from '../../team/entities/team.entity'
 import {User} from '../../user/entities/user.entity'
 import {IssueComment} from '../../issueComment/entities/issueComment.entity'
 import {IssueHistory} from '../../issueHistory/entities/issueHistory.entity'
-import {LinkedIssues} from '../../linkedIssues/entities/linkedIssues.entity'
+import {LinkedIssue} from '../../linkedIssue/entities/linkedIssue.entity'
 
 
 export class Issue {
@@ -21,6 +21,7 @@ sortOrder: number  | null;
 subIssueSortOrder: number  | null;
 estimate: number  | null;
 sourceMetadata: Prisma.JsonValue  | null;
+isBidirectional: boolean  | null;
 team?: Team ;
 teamId: string ;
 createdBy?: User  | null;
@@ -34,5 +35,5 @@ parentId: string  | null;
 subIssue?: Issue[] ;
 comments?: IssueComment[] ;
 history?: IssueHistory[] ;
-linkedIssue?: LinkedIssues[] ;
+linkedIssue?: LinkedIssue[] ;
 }

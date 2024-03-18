@@ -32,6 +32,7 @@ Table Workspace {
   template Template [not null]
   syncAction SyncAction [not null]
   integrationAccount IntegrationAccount [not null]
+  integrationDefinition IntegrationDefinition [not null]
 }
 
 Table UsersOnWorkspaces {
@@ -164,6 +165,7 @@ Table Issue {
   subIssueSortOrder Int
   estimate Int
   sourceMetadata Json
+  isBidirectional Boolean
   team Team [not null]
   teamId String [not null]
   createdBy User
@@ -177,14 +179,14 @@ Table Issue {
   subIssue Issue [not null]
   comments IssueComment [not null]
   history IssueHistory [not null]
-  linkedIssue LinkedIssues [not null]
+  linkedIssue LinkedIssue [not null]
 
   indexes {
     (teamId, number) [unique]
   }
 }
 
-Table LinkedIssues {
+Table LinkedIssue {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
@@ -285,6 +287,8 @@ Table IntegrationDefinition {
   clientId String [not null]
   clientSecret String [not null]
   scopes String [not null]
+  workspace Workspace [not null]
+  workspaceId String [not null]
   IntegrationAccount IntegrationAccount [not null]
 }
 
@@ -302,6 +306,10 @@ Table IntegrationAccount {
   integrationDefinitionId String [not null]
   workspace Workspace [not null]
   workspaceId String [not null]
+
+  indexes {
+    (accountId, integrationDefinitionId, workspaceId) [unique]
+  }
 }
 
 Enum Preference {
@@ -330,6 +338,9 @@ Enum ModelName {
   IssueComment
   IssueHistory
   UsersOnWorkspaces
+  IntegrationDefinition
+  IntegrationAccount
+  LinkedIssue
 }
 
 Enum ActionType {
@@ -389,7 +400,7 @@ Ref: Issue.createdById > User.id
 
 Ref: Issue.parentId - Issue.id
 
-Ref: LinkedIssues.issueId > Issue.id
+Ref: LinkedIssue.issueId > Issue.id
 
 Ref: IssueComment.issueId > Issue.id
 
@@ -402,6 +413,8 @@ Ref: Reaction.commentId > IssueComment.id
 Ref: Reaction.emojiId > Emoji.id
 
 Ref: IssueHistory.issueId > Issue.id
+
+Ref: IntegrationDefinition.workspaceId > Workspace.id
 
 Ref: IntegrationAccount.integratedById > User.id
 

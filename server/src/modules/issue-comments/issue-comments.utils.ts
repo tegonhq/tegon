@@ -1,10 +1,14 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+
+import { upsertGithubIssueComment } from 'modules/integrations/github/github.utils';
+
 import {
   IssueCommentAction,
   IssueCommentWithRelations,
 } from './issue-comments.interface';
-import { Prisma } from '@prisma/client';
-import { upsertGithubIssueComment } from 'modules/integrations/github/github.utils';
 
 export async function handleTwoWaySync(
   prisma: PrismaService,

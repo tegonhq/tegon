@@ -27,68 +27,88 @@ export async function getWorkspaceId(
   modelName: ModelName,
   modelId: string,
 ): Promise<string> {
-  switch (modelName.toLocaleLowerCase()) {
-    case 'workspace':
+  switch (modelName) {
+    case ModelName.Workspace:
       return modelId;
 
-    case 'usersonworkspaces':
+    case ModelName.UsersOnWorkspaces:
       const usersOnWorkspace = await prisma.usersOnWorkspaces.findUnique({
         where: { id: modelId },
       });
       return usersOnWorkspace.workspaceId;
 
-    case 'team':
+    case ModelName.Team:
       const team = await prisma.team.findUnique({
         where: { id: modelId },
       });
       return team.workspaceId;
 
-    case 'teampreference':
+    case ModelName.TeamPreference:
       const teamPreference = await prisma.teamPreference.findUnique({
         where: { id: modelId },
         include: { team: true },
       });
       return teamPreference.team.workspaceId;
 
-    case 'issue':
+    case ModelName.Issue:
       const issue = await prisma.issue.findUnique({
         where: { id: modelId },
         include: { team: true },
       });
       return issue.team.workspaceId;
 
-    case 'label':
+    case ModelName.Label:
       const label = await prisma.label.findUnique({
         where: { id: modelId },
       });
       return label.workspaceId;
 
-    case 'workflow':
+    case ModelName.Workflow:
       const workflow = await prisma.workflow.findUnique({
         where: { id: modelId },
         include: { team: true },
       });
       return workflow.team.workspaceId;
 
-    case 'template':
+    case ModelName.Template:
       const template = await prisma.template.findUnique({
         where: { id: modelId },
       });
       return template.workspaceId;
 
-    case 'issuecomment':
+    case ModelName.IssueComment:
       const issuecomment = await prisma.issueComment.findUnique({
         where: { id: modelId },
         include: { issue: { include: { team: true } } },
       });
       return issuecomment.issue.team.workspaceId;
 
-    case 'issuehistory':
+    case ModelName.IssueHistory:
       const issueHistory = await prisma.issueHistory.findUnique({
         where: { id: modelId },
         include: { issue: { include: { team: true } } },
       });
       return issueHistory.issue.team.workspaceId;
+
+    case ModelName.IntegrationDefinition:
+      const integrationDefinition =
+        await prisma.integrationDefinition.findUnique({
+          where: { id: modelId },
+        });
+      return integrationDefinition.workspaceId;
+
+    case ModelName.IntegrationAccount:
+      const integrationAccount = await prisma.integrationAccount.findUnique({
+        where: { id: modelId },
+      });
+      return integrationAccount.workspaceId;
+
+    case ModelName.LinkedIssue:
+      const linkedIssue = await prisma.linkedIssue.findUnique({
+        where: { id: modelId },
+        include: { issue: { include: { team: true } } },
+      });
+      return linkedIssue.issue.team.workspaceId;
 
     default:
       return undefined;
@@ -100,41 +120,58 @@ export async function getModelData(
   modelName: ModelName,
   modelId: string,
 ) {
-  switch (modelName.toLocaleLowerCase()) {
-    case 'workspace':
-      return await prisma.workspace.findUnique({ where: { id: modelId } });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const modelMap: Record<ModelName, any> = {
+    Workspace: prisma.workspace,
+    UsersOnWorkspaces: prisma.usersOnWorkspaces,
+    Team: prisma.team,
+    TeamPreference: prisma.teamPreference,
+    Issue: prisma.issue,
+    Label: prisma.label,
+    Workflow: prisma.workflow,
+    Template: prisma.template,
+    IssueComment: prisma.issueComment,
+    IssueHistory: prisma.issueHistory,
+    IntegrationDefinition: {
+      findUnique: (args: { where: { id: string } }) =>
+        prisma.integrationDefinition.findUnique({
+          ...args,
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+            workspaceId: true,
+            createdAt: true,
+            updatedAt: true,
+            deleted: true,
+          },
+        }),
+    },
+    IntegrationAccount: {
+      findUnique: (args: { where: { id: string } }) =>
+        prisma.integrationAccount.findUnique({
+          ...args,
+          select: {
+            id: true,
+            accountId: true,
+            settings: true,
+            integratedById: true,
+            createdAt: true,
+            updatedAt: true,
+            deleted: true,
+          },
+        }),
+    },
+    LinkedIssue: prisma.linkedIssue,
+  };
 
-    case 'usersonworkspaces':
-      return await prisma.usersOnWorkspaces.findUnique({
-        where: { id: modelId },
-      });
+  const model = modelMap[modelName];
 
-    case 'team':
-      return await prisma.team.findUnique({ where: { id: modelId } });
-
-    case 'teampreference':
-      return await prisma.teamPreference.findUnique({ where: { id: modelId } });
-
-    case 'issue':
-      return await prisma.issue.findUnique({ where: { id: modelId } });
-
-    case 'label':
-      return await prisma.label.findUnique({ where: { id: modelId } });
-
-    case 'workflow':
-      return await prisma.workflow.findUnique({ where: { id: modelId } });
-
-    case 'template':
-      return await prisma.template.findUnique({ where: { id: modelId } });
-
-    case 'issuecomment':
-      return await prisma.issueComment.findUnique({ where: { id: modelId } });
-
-    case 'issuehistory':
-      return await prisma.issueHistory.findUnique({ where: { id: modelId } });
-    default:
-      return undefined;
+  if (model) {
+    return await model.findUnique({ where: { id: modelId } });
   }
+
+  return undefined;
 }
 
 export async function getSyncActionsData(
