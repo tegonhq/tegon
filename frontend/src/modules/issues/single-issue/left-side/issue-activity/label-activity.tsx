@@ -7,7 +7,7 @@ import ReactTimeAgo from 'react-time-ago';
 import type { IssueHistoryType } from 'common/types/issue';
 import type { LabelType } from 'common/types/label';
 
-import { Badge } from 'components/ui/badge';
+import { Badge, BadgeColor } from 'components/ui/badge';
 import { TimelineItem } from 'components/ui/timeline';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -51,6 +51,10 @@ export function LabelActivity({
           <div>
             {issueHistory.addedLabelIds.map((labelId: string) => (
               <Badge variant="secondary" key={labelId} className="text-xs ml-2">
+                <BadgeColor
+                  style={{ backgroundColor: getLabel(labelId).color }}
+                  className="mr-2"
+                />
                 {getLabel(labelId).name}
               </Badge>
             ))}
@@ -88,6 +92,10 @@ export function LabelActivity({
         <div>
           {issueHistory.removedLabelIds.map((labelId: string) => (
             <Badge variant="secondary" key={labelId} className="text-xs ml-2">
+              <BadgeColor
+                style={{ backgroundColor: getLabel(labelId).color }}
+                className="mr-2"
+              />
               {getLabel(labelId).name}
             </Badge>
           ))}

@@ -40,6 +40,11 @@ export const TeamListItem = ({
         size="sm"
         variant="ghost"
         isActive={isActive}
+        onClick={() =>
+          redirect(
+            `/${router.query.workspaceSlug}/team/${team.identifier}/${href}`,
+          )
+        }
         className="w-full text-sm flex justify-start px-2 mb-1"
       >
         {name}
@@ -53,7 +58,9 @@ export const TeamListItem = ({
       variant="ghost"
       isActive={isActive}
       onClick={() =>
-        redirect(`/${router.query.workspaceSlug}/team/${team.identifier}/all`)
+        redirect(
+          `/${router.query.workspaceSlug}/team/${team.identifier}/${href}`,
+        )
       }
       className="w-full text-sm flex justify-start px-5 mb-1"
     >

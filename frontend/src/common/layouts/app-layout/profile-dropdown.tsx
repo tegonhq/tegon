@@ -2,7 +2,12 @@
 
 import React from 'react';
 
-import { Avatar, AvatarFallback, AvatarImage } from 'components/ui/avatar';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  getInitials,
+} from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
 import {
   DropdownMenu,
@@ -14,11 +19,15 @@ import {
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
 
+import { UserContext } from 'store/user-context';
+
 export interface ProfileDropdownProps {
   isCollapsed: boolean;
 }
 
 export function ProfileDropdown() {
+  const userData = React.useContext(UserContext);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,7 +36,7 @@ export function ProfileDropdown() {
             <Avatar className="h-[20px] w-[30px] ">
               <AvatarImage />
               <AvatarFallback className="bg-cyan-500 dark:bg-cyan-900 rounded-sm">
-                HA
+                {getInitials(userData.fullname)}
               </AvatarFallback>
             </Avatar>
           </div>

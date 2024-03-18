@@ -1,6 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-export const WORKSPACE_LINKS = [
+export interface LinkItem {
+  title: string;
+  href: string;
+}
+
+export const WORKSPACE_LINKS: LinkItem[] = [
   {
     title: 'Overview',
     href: 'overview',
@@ -19,7 +24,7 @@ export const WORKSPACE_LINKS = [
   },
 ];
 
-export const ACCOUNT_LINKS = [
+export const ACCOUNT_LINKS: LinkItem[] = [
   {
     title: 'Profile',
     href: 'profile',
@@ -30,7 +35,7 @@ export const ACCOUNT_LINKS = [
   },
 ];
 
-export const TEAM_LINKS = [
+export const TEAM_LINKS: LinkItem[] = [
   {
     title: 'Overview',
     href: 'overview',

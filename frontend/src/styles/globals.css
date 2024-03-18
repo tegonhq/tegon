@@ -59,10 +59,8 @@
     overflow: hidden;
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-color) transparent;
-  }
-
-  svg {
-    shape-rendering: 'crispEdges';
+    shape-rendering: auto;
+    --webkit-font-smoothing: antialiased;
   }
 }
 

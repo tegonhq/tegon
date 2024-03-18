@@ -104,9 +104,9 @@ export function IssueAssigneeDropdown({
               {getUserData(value).fullname}
             </>
           ) : (
-            <>
-              <RiAccountCircleFill size={14} className="mr-1" /> No Assignee
-            </>
+            <div className="flex text-muted-foreground items-center">
+              <RiAccountCircleFill size={18} className="mr-2" /> No Assignee
+            </div>
           )}
         </Button>
       );
@@ -135,7 +135,7 @@ export function IssueAssigneeDropdown({
           </>
         ) : (
           <>
-            <RiAccountCircleFill size={14} className="mr-1" /> No Assignee
+            <RiAccountCircleFill size={18} className="mr-1" /> No Assignee
           </>
         )}
       </Button>

@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiPriceTagFill } from '@remixicon/react';
+import { RiAddLine, RiPriceTagFill } from '@remixicon/react';
 import * as React from 'react';
 
 import { cn } from 'common/lib/utils';
@@ -71,7 +71,7 @@ export function IssueLabelDropdown({
       const label = labels.find((label: LabelType) => label.id === value[0]);
       return (
         <>
-          <RiPriceTagFill size={14} className="text-muted-foreground mr-2" />
+          <RiPriceTagFill size={18} className="text-muted-foreground mr-2" />
           {label.name}
         </>
       );
@@ -80,17 +80,17 @@ export function IssueLabelDropdown({
     if (value.length > 1) {
       return (
         <>
-          <RiPriceTagFill size={14} className="text-muted-foreground mr-2" />
+          <RiPriceTagFill size={18} className="text-muted-foreground mr-2" />
           {value.length} Labels
         </>
       );
     }
 
     return (
-      <>
-        <RiPriceTagFill size={14} className="text-muted-foreground mr-2" />
-        Labels
-      </>
+      <div className="flex items-center text-muted-foreground">
+        <RiAddLine size={18} className="mr-2" />
+        Add Label
+      </div>
     );
   };
 

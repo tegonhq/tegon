@@ -10,21 +10,17 @@ import { AssigneeView } from './views/assignee';
 import { CategoryView } from './views/category';
 import { PriorityView } from './views/priority';
 
-const VIEW_MAP = {
-  status: CategoryView,
-  assignee: AssigneeView,
-  priority: PriorityView,
-};
-
 export const ListView = observer(() => {
   const { applicationStore } = useContextStore();
   const grouping = applicationStore.displaySettings.grouping;
 
-  const ViewComponent = VIEW_MAP[grouping as keyof typeof VIEW_MAP];
+  if (grouping === 'assignee') {
+    return <AssigneeView />;
+  }
 
-  return (
-    <div>
-      <ViewComponent />
-    </div>
-  );
+  if (grouping === 'priority') {
+    return <PriorityView />;
+  }
+
+  return <CategoryView />;
 });

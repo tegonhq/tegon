@@ -13,18 +13,32 @@ import { cn } from 'common/lib/utils';
 
 import { Button, buttonVariants } from 'components/ui/button';
 
-import { ACCOUNT_LINKS, WORKSPACE_LINKS } from './settings-layout-constants';
+import {
+  ACCOUNT_LINKS,
+  WORKSPACE_LINKS,
+  type LinkItem,
+} from './settings-layout-constants';
 import { TeamSettingsList } from './team-settings-list';
+import { usePathname } from 'next/navigation';
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {}
 
 export function SidebarNav({ className, ...props }: SidebarNavProps) {
   const { query, replace } = useRouter();
+  const pathname = usePathname();
   const {
     workspaceSlug,
     teamIdentifier,
     settingsSection = WORKSPACE_LINKS[0].href,
   } = query;
+
+  function isActive(item: LinkItem) {
+    if (pathname.includes('integrations')) {
+      return pathname.includes(item.href);
+    }
+
+    return settingsSection === item.href;
+  }
 
   return (
     <nav className={cn('flex flex-col', className)} {...props}>
@@ -58,8 +72,9 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                 className={cn(
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
                   !teamIdentifier &&
-                    settingsSection === item.href &&
+                    isActive(item) &&
                     'bg-gray-100 dark:bg-gray-800',
+
                   'justify-start text-sm w-full px-2 text-gray-700 dark:text-gray-300 mt-1',
                 )}
               >
@@ -84,6 +99,9 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                 href={`/${workspaceSlug}/settings/account/${item.href}`}
                 className={cn(
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
+
+                  settingsSection === item.href &&
+                    'bg-gray-100 dark:bg-gray-800',
                   'justify-start text-sm w-full px-2 text-gray-700 dark:text-gray-300 mt-1',
                 )}
               >

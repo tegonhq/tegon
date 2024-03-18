@@ -24,10 +24,12 @@ export function IssueComment() {
   const { mutate: createIssueComment } = useCreateIssueCommentMutation({});
 
   const onSubmit = () => {
-    createIssueComment({
-      body: commentValue,
-      issueId: issueData.id,
-    });
+    if (commentValue !== '') {
+      createIssueComment({
+        body: commentValue,
+        issueId: issueData.id,
+      });
+    }
     setCommentValue('');
   };
 

@@ -2,9 +2,10 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { computed } from 'mobx';
+import { usePathname } from 'next/navigation';
 import * as React from 'react';
 
-import type { WorkflowType } from 'common/types/team';
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -14,7 +15,25 @@ export function useTeamWorkflows(
   teamIdentfier: string,
 ): WorkflowType[] | undefined {
   const team = useTeam(teamIdentfier);
+  const pathname = usePathname();
   const { workflowsStore } = useContextStore();
+
+  function getWorkflowCategories() {
+    if (pathname.includes('/active')) {
+      return [WorkflowCategoryEnum.UNSTARTED, WorkflowCategoryEnum.STARTED];
+    }
+
+    if (pathname.includes('/backlog')) {
+      return [WorkflowCategoryEnum.BACKLOG];
+    }
+
+    return Object.values(WorkflowCategoryEnum);
+  }
+
+  const workflowCategories = React.useMemo(
+    () => getWorkflowCategories(),
+    [workflowsStore],
+  );
 
   const getWorkflows = () => {
     if (!team) {
@@ -23,7 +42,10 @@ export function useTeamWorkflows(
 
     const workflows = workflowsStore.workflows.filter(
       (workflow: WorkflowType) => {
-        return workflow.teamId === team.id;
+        return (
+          workflow.teamId === team.id &&
+          workflowCategories.includes(workflow.category)
+        );
       },
     );
 

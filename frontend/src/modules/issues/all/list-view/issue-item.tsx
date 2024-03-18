@@ -71,13 +71,13 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
             teamIdentfier={team.identifier}
           />
         </div>
-        <div className="font-medium max-w-[400px]" onClick={openIssue}>
+        <div className="font-medium max-w-[500px]" onClick={openIssue}>
           <div className="truncate">{issue.title}</div>
         </div>
 
         {issue.parentId && (
           <div
-            className="font-medium max-w-[200px] text-muted-foreground flex items-center"
+            className="font-medium max-w-[300px] text-muted-foreground flex items-center"
             onClick={openIssue}
           >
             <RiArrowRightSLine size={14} className="mx-2" />
