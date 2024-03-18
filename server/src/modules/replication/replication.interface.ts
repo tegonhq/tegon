@@ -27,4 +27,7 @@ export const tablesToSendMessagesFor = new Map([
   [ModelName.IssueComment, true],
   [ModelName.IssueHistory, true],
   [ModelName.UsersOnWorkspaces, true],
+  [ModelName.IntegrationAccount, true],
+  [ModelName.IntegrationDefinition, true],
+  [ModelName.LinkedIssue, true],
 ]);

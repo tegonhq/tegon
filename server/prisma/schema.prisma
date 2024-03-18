@@ -37,9 +37,10 @@ model User {
   initialSetupComplete    Boolean @default(false)
   anonymousDataCollection Boolean @default(false)
 
-  usersOnWorkspaces UsersOnWorkspaces[]
-  template          Template[]
-  createdBy         Issue[]
+  usersOnWorkspaces  UsersOnWorkspaces[]
+  template           Template[]
+  createdBy          Issue[]
+  integrationAccount IntegrationAccount[]
 }
 
 model Workspace {
@@ -52,11 +53,13 @@ model Workspace {
   slug String  @unique
   icon String?
 
-  usersOnWorkspaces UsersOnWorkspaces[]
-  team              Team[]
-  label             Label[]
-  template          Template[]
-  syncAction        SyncAction[]
+  usersOnWorkspaces     UsersOnWorkspaces[]
+  team                  Team[]
+  label                 Label[]
+  template              Template[]
+  syncAction            SyncAction[]
+  integrationAccount    IntegrationAccount[]
+  integrationDefinition IntegrationDefinition[]
 }
 
 model UsersOnWorkspaces {
@@ -64,12 +67,13 @@ model UsersOnWorkspaces {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user        User      @relation(fields: [userId], references: [id])
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  userId      String
-  workspaceId String
-  teamIds     String[]
-  status      Status    @default(ACTIVE)
+  user                    User      @relation(fields: [userId], references: [id])
+  workspace               Workspace @relation(fields: [workspaceId], references: [id])
+  userId                  String
+  workspaceId             String
+  teamIds                 String[]
+  status                  Status    @default(ACTIVE)
+  externalAccountMappings Json?
 
   @@unique([userId, workspaceId])
 }
@@ -187,17 +191,19 @@ model Issue {
 
   title             String
   number            Int
-  description       String
+  description       String?
   priority          Int?
   dueDate           DateTime?
-  sortOrder         Int
+  sortOrder         Int?
   subIssueSortOrder Int?
   estimate          Int?
+  sourceMetadata    Json?
+  isBidirectional   Boolean?
 
   team          Team     @relation(fields: [teamId], references: [id])
   teamId        String
-  createdBy     User     @relation(fields: [createdById], references: [id])
-  createdById   String
+  createdBy     User?    @relation(fields: [createdById], references: [id])
+  createdById   String?
   subscriberIds String[]
   assigneeId    String?
   labelIds      String[]
@@ -206,10 +212,28 @@ model Issue {
   parentId      String?
   subIssue      Issue[]  @relation("Report")
 
-  comments IssueComment[]
-  history  IssueHistory[]
+  comments    IssueComment[]
+  history     IssueHistory[]
+  linkedIssue LinkedIssue[]
 
   @@unique([teamId, number])
+}
+
+model LinkedIssue {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  url        String
+  sourceId   String
+  source     Json?
+  sourceData Json?
+
+  issue   Issue  @relation(fields: [issueId], references: [id])
+  issueId String
+
+  @@unique([url])
 }
 
 model IssueComment {
@@ -218,8 +242,9 @@ model IssueComment {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  body   String
-  userId String
+  body           String
+  userId         String?
+  sourceMetadata Json?
 
   reactions     Reaction[]
   reactionsData Json[]
@@ -228,7 +253,25 @@ model IssueComment {
   parent        IssueComment? @relation("Report", fields: [parentId], references: [id])
   parentId      String?
 
-  replies IssueComment[] @relation("Report")
+  replies       IssueComment[]  @relation("Report")
+  linkedComment LinkedComment[]
+}
+
+model LinkedComment {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  url        String
+  sourceId   String
+  source     Json?
+  sourceData Json?
+
+  comment   IssueComment @relation(fields: [commentId], references: [id])
+  commentId String
+
+  @@unique([url])
 }
 
 model Reaction {
@@ -260,9 +303,10 @@ model IssueHistory {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  userId  String
-  issue   Issue  @relation(fields: [issueId], references: [id])
-  issueId String
+  userId         String?
+  issue          Issue   @relation(fields: [issueId], references: [id])
+  issueId        String
+  sourceMetaData Json?
 
   addedLabelIds   String[]
   removedLabelIds String[]
@@ -277,6 +321,45 @@ model IssueHistory {
   fromParentId    String?
   toParentId      String?
   relationChanges Json[]
+}
+
+model IntegrationDefinition {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name         IntegrationName
+  icon         String
+  spec         Json
+  clientId     String
+  clientSecret String
+  scopes       String
+  workspace    Workspace       @relation(references: [id], fields: [workspaceId])
+  workspaceId  String
+
+  IntegrationAccount IntegrationAccount[]
+}
+
+model IntegrationAccount {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  integrationConfiguration Json
+  // Unique Identifier for each connected app or personal account
+  accountId                String?
+  settings                 Json?
+
+  integratedBy            User                  @relation(references: [id], fields: [integratedById])
+  integratedById          String
+  integrationDefinition   IntegrationDefinition @relation(references: [id], fields: [integrationDefinitionId])
+  integrationDefinitionId String
+  workspace               Workspace             @relation(references: [id], fields: [workspaceId])
+  workspaceId             String
+
+  @@unique([accountId, integrationDefinitionId, workspaceId])
 }
 
 enum Preference {
@@ -305,6 +388,9 @@ enum ModelName {
   IssueComment
   IssueHistory
   UsersOnWorkspaces
+  IntegrationDefinition
+  IntegrationAccount
+  LinkedIssue
 }
 
 enum ActionType {
@@ -314,6 +400,7 @@ enum ActionType {
 }
 
 enum WorkflowCategory {
+  TRIAGE
   BACKLOG
   UNSTARTED
   STARTED
@@ -325,4 +412,10 @@ enum TemplateCategory {
   ISSUE
   PROJECT
   DOCUMENT
+}
+
+enum IntegrationName {
+  Github
+  GithubPersonal
+  Slack
 }

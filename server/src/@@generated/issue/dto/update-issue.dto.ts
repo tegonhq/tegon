@@ -1,5 +1,5 @@
 
-
+import {Prisma} from '@prisma/client'
 
 
 
@@ -14,6 +14,8 @@ dueDate?: Date;
 sortOrder?: number;
 subIssueSortOrder?: number;
 estimate?: number;
+sourceMetadata?: Prisma.InputJsonValue;
+isBidirectional?: boolean;
 subscriberIds?: string[];
 assigneeId?: string;
 labelIds?: string[];

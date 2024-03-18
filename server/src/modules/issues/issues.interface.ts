@@ -1,8 +1,12 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { Issue } from '@@generated/issue/entities';
+import { Team, User } from '@prisma/client';
 import {
   IsArray,
+  IsBoolean,
   IsDate,
+  IsJSON,
   IsNumber,
   IsOptional,
   IsString,
@@ -34,6 +38,7 @@ export class CreateIssueInput {
   @IsDate()
   dueDate?: Date;
 
+  @IsOptional()
   @IsNumber()
   sortOrder: number;
 
@@ -62,6 +67,9 @@ export class CreateIssueInput {
 
   @IsArray()
   subscriberIds: string[];
+
+  @IsBoolean()
+  isBidirectional: boolean;
 }
 
 export class UpdateIssueInput {
@@ -112,6 +120,32 @@ export class UpdateIssueInput {
   @IsOptional()
   @IsArray()
   subscriberIds: string[];
+}
+
+export class LinkIssueData {
+  @IsString()
+  url: string;
+
+  @IsString()
+  sourceId: string;
+
+  @IsOptional()
+  @IsJSON()
+  source?: Record<string, string | number>;
+
+  @IsOptional()
+  @IsJSON()
+  sourceData?: Record<string, string | number>;
+}
+
+export interface IssueWithRelations extends Issue {
+  team?: Team;
+  createdBy?: User;
+}
+
+export enum IssueAction {
+  CREATED,
+  UPDATED,
 }
 
 export const titlePrompt = ` You have deep expertise in project management and task management for software teams. Whenever a text is provided to you, you have to create an issue title for software development tasks based on the description text.

@@ -7,6 +7,7 @@ import {Prisma} from '@prisma/client'
 export class UpdateIssueHistoryDto {
   deleted?: Date;
 userId?: string;
+sourceMetaData?: Prisma.InputJsonValue;
 addedLabelIds?: string[];
 removedLabelIds?: string[];
 fromPriority?: number;

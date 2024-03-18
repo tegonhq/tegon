@@ -15,6 +15,7 @@ Table User {
   usersOnWorkspaces UsersOnWorkspaces [not null]
   template Template [not null]
   createdBy Issue [not null]
+  integrationAccount IntegrationAccount [not null]
 }
 
 Table Workspace {
@@ -30,6 +31,8 @@ Table Workspace {
   label Label [not null]
   template Template [not null]
   syncAction SyncAction [not null]
+  integrationAccount IntegrationAccount [not null]
+  integrationDefinition IntegrationDefinition [not null]
 }
 
 Table UsersOnWorkspaces {
@@ -42,6 +45,7 @@ Table UsersOnWorkspaces {
   workspaceId String [not null]
   teamIds String[] [not null]
   status Status [not null, default: 'ACTIVE']
+  externalAccountMappings Json
 
   indexes {
     (userId, workspaceId) [unique]
@@ -154,16 +158,18 @@ Table Issue {
   deleted DateTime
   title String [not null]
   number Int [not null]
-  description String [not null]
+  description String
   priority Int
   dueDate DateTime
-  sortOrder Int [not null]
+  sortOrder Int
   subIssueSortOrder Int
   estimate Int
+  sourceMetadata Json
+  isBidirectional Boolean
   team Team [not null]
   teamId String [not null]
-  createdBy User [not null]
-  createdById String [not null]
+  createdBy User
+  createdById String
   subscriberIds String[] [not null]
   assigneeId String
   labelIds String[] [not null]
@@ -173,10 +179,24 @@ Table Issue {
   subIssue Issue [not null]
   comments IssueComment [not null]
   history IssueHistory [not null]
+  linkedIssue LinkedIssue [not null]
 
   indexes {
     (teamId, number) [unique]
   }
+}
+
+Table LinkedIssue {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  url String [unique, not null]
+  sourceId String [not null]
+  source Json
+  sourceData Json
+  issue Issue [not null]
+  issueId String [not null]
 }
 
 Table IssueComment {
@@ -185,7 +205,8 @@ Table IssueComment {
   updatedAt DateTime [not null]
   deleted DateTime
   body String [not null]
-  userId String [not null]
+  userId String
+  sourceMetadata Json
   reactions Reaction [not null]
   reactionsData Json[] [not null]
   issue Issue [not null]
@@ -193,6 +214,20 @@ Table IssueComment {
   parent IssueComment
   parentId String
   replies IssueComment [not null]
+  linkedComment LinkedComment [not null]
+}
+
+Table LinkedComment {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  url String [unique, not null]
+  sourceId String [not null]
+  source Json
+  sourceData Json
+  comment IssueComment [not null]
+  commentId String [not null]
 }
 
 Table Reaction {
@@ -221,9 +256,10 @@ Table IssueHistory {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   deleted DateTime
-  userId String [not null]
+  userId String
   issue Issue [not null]
   issueId String [not null]
+  sourceMetaData Json
   addedLabelIds String[] [not null]
   removedLabelIds String[] [not null]
   fromPriority Int
@@ -237,6 +273,42 @@ Table IssueHistory {
   fromParentId String
   toParentId String
   relationChanges Json[] [not null]
+}
+
+Table IntegrationDefinition {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  name IntegrationName [not null]
+  icon String [not null]
+  spec Json [not null]
+  clientId String [not null]
+  clientSecret String [not null]
+  scopes String [not null]
+  workspace Workspace [not null]
+  workspaceId String [not null]
+  IntegrationAccount IntegrationAccount [not null]
+}
+
+Table IntegrationAccount {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  integrationConfiguration Json [not null]
+  accountId String
+  settings Json
+  integratedBy User [not null]
+  integratedById String [not null]
+  integrationDefinition IntegrationDefinition [not null]
+  integrationDefinitionId String [not null]
+  workspace Workspace [not null]
+  workspaceId String [not null]
+
+  indexes {
+    (accountId, integrationDefinitionId, workspaceId) [unique]
+  }
 }
 
 Enum Preference {
@@ -265,6 +337,9 @@ Enum ModelName {
   IssueComment
   IssueHistory
   UsersOnWorkspaces
+  IntegrationDefinition
+  IntegrationAccount
+  LinkedIssue
 }
 
 Enum ActionType {
@@ -274,6 +349,7 @@ Enum ActionType {
 }
 
 Enum WorkflowCategory {
+  TRIAGE
   BACKLOG
   UNSTARTED
   STARTED
@@ -285,6 +361,12 @@ Enum TemplateCategory {
   ISSUE
   PROJECT
   DOCUMENT
+}
+
+Enum IntegrationName {
+  Github
+  GithubPersonal
+  Slack
 }
 
 Ref: UsersOnWorkspaces.userId > User.id
@@ -317,12 +399,24 @@ Ref: Issue.createdById > User.id
 
 Ref: Issue.parentId - Issue.id
 
+Ref: LinkedIssue.issueId > Issue.id
+
 Ref: IssueComment.issueId > Issue.id
 
 Ref: IssueComment.parentId - IssueComment.id
+
+Ref: LinkedComment.commentId > IssueComment.id
 
 Ref: Reaction.commentId > IssueComment.id
 
 Ref: Reaction.emojiId > Emoji.id
 
 Ref: IssueHistory.issueId > Issue.id
+
+Ref: IntegrationDefinition.workspaceId > Workspace.id
+
+Ref: IntegrationAccount.integratedById > User.id
+
+Ref: IntegrationAccount.integrationDefinitionId > IntegrationDefinition.id
+
+Ref: IntegrationAccount.workspaceId > Workspace.id

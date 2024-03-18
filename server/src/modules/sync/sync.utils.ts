@@ -19,6 +19,6 @@ export async function isValidAuthentication(
   if (!cookies.sAccessToken) {
     return false;
   }
-  
+
   return await hasValidHeader(`Bearer ${cookies.sAccessToken}`, false);
 }

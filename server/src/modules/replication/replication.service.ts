@@ -139,10 +139,9 @@ export default class ReplicationService {
                 isDeleted,
               );
 
-            this.syncGateway.wss.to(syncActionData.workspaceId).emit(
-              'message',
-              JSON.stringify(syncActionData)
-            );
+            this.syncGateway.wss
+              .to(syncActionData.workspaceId)
+              .emit('message', JSON.stringify(syncActionData));
           }
         });
       } else {

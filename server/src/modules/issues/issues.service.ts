@@ -9,11 +9,18 @@ import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 
 import {
   CreateIssueInput,
+  IssueAction,
   IssueRequestParams,
+  LinkIssueData,
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
-import { getIssueDiff, getIssueTitle } from './issues.utils';
+import {
+  getIssueDiff,
+  getIssueTitle,
+  getLastIssueNumber,
+  handleTwoWaySync,
+} from './issues.utils';
 
 const openaiClient = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
@@ -28,49 +35,55 @@ export default class IssuesService {
 
   async createIssue(
     teamRequestParams: TeamRequestParams,
-    userId: string,
     issueData: CreateIssueInput,
+    userId?: string,
+    linkIssuedata?: LinkIssueData,
+    linkMetaData?: Record<string, string>,
   ): Promise<Issue> {
     const { parentId, ...otherIssueData } = issueData;
-    const lastNumber =
-      (
-        await this.prisma.issue.findFirst({
-          where: { teamId: teamRequestParams.teamId },
-          orderBy: { number: 'desc' },
-        })
-      )?.number ?? 0;
-
-    const issueTitle = await getIssueTitle(
-      openaiClient,
-      otherIssueData.description,
+    const lastNumber = await getLastIssueNumber(
+      this.prisma,
+      teamRequestParams.teamId,
     );
+    const issueTitle = await getIssueTitle(openaiClient, issueData);
 
     const issue = await this.prisma.issue.create({
       data: {
         title: issueTitle,
-        ...otherIssueData,
-        createdBy: { connect: { id: userId } },
-        team: { connect: { id: teamRequestParams.teamId } },
         number: lastNumber + 1,
+        team: { connect: { id: teamRequestParams.teamId } },
+        ...otherIssueData,
+        ...(userId && { createdBy: { connect: { id: userId } } }),
         ...(parentId && { parent: { connect: { id: parentId } } }),
+        ...(linkIssuedata && {
+          linkedIssue: { create: linkIssuedata },
+        }),
+        ...(linkMetaData && { sourceMetadata: linkMetaData }),
+      },
+      include: {
+        team: true,
       },
     });
 
-    await this.issueHistoryService.upsertIssueHistory(
-      userId,
-      issue.id,
-      await getIssueDiff(issue, null),
-    );
+    await this.createIssueHistory(issue, userId, linkMetaData);
+    if (issueData.isBidirectional) {
+      await handleTwoWaySync(this.prisma, issue, IssueAction.CREATED, userId);
+    }
 
     return issue;
   }
 
   async updateIssue(
-    userId: string,
     teamRequestParams: TeamRequestParams,
     issueData: UpdateIssueInput,
     issueParams: IssueRequestParams,
+    userId?: string,
+    linkIssuedata?: LinkIssueData,
+    linkMetaData?: Record<string, string>,
   ): Promise<Issue> {
+    const { parentId, ...otherIssueData } = issueData;
+    const issueTitle = await getIssueTitle(openaiClient, issueData);
+
     const [currentIssue, updatedIssue] = await this.prisma.$transaction([
       this.prisma.issue.findUnique({
         where: { id: issueParams.issueId },
@@ -81,16 +94,39 @@ export default class IssuesService {
           teamId: teamRequestParams.teamId,
         },
         data: {
-          ...issueData,
+          ...otherIssueData,
+          ...(issueTitle && { title: issueTitle }),
+          ...(parentId && { parent: { connect: { id: parentId } } }),
+          ...(linkIssuedata && {
+            linkedIssue: {
+              upsert: {
+                where: { url: linkIssuedata.url },
+                update: linkIssuedata,
+                create: linkIssuedata,
+              },
+            },
+          }),
+        },
+        include: {
+          team: true,
         },
       }),
     ]);
 
-    await this.issueHistoryService.upsertIssueHistory(
+    await this.updateIssueHistory(
+      updatedIssue,
+      currentIssue,
       userId,
-      updatedIssue.id,
-      await getIssueDiff(updatedIssue, currentIssue),
+      linkMetaData,
     );
+    if (updatedIssue.isBidirectional) {
+      await handleTwoWaySync(
+        this.prisma,
+        updatedIssue,
+        IssueAction.CREATED,
+        userId,
+      );
+    }
 
     return updatedIssue;
   }
@@ -109,7 +145,8 @@ export default class IssuesService {
       },
     });
 
-    await this.issueHistoryService.deleteIssueHistory(deleteIssue.id);
+    await this.deleteIssueHistory(deleteIssue.id);
+
     return deleteIssue;
   }
 
@@ -123,5 +160,36 @@ export default class IssuesService {
         teamId: teamRequestParams.teamId,
       },
     });
+  }
+
+  private async createIssueHistory(
+    issue: Issue,
+    userId?: string,
+    linkMetaData?: Record<string, string>,
+  ): Promise<void> {
+    await this.issueHistoryService.upsertIssueHistory(
+      userId,
+      issue.id,
+      await getIssueDiff(issue, null),
+      linkMetaData,
+    );
+  }
+
+  private async updateIssueHistory(
+    updatedIssue: Issue,
+    currentIssue: Issue | null,
+    userId?: string,
+    linkMetaData?: Record<string, string>,
+  ): Promise<void> {
+    await this.issueHistoryService.upsertIssueHistory(
+      userId,
+      updatedIssue.id,
+      await getIssueDiff(updatedIssue, currentIssue),
+      linkMetaData,
+    );
+  }
+
+  private async deleteIssueHistory(issueId: string): Promise<void> {
+    await this.issueHistoryService.deleteIssueHistory(issueId);
   }
 }

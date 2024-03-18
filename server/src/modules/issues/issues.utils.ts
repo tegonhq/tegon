@@ -1,11 +1,22 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Issue } from '@prisma/client';
+import { IntegrationName, Issue, Prisma } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
 
+import {
+  sendGithubFirstComment,
+  upsertGithubIssue,
+} from 'modules/integrations/github/github.utils';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 
-import { titlePrompt } from './issues.interface';
+import {
+  CreateIssueInput,
+  IssueAction,
+  IssueWithRelations,
+  UpdateIssueInput,
+  titlePrompt,
+} from './issues.interface';
 
 export async function getIssueDiff(
   newIssueData: Issue,
@@ -65,15 +76,93 @@ function capitalize(s: string) {
 
 export async function getIssueTitle(
   openaiClient: OpenAI,
-  description: string,
+  issueData: CreateIssueInput | UpdateIssueInput,
 ): Promise<string> {
-  const chatCompletion: OpenAI.Chat.ChatCompletion =
-    await openaiClient.chat.completions.create({
-      messages: [
-        { role: 'system', content: titlePrompt },
-        { role: 'user', content: description },
-      ],
-      model: 'gpt-3.5-turbo',
-    });
-  return chatCompletion.choices[0].message.content;
+  if (issueData.title) {
+    return issueData.title;
+  } else if (issueData.description) {
+    const chatCompletion: OpenAI.Chat.ChatCompletion =
+      await openaiClient.chat.completions.create({
+        messages: [
+          { role: 'system', content: titlePrompt },
+          { role: 'user', content: issueData.description },
+        ],
+        model: 'gpt-3.5-turbo',
+      });
+    return chatCompletion.choices[0].message.content;
+  }
+  return '';
+}
+
+export async function getLastIssueNumber(
+  prisma: PrismaService,
+  teamId: string,
+): Promise<number> {
+  const lastIssue = await prisma.issue.findFirst({
+    where: { teamId },
+    orderBy: { number: 'desc' },
+  });
+  return lastIssue?.number ?? 0;
+}
+
+export async function handleTwoWaySync(
+  prisma: PrismaService,
+  issue: IssueWithRelations,
+  action: IssueAction,
+  userId: string,
+) {
+  const integrationAccount = await prisma.integrationAccount.findFirst({
+    where: {
+      settings: {
+        path: [IntegrationName.Github, 'repositoryMappings'],
+        array_contains: [{ teamId: issue.teamId, bidirectional: true }],
+      } as Prisma.JsonFilter,
+    },
+    include: {
+      integrationDefinition: true,
+      workspace: true,
+    },
+  });
+
+  if (integrationAccount) {
+    // Two-way sync is enabled for this team
+    // Perform the necessary sync operations here
+    // ...
+
+    switch (action) {
+      case IssueAction.CREATED: {
+        const githubIssue = await upsertGithubIssue(
+          prisma,
+          issue,
+          integrationAccount,
+          userId,
+        );
+
+        await prisma.linkedIssue.create({
+          data: {
+            url: githubIssue.url,
+            sourceId: githubIssue.id.toString(),
+            source: { type: IntegrationName.Github },
+            sourceData: {
+              id: githubIssue.id.toString(),
+              title: githubIssue.title,
+            },
+            issueId: issue.id,
+          },
+        });
+
+        await sendGithubFirstComment(
+          prisma,
+          integrationAccount,
+          issue,
+          githubIssue.id.toString(),
+        );
+        break;
+      }
+
+      case IssueAction.UPDATED: {
+        await upsertGithubIssue(prisma, issue, integrationAccount, userId);
+      }
+    }
+  }
 }

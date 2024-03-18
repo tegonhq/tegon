@@ -7,3 +7,5 @@ coverage/
 
 prisma/migrations/dev/
 .env
+
+certs/

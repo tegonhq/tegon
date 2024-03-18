@@ -64,6 +64,7 @@
     "@nestjs/websockets": "^10.3.1",
     "@prisma/client": "^5.8.1",
     "@vegardit/prisma-generator-nestjs-dto": "^1.5.1",
+    "axios": "^1.6.7",
     "bcrypt": "5.1.1",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.1",
@@ -77,6 +78,7 @@
     "pg-logical-replication": "^2.0.3",
     "reflect-metadata": "^0.2.1",
     "rxjs": "7.8.1",
+    "simple-oauth2": "^5.0.0",
     "supertokens-node": "^16.7.1"
   },
   "devDependencies": {
@@ -91,6 +93,7 @@
     "@types/jest": "^29.5.11",
     "@types/node": "^20.11.5",
     "@types/pg": "^8.11.0",
+    "@types/simple-oauth2": "^5.0.7",
     "@types/supertest": "6.0.2",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
