@@ -100,7 +100,6 @@ export async function getAccountId(
       return response.team.id;
 
     case IntegrationName.GithubPersonal:
-      console.log(response);
       if (response.token.access_token) {
         const accessToken = response.token.access_token;
         const userData = await getGithubUser(accessToken);

@@ -8,6 +8,7 @@ import {
   getBotAccessToken,
   getReponse,
   sendGithubFirstComment,
+  sendGithubPRFirstComment,
   upsertGithubIssue,
 } from 'modules/integrations/github/github.utils';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
@@ -144,12 +145,16 @@ export async function handleTwoWaySync(
 
         await prisma.linkedIssue.create({
           data: {
-            url: githubIssue.url,
+            url: githubIssue.html_url,
             sourceId: githubIssue.id.toString(),
-            source: { type: IntegrationName.Github },
+            source: {
+              type: IntegrationName.Github,
+              subType: LinkedIssueSubType.GithubIssue,
+            },
             sourceData: {
               id: githubIssue.id.toString(),
               title: githubIssue.title,
+              apiUrl: githubIssue.url,
             },
             issueId: issue.id,
             createdById: userId,
@@ -269,24 +274,43 @@ export async function getLinkedIssueWithUrl(
         apiUrl: response.url,
       };
 
+  const source = isGithubPR
+    ? {
+        type: IntegrationName.Github,
+        subType: LinkedIssueSubType.GithubPullRequest,
+        pullRequestId: response.id,
+      }
+    : {
+        type: IntegrationName.Github,
+        subType: LinkedIssueSubType.GithubIssue,
+      };
+
   const linkedIssue = await prisma.linkedIssue.create({
     data: {
       url: response.html_url,
       issueId,
       sourceId: response.id.toString(),
-      source: { type: IntegrationName.Github },
+      source,
       sourceData,
       createdById: userId,
     },
-    include: { issue: true },
+    include: { issue: { include: { team: { include: { workspace: true } } } } },
   });
 
-  if (isGithubIssue || isGithubPR) {
+  if (isGithubIssue) {
     await sendGithubFirstComment(
       prisma,
       integrationAccount,
       linkedIssue.issue,
       linkedIssue.sourceId,
+    );
+  } else if (isGithubPR) {
+    await sendGithubPRFirstComment(
+      prisma,
+      integrationAccount,
+      linkedIssue.issue.team,
+      linkedIssue.issue,
+      response.comments_url,
     );
   }
 

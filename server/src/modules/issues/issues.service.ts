@@ -11,6 +11,7 @@ import {
   CreateIssueInput,
   IssueAction,
   IssueRequestParams,
+  IssueWithRelations,
   LinkIssueData,
   LinkIssueInput,
   TeamRequestParams,
@@ -43,6 +44,27 @@ export default class IssuesService {
     linkIssuedata?: LinkIssueData,
     linkMetaData?: Record<string, string>,
   ): Promise<Issue> {
+    const issue = await this.createIssueAPI(
+      teamRequestParams,
+      issueData,
+      userId,
+      linkIssuedata,
+      linkMetaData,
+    );
+    if (issueData.isBidirectional) {
+      await handleTwoWaySync(this.prisma, issue, IssueAction.CREATED, userId);
+    }
+
+    return issue;
+  }
+
+  async createIssueAPI(
+    teamRequestParams: TeamRequestParams,
+    issueData: CreateIssueInput,
+    userId?: string,
+    linkIssuedata?: LinkIssueData,
+    linkMetaData?: Record<string, string>,
+  ): Promise<IssueWithRelations> {
     const { parentId, ...otherIssueData } = issueData;
     const lastNumber = await getLastIssueNumber(
       this.prisma,
@@ -69,10 +91,6 @@ export default class IssuesService {
     });
 
     await this.createIssueHistory(issue, userId, linkMetaData);
-    if (issueData.isBidirectional) {
-      await handleTwoWaySync(this.prisma, issue, IssueAction.CREATED, userId);
-    }
-
     return issue;
   }
 
@@ -126,7 +144,7 @@ export default class IssuesService {
       await handleTwoWaySync(
         this.prisma,
         updatedIssue,
-        IssueAction.CREATED,
+        IssueAction.UPDATED,
         userId,
       );
     }

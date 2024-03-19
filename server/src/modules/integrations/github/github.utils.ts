@@ -209,6 +209,7 @@ export async function sendGithubFirstComment(
     data: {
       source: {
         type: IntegrationName.Github,
+        subType: LinkedIssueSubType.GithubIssue,
         syncedCommentId: issueComment.id,
       },
     },
@@ -216,6 +217,21 @@ export async function sendGithubFirstComment(
   const githubCommentBody = `<p><a href="${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${team.identifier}-${issue.number}">${team.identifier}-${issue.number} ${issue.title}</a></p>`;
 
   await sendGithubComment(linkedIssue, accessToken, githubCommentBody);
+}
+
+export async function sendGithubPRFirstComment(
+  prisma: PrismaService,
+  integrationAccount: IntegrationAccountWithRelations,
+  team: Team,
+  issue: Issue,
+  url: string,
+) {
+  const githubCommentBody = `<p><a href="${process.env.PUBLIC_FRONTEND_HOST}/${integrationAccount.workspace.slug}/issue/${team.identifier}-${issue.number}">${team.identifier}-${issue.number} ${issue.title}</a></p>`;
+  const accessToken = await getBotAccessToken(prisma, integrationAccount);
+
+  await postRequest(url, accessToken, {
+    body: githubCommentBody,
+  });
 }
 
 export async function sendGithubComment(
@@ -248,7 +264,7 @@ export async function handleIssues(
           integrationAccount,
           teamId,
         );
-        const issue = await issuesService.createIssue(
+        const issue = await issuesService.createIssueAPI(
           { teamId } as TeamRequestParams,
           createIssueData.issueInput,
           createIssueData.userId,
@@ -421,6 +437,7 @@ export async function handleIssueComments(
                     id: eventBody.comment.id,
                     body: eventBody.comment.body,
                     displayUserName: eventBody.comment.user.login,
+                    apiUrl: eventBody.comment.url,
                   },
                   createdById: userId,
                 },
@@ -486,7 +503,6 @@ export async function handlePullRequests(
   }
 
   const pullRequestId = eventBody.pull_request.id.toString();
-  const workspace = integrationAccount.workspace;
   const sourceData = {
     branch: eventBody.pull_request.head.ref,
     id: pullRequestId,
@@ -517,12 +533,19 @@ export async function handlePullRequests(
         },
       });
 
-      const githubCommentBody = `<p><a href="${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${team.identifier}-${issue.number}">${team.identifier}-${issue.number} ${issue.title}</a></p>`;
-      const accessToken = await getBotAccessToken(prisma, integrationAccount);
+      await sendGithubPRFirstComment(
+        prisma,
+        integrationAccount,
+        team,
+        issue,
+        eventBody.pull_request.comments_url,
+      );
+      // const githubCommentBody = `<p><a href="${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${team.identifier}-${issue.number}">${team.identifier}-${issue.number} ${issue.title}</a></p>`;
+      // const accessToken = await getBotAccessToken(prisma, integrationAccount);
 
-      await postRequest(eventBody.pull_request.comments_url, accessToken, {
-        body: githubCommentBody,
-      });
+      // await postRequest(eventBody.pull_request.comments_url, accessToken, {
+      //   body: githubCommentBody,
+      // });
 
       return linkedIssue;
     }
@@ -621,6 +644,7 @@ export async function handleRepositories(
     },
   });
 }
+
 export async function handleInstallations(
   prisma: PrismaService,
   eventBody: WebhookEventBody,
@@ -971,7 +995,7 @@ export async function upsertGithubIssueComment(
       });
 
       if (linkedIssue) {
-        const url = `${linkedIssue.url}/comments`;
+        const url = `${(linkedIssue.sourceData as LinkedIssueSourceData).apiUrl}/comments`;
         const githubIssueComment = (
           await postRequest(url, accessToken, {
             body: issueComment.body,
