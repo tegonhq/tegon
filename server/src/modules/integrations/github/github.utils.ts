@@ -129,6 +129,7 @@ async function getIssueData(
       title: eventBody.issue.title,
       apiUrl: eventBody.issue.url,
     },
+    createdById: userId,
   } as LinkIssueData;
 
   const issueInput = {
@@ -282,7 +283,7 @@ export async function handleIssues(
           updateIssueData.issueInput as UpdateIssueInput,
           { issueId: linkedIssue.issueId } as IssueRequestParams,
           updateIssueData.userId,
-          null,
+          updateIssueData.linkIssueData,
           updateIssueData.sourceMetadata,
         );
       }
@@ -364,6 +365,7 @@ export async function handleIssueComments(
   const { issueId, source: linkedIssueSource } = linkedIssue;
   const parentId = (linkedIssueSource as Record<string, string>)
     .syncedCommentId;
+  const userId = await getUserId(prisma, eventBody.sender);
 
   switch (eventBody.action) {
     case 'created':
@@ -378,7 +380,7 @@ export async function handleIssueComments(
         data: {
           body: eventBody.comment.body,
           issueId,
-          userId: await getUserId(prisma, eventBody.sender),
+          userId,
           parentId,
           sourceMetadata: {
             id: integrationAccount.id,
@@ -396,6 +398,7 @@ export async function handleIssueComments(
                 displayUserName: eventBody.comment.user.login,
                 apiUrl: eventBody.comment.url,
               },
+              createdById: userId,
             },
           },
         },
@@ -419,6 +422,7 @@ export async function handleIssueComments(
                     body: eventBody.comment.body,
                     displayUserName: eventBody.comment.user.login,
                   },
+                  createdById: userId,
                 },
               },
             },
@@ -509,6 +513,7 @@ export async function handlePullRequests(
             pullRequestId,
           },
           sourceData,
+          createdById: user.id,
         },
       });
 
@@ -673,33 +678,11 @@ async function postRequest(url: string, token: string, body: PostRequestBody) {
       data: response.data,
     };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error(
-          `Error making POST request to ${url}. Status: ${error.response.status}`,
-        );
-        return {
-          status: error.response.status,
-          data: {},
-          error: error.response.data,
-        };
-      }
-      console.error(`Error making POST request to ${url}: ${error.message}`);
-      return {
-        status: 500,
-        data: {},
-        error: 'Internal Server Error',
-      };
-    }
-    console.error(
-      `Unexpected error making POST request to ${url}: ${error.message}`,
-    );
+    console.error(`Error making POST request to ${url}: ${error.message}`);
     return {
-      status: 500,
+      status: error.response.status,
       data: {},
-      error: 'Internal Server Error',
+      error: error.response.data,
     };
   }
 }
@@ -718,31 +701,11 @@ export async function deleteRequest(url: string, token: string) {
       data: response.data,
     };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        console.error(
-          `Error making DELETE request to ${url}. Status: ${error.response.status}`,
-        );
-        return {
-          status: error.response.status,
-          data: {},
-          error: error.response.data,
-        };
-      }
-      console.error(`Error making DELETE request to ${url}: ${error.message}`);
-      return {
-        status: 500,
-        data: {},
-        error: 'Internal Server Error',
-      };
-    }
-    console.error(
-      `Unexpected error making DELETE request to ${url}: ${error.message}`,
-    );
+    console.error(`Error making DELETE request to ${url}: ${error.message}`);
     return {
-      status: 500,
+      status: error.response.status,
       data: {},
-      error: 'Internal Server Error',
+      error: error.response.data,
     };
   }
 }
@@ -1027,6 +990,7 @@ export async function upsertGithubIssueComment(
             source: { type: IntegrationName.Github },
             sourceData: sourceMetadata,
             commentId: issueComment.id,
+            createdById: userId,
           },
         });
         await prisma.issueComment.update({

@@ -12,6 +12,7 @@ url: string ;
 sourceId: string  | null;
 source: Prisma.JsonValue  | null;
 sourceData: Prisma.JsonValue  | null;
+createdById: string  | null;
 issue?: Issue ;
 issueId: string ;
 }

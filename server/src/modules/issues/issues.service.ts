@@ -200,6 +200,7 @@ export default class IssuesService {
     teamParams: TeamRequestParams,
     linkData: LinkIssueInput,
     issueParams: IssueRequestParams,
+    userId: string,
   ): Promise<{ status: number; message: string } | LinkedIssue> {
     if (!isValidLinkUrl(linkData)) {
       return { status: 400, message: "Provided url doesn't exists" };
@@ -221,6 +222,7 @@ export default class IssuesService {
         linkData,
         teamParams.teamId,
         issueParams.issueId,
+        userId,
       );
     } catch (error) {
       return { status: 500, message: 'Failed to create linked issue' };

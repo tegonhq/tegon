@@ -152,6 +152,7 @@ export async function handleTwoWaySync(
               title: githubIssue.title,
             },
             issueId: issue.id,
+            createdById: userId,
           },
         });
 
@@ -212,6 +213,7 @@ export async function getLinkedIssueWithUrl(
   linkData: LinkIssueInput,
   teamId: string,
   issueId: string,
+  userId: string,
 ): Promise<LinkedIssue> {
   const integrationAccount = await prisma.integrationAccount.findFirst({
     where: {
@@ -231,7 +233,7 @@ export async function getLinkedIssueWithUrl(
     linkData.type === LinkedIssueSubType.ExternalLink
   ) {
     return await prisma.linkedIssue.create({
-      data: { url: linkData.url, issueId },
+      data: { url: linkData.url, issueId, createdById: userId },
     });
   }
 
@@ -241,7 +243,7 @@ export async function getLinkedIssueWithUrl(
 
   if (!response) {
     return await prisma.linkedIssue.create({
-      data: { url: linkData.url, issueId },
+      data: { url: linkData.url, issueId, createdById: userId },
     });
   }
 
@@ -274,6 +276,7 @@ export async function getLinkedIssueWithUrl(
       sourceId: response.id.toString(),
       source: { type: IntegrationName.Github },
       sourceData,
+      createdById: userId,
     },
     include: { issue: true },
   });

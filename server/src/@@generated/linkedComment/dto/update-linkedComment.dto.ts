@@ -10,4 +10,5 @@ url?: string;
 sourceId?: string;
 source?: Prisma.InputJsonValue;
 sourceData?: Prisma.InputJsonValue;
+createdById?: string;
 }

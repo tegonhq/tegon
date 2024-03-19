@@ -195,6 +195,7 @@ Table LinkedIssue {
   sourceId String
   source Json
   sourceData Json
+  createdById String
   issue Issue [not null]
   issueId String [not null]
 }
@@ -226,6 +227,7 @@ Table LinkedComment {
   sourceId String [not null]
   source Json
   sourceData Json
+  createdById String
   comment IssueComment [not null]
   commentId String [not null]
 }

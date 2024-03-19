@@ -225,10 +225,11 @@ model LinkedIssue {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  url        String
-  sourceId   String?
-  source     Json?
-  sourceData Json?
+  url         String
+  sourceId    String?
+  source      Json?
+  sourceData  Json?
+  createdById String?
 
   issue   Issue  @relation(fields: [issueId], references: [id])
   issueId String
@@ -263,10 +264,11 @@ model LinkedComment {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  url        String
-  sourceId   String
-  source     Json?
-  sourceData Json?
+  url         String
+  sourceId    String
+  source      Json?
+  sourceData  Json?
+  createdById String?
 
   comment   IssueComment @relation(fields: [commentId], references: [id])
   commentId String

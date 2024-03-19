@@ -73,14 +73,17 @@ export class IssuesController {
   @Post(':issueId/link')
   @UseGuards(new AuthGuard())
   async linkIssue(
+    @SessionDecorator() session: SessionContainer,
     @Param() issueParams: IssueRequestParams,
     @Query() teamParams: TeamRequestParams,
     @Body() linkData: LinkIssueInput,
   ) {
+    const userId = session.getUserId();
     return await this.issuesService.createLinkIssue(
       teamParams,
       linkData,
       issueParams,
+      userId,
     );
   }
 }
