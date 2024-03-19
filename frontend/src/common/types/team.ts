@@ -10,6 +10,7 @@ export interface TeamType {
 }
 
 export enum WorkflowCategoryEnum {
+  TRIAGE = 'TRIAGE',
   BACKLOG = 'BACKLOG',
   UNSTARTED = 'UNSTARTED',
   STARTED = 'STARTED',
@@ -21,7 +22,6 @@ export interface WorkflowType {
   id: string;
   createdAt: string;
   updatedAt: string;
-
   name:
     | 'Backlog'
     | 'Todo'

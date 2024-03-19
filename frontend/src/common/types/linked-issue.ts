@@ -10,4 +10,5 @@ export interface LinkedIssueType {
   source: string;
   sourceData: string;
   issueId: string;
+  createdById: string;
 }

@@ -51,7 +51,7 @@ export const IssueDescription = ({
         <EditorContent
           initialContent={value ? JSON.parse(value) : undefined}
           extensions={extensions}
-          className="relative min-h-[50px] w-full max-w-screen-lg mb-[40px] text-base text-gray-800 dark:text-gray-300 sm:rounded-lg"
+          className="relative min-h-[50px] w-full max-w-screen-lg mb-[40px] text-base text-gray-600 dark:text-gray-300 sm:rounded-lg"
           editorProps={{
             handleDOMEvents: {
               keydown: (_view, event) => handleCommandNavigation(event),

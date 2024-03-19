@@ -37,7 +37,7 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
           `/${workspaceSlug}/issue/${team.identifier}-${issue.parent.number}`,
         );
       }}
-      className="cursor-pointer max-w-[400px] mb-1 border-1 bg-background backdrop-blur-md dark:bg-gray-700/20 shadow-2xl p-2 rounded-md flex gap-2 items-center text-sm"
+      className="cursor-pointer max-w-[400px] mb-1 border-1 bg-background backdrop-blur-md dark:bg-gray-700/20  p-2 rounded-md flex gap-2 items-center text-sm"
     >
       <CategoryIcon
         size={16}

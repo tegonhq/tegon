@@ -22,6 +22,7 @@ export async function saveLinkedIssueData(
         source: JSON.stringify(record.data.source),
         sourceData: JSON.stringify(record.data.sourceData),
         issueId: record.data.issueId,
+        createdById: record.data.createdById,
       };
 
       switch (record.action) {

@@ -15,6 +15,7 @@ export const Workflow = types.model({
     'STARTED',
     'COMPLETED',
     'CANCELED',
+    'TRIAGE',
   ]),
   teamId: types.string,
 });

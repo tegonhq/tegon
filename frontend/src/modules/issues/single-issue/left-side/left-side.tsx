@@ -45,7 +45,7 @@ export const LeftSide = observer(() => {
   return (
     <div className="col-span-3">
       <Header />
-      <div className="grow px-8 py-6 flex flex-col gap-4 overflow-y-auto h-[calc(100vh_-_52px)]">
+      <div className="grow px-8 py-6 flex flex-col gap-2 overflow-y-auto h-[calc(100vh_-_52px)]">
         <div>
           {issue.parentId && <ParentIssueView issue={issue} />}
 

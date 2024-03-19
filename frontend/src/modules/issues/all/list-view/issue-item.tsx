@@ -13,6 +13,8 @@ import {
   IssueStatusDropdownVariant,
 } from 'modules/issues/components';
 
+import { cn } from 'common/lib/utils';
+
 import { useCurrentTeam } from 'hooks/teams/use-current-team';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
@@ -53,9 +55,9 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
 
   return (
     <div className="pl-8 p-3 flex justify-between cursor-default text-sm hover:bg-gray-100/50 dark:hover:bg-gray-800/20 border-b-[0.5px]">
-      <div className="flex items-center">
+      <div className="flex items-center grow">
         <IssuePriorityDropdown
-          value={issue.priority}
+          value={issue.priority ?? 0}
           onChange={priorityChange}
           variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
         />
@@ -71,7 +73,13 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
             teamIdentfier={team.identifier}
           />
         </div>
-        <div className="font-medium max-w-[500px]" onClick={openIssue}>
+        <div
+          className={cn(
+            'font-medium',
+            issue.parentId ? 'max-w-[500px]' : 'w-full',
+          )}
+          onClick={openIssue}
+        >
           <div className="truncate">{issue.title}</div>
         </div>
 

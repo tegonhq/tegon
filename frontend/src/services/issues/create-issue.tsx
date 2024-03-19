@@ -20,7 +20,13 @@ export interface CreateIssueParams {
 export function createIssue({ teamId, ...otherParams }: CreateIssueParams) {
   return ajaxPost({
     url: `/api/v1/issues?teamId=${teamId}`,
-    data: { ...otherParams, sortOrder: 0, estimate: 0, subscriberIds: [] },
+    data: {
+      ...otherParams,
+      sortOrder: 0,
+      estimate: 0,
+      subscriberIds: [],
+      isBidirectional: false,
+    },
   });
 }
 

@@ -61,6 +61,7 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
         });
       },
     });
+
   const accounts = React.useMemo(() => {
     let accounts: GithubRepositoryMappingsWithAccount[] = [];
     githubAccounts.forEach((account: IntegrationAccountType) => {
@@ -109,7 +110,7 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
         {team.name} ({team.identifier})
       </div>
 
-      <div className="mt-3">
+      <div className="mt-1">
         {accounts.map((account, index) => {
           return (
             <div

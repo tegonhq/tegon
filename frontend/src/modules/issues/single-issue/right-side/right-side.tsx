@@ -67,7 +67,7 @@ export const RightSide = observer(() => {
           </div>
           <div>
             <IssuePriorityDropdown
-              value={issue.priority}
+              value={issue.priority ?? 0}
               onChange={priorityChange}
               variant={IssuePriorityDropdownVariant.LINK}
             />

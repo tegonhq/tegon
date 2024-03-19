@@ -57,7 +57,7 @@ export class TegonDatabase extends Dexie {
       [MODELS.IntegrationAccount]:
         'id,createdAt,updatedAt,accountId,settings,integratedById,integrationDefinitionId,workspaceId',
       [MODELS.LinkedIssue]:
-        'id,createdAt,updatedAt,url,sourceId,source,sourceData,issueId',
+        'id,createdAt,updatedAt,url,sourceId,source,sourceData,issueId,createdById',
     });
 
     this.workspaces = this.table(MODELS.Workspace);

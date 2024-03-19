@@ -82,9 +82,11 @@ export const IssueActivity = observer(() => {
     );
   }
 
+  console.log(activities);
+
   return (
-    <>
-      <div>
+    <div className="px-4">
+      <div className="my-4">
         <div> Activity</div>
       </div>
 
@@ -165,6 +167,6 @@ export const IssueActivity = observer(() => {
           <IssueComment />
         </Timeline>
       </div>
-    </>
+    </div>
   );
 });

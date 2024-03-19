@@ -29,7 +29,7 @@ export function SubIssueView({
   setNewIssueState,
   newIssueState,
 }: SubIssueViewProps) {
-  const [isOpen, setOpen] = React.useState(false);
+  const [isOpen, setOpen] = React.useState(true);
 
   return (
     <div>
@@ -38,7 +38,7 @@ export function SubIssueView({
           <Button
             variant="ghost"
             size="sm"
-            className="text-muted-foreground"
+            className="text-muted-foreground px-1"
             onClick={setNewIssueState}
             disabled={newIssueState}
           >
@@ -50,7 +50,7 @@ export function SubIssueView({
         <Collapsible
           open={isOpen}
           onOpenChange={setOpen}
-          className="w-full space-y-2"
+          className="w-full space-y-1"
         >
           <div className="flex justify-between">
             <div>
@@ -58,12 +58,12 @@ export function SubIssueView({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-muted-foreground"
+                  className="text-muted-foreground px-1"
                 >
                   {isOpen ? (
-                    <RiArrowDownSFill size={14} className="mr-2" />
+                    <RiArrowDownSFill size={16} className="mr-1" />
                   ) : (
-                    <RiArrowRightSFill size={14} className="mr-2" />
+                    <RiArrowRightSFill size={16} className="mr-1" />
                   )}
                   Sub-issues
                 </Button>
@@ -74,7 +74,7 @@ export function SubIssueView({
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-muted-foreground"
+                className="text-muted-foreground px-1"
                 onClick={setNewIssueState}
                 disabled={newIssueState}
               >
