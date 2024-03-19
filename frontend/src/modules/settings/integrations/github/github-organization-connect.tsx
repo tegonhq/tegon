@@ -5,6 +5,7 @@ import { RiAddLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
+import { cn } from 'common/lib/utils';
 import type {
   IntegrationAccountType,
   Settings,
@@ -20,7 +21,6 @@ import { useCreateRedirectURLMutation } from 'services/oauth/create-redirect-url
 import type { User } from 'store/user-context';
 
 import { useGithubAccounts } from './github-utils';
-import { cn } from 'common/lib/utils';
 
 export const GithubOrganizationConnect = observer(() => {
   const { usersData, isLoading } = useUsersData();

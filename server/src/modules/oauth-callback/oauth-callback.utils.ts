@@ -13,7 +13,7 @@ import {
   ProviderConfig,
   ProviderTemplate,
   ProviderTemplateOAuth2,
-} from './oauth_callback.interface';
+} from './oauth-callback.interface';
 
 /**
  * A helper function to interpolate a string.

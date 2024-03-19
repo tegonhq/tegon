@@ -9,12 +9,11 @@ import {
   IntegrationAccountRequestBody,
   IntegrationAccountRequestIdBody,
   UpdateIntegrationAccountBody,
-} from './integration_account.interface';
+} from './integration-account.interface';
 import {
   handleAppDeletion,
   storeIntegrationRelatedData,
-} from './integration_account.utils';
-import { Prisma } from '@prisma/client';
+} from './integration-account.utils';
 
 @Injectable()
 export class IntegrationAccountService {

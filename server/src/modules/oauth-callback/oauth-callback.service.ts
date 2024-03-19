@@ -5,19 +5,19 @@ import { IntegrationDefinition } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import * as simpleOauth2 from 'simple-oauth2';
 
-import { CreateIntegrationAccountBody } from 'modules/integration_account/integration_account.interface';
-import { IntegrationAccountService } from 'modules/integration_account/integration_account.service';
+import { CreateIntegrationAccountBody } from 'modules/integration-account/integration-account.interface';
+import { IntegrationAccountService } from 'modules/integration-account/integration-account.service';
 
 import {
   CallbackParams,
   ProviderTemplateOAuth2,
   SessionRecord,
-} from './oauth_callback.interface';
+} from './oauth-callback.interface';
 import {
   getAccountId,
   getSimpleOAuth2ClientConfig,
   getTemplate,
-} from './oauth_callback.utils';
+} from './oauth-callback.utils';
 
 // const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/api/v1/oauth/callback`;
 

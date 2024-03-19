@@ -24,8 +24,8 @@ import {
   IntegrationAccountRequestIdBody,
   IntegrationAccountsRequestBody,
   UpdateIntegrationAccountBody,
-} from './integration_account.interface';
-import { IntegrationAccountService } from './integration_account.service';
+} from './integration-account.interface';
+import { IntegrationAccountService } from './integration-account.service';
 
 @Controller({
   version: '1',

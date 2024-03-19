@@ -30,7 +30,6 @@ export function IssueLabelDropdown({
 }: IssueLabelProps) {
   const [open, setOpen] = React.useState(false);
   const labels = useTeamLabels();
-  console.log(labels);
 
   function getTrigger() {
     if (variant === IssueLabelDropdownVariant.LINK) {

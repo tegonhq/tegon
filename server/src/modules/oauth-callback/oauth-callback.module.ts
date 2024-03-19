@@ -4,11 +4,11 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
-import { IntegrationAccountModule } from 'modules/integration_account/integration_account.module';
-import { IntegrationDefinitionService } from 'modules/integration_definition/integration_definition.service';
+import { IntegrationAccountModule } from 'modules/integration-account/integration-account.module';
+import { IntegrationDefinitionService } from 'modules/integration-definition/integration-definition.service';
 
-import { OAuthCallbackController } from './oauth_callback.controller';
-import { OAuthCallbackService } from './oauth_callback.service';
+import { OAuthCallbackController } from './oauth-callback.controller';
+import { OAuthCallbackService } from './oauth-callback.service';
 
 @Module({
   imports: [PrismaModule, HttpModule, IntegrationAccountModule],

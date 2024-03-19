@@ -8,12 +8,12 @@ import config from 'common/configs/config';
 import { loggingMiddleware } from 'common/middleware/logging.middleware';
 
 import { AuthModule } from 'modules/auth/auth.module';
-import { IntegrationAccountModule } from 'modules/integration_account/integration_account.module';
-import { IntegrationDefinitionModule } from 'modules/integration_definition/integration_definition.module';
+import { IntegrationAccountModule } from 'modules/integration-account/integration-account.module';
+import { IntegrationDefinitionModule } from 'modules/integration-definition/integration-definition.module';
 import { IssueCommentsModule } from 'modules/issue-comments/issue-comments.module';
 import { IssuesModule } from 'modules/issues/issues.module';
 import { LabelsModule } from 'modules/labels/labels.module';
-import { OAuthCallbackModule } from 'modules/oauth_callback/oauth_callback.module';
+import { OAuthCallbackModule } from 'modules/oauth-callback/oauth-callback.module';
 import { ReplicationModule } from 'modules/replication/replication.module';
 import { SyncModule } from 'modules/sync/sync.module';
 import { SyncActionsModule } from 'modules/sync-actions/sync-actions.module';

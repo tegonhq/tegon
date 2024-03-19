@@ -4,6 +4,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
+import { Team } from '@@generated/team/entities';
 import {
   IntegrationAccount,
   IntegrationName,
@@ -21,8 +22,8 @@ import {
   GithubSettings,
   IntegrationAccountWithRelations,
   Settings,
-} from 'modules/integration_account/integration_account.interface';
-import { Specification } from 'modules/integration_definition/integration_definition.interface';
+} from 'modules/integration-account/integration-account.interface';
+import { Specification } from 'modules/integration-definition/integration-definition.interface';
 import {
   IssueCommentAction,
   IssueCommentWithRelations,
@@ -43,7 +44,6 @@ import IssuesService from 'modules/issues/issues.service';
 import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import { PostRequestBody, labelDataType } from './github.interface';
-import { Team } from '@@generated/team/entities';
 
 async function getState(
   prisma: PrismaService,
@@ -601,8 +601,8 @@ export async function handleRepositories(
     eventBody.action === 'added'
       ? [...new Set([...repoArray, ...currentRepositories])]
       : currentRepositories.filter(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (repo) =>
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             !repoArray.some((r: any) => r.id.toString() === repo.id.toString()),
         );
 
@@ -668,16 +668,15 @@ export async function getReponse(url: string, token: string) {
         data: {},
         error: 'Internal Server Error',
       };
-    } else {
-      console.error(
-        `Unexpected error making GET request to ${url}: ${error.message}`,
-      );
-      return {
-        status: 500,
-        data: {},
-        error: 'Internal Server Error',
-      };
     }
+    console.error(
+      `Unexpected error making GET request to ${url}: ${error.message}`,
+    );
+    return {
+      status: 500,
+      data: {},
+      error: 'Internal Server Error',
+    };
   }
 }
 
@@ -714,16 +713,15 @@ async function postRequest(url: string, token: string, body: PostRequestBody) {
         data: {},
         error: 'Internal Server Error',
       };
-    } else {
-      console.error(
-        `Unexpected error making POST request to ${url}: ${error.message}`,
-      );
-      return {
-        status: 500,
-        data: {},
-        error: 'Internal Server Error',
-      };
     }
+    console.error(
+      `Unexpected error making POST request to ${url}: ${error.message}`,
+    );
+    return {
+      status: 500,
+      data: {},
+      error: 'Internal Server Error',
+    };
   }
 }
 
@@ -758,16 +756,15 @@ export async function deleteRequest(url: string, token: string) {
         data: {},
         error: 'Internal Server Error',
       };
-    } else {
-      console.error(
-        `Unexpected error making DELETE request to ${url}: ${error.message}`,
-      );
-      return {
-        status: 500,
-        data: {},
-        error: 'Internal Server Error',
-      };
     }
+    console.error(
+      `Unexpected error making DELETE request to ${url}: ${error.message}`,
+    );
+    return {
+      status: 500,
+      data: {},
+      error: 'Internal Server Error',
+    };
   }
 }
 

@@ -15,8 +15,8 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
-import { BodyInterface, CallbackParams } from './oauth_callback.interface';
-import { OAuthCallbackService } from './oauth_callback.service';
+import { BodyInterface, CallbackParams } from './oauth-callback.interface';
+import { OAuthCallbackService } from './oauth-callback.service';
 
 @Controller({
   version: '1',

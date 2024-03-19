@@ -8,7 +8,7 @@ import {
   IntegrationDefinitionCreateBody,
   IntegrationDefinitionRequestIdBody,
   IntegrationDefinitionUpdateBody,
-} from './integration_definition.interface';
+} from './integration-definition.interface';
 
 @Injectable()
 export class IntegrationDefinitionService {

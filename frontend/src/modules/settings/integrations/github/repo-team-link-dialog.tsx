@@ -45,14 +45,14 @@ import { useGithubAccounts } from './github-utils';
 const RepoTeamLinkSchema = z.object({
   teamId: z.string(),
   githubRepoId: z.string(),
-  birectional: z.boolean(),
+  bidirectional: z.boolean(),
   integrationAccountId: z.string(),
 });
 
 interface ValuesType {
   teamId?: string;
   githubRepoId?: string;
-  birectional?: boolean;
+  bidirectional?: boolean;
   integrationAccountId?: string;
 }
 
@@ -70,7 +70,7 @@ export function RepoTeamLinkDialog({
   const form = useForm<z.infer<typeof RepoTeamLinkSchema>>({
     resolver: zodResolver(RepoTeamLinkSchema),
     defaultValues: {
-      birectional: false,
+      bidirectional: false,
       ...defaultValues,
     },
   });
@@ -108,7 +108,7 @@ export function RepoTeamLinkDialog({
               teamId: values.teamId,
               default: false,
               githubRepoId: values.githubRepoId,
-              bidirectional: values.birectional,
+              bidirectional: values.bidirectional,
               githubRepoFullName: repository.fullName,
             },
           ]
@@ -118,7 +118,7 @@ export function RepoTeamLinkDialog({
               teamId: values.teamId,
               default: true,
               githubRepoId: values.githubRepoId,
-              bidirectional: values.birectional,
+              bidirectional: values.bidirectional,
               githubRepoFullName: repository.fullName,
             },
           ];
@@ -230,8 +230,6 @@ export function RepoTeamLinkDialog({
                         ).length === 0 ||
                         defaultValues.githubRepoId === `${repo.id}`,
                     );
-
-                    console.log(repositories);
                   }
 
                   return (
@@ -329,11 +327,11 @@ export function RepoTeamLinkDialog({
 
               <FormField
                 control={form.control}
-                name="birectional"
+                name="bidirectional"
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg mt-4">
                     <div className="space-y-0.5">
-                      <FormLabel>Enable birectional sync</FormLabel>
+                      <FormLabel>Enable bidirectional sync</FormLabel>
                       <FormDescription>
                         When enabled, issues created in Tegon will also sync to
                         Github. Otherwise only issues created in GitHub will

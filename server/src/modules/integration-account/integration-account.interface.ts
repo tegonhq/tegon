@@ -15,14 +15,10 @@ export type Config = Record<string, any>;
 
 export interface GithubRepositories {
   id: string;
-<<<<<<< HEAD
   fulllName: string;
   name?: string;
   private?: boolean;
   nodeId?: string;
-=======
-  fullName: string;
->>>>>>> 35bef89 (Feat: added github integration)
 }
 
 export interface GithubRepositoryMappings {

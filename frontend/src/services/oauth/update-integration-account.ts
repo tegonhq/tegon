@@ -20,7 +20,7 @@ export function updateIntegrationAccount({
   ...params
 }: UpdateIntegrationAccountParams) {
   return ajaxPost({
-    url: `/api/v1/integration_account/${integrationAccountId}/settings`,
+    url: `/api/v1/integration_account/${integrationAccountId}`,
     data: params,
   });
 }

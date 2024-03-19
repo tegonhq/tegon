@@ -14,7 +14,7 @@ import {
 import {
   Config,
   IntegrationAccountWithRelations,
-} from './integration_account.interface';
+} from './integration-account.interface';
 
 export async function storeIntegrationRelatedData(
   prisma: PrismaService,

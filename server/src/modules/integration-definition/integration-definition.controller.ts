@@ -14,8 +14,8 @@ import {
   IntegrationDefinitionCreateBody,
   IntegrationDefinitionRequestIdBody,
   IntegrationDefinitionUpdateBody,
-} from './integration_definition.interface';
-import { IntegrationDefinitionService } from './integration_definition.service';
+} from './integration-definition.interface';
+import { IntegrationDefinitionService } from './integration-definition.service';
 
 @Controller({
   version: '1',
