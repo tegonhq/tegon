@@ -7,6 +7,7 @@ import {
   RiBuilding4Fill,
 } from '@remixicon/react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 
 import { cn } from 'common/lib/utils';
@@ -19,7 +20,6 @@ import {
   type LinkItem,
 } from './settings-layout-constants';
 import { TeamSettingsList } from './team-settings-list';
-import { usePathname } from 'next/navigation';
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {}
 
