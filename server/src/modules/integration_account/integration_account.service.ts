@@ -13,6 +13,7 @@ import {
   handleAppDeletion,
   storeIntegrationRelatedData,
 } from './integration_account.utils';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class IntegrationAccountService {
@@ -128,7 +129,9 @@ export class IntegrationAccountService {
   ) {
     return await this.prisma.integrationAccount.update({
       data: {
-        integrationConfiguration: updateIntegrationAccountBody.config,
+        ...updateIntegrationAccountBody,
+        settings:
+          updateIntegrationAccountBody.settings as Prisma.InputJsonValue,
       },
       where: {
         id: integrationAccountId,

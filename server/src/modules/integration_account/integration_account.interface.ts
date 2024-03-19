@@ -48,17 +48,11 @@ export interface Settings {
 }
 
 export class IntegrationAccountRequestIdBody {
-  /**
-   * Unique identifier for Integration Account
-   */
   @IsString()
   integrationAccountId: string;
 }
 
 export class IntegrationAccountRequestBody extends WorkspaceIdRequestBody {
-  /**
-   * Unique identifier for Integration Account
-   */
   @IsString()
   integrationAccountId: string;
 }
@@ -66,22 +60,12 @@ export class IntegrationAccountRequestBody extends WorkspaceIdRequestBody {
 export class IntegrationAccountsRequestBody extends WorkspaceIdRequestBody {}
 
 export class CreateIntegrationAccountBody extends WorkspaceIdRequestBody {
-  /**
-   * Unique identifier for Integration Definition
-   */
   @IsString()
   integrationDefinitionId: string;
 
-  /**
-   * All properties needed by the integration to talk to their APIs
-   */
   @IsObject()
   config: Config;
 
-  /**
-   * A unique identifier can be passed to identify a group of Accounts.
-   * Example: You can pass user_id or random hash.
-   */
   @IsString()
   @IsOptional()
   accountIdentifier: string;
@@ -100,12 +84,9 @@ export class CreateIntegrationAccountBody extends WorkspaceIdRequestBody {
 }
 
 export class UpdateIntegrationAccountBody {
-  /**
-   * All properties needed by the integration to talk to their APIs
-   */
   @IsOptional()
   @IsObject()
-  config: Config;
+  integrationConfiguration: Config;
 
   @IsString()
   @IsOptional()
