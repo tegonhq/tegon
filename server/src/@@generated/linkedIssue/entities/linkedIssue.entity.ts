@@ -9,7 +9,7 @@ createdAt: Date ;
 updatedAt: Date ;
 deleted: Date  | null;
 url: string ;
-sourceId: string ;
+sourceId: string  | null;
 source: Prisma.JsonValue  | null;
 sourceData: Prisma.JsonValue  | null;
 issue?: Issue ;

@@ -19,6 +19,7 @@ import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 import {
   CreateIssueInput,
   IssueRequestParams,
+  LinkIssueInput,
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
@@ -67,5 +68,19 @@ export class IssuesController {
     @Query() teamParams: TeamRequestParams,
   ): Promise<Issue> {
     return await this.issuesService.deleteIssue(teamParams, issueParams);
+  }
+
+  @Post(':issueId/link')
+  @UseGuards(new AuthGuard())
+  async linkIssue(
+    @Param() issueParams: IssueRequestParams,
+    @Query() teamParams: TeamRequestParams,
+    @Body() linkData: LinkIssueInput,
+  ) {
+    return await this.issuesService.createLinkIssue(
+      teamParams,
+      linkData,
+      issueParams,
+    );
   }
 }

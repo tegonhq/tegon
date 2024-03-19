@@ -10,7 +10,13 @@ import {
 } from 'modules/webhooks/webhooks.interface';
 
 import { eventsToListen } from './github.interface';
-import { handleIssueComments, handleIssues } from './github.utils';
+import {
+  handleInstallations,
+  handleIssueComments,
+  handleIssues,
+  handlePullRequests,
+  handleRepositories,
+} from './github.utils';
 
 @Injectable()
 export default class GithubService {
@@ -49,7 +55,21 @@ export default class GithubService {
           handleIssueComments(this.prisma, eventBody, integrationAccount);
           break;
 
+        case 'pull_request':
+          handlePullRequests(
+            this.prisma,
+            this.issuesService,
+            eventBody,
+            integrationAccount,
+          );
+          break;
+
+        case 'installation':
+          handleInstallations(this.prisma, eventBody, integrationAccount);
+          break;
+
         case 'installation_repositories':
+          handleRepositories(this.prisma, eventBody, integrationAccount);
           break;
 
         default:

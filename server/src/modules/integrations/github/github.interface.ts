@@ -10,4 +10,6 @@ export const eventsToListen = new Map([
   ['issue_comment', true],
   ['label', true],
   ['installation_repositories', true],
+  ['pull_request', true],
+  ['installation', true],
 ]);

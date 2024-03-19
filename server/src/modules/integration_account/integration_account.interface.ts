@@ -16,6 +16,9 @@ export type Config = Record<string, any>;
 export interface GithubRepositories {
   id: string;
   fulllName: string;
+  name?: string;
+  private?: boolean;
+  nodeId?: string;
 }
 
 export interface GithubRepositoryMappings {
@@ -37,7 +40,6 @@ export interface GithubPersonalSettings {
   login: string;
 }
 
-// export type Settings = Record<string, any>;
 export interface Settings {
   [IntegrationName.Github]?: GithubSettings;
   [IntegrationName.GithubPersonal]?: GithubPersonalSettings;
@@ -71,20 +73,6 @@ export class CreateIntegrationAccountBody extends WorkspaceIdRequestBody {
   integrationDefinitionId: string;
 
   /**
-   * This is used for User experience. You can pass a name
-   * to easily identify the account in UI
-   */
-  @IsString()
-  integrationAccountName: string;
-
-  /**
-   * A string according to the integration spec
-   * Example: OAuth2, Api Key etc
-   */
-  @IsString()
-  authType: string;
-
-  /**
    * All properties needed by the integration to talk to their APIs
    */
   @IsObject()
@@ -113,31 +101,30 @@ export class CreateIntegrationAccountBody extends WorkspaceIdRequestBody {
 
 export class UpdateIntegrationAccountBody {
   /**
-   * This is used for User experience. You can pass a name
-   * to easily identify the account in UI
-   */
-  @IsString()
-  integrationAccountName: string;
-
-  /**
-   * All params needed by the integration to talk to their APIs
-   */
-  @IsString()
-  authType: string;
-
-  /**
    * All properties needed by the integration to talk to their APIs
    */
+  @IsOptional()
   @IsObject()
   config: Config;
+
+  @IsString()
+  @IsOptional()
+  accountIdentifier: string;
+
+  @IsString()
+  @IsOptional()
+  accountId: string;
+
+  @IsObject()
+  @IsOptional()
+  settings: Settings;
+
+  @IsString()
+  @IsOptional()
+  userId: string;
 }
 
 export interface IntegrationAccountWithRelations extends IntegrationAccount {
   workspace: Workspace;
   integrationDefinition: IntegrationDefinition;
-}
-
-export class UpdateIntegrationAccountSettingsBody {
-  @IsObject()
-  settings: Settings;
 }

@@ -6,6 +6,7 @@ import {
   IsArray,
   IsBoolean,
   IsDate,
+  IsEnum,
   IsJSON,
   IsNumber,
   IsOptional,
@@ -20,6 +21,12 @@ export class TeamRequestParams {
 export class IssueRequestParams {
   @IsString()
   issueId: string;
+}
+
+export enum LinkedIssueSubType {
+  GithubIssue = 'GithubIssue',
+  GithubPullRequest = 'GithubPullRequest',
+  ExternalLink = 'ExternalLink',
 }
 
 export class CreateIssueInput {
@@ -122,6 +129,14 @@ export class UpdateIssueInput {
   subscriberIds: string[];
 }
 
+export class LinkIssueInput {
+  @IsString()
+  url: string;
+
+  @IsEnum(LinkedIssueSubType)
+  type: LinkedIssueSubType;
+}
+
 export class LinkIssueData {
   @IsString()
   url: string;
@@ -147,6 +162,12 @@ export enum IssueAction {
   CREATED,
   UPDATED,
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type LinkedIssueSource = Record<string, any>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type LinkedIssueSourceData = Record<string, any>;
 
 export const titlePrompt = ` You have deep expertise in project management and task management for software teams. Whenever a text is provided to you, you have to create an issue title for software development tasks based on the description text.
 

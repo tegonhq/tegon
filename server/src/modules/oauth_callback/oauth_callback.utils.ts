@@ -4,6 +4,7 @@ import { BadRequestException } from '@nestjs/common';
 import { IntegrationDefinition, IntegrationName } from '@prisma/client';
 
 import { getGithubUser } from 'modules/integrations/github/github.utils';
+
 import {
   CallbackParams,
   OAuthAuthorizationMethod,

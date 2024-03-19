@@ -4,7 +4,9 @@ import { IntegrationName, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
+  deleteRequest,
   getAccessToken,
+  getBotJWTToken,
   getGithubSettings,
   getGithubUser,
 } from 'modules/integrations/github/github.utils';
@@ -26,7 +28,7 @@ export async function storeIntegrationRelatedData(
   switch (integrationName) {
     case IntegrationName.Github:
       const githubSettings = await getGithubSettings(
-        integrationAccount.accountId,
+        integrationAccount,
         integrationConfig.access_token,
       );
 
@@ -78,4 +80,15 @@ export async function storeIntegrationRelatedData(
     default:
       return undefined;
   }
+}
+
+export async function handleAppDeletion(
+  integrationAccount: IntegrationAccountWithRelations,
+) {
+  const accessToken = await getBotJWTToken(integrationAccount);
+
+  return await deleteRequest(
+    `https://api.github.com/app/installations/${integrationAccount.accountId}`,
+    accessToken,
+  );
 }

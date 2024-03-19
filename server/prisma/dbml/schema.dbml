@@ -192,7 +192,7 @@ Table LinkedIssue {
   updatedAt DateTime [not null]
   deleted DateTime
   url String [unique, not null]
-  sourceId String [not null]
+  sourceId String
   source Json
   sourceData Json
   issue Issue [not null]
@@ -299,6 +299,7 @@ Table IntegrationAccount {
   integrationConfiguration Json [not null]
   accountId String
   settings Json
+  isActive Boolean [not null, default: true]
   integratedBy User [not null]
   integratedById String [not null]
   integrationDefinition IntegrationDefinition [not null]

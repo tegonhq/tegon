@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
-import { Issue } from '@prisma/client';
+import { Issue, LinkedIssue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
 
@@ -12,6 +12,7 @@ import {
   IssueAction,
   IssueRequestParams,
   LinkIssueData,
+  LinkIssueInput,
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
@@ -19,7 +20,9 @@ import {
   getIssueDiff,
   getIssueTitle,
   getLastIssueNumber,
+  getLinkedIssueWithUrl,
   handleTwoWaySync,
+  isValidLinkUrl,
 } from './issues.utils';
 
 const openaiClient = new OpenAI({
@@ -191,5 +194,36 @@ export default class IssuesService {
 
   private async deleteIssueHistory(issueId: string): Promise<void> {
     await this.issueHistoryService.deleteIssueHistory(issueId);
+  }
+
+  async createLinkIssue(
+    teamParams: TeamRequestParams,
+    linkData: LinkIssueInput,
+    issueParams: IssueRequestParams,
+  ): Promise<{ status: number; message: string } | LinkedIssue> {
+    if (!isValidLinkUrl(linkData)) {
+      return { status: 400, message: "Provided url doesn't exists" };
+    }
+
+    const linkedIssue = await this.prisma.linkedIssue.findFirst({
+      where: { url: linkData.url },
+      include: { issue: { include: { team: true } } },
+    });
+    if (linkedIssue) {
+      return {
+        status: 400,
+        message: `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
+      };
+    }
+    try {
+      return await getLinkedIssueWithUrl(
+        this.prisma,
+        linkData,
+        teamParams.teamId,
+        issueParams.issueId,
+      );
+    } catch (error) {
+      return { status: 500, message: 'Failed to create linked issue' };
+    }
   }
 }
