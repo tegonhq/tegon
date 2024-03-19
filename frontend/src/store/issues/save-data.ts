@@ -48,7 +48,7 @@ export async function saveIssuesData(
 
         case 'D': {
           await tegonDatabase.issues.delete(record.data.id);
-          return issuesStore && (await issuesStore.delete(record.data.id));
+          return issuesStore && (await issuesStore.deleteById(record.data.id));
         }
       }
     }),

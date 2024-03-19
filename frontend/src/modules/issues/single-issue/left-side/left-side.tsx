@@ -34,6 +34,14 @@ export const LeftSide = observer(() => {
     });
   }, 1000);
 
+  const onIssueChange = useDebouncedCallback((content: string) => {
+    updateIssue({
+      title: content,
+      teamId: issue.teamId,
+      id: issue.id,
+    });
+  }, 1000);
+
   return (
     <div className="col-span-3">
       <Header />
@@ -41,7 +49,7 @@ export const LeftSide = observer(() => {
         <div>
           {issue.parentId && <ParentIssueView issue={issue} />}
 
-          <IssueTitle defaultValue={issue.title} />
+          <IssueTitle value={issue.title} onChange={onIssueChange} />
           <IssueDescription
             value={issue.description}
             onChange={onDescriptionChange}

@@ -42,7 +42,9 @@ export async function saveCommentsData(
 
         case 'D': {
           await tegonDatabase.comments.delete(record.data.id);
-          return commentsStore && (await commentsStore.delete(record.data.id));
+          return (
+            commentsStore && (await commentsStore.deleteById(record.data.id))
+          );
         }
       }
     }),

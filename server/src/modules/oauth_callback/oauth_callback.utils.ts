@@ -1,3 +1,4 @@
+/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { BadRequestException } from '@nestjs/common';
@@ -88,6 +89,7 @@ export async function getTemplate(
 export async function getAccountId(
   integrationName: IntegrationName,
   params: CallbackParams,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response: any,
 ): Promise<string> {
   switch (integrationName) {

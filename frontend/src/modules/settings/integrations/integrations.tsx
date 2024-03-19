@@ -1,9 +1,12 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiGithubFill } from '@remixicon/react';
+import { useRouter } from 'next/router';
+
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { Separator } from 'components/ui/separator';
+import { useCurrentWorkspace } from 'hooks/workspace';
 
 interface IntegrationCardProps {
   name: string;
@@ -12,14 +15,22 @@ interface IntegrationCardProps {
 }
 
 function IntegrationCard({ name, description, href }: IntegrationCardProps) {
+  const { push } = useRouter();
+  const currentWorkspace = useCurrentWorkspace();
+
   return (
-    <div className="p-3 border rounded-md text-sm">
+    <div
+      className="p-3 border rounded-md text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+      onClick={() =>
+        push(`/${currentWorkspace.slug}/settings/integrations/${href}`)
+      }
+    >
       <div className="flex items-center gap-2">
-        <div className="border p-1 rounded-md">
+        <div className="border p-1 rounded-md bg-background">
           <RiGithubFill className="" />
         </div>
         <div>
-          <div> {name} </div>
+          <div className="font-medium"> {name} </div>
         </div>
       </div>
 

@@ -11,4 +11,6 @@ export enum MODELS {
   Issue = 'Issue',
   IssueHistory = 'IssueHistory',
   IssueComment = 'IssueComment',
+  IntegrationDefinition = 'IntegrationDefinition',
+  IntegrationAccount = 'IntegrationAccount',
 }

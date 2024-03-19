@@ -53,7 +53,7 @@ export async function saveIssueHistoryData(
           await tegonDatabase.issueHistory.delete(record.data.id);
           return (
             issueHistoryStore &&
-            (await issueHistoryStore.delete(record.data.id))
+            (await issueHistoryStore.deleteById(record.data.id))
           );
         }
       }

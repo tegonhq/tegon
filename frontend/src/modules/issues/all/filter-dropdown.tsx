@@ -88,9 +88,9 @@ export function FilterDropdown() {
     >
       <PopoverTrigger asChild>
         <Button
-          variant="ghost"
+          variant="outline"
           size="xs"
-          className="border-1 border-dashed text-xs"
+          className="border-1 border-dashed   text-xs"
         >
           <RiFilter3Line size={16} className="mr-2 text-muted-foreground" />
           Filter

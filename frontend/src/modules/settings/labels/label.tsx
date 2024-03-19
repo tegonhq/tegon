@@ -14,7 +14,7 @@ interface LabelProps {
 
 export function Label({ label, setEditLabelState }: LabelProps) {
   return (
-    <div className="border border-gray-200 dark:border-gray-800 group flex justify-between mb-2 text-sm rounded-md bg-gray-100/80 dark:bg-gray-800 p-2 px-4">
+    <div className="border border-gray-200 dark:border-gray-800 group flex justify-between mb-2 text-sm rounded-md bg-gray-50 dark:bg-gray-800/50 p-2 px-4">
       <div className="flex items-center justify-center gap-3">
         <div
           className="h-3 w-3 rounded-full"

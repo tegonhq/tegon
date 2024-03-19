@@ -34,7 +34,7 @@ export async function saveTeamData(
 
         case 'D': {
           await tegonDatabase.teams.delete(record.data.id);
-          return teamsStore && (await teamsStore.delete(record.data.id));
+          return teamsStore && (await teamsStore.deleteById(record.data.id));
         }
       }
     }),

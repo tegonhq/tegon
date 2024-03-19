@@ -41,7 +41,7 @@ export async function saveLabelData(
 
         case 'D': {
           await tegonDatabase.labels.delete(record.data.id);
-          return labelsStore && (await labelsStore.delete(record.data.id));
+          return labelsStore && (await labelsStore.deleteById(record.data.id));
         }
       }
     }),

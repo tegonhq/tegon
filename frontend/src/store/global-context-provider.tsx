@@ -5,6 +5,8 @@ import React from 'react';
 
 import { ApplicationStore } from './application';
 import { CommentsStore } from './comments';
+import { IntegrationAccountsStore } from './integration-accounts';
+import { IntegrationDefinitionsStore } from './integration-definitions';
 import { IssueHistoryStore } from './issue-history';
 import { IssuesStore } from './issues';
 import { LabelsStore } from './labels';
@@ -21,6 +23,8 @@ const StoreContextModel = types.model({
   teamsStore: TeamsStore,
   workspaceStore: WorkspaceStore,
   applicationStore: ApplicationStore,
+  integrationAccountsStore: IntegrationAccountsStore,
+  integrationDefinitionsStore: IntegrationDefinitionsStore,
 });
 
 export const storeContextStore = StoreContextModel.create({
@@ -58,6 +62,12 @@ export const storeContextStore = StoreContextModel.create({
       showSubIssues: true,
       showEmptyGroups: false,
     },
+  },
+  integrationDefinitionsStore: {
+    integrationDefinitions: [],
+  },
+  integrationAccountsStore: {
+    integrationAccounts: [],
   },
 });
 

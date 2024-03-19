@@ -44,7 +44,7 @@ export async function saveWorkflowData(
         case 'D': {
           await tegonDatabase.workflows.delete(record.data.id);
           return (
-            workflowsStore && (await workflowsStore.delete(record.data.id))
+            workflowsStore && (await workflowsStore.deleteById(record.data.id))
           );
         }
       }

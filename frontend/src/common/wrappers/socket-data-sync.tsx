@@ -28,6 +28,8 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
       workspaceStore,
       teamsStore,
       labelsStore,
+      integrationAccountsStore,
+      integrationDefinitionsStore,
     } = useContextStore();
 
     const [socket, setSocket] = React.useState<Socket | undefined>(undefined);
@@ -65,6 +67,8 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
         [MODELS.Issue]: issuesStore,
         [MODELS.IssueHistory]: issuesHistoryStore,
         [MODELS.IssueComment]: commentsStore,
+        [MODELS.IntegrationAccount]: integrationAccountsStore,
+        [MODELS.IntegrationDefinition]: integrationDefinitionsStore,
       };
 
       socket.on('message', (newMessage: string) => {

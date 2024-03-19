@@ -4,6 +4,8 @@
 
 import Dexie from 'dexie';
 
+import type { IntegrationAccountType } from 'common/types/integration-account';
+import type { IntegrationDefinitionType } from 'common/types/integration-definition';
 import type {
   IssueType,
   IssueHistoryType,
@@ -27,6 +29,8 @@ export class TegonDatabase extends Dexie {
   issueHistory: Dexie.Table<IssueHistoryType, string>;
   comments: Dexie.Table<IssueCommentType, string>;
   usersOnWorkspaces: Dexie.Table<UsersOnWorkspaceType, string>;
+  integrationDefinitions: Dexie.Table<IntegrationDefinitionType, string>;
+  integrationAccounts: Dexie.Table<IntegrationAccountType, string>;
 
   constructor() {
     super('TegonDatabase');
@@ -46,6 +50,10 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,userId,issueId,assedLabelIds,removedLabelIds,fromPriority,toPriority,fromStateId,toStateId,fromEstimate,toEstimate,fromAssigneeId,toAssigneeId,fromParentId,toParentId',
       [MODELS.IssueComment]:
         'id,createdAt,updatedAt,userId,issueId,body,parentId',
+      [MODELS.IntegrationDefinition]:
+        'id,createdAt,updatedAt,userId,name,icon,spec,scopes,workspaceId',
+      [MODELS.IntegrationAccount]:
+        'id,createdAt,updatedAt,accountId,settings,integratedById,integrationDefinitionId,workspaceId',
     });
 
     this.workspaces = this.table(MODELS.Workspace);
@@ -56,6 +64,8 @@ export class TegonDatabase extends Dexie {
     this.usersOnWorkspaces = this.table(MODELS.UsersOnWorkspaces);
     this.issueHistory = this.table(MODELS.IssueHistory);
     this.comments = this.table(MODELS.IssueComment);
+    this.integrationDefinitions = this.table(MODELS.IntegrationDefinition);
+    this.integrationAccounts = this.table(MODELS.IntegrationAccount);
   }
 }
 
