@@ -10,6 +10,7 @@ import { IntegrationDefinitionsStore } from './integration-definitions';
 import { IssueHistoryStore } from './issue-history';
 import { IssuesStore } from './issues';
 import { LabelsStore } from './labels';
+import { LinkedIssuesStore } from './linked-issues';
 import { TeamsStore } from './teams';
 import { WorkflowsStore } from './workflows';
 import { WorkspaceStore } from './workspace';
@@ -25,6 +26,7 @@ const StoreContextModel = types.model({
   applicationStore: ApplicationStore,
   integrationAccountsStore: IntegrationAccountsStore,
   integrationDefinitionsStore: IntegrationDefinitionsStore,
+  linkedIssuesStore: LinkedIssuesStore,
 });
 
 export const storeContextStore = StoreContextModel.create({
@@ -65,9 +67,15 @@ export const storeContextStore = StoreContextModel.create({
   },
   integrationDefinitionsStore: {
     integrationDefinitions: [],
+    workspaceId: undefined,
   },
   integrationAccountsStore: {
     integrationAccounts: [],
+    workspaceId: undefined,
+  },
+  linkedIssuesStore: {
+    linkedIssues: [],
+    issueId: undefined,
   },
 });
 

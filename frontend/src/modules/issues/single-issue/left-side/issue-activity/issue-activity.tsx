@@ -21,10 +21,13 @@ import type { User } from 'store/user-context';
 import { ActivityItem } from './activity-item';
 import { CommentActivity } from './comment-activity';
 import { IssueComment } from './issue-comment';
+import type { LinkedIssueType } from 'common/types/linked-issue';
+import { LinkedIssueActivity } from './linked-issue-activity';
 
 enum ActivityType {
   Comment = 'Comment',
   Default = 'Default',
+  LinkedIssue = 'LinkedIssue',
 }
 
 export const IssueActivity = observer(() => {
@@ -34,6 +37,7 @@ export const IssueActivity = observer(() => {
   const {
     commentsStore: { comments },
     issuesHistoryStore: { issueHistories },
+    linkedIssuesStore: { linkedIssues },
   } = useContextStore();
 
   const activities = [
@@ -44,6 +48,10 @@ export const IssueActivity = observer(() => {
     ...issueHistories.map((issueHistory: IssueHistoryType) => ({
       ...issueHistory,
       type: ActivityType.Default,
+    })),
+    ...linkedIssues.map((linkedIssue: LinkedIssueType) => ({
+      ...linkedIssue,
+      type: ActivityType.LinkedIssue,
     })),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ].sort((a: any, b: any) => {
@@ -126,6 +134,17 @@ export const IssueActivity = observer(() => {
                       allowReply
                       getUserData={getUserData}
                     />
+                  </TimelineItem>
+                );
+              }
+              if (activity.type === ActivityType.LinkedIssue) {
+                return (
+                  <TimelineItem
+                    className="my-2 w-full"
+                    key={`${activity.id}-comment`}
+                    hasMore
+                  >
+                    <LinkedIssueActivity linkedIssue={activity} />
                   </TimelineItem>
                 );
               }

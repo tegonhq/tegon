@@ -7,6 +7,7 @@ import { saveIntegrationDefinitionData } from 'store/integration-definitions';
 import { saveIssueHistoryData } from 'store/issue-history';
 import { saveIssuesData } from 'store/issues';
 import { saveLabelData } from 'store/labels';
+import { saveLinkedIssueData } from 'store/linked-issues';
 import { MODELS } from 'store/models';
 import { saveTeamData } from 'store/teams';
 import { saveWorkflowData } from 'store/workflows';
@@ -79,6 +80,13 @@ export async function saveSocketData(
           return await saveIntegrationDefinitionData(
             [record],
             MODEL_STORE_MAP[MODELS.IntegrationDefinition],
+          );
+        }
+
+        case MODELS.LinkedIssue: {
+          return await saveLinkedIssueData(
+            [record],
+            MODEL_STORE_MAP[MODELS.LinkedIssue],
           );
         }
       }

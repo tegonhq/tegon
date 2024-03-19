@@ -616,23 +616,25 @@ export async function handleRepositories(
     },
   });
 }
-
 export async function handleInstallations(
   prisma: PrismaService,
   eventBody: WebhookEventBody,
   integrationAccount: IntegrationAccountWithRelations,
 ) {
-  const isActive = eventBody.action === 'unsuspend' ? true : false;
-  const updateData: Prisma.IntegrationAccountUpdateInput = { isActive };
+  if (eventBody.action !== 'installed') {
+    const isActive = eventBody.action === 'unsuspend' ? true : false;
+    const updateData: Prisma.IntegrationAccountUpdateInput = { isActive };
 
-  if (eventBody.action === 'deleted') {
-    updateData.deleted = new Date();
+    if (eventBody.action === 'deleted') {
+      updateData.deleted = new Date();
+    }
+
+    return await prisma.integrationAccount.update({
+      where: { id: integrationAccount.id },
+      data: updateData,
+    });
   }
-
-  return await prisma.integrationAccount.update({
-    where: { id: integrationAccount.id },
-    data: updateData,
-  });
+  return undefined;
 }
 
 export async function getReponse(url: string, token: string) {
@@ -649,33 +651,10 @@ export async function getReponse(url: string, token: string) {
       data: response.data,
     };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error(
-          `Error making GET request to ${url}. Status: ${error.response.status}`,
-        );
-        return {
-          status: error.response.status,
-          data: {},
-          error: error.response.data,
-        };
-      }
-      console.error(`Error making GET request to ${url}: ${error.message}`);
-      return {
-        status: 500,
-        data: {},
-        error: 'Internal Server Error',
-      };
-    }
-    console.error(
-      `Unexpected error making GET request to ${url}: ${error.message}`,
-    );
     return {
-      status: 500,
+      status: error.response.status,
       data: {},
-      error: 'Internal Server Error',
+      error: error.response.data,
     };
   }
 }

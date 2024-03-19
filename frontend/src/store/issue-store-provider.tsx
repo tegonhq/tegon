@@ -12,8 +12,13 @@ import { useContextStore } from './global-context-provider';
 export const IssueStoreInit = observer(
   ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = React.useState(true);
-    const { issuesHistoryStore, commentsStore, issuesStore, workflowsStore } =
-      useContextStore();
+    const {
+      issuesHistoryStore,
+      commentsStore,
+      issuesStore,
+      workflowsStore,
+      linkedIssuesStore,
+    } = useContextStore();
 
     const {
       query: { issueId },
@@ -43,6 +48,7 @@ export const IssueStoreInit = observer(
       await workflowsStore.load(teamData?.id);
       await issuesHistoryStore.load(issueData.id);
       await commentsStore.load(issueData.id);
+      await linkedIssuesStore.load(issueData.id);
 
       setLoading(false);
       // eslint-disable-next-line react-hooks/exhaustive-deps

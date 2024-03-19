@@ -98,6 +98,10 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
     });
   };
 
+  if (accounts.length === 0) {
+    return null;
+  }
+
   return (
     <div className="w-full">
       <div className="py-2 px-2 flex gap-2 bg-gray-100 dark:bg-gray-800 w-full rounded-md text-muted-foreground items-center">

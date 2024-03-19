@@ -23,7 +23,7 @@ export function Header() {
         {issueId}
       </div>
 
-      <div className="flex gap-1 justify-start">
+      <div className="flex gap-1 justify-start ml-1">
         {/* <Button variant="ghost" size="xs"   onClick={() => copy(`${userdata.username}/${issueId}`)}>
           <RiLinkM size={16} className="text-muted-foreground" />
         </Button> */}

@@ -19,9 +19,7 @@ import {
   getTemplate,
 } from './oauth-callback.utils';
 
-// const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/api/v1/oauth/callback`;
-
-const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/v1/oauth/callback`;
+const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/api/v1/oauth/callback`;
 
 @Injectable()
 export class OAuthCallbackService {

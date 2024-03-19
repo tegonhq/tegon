@@ -34,6 +34,7 @@ export function BootstrapWrapper({ children }: Props) {
     labelsStore,
     integrationAccountsStore,
     integrationDefinitionsStore,
+    linkedIssuesStore,
   } = useContextStore();
 
   const MODEL_STORE_MAP = {
@@ -47,6 +48,7 @@ export function BootstrapWrapper({ children }: Props) {
     [MODELS.IssueComment]: commentsStore,
     [MODELS.IntegrationAccount]: integrationAccountsStore,
     [MODELS.IntegrationDefinition]: integrationDefinitionsStore,
+    [MODELS.LinkedIssue]: linkedIssuesStore,
   };
 
   const { refetch: bootstrapIssuesRecords } = useBootstrapRecords({

@@ -12,6 +12,7 @@ import type {
   IssueCommentType,
 } from 'common/types/issue';
 import type { LabelType } from 'common/types/label';
+import type { LinkedIssueType } from 'common/types/linked-issue';
 import type { TeamType, WorkflowType } from 'common/types/team';
 import type {
   UsersOnWorkspaceType,
@@ -31,6 +32,7 @@ export class TegonDatabase extends Dexie {
   usersOnWorkspaces: Dexie.Table<UsersOnWorkspaceType, string>;
   integrationDefinitions: Dexie.Table<IntegrationDefinitionType, string>;
   integrationAccounts: Dexie.Table<IntegrationAccountType, string>;
+  linkedIssues: Dexie.Table<LinkedIssueType, string>;
 
   constructor() {
     super('TegonDatabase');
@@ -54,6 +56,8 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,userId,name,icon,spec,scopes,workspaceId',
       [MODELS.IntegrationAccount]:
         'id,createdAt,updatedAt,accountId,settings,integratedById,integrationDefinitionId,workspaceId',
+      [MODELS.LinkedIssue]:
+        'id,createdAt,updatedAt,url,sourceId,source,sourceData,issueId',
     });
 
     this.workspaces = this.table(MODELS.Workspace);
@@ -66,6 +70,7 @@ export class TegonDatabase extends Dexie {
     this.comments = this.table(MODELS.IssueComment);
     this.integrationDefinitions = this.table(MODELS.IntegrationDefinition);
     this.integrationAccounts = this.table(MODELS.IntegrationAccount);
+    this.linkedIssues = this.table(MODELS.LinkedIssue);
   }
 }
 
