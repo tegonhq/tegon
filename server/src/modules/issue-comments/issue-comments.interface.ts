@@ -2,6 +2,7 @@
 
 import { IssueComment } from '@@generated/issueComment/entities';
 import { IsOptional, IsString } from 'class-validator';
+
 import { IssueWithRelations } from 'modules/issues/issues.interface';
 
 export class IssueCommentRequestParams {
@@ -56,3 +57,7 @@ export enum IssueCommentAction {
 export interface IssueCommentWithRelations extends IssueComment {
   issue: IssueWithRelations;
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type LinkedCommentSource = Record<string, any>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type LinkedCommentSourceData = Record<string, any>;

@@ -159,6 +159,8 @@ export async function getModelData(
             createdAt: true,
             updatedAt: true,
             deleted: true,
+            workspaceId: true,
+            integrationDefinitionId: true,
           },
         }),
     },

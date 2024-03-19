@@ -226,7 +226,7 @@ model LinkedIssue {
   deleted   DateTime?
 
   url        String
-  sourceId   String
+  sourceId   String?
   source     Json?
   sourceData Json?
 
@@ -351,6 +351,7 @@ model IntegrationAccount {
   // Unique Identifier for each connected app or personal account
   accountId                String?
   settings                 Json?
+  isActive                 Boolean @default(true)
 
   integratedBy            User                  @relation(references: [id], fields: [integratedById])
   integratedById          String

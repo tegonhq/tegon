@@ -1,10 +1,12 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { IntegrationName, Issue, Prisma } from '@prisma/client';
+import { IntegrationName, Issue, LinkedIssue, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
 
 import {
+  getBotAccessToken,
+  getReponse,
   sendGithubFirstComment,
   upsertGithubIssue,
 } from 'modules/integrations/github/github.utils';
@@ -14,6 +16,8 @@ import {
   CreateIssueInput,
   IssueAction,
   IssueWithRelations,
+  LinkIssueInput,
+  LinkedIssueSubType,
   UpdateIssueInput,
   titlePrompt,
 } from './issues.interface';
@@ -165,4 +169,123 @@ export async function handleTwoWaySync(
       }
     }
   }
+}
+
+export function isValidLinkUrl(linkData: LinkIssueInput): boolean {
+  const { url, type } = linkData;
+  if (type === LinkedIssueSubType.GithubIssue) {
+    const githubIssueRegex =
+      /^https:\/\/github\.com\/[^/]+\/[^/]+\/issues\/\d+$/;
+    return githubIssueRegex.test(url);
+  } else if (type === LinkedIssueSubType.GithubPullRequest) {
+    const githubPRRegex = /^https:\/\/github\.com\/[^/]+\/[^/]+\/pull\/\d+$/;
+    return githubPRRegex.test(url);
+  } else if (type === LinkedIssueSubType.ExternalLink) {
+    return true;
+  }
+
+  return false;
+}
+
+export function convertToAPIUrl(linkData: LinkIssueInput): string {
+  const { url, type } = linkData;
+
+  if (
+    type === LinkedIssueSubType.GithubIssue ||
+    type === LinkedIssueSubType.GithubPullRequest
+  ) {
+    const matches = url.match(
+      /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/(issues|pull)\/(\d+)$/,
+    );
+
+    if (matches) {
+      const [, owner, repo, issueOrPull, number] = matches;
+      return `https://api.github.com/repos/${owner}/${repo}/${issueOrPull === 'pull' ? 'pulls' : 'issues'}/${number}`;
+    }
+  }
+
+  return url;
+}
+
+export async function getLinkedIssueWithUrl(
+  prisma: PrismaService,
+  linkData: LinkIssueInput,
+  teamId: string,
+  issueId: string,
+): Promise<LinkedIssue> {
+  const integrationAccount = await prisma.integrationAccount.findFirst({
+    where: {
+      settings: {
+        path: [IntegrationName.Github, 'repositoryMappings'],
+        array_contains: [{ teamId, bidirectional: true }],
+      } as Prisma.JsonFilter,
+    },
+    include: {
+      integrationDefinition: true,
+      workspace: true,
+    },
+  });
+
+  if (
+    !integrationAccount ||
+    linkData.type === LinkedIssueSubType.ExternalLink
+  ) {
+    return await prisma.linkedIssue.create({
+      data: { url: linkData.url, issueId },
+    });
+  }
+
+  const accessToken = await getBotAccessToken(prisma, integrationAccount);
+  const response =
+    (await getReponse(convertToAPIUrl(linkData), accessToken)).data ?? {};
+
+  if (!response) {
+    return await prisma.linkedIssue.create({
+      data: { url: linkData.url, issueId },
+    });
+  }
+
+  const isGithubIssue = linkData.type === LinkedIssueSubType.GithubIssue;
+  const isGithubPR = linkData.type === LinkedIssueSubType.GithubPullRequest;
+
+  const sourceData = isGithubPR
+    ? {
+        branch: response.head.ref,
+        id: response.id.toString(),
+        closedAt: response.closed_at,
+        createdAt: response.created_at,
+        updatedAt: response.updated_at,
+        number: response.number,
+        state: response.state,
+        title: response.title,
+        apiUrl: response.url,
+        mergedAt: response.merged_at,
+      }
+    : {
+        id: response.id.toString(),
+        title: response.title,
+        apiUrl: response.url,
+      };
+
+  const linkedIssue = await prisma.linkedIssue.create({
+    data: {
+      url: response.html_url,
+      issueId,
+      sourceId: response.id.toString(),
+      source: { type: IntegrationName.Github },
+      sourceData,
+    },
+    include: { issue: true },
+  });
+
+  if (isGithubIssue || isGithubPR) {
+    await sendGithubFirstComment(
+      prisma,
+      integrationAccount,
+      linkedIssue.issue,
+      linkedIssue.sourceId,
+    );
+  }
+
+  return linkedIssue;
 }

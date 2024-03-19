@@ -13,6 +13,7 @@ deleted: Date  | null;
 integrationConfiguration: Prisma.JsonValue ;
 accountId: string  | null;
 settings: Prisma.JsonValue  | null;
+isActive: boolean ;
 integratedBy?: User ;
 integratedById: string ;
 integrationDefinition?: IntegrationDefinition ;

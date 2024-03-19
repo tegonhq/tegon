@@ -2,7 +2,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
-import { ActionType, ModelName, SyncAction } from '@prisma/client';
+import { ActionType, ModelName } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -26,41 +26,30 @@ export default class SyncActionsService {
   ) {
     const workspaceId = await getWorkspaceId(this.prisma, modelName, modelId);
     const sequenceId = convertLsnToInt(lsn);
-    const actionType = convertToActionType(action);
-
-    let syncActionData: SyncAction;
+    let actionType = convertToActionType(action);
 
     if (isDeleted) {
-      syncActionData = await this.prisma.syncAction.create({
-        data: {
-          action: ActionType.D,
-          modelId,
-          modelName,
-          workspaceId,
-          sequenceId,
-        },
-      });
-    } else {
-      syncActionData = await this.prisma.syncAction.upsert({
-        where: {
-          modelId_action: {
-            modelId,
-            action: actionType,
-          },
-        },
-        update: {
-          sequenceId,
-          action: actionType,
-        },
-        create: {
-          action: actionType,
-          modelName,
-          modelId,
-          workspaceId,
-          sequenceId,
-        },
-      });
+      actionType = ActionType.D;
     }
+    const syncActionData = await this.prisma.syncAction.upsert({
+      where: {
+        modelId_action: {
+          modelId,
+          action: actionType,
+        },
+      },
+      update: {
+        sequenceId,
+        action: actionType,
+      },
+      create: {
+        action: actionType,
+        modelName,
+        modelId,
+        workspaceId,
+        sequenceId,
+      },
+    });
 
     const modelData = await getModelData(this.prisma, modelName, modelId);
 

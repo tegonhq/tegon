@@ -8,10 +8,11 @@ import {
   IntegrationAccountRequestBody,
   IntegrationAccountRequestIdBody,
   UpdateIntegrationAccountBody,
-  UpdateIntegrationAccountSettingsBody,
 } from './integration_account.interface';
-import { storeIntegrationRelatedData } from './integration_account.utils';
-import { Prisma } from '@prisma/client';
+import {
+  handleAppDeletion,
+  storeIntegrationRelatedData,
+} from './integration_account.utils';
 
 @Injectable()
 export class IntegrationAccountService {
@@ -23,8 +24,16 @@ export class IntegrationAccountService {
     const { integrationDefinitionId, config, workspaceId, userId } =
       createIntegrationAccountBody;
 
-    const integrationAccount = await this.prisma.integrationAccount.create({
-      data: {
+    const integrationAccount = await this.prisma.integrationAccount.upsert({
+      where: {
+        accountId_integrationDefinitionId_workspaceId: {
+          accountId: createIntegrationAccountBody.accountId,
+          workspaceId,
+          integrationDefinitionId,
+        },
+      },
+      update: { integrationConfiguration: config, deleted: null },
+      create: {
         integrationDefinition: { connect: { id: integrationDefinitionId } },
         workspace: { connect: { id: workspaceId } },
         integrationConfiguration: config,
@@ -64,14 +73,22 @@ export class IntegrationAccountService {
   async deleteIntegrationAccount(
     integrationAccountRequestIdBody: IntegrationAccountRequestIdBody,
   ) {
-    return await this.prisma.integrationAccount.update({
+    const integrationAccount = await this.prisma.integrationAccount.update({
       where: {
         id: integrationAccountRequestIdBody.integrationAccountId,
       },
       data: {
         deleted: new Date().toISOString(),
       },
+      include: {
+        integrationDefinition: true,
+        workspace: true,
+      },
     });
+
+    await handleAppDeletion(integrationAccount);
+
+    return integrationAccount;
   }
 
   async getIntegrationAccount(
@@ -112,21 +129,6 @@ export class IntegrationAccountService {
     return await this.prisma.integrationAccount.update({
       data: {
         integrationConfiguration: updateIntegrationAccountBody.config,
-      },
-      where: {
-        id: integrationAccountId,
-      },
-    });
-  }
-
-  async updateIntegrationAccountSettings(
-    integrationAccountId: string,
-    updateIntegrationAccountSettingsBody: UpdateIntegrationAccountSettingsBody,
-  ) {
-    return await this.prisma.integrationAccount.update({
-      data: {
-        settings:
-          updateIntegrationAccountSettingsBody.settings as Prisma.JsonObject,
       },
       where: {
         id: integrationAccountId,

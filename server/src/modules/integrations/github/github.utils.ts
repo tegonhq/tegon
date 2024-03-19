@@ -2,16 +2,18 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import axios from 'axios';
-import jwt from 'jsonwebtoken';
-import { PrismaService } from 'nestjs-prisma';
+
 import {
   IntegrationAccount,
   IntegrationName,
   Issue,
   LinkedIssue,
+  Prisma,
   WorkflowCategory,
 } from '@prisma/client';
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
+import { PrismaService } from 'nestjs-prisma';
 
 import {
   GithubRepositoryMappings,
@@ -21,10 +23,18 @@ import {
 } from 'modules/integration_account/integration_account.interface';
 import { Specification } from 'modules/integration_definition/integration_definition.interface';
 import {
+  IssueCommentAction,
+  IssueCommentWithRelations,
+  LinkedCommentSourceData,
+} from 'modules/issue-comments/issue-comments.interface';
+import {
   CreateIssueInput,
   IssueRequestParams,
   IssueWithRelations,
   LinkIssueData,
+  LinkedIssueSource,
+  LinkedIssueSourceData,
+  LinkedIssueSubType,
   TeamRequestParams,
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
@@ -32,10 +42,7 @@ import IssuesService from 'modules/issues/issues.service';
 import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import { PostRequestBody, labelDataType } from './github.interface';
-import {
-  IssueCommentAction,
-  IssueCommentWithRelations,
-} from 'modules/issue-comments/issue-comments.interface';
+import { Team } from '@@generated/team/entities';
 
 async function getState(
   prisma: PrismaService,
@@ -110,16 +117,24 @@ async function getIssueData(
   );
 
   const linkIssueData = {
-    url: eventBody.issue.url,
+    url: eventBody.issue.html_url,
     sourceId: eventBody.issue.id.toString(),
-    source: { type: IntegrationName.Github },
-    sourceData: { id: eventBody.issue.id, title: eventBody.issue.title },
+    source: {
+      type: IntegrationName.Github,
+      subType: LinkedIssueSubType.GithubIssue,
+    },
+    sourceData: {
+      id: eventBody.issue.id,
+      title: eventBody.issue.title,
+      apiUrl: eventBody.issue.url,
+    },
   } as LinkIssueData;
 
   const issueInput = {
     title: eventBody.issue.title,
     description: eventBody.issue.body,
     stateId,
+    isBidirectional: true,
     ...(issueLabelIds && { labelIds: issueLabelIds }),
   } as CreateIssueInput;
 
@@ -199,6 +214,17 @@ export async function sendGithubFirstComment(
   const githubCommentBody = `<p><a href="${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${team.identifier}-${issue.number}">${team.identifier}-${issue.number} ${issue.title}</a></p>`;
 
   await sendGithubComment(linkedIssue, accessToken, githubCommentBody);
+}
+
+export async function sendGithubComment(
+  linkedIssue: LinkedIssue,
+  accessToken: string,
+  body: string,
+) {
+  const linkedIssueSource = linkedIssue.sourceData as LinkedIssueSourceData;
+  const url = `${linkedIssueSource.apiUrl}/comments`;
+  const response = await postRequest(url, accessToken, { body });
+  return response;
 }
 
 export async function handleIssues(
@@ -360,13 +386,14 @@ export async function handleIssueComments(
           },
           linkedComment: {
             create: {
-              url: eventBody.comment.url,
+              url: eventBody.comment.html_url,
               sourceId: eventBody.comment.id.toString(),
               source: { type: IntegrationName.Github },
               sourceData: {
                 id: eventBody.comment.id,
                 body: eventBody.comment.body,
                 displayUserName: eventBody.comment.user.login,
+                apiUrl: eventBody.comment.url,
               },
             },
           },
@@ -428,15 +455,229 @@ export async function handleIssueComments(
   }
 }
 
-async function getReponse(url: string, token: string) {
-  const response = await axios.get(url, {
-    headers: {
-      Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${token}`,
-      'X-GitHub-Api-Version': '2022-11-28',
+export async function handlePullRequests(
+  prisma: PrismaService,
+  issuesService: IssuesService,
+  eventBody: WebhookEventBody,
+  integrationAccount: IntegrationAccountWithRelations,
+) {
+  const branchName = eventBody.pull_request.head.ref;
+  const branchNameRegex = /^([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)-(\d+)$/;
+  const match = branchName.match(branchNameRegex);
+  const [, userName, teamSlug, issueNumber] = match ?? [];
+
+  const user = await prisma.user.findFirst({
+    where: { username: { equals: userName, mode: 'insensitive' } },
+  });
+  const team = (await prisma.team.findFirst({
+    where: { identifier: { equals: teamSlug, mode: 'insensitive' } },
+  })) as Team;
+  const issue = await prisma.issue.findFirst({
+    where: { number: Number(issueNumber), teamId: team.id },
+  });
+
+  if (!user || !team || !issue) {
+    return undefined;
+  }
+
+  const pullRequestId = eventBody.pull_request.id.toString();
+  const workspace = integrationAccount.workspace;
+  const sourceData = {
+    branch: eventBody.pull_request.head.ref,
+    id: pullRequestId,
+    closedAt: eventBody.pull_request.closed_at,
+    createdAt: eventBody.pull_request.created_at,
+    updatedAt: eventBody.pull_request.updated_at,
+    number: eventBody.pull_request.number,
+    state: eventBody.pull_request.state,
+    title: eventBody.pull_request.title,
+    apiUrl: eventBody.pull_request.url,
+    mergedAt: eventBody.pull_request.merged_at,
+  };
+
+  switch (eventBody.action) {
+    case 'opened': {
+      const linkedIssue = await prisma.linkedIssue.create({
+        data: {
+          url: eventBody.pull_request.html_url,
+          sourceId: pullRequestId,
+          issueId: issue.id,
+          source: {
+            type: IntegrationName.Github,
+            subType: LinkedIssueSubType.GithubPullRequest,
+            pullRequestId,
+          },
+          sourceData,
+        },
+      });
+
+      const githubCommentBody = `<p><a href="${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${team.identifier}-${issue.number}">${team.identifier}-${issue.number} ${issue.title}</a></p>`;
+      const accessToken = await getBotAccessToken(prisma, integrationAccount);
+
+      await postRequest(eventBody.pull_request.comments_url, accessToken, {
+        body: githubCommentBody,
+      });
+
+      return linkedIssue;
+    }
+
+    case 'closed': {
+      const linkedIssues = await prisma.linkedIssue.findMany({
+        where: { issueId: issue.id },
+      });
+
+      const openPRs = linkedIssues.filter(
+        (linkedIssue) =>
+          (linkedIssue.source as LinkedIssueSource).subType ===
+            LinkedIssueSubType.GithubPullRequest &&
+          (linkedIssue.sourceData as LinkedIssueSourceData).state === 'open',
+      );
+
+      const linkedIssueIds = openPRs.reduce(
+        (map, linkedIssue) => {
+          map[linkedIssue.sourceId] = linkedIssue.id;
+          return map;
+        },
+        {} as Record<string, string>,
+      );
+
+      if (pullRequestId in linkedIssueIds) {
+        const linkedIssue = await prisma.linkedIssue.update({
+          where: { id: linkedIssueIds[pullRequestId] },
+          data: { sourceData },
+        });
+
+        if (openPRs.length <= 1 && sourceData.mergedAt) {
+          const stateId = await getState(prisma, 'closed', team.id);
+          await issuesService.updateIssue(
+            { teamId: team.id } as TeamRequestParams,
+            { stateId } as UpdateIssueInput,
+            { issueId: linkedIssue.issueId } as IssueRequestParams,
+            user.id,
+            null,
+            {
+              id: integrationAccount.id,
+              type: IntegrationName.Github,
+              userDisplayName: eventBody.sender.login,
+            },
+          );
+        }
+
+        return linkedIssue;
+      }
+
+      return undefined;
+    }
+
+    default:
+      return undefined;
+  }
+}
+
+export async function handleRepositories(
+  prisma: PrismaService,
+  eventBody: WebhookEventBody,
+  integrationAccount: IntegrationAccountWithRelations,
+) {
+  const integrationAccountSettings = integrationAccount.settings as Settings;
+  const repositories =
+    eventBody.action === 'added'
+      ? eventBody.repositories_added
+      : eventBody.repositories_removed;
+
+  const currentRepositories = integrationAccountSettings.Github.repositories;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const repoArray = repositories.map((repo: any) => ({
+    id: repo.id.toString(),
+    fullName: repo.full_name,
+    name: repo.name,
+    private: repo.private,
+  }));
+
+  // Merge repositories and currentRepositories, removing duplicates
+  const mergedRepositories =
+    eventBody.action === 'added'
+      ? [...new Set([...repoArray, ...currentRepositories])]
+      : currentRepositories.filter(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (repo) =>
+            !repoArray.some((r: any) => r.id.toString() === repo.id.toString()),
+        );
+
+  integrationAccountSettings.Github.repositories = mergedRepositories;
+
+  // Update the integrationAccount settings with the merged repositories
+  return await prisma.integrationAccount.update({
+    where: { id: integrationAccount.id },
+    data: {
+      settings: integrationAccountSettings as Prisma.JsonObject,
     },
   });
-  return response.data;
+}
+
+export async function handleInstallations(
+  prisma: PrismaService,
+  eventBody: WebhookEventBody,
+  integrationAccount: IntegrationAccountWithRelations,
+) {
+  const isActive = eventBody.action === 'unsuspend' ? true : false;
+  const updateData: Prisma.IntegrationAccountUpdateInput = { isActive };
+
+  if (eventBody.action === 'deleted') {
+    updateData.deleted = new Date();
+  }
+
+  return await prisma.integrationAccount.update({
+    where: { id: integrationAccount.id },
+    data: updateData,
+  });
+}
+
+export async function getReponse(url: string, token: string) {
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${token}`,
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    });
+    return {
+      status: response.status,
+      data: response.data,
+    };
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error(
+          `Error making GET request to ${url}. Status: ${error.response.status}`,
+        );
+        return {
+          status: error.response.status,
+          data: {},
+          error: error.response.data,
+        };
+      }
+      console.error(`Error making GET request to ${url}: ${error.message}`);
+      return {
+        status: 500,
+        data: {},
+        error: 'Internal Server Error',
+      };
+    } else {
+      console.error(
+        `Unexpected error making GET request to ${url}: ${error.message}`,
+      );
+      return {
+        status: 500,
+        data: {},
+        error: 'Internal Server Error',
+      };
+    }
+  }
 }
 
 async function postRequest(url: string, token: string, body: PostRequestBody) {
@@ -448,10 +689,40 @@ async function postRequest(url: string, token: string, body: PostRequestBody) {
         'X-GitHub-Api-Version': '2022-11-28',
       },
     });
-    return response.data;
+    return {
+      status: response.status,
+      data: response.data,
+    };
   } catch (error) {
-    console.error(`Error making POST request to ${url}: ${error.message}`);
-    throw error;
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error(
+          `Error making POST request to ${url}. Status: ${error.response.status}`,
+        );
+        return {
+          status: error.response.status,
+          data: {},
+          error: error.response.data,
+        };
+      }
+      console.error(`Error making POST request to ${url}: ${error.message}`);
+      return {
+        status: 500,
+        data: {},
+        error: 'Internal Server Error',
+      };
+    } else {
+      console.error(
+        `Unexpected error making POST request to ${url}: ${error.message}`,
+      );
+      return {
+        status: 500,
+        data: {},
+        error: 'Internal Server Error',
+      };
+    }
   }
 }
 
@@ -464,26 +735,67 @@ export async function deleteRequest(url: string, token: string) {
         'X-GitHub-Api-Version': '2022-11-28',
       },
     });
-    return response.data;
+    return {
+      status: response.status,
+      data: response.data,
+    };
   } catch (error) {
-    console.error(`Error making DELETE request to ${url}: ${error.message}`);
-    throw error;
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        console.error(
+          `Error making DELETE request to ${url}. Status: ${error.response.status}`,
+        );
+        return {
+          status: error.response.status,
+          data: {},
+          error: error.response.data,
+        };
+      }
+      console.error(`Error making DELETE request to ${url}: ${error.message}`);
+      return {
+        status: 500,
+        data: {},
+        error: 'Internal Server Error',
+      };
+    } else {
+      console.error(
+        `Unexpected error making DELETE request to ${url}: ${error.message}`,
+      );
+      return {
+        status: 500,
+        data: {},
+        error: 'Internal Server Error',
+      };
+    }
   }
 }
 
-export async function getGithubSettings(installationId: string, token: string) {
-  const orgUrl = `https://api.github.com/user/orgs`;
-  const orgs = await getReponse(orgUrl, token);
-  if (orgs.length !== 0) {
+export async function getGithubSettings(
+  integrationAccount: IntegrationAccountWithRelations,
+  token: string,
+) {
+  const installationId = integrationAccount.accountId;
+  const orgUrl = `https://api.github.com/app/installations/${installationId}`;
+
+  const org = (
+    await getReponse(orgUrl, await getBotJWTToken(integrationAccount))
+  ).data;
+  if (org) {
     const repoUrl = `https://api.github.com/user/installations/${installationId}/repositories`;
-    const repos = await getReponse(repoUrl, token);
+    const repos = (await getReponse(repoUrl, token)).data;
     return {
-      orgAvatarURL: orgs[0].avatar_url,
-      orgLogin: orgs[0].login,
+      orgAvatarURL: org.account.avatar_url,
+      orgLogin: org.account.login,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      repositories: repos.repositories.map((repo: any) => {
-        return { id: repo.id, fullName: repo.full_name };
+      repositories: repos?.repositories.map((repo: any) => {
+        return {
+          id: repo.id.toString(),
+          fullName: repo.full_name,
+          name: repo.name,
+          private: repo.private,
+        };
       }),
+      repositoryMappings: [],
     } as GithubSettings;
   }
 
@@ -528,14 +840,28 @@ export async function getAccessToken(
   return config.access_token;
 }
 
-export async function sendGithubComment(
-  linkedIssue: LinkedIssue,
-  accessToken: string,
-  body: string,
+export async function getBotJWTToken(
+  integrationAccount: IntegrationAccountWithRelations,
 ) {
-  const url = `${linkedIssue.url}/comments`;
-  const response = await postRequest(url, accessToken, { body });
-  return response;
+  const spec = integrationAccount.integrationDefinition
+    .spec as unknown as Specification;
+
+  const appId = spec.other_data.app_id;
+  const privateKeyPath = path.join(process.cwd(), `certs/${appId}.pem`);
+  const privateKey = await fs.readFile(privateKeyPath, 'utf8');
+
+  const payload = {
+    // issued at time, 60 seconds in the past to allow for clock drift
+    iat: Math.floor(Date.now() / 1000) - 60,
+    // JWT expiration time (10 minute maximum)
+    exp: Math.floor(Date.now() / 1000) + 10 * 60,
+    // GitHub App's identifier
+    iss: appId,
+  };
+
+  return jwt.sign(payload, privateKey, {
+    algorithm: 'RS256',
+  });
 }
 
 export async function getBotAccessToken(
@@ -552,32 +878,12 @@ export async function getBotAccessToken(
     !config.expires_at ||
     currentTime > new Date(config.expires_at).getTime()
   ) {
-    const spec = integrationAccount.integrationDefinition
-      .spec as unknown as Specification;
-
-    const appId = spec.other_data.app_id;
-    const privateKeyPath = path.join(
-      __dirname,
-      `../../../../certs/${appId}.pem`,
-    );
-    const privateKey = await fs.readFile(privateKeyPath, 'utf8');
-
-    const payload = {
-      // issued at time, 60 seconds in the past to allow for clock drift
-      iat: Math.floor(Date.now() / 1000) - 60,
-      // JWT expiration time (10 minute maximum)
-      exp: Math.floor(Date.now() / 1000) + 10 * 60,
-      // GitHub App's identifier
-      iss: appId,
-    };
-
-    const token = jwt.sign(payload, privateKey, {
-      algorithm: 'RS256',
-    });
+    const token = await getBotJWTToken(integrationAccount);
 
     const url = `https://api.github.com/app/installations/${integrationAccount.accountId}/access_tokens`;
 
-    const accessResponse = await postRequest(url, token, {});
+    const accessResponse = (await postRequest(url, token, {})).data;
+
     config = {
       access_token: accessResponse.token,
       expires_at: accessResponse.expires_at,
@@ -595,21 +901,15 @@ async function getGithubUserIntegrationAccount(
   userId: string,
   workspaceId: string,
 ) {
-  const usersOnWorkspaces = await prisma.usersOnWorkspaces.findUnique({
-    where: { userId_workspaceId: { userId, workspaceId } },
+  return await prisma.integrationAccount.findFirst({
+    where: {
+      integratedById: userId,
+      integrationDefinition: {
+        workspaceId,
+        name: IntegrationName.GithubPersonal,
+      },
+    },
   });
-
-  const accountMapping = usersOnWorkspaces.externalAccountMappings as Record<
-    string,
-    string
-  >;
-
-  if (accountMapping) {
-    return await prisma.integrationAccount.findFirst({
-      where: { accountId: accountMapping[IntegrationName.Github] },
-    });
-  }
-  return null;
 }
 
 async function getGithubLabels(
@@ -630,7 +930,7 @@ async function getGithubLabels(
 }
 
 export async function getGithubUser(token: string) {
-  return await getReponse('https://api.github.com/user', token);
+  return (await getReponse('https://api.github.com/user', token)).data ?? {};
 }
 
 export async function upsertGithubIssue(
@@ -685,7 +985,13 @@ export async function upsertGithubIssue(
       ? await getAccessToken(prisma, userGithubIntegrationAccount)
       : await getBotAccessToken(prisma, integrationAccount);
 
-    return await postRequest(linkedIssue.url, accessToken, issueBody);
+    return (
+      await postRequest(
+        (linkedIssue.sourceData as LinkedIssueSourceData).apiUrl,
+        accessToken,
+        issueBody,
+      )
+    ).data;
   }
   const accessToken = await getBotAccessToken(prisma, integrationAccount);
 
@@ -695,7 +1001,7 @@ export async function upsertGithubIssue(
 
   if (defaultRepo) {
     const url = `https://api.github.com/repos/${defaultRepo.githubRepoFullName}/issues`;
-    return await postRequest(url, accessToken, issueBody);
+    return (await postRequest(url, accessToken, issueBody)).data;
   }
 
   return undefined;
@@ -726,18 +1032,21 @@ export async function upsertGithubIssueComment(
 
       if (linkedIssue) {
         const url = `${linkedIssue.url}/comments`;
-        const githubIssueComment = await postRequest(url, accessToken, {
-          body: issueComment.body,
-        });
+        const githubIssueComment = (
+          await postRequest(url, accessToken, {
+            body: issueComment.body,
+          })
+        ).data;
         const sourceMetadata = {
           id: githubIssueComment.id,
           body: githubIssueComment.body,
           displayUserName: githubIssueComment.user.login,
+          apiUrl: githubIssueComment.url,
         };
         await prisma.linkedComment.create({
           data: {
             sourceId: githubIssueComment.id.toString(),
-            url: githubIssueComment.url,
+            url: githubIssueComment.html_url,
             source: { type: IntegrationName.Github },
             sourceData: sourceMetadata,
             commentId: issueComment.id,
@@ -759,31 +1068,35 @@ export async function upsertGithubIssueComment(
         },
       });
       if (linkedComment) {
-        return await postRequest(linkedComment.url, accessToken, {
-          body: issueComment.body,
-        });
+        return await postRequest(
+          (linkedComment.sourceData as LinkedCommentSourceData).apiUrl,
+          accessToken,
+          {
+            body: issueComment.body,
+          },
+        );
       }
       return undefined;
 
     case IssueCommentAction.DELETED:
-      // const deletedLinkedComment = await prisma.linkedComment.findFirst({
-      //   where: {
-      //     commentId: issueComment.id,
-      //     source: { path: ['type'], equals: IntegrationName.Github },
-      //   },
-      // });
-      // if (deletedLinkedComment) {
-      //   const deleteResponse = await deleteRequest(
-      //     deletedLinkedComment.url,
-      //     accessToken,
-      //   );
+      const deletedLinkedComment = await prisma.linkedComment.findFirst({
+        where: {
+          commentId: issueComment.id,
+          source: { path: ['type'], equals: IntegrationName.Github },
+        },
+      });
+      if (deletedLinkedComment) {
+        const deleteResponse = await deleteRequest(
+          (deletedLinkedComment.sourceData as LinkedCommentSourceData).apiUrl,
+          accessToken,
+        );
 
-      //   await prisma.linkedComment.update({
-      //     where: { id: deletedLinkedComment.id },
-      //     data: { deleted: new Date().toISOString() },
-      //   });
-      //   return deleteResponse;
-      // }
+        await prisma.linkedComment.update({
+          where: { id: deletedLinkedComment.id },
+          data: { deleted: new Date().toISOString() },
+        });
+        return deleteResponse;
+      }
       return undefined;
   }
 }

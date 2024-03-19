@@ -30,18 +30,6 @@ export class BodyInterface {
   workspaceId?: string;
 
   @IsString()
-  @IsOptional()
-  linkId?: string;
-
-  @IsString()
-  @IsOptional()
-  integrationKeys?: string;
-
-  @IsString()
-  @IsOptional()
-  accountIdentifier?: string;
-
-  @IsString()
   integrationDefinitionId: string;
 }
 
