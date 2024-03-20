@@ -35,7 +35,7 @@ export function ProfileDropdown() {
           <div className="flex justify-between">
             <Avatar className="h-[20px] w-[30px] ">
               <AvatarImage />
-              <AvatarFallback className="bg-cyan-500 dark:bg-cyan-900 rounded-sm">
+              <AvatarFallback className="bg-cyan-500 dark:bg-cyan-900 text-[0.6rem] rounded-sm">
                 {getInitials(userData.fullname)}
               </AvatarFallback>
             </Avatar>

@@ -55,4 +55,5 @@ export interface IssueCommentType {
 
   issueId: string;
   parentId: string;
+  sourceMetadata?: string;
 }

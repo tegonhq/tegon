@@ -21,6 +21,7 @@ export async function saveCommentsData(
         userId: record.data.userId,
         body: record.data.body,
         parentId: record.data.parentId,
+        sourceMetadata: JSON.stringify(record.data.sourceMetadata),
       };
 
       switch (record.action) {

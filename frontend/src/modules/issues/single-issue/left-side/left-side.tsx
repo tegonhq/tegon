@@ -18,6 +18,7 @@ import { IssueDescription } from './issue-description';
 import { IssueTitle } from './issue-title';
 import { ParentIssueView } from './parent-issue-view';
 import { SubIssueView } from './sub-issue-view';
+import { LinkedIssuesView } from './linked-issues-view';
 
 export const LeftSide = observer(() => {
   const issue = useIssueData();
@@ -62,8 +63,6 @@ export const LeftSide = observer(() => {
           />
         </div>
 
-        <Separator className="my-1" />
-
         {newIssueState && (
           <>
             <div className="my-1">
@@ -76,6 +75,10 @@ export const LeftSide = observer(() => {
             <Separator className="my-1" />
           </>
         )}
+
+        <LinkedIssuesView issueId={issue.id} />
+
+        <Separator className="my-1" />
 
         <IssueActivity />
       </div>

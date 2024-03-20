@@ -40,7 +40,7 @@ export const WorkspaceDropdown = observer(
             <div className="flex justify-between">
               <Avatar className="h-[20px] w-[25px] ">
                 <AvatarImage />
-                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-xs rounded-sm">
+                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
                   {getInitials(workspaceStore.workspace.name)}
                 </AvatarFallback>
               </Avatar>

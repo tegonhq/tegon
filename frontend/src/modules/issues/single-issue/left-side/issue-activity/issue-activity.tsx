@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite';
 import ReactTimeAgo from 'react-time-ago';
 
 import type { IssueCommentType, IssueHistoryType } from 'common/types/issue';
+import type { LinkedIssueType } from 'common/types/linked-issue';
 
 import {
   Avatar,
@@ -21,7 +22,6 @@ import type { User } from 'store/user-context';
 import { ActivityItem } from './activity-item';
 import { CommentActivity } from './comment-activity';
 import { IssueComment } from './issue-comment';
-import type { LinkedIssueType } from 'common/types/linked-issue';
 import { LinkedIssueActivity } from './linked-issue-activity';
 
 enum ActivityType {
@@ -82,8 +82,6 @@ export const IssueActivity = observer(() => {
     );
   }
 
-  console.log(activities);
-
   return (
     <div className="px-4">
       <div className="my-4">
@@ -139,6 +137,7 @@ export const IssueActivity = observer(() => {
                   </TimelineItem>
                 );
               }
+
               if (activity.type === ActivityType.LinkedIssue) {
                 return (
                   <TimelineItem

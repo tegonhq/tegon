@@ -42,7 +42,7 @@ export function SubIssueView({
             onClick={setNewIssueState}
             disabled={newIssueState}
           >
-            <RiAddLine size={14} className="mr-2" /> Add sub-issues
+            <RiAddLine size={14} className="mr-1" /> Add sub-issues
           </Button>
         </div>
       )}

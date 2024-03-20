@@ -51,7 +51,7 @@ export class TegonDatabase extends Dexie {
       [MODELS.IssueHistory]:
         'id,createdAt,updatedAt,userId,issueId,assedLabelIds,removedLabelIds,fromPriority,toPriority,fromStateId,toStateId,fromEstimate,toEstimate,fromAssigneeId,toAssigneeId,fromParentId,toParentId',
       [MODELS.IssueComment]:
-        'id,createdAt,updatedAt,userId,issueId,body,parentId',
+        'id,createdAt,updatedAt,userId,issueId,body,parentId,sourceMetadata',
       [MODELS.IntegrationDefinition]:
         'id,createdAt,updatedAt,userId,name,icon,spec,scopes,workspaceId',
       [MODELS.IntegrationAccount]:
