@@ -20,6 +20,8 @@ import {
   LinkIssueInput,
   LinkedIssueSubType,
   UpdateIssueInput,
+  githubIssueRegex,
+  githubPRRegex,
   titlePrompt,
 } from './issues.interface';
 
@@ -177,14 +179,20 @@ export async function handleTwoWaySync(
   }
 }
 
+export function getLinkType(url: string): LinkedIssueSubType | null {
+  if (githubIssueRegex.test(url)) {
+    return LinkedIssueSubType.GithubIssue;
+  } else if (githubPRRegex.test(url)) {
+    return LinkedIssueSubType.GithubPullRequest;
+  }
+  return LinkedIssueSubType.ExternalLink;
+}
+
 export function isValidLinkUrl(linkData: LinkIssueInput): boolean {
   const { url, type } = linkData;
   if (type === LinkedIssueSubType.GithubIssue) {
-    const githubIssueRegex =
-      /^https:\/\/github\.com\/[^/]+\/[^/]+\/issues\/\d+$/;
     return githubIssueRegex.test(url);
   } else if (type === LinkedIssueSubType.GithubPullRequest) {
-    const githubPRRegex = /^https:\/\/github\.com\/[^/]+\/[^/]+\/pull\/\d+$/;
     return githubPRRegex.test(url);
   } else if (type === LinkedIssueSubType.ExternalLink) {
     return true;
@@ -248,7 +256,12 @@ export async function getLinkedIssueWithUrl(
 
   if (!response) {
     return await prisma.linkedIssue.create({
-      data: { url: linkData.url, issueId, createdById: userId },
+      data: {
+        url: linkData.url,
+        issueId,
+        createdById: userId,
+        sourceData: linkData as unknown as Prisma.InputJsonValue,
+      },
     });
   }
 

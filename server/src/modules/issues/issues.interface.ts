@@ -9,9 +9,12 @@ import {
   IsEnum,
   IsJSON,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
 } from 'class-validator';
+
+import { IssueRelation } from 'modules/issue-history/issue-history.interface';
 
 export class TeamRequestParams {
   @IsString()
@@ -27,6 +30,19 @@ export enum LinkedIssueSubType {
   GithubIssue = 'GithubIssue',
   GithubPullRequest = 'GithubPullRequest',
   ExternalLink = 'ExternalLink',
+}
+
+export class LinkIssueInput {
+  @IsString()
+  url: string;
+
+  @IsOptional()
+  @IsEnum(LinkedIssueSubType)
+  type?: LinkedIssueSubType;
+
+  @IsOptional()
+  @IsString()
+  title?: string;
 }
 
 export class CreateIssueInput {
@@ -77,6 +93,14 @@ export class CreateIssueInput {
 
   @IsBoolean()
   isBidirectional: boolean;
+
+  @IsOptional()
+  @IsObject()
+  linkIssue?: LinkIssueInput;
+
+  @IsOptional()
+  @IsObject()
+  issueRelation?: IssueRelation;
 }
 
 export class UpdateIssueInput {
@@ -127,14 +151,10 @@ export class UpdateIssueInput {
   @IsOptional()
   @IsArray()
   subscriberIds: string[];
-}
 
-export class LinkIssueInput {
-  @IsString()
-  url: string;
-
-  @IsEnum(LinkedIssueSubType)
-  type: LinkedIssueSubType;
+  @IsOptional()
+  @IsObject()
+  issueRelation?: IssueRelation;
 }
 
 export class LinkIssueData {
@@ -203,3 +223,7 @@ Step 4: Refine the title created in step 3 based on following guidelines.
         - Better: ""Enhance Source Linnworks Docs: Setup, UI Navigation, Streams, Troubleshooting, and Examples
 
 Step 5: Give output only of the refined title created in Step 4 without mentioning Title in the start `;
+
+export const githubIssueRegex =
+  /^https:\/\/github\.com\/[^/]+\/[^/]+\/issues\/\d+$/;
+export const githubPRRegex = /^https:\/\/github\.com\/[^/]+\/[^/]+\/pull\/\d+$/;

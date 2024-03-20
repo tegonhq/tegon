@@ -11,6 +11,7 @@ import { AuthModule } from 'modules/auth/auth.module';
 import { IntegrationAccountModule } from 'modules/integration-account/integration-account.module';
 import { IntegrationDefinitionModule } from 'modules/integration-definition/integration-definition.module';
 import { IssueCommentsModule } from 'modules/issue-comments/issue-comments.module';
+import { IssueHistoryModule } from 'modules/issue-history/issue-history.module';
 import { IssuesModule } from 'modules/issues/issues.module';
 import { LabelsModule } from 'modules/labels/labels.module';
 import { OAuthCallbackModule } from 'modules/oauth-callback/oauth-callback.module';
@@ -46,6 +47,7 @@ import { AppService } from './app.service';
     WorkflowsModule,
     IssuesModule,
     IssueCommentsModule,
+    IssueHistoryModule,
 
     ReplicationModule,
     SyncActionsModule,

@@ -4,11 +4,12 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
+import { IssueHistoryController } from './issue-history.controller';
 import IssueHistoryService from './issue-history.service';
 
 @Module({
   imports: [PrismaModule, HttpModule],
-  controllers: [],
+  controllers: [IssueHistoryController],
   providers: [IssueHistoryService, PrismaService],
   exports: [IssueHistoryService],
 })

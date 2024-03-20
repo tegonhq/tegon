@@ -5,6 +5,7 @@ import { Issue, LinkedIssue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
 
+import { IssueRelation } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 
 import {
@@ -21,6 +22,7 @@ import {
   getIssueDiff,
   getIssueTitle,
   getLastIssueNumber,
+  getLinkType,
   getLinkedIssueWithUrl,
   handleTwoWaySync,
   isValidLinkUrl,
@@ -44,14 +46,26 @@ export default class IssuesService {
     linkIssuedata?: LinkIssueData,
     linkMetaData?: Record<string, string>,
   ): Promise<Issue> {
+    const { linkIssue, ...otherIssueData } = issueData;
     const issue = await this.createIssueAPI(
       teamRequestParams,
-      issueData,
+      otherIssueData,
       userId,
       linkIssuedata,
       linkMetaData,
     );
-    if (issueData.isBidirectional) {
+
+    if (linkIssue) {
+      linkIssue.type = await getLinkType(linkIssue.url);
+      await this.createLinkIssue(
+        teamRequestParams,
+        linkIssue,
+        { issueId: issue.id },
+        userId,
+      );
+    }
+
+    if (otherIssueData.isBidirectional && !linkIssue) {
       await handleTwoWaySync(this.prisma, issue, IssueAction.CREATED, userId);
     }
 
@@ -65,7 +79,7 @@ export default class IssuesService {
     linkIssuedata?: LinkIssueData,
     linkMetaData?: Record<string, string>,
   ): Promise<IssueWithRelations> {
-    const { parentId, ...otherIssueData } = issueData;
+    const { parentId, issueRelation, ...otherIssueData } = issueData;
     const lastNumber = await getLastIssueNumber(
       this.prisma,
       teamRequestParams.teamId,
@@ -90,7 +104,13 @@ export default class IssuesService {
       },
     });
 
-    await this.createIssueHistory(issue, userId, linkMetaData);
+    await this.upsertIssueHistory(
+      issue,
+      null,
+      userId,
+      linkMetaData,
+      issueRelation,
+    );
     return issue;
   }
 
@@ -102,7 +122,7 @@ export default class IssuesService {
     linkIssuedata?: LinkIssueData,
     linkMetaData?: Record<string, string>,
   ): Promise<Issue> {
-    const { parentId, ...otherIssueData } = issueData;
+    const { parentId, issueRelation, ...otherIssueData } = issueData;
     const issueTitle = await getIssueTitle(openaiClient, issueData);
 
     const [currentIssue, updatedIssue] = await this.prisma.$transaction([
@@ -134,11 +154,12 @@ export default class IssuesService {
       }),
     ]);
 
-    await this.updateIssueHistory(
+    await this.upsertIssueHistory(
       updatedIssue,
       currentIssue,
       userId,
       linkMetaData,
+      issueRelation,
     );
     if (updatedIssue.isBidirectional) {
       await handleTwoWaySync(
@@ -183,31 +204,27 @@ export default class IssuesService {
     });
   }
 
-  private async createIssueHistory(
+  private async upsertIssueHistory(
     issue: Issue,
+    currentIssue: Issue | null,
     userId?: string,
     linkMetaData?: Record<string, string>,
+    issueRelation?: IssueRelation,
   ): Promise<void> {
     await this.issueHistoryService.upsertIssueHistory(
       userId,
       issue.id,
-      await getIssueDiff(issue, null),
+      await getIssueDiff(issue, currentIssue),
       linkMetaData,
     );
-  }
 
-  private async updateIssueHistory(
-    updatedIssue: Issue,
-    currentIssue: Issue | null,
-    userId?: string,
-    linkMetaData?: Record<string, string>,
-  ): Promise<void> {
-    await this.issueHistoryService.upsertIssueHistory(
-      userId,
-      updatedIssue.id,
-      await getIssueDiff(updatedIssue, currentIssue),
-      linkMetaData,
-    );
+    if (issueRelation) {
+      await this.issueHistoryService.createIssueRelation(
+        userId,
+        issue.id,
+        issueRelation,
+      );
+    }
   }
 
   private async deleteIssueHistory(issueId: string): Promise<void> {

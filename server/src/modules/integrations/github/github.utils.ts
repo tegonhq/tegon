@@ -540,12 +540,6 @@ export async function handlePullRequests(
         issue,
         eventBody.pull_request.comments_url,
       );
-      // const githubCommentBody = `<p><a href="${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${team.identifier}-${issue.number}">${team.identifier}-${issue.number} ${issue.title}</a></p>`;
-      // const accessToken = await getBotAccessToken(prisma, integrationAccount);
-
-      // await postRequest(eventBody.pull_request.comments_url, accessToken, {
-      //   body: githubCommentBody,
-      // });
 
       return linkedIssue;
     }
