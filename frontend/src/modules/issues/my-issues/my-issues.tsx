@@ -13,7 +13,7 @@ import { TeamStoreInit } from 'store/team-store-provider';
 import { UserContext } from 'store/user-context';
 
 import { FiltersView } from '../all/filters-view';
-import { Header } from '../all/header';
+// import { Header } from '../all/header';
 import { ListView } from '../all/list-view';
 
 export function MyIssues() {
@@ -29,7 +29,7 @@ export function MyIssues() {
 
   return (
     <main className="flex flex-col">
-      <Header />
+      {/* <Header /> */}
       <FiltersView />
       <div className="grow">{loading ? <Loader /> : <ListView />}</div>
     </main>
