@@ -45,6 +45,9 @@ export const IssuesStore: IAnyStateTreeNode = types
     return { update, deleteById, load };
   })
   .views((self) => ({
+    getIssues() {
+      return Array.from(self.issuesMap.values());
+    },
     getIssuesForState(stateId: string, teamId: string, showSubIssues: boolean) {
       return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
         showSubIssues

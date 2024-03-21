@@ -4,6 +4,7 @@ import {
   RiAccountBoxFill,
   RiArrowRightSFill,
   RiExchangeFill,
+  RiFlipHorizontal2Fill,
   RiFunctionFill,
   RiStackFill,
   RiTeamFill,
@@ -88,7 +89,7 @@ export const TeamList = observer(({ isCollapsed }: TeamListProps) => {
                   <TeamListItem
                     name="Triage"
                     team={team}
-                    Icon={RiExchangeFill}
+                    Icon={RiFlipHorizontal2Fill}
                     href="triage"
                   />
                   <TeamListItem

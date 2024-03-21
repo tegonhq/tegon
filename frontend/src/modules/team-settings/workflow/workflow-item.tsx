@@ -5,6 +5,7 @@ import {
   RiCircleLine,
   RiCloseCircleFill,
   RiExchangeFill,
+  RiFlipHorizontal2Fill,
   RiLoader3Line,
   RiProgress4Line,
   RiProgress6Line,
@@ -24,7 +25,7 @@ export const WORKFLOW_CATEGORY_ICONS = {
   Done: RiCheckboxCircleFill,
   Duplicate: RiCloseCircleFill,
   Canceled: RiCloseCircleFill,
-  Triage: RiExchangeFill,
+  Triage: RiFlipHorizontal2Fill,
 };
 
 export function WorkflowItem({ workflow }: WorkflowItemProps) {

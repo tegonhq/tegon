@@ -8,3 +8,4 @@ export * from './issue-assignee-dropdown';
 export * from './issue-label-dropdown';
 export * from './issue-status-dropdown';
 export * from './issue-priority-dropdown';
+export * from './issue-related-dropdown';

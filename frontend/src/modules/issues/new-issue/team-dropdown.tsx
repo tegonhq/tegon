@@ -50,7 +50,11 @@ export function TeamDropdown({ value, onChange }: TeamProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="flex items-center">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center text-foreground"
+        >
           <RiAccountBoxFill size={14} className="mr-2" />
           {getTeam()?.name}
         </Button>

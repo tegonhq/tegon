@@ -63,11 +63,11 @@ export function GithubCommentActivity({
       >
         <div className={cn('flex gap-2', !comment.parentId && 'p-3')}>
           <span className="text-foreground font-medium flex items-center gap-1">
-            <RiGithubFill size={16} /> Github
+            <RiGithubFill size={16} className="mr-2" /> Github
           </span>
           <span className="text-muted-foreground"> thread connected in </span>
           <a href={linkedIssue.url}>
-            # {issueNumber} {linkedSourceData.title}
+            #{issueNumber} {linkedSourceData.title}
           </a>
           <span>
             <ReactTimeAgo

@@ -57,12 +57,12 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <RiPencilFill size={16} /> Edit
+                  <RiPencilFill size={14} /> Edit
                 </div>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <RiDeleteBin7Fill size={16} /> Remove
+                  <RiDeleteBin7Fill size={14} /> Remove
                 </div>
               </DropdownMenuItem>
             </DropdownMenuGroup>

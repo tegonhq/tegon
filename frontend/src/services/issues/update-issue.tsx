@@ -3,7 +3,7 @@
 import { useMutation } from 'react-query';
 
 import { ajaxPost } from 'common/lib/ajax';
-import type { IssueType } from 'common/types/issue';
+import type { IssueRelation, IssueType } from 'common/types/issue';
 
 export interface UpdateIssueParams {
   id: string;
@@ -15,6 +15,10 @@ export interface UpdateIssueParams {
   stateId?: string;
   assigneeId?: string;
   teamId: string;
+
+  parentId?: string;
+
+  issueRelation?: IssueRelation;
 }
 
 export function updateIssue({ id, teamId, ...otherParams }: UpdateIssueParams) {
