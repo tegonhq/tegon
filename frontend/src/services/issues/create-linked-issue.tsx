@@ -3,34 +3,38 @@
 import { useMutation } from 'react-query';
 
 import { ajaxPost } from 'common/lib/ajax';
-import type { IssueType } from 'common/types/issue';
+import type {
+  LinkedIssueSubType,
+  LinkedIssueType,
+} from 'common/types/linked-issue';
 
-export interface UpdateIssueParams {
-  id: string;
+export interface CreateLinkedIssueParams {
   title?: string;
-  description?: string;
-  priority?: number;
-
-  labelIds?: string[];
-  stateId?: string;
-  assigneeId?: string;
+  url: string;
+  type: LinkedIssueSubType;
+  issueId: string;
   teamId: string;
 }
 
-export function updateIssue({ id, teamId, ...otherParams }: UpdateIssueParams) {
+export function createLinkedIssue({
+  issueId,
+  teamId,
+  ...otherParams
+}: CreateLinkedIssueParams) {
   return ajaxPost({
-    url: `/api/v1/issues/${id}?teamId=${teamId}`,
+    url: `/api/v1/issues/${issueId}/link?teamId=${teamId}`,
     data: otherParams,
   });
 }
 
 interface MutationParams {
   onMutate?: () => void;
-  onSuccess?: (data: IssueType) => void;
-  onError?: (error: string) => void;
+  onSuccess?: (data: LinkedIssueType) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onError?: (error: any) => void;
 }
 
-export function useUpdateIssueMutation({
+export function useCreateLinkedIssueMutation({
   onMutate,
   onSuccess,
   onError,
@@ -46,11 +50,11 @@ export function useUpdateIssueMutation({
     onError && onError(errorText);
   };
 
-  const onMutationSuccess = (data: IssueType) => {
+  const onMutationSuccess = (data: LinkedIssueType) => {
     onSuccess && onSuccess(data);
   };
 
-  return useMutation(updateIssue, {
+  return useMutation(createLinkedIssue, {
     onError: onMutationError,
     onMutate: onMutationTriggered,
     onSuccess: onMutationSuccess,

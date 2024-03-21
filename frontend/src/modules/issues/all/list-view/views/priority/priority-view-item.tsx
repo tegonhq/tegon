@@ -38,7 +38,7 @@ export const PriorityViewItem = observer(
 
     return (
       <div className="flex flex-col">
-        <div className="flex items-center w-full pl-8 p-2 bg-gray-100 dark:bg-gray-800/60">
+        <div className="flex items-center w-full pl-8 p-2 bg-slate-100 dark:bg-slate-800/60">
           <PriorityIcon.icon size={18} className="text-muted-foreground mr-2" />
           <h3 className="pl-2 text-sm font-medium">
             {Priorities[priority]}

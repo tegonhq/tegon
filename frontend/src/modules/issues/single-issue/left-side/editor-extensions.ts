@@ -77,7 +77,7 @@ const starterKit = StarterKit.configure({
   },
   blockquote: {
     HTMLAttributes: {
-      class: cx('border-l-4 border-gray-400 dark:border-gray-500'),
+      class: cx('border-l-4 border-slate-400 dark:border-slate-500'),
     },
   },
   codeBlock: {

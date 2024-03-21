@@ -39,7 +39,7 @@ export function Header() {
             <BreadcrumbLink
               as={Link}
               href="/docs/primitives/accordion"
-              className="font-bold"
+              className="font-medium"
             >
               {issueId}
             </BreadcrumbLink>

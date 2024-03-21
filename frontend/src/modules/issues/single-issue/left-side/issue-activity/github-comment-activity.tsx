@@ -58,7 +58,7 @@ export function GithubCommentActivity({
           'group relative w-full flex flex-col text-foreground rounded-md',
           comment.parentId && 'bg-transparent border-0',
           !comment.parentId &&
-            'bg-background backdrop-blur-md dark:bg-gray-700/20 shadow-sm border',
+            'bg-background backdrop-blur-md dark:bg-slate-700/20 shadow-sm border',
         )}
       >
         <div className={cn('flex gap-2', !comment.parentId && 'p-3')}>
@@ -91,6 +91,7 @@ export function GithubCommentActivity({
                     comment={subComment}
                     user={getUserData(subComment.userId)}
                     childComments={[]}
+                    html
                     allowReply={false}
                     getUserData={getUserData}
                   />
@@ -104,7 +105,7 @@ export function GithubCommentActivity({
           <ReplyComment
             issueCommentId={comment.id}
             badgeContent={
-              <div className="text-xs border rounded-full flex items-center gap-1 p-1 px-2 bg-gray-100 dark:bg-gray-800">
+              <div className="text-xs border rounded-full flex items-center gap-1 p-1 px-2 bg-slate-100 dark:bg-slate-800">
                 <RiGithubFill size={16} /> Comments are also posted on github
               </div>
             }

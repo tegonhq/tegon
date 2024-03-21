@@ -3,34 +3,32 @@
 import { useMutation } from 'react-query';
 
 import { ajaxPost } from 'common/lib/ajax';
-import type { IssueType } from 'common/types/issue';
+import type { IssueCommentType } from 'common/types/issue';
 
-export interface UpdateIssueParams {
-  id: string;
-  title?: string;
-  description?: string;
-  priority?: number;
-
-  labelIds?: string[];
-  stateId?: string;
-  assigneeId?: string;
-  teamId: string;
+export interface UpdateIssueCommentParams {
+  body: string;
+  parentId?: string;
+  issueCommentId: string;
 }
 
-export function updateIssue({ id, teamId, ...otherParams }: UpdateIssueParams) {
+export function updateIssueComment({
+  issueCommentId,
+  body,
+  parentId,
+}: UpdateIssueCommentParams) {
   return ajaxPost({
-    url: `/api/v1/issues/${id}?teamId=${teamId}`,
-    data: otherParams,
+    url: `/api/v1/issue-comments/${issueCommentId}`,
+    data: { body, parentId },
   });
 }
 
 interface MutationParams {
   onMutate?: () => void;
-  onSuccess?: (data: IssueType) => void;
+  onSuccess?: (data: IssueCommentType) => void;
   onError?: (error: string) => void;
 }
 
-export function useUpdateIssueMutation({
+export function useUpdateIssueCommentMutation({
   onMutate,
   onSuccess,
   onError,
@@ -46,11 +44,11 @@ export function useUpdateIssueMutation({
     onError && onError(errorText);
   };
 
-  const onMutationSuccess = (data: IssueType) => {
+  const onMutationSuccess = (data: IssueCommentType) => {
     onSuccess && onSuccess(data);
   };
 
-  return useMutation(updateIssue, {
+  return useMutation(updateIssueComment, {
     onError: onMutationError,
     onMutate: onMutationTriggered,
     onSuccess: onMutationSuccess,

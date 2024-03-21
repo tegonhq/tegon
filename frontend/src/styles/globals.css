@@ -102,7 +102,7 @@
 }
 
 .editor-checkbox span:after {
-  @apply dark:border-gray-800 border-gray-100;
+  @apply dark:border-slate-800 border-slate-100;
 
   left: 5px;
   top: 1px;
@@ -115,7 +115,7 @@
 }
 
 .tiptap p.is-editor-empty:first-child::before {
-  @apply text-gray-500 dark:text-gray-600 text-base;
+  @apply text-slate-500 dark:text-slate-600 text-base;
 
   content: attr(data-placeholder);
   float: left;

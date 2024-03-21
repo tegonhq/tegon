@@ -51,7 +51,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
         className=" group px-3 py-4 text-lg bg-transparent hover:bg-transparent dark:hover:bg-transparent flex justify-start"
       >
         <RiArrowLeftSLine
-          className="mr-4 text-gray-400 dark:text-gray-600 dark:group-hover:text-gray-500 group-hover:text-black"
+          className="mr-4 text-slate-400 dark:text-slate-600 dark:group-hover:text-slate-500 group-hover:text-black"
           size={20}
         />
         Settings
@@ -73,9 +73,9 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
                   !teamIdentifier &&
                     isActive(item) &&
-                    'bg-gray-100 dark:bg-gray-800',
+                    'bg-slate-100 dark:bg-slate-800',
 
-                  'justify-start text-sm w-full px-2 text-gray-700 dark:text-gray-300 mt-1',
+                  'justify-start text-sm w-full px-2 text-slate-700 dark:text-slate-300 mt-1',
                 )}
               >
                 {item.title}
@@ -101,8 +101,8 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
 
                   settingsSection === item.href &&
-                    'bg-gray-100 dark:bg-gray-800',
-                  'justify-start text-sm w-full px-2 text-gray-700 dark:text-gray-300 mt-1',
+                    'bg-slate-100 dark:bg-slate-800',
+                  'justify-start text-sm w-full px-2 text-slate-700 dark:text-slate-300 mt-1',
                 )}
               >
                 {item.title}

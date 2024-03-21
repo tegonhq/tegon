@@ -40,7 +40,7 @@ export function IssueLabelDropdown({
           size="lg"
           aria-expanded={open}
           className={cn(
-            'flex items-center border dark:bg-transparent border-transparent hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+            'flex items-center border dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
             value && 'text-foreground',
           )}
         >
@@ -71,7 +71,7 @@ export function IssueLabelDropdown({
       const label = labels.find((label: LabelType) => label.id === value[0]);
       return (
         <>
-          <RiPriceTagFill size={18} className="text-muted-foreground mr-2" />
+          <RiPriceTagFill size={18} className="text-muted-foreground mr-3" />
           {label.name}
         </>
       );
@@ -80,7 +80,7 @@ export function IssueLabelDropdown({
     if (value.length > 1) {
       return (
         <>
-          <RiPriceTagFill size={18} className="text-muted-foreground mr-2" />
+          <RiPriceTagFill size={18} className="text-muted-foreground mr-3" />
           {value.length} Labels
         </>
       );
@@ -88,14 +88,18 @@ export function IssueLabelDropdown({
 
     return (
       <div className="flex items-center text-muted-foreground">
-        <RiAddLine size={18} className="mr-2" />
+        <RiAddLine size={18} className="mr-3" />
         Add Label
       </div>
     );
   };
 
   return (
-    <div>
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">

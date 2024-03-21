@@ -51,7 +51,7 @@ export const IssueDescription = ({
         <EditorContent
           initialContent={value ? JSON.parse(value) : undefined}
           extensions={extensions}
-          className="relative min-h-[50px] w-full max-w-screen-lg mb-[40px] text-base text-gray-600 dark:text-gray-300 sm:rounded-lg"
+          className="relative min-h-[50px] w-full max-w-screen-lg mb-[40px] text-base text-slate-600 dark:text-slate-400 sm:rounded-lg"
           editorProps={{
             handleDOMEvents: {
               keydown: (_view, event) => handleCommandNavigation(event),
@@ -67,7 +67,7 @@ export const IssueDescription = ({
         >
           <EditorCommand
             className={cn(
-              'z-50 h-auto font-sans max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background backdrop-blur-md dark:bg-gray-700/20 px-1 py-2 shadow-md transition-all',
+              'z-50 h-auto font-sans max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background backdrop-blur-md dark:bg-slate-700/20 px-1 py-2 shadow-md transition-all',
               fontSans.variable,
             )}
           >

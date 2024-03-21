@@ -24,16 +24,14 @@ import { useCurrentTeam } from 'hooks/teams';
 
 import { useCreateLinkedIssueMutation } from 'services/issues';
 
-export const URLSchema = z.object({
-  url: z.string().url(),
-});
-
-interface AddGithubIssueProps {
+import { URLSchema } from './add-github-issue';
+interface AddGithubPRProps {
   issueId: string;
+
   onClose: () => void;
 }
 
-export function AddGithubIssue({ issueId, onClose }: AddGithubIssueProps) {
+export function AddGithubPR({ issueId, onClose }: AddGithubPRProps) {
   const currentTeam = useCurrentTeam();
   const form = useForm<z.infer<typeof URLSchema>>({
     resolver: zodResolver(URLSchema),
@@ -62,7 +60,7 @@ export function AddGithubIssue({ issueId, onClose }: AddGithubIssueProps) {
     <div className="p-6">
       <DialogHeader>
         <DialogTitle className="text-md text-foreground font-normal">
-          Enter URL of Github Issue to link
+          Enter URL of Github PR to link
         </DialogTitle>
         <DialogDescription>
           Copy the URL from the browser when viewing the issue
@@ -79,7 +77,7 @@ export function AddGithubIssue({ issueId, onClose }: AddGithubIssueProps) {
                 <FormItem>
                   <FormControl>
                     <Input
-                      placeholder="https://github.com/tegonhq/tegon/issues/1"
+                      placeholder="https://github.com/tegonhq/tegon/pull/1"
                       {...field}
                     />
                   </FormControl>

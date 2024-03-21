@@ -72,11 +72,11 @@ export function IssueStatusDropdown({
           role="combobox"
           size="lg"
           aria-expanded={open}
-          className="flex items-center border border-transparent hover:bg-gray-50 hover:border-gray-200 dark:border-transparent dark:hover:border-gray-700 px-3 dark:bg-transparent shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
+          className="flex items-center border border-transparent hover:bg-slate-50 hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-3 dark:bg-transparent shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
         >
           <CategoryIcon
             size={18}
-            className="text-muted-foreground mr-2"
+            className="text-muted-foreground mr-3"
             color={workflow.color}
           />
           {workflow.name}
@@ -103,7 +103,11 @@ export function IssueStatusDropdown({
   }
 
   return (
-    <div>
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">

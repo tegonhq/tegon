@@ -61,7 +61,7 @@ const Toast = React.forwardRef<
         toastVariants({ variant }),
         className,
         fontSans.variable,
-        'font-sans bg-background backdrop-blur-md dark:bg-gray-700/20 shadow-md border rounded-md',
+        'font-sans bg-background backdrop-blur-md dark:bg-slate-700/20 shadow-md border rounded-md',
       )}
       {...props}
     />

@@ -37,10 +37,6 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
   const { issuesStore } = useContextStore();
   const issue = issuesStore.getIssueById(issueId);
 
-  const openIssue = () => {
-    push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
-  };
-
   const statusChange = (stateId: string) => {
     updateIssue({ id: issue.id, stateId, teamId: issue.teamId });
   };
@@ -54,17 +50,19 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
   };
 
   return (
-    <div className="pl-8 p-3 flex justify-between cursor-default text-sm hover:bg-gray-100/50 dark:hover:bg-gray-800/20 border-b-[0.5px]">
+    <a
+      className="pl-8 p-3 flex justify-between cursor-default text-sm hover:bg-slate-100/50 dark:hover:bg-slate-800/20 border-b-[0.5px]"
+      onClick={() => {
+        push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
+      }}
+    >
       <div className="flex items-center grow">
         <IssuePriorityDropdown
           value={issue.priority ?? 0}
           onChange={priorityChange}
           variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
         />
-        <div
-          className="pr-3 text-muted-foreground min-w-[68px]"
-          onClick={openIssue}
-        >{`${team.identifier}-${issue.number}`}</div>
+        <div className="pr-3 text-muted-foreground min-w-[68px]">{`${team.identifier}-${issue.number}`}</div>
         <div className="pr-3">
           <IssueStatusDropdown
             value={issue.stateId}
@@ -78,16 +76,12 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
             'font-medium',
             issue.parentId ? 'max-w-[500px]' : 'w-full',
           )}
-          onClick={openIssue}
         >
           <div className="truncate">{issue.title}</div>
         </div>
 
         {issue.parentId && (
-          <div
-            className="font-medium max-w-[300px] text-muted-foreground flex items-center"
-            onClick={openIssue}
-          >
+          <div className="font-medium max-w-[300px] text-muted-foreground flex items-center">
             <RiArrowRightSLine size={14} className="mx-2" />
             <div className="truncate ">{issue.parent?.title}</div>
           </div>
@@ -106,6 +100,6 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
           variant={IssueAssigneeDropdownVariant.NO_BACKGROUND}
         />
       </div>
-    </div>
+    </a>
   );
 });

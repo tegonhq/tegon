@@ -22,7 +22,7 @@ export function createIssueComment({
   });
 }
 
-export interface MutationParams {
+interface MutationParams {
   onMutate?: () => void;
   onSuccess?: (data: IssueCommentType) => void;
   onError?: (error: string) => void;

@@ -55,32 +55,41 @@ export function SubIssueView({
           <div className="flex justify-between">
             <div>
               <CollapsibleTrigger asChild>
+                <div className="flex items-center">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-muted-foreground px-1"
+                  >
+                    {isOpen ? (
+                      <RiArrowDownSFill size={16} className="mr-1" />
+                    ) : (
+                      <RiArrowRightSFill size={16} className="mr-1" />
+                    )}
+                    Sub-issues
+                  </Button>
+                  {!isOpen && (
+                    <div className="px-2 ml-1 rounded-md text-sm bg-slate-100 dark:bg-slate-800 text-foreground">
+                      {childIssues.length}
+                    </div>
+                  )}
+                </div>
+              </CollapsibleTrigger>
+            </div>
+
+            {isOpen && (
+              <div>
                 <Button
                   variant="ghost"
                   size="sm"
                   className="text-muted-foreground px-1"
+                  onClick={setNewIssueState}
+                  disabled={newIssueState}
                 >
-                  {isOpen ? (
-                    <RiArrowDownSFill size={16} className="mr-1" />
-                  ) : (
-                    <RiArrowRightSFill size={16} className="mr-1" />
-                  )}
-                  Sub-issues
+                  <RiAddLine size={14} className="mr-2" /> Add sub-issues
                 </Button>
-              </CollapsibleTrigger>
-            </div>
-
-            <div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground px-1"
-                onClick={setNewIssueState}
-                disabled={newIssueState}
-              >
-                <RiAddLine size={14} className="mr-2" /> Add sub-issues
-              </Button>
-            </div>
+              </div>
+            )}
           </div>
           <CollapsibleContent className="space-y-2">
             <div className="pt-1 border-t">

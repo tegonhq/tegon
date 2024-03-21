@@ -29,7 +29,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
       <React.Fragment>
         <div
           className={cn(
-            'h-3 w-[1px] dark:bg-gray-700 bg-gray-300 self-stretch ml-3',
+            'h-3 w-[1px] dark:bg-slate-700 bg-slate-300 self-stretch ml-3',
           )}
         ></div>
       </React.Fragment>

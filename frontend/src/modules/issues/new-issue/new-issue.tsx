@@ -54,7 +54,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
       className={cn(
         'flex flex-col',
         parentId &&
-          'bg-background backdrop-blur-md border dark:bg-gray-700/20 shadow-md rounded-md py-1 pt-3 px-2',
+          'bg-background backdrop-blur-md border dark:bg-slate-700/20 shadow-md rounded-md py-1 pt-3 px-2',
       )}
     >
       <Form {...form}>

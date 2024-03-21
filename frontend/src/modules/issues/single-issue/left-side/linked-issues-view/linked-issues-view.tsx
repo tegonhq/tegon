@@ -8,7 +8,10 @@ import {
 } from '@remixicon/react';
 import React from 'react';
 
-import type { LinkedIssueType } from 'common/types/linked-issue';
+import {
+  LinkedIssueSubType,
+  type LinkedIssueType,
+} from 'common/types/linked-issue';
 
 import { Button } from 'components/ui/button';
 import {
@@ -26,6 +29,7 @@ import {
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { AddLinkedIssueDialog } from './add-linked-issue-dialog';
 import { LinkedIssueItem } from './linked-issue-item';
 
 interface LinkedIssuesView {
@@ -35,6 +39,8 @@ interface LinkedIssuesView {
 export function LinkedIssuesView({ issueId }: LinkedIssuesView) {
   const { linkedIssuesStore } = useContextStore();
   const [isOpen, setIsOpen] = React.useState(true);
+  const [dialogOpen, setDialogOpen] =
+    React.useState<LinkedIssueSubType>(undefined);
 
   const linkedIssues = linkedIssuesStore.linkedIssues.filter(
     (linkedIssue: LinkedIssueType) => linkedIssue.issueId === issueId,
@@ -51,18 +57,25 @@ export function LinkedIssuesView({ issueId }: LinkedIssuesView) {
           <div className="flex justify-between">
             <div>
               <CollapsibleTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  className="text-muted-foreground px-1 pr-2"
-                >
-                  {isOpen ? (
-                    <RiArrowDownSFill size={16} className="mr-1" />
-                  ) : (
-                    <RiArrowRightSFill size={16} className="mr-1" />
+                <div className="flex items-center">
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    className="text-muted-foreground px-1 pr-2"
+                  >
+                    {isOpen ? (
+                      <RiArrowDownSFill size={16} className="mr-1" />
+                    ) : (
+                      <RiArrowRightSFill size={16} className="mr-1" />
+                    )}
+                    Links
+                  </Button>
+                  {!isOpen && (
+                    <div className="px-2 ml-1 rounded-md text-sm bg-slate-100 dark:bg-slate-800 text-foreground">
+                      {linkedIssues.length}
+                    </div>
                   )}
-                  Links
-                </Button>
+                </div>
               </CollapsibleTrigger>
             </div>
 
@@ -80,13 +93,20 @@ export function LinkedIssuesView({ issueId }: LinkedIssuesView) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuGroup>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          setDialogOpen(LinkedIssueSubType.GithubIssue)
+                        }
+                      >
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <RiGithubFill size={16} /> Link Github issue
                         </div>
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        {' '}
+                      <DropdownMenuItem
+                        onClick={() =>
+                          setDialogOpen(LinkedIssueSubType.GithubPullRequest)
+                        }
+                      >
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <RiGithubFill size={16} /> Link Github pull request
                         </div>
@@ -104,6 +124,11 @@ export function LinkedIssuesView({ issueId }: LinkedIssuesView) {
           </CollapsibleContent>
         </Collapsible>
       )}
+      <AddLinkedIssueDialog
+        open={dialogOpen}
+        setOpen={setDialogOpen}
+        issueId={issueId}
+      />
     </>
   );
 }

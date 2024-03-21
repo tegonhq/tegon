@@ -1,10 +1,22 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiGithubFill, RiMoreFill } from '@remixicon/react';
+import {
+  RiDeleteBin7Fill,
+  RiGithubFill,
+  RiMoreFill,
+  RiPencilFill,
+} from '@remixicon/react';
 
 import type { LinkedIssueType } from 'common/types/linked-issue';
 
 import { Button } from 'components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from 'components/ui/dropdown-menu';
 
 interface LinkedIssueItemProps {
   linkedIssue: LinkedIssueType;
@@ -19,7 +31,7 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
     <a
       href={linkedIssue.url}
       target="_blank"
-      className="cursor-pointer w-full mb-1 border-1 hover:bg-gray-100 dark:hover:bg-gray-700/50 shadow-sm bg-background dark:bg-gray-700/20  p-2 py-3 rounded-md flex gap-2 items-center justify-between text-sm"
+      className="cursor-pointer w-full mb-1 border-1 hover:bg-slate-50 dark:hover:bg-slate-700/50 shadow-sm bg-background dark:bg-slate-700/20  p-3 py-3 rounded-md flex gap-2 items-center justify-between text-sm"
     >
       <div className="flex items-center gap-2">
         <RiGithubFill size={18} className="text-muted-foreground" />
@@ -29,15 +41,33 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
       </div>
 
       <div>
-        <Button
-          variant="ghost"
-          size="xs"
-          onClick={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <RiMoreFill size={14} className="text-muted-foreground" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="xs"
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <RiMoreFill size={16} className="text-muted-foreground" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <RiPencilFill size={16} /> Edit
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <RiDeleteBin7Fill size={16} /> Remove
+                </div>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </a>
   );

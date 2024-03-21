@@ -18,7 +18,7 @@ export interface IssueHistoryData {
   relationChanges: JSON[];
 }
 
-export enum issueRelationType {
+export enum IssueRelationType {
   BLOCKS = 'BLOCKS',
   BLOCKED = 'BLOCKED',
   RELATED = 'RELATED',
@@ -35,7 +35,7 @@ export enum ReverseIssueRelationType {
 }
 
 export interface IssueRelation {
-  type: issueRelationType;
+  type: IssueRelationType;
   issueId: string;
   relatedIssueId: string;
 }

@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Issue, LinkedIssue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
@@ -56,7 +56,7 @@ export default class IssuesService {
     );
 
     if (linkIssue) {
-      linkIssue.type = await getLinkType(linkIssue.url);
+      linkIssue.type = getLinkType(linkIssue.url);
       await this.createLinkIssue(
         teamRequestParams,
         linkIssue,
@@ -238,7 +238,7 @@ export default class IssuesService {
     userId: string,
   ): Promise<{ status: number; message: string } | LinkedIssue> {
     if (!isValidLinkUrl(linkData)) {
-      return { status: 400, message: "Provided url doesn't exists" };
+      throw new BadRequestException("Provided url doesn't exists");
     }
 
     const linkedIssue = await this.prisma.linkedIssue.findFirst({
@@ -246,10 +246,9 @@ export default class IssuesService {
       include: { issue: { include: { team: true } } },
     });
     if (linkedIssue) {
-      return {
-        status: 400,
-        message: `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
-      };
+      throw new BadRequestException(
+        `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
+      );
     }
     try {
       return await getLinkedIssueWithUrl(
@@ -260,7 +259,7 @@ export default class IssuesService {
         userId,
       );
     } catch (error) {
-      return { status: 500, message: 'Failed to create linked issue' };
+      throw new BadRequestException(`Failed to create linked issue: ${error}`);
     }
   }
 }

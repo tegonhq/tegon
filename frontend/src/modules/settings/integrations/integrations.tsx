@@ -20,7 +20,7 @@ function IntegrationCard({ name, description, href }: IntegrationCardProps) {
 
   return (
     <div
-      className="p-3 border rounded-md text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+      className="p-3 border rounded-md text-sm cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800"
       onClick={() =>
         push(`/${currentWorkspace.slug}/settings/integrations/${href}`)
       }
