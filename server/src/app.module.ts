@@ -8,12 +8,15 @@ import config from 'common/configs/config';
 import { loggingMiddleware } from 'common/middleware/logging.middleware';
 
 import { AuthModule } from 'modules/auth/auth.module';
+import { BullConfigModule } from 'modules/bull/bull.module';
 import { IntegrationAccountModule } from 'modules/integration-account/integration-account.module';
 import { IntegrationDefinitionModule } from 'modules/integration-definition/integration-definition.module';
 import { IssueCommentsModule } from 'modules/issue-comments/issue-comments.module';
 import { IssueHistoryModule } from 'modules/issue-history/issue-history.module';
+import { IssueRelationModule } from 'modules/issue-relation/issue-relation.module';
 import { IssuesModule } from 'modules/issues/issues.module';
 import { LabelsModule } from 'modules/labels/labels.module';
+import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 import { OAuthCallbackModule } from 'modules/oauth-callback/oauth-callback.module';
 import { ReplicationModule } from 'modules/replication/replication.module';
 import { SyncModule } from 'modules/sync/sync.module';
@@ -27,8 +30,6 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BullConfigModule } from 'modules/bull/bull.module';
-import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
     IssueCommentsModule,
     IssueHistoryModule,
     LinkedIssueModule,
+    IssueRelationModule,
 
     ReplicationModule,
     SyncActionsModule,

@@ -180,6 +180,7 @@ Table Issue {
   comments IssueComment [not null]
   history IssueHistory [not null]
   linkedIssue LinkedIssue [not null]
+  issueRelations IssueRelation [not null]
 
   indexes {
     (teamId, number) [unique]
@@ -274,7 +275,23 @@ Table IssueHistory {
   toAssigneeId String
   fromParentId String
   toParentId String
-  relationChanges Json[] [not null]
+}
+
+Table IssueRelation {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  issue Issue [not null]
+  issueId String [not null]
+  relatedIssueId String [not null]
+  type IssueRelationType [not null]
+  createdById String [not null]
+  deletedById String
+  deletedAt DateTime
+
+  indexes {
+    (issueId, relatedIssueId, type) [unique]
+  }
 }
 
 Table IntegrationDefinition {
@@ -343,6 +360,7 @@ Enum ModelName {
   IntegrationDefinition
   IntegrationAccount
   LinkedIssue
+  IssueRelation
 }
 
 Enum ActionType {
@@ -370,6 +388,14 @@ Enum IntegrationName {
   Github
   GithubPersonal
   Slack
+}
+
+Enum IssueRelationType {
+  BLOCKS
+  BLOCKED
+  RELATED
+  DUPLICATE
+  DUPLICATE_OF
 }
 
 Ref: UsersOnWorkspaces.userId > User.id
@@ -415,6 +441,8 @@ Ref: Reaction.commentId > IssueComment.id
 Ref: Reaction.emojiId > Emoji.id
 
 Ref: IssueHistory.issueId > Issue.id
+
+Ref: IssueRelation.issueId > Issue.id
 
 Ref: IntegrationDefinition.workspaceId > Workspace.id
 

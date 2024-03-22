@@ -110,6 +110,13 @@ export async function getWorkspaceId(
       });
       return linkedIssue.issue.team.workspaceId;
 
+    case ModelName.IssueRelation:
+      const issueRelation = await prisma.issueRelation.findUnique({
+        where: { id: modelId },
+        include: { issue: { include: { team: true } } },
+      });
+      return issueRelation.issue.team.workspaceId;
+
     default:
       return undefined;
   }
@@ -167,6 +174,7 @@ export async function getModelData(
         }),
     },
     LinkedIssue: prisma.linkedIssue,
+    IssueRelation: prisma.issueRelation,
   };
 
   const model = modelMap[modelName];

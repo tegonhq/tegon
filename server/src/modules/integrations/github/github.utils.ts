@@ -5,6 +5,7 @@ import fs from 'fs/promises';
 import path from 'path';
 
 import { Team } from '@@generated/team/entities';
+import { Logger } from '@nestjs/common';
 import {
   IntegrationAccount,
   IntegrationName,
@@ -33,7 +34,11 @@ import {
   LinkedIssueSubType,
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
-
+import {
+  LinkIssueData,
+  LinkedIssueSourceData,
+} from 'modules/linked-issue/linked-issue.interface';
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import {
@@ -41,15 +46,8 @@ import {
   githubIssueData,
   labelDataType,
 } from './github.interface';
-import { Logger } from '@nestjs/common';
 import { deleteRequest, getRequest, postRequest } from '../integrations.utils';
-import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
-import {
-  LinkIssueData,
-  LinkedIssueSourceData,
-} from 'modules/linked-issue/linked-issue.interface';
 
-// edited
 export async function getState(
   prisma: PrismaService,
   action: string,
@@ -73,7 +71,6 @@ export async function getState(
   return undefined;
 }
 
-// edited
 export function getTeamId(
   repoId: string,
   accountSettings: Settings,
@@ -85,7 +82,6 @@ export function getTeamId(
   return mapping?.teamId;
 }
 
-// edited
 export async function getUserId(
   prisma: PrismaService,
   userData: Record<string, string>,
@@ -98,7 +94,6 @@ export async function getUserId(
   return integratedById || null;
 }
 
-// edited
 export async function getIssueData(
   prisma: PrismaService,
   eventBody: WebhookEventBody,
@@ -148,7 +143,6 @@ export async function getIssueData(
   return { linkIssueData, issueInput, sourceMetadata, userId };
 }
 
-// edited
 export async function getOrCreateLabelIds(
   prisma: PrismaService,
   labels: labelDataType[],
@@ -193,7 +187,6 @@ export async function getOrCreateLabelIds(
   ];
 }
 
-// edited
 export async function sendGithubFirstComment(
   prisma: PrismaService,
   logger: Logger,
@@ -248,7 +241,6 @@ export async function sendGithubFirstComment(
   logger.log(`GitHub comment sent for issue ${issueId}`);
 }
 
-// edited
 export async function sendGithubPRFirstComment(
   prisma: PrismaService,
   integrationAccount: IntegrationAccountWithRelations,
@@ -269,7 +261,6 @@ export async function sendGithubPRFirstComment(
   });
 }
 
-// edited
 export async function sendGithubComment(
   linkedIssue: LinkedIssue,
   accessToken: string,
@@ -282,7 +273,6 @@ export async function sendGithubComment(
   return postRequest(url, headers, { body });
 }
 
-// edited
 export async function getGithubSettings(
   integrationAccount: IntegrationAccountWithRelations,
   token: string,
@@ -306,6 +296,7 @@ export async function getGithubSettings(
   return {
     orgAvatarURL: org.account.avatar_url,
     orgLogin: org.account.login,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     repositories: repos?.repositories.map((repo: any) => ({
       id: repo.id.toString(),
       fullName: repo.full_name,
@@ -316,7 +307,6 @@ export async function getGithubSettings(
   } as GithubSettings;
 }
 
-// edited
 export function getGithubHeaders(token: string) {
   return {
     headers: {
@@ -326,7 +316,6 @@ export function getGithubHeaders(token: string) {
   };
 }
 
-// edited
 export async function getAccessToken(
   prisma: PrismaService,
   integrationAccount: IntegrationAccount,
@@ -363,7 +352,6 @@ export async function getAccessToken(
   return config.access_token;
 }
 
-// edited
 export async function getBotJWTToken(
   integrationAccount: IntegrationAccountWithRelations,
 ) {
@@ -385,7 +373,6 @@ export async function getBotJWTToken(
   return jwt.sign(payload, privateKey, { algorithm: 'RS256' });
 }
 
-// edited
 export async function getBotAccessToken(
   prisma: PrismaService,
   integrationAccount: IntegrationAccountWithRelations,
@@ -424,7 +411,6 @@ export async function getBotAccessToken(
   return config.access_token;
 }
 
-// edited
 async function getGithubUserIntegrationAccount(
   prisma: PrismaService,
   userId: string,
@@ -441,7 +427,6 @@ async function getGithubUserIntegrationAccount(
   });
 }
 
-// edited
 async function getGithubLabels(
   prisma: PrismaService,
   labelIds: string[],
@@ -459,7 +444,6 @@ async function getGithubLabels(
   return labels.map((label) => label.name);
 }
 
-// edited
 export async function getGithubUser(token: string) {
   return (
     (await getRequest('https://api.github.com/user', getGithubHeaders(token)))
@@ -467,7 +451,6 @@ export async function getGithubUser(token: string) {
   );
 }
 
-// edited
 export async function upsertGithubIssue(
   prisma: PrismaService,
   logger: Logger,
@@ -557,7 +540,6 @@ export async function upsertGithubIssue(
   return undefined;
 }
 
-// edited
 export async function upsertGithubIssueComment(
   prisma: PrismaService,
   logger: Logger,

@@ -15,6 +15,7 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 
 import {
   ApiResponse,
@@ -25,7 +26,6 @@ import {
   UpdateIssueInput,
 } from './issues.interface';
 import IssuesService from './issues.service';
-import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 
 @Controller({
   version: '1',

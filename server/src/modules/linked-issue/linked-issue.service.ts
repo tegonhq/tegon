@@ -2,12 +2,14 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import { LinkedIssue } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
+
 import {
   ApiResponse,
   IssueRequestParams,
   TeamRequestParams,
 } from 'modules/issues/issues.interface';
-import { PrismaService } from 'nestjs-prisma';
+
 import {
   CreateLinkIssueInput,
   LinkIssueInput,

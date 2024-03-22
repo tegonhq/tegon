@@ -1,4 +1,17 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import { Logger } from '@nestjs/common';
+import { IntegrationName, Issue, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+
+import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
+import {
+  getBotAccessToken,
+  getGithubHeaders,
+  sendGithubFirstComment,
+} from 'modules/integrations/github/github.utils';
+import { getRequest } from 'modules/integrations/integrations.utils';
+
 import {
   CreateLinkIssueInput,
   LinkIssueInput,
@@ -6,16 +19,7 @@ import {
   githubIssueRegex,
   githubPRRegex,
 } from './linked-issue.interface';
-import { IntegrationName, Issue, Prisma } from '@prisma/client';
-import {
-  getBotAccessToken,
-  getGithubHeaders,
-  sendGithubFirstComment,
-} from 'modules/integrations/github/github.utils';
-import { getRequest } from 'modules/integrations/integrations.utils';
-import { Logger } from '@nestjs/common';
 import LinkedIssueService from './linked-issue.service';
-import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
 
 export function isValidLinkUrl(linkData: LinkIssueInput): boolean {
   const { url, type } = linkData;

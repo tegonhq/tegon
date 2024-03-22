@@ -1,3 +1,5 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
 
@@ -18,7 +20,7 @@ export class BullService {
   }
 
   private getQueue(queueName: string): Queue {
-    let queue = this.queues.get(queueName);
+    const queue = this.queues.get(queueName);
     return queue;
   }
 }

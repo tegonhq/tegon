@@ -13,7 +13,7 @@ import {
   IsString,
 } from 'class-validator';
 
-import { IssueRelation } from 'modules/issue-history/issue-history.interface';
+import { IssueRelationType } from 'modules/issue-relation/issue-relation.interface';
 
 export class TeamRequestParams {
   @IsString()
@@ -31,10 +31,10 @@ export enum LinkedIssueSubType {
   ExternalLink = 'ExternalLink',
 }
 
-export type ApiResponse = {
+export interface ApiResponse {
   status: number;
   message: string;
-};
+}
 
 export class LinkIssueInput {
   @IsString()
@@ -47,6 +47,20 @@ export class LinkIssueInput {
   @IsOptional()
   @IsString()
   title?: string;
+}
+
+export class RelationInput {
+  @IsOptional()
+  @IsEnum(IssueRelationType)
+  type?: IssueRelationType;
+
+  @IsOptional()
+  @IsString()
+  issueId?: string;
+
+  @IsOptional()
+  @IsString()
+  relatedIssueId?: string;
 }
 
 export class CreateIssueInput {
@@ -105,7 +119,7 @@ export class CreateIssueInput {
 
   @IsOptional()
   @IsObject()
-  issueRelation?: IssueRelation;
+  issueRelation?: RelationInput;
 }
 
 export class UpdateIssueInput {
@@ -163,7 +177,7 @@ export class UpdateIssueInput {
 
   @IsOptional()
   @IsObject()
-  issueRelation?: IssueRelation;
+  issueRelation?: RelationInput;
 }
 
 export interface IssueWithRelations extends Issue {

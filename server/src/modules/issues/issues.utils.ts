@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { Logger } from '@nestjs/common';
 import { IntegrationName, Issue, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
@@ -9,6 +10,7 @@ import {
   upsertGithubIssue,
 } from 'modules/integrations/github/github.utils';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 
 import {
   CreateIssueInput,
@@ -19,8 +21,6 @@ import {
   UpdateIssueInput,
   titlePrompt,
 } from './issues.interface';
-import { Logger } from '@nestjs/common';
-import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 
 export async function getIssueDiff(
   newIssueData: Issue,

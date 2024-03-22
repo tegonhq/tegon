@@ -1,6 +1,9 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
+
 import {
   WebhookEventBody,
   WebhookEventHeaders,

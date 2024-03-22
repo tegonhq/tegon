@@ -5,8 +5,11 @@ import { Issue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
 
-import { IssueRelation } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
+import { IssueRelationInput } from 'modules/issue-relation/issue-relation.interface';
+import IssueRelationService from 'modules/issue-relation/issue-relation.service';
+import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
+import { getLinkType } from 'modules/linked-issue/linked-issue.utils';
 
 import {
   ApiResponse,
@@ -14,18 +17,17 @@ import {
   IssueAction,
   IssueRequestParams,
   IssueWithRelations,
+  RelationInput,
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
+import { IssuesQueue } from './issues.queue';
 import {
   findExistingLink,
   getIssueDiff,
   getIssueTitle,
   getLastIssueNumber,
 } from './issues.utils';
-import { IssuesQueue } from './issues.queue';
-import { getLinkType } from 'modules/linked-issue/linked-issue.utils';
-import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 
 const openaiClient = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
@@ -39,6 +41,7 @@ export default class IssuesService {
     private prisma: PrismaService,
     private issueHistoryService: IssuesHistoryService,
     private issuesQueue: IssuesQueue,
+    private issueRelationService: IssueRelationService,
   ) {}
 
   async createIssue(
@@ -257,7 +260,7 @@ export default class IssuesService {
     currentIssue: Issue | null,
     userId?: string,
     linkMetaData?: Record<string, string>,
-    issueRelation?: IssueRelation,
+    issueRelation?: RelationInput,
   ): Promise<void> {
     this.logger.log(`Upserting issue history for issue ${issue.id}`);
     await this.issueHistoryService.upsertIssueHistory(
@@ -269,10 +272,16 @@ export default class IssuesService {
 
     if (issueRelation) {
       this.logger.log(`Creating issue relation for issue ${issue.id}`);
-      await this.issueHistoryService.createIssueRelation(
+
+      const relationInput: IssueRelationInput = {
+        issueId: issueRelation.issueId || issue.id,
+        relatedIssueId: issueRelation.relatedIssueId || issue.id,
+        type: issueRelation.type,
+      };
+
+      await this.issueRelationService.createIssueRelation(
         userId,
-        issue.id,
-        issueRelation,
+        relationInput,
       );
     }
   }

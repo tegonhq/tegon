@@ -212,9 +212,10 @@ model Issue {
   parentId      String?
   subIssue      Issue[]  @relation("Report")
 
-  comments    IssueComment[]
-  history     IssueHistory[]
-  linkedIssue LinkedIssue[]
+  comments       IssueComment[]
+  history        IssueHistory[]
+  linkedIssue    LinkedIssue[]
+  issueRelations IssueRelation[]
 
   @@unique([teamId, number])
 }
@@ -322,7 +323,24 @@ model IssueHistory {
   toAssigneeId    String?
   fromParentId    String?
   toParentId      String?
-  relationChanges Json[]
+}
+
+model IssueRelation {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  issue          Issue             @relation(references: [id], fields: [issueId])
+  issueId        String
+  relatedIssueId String
+  type           IssueRelationType
+
+  createdById String
+
+  deletedById String?
+  deletedAt   DateTime?
+
+  @@unique([issueId, relatedIssueId, type])
 }
 
 model IntegrationDefinition {
@@ -394,6 +412,7 @@ enum ModelName {
   IntegrationDefinition
   IntegrationAccount
   LinkedIssue
+  IssueRelation
 }
 
 enum ActionType {
@@ -421,4 +440,12 @@ enum IntegrationName {
   Github
   GithubPersonal
   Slack
+}
+
+enum IssueRelationType {
+  BLOCKS
+  BLOCKED
+  RELATED
+  DUPLICATE
+  DUPLICATE_OF
 }

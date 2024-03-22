@@ -1,3 +1,5 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { IsEnum, IsJSON, IsOptional, IsString } from 'class-validator';
 
 export enum LinkedIssueSubType {
@@ -25,14 +27,14 @@ export type LinkedIssueSource = Record<string, any>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type LinkedIssueSourceData = Record<string, any>;
 
-export type CreateLinkIssueInput = {
+export interface CreateLinkIssueInput {
   url: string;
   issueId: string;
   createdById: string;
   sourceId?: string;
   source?: LinkedIssueSource;
   sourceData?: LinkedIssueSourceData;
-};
+}
 
 export const githubIssueRegex =
   /^https:\/\/github\.com\/[^/]+\/[^/]+\/issues\/\d+$/;

@@ -1,7 +1,10 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Issue } from '@prisma/client';
 import { Queue } from 'bull';
+
 import {
   IssueAction,
   IssueRequestParams,

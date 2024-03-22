@@ -1,4 +1,7 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import axios from 'axios';
+
 import { PostRequestBody, RequestHeaders } from './integrations.interface';
 
 export async function getRequest(url: string, headers: RequestHeaders) {

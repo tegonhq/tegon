@@ -1,10 +1,14 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { Process, Processor } from '@nestjs/bull';
-import { Job } from 'bull';
 import { Logger } from '@nestjs/common';
+import { Job } from 'bull';
+
 import {
   WebhookEventBody,
   WebhookEventHeaders,
 } from 'modules/webhooks/webhooks.interface';
+
 import GithubService from './github.service';
 
 @Processor('github')

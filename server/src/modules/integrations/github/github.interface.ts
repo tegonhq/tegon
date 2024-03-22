@@ -1,4 +1,5 @@
 import { IntegrationName } from '@prisma/client';
+
 import { UpdateIssueInput } from 'modules/issues/issues.interface';
 import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 
@@ -19,7 +20,7 @@ export const githubHeaders = {
   'X-GitHub-Api-Version': '2022-11-28',
 };
 
-export type githubIssueData = {
+export interface githubIssueData {
   linkIssueData: LinkIssueData;
   issueInput: UpdateIssueInput;
   sourceMetadata: {
@@ -28,4 +29,4 @@ export type githubIssueData = {
     userDisplayName: string;
   };
   userId: string | null;
-};
+}

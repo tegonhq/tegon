@@ -4,12 +4,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 
 import IssuesService from 'modules/issues/issues.service';
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import {
   WebhookEventBody,
   WebhookEventHeaders,
 } from 'modules/webhooks/webhooks.interface';
 
-import { eventsToListen } from './github.interface';
 import {
   handleInstallations,
   handleIssueComments,
@@ -17,7 +17,7 @@ import {
   handlePullRequests,
   handleRepositories,
 } from './github.handlers';
-import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
+import { eventsToListen } from './github.interface';
 
 @Injectable()
 export default class GithubService {

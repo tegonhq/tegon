@@ -1,17 +1,21 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import { LinkedIssue } from '@@generated/linkedIssue/entities';
 import { Process, Processor } from '@nestjs/bull';
-import { Job } from 'bull';
-import { handleTwoWaySync } from './issues.utils';
-import { PrismaService } from 'nestjs-prisma';
+import { Logger } from '@nestjs/common';
 import { Issue } from '@prisma/client';
+import { Job } from 'bull';
+import { PrismaService } from 'nestjs-prisma';
+
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
+
 import {
   IssueAction,
   IssueRequestParams,
   LinkIssueInput,
   TeamRequestParams,
 } from './issues.interface';
-import { Logger } from '@nestjs/common';
-import { LinkedIssue } from '@@generated/linkedIssue/entities';
-import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
+import { handleTwoWaySync } from './issues.utils';
 
 @Processor('issues')
 export class IssuesProcessor {

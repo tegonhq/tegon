@@ -1,10 +1,28 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import { Logger } from '@nestjs/common';
+import { IntegrationName, LinkedIssue, Prisma } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
+
 import {
   IntegrationAccountWithRelations,
   Settings,
 } from 'modules/integration-account/integration-account.interface';
+import {
+  CreateIssueInput,
+  IssueRequestParams,
+  LinkedIssueSubType,
+  TeamRequestParams,
+  UpdateIssueInput,
+} from 'modules/issues/issues.interface';
 import IssuesService from 'modules/issues/issues.service';
+import {
+  LinkedIssueSource,
+  LinkedIssueSourceData,
+} from 'modules/linked-issue/linked-issue.interface';
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
-import { PrismaService } from 'nestjs-prisma';
+
 import {
   getIssueData,
   getOrCreateLabelIds,
@@ -14,20 +32,6 @@ import {
   sendGithubFirstComment,
   sendGithubPRFirstComment,
 } from './github.utils';
-import {
-  CreateIssueInput,
-  IssueRequestParams,
-  LinkedIssueSubType,
-  TeamRequestParams,
-  UpdateIssueInput,
-} from 'modules/issues/issues.interface';
-import { Logger } from '@nestjs/common';
-import { IntegrationName, LinkedIssue, Prisma } from '@prisma/client';
-import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
-import {
-  LinkedIssueSource,
-  LinkedIssueSourceData,
-} from 'modules/linked-issue/linked-issue.interface';
 
 export async function handleIssues(
   prisma: PrismaService,

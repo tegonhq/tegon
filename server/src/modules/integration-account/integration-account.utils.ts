@@ -10,12 +10,12 @@ import {
   getGithubSettings,
   getGithubUser,
 } from 'modules/integrations/github/github.utils';
+import { deleteRequest } from 'modules/integrations/integrations.utils';
 
 import {
   Config,
   IntegrationAccountWithRelations,
 } from './integration-account.interface';
-import { deleteRequest } from 'modules/integrations/integrations.utils';
 
 export async function storeIntegrationRelatedData(
   prisma: PrismaService,

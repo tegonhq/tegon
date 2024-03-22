@@ -3,8 +3,9 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
-import LinkedIssueService from './linked-issue.service';
+
 import { LinkedIssueController } from './linked-issue.controller';
+import LinkedIssueService from './linked-issue.service';
 
 @Module({
   imports: [PrismaModule, HttpModule],

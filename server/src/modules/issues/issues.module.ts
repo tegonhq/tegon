@@ -2,17 +2,18 @@
 
 import { IssueHistory } from '@@generated/issueHistory/entities';
 import { HttpModule } from '@nestjs/axios';
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
 import { IssueHistoryModule } from 'modules/issue-history/issue-history.module';
+import IssueRelationService from 'modules/issue-relation/issue-relation.service';
+import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 
 import { IssuesController } from './issues.controller';
-import IssuesService from './issues.service';
-import { BullModule } from '@nestjs/bull';
-import { IssuesQueue } from './issues.queue';
 import { IssuesProcessor } from './issues.processor';
-import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
+import { IssuesQueue } from './issues.queue';
+import IssuesService from './issues.service';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
     IssueHistory,
     IssuesQueue,
     IssuesProcessor,
+    IssueRelationService,
   ],
   exports: [IssuesService, IssuesQueue],
 })

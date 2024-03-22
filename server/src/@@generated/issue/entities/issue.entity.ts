@@ -5,6 +5,7 @@ import {User} from '../../user/entities/user.entity'
 import {IssueComment} from '../../issueComment/entities/issueComment.entity'
 import {IssueHistory} from '../../issueHistory/entities/issueHistory.entity'
 import {LinkedIssue} from '../../linkedIssue/entities/linkedIssue.entity'
+import {IssueRelation} from '../../issueRelation/entities/issueRelation.entity'
 
 
 export class Issue {
@@ -36,4 +37,5 @@ subIssue?: Issue[] ;
 comments?: IssueComment[] ;
 history?: IssueHistory[] ;
 linkedIssue?: LinkedIssue[] ;
+issueRelations?: IssueRelation[] ;
 }

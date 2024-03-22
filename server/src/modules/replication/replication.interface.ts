@@ -30,4 +30,5 @@ export const tablesToSendMessagesFor = new Map([
   [ModelName.IntegrationAccount, true],
   [ModelName.IntegrationDefinition, true],
   [ModelName.LinkedIssue, true],
+  [ModelName.IssueRelation, true],
 ]);

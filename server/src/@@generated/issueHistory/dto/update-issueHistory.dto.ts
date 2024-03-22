@@ -20,5 +20,4 @@ fromAssigneeId?: string;
 toAssigneeId?: string;
 fromParentId?: string;
 toParentId?: string;
-relationChanges?: Prisma.InputJsonValue[];
 }

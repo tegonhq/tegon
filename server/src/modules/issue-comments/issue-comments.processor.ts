@@ -1,7 +1,10 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { Process, Processor } from '@nestjs/bull';
+import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { PrismaService } from 'nestjs-prisma';
-import { Logger } from '@nestjs/common';
+
 import {
   IssueCommentAction,
   IssueCommentWithRelations,

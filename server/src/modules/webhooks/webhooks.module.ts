@@ -4,12 +4,13 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
-import { WebhookController } from './webhooks.controller';
-import WebhookService from './webhooks.service';
+import { GithubModule } from 'modules/integrations/github/github.module';
+import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import { IssuesModule } from 'modules/issues/issues.module';
 import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
-import IssuesHistoryService from 'modules/issue-history/issue-history.service';
-import { GithubModule } from 'modules/integrations/github/github.module';
+
+import { WebhookController } from './webhooks.controller';
+import WebhookService from './webhooks.service';
 
 @Module({
   imports: [

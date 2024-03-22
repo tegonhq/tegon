@@ -9,14 +9,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { LinkedIssue } from '@prisma/client';
+
+import { AuthGuard } from 'modules/auth/auth.guard';
+import { ApiResponse } from 'modules/issues/issues.interface';
+
 import {
   LinkedIssueIdParams,
   UpdateLinkedIssueData,
 } from './linked-issue.interface';
-import { AuthGuard } from 'modules/auth/auth.guard';
-import { LinkedIssue } from '@prisma/client';
 import LinkedIssueService from './linked-issue.service';
-import { ApiResponse } from 'modules/issues/issues.interface';
 
 @Controller({
   version: '1',

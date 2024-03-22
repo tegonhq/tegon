@@ -2,12 +2,13 @@
 
 import { Injectable } from '@nestjs/common';
 
+import { GithubQueue } from 'modules/integrations/github/github.queue';
+
 import {
   WebhookEventBody,
   WebhookEventHeaders,
   WebhookEventParams,
 } from './webhooks.interface';
-import { GithubQueue } from 'modules/integrations/github/github.queue';
 
 @Injectable()
 export default class WebhookService {
