@@ -275,6 +275,7 @@ Table IssueHistory {
   toAssigneeId String
   fromParentId String
   toParentId String
+  relationChanges Json
 }
 
 Table IssueRelation {
@@ -287,7 +288,7 @@ Table IssueRelation {
   type IssueRelationType [not null]
   createdById String [not null]
   deletedById String
-  deletedAt DateTime
+  deleted DateTime
 
   indexes {
     (issueId, relatedIssueId, type) [unique]

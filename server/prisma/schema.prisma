@@ -323,6 +323,7 @@ model IssueHistory {
   toAssigneeId    String?
   fromParentId    String?
   toParentId      String?
+  relationChanges Json?
 }
 
 model IssueRelation {
@@ -338,7 +339,7 @@ model IssueRelation {
   createdById String
 
   deletedById String?
-  deletedAt   DateTime?
+  deleted     DateTime?
 
   @@unique([issueId, relatedIssueId, type])
 }

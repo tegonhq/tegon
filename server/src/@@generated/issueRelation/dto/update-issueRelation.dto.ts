@@ -11,5 +11,5 @@ export class UpdateIssueRelationDto {
 type?: IssueRelationType;
 createdById?: string;
 deletedById?: string;
-deletedAt?: Date;
+deleted?: Date;
 }

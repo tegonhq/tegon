@@ -13,5 +13,5 @@ relatedIssueId: string ;
 type: IssueRelationType ;
 createdById: string ;
 deletedById: string  | null;
-deletedAt: Date  | null;
+deleted: Date  | null;
 }

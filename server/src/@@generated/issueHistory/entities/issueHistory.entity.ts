@@ -24,4 +24,5 @@ fromAssigneeId: string  | null;
 toAssigneeId: string  | null;
 fromParentId: string  | null;
 toParentId: string  | null;
+relationChanges: Prisma.JsonValue  | null;
 }

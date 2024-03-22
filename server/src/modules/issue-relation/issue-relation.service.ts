@@ -19,49 +19,80 @@ export default class IssueRelationService {
     userId: string,
     relationData: IssueRelationInput,
   ): Promise<IssueRelation> {
-    const [issueRelation] = await Promise.all([
-      this.prisma.issueRelation.create({
-        data: {
-          createdById: userId,
-          ...relationData,
-        },
-      }),
-      this.prisma.issueRelation.create({
-        data: {
-          createdById: userId,
-          issueId: relationData.relatedIssueId,
-          relatedIssueId: relationData.issueId,
-          type: ReverseIssueRelationType[relationData.type],
-        },
-      }),
-    ]);
+    const issueRelationData = await this.prisma.issueRelation.create({
+      data: {
+        createdById: userId,
+        ...relationData,
+      },
+    });
 
-    return issueRelation;
+    await this.prisma.issueRelation.create({
+      data: {
+        createdById: userId,
+        issueId: relationData.relatedIssueId,
+        relatedIssueId: relationData.issueId,
+        type: ReverseIssueRelationType[relationData.type],
+      },
+    });
+
+    await this.createIssueHistory(userId, issueRelationData);
+
+    return issueRelationData;
   }
 
   async deleteIssueRelation(
     userId: string,
     issueRelationId: IssueRelationIdRequestParams,
   ): Promise<IssueRelation> {
-    const deletedAt = new Date().toISOString();
+    const deleted = new Date().toISOString();
 
-    const issueRelationData: IssueRelation =
-      await this.prisma.issueRelation.update({
-        where: { id: issueRelationId.issueRelationId },
-        data: { deletedAt, deletedById: userId },
-      });
-
-    await this.prisma.issueRelation.update({
-      where: {
-        issueId_relatedIssueId_type: {
-          issueId: issueRelationData.relatedIssueId,
-          relatedIssueId: issueRelationData.issueId,
-          type: ReverseIssueRelationType[issueRelationData.type],
-        },
-      },
-      data: { deletedAt, deletedById: userId },
+    const issueRelationData = await this.prisma.issueRelation.update({
+      where: { id: issueRelationId.issueRelationId },
+      data: { deleted, deletedById: userId },
     });
 
+    await this.prisma.issueRelation.updateMany({
+      where: {
+        issueId: issueRelationData.relatedIssueId,
+        relatedIssueId: issueRelationData.issueId,
+        type: ReverseIssueRelationType[issueRelationData.type],
+      },
+      data: { deleted, deletedById: userId },
+    });
+
+    await this.createIssueHistory(userId, issueRelationData, true);
+
     return issueRelationData;
+  }
+
+  async createIssueHistory(
+    userId: string,
+    issueRelation: IssueRelation,
+    isDeleted?: boolean,
+  ) {
+    await this.prisma.issueHistory.createMany({
+      data: [
+        {
+          issueId: issueRelation.issueId,
+          userId,
+          relationChanges: {
+            issueId: issueRelation.issueId,
+            relatedIssueId: issueRelation.relatedIssueId,
+            type: issueRelation.type,
+            ...(isDeleted !== undefined && { isDeleted }),
+          },
+        },
+        {
+          issueId: issueRelation.relatedIssueId,
+          userId,
+          relationChanges: {
+            issueId: issueRelation.relatedIssueId,
+            relatedIssueId: issueRelation.issueId,
+            type: ReverseIssueRelationType[issueRelation.type],
+            ...(isDeleted !== undefined && { isDeleted }),
+          },
+        },
+      ],
+    });
   }
 }
