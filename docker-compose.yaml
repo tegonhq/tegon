@@ -34,6 +34,7 @@ services:
     networks:
       - tegon
     restart: unless-stopped
+
   server:
     image: "poozlehq/tegon-server:${VERSION}"
     # platform: linux/amd64
@@ -41,6 +42,7 @@ services:
     depends_on:
       - db
       - supertokens
+      - redis
     restart: unless-stopped
     networks:
       - tegon
