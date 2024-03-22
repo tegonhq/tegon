@@ -2,17 +2,16 @@
 
 import { Injectable } from '@nestjs/common';
 
-import GithubService from 'modules/integrations/github/github.service';
-
 import {
   WebhookEventBody,
   WebhookEventHeaders,
   WebhookEventParams,
 } from './webhooks.interface';
+import { GithubQueue } from 'modules/integrations/github/github.queue';
 
 @Injectable()
 export default class WebhookService {
-  constructor(private githubService: GithubService) {}
+  constructor(private githubQueue: GithubQueue) {}
 
   async handleEvents(
     webhookEventParams: WebhookEventParams,
@@ -21,7 +20,8 @@ export default class WebhookService {
   ) {
     switch (webhookEventParams.eventSource) {
       case 'github':
-        await this.githubService.handleEvents(eventHeaders, eventBody);
+        // await this.githubService.handleEvents(eventHeaders, eventBody);
+        this.githubQueue.handleEventsJob(eventHeaders, eventBody);
         break;
       default:
         console.warn(`Invalid event source ${webhookEventParams.eventSource}`);

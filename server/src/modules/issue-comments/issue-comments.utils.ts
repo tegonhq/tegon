@@ -9,9 +9,11 @@ import {
   IssueCommentAction,
   IssueCommentWithRelations,
 } from './issue-comments.interface';
+import { Logger } from '@nestjs/common';
 
 export async function handleTwoWaySync(
   prisma: PrismaService,
+  logger: Logger,
   issueComment: IssueCommentWithRelations,
   action: IssueCommentAction,
   userId: string,
@@ -38,6 +40,7 @@ export async function handleTwoWaySync(
 
     await upsertGithubIssueComment(
       prisma,
+      logger,
       issueComment,
       integrationAccount,
       userId,

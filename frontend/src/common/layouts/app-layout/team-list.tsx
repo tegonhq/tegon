@@ -3,7 +3,6 @@
 import {
   RiAccountBoxFill,
   RiArrowRightSFill,
-  RiExchangeFill,
   RiFlipHorizontal2Fill,
   RiFunctionFill,
   RiStackFill,

@@ -144,6 +144,8 @@ export async function getModelData(
             createdAt: true,
             updatedAt: true,
             deleted: true,
+            scopes: true,
+            spec: true,
           },
         }),
     },

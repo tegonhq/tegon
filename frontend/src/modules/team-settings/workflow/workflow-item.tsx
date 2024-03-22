@@ -4,7 +4,6 @@ import {
   RiCheckboxCircleFill,
   RiCircleLine,
   RiCloseCircleFill,
-  RiExchangeFill,
   RiFlipHorizontal2Fill,
   RiLoader3Line,
   RiProgress4Line,

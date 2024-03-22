@@ -228,7 +228,7 @@ export async function sendGithubFirstComment(
 
   logger.debug(`Issue comment created for issue ${issueId}`);
 
-  await linkedIssueService.updateLinkIssue(
+  await linkedIssueService.updateLinkIssueApi(
     { linkedIssueId: linkedIssue.id },
     {
       source: {
@@ -497,7 +497,7 @@ export async function upsertGithubIssue(
     }),
   ]);
 
-  logger.log(`Assignee GitHub user: ${JSON.stringify(assigneeGithubUser)}`);
+  logger.debug(`Assignee GitHub user: ${JSON.stringify(assigneeGithubUser)}`);
 
   const issueBody = {
     title: issue.title,
@@ -513,7 +513,7 @@ export async function upsertGithubIssue(
   };
 
   if (linkedIssue) {
-    logger.log(`Found a Linked issue: ${linkedIssue.id}`);
+    logger.debug(`Found a Linked issue: ${linkedIssue.id}`);
 
     const userGithubIntegrationAccount = await getGithubUserIntegrationAccount(
       prisma,
@@ -521,7 +521,7 @@ export async function upsertGithubIssue(
       issue.team.workspaceId,
     );
 
-    logger.log(
+    logger.debug(
       `User GitHub integration account: ${userGithubIntegrationAccount.id}`,
     );
 
@@ -545,7 +545,7 @@ export async function upsertGithubIssue(
     ),
   ]);
 
-  logger.log(`Default repo: ${JSON.stringify(defaultRepo)}`);
+  logger.debug(`Default repo: ${JSON.stringify(defaultRepo)}`);
 
   if (defaultRepo) {
     const url = `https://api.github.com/repos/${defaultRepo.githubRepoFullName}/issues`;
@@ -560,11 +560,14 @@ export async function upsertGithubIssue(
 // edited
 export async function upsertGithubIssueComment(
   prisma: PrismaService,
+  logger: Logger,
   issueComment: IssueCommentWithRelations,
   integrationAccount: IntegrationAccountWithRelations,
   userId: string,
   action: IssueCommentAction,
 ) {
+  logger.debug(`Upserting GitHub issue comment for action: ${action}`);
+
   const userGithubIntegrationAccount = await getGithubUserIntegrationAccount(
     prisma,
     userId,
@@ -584,6 +587,7 @@ export async function upsertGithubIssueComment(
 
   switch (action) {
     case IssueCommentAction.CREATED:
+      logger.debug('Creating GitHub issue comment');
       const linkedIssue = await prisma.linkedIssue.findFirst({
         where: { issueId: issueComment.issueId },
       });
@@ -617,23 +621,30 @@ export async function upsertGithubIssueComment(
             data: { sourceMetadata },
           }),
         ]);
+        logger.debug('GitHub issue comment created successfully');
         return githubIssueComment;
       }
+      logger.debug('Linked issue not found, skipping comment creation');
       return undefined;
 
     case IssueCommentAction.UPDATED:
+      logger.debug('Updating GitHub issue comment');
       if (linkedComment) {
-        return await postRequest(
+        const updatedComment = await postRequest(
           (linkedComment.sourceData as LinkedCommentSourceData).apiUrl,
           getGithubHeaders(accessToken),
           {
             body: issueComment.body,
           },
         );
+        logger.debug('GitHub issue comment updated successfully');
+        return updatedComment;
       }
+      logger.debug('Linked comment not found, skipping comment update');
       return undefined;
 
     case IssueCommentAction.DELETED:
+      logger.debug('Deleting GitHub issue comment');
       if (linkedComment) {
         const deleteResponse = await deleteRequest(
           (linkedComment.sourceData as LinkedCommentSourceData).apiUrl,
@@ -644,8 +655,10 @@ export async function upsertGithubIssueComment(
           where: { id: linkedComment.id },
           data: { deleted: new Date().toISOString() },
         });
+        logger.debug('GitHub issue comment deleted successfully');
         return deleteResponse;
       }
+      logger.debug('Linked comment not found, skipping comment deletion');
       return undefined;
   }
 }

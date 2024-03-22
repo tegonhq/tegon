@@ -123,6 +123,8 @@ export async function handleTwoWaySync(
         path: [IntegrationName.Github, 'repositoryMappings'],
         array_contains: [{ teamId: issue.teamId, bidirectional: true }],
       } as Prisma.JsonFilter,
+      isActive: true,
+      deleted: null,
     },
     include: {
       integrationDefinition: true,
@@ -131,7 +133,7 @@ export async function handleTwoWaySync(
   });
 
   if (integrationAccount) {
-    logger.log(`Found integration account for team ${issue.teamId}`);
+    logger.debug(`Found integration account for team ${issue.teamId}`);
     switch (action) {
       case IssueAction.CREATED: {
         logger.log(`Creating GitHub issue for Tegon issue ${issue.id}`);
@@ -143,7 +145,7 @@ export async function handleTwoWaySync(
           userId,
         );
 
-        logger.log(
+        logger.debug(
           `Linking GitHub issue ${githubIssue.id} to Tegon issue ${issue.id}`,
         );
         await linkedIssueService.createLinkIssueAPI({
@@ -162,7 +164,7 @@ export async function handleTwoWaySync(
           createdById: userId,
         });
 
-        logger.log(`Sending first comment to GitHub issue ${githubIssue.id}`);
+        logger.debug(`Sending first comment to GitHub issue ${githubIssue.id}`);
         await sendGithubFirstComment(
           prisma,
           logger,
@@ -175,7 +177,7 @@ export async function handleTwoWaySync(
       }
 
       case IssueAction.UPDATED: {
-        logger.log(`Updating GitHub issue for Tegon issue ${issue.id}`);
+        logger.debug(`Updating GitHub issue for Tegon issue ${issue.id}`);
         await upsertGithubIssue(
           prisma,
           logger,

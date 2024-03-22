@@ -26,7 +26,9 @@ export default class GithubService {
     private issuesService: IssuesService,
     private linkedIssueService: LinkedIssueService,
   ) {}
-  private readonly logger: Logger = new Logger('GithubService');
+  private readonly logger: Logger = new Logger('GithubService', {
+    timestamp: true,
+  });
 
   async handleEvents(
     eventHeaders: WebhookEventHeaders,
@@ -43,6 +45,9 @@ export default class GithubService {
           include: { workspace: true, integrationDefinition: true },
         },
       );
+      if (!integrationAccount) {
+        return undefined;
+      }
       switch (eventType) {
         case 'issues':
           handleIssues(
@@ -99,5 +104,6 @@ export default class GithubService {
           console.warn(`couldn't find eventType ${eventType}`);
       }
     }
+    return { status: 200, message: 'handled event successfully' };
   }
 }

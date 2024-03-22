@@ -86,10 +86,16 @@ export async function storeIntegrationRelatedData(
 export async function handleAppDeletion(
   integrationAccount: IntegrationAccountWithRelations,
 ) {
-  const accessToken = await getBotJWTToken(integrationAccount);
+  if (
+    integrationAccount.integrationDefinition.name === IntegrationName.Github
+  ) {
+    const accessToken = await getBotJWTToken(integrationAccount);
 
-  return await deleteRequest(
-    `https://api.github.com/app/installations/${integrationAccount.accountId}`,
-    getGithubHeaders(accessToken),
-  );
+    return await deleteRequest(
+      `https://api.github.com/app/installations/${integrationAccount.accountId}`,
+      getGithubHeaders(accessToken),
+    );
+  }
+
+  return undefined;
 }

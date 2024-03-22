@@ -6,11 +6,23 @@ import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
 import { IssueCommentsController } from './issue-comments.controller';
 import IssueCommentsService from './issue-comments.service';
+import { BullModule } from '@nestjs/bull';
+import { IssueCommentsQueue } from './issue-comments.queue';
+import { IssueCommentsProcessor } from './issue-comments.processor';
 
 @Module({
-  imports: [PrismaModule, HttpModule],
+  imports: [
+    PrismaModule,
+    HttpModule,
+    BullModule.registerQueue({ name: 'issueComments' }),
+  ],
   controllers: [IssueCommentsController],
-  providers: [IssueCommentsService, PrismaService],
+  providers: [
+    IssueCommentsService,
+    PrismaService,
+    IssueCommentsQueue,
+    IssueCommentsProcessor,
+  ],
   exports: [IssueCommentsService],
 })
 export class IssueCommentsModule {}

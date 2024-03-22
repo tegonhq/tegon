@@ -50,7 +50,7 @@ export default class IssuesService {
   ): Promise<ApiResponse | Issue> {
     const { linkIssue, ...otherIssueData } = issueData;
 
-    this.logger.log(
+    this.logger.debug(
       `Creating issue with data: ${JSON.stringify(otherIssueData)}`,
     );
 
@@ -147,10 +147,39 @@ export default class IssuesService {
     linkIssuedata?: LinkIssueData,
     linkMetaData?: Record<string, string>,
   ): Promise<Issue> {
+    this.logger.log(`Updating issue with ID: ${issueParams.issueId}`);
+
+    const updatedIssue = await this.updateIssueApi(
+      teamRequestParams,
+      issueData,
+      issueParams,
+      userId,
+      linkIssuedata,
+      linkMetaData,
+    );
+
+    if (updatedIssue.isBidirectional) {
+      this.logger.log(`Adding two-way sync job for issue: ${updatedIssue.id}`);
+      await this.issuesQueue.addTwoWaySyncJob(
+        updatedIssue,
+        IssueAction.UPDATED,
+        userId,
+      );
+    }
+
+    return updatedIssue;
+  }
+
+  async updateIssueApi(
+    teamRequestParams: TeamRequestParams,
+    issueData: UpdateIssueInput,
+    issueParams: IssueRequestParams,
+    userId?: string,
+    linkIssuedata?: LinkIssueData,
+    linkMetaData?: Record<string, string>,
+  ) {
     const { parentId, issueRelation, ...otherIssueData } = issueData;
     const issueTitle = await getIssueTitle(openaiClient, issueData);
-
-    this.logger.log(`Updating issue with ID: ${issueParams.issueId}`);
 
     const [currentIssue, updatedIssue] = await this.prisma.$transaction([
       this.prisma.issue.findUnique({
@@ -192,15 +221,6 @@ export default class IssuesService {
       linkMetaData,
       issueRelation,
     );
-
-    if (updatedIssue.isBidirectional) {
-      this.logger.log(`Adding two-way sync job for issue: ${updatedIssue.id}`);
-      await this.issuesQueue.addTwoWaySyncJob(
-        updatedIssue,
-        IssueAction.UPDATED,
-        userId,
-      );
-    }
 
     return updatedIssue;
   }

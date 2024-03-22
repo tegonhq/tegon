@@ -65,7 +65,7 @@ export async function handleIssues(
     logger.log(
       `Updating issue ${linkedIssue.issueId} for GitHub issue ${issue.id}`,
     );
-    return issuesService.updateIssue(
+    return issuesService.updateIssueApi(
       { teamId } as TeamRequestParams,
       input,
       { issueId: linkedIssue.issueId } as IssueRequestParams,
@@ -501,6 +501,7 @@ export async function handleInstallations(
   eventBody: WebhookEventBody,
   integrationAccount: IntegrationAccountWithRelations,
 ) {
+  logger.debug(`Changes in App installation ${eventBody.action}`);
   if (eventBody.action === 'installed') {
     logger.debug('Skipping handling for "installed" action');
     return undefined;
@@ -511,7 +512,7 @@ export async function handleInstallations(
     ...(eventBody.action === 'deleted' && { deleted: new Date() }),
   };
 
-  logger.log(
+  logger.debug(
     `Updating integration account ${integrationAccount.id} with data:`,
     updateData,
   );

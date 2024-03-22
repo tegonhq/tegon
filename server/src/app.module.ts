@@ -28,6 +28,7 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BullConfigModule } from 'modules/bull/bull.module';
+import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { BullConfigModule } from 'modules/bull/bull.module';
     IssuesModule,
     IssueCommentsModule,
     IssueHistoryModule,
+    LinkedIssueModule,
 
     ReplicationModule,
     SyncActionsModule,

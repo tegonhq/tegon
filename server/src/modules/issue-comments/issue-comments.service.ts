@@ -14,11 +14,14 @@ import {
   commentReactionType,
   reactionDataType,
 } from './issue-comments.interface';
-import { handleTwoWaySync } from './issue-comments.utils';
+import { IssueCommentsQueue } from './issue-comments.queue';
 
 @Injectable()
 export default class IssueCommentsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private issueCommentsQueue: IssueCommentsQueue,
+  ) {}
 
   async createIssueComment(
     issueRequestParams: IssueRequestParams,
@@ -36,12 +39,12 @@ export default class IssueCommentsService {
       },
     });
 
-    await handleTwoWaySync(
-      this.prisma,
+    await this.issueCommentsQueue.addTwoWaySyncJob(
       issueComment,
       IssueCommentAction.CREATED,
       userId,
     );
+
     return issueComment;
   }
 
@@ -59,8 +62,7 @@ export default class IssueCommentsService {
       },
     });
 
-    await handleTwoWaySync(
-      this.prisma,
+    await this.issueCommentsQueue.addTwoWaySyncJob(
       issueComment,
       IssueCommentAction.UPDATED,
       issueComment.userId,
@@ -84,13 +86,11 @@ export default class IssueCommentsService {
       },
     });
 
-    await handleTwoWaySync(
-      this.prisma,
+    await this.issueCommentsQueue.addTwoWaySyncJob(
       issueComment,
       IssueCommentAction.DELETED,
       issueComment.userId,
     );
-
     return issueComment;
   }
 

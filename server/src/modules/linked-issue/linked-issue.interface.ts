@@ -63,7 +63,7 @@ export class LinkedIssueIdParams {
   linkedIssueId: string;
 }
 
-export class UpdateLinkedIssueData {
+export class UpdateLinkedIssueAPIData {
   @IsOptional()
   @IsString()
   url?: string;
@@ -79,4 +79,13 @@ export class UpdateLinkedIssueData {
   @IsOptional()
   @IsString()
   createdById?: string;
+}
+
+export class UpdateLinkedIssueData {
+  @IsString()
+  url: string;
+
+  @IsOptional()
+  @IsString()
+  title?: string;
 }
