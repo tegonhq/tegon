@@ -18,6 +18,7 @@ export const IssueStoreInit = observer(
       issuesStore,
       workflowsStore,
       linkedIssuesStore,
+      issueRelationsStore,
     } = useContextStore();
 
     const {
@@ -49,6 +50,7 @@ export const IssueStoreInit = observer(
       await issuesHistoryStore.load(issueData.id);
       await commentsStore.load(issueData.id);
       await linkedIssuesStore.load(issueData.id);
+      await issueRelationsStore.load(issueData.id);
 
       setLoading(false);
       // eslint-disable-next-line react-hooks/exhaustive-deps

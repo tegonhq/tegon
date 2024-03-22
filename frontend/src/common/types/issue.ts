@@ -45,22 +45,6 @@ export interface IssueHistoryType {
 
 export const Priorities = ['No priority', 'Urgent', 'High', 'Medium', 'Low'];
 
-export enum IssueRelationType {
-  BLOCKS = 'BLOCKS',
-  BLOCKED = 'BLOCKED',
-  RELATED = 'RELATED',
-  DUPLICATE = 'DUPLICATE',
-  DUPLICATE_OF = 'DUPLICATE_OF',
-  PARENT = 'PARENT',
-  SUB_ISSUE = 'SUB_ISSUE',
-}
-
-export interface IssueRelation {
-  type: IssueRelationType;
-  issueId: string;
-  relatedIssueId: string;
-}
-
 export interface IssueCommentType {
   id: string;
   createdAt: string;

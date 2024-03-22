@@ -9,6 +9,7 @@ import type { User } from 'store/user-context';
 import { LabelActivity } from './label-activity';
 import { PriorityActivity } from './priority-activity';
 import { StatusActivity } from './status-activity';
+import { RelatedActivity } from './related-activity';
 
 interface ActivityItemProps {
   issueHistory: IssueHistoryType;
@@ -74,6 +75,23 @@ export function ActivityItem({ issueHistory, user }: ActivityItemProps) {
     if (issueHistory.toStateId) {
       localItems.push(
         <StatusActivity
+          username={user.username}
+          issueHistory={issueHistory}
+          showTime={setShowTime}
+          key={index}
+        />,
+      );
+      index = index + 1;
+
+      setShowTime = false;
+    }
+
+    if (
+      issueHistory.relationChanges &&
+      JSON.parse(issueHistory.relationChanges).length > 0
+    ) {
+      localItems.push(
+        <RelatedActivity
           username={user.username}
           issueHistory={issueHistory}
           showTime={setShowTime}

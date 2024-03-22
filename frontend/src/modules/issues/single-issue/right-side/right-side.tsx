@@ -20,6 +20,7 @@ import { useCurrentTeam } from 'hooks/teams';
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
 import { Header } from './header';
+import { IssueRelatedProperties } from './issue-related-properties';
 
 export const RightSide = observer(() => {
   const issue = useIssueData();
@@ -88,9 +89,9 @@ export const RightSide = observer(() => {
           </div>
         </div>
 
-        <div className="flex justify-start items-center text-sm mb-4">
+        <div className="flex justify-start items-start text-sm mb-4">
           <div className="text-muted-foreground w-[95px] text-left">Labels</div>
-          <div>
+          <div className="w-[calc(100%_-_95px)]">
             <IssueLabelDropdown
               value={issue.labelIds}
               onChange={labelsChange}
@@ -99,14 +100,7 @@ export const RightSide = observer(() => {
           </div>
         </div>
 
-        <div className="flex justify-start items-center text-sm">
-          <div className="text-muted-foreground w-[95px] text-left">
-            Related
-          </div>
-          <div>
-            <IssueRelatedDropdown />
-          </div>
-        </div>
+        <IssueRelatedProperties />
       </div>
     </div>
   );

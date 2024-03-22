@@ -11,6 +11,7 @@ import type {
   IssueHistoryType,
   IssueCommentType,
 } from 'common/types/issue';
+import type { IssueRelationType } from 'common/types/issue-relation';
 import type { LabelType } from 'common/types/label';
 import type { LinkedIssueType } from 'common/types/linked-issue';
 import type { TeamType, WorkflowType } from 'common/types/team';
@@ -33,6 +34,7 @@ export class TegonDatabase extends Dexie {
   integrationDefinitions: Dexie.Table<IntegrationDefinitionType, string>;
   integrationAccounts: Dexie.Table<IntegrationAccountType, string>;
   linkedIssues: Dexie.Table<LinkedIssueType, string>;
+  issueRelations: Dexie.Table<IssueRelationType, string>;
 
   constructor() {
     super('TegonDatabase');
@@ -58,6 +60,8 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,accountId,settings,integratedById,integrationDefinitionId,workspaceId',
       [MODELS.LinkedIssue]:
         'id,createdAt,updatedAt,url,sourceId,source,sourceData,issueId,createdById',
+      [MODELS.IssueRelation]:
+        'id,createdAt,updatedAt,issueId,createdById,type,relatedIssueId',
     });
 
     this.workspaces = this.table(MODELS.Workspace);
@@ -71,6 +75,7 @@ export class TegonDatabase extends Dexie {
     this.integrationDefinitions = this.table(MODELS.IntegrationDefinition);
     this.integrationAccounts = this.table(MODELS.IntegrationAccount);
     this.linkedIssues = this.table(MODELS.LinkedIssue);
+    this.issueRelations = this.table(MODELS.IssueRelation);
   }
 }
 

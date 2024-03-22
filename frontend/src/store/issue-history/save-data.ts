@@ -30,6 +30,7 @@ export async function saveIssueHistoryData(
         toAssigneeId: record.data.toAssigneeId,
         fromParentId: record.data.fromParentId,
         toParentId: record.data.toParentId,
+        relationChanges: JSON.stringify(record.data.relationChanges),
       };
 
       switch (record.action) {

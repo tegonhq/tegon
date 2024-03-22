@@ -8,6 +8,7 @@ import { CommentsStore } from './comments';
 import { IntegrationAccountsStore } from './integration-accounts';
 import { IntegrationDefinitionsStore } from './integration-definitions';
 import { IssueHistoryStore } from './issue-history';
+import { IssueRelationsStore } from './issue-relation';
 import { IssuesStore } from './issues';
 import { LabelsStore } from './labels';
 import { LinkedIssuesStore } from './linked-issues';
@@ -27,6 +28,7 @@ const StoreContextModel = types.model({
   integrationAccountsStore: IntegrationAccountsStore,
   integrationDefinitionsStore: IntegrationDefinitionsStore,
   linkedIssuesStore: LinkedIssuesStore,
+  issueRelationsStore: IssueRelationsStore,
 });
 
 export const storeContextStore = StoreContextModel.create({
@@ -34,7 +36,7 @@ export const storeContextStore = StoreContextModel.create({
     comments: [],
   },
   issuesHistoryStore: {
-    issueHistory: [],
+    issueHistories: [],
   },
   issuesStore: {
     issues: [],
@@ -75,6 +77,10 @@ export const storeContextStore = StoreContextModel.create({
   },
   linkedIssuesStore: {
     linkedIssues: [],
+    issueId: undefined,
+  },
+  issueRelationsStore: {
+    issueRelations: [],
     issueId: undefined,
   },
 });

@@ -6,6 +6,7 @@ import * as React from 'react';
 import { cn } from 'common/lib/utils';
 import type { LabelType } from 'common/types/label';
 
+import { Badge, BadgeColor } from 'components/ui/badge';
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useTeamLabels } from 'hooks/labels/use-team-labels';
@@ -34,18 +35,38 @@ export function IssueLabelDropdown({
   function getTrigger() {
     if (variant === IssueLabelDropdownVariant.LINK) {
       return (
-        <Button
-          variant="outline"
-          role="combobox"
-          size="lg"
-          aria-expanded={open}
-          className={cn(
-            'flex items-center border dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
-            value && 'text-foreground',
-          )}
-        >
-          {labelTitle()}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          {labels.slice(0, 3).map((label: LabelType) => (
+            <Badge
+              variant="outline"
+              key={label.name}
+              className="text-muted-foreground flex items-center"
+            >
+              <BadgeColor
+                style={{ backgroundColor: label.color }}
+                className="mr-2"
+              />
+              {label.name}
+            </Badge>
+          ))}
+
+          <Button
+            variant="outline"
+            role="combobox"
+            size="xs"
+            aria-expanded={open}
+            className={cn(
+              'flex items-center justify-between text-xs font-normal border-0 shadow-none',
+              value.length > 0 && 'text-foreground',
+              value.length === 0 && 'text-muted-foreground',
+            )}
+          >
+            <div className="flex items-center text-muted-foreground">
+              <RiAddLine size={18} className="mr-1" />
+              Add Label
+            </div>
+          </Button>
+        </div>
       );
     }
 

@@ -21,4 +21,5 @@ export const IssueHistory = types.model({
   toAssigneeId: types.union(types.string, types.null),
   fromParentId: types.union(types.string, types.null),
   toParentId: types.union(types.string, types.null),
+  relationChanges: types.union(types.string, types.null),
 });

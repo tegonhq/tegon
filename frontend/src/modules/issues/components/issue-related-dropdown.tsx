@@ -1,13 +1,13 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import {
+  RiAddLine,
   RiFileAddLine,
   RiFileCopyLine,
   RiFileDownloadLine,
   RiFileForbidLine,
   RiFileTransferLine,
   RiFileWarningLine,
-  RiFlag2Fill,
 } from '@remixicon/react';
 import React from 'react';
 
@@ -32,18 +32,22 @@ export function IssueRelatedDropdown() {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            size="lg"
-            className={cn(
-              'flex items-center border text-foreground dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
-            )}
-          >
-            <div className="flex text-muted-foreground items-center">
-              <RiFlag2Fill size={18} className="mr-3" /> Mark as
-            </div>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              role="combobox"
+              size="lg"
+              className={cn(
+                'flex items-center border text-foreground dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+              )}
+            >
+              <div className="flex items-center gap-2">
+                <div className="flex text-muted-foreground items-center">
+                  <RiAddLine size={18} className="mr-3" /> Add Relation
+                </div>
+              </div>
+            </Button>
+          </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="text-muted-foreground">
           <DropdownMenuGroup>
@@ -82,7 +86,7 @@ export function IssueRelatedDropdown() {
 
             <DropdownMenuItem
               onClick={() => {
-                setModal(IssueRelationType.PARENT);
+                setModal(IssueRelationType.BLOCKED);
               }}
             >
               <div className="flex items-center gap-2">
@@ -91,14 +95,22 @@ export function IssueRelatedDropdown() {
               </div>
             </DropdownMenuItem>
 
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setModal(IssueRelationType.BLOCKS);
+              }}
+            >
               <div className="flex items-center gap-2">
                 <RiFileForbidLine size={16} />
                 Blocked to...
               </div>
             </DropdownMenuItem>
 
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setModal(IssueRelationType.DUPLICATE_OF);
+              }}
+            >
               <div className="flex items-center gap-2">
                 <RiFileCopyLine size={16} />
                 Duplicate of...

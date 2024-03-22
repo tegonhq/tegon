@@ -7,56 +7,60 @@ import {
   flow,
 } from 'mobx-state-tree';
 
-import type { LinkedIssueType } from 'common/types/linked-issue';
+import type { IssueRelationType } from 'common/types/issue-relation';
 
 import { tegonDatabase } from 'store/database';
 
-import { LinkedIssue } from './models';
+import { IssueRelation } from './models';
 
-export const LinkedIssuesStore: IAnyStateTreeNode = types
+export const IssueRelationsStore: IAnyStateTreeNode = types
   .model({
-    linkedIssues: types.array(LinkedIssue),
+    issueRelations: types.array(IssueRelation),
     issueId: types.union(types.string, types.undefined),
   })
   .actions((self) => {
-    const update = (linkedIssue: LinkedIssueType, id: string) => {
-      const indexToUpdate = self.linkedIssues.findIndex((obj) => obj.id === id);
+    const update = (issueRelation: IssueRelationType, id: string) => {
+      const indexToUpdate = self.issueRelations.findIndex(
+        (obj) => obj.id === id,
+      );
 
       if (indexToUpdate !== -1) {
         // Update the object at the found index with the new data
-        self.linkedIssues[indexToUpdate] = {
-          ...self.linkedIssues[indexToUpdate],
-          ...linkedIssue,
+        self.issueRelations[indexToUpdate] = {
+          ...self.issueRelations[indexToUpdate],
+          ...issueRelation,
           // TODO fix the any and have a type with Issuetype
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any;
       } else {
-        self.linkedIssues.push(linkedIssue);
+        self.issueRelations.push(issueRelation);
       }
     };
     const deleteById = (id: string) => {
-      const indexToDelete = self.linkedIssues.findIndex((obj) => obj.id === id);
+      const indexToDelete = self.issueRelations.findIndex(
+        (obj) => obj.id === id,
+      );
 
       if (indexToDelete !== -1) {
-        self.linkedIssues.splice(indexToDelete, 1);
+        self.issueRelations.splice(indexToDelete, 1);
       }
     };
 
     const load = flow(function* (issueId: string) {
       self.issueId = issueId;
 
-      const linkedIssues = issueId
-        ? yield tegonDatabase.linkedIssues
+      const issueRelations = issueId
+        ? yield tegonDatabase.issueRelations
             .where({
               issueId,
             })
             .toArray()
         : [];
 
-      self.linkedIssues = linkedIssues;
+      self.issueRelations = issueRelations;
     });
 
     return { update, deleteById, load };
   });
 
-export type LinkedIssuesStoreType = Instance<typeof LinkedIssuesStore>;
+export type IssueRelationsStoreType = Instance<typeof IssueRelationsStore>;
