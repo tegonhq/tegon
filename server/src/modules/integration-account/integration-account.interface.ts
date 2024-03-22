@@ -15,7 +15,7 @@ export type Config = Record<string, any>;
 
 export interface GithubRepositories {
   id: string;
-  fulllName: string;
+  fullName: string;
   name?: string;
   private?: boolean;
   nodeId?: string;

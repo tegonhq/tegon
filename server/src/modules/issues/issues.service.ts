@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { Issue, LinkedIssue } from '@prisma/client';
+import { Injectable, Logger } from '@nestjs/common';
+import { Issue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
 
@@ -9,24 +9,23 @@ import { IssueRelation } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 
 import {
+  ApiResponse,
   CreateIssueInput,
   IssueAction,
   IssueRequestParams,
   IssueWithRelations,
-  LinkIssueData,
-  LinkIssueInput,
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
 import {
+  findExistingLink,
   getIssueDiff,
   getIssueTitle,
   getLastIssueNumber,
-  getLinkType,
-  getLinkedIssueWithUrl,
-  handleTwoWaySync,
-  isValidLinkUrl,
 } from './issues.utils';
+import { IssuesQueue } from './issues.queue';
+import { getLinkType } from 'modules/linked-issue/linked-issue.utils';
+import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 
 const openaiClient = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
@@ -34,9 +33,12 @@ const openaiClient = new OpenAI({
 
 @Injectable()
 export default class IssuesService {
+  private readonly logger: Logger = new Logger('IssueService');
+
   constructor(
     private prisma: PrismaService,
     private issueHistoryService: IssuesHistoryService,
+    private issuesQueue: IssuesQueue,
   ) {}
 
   async createIssue(
@@ -45,8 +47,23 @@ export default class IssuesService {
     userId?: string,
     linkIssuedata?: LinkIssueData,
     linkMetaData?: Record<string, string>,
-  ): Promise<Issue> {
+  ): Promise<ApiResponse | Issue> {
     const { linkIssue, ...otherIssueData } = issueData;
+
+    this.logger.log(
+      `Creating issue with data: ${JSON.stringify(otherIssueData)}`,
+    );
+
+    const linkStatus = linkIssue
+      ? await findExistingLink(this.prisma, linkIssue)
+      : null;
+    if (linkStatus?.status === 400) {
+      this.logger.error(
+        `Error finding existing link: ${JSON.stringify(linkStatus)}`,
+      );
+      return linkStatus;
+    }
+
     const issue = await this.createIssueAPI(
       teamRequestParams,
       otherIssueData,
@@ -55,18 +72,26 @@ export default class IssuesService {
       linkMetaData,
     );
 
+    this.logger.log(`Created issue: ${issue.number}`);
+
     if (linkIssue) {
-      linkIssue.type = getLinkType(linkIssue.url);
-      await this.createLinkIssue(
+      linkIssue.type = await getLinkType(linkIssue.url);
+      this.logger.log(
+        `Adding create link issue job for link: ${linkIssue.url}`,
+      );
+      await this.issuesQueue.addCreateLinkIssueJob(
         teamRequestParams,
         linkIssue,
         { issueId: issue.id },
         userId,
       );
-    }
-
-    if (otherIssueData.isBidirectional && !linkIssue) {
-      await handleTwoWaySync(this.prisma, issue, IssueAction.CREATED, userId);
+    } else if (otherIssueData.isBidirectional) {
+      this.logger.log(`Adding two-way sync job for issue: ${issue.id}`);
+      await this.issuesQueue.addTwoWaySyncJob(
+        issue,
+        IssueAction.CREATED,
+        userId,
+      );
     }
 
     return issue;
@@ -125,6 +150,8 @@ export default class IssuesService {
     const { parentId, issueRelation, ...otherIssueData } = issueData;
     const issueTitle = await getIssueTitle(openaiClient, issueData);
 
+    this.logger.log(`Updating issue with ID: ${issueParams.issueId}`);
+
     const [currentIssue, updatedIssue] = await this.prisma.$transaction([
       this.prisma.issue.findUnique({
         where: { id: issueParams.issueId },
@@ -154,6 +181,10 @@ export default class IssuesService {
       }),
     ]);
 
+    this.logger.log(
+      `Issue with ID ${issueParams.issueId} updated successfully`,
+    );
+
     await this.upsertIssueHistory(
       updatedIssue,
       currentIssue,
@@ -161,9 +192,10 @@ export default class IssuesService {
       linkMetaData,
       issueRelation,
     );
+
     if (updatedIssue.isBidirectional) {
-      await handleTwoWaySync(
-        this.prisma,
+      this.logger.log(`Adding two-way sync job for issue: ${updatedIssue.id}`);
+      await this.issuesQueue.addTwoWaySyncJob(
         updatedIssue,
         IssueAction.UPDATED,
         userId,
@@ -177,6 +209,10 @@ export default class IssuesService {
     teamRequestParams: TeamRequestParams,
     issueParams: IssueRequestParams,
   ): Promise<Issue> {
+    this.logger.log(
+      `Deleting issue with id ${issueParams.issueId} for team ${teamRequestParams.teamId}`,
+    );
+
     const deleteIssue = await this.prisma.issue.update({
       where: {
         id: issueParams.issueId,
@@ -187,21 +223,13 @@ export default class IssuesService {
       },
     });
 
+    this.logger.log(`Issue ${deleteIssue.id} marked as deleted`);
+
     await this.deleteIssueHistory(deleteIssue.id);
 
-    return deleteIssue;
-  }
+    this.logger.log(`Issue history deleted for issue ${deleteIssue.id}`);
 
-  async deleteIssuePermenant(
-    teamRequestParams: TeamRequestParams,
-    issueParams: IssueRequestParams,
-  ): Promise<Issue> {
-    return await this.prisma.issue.delete({
-      where: {
-        id: issueParams.issueId,
-        teamId: teamRequestParams.teamId,
-      },
-    });
+    return deleteIssue;
   }
 
   private async upsertIssueHistory(
@@ -211,6 +239,7 @@ export default class IssuesService {
     linkMetaData?: Record<string, string>,
     issueRelation?: IssueRelation,
   ): Promise<void> {
+    this.logger.log(`Upserting issue history for issue ${issue.id}`);
     await this.issueHistoryService.upsertIssueHistory(
       userId,
       issue.id,
@@ -219,6 +248,7 @@ export default class IssuesService {
     );
 
     if (issueRelation) {
+      this.logger.log(`Creating issue relation for issue ${issue.id}`);
       await this.issueHistoryService.createIssueRelation(
         userId,
         issue.id,
@@ -228,38 +258,7 @@ export default class IssuesService {
   }
 
   private async deleteIssueHistory(issueId: string): Promise<void> {
+    this.logger.log(`Deleting issue history for issue ${issueId}`);
     await this.issueHistoryService.deleteIssueHistory(issueId);
-  }
-
-  async createLinkIssue(
-    teamParams: TeamRequestParams,
-    linkData: LinkIssueInput,
-    issueParams: IssueRequestParams,
-    userId: string,
-  ): Promise<{ status: number; message: string } | LinkedIssue> {
-    if (!isValidLinkUrl(linkData)) {
-      throw new BadRequestException("Provided url doesn't exists");
-    }
-
-    const linkedIssue = await this.prisma.linkedIssue.findFirst({
-      where: { url: linkData.url },
-      include: { issue: { include: { team: true } } },
-    });
-    if (linkedIssue) {
-      throw new BadRequestException(
-        `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
-      );
-    }
-    try {
-      return await getLinkedIssueWithUrl(
-        this.prisma,
-        linkData,
-        teamParams.teamId,
-        issueParams.issueId,
-        userId,
-      );
-    } catch (error) {
-      throw new BadRequestException(`Failed to create linked issue: ${error}`);
-    }
   }
 }

@@ -7,7 +7,6 @@ import {
   IsBoolean,
   IsDate,
   IsEnum,
-  IsJSON,
   IsNumber,
   IsObject,
   IsOptional,
@@ -31,6 +30,11 @@ export enum LinkedIssueSubType {
   GithubPullRequest = 'GithubPullRequest',
   ExternalLink = 'ExternalLink',
 }
+
+export type ApiResponse = {
+  status: number;
+  message: string;
+};
 
 export class LinkIssueInput {
   @IsString()
@@ -63,11 +67,11 @@ export class CreateIssueInput {
 
   @IsOptional()
   @IsNumber()
-  sortOrder: number;
+  sortOrder?: number;
 
   @IsOptional()
   @IsNumber()
-  estimate: number;
+  estimate?: number;
 
   @IsOptional()
   @IsNumber()
@@ -88,8 +92,9 @@ export class CreateIssueInput {
   @IsString()
   parentId?: string;
 
+  @IsOptional()
   @IsArray()
-  subscriberIds: string[];
+  subscriberIds?: string[];
 
   @IsBoolean()
   isBidirectional: boolean;
@@ -149,28 +154,16 @@ export class UpdateIssueInput {
   parentId?: string;
 
   @IsOptional()
+  @IsBoolean()
+  isBidirectional?: boolean;
+
+  @IsOptional()
   @IsArray()
   subscriberIds: string[];
 
   @IsOptional()
   @IsObject()
   issueRelation?: IssueRelation;
-}
-
-export class LinkIssueData {
-  @IsString()
-  url: string;
-
-  @IsString()
-  sourceId: string;
-
-  @IsOptional()
-  @IsJSON()
-  source?: Record<string, string | number>;
-
-  @IsOptional()
-  @IsJSON()
-  sourceData?: Record<string, string | number>;
 }
 
 export interface IssueWithRelations extends Issue {
@@ -182,12 +175,6 @@ export enum IssueAction {
   CREATED,
   UPDATED,
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type LinkedIssueSource = Record<string, any>;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type LinkedIssueSourceData = Record<string, any>;
 
 export const titlePrompt = ` You have deep expertise in project management and task management for software teams. Whenever a text is provided to you, you have to create an issue title for software development tasks based on the description text.
 
@@ -223,7 +210,3 @@ Step 4: Refine the title created in step 3 based on following guidelines.
         - Better: ""Enhance Source Linnworks Docs: Setup, UI Navigation, Streams, Troubleshooting, and Examples
 
 Step 5: Give output only of the refined title created in Step 4 without mentioning Title in the start `;
-
-export const githubIssueRegex =
-  /^https:\/\/github\.com\/[^/]+\/[^/]+\/issues\/\d+$/;
-export const githubPRRegex = /^https:\/\/github\.com\/[^/]+\/[^/]+\/pull\/\d+$/;

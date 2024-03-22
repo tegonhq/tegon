@@ -26,7 +26,14 @@ services:
     networks:
       - tegon
     restart: unless-stopped
-    
+
+  redis:
+    image: redis:alpine3.19
+    ports:
+      - 6379:6379
+    networks:
+      - tegon
+    restart: unless-stopped
   # server:
   #   image: "poozlehq/tegon-server:${VERSION}"
   #   # platform: linux/amd64

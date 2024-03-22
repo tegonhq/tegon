@@ -17,6 +17,7 @@ import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import {
+  ApiResponse,
   CreateIssueInput,
   IssueRequestParams,
   LinkIssueInput,
@@ -24,6 +25,7 @@ import {
   UpdateIssueInput,
 } from './issues.interface';
 import IssuesService from './issues.service';
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 
 @Controller({
   version: '1',
@@ -31,7 +33,10 @@ import IssuesService from './issues.service';
 })
 @ApiTags('Issues')
 export class IssuesController {
-  constructor(private issuesService: IssuesService) {}
+  constructor(
+    private issuesService: IssuesService,
+    private linkedIssueService: LinkedIssueService,
+  ) {}
 
   @Post()
   @UseGuards(new AuthGuard())
@@ -39,7 +44,7 @@ export class IssuesController {
     @SessionDecorator() session: SessionContainer,
     @Query() teamParams: TeamRequestParams,
     @Body() issueData: CreateIssueInput,
-  ): Promise<Issue> {
+  ) {
     const userId = session.getUserId();
     return await this.issuesService.createIssue(teamParams, issueData, userId);
   }
@@ -51,7 +56,7 @@ export class IssuesController {
     @Param() issueParams: IssueRequestParams,
     @Query() teamParams: TeamRequestParams,
     @Body() issueData: UpdateIssueInput,
-  ): Promise<Issue> {
+  ): Promise<Issue | ApiResponse> {
     const userId = session.getUserId();
     return await this.issuesService.updateIssue(
       teamParams,
@@ -79,7 +84,7 @@ export class IssuesController {
     @Body() linkData: LinkIssueInput,
   ) {
     const userId = session.getUserId();
-    return await this.issuesService.createLinkIssue(
+    return await this.linkedIssueService.createLinkIssue(
       teamParams,
       linkData,
       issueParams,

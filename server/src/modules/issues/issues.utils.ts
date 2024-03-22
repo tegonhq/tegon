@@ -1,14 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { IntegrationName, Issue, LinkedIssue, Prisma } from '@prisma/client';
+import { IntegrationName, Issue, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
 
 import {
-  getBotAccessToken,
-  getReponse,
   sendGithubFirstComment,
-  sendGithubPRFirstComment,
   upsertGithubIssue,
 } from 'modules/integrations/github/github.utils';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
@@ -20,10 +17,10 @@ import {
   LinkIssueInput,
   LinkedIssueSubType,
   UpdateIssueInput,
-  githubIssueRegex,
-  githubPRRegex,
   titlePrompt,
 } from './issues.interface';
+import { Logger } from '@nestjs/common';
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 
 export async function getIssueDiff(
   newIssueData: Issue,
@@ -114,6 +111,8 @@ export async function getLastIssueNumber(
 
 export async function handleTwoWaySync(
   prisma: PrismaService,
+  logger: Logger,
+  linkedIssueService: LinkedIssueService,
   issue: IssueWithRelations,
   action: IssueAction,
   userId: string,
@@ -132,39 +131,42 @@ export async function handleTwoWaySync(
   });
 
   if (integrationAccount) {
-    // Two-way sync is enabled for this team
-    // Perform the necessary sync operations here
-    // ...
-
+    logger.log(`Found integration account for team ${issue.teamId}`);
     switch (action) {
       case IssueAction.CREATED: {
+        logger.log(`Creating GitHub issue for Tegon issue ${issue.id}`);
         const githubIssue = await upsertGithubIssue(
           prisma,
+          logger,
           issue,
           integrationAccount,
           userId,
         );
 
-        await prisma.linkedIssue.create({
-          data: {
-            url: githubIssue.html_url,
-            sourceId: githubIssue.id.toString(),
-            source: {
-              type: IntegrationName.Github,
-              subType: LinkedIssueSubType.GithubIssue,
-            },
-            sourceData: {
-              id: githubIssue.id.toString(),
-              title: githubIssue.title,
-              apiUrl: githubIssue.url,
-            },
-            issueId: issue.id,
-            createdById: userId,
+        logger.log(
+          `Linking GitHub issue ${githubIssue.id} to Tegon issue ${issue.id}`,
+        );
+        await linkedIssueService.createLinkIssueAPI({
+          url: githubIssue.html_url,
+          sourceId: githubIssue.id.toString(),
+          source: {
+            type: IntegrationName.Github,
+            subType: LinkedIssueSubType.GithubIssue,
           },
+          sourceData: {
+            id: githubIssue.id.toString(),
+            title: githubIssue.title,
+            apiUrl: githubIssue.url,
+          },
+          issueId: issue.id,
+          createdById: userId,
         });
 
+        logger.log(`Sending first comment to GitHub issue ${githubIssue.id}`);
         await sendGithubFirstComment(
           prisma,
+          logger,
+          linkedIssueService,
           integrationAccount,
           issue,
           githubIssue.id.toString(),
@@ -173,159 +175,34 @@ export async function handleTwoWaySync(
       }
 
       case IssueAction.UPDATED: {
-        await upsertGithubIssue(prisma, issue, integrationAccount, userId);
+        logger.log(`Updating GitHub issue for Tegon issue ${issue.id}`);
+        await upsertGithubIssue(
+          prisma,
+          logger,
+          issue,
+          integrationAccount,
+          userId,
+        );
       }
     }
+  } else {
+    logger.log(`No integration account found for team ${issue.teamId}`);
   }
 }
 
-export function getLinkType(url: string): LinkedIssueSubType | null {
-  if (githubIssueRegex.test(url)) {
-    return LinkedIssueSubType.GithubIssue;
-  } else if (githubPRRegex.test(url)) {
-    return LinkedIssueSubType.GithubPullRequest;
-  }
-  return LinkedIssueSubType.ExternalLink;
-}
-
-export function isValidLinkUrl(linkData: LinkIssueInput): boolean {
-  const { url, type } = linkData;
-  if (type === LinkedIssueSubType.GithubIssue) {
-    return githubIssueRegex.test(url);
-  } else if (type === LinkedIssueSubType.GithubPullRequest) {
-    return githubPRRegex.test(url);
-  } else if (type === LinkedIssueSubType.ExternalLink) {
-    return true;
-  }
-
-  return false;
-}
-
-export function convertToAPIUrl(linkData: LinkIssueInput): string {
-  const { url, type } = linkData;
-
-  if (
-    type === LinkedIssueSubType.GithubIssue ||
-    type === LinkedIssueSubType.GithubPullRequest
-  ) {
-    const matches = url.match(
-      /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/(issues|pull)\/(\d+)$/,
-    );
-
-    if (matches) {
-      const [, owner, repo, issueOrPull, number] = matches;
-      return `https://api.github.com/repos/${owner}/${repo}/${issueOrPull === 'pull' ? 'pulls' : 'issues'}/${number}`;
-    }
-  }
-
-  return url;
-}
-
-export async function getLinkedIssueWithUrl(
+export async function findExistingLink(
   prisma: PrismaService,
   linkData: LinkIssueInput,
-  teamId: string,
-  issueId: string,
-  userId: string,
-): Promise<LinkedIssue> {
-  const integrationAccount = await prisma.integrationAccount.findFirst({
-    where: {
-      settings: {
-        path: [IntegrationName.Github, 'repositoryMappings'],
-        array_contains: [{ teamId, bidirectional: true }],
-      } as Prisma.JsonFilter,
-    },
-    include: {
-      integrationDefinition: true,
-      workspace: true,
-    },
+) {
+  const linkedIssue = await prisma.linkedIssue.findFirst({
+    where: { url: linkData.url },
+    include: { issue: { include: { team: true } } },
   });
-
-  if (
-    !integrationAccount ||
-    linkData.type === LinkedIssueSubType.ExternalLink
-  ) {
-    return await prisma.linkedIssue.create({
-      data: { url: linkData.url, issueId, createdById: userId },
-    });
+  if (linkedIssue) {
+    return {
+      status: 400,
+      message: `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
+    };
   }
-
-  const accessToken = await getBotAccessToken(prisma, integrationAccount);
-  const response =
-    (await getReponse(convertToAPIUrl(linkData), accessToken)).data ?? {};
-
-  if (!response) {
-    return await prisma.linkedIssue.create({
-      data: {
-        url: linkData.url,
-        issueId,
-        createdById: userId,
-        sourceData: linkData as unknown as Prisma.InputJsonValue,
-      },
-    });
-  }
-
-  const isGithubIssue = linkData.type === LinkedIssueSubType.GithubIssue;
-  const isGithubPR = linkData.type === LinkedIssueSubType.GithubPullRequest;
-
-  const sourceData = isGithubPR
-    ? {
-        branch: response.head.ref,
-        id: response.id.toString(),
-        closedAt: response.closed_at,
-        createdAt: response.created_at,
-        updatedAt: response.updated_at,
-        number: response.number,
-        state: response.state,
-        title: response.title,
-        apiUrl: response.url,
-        mergedAt: response.merged_at,
-      }
-    : {
-        id: response.id.toString(),
-        title: response.title,
-        apiUrl: response.url,
-      };
-
-  const source = isGithubPR
-    ? {
-        type: IntegrationName.Github,
-        subType: LinkedIssueSubType.GithubPullRequest,
-        pullRequestId: response.id,
-      }
-    : {
-        type: IntegrationName.Github,
-        subType: LinkedIssueSubType.GithubIssue,
-      };
-
-  const linkedIssue = await prisma.linkedIssue.create({
-    data: {
-      url: response.html_url,
-      issueId,
-      sourceId: response.id.toString(),
-      source,
-      sourceData,
-      createdById: userId,
-    },
-    include: { issue: { include: { team: { include: { workspace: true } } } } },
-  });
-
-  if (isGithubIssue) {
-    await sendGithubFirstComment(
-      prisma,
-      integrationAccount,
-      linkedIssue.issue,
-      linkedIssue.sourceId,
-    );
-  } else if (isGithubPR) {
-    await sendGithubPRFirstComment(
-      prisma,
-      integrationAccount,
-      linkedIssue.issue.team,
-      linkedIssue.issue,
-      response.comments_url,
-    );
-  }
-
-  return linkedIssue;
+  return { status: 200, message: null };
 }
