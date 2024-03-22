@@ -9,11 +9,27 @@ import { IssueHistoryModule } from 'modules/issue-history/issue-history.module';
 
 import { IssuesController } from './issues.controller';
 import IssuesService from './issues.service';
+import { BullModule } from '@nestjs/bull';
+import { IssuesQueue } from './issues.queue';
+import { IssuesProcessor } from './issues.processor';
+import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 
 @Module({
-  imports: [PrismaModule, HttpModule, IssueHistoryModule],
+  imports: [
+    PrismaModule,
+    HttpModule,
+    IssueHistoryModule,
+    LinkedIssueModule,
+    BullModule.registerQueue({ name: 'issues' }),
+  ],
   controllers: [IssuesController],
-  providers: [IssuesService, PrismaService, IssueHistory],
-  exports: [IssuesService],
+  providers: [
+    IssuesService,
+    PrismaService,
+    IssueHistory,
+    IssuesQueue,
+    IssuesProcessor,
+  ],
+  exports: [IssuesService, IssuesQueue],
 })
 export class IssuesModule {}

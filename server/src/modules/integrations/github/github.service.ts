@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 
 import IssuesService from 'modules/issues/issues.service';
@@ -16,14 +16,19 @@ import {
   handleIssues,
   handlePullRequests,
   handleRepositories,
-} from './github.utils';
+} from './github.handlers';
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 
 @Injectable()
 export default class GithubService {
   constructor(
     private prisma: PrismaService,
     private issuesService: IssuesService,
+    private linkedIssueService: LinkedIssueService,
   ) {}
+  private readonly logger: Logger = new Logger('GithubService', {
+    timestamp: true,
+  });
 
   async handleEvents(
     eventHeaders: WebhookEventHeaders,
@@ -40,10 +45,15 @@ export default class GithubService {
           include: { workspace: true, integrationDefinition: true },
         },
       );
+      if (!integrationAccount) {
+        return undefined;
+      }
       switch (eventType) {
         case 'issues':
           handleIssues(
             this.prisma,
+            this.logger,
+            this.linkedIssueService,
             this.issuesService,
             eventBody,
             integrationAccount,
@@ -52,29 +62,48 @@ export default class GithubService {
           break;
 
         case 'issue_comment':
-          handleIssueComments(this.prisma, eventBody, integrationAccount);
+          handleIssueComments(
+            this.prisma,
+            this.logger,
+            this.linkedIssueService,
+            eventBody,
+            integrationAccount,
+          );
           break;
 
         case 'pull_request':
           handlePullRequests(
             this.prisma,
+            this.logger,
             this.issuesService,
+            this.linkedIssueService,
             eventBody,
             integrationAccount,
           );
           break;
 
         case 'installation':
-          handleInstallations(this.prisma, eventBody, integrationAccount);
+          handleInstallations(
+            this.prisma,
+            this.logger,
+            eventBody,
+            integrationAccount,
+          );
           break;
 
         case 'installation_repositories':
-          handleRepositories(this.prisma, eventBody, integrationAccount);
+          handleRepositories(
+            this.prisma,
+            this.logger,
+            eventBody,
+            integrationAccount,
+          );
           break;
 
         default:
           console.warn(`couldn't find eventType ${eventType}`);
       }
     }
+    return { status: 200, message: 'handled event successfully' };
   }
 }

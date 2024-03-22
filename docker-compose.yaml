@@ -26,52 +26,61 @@ services:
     networks:
       - tegon
     restart: unless-stopped
-    
-  # server:
-  #   image: "poozlehq/tegon-server:${VERSION}"
-  #   # platform: linux/amd64
-  #   container_name: tegon-server
-  #   depends_on:
-  #     - db
-  #     - supertokens
-  #   restart: unless-stopped
-  #   networks:
-  #     - tegon
-  #   environment:
-  #     - DATABASE_URL=${DATABASE_URL}
-  #     - FRONTEND_HOST=${FRONTEND_HOST}
-  #     - PUBLIC_FRONTEND_HOST=${PUBLIC_FRONTEND_HOST}
-  #     - BACKEND_HOST=${BACKEND_HOST}
-  #     - PORT=${BACKEND_PORT}
-  #     - SUPERTOKEN_CONNECTION_URI=${SUPERTOKEN_CONNECTION_URI}
-  #     - MASTER_TOKEN=${MASTER_TOKEN}
-  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
-  #     - REPLICATION_DATABASE_URL=${REPLICATION_DATABASE_URL}
-  #     - POSTGRES_USER=${POSTGRES_USER}
-  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-  #     - POSTGRES_DB=${POSTGRES_DB}
-  #     - DB_HOST=${DB_HOST}
-  #     - DB_PORT=${DB_PORT}
-  #     - DB_SCHEMA=${DB_SCHEMA}
-  #   ports:
-  #     - 3001:3001
 
-  # webapp:
-  #   image: "poozlehq/tegon-webapp:${VERSION}"
-  #   # platform: linux/amd64
-  #   container_name: tegon-webapp
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - server
-  #   networks:
-  #     - tegon
-  #   environment:
-  #     - BACKEND_URL=${BACKEND_URL}
-  #     - NEXT_PUBLIC_BASE_HOST=${PUBLIC_FRONTEND_HOST}
-  #     - NEXT_PUBLIC_VERSION=${VERSION}
-  #     - NEXT_PUBLIC_SYNC_SERVER=${NEXT_PUBLIC_SYNC_SERVER}
-  #   ports:
-  #     - 8000:3000
+  redis:
+    image: redis:alpine3.19
+    ports:
+      - 6379:6379
+    networks:
+      - tegon
+    restart: unless-stopped
+  server:
+    image: "poozlehq/tegon-server:${VERSION}"
+    # platform: linux/amd64
+    container_name: tegon-server
+    depends_on:
+      - db
+      - supertokens
+    restart: unless-stopped
+    networks:
+      - tegon
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - FRONTEND_HOST=${FRONTEND_HOST}
+      - PUBLIC_FRONTEND_HOST=${PUBLIC_FRONTEND_HOST}
+      - BACKEND_HOST=${BACKEND_HOST}
+      - PORT=${BACKEND_PORT}
+      - SUPERTOKEN_CONNECTION_URI=${SUPERTOKEN_CONNECTION_URI}
+      - MASTER_TOKEN=${MASTER_TOKEN}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - REPLICATION_DATABASE_URL=${REPLICATION_DATABASE_URL}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_SCHEMA=${DB_SCHEMA}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_PORT=${REDIS_PORT}
+    ports:
+      - 3001:3001
+
+  webapp:
+    image: "poozlehq/tegon-webapp:${VERSION}"
+    # platform: linux/amd64
+    container_name: tegon-webapp
+    restart: unless-stopped
+    depends_on:
+      - server
+    networks:
+      - tegon
+    environment:
+      - BACKEND_URL=${BACKEND_URL}
+      - NEXT_PUBLIC_BASE_HOST=${PUBLIC_FRONTEND_HOST}
+      - NEXT_PUBLIC_VERSION=${VERSION}
+      - NEXT_PUBLIC_SYNC_SERVER=${NEXT_PUBLIC_SYNC_SERVER}
+    ports:
+      - 8000:3000
 
 networks:
   app_network:

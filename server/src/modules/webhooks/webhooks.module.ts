@@ -4,23 +4,23 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
-import GithubService from 'modules/integrations/github/github.service';
-import IssuesHistoryService from 'modules/issue-history/issue-history.service';
-import IssuesService from 'modules/issues/issues.service';
-
 import { WebhookController } from './webhooks.controller';
 import WebhookService from './webhooks.service';
+import { IssuesModule } from 'modules/issues/issues.module';
+import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
+import IssuesHistoryService from 'modules/issue-history/issue-history.service';
+import { GithubModule } from 'modules/integrations/github/github.module';
 
 @Module({
-  imports: [PrismaModule, HttpModule],
-  controllers: [WebhookController],
-  providers: [
-    PrismaService,
-    WebhookService,
-    IssuesService,
-    IssuesHistoryService,
-    GithubService,
+  imports: [
+    PrismaModule,
+    HttpModule,
+    IssuesModule,
+    LinkedIssueModule,
+    GithubModule,
   ],
+  controllers: [WebhookController],
+  providers: [PrismaService, WebhookService, IssuesHistoryService],
   exports: [],
 })
 export class WebhooksModule {}
