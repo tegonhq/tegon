@@ -86,12 +86,12 @@ export async function getUserId(
   prisma: PrismaService,
   userData: Record<string, string>,
 ) {
-  const { integratedById } = await prisma.integrationAccount.findFirst({
+  const integrationAccount = await prisma.integrationAccount.findFirst({
     where: { accountId: userData.id.toString() },
     select: { integratedById: true },
   });
 
-  return integratedById || null;
+  return integrationAccount?.integratedById || null;
 }
 
 export async function getIssueData(
