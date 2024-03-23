@@ -19,15 +19,35 @@ export default class IssueRelationService {
     userId: string,
     relationData: IssueRelationInput,
   ): Promise<IssueRelation> {
-    const issueRelationData = await this.prisma.issueRelation.create({
-      data: {
+    const issueRelationData = await this.prisma.issueRelation.upsert({
+      where: {
+        issueId_relatedIssueId_type: {
+          issueId: relationData.issueId,
+          relatedIssueId: relationData.relatedIssueId,
+          type: relationData.type,
+        },
+      },
+      update: {
+        deleted: null,
+      },
+      create: {
         createdById: userId,
         ...relationData,
       },
     });
 
-    await this.prisma.issueRelation.create({
-      data: {
+    await this.prisma.issueRelation.upsert({
+      where: {
+        issueId_relatedIssueId_type: {
+          issueId: relationData.relatedIssueId,
+          relatedIssueId: relationData.issueId,
+          type: ReverseIssueRelationType[relationData.type],
+        },
+      },
+      update: {
+        deleted: null,
+      },
+      create: {
         createdById: userId,
         issueId: relationData.relatedIssueId,
         relatedIssueId: relationData.issueId,
@@ -51,11 +71,13 @@ export default class IssueRelationService {
       data: { deleted, deletedById: userId },
     });
 
-    await this.prisma.issueRelation.updateMany({
+    await this.prisma.issueRelation.update({
       where: {
-        issueId: issueRelationData.relatedIssueId,
-        relatedIssueId: issueRelationData.issueId,
-        type: ReverseIssueRelationType[issueRelationData.type],
+        issueId_relatedIssueId_type: {
+          issueId: issueRelationData.relatedIssueId,
+          relatedIssueId: issueRelationData.issueId,
+          type: ReverseIssueRelationType[issueRelationData.type],
+        },
       },
       data: { deleted, deletedById: userId },
     });
