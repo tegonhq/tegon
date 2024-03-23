@@ -1,3 +1,3 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-export * from './delete-issue-history';
+export * from './delete-issue-relation';

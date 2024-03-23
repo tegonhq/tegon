@@ -13,7 +13,7 @@ import IssuesRelationService from './issue-relation.service';
 
 @Controller({
   version: '1',
-  path: 'issue-relation',
+  path: 'issue_relation',
 })
 @ApiTags('Issue Relation')
 export class IssueRelationController {

@@ -4,7 +4,7 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { IssueRelationType } from 'common/types/issue';
+import type { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { Dialog, DialogContent } from 'components/ui/dialog';
 import { Input } from 'components/ui/input';
@@ -14,10 +14,10 @@ import { ModalIssues } from './modal-issues';
 interface ParentOfModalProps {
   isOpen: boolean;
   setOpen: (open: boolean) => void;
-  type: IssueRelationType;
+  type: IssueRelationEnum;
 }
 
-export const UpdateIssueModal = observer(
+export const AddIssueRelationModal = observer(
   ({ isOpen, setOpen, type }: ParentOfModalProps) => {
     const [value, setValue] = React.useState('');
 

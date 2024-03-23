@@ -9,7 +9,6 @@ import {
   IssueLabelDropdownVariant,
   IssuePriorityDropdown,
   IssuePriorityDropdownVariant,
-  IssueRelatedDropdown,
   IssueStatusDropdown,
   IssueStatusDropdownVariant,
 } from 'modules/issues/components';
@@ -89,7 +88,9 @@ export const RightSide = observer(() => {
           </div>
         </div>
 
-        <div className="flex justify-start items-start text-sm mb-4">
+        <IssueRelatedProperties />
+
+        <div className="flex justify-start items-start text-sm">
           <div className="text-muted-foreground w-[95px] text-left">Labels</div>
           <div className="w-[calc(100%_-_95px)]">
             <IssueLabelDropdown
@@ -99,8 +100,6 @@ export const RightSide = observer(() => {
             />
           </div>
         </div>
-
-        <IssueRelatedProperties />
       </div>
     </div>
   );

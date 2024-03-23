@@ -30,7 +30,7 @@ export const GithubPersonalConnect = observer(() => {
       onSuccess: (data) => {
         const redirectURL = data.redirectURL;
 
-        window.open(redirectURL, '_blank');
+        window.open(redirectURL);
       },
     });
   const { mutate: deleteIntegrationAccount, isLoading: deleting } =

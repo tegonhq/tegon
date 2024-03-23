@@ -75,6 +75,46 @@ export const DisplayPopover = observer(() => {
 
           <div className="flex justify-between text-xs items-center">
             <div className="text-muted-foreground min-w-[150px]">
+              Show triage issues
+            </div>
+
+            <div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="showTriageIssues"
+                  checked={applicationStore.displaySettings.showTriageIssues}
+                  onCheckedChange={(value: boolean) =>
+                    applicationStore.updateDisplaySettings({
+                      showTriageIssues: value,
+                    })
+                  }
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-between text-xs items-center">
+            <div className="text-muted-foreground min-w-[150px]">
+              Show completed issues
+            </div>
+
+            <div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="showCompletedIssues"
+                  checked={applicationStore.displaySettings.showCompletedIssues}
+                  onCheckedChange={(value: boolean) =>
+                    applicationStore.updateDisplaySettings({
+                      showCompletedIssues: value,
+                    })
+                  }
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-between text-xs items-center">
+            <div className="text-muted-foreground min-w-[150px]">
               Show empty groups
             </div>
 

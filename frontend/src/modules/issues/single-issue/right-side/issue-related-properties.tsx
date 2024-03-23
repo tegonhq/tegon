@@ -61,7 +61,10 @@ export const IssueRelatedProperties = observer(() => {
       }
 
       return (
-        <div className="flex justify-start items-start text-sm" key={index}>
+        <div
+          className="flex justify-start items-start text-sm mb-4"
+          key={index}
+        >
           <div className="text-muted-foreground w-[95px] text-left my-2">
             {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
           </div>
@@ -90,7 +93,10 @@ export const IssueRelatedProperties = observer(() => {
       }
 
       return (
-        <div className="flex justify-start items-start text-sm" key={index}>
+        <div
+          className="flex justify-start items-start text-sm mb-4"
+          key={index}
+        >
           <div className="text-muted-foreground w-[95px] text-left my-2">
             {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
           </div>
@@ -115,7 +121,10 @@ export const IssueRelatedProperties = observer(() => {
       const relatedIssues = getRelatedIssues(IssueRelationEnum.RELATED);
 
       return (
-        <div className="flex justify-start items-start text-sm" key={index}>
+        <div
+          className="flex justify-start items-start text-sm mb-4"
+          key={index}
+        >
           <div className="text-muted-foreground w-[95px] text-left my-2">
             {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
           </div>

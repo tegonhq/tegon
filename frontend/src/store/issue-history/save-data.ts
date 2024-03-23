@@ -30,7 +30,7 @@ export async function saveIssueHistoryData(
         toAssigneeId: record.data.toAssigneeId,
         fromParentId: record.data.fromParentId,
         toParentId: record.data.toParentId,
-        relationChanges: JSON.stringify(record.data.relationChanges),
+        relationChanges: record.data.relationChanges,
       };
 
       switch (record.action) {
@@ -38,6 +38,7 @@ export async function saveIssueHistoryData(
           await tegonDatabase.issueHistory.put(issueHistory);
           return (
             issueHistoryStore &&
+            issueHistoryStore.issueId === record.data.issueId &&
             (await issueHistoryStore.update(issueHistory, record.data.id))
           );
         }
@@ -46,6 +47,7 @@ export async function saveIssueHistoryData(
           await tegonDatabase.issueHistory.put(issueHistory);
           return (
             issueHistoryStore &&
+            issueHistoryStore.issueId === record.data.issueId &&
             (await issueHistoryStore.update(issueHistory, record.data.id))
           );
         }
@@ -54,6 +56,7 @@ export async function saveIssueHistoryData(
           await tegonDatabase.issueHistory.delete(record.data.id);
           return (
             issueHistoryStore &&
+            issueHistoryStore.issueId === record.data.issueId &&
             (await issueHistoryStore.deleteById(record.data.id))
           );
         }

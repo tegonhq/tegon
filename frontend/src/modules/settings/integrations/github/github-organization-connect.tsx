@@ -29,7 +29,7 @@ export const GithubOrganizationConnect = observer(() => {
       onSuccess: (data) => {
         const redirectURL = data.redirectURL;
 
-        window.open(redirectURL, '_blank');
+        window.open(redirectURL);
       },
     });
 

@@ -9,10 +9,17 @@ import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
 
+import { useContextStore } from 'store/global-context-provider';
+
 import { CategoryViewItem } from './category-view-item';
 
 export const CategoryView = observer(() => {
   const currentTeam = useCurrentTeam();
+  const {
+    applicationStore: {
+      displaySettings: { showCompletedIssues, showTriageIssues },
+    },
+  } = useContextStore();
 
   const categorySequence = [
     WorkflowCategoryEnum.STARTED,
@@ -34,7 +41,19 @@ export const CategoryView = observer(() => {
     return a.position - b.position;
   }
 
-  const workflows = useTeamWorkflows(currentTeam.identifier).sort(workflowSort);
+  const workflows = useTeamWorkflows(currentTeam.identifier)
+    .filter((workflow: WorkflowType) => {
+      if (workflow.category === WorkflowCategoryEnum.TRIAGE) {
+        return showTriageIssues;
+      }
+
+      if (workflow.category === WorkflowCategoryEnum.COMPLETED) {
+        return showCompletedIssues;
+      }
+
+      return true;
+    })
+    .sort(workflowSort);
 
   return (
     <div>

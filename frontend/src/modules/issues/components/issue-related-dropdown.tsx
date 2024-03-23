@@ -12,7 +12,7 @@ import {
 import React from 'react';
 
 import { cn } from 'common/lib/utils';
-import { IssueRelationType } from 'common/types/issue';
+import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { Button } from 'components/ui/button';
 import {
@@ -23,10 +23,10 @@ import {
   DropdownMenuItem,
 } from 'components/ui/dropdown-menu';
 
-import { UpdateIssueModal } from './modals';
+import { AddIssueRelationModal } from './modals';
 
 export function IssueRelatedDropdown() {
-  const [modal, setModal] = React.useState<IssueRelationType>(undefined);
+  const [modal, setModal] = React.useState<IssueRelationEnum>(undefined);
 
   return (
     <>
@@ -53,7 +53,7 @@ export function IssueRelatedDropdown() {
           <DropdownMenuGroup>
             <DropdownMenuItem
               onClick={() => {
-                setModal(IssueRelationType.PARENT);
+                setModal(IssueRelationEnum.PARENT);
               }}
             >
               <div className="flex items-center gap-2">
@@ -64,7 +64,7 @@ export function IssueRelatedDropdown() {
 
             <DropdownMenuItem
               onClick={() => {
-                setModal(IssueRelationType.SUB_ISSUE);
+                setModal(IssueRelationEnum.SUB_ISSUE);
               }}
             >
               <div className="flex items-center gap-2">
@@ -75,7 +75,7 @@ export function IssueRelatedDropdown() {
 
             <DropdownMenuItem
               onClick={() => {
-                setModal(IssueRelationType.RELATED);
+                setModal(IssueRelationEnum.RELATED);
               }}
             >
               <div className="flex items-center gap-2">
@@ -86,7 +86,7 @@ export function IssueRelatedDropdown() {
 
             <DropdownMenuItem
               onClick={() => {
-                setModal(IssueRelationType.BLOCKED);
+                setModal(IssueRelationEnum.BLOCKED);
               }}
             >
               <div className="flex items-center gap-2">
@@ -97,7 +97,7 @@ export function IssueRelatedDropdown() {
 
             <DropdownMenuItem
               onClick={() => {
-                setModal(IssueRelationType.BLOCKS);
+                setModal(IssueRelationEnum.BLOCKS);
               }}
             >
               <div className="flex items-center gap-2">
@@ -108,7 +108,7 @@ export function IssueRelatedDropdown() {
 
             <DropdownMenuItem
               onClick={() => {
-                setModal(IssueRelationType.DUPLICATE_OF);
+                setModal(IssueRelationEnum.DUPLICATE_OF);
               }}
             >
               <div className="flex items-center gap-2">
@@ -120,7 +120,7 @@ export function IssueRelatedDropdown() {
         </DropdownMenuContent>
       </DropdownMenu>
       {modal && (
-        <UpdateIssueModal
+        <AddIssueRelationModal
           isOpen
           type={modal}
           setOpen={(open: boolean) => {

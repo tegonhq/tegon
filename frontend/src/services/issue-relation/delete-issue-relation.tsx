@@ -4,15 +4,15 @@ import { useMutation } from 'react-query';
 
 import { ajaxDelete } from 'common/lib/ajax';
 
-export interface DeleteIssueHistoryParams {
-  issueHistoryId: string;
+export interface DeleteIssueRelationParams {
+  issueRelationId: string;
 }
 
-export function deleteIssueHistory({
-  issueHistoryId,
-}: DeleteIssueHistoryParams) {
+export function deleteIssueRelation({
+  issueRelationId,
+}: DeleteIssueRelationParams) {
   return ajaxDelete({
-    url: `/api/v1/issue_history/${issueHistoryId}`,
+    url: `/api/v1/issue_relation/${issueRelationId}`,
   });
 }
 
@@ -22,7 +22,7 @@ interface MutationParams {
   onError?: (error: string) => void;
 }
 
-export function useDeleteIssueHistoryMutation({
+export function useDeleteIssueRelationMutation({
   onMutate,
   onSuccess,
   onError,
@@ -42,7 +42,7 @@ export function useDeleteIssueHistoryMutation({
     onSuccess && onSuccess();
   };
 
-  return useMutation(deleteIssueHistory, {
+  return useMutation(deleteIssueRelation, {
     onError: onMutationError,
     onMutate: onMutationTriggered,
     onSuccess: onMutationSuccess,

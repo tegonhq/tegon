@@ -1,5 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import type { IssueRelationEnum } from './issue-relation';
+
 export interface IssueType {
   id: string;
   createdAt: string;
@@ -41,6 +43,12 @@ export interface IssueHistoryType {
   toAssigneeId?: string;
   fromParentId?: string;
   toParentId?: string;
+  relationChanges?: {
+    isDeleted?: boolean;
+    issueId: string;
+    relatedIssueId: string;
+    type: IssueRelationEnum;
+  };
 }
 
 export const Priorities = ['No priority', 'Urgent', 'High', 'Medium', 'Low'];

@@ -4,7 +4,8 @@ import { observer } from 'mobx-react-lite';
 
 import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
 
-import { IssueRelationType, type IssueType } from 'common/types/issue';
+import { type IssueType } from 'common/types/issue';
+import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
@@ -15,7 +16,7 @@ interface ModalIssueItemProps {
   issue: IssueType;
   currentIssue: IssueType;
   onClose: () => void;
-  type: IssueRelationType;
+  type: IssueRelationEnum;
 }
 
 export const ModalIssueItem = observer(
@@ -30,7 +31,7 @@ export const ModalIssueItem = observer(
     const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];
 
     const onClick = () => {
-      if (type === IssueRelationType.PARENT) {
+      if (type === IssueRelationEnum.PARENT) {
         updateIssue({
           id: currentIssue.id,
           teamId: currentTeam.id,
@@ -38,7 +39,7 @@ export const ModalIssueItem = observer(
         });
       }
 
-      if (type === IssueRelationType.SUB_ISSUE) {
+      if (type === IssueRelationEnum.SUB_ISSUE) {
         updateIssue({
           id: issue.id,
           teamId: currentTeam.id,
@@ -47,11 +48,11 @@ export const ModalIssueItem = observer(
       }
 
       if (
-        type === IssueRelationType.RELATED ||
-        type === IssueRelationType.BLOCKS ||
-        type === IssueRelationType.BLOCKED ||
-        type === IssueRelationType.DUPLICATE ||
-        type === IssueRelationType.DUPLICATE_OF
+        type === IssueRelationEnum.RELATED ||
+        type === IssueRelationEnum.BLOCKS ||
+        type === IssueRelationEnum.BLOCKED ||
+        type === IssueRelationEnum.DUPLICATE ||
+        type === IssueRelationEnum.DUPLICATE_OF
       ) {
         updateIssue({
           id: currentIssue.id,

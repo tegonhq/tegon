@@ -4,7 +4,8 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import type { IssueRelationType, IssueType } from 'common/types/issue';
+import type { IssueType } from 'common/types/issue';
+import type { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -13,7 +14,7 @@ import { ModalIssueItem } from './modal-issue-item';
 interface ModalIssuesProps {
   value: string;
   onClose: () => void;
-  type: IssueRelationType;
+  type: IssueRelationEnum;
 }
 
 export function ModalIssues({ value, onClose, type }: ModalIssuesProps) {

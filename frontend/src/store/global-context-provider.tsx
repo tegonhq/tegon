@@ -65,6 +65,8 @@ export const storeContextStore = StoreContextModel.create({
       grouping: 'status',
       showSubIssues: true,
       showEmptyGroups: false,
+      showCompletedIssues: true,
+      showTriageIssues: false,
     },
   },
   integrationDefinitionsStore: {

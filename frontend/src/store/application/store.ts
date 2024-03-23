@@ -10,6 +10,8 @@ interface UpdateDisplaySettingsBody {
   grouping?: string;
   showSubIssues?: boolean;
   showEmptyGroups?: boolean;
+  showTriageIssues?: boolean;
+  showDoneIssues?: boolean;
 }
 
 export const ApplicationStore: IAnyStateTreeNode = types
@@ -19,6 +21,8 @@ export const ApplicationStore: IAnyStateTreeNode = types
       grouping: types.string,
       showSubIssues: types.boolean,
       showEmptyGroups: types.boolean,
+      showTriageIssues: types.boolean,
+      showCompletedIssues: types.boolean,
     }),
     identifier: types.string,
   })

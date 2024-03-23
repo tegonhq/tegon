@@ -61,6 +61,14 @@ export const IssueRelationsStore: IAnyStateTreeNode = types
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    getIssueRelationWithId(issueRelationId: string) {
+      return self.issueRelations.find(
+        (issueRelation: IssueRelationType) =>
+          issueRelation.id === issueRelationId,
+      );
+    },
+  }));
 
 export type IssueRelationsStoreType = Instance<typeof IssueRelationsStore>;

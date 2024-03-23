@@ -6,7 +6,7 @@ import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
 
-export async function saveLinkedIssueData(
+export async function saveIssueRelationData(
   data: SyncActionRecord[],
   issueRelationsStore: IssueRelationsStoreType,
 ) {
@@ -29,6 +29,7 @@ export async function saveLinkedIssueData(
           await tegonDatabase.issueRelations.put(issueRelation);
           return (
             issueRelationsStore &&
+            issueRelationsStore.issueId === record.data.issueId &&
             (await issueRelationsStore.update(issueRelation, record.data.id))
           );
         }
@@ -37,6 +38,7 @@ export async function saveLinkedIssueData(
           await tegonDatabase.issueRelations.put(issueRelation);
           return (
             issueRelationsStore &&
+            issueRelationsStore.issueId === record.data.issueId &&
             (await issueRelationsStore.update(issueRelation, record.data.id))
           );
         }
@@ -45,6 +47,7 @@ export async function saveLinkedIssueData(
           await tegonDatabase.issueRelations.delete(record.data.id);
           return (
             issueRelationsStore &&
+            issueRelationsStore.issueId === record.data.issueId &&
             (await issueRelationsStore.deleteById(record.data.id))
           );
         }

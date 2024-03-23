@@ -2,6 +2,19 @@
 
 import { types } from 'mobx-state-tree';
 
+export const RelationChangeModel = types.model({
+  type: types.enumeration([
+    'BLOCKS',
+    'BLOCKED',
+    'RELATED',
+    'DUPLICATE',
+    'DUPLICATE_OF',
+  ]),
+  relatedIssueId: types.string,
+  issueId: types.string,
+  isDeleted: types.union(types.boolean, types.undefined),
+});
+
 export const IssueHistory = types.model({
   id: types.string,
   createdAt: types.string,
@@ -21,5 +34,5 @@ export const IssueHistory = types.model({
   toAssigneeId: types.union(types.string, types.null),
   fromParentId: types.union(types.string, types.null),
   toParentId: types.union(types.string, types.null),
-  relationChanges: types.union(types.string, types.null),
+  relationChanges: types.union(types.null, RelationChangeModel),
 });

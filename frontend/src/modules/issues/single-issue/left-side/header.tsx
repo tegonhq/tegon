@@ -11,11 +11,15 @@ import {
 } from 'components/ui/breadcrumb';
 import { useCurrentTeam } from 'hooks/teams';
 
-export function Header() {
+interface HeaderProps {
+  backURL?: string;
+}
+
+export function Header({ backURL }: HeaderProps) {
   const team = useCurrentTeam();
 
   const {
-    query: { issueId },
+    query: { issueId, workspaceSlug },
   } = useRouter();
 
   return (
@@ -26,7 +30,11 @@ export function Header() {
             <BreadcrumbLink
               as={Link}
               className="flex items-center gap-2"
-              href="/"
+              href={
+                backURL
+                  ? backURL
+                  : `/${workspaceSlug}/team/${team.identifier}/all`
+              }
             >
               <RiAccountBoxFill
                 size={14}
