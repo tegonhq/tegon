@@ -35,13 +35,13 @@ export const IssueActivity = observer(() => {
   const { usersData, isLoading } = useUsersData(issue.teamId);
 
   const {
-    commentsStore: { comments },
+    commentsStore,
     issuesHistoryStore: { issueHistories },
     linkedIssuesStore: { linkedIssues },
   } = useContextStore();
 
   const activities = [
-    ...comments.map((comment: IssueCommentType) => ({
+    ...commentsStore.getComments(issue.id).map((comment: IssueCommentType) => ({
       ...comment,
       type: ActivityType.Comment,
     })),

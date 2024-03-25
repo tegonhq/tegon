@@ -39,7 +39,7 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
     const { publicRuntimeConfig } = getConfig();
 
     React.useEffect(() => {
-      if (workspaceStore?.workspace && !socket) {
+      if (!socket) {
         initSocket();
       }
 
@@ -48,7 +48,7 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
       };
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [workspaceStore?.workspace]);
+    }, []);
 
     async function initSocket() {
       const socket = io(publicRuntimeConfig.NEXT_PUBLIC_SYNC_SERVER, {

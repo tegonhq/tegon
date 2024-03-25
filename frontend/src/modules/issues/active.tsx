@@ -2,8 +2,6 @@
 
 import { AppLayout } from 'common/layouts/app-layout';
 
-import { TeamStoreInit } from 'store/team-store-provider';
-
 import { FiltersView } from './all/filters-view';
 import { Header } from './all/header';
 import { ListView } from './all/list-view';
@@ -21,9 +19,5 @@ export const ActiveIssues = () => {
 };
 
 ActiveIssues.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <AppLayout>
-      <TeamStoreInit>{page}</TeamStoreInit>
-    </AppLayout>
-  );
+  return <AppLayout>{page}</AppLayout>;
 };

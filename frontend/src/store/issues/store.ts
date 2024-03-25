@@ -26,16 +26,8 @@ export const IssuesStore: IAnyStateTreeNode = types
       self.issuesMap.delete(id);
     };
 
-    const load = flow(function* (teamId: string) {
-      self.teamId = teamId;
-
-      const issues = teamId
-        ? yield tegonDatabase.issues
-            .where({
-              teamId,
-            })
-            .toArray()
-        : [];
+    const load = flow(function* () {
+      const issues = yield tegonDatabase.issues.toArray();
 
       issues.forEach((issue: IssueType) => {
         self.issuesMap.set(issue.id, Issue.create(issue));

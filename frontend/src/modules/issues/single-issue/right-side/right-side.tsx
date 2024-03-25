@@ -13,6 +13,8 @@ import {
   IssueStatusDropdownVariant,
 } from 'modules/issues/components';
 
+import { cn } from 'common/lib/utils';
+
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
 
@@ -47,12 +49,12 @@ export const RightSide = observer(() => {
   };
 
   return (
-    <div className="bg-background border-l dark:bg-slate-800/50 flex flex-col">
+    <>
       <Header />
       <div className="grow pl-8 p-4 mt-2 flex flex-col">
         <div className="flex justify-start items-center text-sm mb-4">
           <div className="text-muted-foreground w-[95px] text-left">Status</div>
-          <div>
+          <div className="w-[calc(100%_-_95px)]">
             <IssueStatusDropdown
               value={issue.stateId}
               onChange={statusChange}
@@ -66,7 +68,7 @@ export const RightSide = observer(() => {
           <div className="text-muted-foreground w-[95px] text-left">
             Priority
           </div>
-          <div>
+          <div className="w-[calc(100%_-_95px)]">
             <IssuePriorityDropdown
               value={issue.priority ?? 0}
               onChange={priorityChange}
@@ -79,7 +81,7 @@ export const RightSide = observer(() => {
           <div className="text-muted-foreground w-[95px] text-left">
             Assignee
           </div>
-          <div>
+          <div className="w-[calc(100%_-_95px)]">
             <IssueAssigneeDropdown
               value={issue.assigneeId}
               onChange={assigneeChange}
@@ -90,7 +92,12 @@ export const RightSide = observer(() => {
 
         <IssueRelatedProperties />
 
-        <div className="flex justify-start items-start text-sm">
+        <div
+          className={cn(
+            'flex justify-start text-sm items-center',
+            issue.labelIds.length > 0 && 'items-start',
+          )}
+        >
           <div className="text-muted-foreground w-[95px] text-left">Labels</div>
           <div className="w-[calc(100%_-_95px)]">
             <IssueLabelDropdown
@@ -101,6 +108,6 @@ export const RightSide = observer(() => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 });

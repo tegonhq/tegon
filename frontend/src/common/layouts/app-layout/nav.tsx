@@ -3,6 +3,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import { cn } from 'common/lib/utils';
 
@@ -21,6 +22,8 @@ interface NavProps {
 }
 
 export function Nav({ links, isCollapsed }: NavProps) {
+  const pathname = usePathname();
+
   return (
     <div
       data-collapsed={isCollapsed}
@@ -32,7 +35,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
             <Tooltip key={index} delayDuration={0}>
               <TooltipTrigger asChild>
                 <Link
-                  href={link.href}
+                  href={{
+                    pathname: link.href,
+                    query: { previousPath: pathname },
+                  }}
                   className={cn(
                     buttonVariants({ variant: 'ghost', size: 'icon' }),
                     'h-9 w-9 text-base px-1',

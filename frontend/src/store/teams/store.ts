@@ -42,16 +42,8 @@ export const TeamsStore: IAnyStateTreeNode = types
       }
     };
 
-    const load = flow(function* (workspaceId: string) {
-      self.workspaceId = workspaceId;
-
-      const teams = workspaceId
-        ? yield tegonDatabase.teams
-            .where({
-              workspaceId,
-            })
-            .toArray()
-        : [];
+    const load = flow(function* () {
+      const teams = yield tegonDatabase.teams.toArray();
 
       self.teams = teams;
     });

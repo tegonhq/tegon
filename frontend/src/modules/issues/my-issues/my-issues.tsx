@@ -9,7 +9,6 @@ import { AppLayout } from 'common/layouts/app-layout';
 import { Loader } from 'components/ui/loader';
 
 import { useContextStore } from 'store/global-context-provider';
-import { TeamStoreInit } from 'store/team-store-provider';
 import { UserContext } from 'store/user-context';
 
 import { FiltersView } from '../all/filters-view';
@@ -37,9 +36,5 @@ export function MyIssues() {
 }
 
 MyIssues.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <AppLayout>
-      <TeamStoreInit>{page}</TeamStoreInit>
-    </AppLayout>
-  );
+  return <AppLayout>{page}</AppLayout>;
 };

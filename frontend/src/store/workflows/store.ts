@@ -42,21 +42,25 @@ export const WorkflowsStore: IAnyStateTreeNode = types
       }
     };
 
-    const load = flow(function* (teamId: string) {
-      self.teamId = teamId;
-
-      const workflows = teamId
-        ? yield tegonDatabase.workflows
-            .where({
-              teamId,
-            })
-            .toArray()
-        : [];
+    const load = flow(function* () {
+      const workflows = yield tegonDatabase.workflows.toArray();
 
       self.workflows = workflows;
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    getWorkflowsForTeam(teamId: string) {
+      return self.workflows.filter((workflow: WorkflowType) => {
+        workflow.teamId === teamId;
+      });
+    },
+    getCancelledWorkflow(teamId: string) {
+      return self.workflows.find((workflow: WorkflowType) => {
+        workflow.teamId === teamId && workflow.name === 'Canceled';
+      });
+    },
+  }));
 
 export type WorkflowsStoreType = Instance<typeof WorkflowsStore>;

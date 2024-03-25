@@ -12,6 +12,7 @@ import { useCurrentTeam } from 'hooks/teams';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
+import { FilterSmall } from './filters-small';
 import { Header } from './header';
 import { IssueActivity } from './issue-activity';
 import { IssueDescription } from './issue-description';
@@ -44,9 +45,12 @@ export const LeftSide = observer(() => {
   }, 1000);
 
   return (
-    <div className="col-span-3">
+    <>
       <Header />
-      <div className="grow px-8 py-6 flex flex-col gap-2 overflow-y-auto h-[calc(100vh_-_52px)]">
+      <div className="flex xl:hidden px-8 py-2 border-b">
+        <FilterSmall />
+      </div>
+      <div className="grow px-8 py-6 flex flex-col gap-2 overflow-y-auto">
         <div>
           {issue.parentId && <ParentIssueView issue={issue} />}
 
@@ -82,6 +86,6 @@ export const LeftSide = observer(() => {
 
         <IssueActivity />
       </div>
-    </div>
+    </>
   );
 });

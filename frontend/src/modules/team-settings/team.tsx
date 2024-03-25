@@ -8,8 +8,6 @@ import { SettingsLayout } from 'common/layouts/settings-layout';
 import { Loader } from 'components/ui/loader';
 import { useCurrentTeam } from 'hooks/teams/use-current-team';
 
-import { TeamStoreInit } from 'store/team-store-provider';
-
 import {
   type SECTION_COMPONENTS_KEYS,
   SECTION_COMPONENTS,
@@ -37,9 +35,5 @@ export function TeamSettings() {
 }
 
 TeamSettings.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <SettingsLayout>
-      <TeamStoreInit>{page}</TeamStoreInit>
-    </SettingsLayout>
-  );
+  return <SettingsLayout>{page}</SettingsLayout>;
 };

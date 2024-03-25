@@ -57,6 +57,13 @@ export const CommentsStore: IAnyStateTreeNode = types
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    getComments(issueId: string) {
+      return self.comments.filter(
+        (comment: IssueCommentType) => comment.issueId === issueId,
+      );
+    },
+  }));
 
 export type CommentsStoreType = Instance<typeof CommentsStore>;

@@ -1,3 +1,4 @@
+/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { computed } from 'mobx';
@@ -16,6 +17,7 @@ export function useTeamLabels() {
   const currentTeam = useCurrentTeam();
 
   const getLabels = () => {
+    const labelsForTeam = labelsStore.getLabelsForTeam(currentTeam.id);
     let labels = labelsStore.labels.filter(
       (label: LabelType) => label.workspaceId === currentWorkspace.id,
     );
@@ -23,9 +25,8 @@ export function useTeamLabels() {
     if (currentTeam) {
       labels = [
         ...labels,
-        ...labelsStore.labels.filter(
-          (label: LabelType) =>
-            label.teamId === currentTeam.id && labels.includes(label.id),
+        ...labelsForTeam.filter((label: LabelType) =>
+          labels.includes(label.id),
         ),
       ];
     }

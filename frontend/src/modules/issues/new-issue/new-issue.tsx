@@ -7,7 +7,14 @@ import { z } from 'zod';
 import { cn } from 'common/lib/utils';
 
 import { Button } from 'components/ui/button';
-import { Form, FormControl, FormField, FormItem } from 'components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from 'components/ui/form';
+import { Switch } from 'components/ui/switch';
 import { useTeam } from 'hooks/teams';
 
 import {
@@ -137,22 +144,49 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
 
           <div
             className={cn(
-              'flex items-center justify-end p-2',
+              'flex items-center justify-between p-3',
               !parentId && 'border-t gap-2',
               parentId && 'gap-2',
             )}
           >
-            <Button
-              size="sm"
-              variant="secondary"
-              isLoading={isLoading}
-              onClick={onClose}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" size="sm" isLoading={isLoading}>
-              Create issue
-            </Button>
+            <div className="flex justify-between text-xs items-center">
+              <div>
+                <div className="flex items-center">
+                  <FormField
+                    control={form.control}
+                    name="isBidirectional"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Switch
+                            id="isBidirectional"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormLabel className="text-muted-foreground min-w-[150px] ml-2">
+                          Create github
+                        </FormLabel>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="secondary"
+                isLoading={isLoading}
+                onClick={onClose}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" size="sm" isLoading={isLoading}>
+                Create issue
+              </Button>
+            </div>
           </div>
         </form>
       </Form>

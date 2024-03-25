@@ -24,8 +24,9 @@ export const CategoryView = observer(() => {
   const categorySequence = [
     WorkflowCategoryEnum.STARTED,
     WorkflowCategoryEnum.UNSTARTED,
-    WorkflowCategoryEnum.COMPLETED,
     WorkflowCategoryEnum.BACKLOG,
+    WorkflowCategoryEnum.TRIAGE,
+    WorkflowCategoryEnum.COMPLETED,
     WorkflowCategoryEnum.CANCELED,
   ];
 
@@ -47,7 +48,10 @@ export const CategoryView = observer(() => {
         return showTriageIssues;
       }
 
-      if (workflow.category === WorkflowCategoryEnum.COMPLETED) {
+      if (
+        workflow.category === WorkflowCategoryEnum.COMPLETED ||
+        workflow.category === WorkflowCategoryEnum.CANCELED
+      ) {
         return showCompletedIssues;
       }
 

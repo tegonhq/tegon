@@ -27,6 +27,10 @@ export function useTeamWorkflows(
       return [WorkflowCategoryEnum.BACKLOG];
     }
 
+    if (pathname.includes('/triage')) {
+      return [WorkflowCategoryEnum.TRIAGE];
+    }
+
     return Object.values(WorkflowCategoryEnum);
   }
 

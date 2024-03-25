@@ -5,8 +5,6 @@ import React from 'react';
 
 import { DialogContent, DialogHeader, DialogTitle } from 'components/ui/dialog';
 
-import { TeamStoreInit } from 'store/team-store-provider';
-
 import { NewIssue } from './new-issue';
 import { TeamDropdown } from './team-dropdown';
 
@@ -31,11 +29,7 @@ export function NewIssueDialog({ onClose }: NewIssueDialogProps) {
         </DialogTitle>
       </DialogHeader>
 
-      {team && (
-        <TeamStoreInit teamIdentifier={team}>
-          <NewIssue onClose={onClose} teamIdentfier={team} />
-        </TeamStoreInit>
-      )}
+      {team && <NewIssue onClose={onClose} teamIdentfier={team} />}
     </DialogContent>
   );
 }

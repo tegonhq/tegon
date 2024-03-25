@@ -9,10 +9,13 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
+import React from 'react';
 
 import { cn } from 'common/lib/utils';
 
 import { Button, buttonVariants } from 'components/ui/button';
+
+import { useContextStore } from 'store/global-context-provider';
 
 import {
   ACCOUNT_LINKS,
@@ -24,7 +27,9 @@ import { TeamSettingsList } from './team-settings-list';
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {}
 
 export function SidebarNav({ className, ...props }: SidebarNavProps) {
-  const { query, replace } = useRouter();
+  const router = useRouter();
+  const { query, push } = router;
+  const { teamsStore } = useContextStore();
   const pathname = usePathname();
   const {
     workspaceSlug,
@@ -46,7 +51,9 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
         variant="ghost"
         size="xl"
         onClick={() => {
-          replace(`/${query.workspaceSlug}`);
+          push(
+            `/${query.workspaceSlug}/team/${teamsStore.teams[0].identifier}/all`,
+          );
         }}
         className=" group px-3 py-4 text-lg bg-transparent hover:bg-transparent dark:hover:bg-transparent flex justify-start"
       >

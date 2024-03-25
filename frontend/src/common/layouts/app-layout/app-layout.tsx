@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiFocusMode, RiInbox2Fill, RiSettings2Fill } from '@remixicon/react';
+import { RiSettings2Fill } from '@remixicon/react';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
@@ -67,16 +67,16 @@ export function AppLayout({ defaultCollapsed = false, children }: LayoutProps) {
             <Nav
               isCollapsed={isCollapsed}
               links={[
-                {
-                  title: 'Inbox',
-                  icon: RiInbox2Fill,
-                  href: '/inbox',
-                },
-                {
-                  title: 'My issues',
-                  icon: RiFocusMode,
-                  href: `/${workspaceSlug}/my-issues`,
-                },
+                // {
+                //   title: 'Inbox',
+                //   icon: RiInbox2Fill,
+                //   href: '/inbox',
+                // },
+                // {
+                //   title: 'My issues',
+                //   icon: RiFocusMode,
+                //   href: `/${workspaceSlug}/my-issues`,
+                // },
                 {
                   title: 'Settings',
                   icon: RiSettings2Fill,

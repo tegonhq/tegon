@@ -42,21 +42,24 @@ export const LabelsStore: IAnyStateTreeNode = types
       }
     };
 
-    const load = flow(function* (workspaceId: string) {
-      self.workspaceId = workspaceId;
-
-      const labels = workspaceId
-        ? yield tegonDatabase.labels
-            .where({
-              workspaceId,
-            })
-            .toArray()
-        : [];
+    const load = flow(function* () {
+      const labels = yield tegonDatabase.labels.toArray();
 
       self.labels = labels;
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    getLabelsForTeam(teamId: string) {
+      return self.labels.filter((label: LabelType) => label.teamId === teamId);
+    },
+    getLabelsWithIds(ids: string[]) {
+      return self.labels.filter((label: LabelType) => ids.includes(label.id));
+    },
+    getLabelWithId(id: string) {
+      return self.labels.find((label: LabelType) => label.id === id);
+    },
+  }));
 
 export type LabelsStoreType = Instance<typeof LabelsStore>;

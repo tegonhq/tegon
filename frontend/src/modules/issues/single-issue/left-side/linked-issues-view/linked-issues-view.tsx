@@ -48,6 +48,41 @@ export function LinkedIssuesView({ issueId }: LinkedIssuesView) {
 
   return (
     <>
+      {linkedIssues.length === 0 && (
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground px-1"
+              >
+                <RiAddLine size={14} className="mr-1" /> Add link
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onClick={() => setDialogOpen(LinkedIssueSubType.GithubIssue)}
+                >
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <RiGithubFill size={16} /> Link Github issue
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    setDialogOpen(LinkedIssueSubType.GithubPullRequest)
+                  }
+                >
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <RiGithubFill size={16} /> Link Github pull request
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      )}
       {linkedIssues.length > 0 && (
         <Collapsible
           open={isOpen}

@@ -25,7 +25,6 @@ export function createIssue({ teamId, ...otherParams }: CreateIssueParams) {
       sortOrder: 0,
       estimate: 0,
       subscriberIds: [],
-      isBidirectional: false,
     },
   });
 }

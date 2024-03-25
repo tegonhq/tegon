@@ -4,9 +4,10 @@ import { SessionAuth } from 'supertokens-auth-react/recipe/session';
 
 import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
 
+import { WorkspaceStoreInit } from 'store/workspace-store-provider';
+
 import { BootstrapWrapper } from './bootstrap-data';
 import { SocketDataSyncWrapper } from './socket-data-sync';
-import { WorkspaceStoreInit } from '../../store/workspace-store-provider';
 
 export const AllProviders = ({
   children,
