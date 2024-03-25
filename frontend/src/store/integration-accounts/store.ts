@@ -12,6 +12,7 @@ import type { IntegrationAccountType } from 'common/types/integration-account';
 import { tegonDatabase } from 'store/database';
 
 import { IntegrationAccount } from './models';
+import type { IntegrationName } from 'common/types/integration-definition';
 
 export const IntegrationAccountsStore: IAnyStateTreeNode = types
   .model({
@@ -47,21 +48,21 @@ export const IntegrationAccountsStore: IAnyStateTreeNode = types
     };
 
     const load = flow(function* (workspaceId: string) {
-      self.workspaceId = workspaceId;
-
-      const integrationAccounts = workspaceId
-        ? yield tegonDatabase.integrationAccounts
-            .where({
-              workspaceId,
-            })
-            .toArray()
-        : [];
+      const integrationAccounts =
+        yield tegonDatabase.integrationAccounts.toArray();
 
       self.integrationAccounts = integrationAccounts;
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    getIntegrationAccount(integrationDefinitionId: string) {
+      return self.integrationAccounts.filter(
+        (integrationAccount: IntegrationAccountType) => {},
+      );
+    },
+  }));
 
 export type IntegrationAccountsStoreType = Instance<
   typeof IntegrationAccountsStore

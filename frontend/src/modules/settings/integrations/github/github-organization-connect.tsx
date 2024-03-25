@@ -49,7 +49,7 @@ export const GithubOrganizationConnect = observer(() => {
 
   return (
     <div className="mt-8 border text-sm rounded-md flex flex-col items-center justify-between">
-      <div className="flex justify-between items-center w-full  p-3 ">
+      <div className="flex justify-between items-center w-full p-3 ">
         <div> Connected organizations </div>
         <div>
           <Button
@@ -70,7 +70,7 @@ export const GithubOrganizationConnect = observer(() => {
         </div>
       </div>
 
-      <div className="border-t w-full">
+      <div className={cn('w-full', githubAccounts.length > 0 && 'border-t')}>
         {githubAccounts.map(
           (githubAccount: IntegrationAccountType, index: number) => {
             const settings: Settings = JSON.parse(githubAccount.settings);

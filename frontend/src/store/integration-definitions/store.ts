@@ -49,16 +49,9 @@ export const IntegrationDefinitionsStore: IAnyStateTreeNode = types
       }
     };
 
-    const load = flow(function* (workspaceId: string) {
-      self.workspaceId = workspaceId;
-
-      const integrationDefinitions = workspaceId
-        ? yield tegonDatabase.integrationDefinitions
-            .where({
-              workspaceId,
-            })
-            .toArray()
-        : [];
+    const load = flow(function* () {
+      const integrationDefinitions =
+        yield tegonDatabase.integrationDefinitions.toArray();
 
       self.integrationDefinitions = integrationDefinitions;
     });
