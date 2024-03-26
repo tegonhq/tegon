@@ -8,6 +8,8 @@ import {
   CreateWorkspaceInput,
   UpdateWorkspaceInput,
   WorkspaceIdRequestBody,
+  integrationDefinitionSeedData,
+  labelSeedData,
 } from './workspaces.interface';
 
 @Injectable()
@@ -22,10 +24,10 @@ export default class WorkspacesService {
       data: {
         ...workspaceData,
         usersOnWorkspaces: {
-          create: {
-            userId,
-          },
+          create: { userId },
         },
+        label: { create: labelSeedData },
+        integrationDefinition: { create: integrationDefinitionSeedData },
       },
       include: {
         usersOnWorkspaces: true,

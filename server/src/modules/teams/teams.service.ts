@@ -11,6 +11,7 @@ import {
   PreferenceInput,
   CreateTeamInput,
   TeamMemberInput,
+  workflowSeedData,
 } from './teams.interface';
 
 @Injectable()
@@ -34,6 +35,7 @@ export default class TeamsService {
       data: {
         workspaceId: workspaceRequestParams.workspaceId,
         ...teamData,
+        workflow: { create: workflowSeedData },
       },
     });
 

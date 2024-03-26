@@ -62,6 +62,8 @@ services:
       - DB_SCHEMA=${DB_SCHEMA}
       - REDIS_URL=${REDIS_URL}
       - REDIS_PORT=${REDIS_PORT}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
     ports:
       - 3001:3001
 
@@ -81,6 +83,24 @@ services:
       - NEXT_PUBLIC_SYNC_SERVER=${NEXT_PUBLIC_SYNC_SERVER}
     ports:
       - 8000:3000
+
+  prisma:
+    image: "poozlehq/tegon-prisma:${VERSION}"
+    container_name: tegon-prisma
+    restart: unless-stopped
+    networks:
+      - tegon
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REPLICATION_DATABASE_URL=${REPLICATION_DATABASE_URL}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_SCHEMA=${DB_SCHEMA}
+    ports:
+      - 5555:5555
 
 networks:
   app_network:
