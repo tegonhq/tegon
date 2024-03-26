@@ -27,7 +27,9 @@ export const recipeList = [
   jwt.init(),
   EmailPassword.init(),
   UserRoles.init(),
-  Session.init(), // initializes session features
+  Session.init({
+    cookieSecure: true,
+  }), // initializes session features
 ];
 
 export default (): Config => config;

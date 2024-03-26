@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiAccountCircleLine } from '@remixicon/react';
+import { AssigneeLine } from 'icons';
 
 import {
   Avatar,
@@ -59,7 +59,7 @@ export function IssueAssigneeDropdownContent({
           key="no-user"
           value="no-user"
           onSelect={() => {
-            onChange && onChange(undefined);
+            onChange && onChange(null);
             onClose();
           }}
         >
@@ -72,8 +72,10 @@ export function IssueAssigneeDropdownContent({
               }
             />
           )}
-          <RiAccountCircleLine size={14} className="min-w-[25px] mr-1" /> No
-          Assignee
+          <div className="h-[20px] w-[30px] flex items-center justify-center mr-2">
+            <AssigneeLine size={16} className="mr-2 text-muted-foreground" />
+          </div>
+          No Assignee
         </CommandItem>
         {usersData &&
           usersData.map((user: User) => {

@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
 
   server:
-    image: "poozlehq/tegon-server:${VERSION}"
+    image: "tegonhq/tegon-server:${VERSION}"
     container_name: tegon-server
     depends_on:
       - supertokens
@@ -50,7 +50,7 @@ services:
       - 3001:3001
 
   webapp:
-    image: "poozlehq/tegon-webapp:${VERSION}"
+    image: "tegonhq/tegon-webapp:${VERSION}"
     container_name: tegon-webapp
     restart: unless-stopped
     depends_on:

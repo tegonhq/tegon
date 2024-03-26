@@ -62,24 +62,21 @@ export const IssueRelatedProperties = observer(() => {
 
       return (
         <div
-          className="flex justify-start items-start text-sm mb-4"
+          className="flex flex-col justify-start text-sm items-start gap-2 mb-6"
           key={index}
         >
-          <div className="text-muted-foreground w-[95px] text-left my-2">
+          <div className="text-muted-foreground text-left">
             {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
           </div>
-          <div className="w-[calc(100%_-_95px)]">
-            <div className="flex items-center gap-2 flex-wrap">
-              {relatedIssues.map(
-                (relatedIssue: RelatedIssue, index: number) => (
-                  <RelatedIssueItem
-                    key={index}
-                    issue={relatedIssue.issue}
-                    relation={relatedIssue.relation}
-                  />
-                ),
-              )}
-            </div>
+
+          <div className="flex items-center gap-2 flex-wrap -ml-2">
+            {relatedIssues.map((relatedIssue: RelatedIssue, index: number) => (
+              <RelatedIssueItem
+                key={index}
+                issue={relatedIssue.issue}
+                relation={relatedIssue.relation}
+              />
+            ))}
           </div>
         </div>
       );
@@ -94,24 +91,21 @@ export const IssueRelatedProperties = observer(() => {
 
       return (
         <div
-          className="flex justify-start items-start text-sm mb-4"
+          className="flex flex-col justify-start text-sm items-start gap-2 mb-6"
           key={index}
         >
-          <div className="text-muted-foreground w-[95px] text-left my-2">
+          <div className="text-muted-foreground text-left">
             {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
           </div>
-          <div className="w-[calc(100%_-_95px)]">
-            <div className="flex flex-col items-start gap-1 flex-wrap">
-              {relatedIssues.map(
-                (relatedIssue: RelatedIssue, index: number) => (
-                  <RelatedIssueItem
-                    key={index}
-                    issue={relatedIssue.issue}
-                    relation={relatedIssue.relation}
-                  />
-                ),
-              )}
-            </div>
+
+          <div className="flex flex-col items-start gap-2 flex-wrap -ml-2">
+            {relatedIssues.map((relatedIssue: RelatedIssue, index: number) => (
+              <RelatedIssueItem
+                key={index}
+                issue={relatedIssue.issue}
+                relation={relatedIssue.relation}
+              />
+            ))}
           </div>
         </div>
       );
@@ -122,25 +116,22 @@ export const IssueRelatedProperties = observer(() => {
 
       return (
         <div
-          className="flex justify-start items-start text-sm mb-4"
+          className="flex flex-col justify-start text-sm items-start gap-2 mb-6"
           key={index}
         >
-          <div className="text-muted-foreground w-[95px] text-left my-2">
+          <div className="text-muted-foreground text-left">
             {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
           </div>
-          <div className="w-[calc(100%_-_95px)]">
-            <div className="flex flex-col items-start gap-1 flex-wrap">
-              {relatedIssues.map(
-                (relatedIssue: RelatedIssue, index: number) => (
-                  <RelatedIssueItem
-                    key={index}
-                    issue={relatedIssue.issue}
-                    relation={relatedIssue.relation}
-                  />
-                ),
-              )}
-              <IssueRelatedDropdown />
-            </div>
+
+          <div className="flex flex-col items-start gap-2 flex-wrap -ml-2">
+            {relatedIssues.map((relatedIssue: RelatedIssue, index: number) => (
+              <RelatedIssueItem
+                key={index}
+                issue={relatedIssue.issue}
+                relation={relatedIssue.relation}
+              />
+            ))}
+            <IssueRelatedDropdown />
           </div>
         </div>
       );

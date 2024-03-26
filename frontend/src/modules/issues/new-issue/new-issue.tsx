@@ -4,7 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useGithubAccounts } from 'modules/settings/integrations/github/github-utils';
+
 import { cn } from 'common/lib/utils';
+import { IntegrationName } from 'common/types/integration-definition';
 
 import { Button } from 'components/ui/button';
 import {
@@ -22,6 +25,7 @@ import {
   useCreateIssueMutation,
 } from 'services/issues/create-issue';
 
+import { isBirectionalEnabled } from './new-issue-utils';
 import { NewIssueSchema } from './new-issues-type';
 import {
   IssueAssigneeDropdown,
@@ -42,12 +46,15 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
     onSuccess: () => {},
   });
   const team = useTeam(teamIdentfier);
+  const { githubAccounts } = useGithubAccounts(IntegrationName.Github);
+  const isBidirectional = isBirectionalEnabled(githubAccounts);
 
   const form = useForm<z.infer<typeof NewIssueSchema>>({
     resolver: zodResolver(NewIssueSchema),
     defaultValues: {
       labelIds: [],
       priority: 0,
+      isBidirectional: false,
     },
   });
 
@@ -147,42 +154,37 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
               'flex items-center justify-between p-3',
               !parentId && 'border-t gap-2',
               parentId && 'gap-2',
+              !isBidirectional && 'justify-end',
             )}
           >
-            <div className="flex justify-between text-xs items-center">
-              <div>
-                <div className="flex items-center">
-                  <FormField
-                    control={form.control}
-                    name="isBidirectional"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Switch
-                            id="isBidirectional"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormLabel className="text-muted-foreground min-w-[150px] ml-2">
-                          Create github
-                        </FormLabel>
-                      </FormItem>
-                    )}
-                  />
+            {isBidirectional && (
+              <div className="flex justify-between text-xs items-center">
+                <div>
+                  <div className="flex items-center">
+                    <FormField
+                      control={form.control}
+                      name="isBidirectional"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Switch
+                              id="isBidirectional"
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-muted-foreground min-w-[150px] ml-2">
+                            Create github
+                          </FormLabel>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="secondary"
-                isLoading={isLoading}
-                onClick={onClose}
-              >
-                Cancel
-              </Button>
               <Button type="submit" size="sm" isLoading={isLoading}>
                 Create issue
               </Button>

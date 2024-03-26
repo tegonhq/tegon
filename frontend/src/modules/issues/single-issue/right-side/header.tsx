@@ -18,12 +18,12 @@ export function Header() {
   const { toast } = useToast();
 
   return (
-    <div className="flex pl-8 px-4 py-[14px] w-full border-b items-center">
+    <div className="flex pl-7 px-4 py-[10px] w-full border-b justify-between items-center">
       <div className="text-sm text-muted-foreground w-[95px] text-left">
         {issueId}
       </div>
 
-      <div className="flex gap-1 justify-start ml-1">
+      <div className="flex gap-1 justify-center ml-1">
         {/* <Button variant="ghost" size="xs"   onClick={() => copy(`${userdata.username}/${issueId}`)}>
           <RiLinkM size={16} className="text-muted-foreground" />
         </Button> */}

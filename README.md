@@ -1,9 +1,6 @@
 <p align="center">
-  <a href="https://poozle.dev"><img src="https://github.com/tegonhq/tegon/assets/17528887/07036ee1-774d-4dff-a56b-8050041f36ce" width="200" height="100" /></a>
+  <a href="https://tegon.ai"><img src="https://github.com/tegonhq/tegon/assets/17528887/07036ee1-774d-4dff-a56b-8050041f36ce" width="200" height="100" /></a>
 </p>
-
-
-
 
 <div align="center">
 

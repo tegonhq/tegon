@@ -47,7 +47,7 @@ export function IssuePriorityDropdown({
             size={PriorityIcon.size}
             className={cn(
               'mr-2 text-muted-foreground',
-              value === 1 && 'text-orange-600',
+              value === 1 && 'text-[#F9703E]',
             )}
           />
         </Button>
@@ -59,16 +59,21 @@ export function IssuePriorityDropdown({
         <Button
           variant="outline"
           role="combobox"
-          size="lg"
+          size="sm"
           aria-expanded={open}
-          className="flex items-center border dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
+          className={cn(
+            'flex items-center border dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-2 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+            value === 0 && 'text-muted-foreground',
+          )}
         >
           <PriorityIcon.icon
             size={PriorityIcon.size}
-            className={cn('mr-3 text-muted-foreground')}
+            className={cn('mr-3', value === 0 && 'text-muted-foreground')}
           />
 
-          {Priorities[value]}
+          <span className={cn(value === 0 && 'text-muted-foreground')}>
+            {Priorities[value]}
+          </span>
         </Button>
       );
     }
@@ -85,7 +90,7 @@ export function IssuePriorityDropdown({
           size={PriorityIcon.size}
           className={cn(
             'mr-2 text-muted-foreground',
-            value === 1 && 'text-orange-600',
+            value === 1 && 'text-[#F9703E]',
           )}
         />
 

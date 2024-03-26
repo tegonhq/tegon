@@ -41,7 +41,7 @@ export function ReplyComment({
   };
 
   return (
-    <div className="flex items-start text-xs text-muted-foreground w-full border-t p-3 pb-0">
+    <div className="flex items-start text-xs text-muted-foreground w-full border-t p-3 pb-0 rounded-md">
       <Avatar className="h-[20px] w-[25px] text-foreground">
         <AvatarImage />
         <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">

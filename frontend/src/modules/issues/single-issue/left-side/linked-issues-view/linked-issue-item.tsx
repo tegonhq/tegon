@@ -31,7 +31,7 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
     <a
       href={linkedIssue.url}
       target="_blank"
-      className="cursor-pointer w-full mb-1 border-1 hover:bg-slate-50 dark:hover:bg-slate-700/50 shadow-sm bg-background dark:bg-slate-700/20  p-3 py-3 rounded-md flex gap-2 items-center justify-between text-sm"
+      className="cursor-pointer w-full mb-1 border-1 hover:bg-slate-100 dark:hover:bg-slate-700/50 shadow-sm bg-white dark:bg-slate-700/20  p-3 py-3 rounded-md flex gap-2 items-center justify-between text-sm"
     >
       <div className="flex items-center gap-2">
         <RiGithubFill size={18} className="text-muted-foreground" />

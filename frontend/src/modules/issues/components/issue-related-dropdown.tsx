@@ -36,14 +36,14 @@ export function IssueRelatedDropdown() {
             <Button
               variant="outline"
               role="combobox"
-              size="lg"
+              size="sm"
               className={cn(
-                'flex items-center border text-foreground dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+                'flex items-center border text-foreground dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-1 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
               )}
             >
               <div className="flex items-center gap-2">
                 <div className="flex text-muted-foreground items-center">
-                  <RiAddLine size={18} className="mr-3" /> Add Relation
+                  <RiAddLine size={18} className="mr-1" /> Add Relation
                 </div>
               </div>
             </Button>

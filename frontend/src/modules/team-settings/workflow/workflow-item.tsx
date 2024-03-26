@@ -4,11 +4,12 @@ import {
   RiCheckboxCircleFill,
   RiCircleLine,
   RiCloseCircleFill,
-  RiFlipHorizontal2Fill,
   RiLoader3Line,
   RiProgress4Line,
   RiProgress6Line,
 } from '@remixicon/react';
+
+import { TriageFill } from 'icons';
 
 import type { WorkflowType } from 'common/types/team';
 
@@ -24,7 +25,7 @@ export const WORKFLOW_CATEGORY_ICONS = {
   Done: RiCheckboxCircleFill,
   Duplicate: RiCloseCircleFill,
   Canceled: RiCloseCircleFill,
-  Triage: RiFlipHorizontal2Fill,
+  Triage: TriageFill,
 };
 
 export function WorkflowItem({ workflow }: WorkflowItemProps) {
@@ -35,7 +36,7 @@ export function WorkflowItem({ workflow }: WorkflowItemProps) {
   return (
     <div
       key={workflow.name}
-      className="w-full border border-slate-200 dark:border-slate-800 group flex justify-between mb-2 text-sm rounded-md bg-slate-50 dark:bg-slate-800/50 p-2 px-2"
+      className="w-full border border-slate-200 dark:border-slate-800 group flex justify-between mb-2 text-sm rounded-md bg-slate-100 dark:bg-slate-800/50 p-2 px-2"
     >
       <div className="flex items-center">
         <CategoryIcon

@@ -51,7 +51,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
 
   return (
     <a
-      className="pl-8 p-3 flex justify-between cursor-default text-sm hover:bg-slate-100/50 dark:hover:bg-slate-800/20 border-b-[0.5px]"
+      className="pl-8 p-2.5 flex justify-between cursor-default text-sm hover:bg-slate-100 dark:hover:bg-slate-800/20 border-b-[0.5px]"
       onClick={() => {
         push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
       }}
@@ -82,7 +82,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
 
         {issue.parentId && (
           <div className="font-medium max-w-[300px] text-muted-foreground flex items-center">
-            <RiArrowRightSLine size={14} className="mx-2" />
+            <RiArrowRightSLine size={14} className="mx-1" />
             <div className="truncate ">{issue.parent?.title}</div>
           </div>
         )}

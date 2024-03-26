@@ -50,7 +50,7 @@ export function LabelActivity({
 
           <div>
             {issueHistory.addedLabelIds.map((labelId: string) => (
-              <Badge variant="secondary" key={labelId} className="text-xs ml-2">
+              <Badge variant="outline" key={labelId} className="text-xs ml-2">
                 <BadgeColor
                   style={{ backgroundColor: getLabel(labelId).color }}
                   className="mr-2"
@@ -91,7 +91,7 @@ export function LabelActivity({
 
         <div>
           {issueHistory.removedLabelIds.map((labelId: string) => (
-            <Badge variant="secondary" key={labelId} className="text-xs ml-2">
+            <Badge variant="outline" key={labelId} className="text-xs ml-2">
               <BadgeColor
                 style={{ backgroundColor: getLabel(labelId).color }}
                 className="mr-2"

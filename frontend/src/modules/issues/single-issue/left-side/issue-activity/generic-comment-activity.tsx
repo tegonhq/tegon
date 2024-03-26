@@ -51,7 +51,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
   const [edit, setEdit] = React.useState(false);
 
   return (
-    <div className="flex items-start text-xs text-muted-foreground">
+    <div className="flex items-start text-xs text-muted-foreground ">
       {user ? (
         <Avatar className="h-[20px] w-[25px] mr-3 text-foreground">
           <AvatarImage />
@@ -66,10 +66,9 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
       )}
       <div
         className={cn(
-          'group relative w-full flex flex-col text-foreground rounded-md',
-          comment.parentId && 'bg-transparent border-0',
-          !comment.parentId &&
-            'bg-background backdrop-blur-md dark:bg-slate-700/20 shadow-sm border',
+          'group relative w-full flex flex-col text-foreground rounded-md  shadow-sm',
+          comment.parentId && 'border-0',
+          !comment.parentId && 'border bg-white dark:bg-slate-700/20',
         )}
       >
         <div

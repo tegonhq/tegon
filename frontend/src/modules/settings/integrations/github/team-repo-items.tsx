@@ -1,14 +1,11 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import {
-  RiAccountBoxFill,
-  RiDeleteBin7Fill,
-  RiGithubFill,
-  RiPencilFill,
-} from '@remixicon/react';
+import { RiDeleteBin7Fill, RiGithubFill, RiPencilFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+
+import { TeamLine } from 'icons';
 
 import { cn } from 'common/lib/utils';
 import type {
@@ -106,7 +103,7 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
   return (
     <div className="w-full">
       <div className="py-2 px-2 flex gap-2 bg-slate-100 dark:bg-slate-800 w-full rounded-md text-muted-foreground items-center">
-        <RiAccountBoxFill size={16} />
+        <TeamLine size={16} />
         {team.name} ({team.identifier})
       </div>
 

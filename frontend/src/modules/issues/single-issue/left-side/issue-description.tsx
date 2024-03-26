@@ -9,14 +9,24 @@ import {
   EditorCommandItem,
   EditorCommandEmpty,
   EditorContent,
+  EditorBubble,
 } from 'novel';
 import { ImageResizer, handleCommandNavigation } from 'novel/extensions';
 import * as React from 'react';
+import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 import { cn } from 'common/lib/utils';
 
+import { Separator } from 'components/ui/separator';
+
 import { defaultExtensions } from './editor-extensions';
+import {
+  NodeSelector,
+  TextButtons,
+  ColorSelector,
+  LinkSelector,
+} from './selectors';
 import { slashCommand, suggestionItems } from './slash-command';
 
 // Inter as default font
@@ -36,6 +46,10 @@ export const IssueDescription = ({
   value,
   onChange,
 }: IssueDescriptionProps) => {
+  const [openNode, setOpenNode] = useState(false);
+  const [openColor, setOpenColor] = useState(false);
+  const [openLink, setOpenLink] = useState(false);
+
   const debouncedUpdates = useDebouncedCallback(
     async (editor: EditorInstance) => {
       const json = editor.getJSON();
@@ -93,6 +107,22 @@ export const IssueDescription = ({
               </EditorCommandItem>
             ))}
           </EditorCommand>
+
+          <EditorBubble
+            tippyOptions={{
+              placement: 'top',
+            }}
+            className="flex w-fit items-center max-w-[90vw] overflow-hidden rounded border bg-background shadow-xl"
+          >
+            <Separator orientation="vertical" />
+            <NodeSelector open={openNode} onOpenChange={setOpenNode} />
+            <Separator orientation="vertical" />
+            <LinkSelector open={openLink} onOpenChange={setOpenLink} />
+            <Separator orientation="vertical" />
+            <TextButtons />
+            <Separator orientation="vertical" />
+            <ColorSelector open={openColor} onOpenChange={setOpenColor} />
+          </EditorBubble>
         </EditorContent>
       </EditorRoot>
     </div>

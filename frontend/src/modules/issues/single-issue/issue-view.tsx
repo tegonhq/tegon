@@ -27,8 +27,8 @@ export const IssueView = observer(() => {
   }
 
   return (
-    <main className="grid grid-cols-4 h-full">
-      <div className="col-span-4 xl:col-span-3 flex flex-col h-[100vh]">
+    <main className="grid grid-cols-5 h-full">
+      <div className="col-span-5 xl:col-span-4 flex flex-col h-[100vh]">
         <LeftSide />
       </div>
       <div className="bg-background border-l dark:bg-slate-800/50 hidden flex-col xl:flex">

@@ -48,17 +48,16 @@ export function GithubCommentActivity({
     linkedIssue.url.split('/')[linkedIssue.url.split('/').length - 1];
 
   return (
-    <div className="flex items-start text-xs text-muted-foreground">
+    <div className="flex items-start text-xs text-muted-foreground ">
       <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
         <RiGithubFill size={18} className="text-foreground" />
       </div>
 
       <div
         className={cn(
-          'group relative w-full flex flex-col text-foreground rounded-md',
-          comment.parentId && 'bg-transparent border-0',
-          !comment.parentId &&
-            'bg-background backdrop-blur-md dark:bg-slate-700/20 shadow-sm border',
+          'group relative w-full flex flex-col text-foreground rounded-md bg-white dark:bg-slate-700/20 shadow-sm ',
+          comment.parentId && 'border-0',
+          !comment.parentId && 'border',
         )}
       >
         <div className={cn('flex gap-2', !comment.parentId && 'p-3')}>

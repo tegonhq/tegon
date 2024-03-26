@@ -36,7 +36,7 @@ export function TriageView() {
       </div>
       <div className="border-l flex col-span-3">
         <div className="flex flex-col h-full w-full">
-          <div className="p-3 px-4 border-b flex justify-end gap-3">
+          <div className="p-3.5 px-4 border-b flex justify-end gap-3">
             <Button
               variant="outline"
               size="xs"
@@ -55,8 +55,8 @@ export function TriageView() {
               Decline
             </Button>
           </div>
-          <main className="grid grid-cols-3 h-full">
-            <div className="col-span-3 xl:col-span-2 flex flex-col h-[calc(100vh_-_52px)]">
+          <main className="grid grid-cols-4 h-full">
+            <div className="col-span-4 xl:col-span-3 flex flex-col h-[calc(100vh_-_52px)]">
               <LeftSide />
             </div>
             <div className="bg-background border-l dark:bg-slate-800/50 hidden flex-col xl:col-span-1 xl:flex">

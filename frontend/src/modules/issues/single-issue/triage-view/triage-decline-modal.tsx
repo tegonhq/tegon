@@ -110,7 +110,7 @@ export function TriageDeclineModal({ setDialogOpen }: TriageDeclineModalProps) {
                           </Avatar>
                           <Textarea
                             {...field}
-                            className="focus-visible:ring-0 border-0 mb-4 w-full min-h-[60px] text-foreground shadow-sm p-0"
+                            className="focus-visible:ring-0 border-0 mb-4 w-full min-h-[60px] text-foreground p-0"
                             placeholder="Add a reason for declining"
                           />
                         </div>

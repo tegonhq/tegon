@@ -182,7 +182,6 @@ export default class IssuesService {
     linkMetaData?: Record<string, string>,
   ) {
     const { parentId, issueRelation, ...otherIssueData } = issueData;
-    const issueTitle = await getIssueTitle(openaiClient, issueData);
 
     const [currentIssue, updatedIssue] = await this.prisma.$transaction([
       this.prisma.issue.findUnique({
@@ -195,7 +194,6 @@ export default class IssuesService {
         },
         data: {
           ...otherIssueData,
-          ...(issueTitle && { title: issueTitle }),
           ...(parentId && { parent: { connect: { id: parentId } } }),
           ...(linkIssuedata && {
             linkedIssue: {

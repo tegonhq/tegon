@@ -1,15 +1,13 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 'use client';
 
-import {
-  RiAccountCircleFill,
-  RiArrowLeftSLine,
-  RiBuilding4Fill,
-} from '@remixicon/react';
+import { RiArrowLeftSLine, RiBuilding4Fill } from '@remixicon/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 import React from 'react';
+
+import { AssigneeLine } from 'icons';
 
 import { cn } from 'common/lib/utils';
 
@@ -80,7 +78,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
                   !teamIdentifier &&
                     isActive(item) &&
-                    'bg-slate-100 dark:bg-slate-800',
+                    'bg-slate-200 dark:bg-slate-800',
 
                   'justify-start text-sm w-full px-2 text-slate-700 dark:text-slate-300 mt-1',
                 )}
@@ -95,7 +93,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
       <div className="px-4 py-3">
         <div className="flex flex-col items-start justify-start w-full">
           <div className="flex items-center mb-1">
-            <RiAccountCircleFill size={18} className="text-muted-foreground" />
+            <AssigneeLine size={18} className="text-muted-foreground" />
             <div className="text-muted-foreground text-sm ml-4">My Account</div>
           </div>
 
@@ -108,7 +106,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
 
                   settingsSection === item.href &&
-                    'bg-slate-100 dark:bg-slate-800',
+                    'bg-slate-200 dark:bg-slate-800',
                   'justify-start text-sm w-full px-2 text-slate-700 dark:text-slate-300 mt-1',
                 )}
               >

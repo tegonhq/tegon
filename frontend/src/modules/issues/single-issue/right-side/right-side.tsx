@@ -52,60 +52,45 @@ export const RightSide = observer(() => {
     <>
       <Header />
       <div className="grow pl-8 p-4 mt-2 flex flex-col">
-        <div className="flex justify-start items-center text-sm mb-4">
-          <div className="text-muted-foreground w-[95px] text-left">Status</div>
-          <div className="w-[calc(100%_-_95px)]">
-            <IssueStatusDropdown
-              value={issue.stateId}
-              onChange={statusChange}
-              variant={IssueStatusDropdownVariant.LINK}
-              teamIdentfier={currentTeam.identifier}
-            />
-          </div>
+        <div className="flex justify-start items-center text-sm mb-3 -ml-3">
+          <IssueStatusDropdown
+            value={issue.stateId}
+            onChange={statusChange}
+            variant={IssueStatusDropdownVariant.LINK}
+            teamIdentfier={currentTeam.identifier}
+          />
         </div>
 
-        <div className="flex justify-start items-center text-sm mb-4">
-          <div className="text-muted-foreground w-[95px] text-left">
-            Priority
-          </div>
-          <div className="w-[calc(100%_-_95px)]">
-            <IssuePriorityDropdown
-              value={issue.priority ?? 0}
-              onChange={priorityChange}
-              variant={IssuePriorityDropdownVariant.LINK}
-            />
-          </div>
+        <div className="flex justify-start items-center text-sm mb-3 -ml-3">
+          <IssuePriorityDropdown
+            value={issue.priority ?? 0}
+            onChange={priorityChange}
+            variant={IssuePriorityDropdownVariant.LINK}
+          />
         </div>
 
-        <div className="flex justify-start items-center text-sm mb-4">
-          <div className="text-muted-foreground w-[95px] text-left">
-            Assignee
-          </div>
-          <div className="w-[calc(100%_-_95px)]">
-            <IssueAssigneeDropdown
-              value={issue.assigneeId}
-              onChange={assigneeChange}
-              variant={IssueAssigneeDropdownVariant.LINK}
-            />
-          </div>
+        <div className="flex justify-start items-center text-sm mb-6 -ml-3">
+          <IssueAssigneeDropdown
+            value={issue.assigneeId}
+            onChange={assigneeChange}
+            variant={IssueAssigneeDropdownVariant.LINK}
+          />
         </div>
 
         <IssueRelatedProperties />
 
         <div
           className={cn(
-            'flex justify-start text-sm items-center',
-            issue.labelIds.length > 0 && 'items-start',
+            'flex flex-col justify-start text-sm items-start gap-2',
           )}
         >
-          <div className="text-muted-foreground w-[95px] text-left">Labels</div>
-          <div className="w-[calc(100%_-_95px)]">
-            <IssueLabelDropdown
-              value={issue.labelIds}
-              onChange={labelsChange}
-              variant={IssueLabelDropdownVariant.LINK}
-            />
-          </div>
+          <div className="text-muted-foreground  text-left">Labels</div>
+
+          <IssueLabelDropdown
+            value={issue.labelIds}
+            onChange={labelsChange}
+            variant={IssueLabelDropdownVariant.LINK}
+          />
         </div>
       </div>
     </>

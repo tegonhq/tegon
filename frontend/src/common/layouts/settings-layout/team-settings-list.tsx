@@ -1,9 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiArrowRightSFill, RiTeamFill } from '@remixicon/react';
+import { RiArrowRightSFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+
+import { TeamLine } from 'icons';
 
 import { cn } from 'common/lib/utils';
 import type { TeamType } from 'common/types/team';
@@ -30,7 +32,7 @@ export const TeamSettingsList = observer(() => {
     <div className="px-4 py-3">
       <div className="flex flex-col items-start justify-start w-full">
         <div className="flex items-center mb-2">
-          <RiTeamFill size={18} className="text-muted-foreground" />
+          <TeamLine size={18} className="text-muted-foreground" />
           <div className="text-muted-foreground text-sm ml-4">Teams</div>
         </div>
 
@@ -44,7 +46,7 @@ export const TeamSettingsList = observer(() => {
               className="w-full text-slate-700 dark:text-slate-300 mt-0"
             >
               <AccordionItem value="item-1">
-                <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 hover:bg-slate-100 hover:text-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-50 rounded-md">
+                <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 hover:bg-slate-200 hover:text-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-50 rounded-md">
                   <div className="w-full justify-start flex items-center">
                     <div className="flex justify-start items-center text-sm">
                       <RiArrowRightSFill className="arrow-right-icon mx-2 h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200" />
@@ -63,7 +65,7 @@ export const TeamSettingsList = observer(() => {
                         'justify-start text-sm w-full px-2 !text-muted-foreground mt-1',
                         team.identifier === teamIdentifier &&
                           settingsSection === item.href &&
-                          'bg-slate-100 dark:bg-slate-800',
+                          'bg-slate-200 dark:bg-slate-800',
                       )}
                     >
                       {item.title}

@@ -49,7 +49,7 @@ export function IssueComment() {
             rows={5}
             value={commentValue}
             onChange={(e) => setCommentValue(e.currentTarget.value)}
-            className="w-full min-h-[60px] text-foreground bg-background backdrop-blur-md dark:bg-slate-700/20 shadow-sm"
+            className="w-full min-h-[60px] text-foreground bg-white backdrop-blur-md dark:bg-slate-700/20 shadow-sm"
           />
           <Button
             variant="outline"

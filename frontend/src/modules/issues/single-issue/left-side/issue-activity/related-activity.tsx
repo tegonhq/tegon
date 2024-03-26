@@ -30,11 +30,11 @@ const ICON_MAP: Record<
 > = {
   [IssueRelationEnum.BLOCKS]: {
     icon: RiFileForbidLine,
-    color: 'text-red-500',
+    color: 'text-red-700 dark:text-red-400',
   },
   [IssueRelationEnum.BLOCKED]: {
     icon: RiFileWarningLine,
-    color: 'text-red-500',
+    color: 'text-red-700 dark:text-red-400',
   },
   [IssueRelationEnum.RELATED]: {
     icon: RiFileTransferLine,

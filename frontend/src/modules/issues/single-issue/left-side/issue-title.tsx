@@ -11,20 +11,31 @@ interface IssueTitleProps {
 }
 
 export function IssueTitle({ value, onChange }: IssueTitleProps) {
+  const [inputValue, setInputValue] = React.useState(value);
+
   const debouncedUpdates = useDebouncedCallback(async (title: string) => {
     onChange && onChange(title);
   }, 500);
 
+  React.useEffect(() => {
+    if (value !== inputValue) {
+      setInputValue(value);
+    }
+  }, [inputValue, value]);
+
+  const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(e.currentTarget.value);
+    debouncedUpdates(e.currentTarget.value);
+  };
+
   return (
     <Textarea
-      className="border-0 pl-0 font-medium resize-none no-scrollbar overflow-hidden outline-none focus-visible:ring-0 text-xl"
+      className="border-0 pl-0 font-medium resize-none bg-transparent no-scrollbar overflow-hidden outline-none focus-visible:ring-0 text-xl"
       rows={1}
       cols={1}
-      defaultValue={value}
+      value={inputValue}
       placeholder="Issue title"
-      onChange={(e) => {
-        debouncedUpdates(e.currentTarget.value);
-      }}
+      onChange={onInputChange}
     />
   );
 }

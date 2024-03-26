@@ -2,10 +2,12 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { RiAccountBoxFill, RiGithubFill } from '@remixicon/react';
+import { RiGithubFill } from '@remixicon/react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { TeamLine } from 'icons';
 
 import { cn } from 'common/lib/utils';
 import type {
@@ -97,31 +99,33 @@ export function RepoTeamLinkDialog({
   const onSubmit = (values: ValuesType) => {
     const integrationAccount = getGithubAccount(values.integrationAccountId);
     const settings: Settings = JSON.parse(integrationAccount.settings);
+    const indexToUpdate = settings.Github.repositoryMappings.findIndex(
+      (mapping) => mapping.githubRepoId === defaultValues.githubRepoId,
+    );
     const repository = settings.Github.repositories.find(
       (repository) => `${repository.id}` === values.githubRepoId,
     );
 
-    const repositoryMappings =
-      settings.Github.repositoryMappings.length === 0
-        ? [
-            {
-              teamId: values.teamId,
-              default: false,
-              githubRepoId: values.githubRepoId,
-              bidirectional: values.bidirectional,
-              githubRepoFullName: repository.fullName,
-            },
-          ]
-        : [
-            ...settings.Github.repositoryMappings,
-            {
-              teamId: values.teamId,
-              default: true,
-              githubRepoId: values.githubRepoId,
-              bidirectional: values.bidirectional,
-              githubRepoFullName: repository.fullName,
-            },
-          ];
+    let repositoryMappings = settings.Github.repositoryMappings;
+    if (repositoryMappings.length === 0) {
+      repositoryMappings = [
+        {
+          teamId: values.teamId,
+          default: false,
+          githubRepoId: values.githubRepoId,
+          bidirectional: values.bidirectional,
+          githubRepoFullName: repository.fullName,
+        },
+      ];
+    } else {
+      repositoryMappings[indexToUpdate] = {
+        teamId: values.teamId,
+        default: false,
+        githubRepoId: values.githubRepoId,
+        bidirectional: values.bidirectional,
+        githubRepoFullName: repository.fullName,
+      };
+    }
 
     updateIntegrationAccount({
       integrationAccountId: values.integrationAccountId,
@@ -307,7 +311,7 @@ export function RepoTeamLinkDialog({
                                     key={team.id}
                                   >
                                     <div className="flex gap-2 items-center">
-                                      <RiAccountBoxFill
+                                      <TeamLine
                                         size={16}
                                         className="text-muted-foreground"
                                       />

@@ -85,7 +85,7 @@ export const IssueActivity = observer(() => {
   return (
     <div className="px-4">
       <div className="my-4">
-        <div> Activity</div>
+        <div>Activity</div>
       </div>
 
       <div className="my-2">

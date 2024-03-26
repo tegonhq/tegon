@@ -18,66 +18,63 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
 
 import { useContextStore } from 'store/global-context-provider';
 
-export interface WorkspaceDropdownProps {
-  isCollapsed: boolean;
-}
+export const WorkspaceDropdown = observer(() => {
+  const { workspaceStore } = useContextStore();
+  const { query, replace } = useRouter();
 
-export const WorkspaceDropdown = observer(
-  ({ isCollapsed }: WorkspaceDropdownProps) => {
-    const { workspaceStore } = useContextStore();
-    const { query, replace } = useRouter();
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="px-2">
+          <div className="flex justify-between">
+            <Avatar className="h-[20px] w-[25px] ">
+              <AvatarImage />
+              <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+                {getInitials(workspaceStore.workspace.name)}
+              </AvatarFallback>
+            </Avatar>
 
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="px-2">
-            <div className="flex justify-between">
-              <Avatar className="h-[20px] w-[25px] ">
-                <AvatarImage />
-                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
-                  {getInitials(workspaceStore.workspace.name)}
-                </AvatarFallback>
-              </Avatar>
-              {!isCollapsed && (
-                <div className="ml-2"> {workspaceStore.workspace.name}</div>
-              )}
-            </div>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="min-w-60" align="start">
-          <DropdownMenuGroup>
-            <DropdownMenuItem
-              onClick={() => {
-                replace(`/${query.workspaceSlug}/settings/overview`);
-              }}
-            >
-              Workspace settings
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Invite & manage members
-              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
+            <div className="ml-2"> {workspaceStore.workspace.name}</div>
+          </div>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="min-w-60" align="start">
+        <DropdownMenuGroup>
           <DropdownMenuItem
-            onClick={async () => {
-              await signOut();
-
-              replace('/auth/signin');
+            onClick={() => {
+              replace(`/${query.workspaceSlug}/settings/account/profile`);
             }}
           >
-            Log out
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+            Preferences
           </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  },
-);
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            onClick={() => {
+              replace(`/${query.workspaceSlug}/settings/overview`);
+            }}
+          >
+            Workspace settings
+          </DropdownMenuItem>
+          <DropdownMenuItem>Invite & manage members</DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={async () => {
+            await signOut();
+
+            replace('/auth/signin');
+          }}
+        >
+          Log out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+});

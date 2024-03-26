@@ -51,15 +51,16 @@ export const TriageIssues = observer(() => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col p-2">
       {issues.map((issue: IssueType) => {
         return (
           <div
             key={issue.id}
             className={cn(
-              'p-4 border-b flex flex-col gap-4',
-              issueId === `${currentTeam.identifier}-${issue.number}` &&
-                'bg-primary/10 border-l-3 border-l-primary',
+              'p-4 py-3 flex flex-col gap-2',
+              issueId === `${currentTeam.identifier}-${issue.number}`
+                ? 'bg-primary/10 rounded-md'
+                : 'border-b',
             )}
             onClick={() => {
               push(

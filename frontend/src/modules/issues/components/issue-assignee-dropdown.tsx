@@ -1,7 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiAccountCircleFill } from '@remixicon/react';
 import * as React from 'react';
+
+import { AssigneeLine } from 'icons';
 
 import { cn } from 'common/lib/utils';
 
@@ -70,12 +71,9 @@ export function IssueAssigneeDropdown({
               </Avatar>
             </>
           ) : (
-            <>
-              <RiAccountCircleFill
-                size={18}
-                className="mr-1 text-muted-foreground"
-              />
-            </>
+            <div className="h-[20px] w-[25px] flex items-center justify-center">
+              <AssigneeLine size={18} className="mr-1 text-muted-foreground" />
+            </div>
           )}
         </Button>
       );
@@ -86,17 +84,17 @@ export function IssueAssigneeDropdown({
         <Button
           variant="outline"
           role="combobox"
-          size="lg"
+          size="sm"
           aria-expanded={open}
           className={cn(
-            'flex items-center border text-foreground dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+            'flex items-center border text-foreground dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-2 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
           )}
         >
           {value ? (
             <>
-              <Avatar className="h-[20px] w-[30px] mr-1">
+              <Avatar className="h-[20px] w-[20px] mr-3">
                 <AvatarImage />
-                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm mr-2">
+                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
                   {getInitials(getUserData(value).fullname)}
                 </AvatarFallback>
               </Avatar>
@@ -104,8 +102,9 @@ export function IssueAssigneeDropdown({
               {getUserData(value).fullname}
             </>
           ) : (
-            <div className="flex text-muted-foreground items-center">
-              <RiAccountCircleFill size={18} className="mr-3" /> No Assignee
+            <div className="text-muted-foreground flex">
+              <AssigneeLine size={18} className="mr-3" />
+              No Assignee
             </div>
           )}
         </Button>
@@ -135,7 +134,7 @@ export function IssueAssigneeDropdown({
           </>
         ) : (
           <>
-            <RiAccountCircleFill size={18} className="mr-1" /> No Assignee
+            <AssigneeLine size={18} className="mr-1" /> No Assignee
           </>
         )}
       </Button>

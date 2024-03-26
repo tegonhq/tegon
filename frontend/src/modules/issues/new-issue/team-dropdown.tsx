@@ -1,7 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiAccountBoxFill } from '@remixicon/react';
 import * as React from 'react';
+
+import { TeamLine } from 'icons';
 
 import type { TeamType } from 'common/types/team';
 
@@ -55,7 +56,12 @@ export function TeamDropdown({ value, onChange }: TeamProps) {
           size="sm"
           className="flex items-center text-foreground"
         >
-          <RiAccountBoxFill size={14} className="mr-2" />
+          <div className="p-[2px] w-5 h-5 bg-red-400/10 rounded-sm mr-2">
+            <TeamLine
+              size={14}
+              className="shrink-0 text-muted-foreground h-4 w-4 text-red-400"
+            />
+          </div>
           {getTeam()?.name}
         </Button>
       </DropdownMenuTrigger>

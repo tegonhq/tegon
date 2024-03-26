@@ -70,9 +70,9 @@ export function IssueStatusDropdown({
         <Button
           variant="outline"
           role="combobox"
-          size="lg"
+          size="sm"
           aria-expanded={open}
-          className="flex items-center border border-transparent hover:bg-slate-50 hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-3 dark:bg-transparent shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
+          className="flex items-center border border-transparent hover:bg-slate-100 hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-2 dark:bg-transparent shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary"
         >
           <CategoryIcon
             size={18}

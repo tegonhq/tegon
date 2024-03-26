@@ -80,10 +80,10 @@ export const IssueLabelDropdown = observer(
               <Button
                 variant="outline"
                 role="combobox"
-                size="lg"
+                size="sm"
                 aria-expanded={open}
                 className={cn(
-                  'flex items-center border dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+                  'flex items-center border px-1 -ml-2 dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
                 )}
               >
                 {labelTitle()}
@@ -132,7 +132,7 @@ export const IssueLabelDropdown = observer(
 
       return (
         <div className="flex items-center text-muted-foreground">
-          <RiAddLine size={18} className="mr-3" />
+          <RiAddLine size={18} className="mr-1" />
           Add Label
         </div>
       );

@@ -47,14 +47,14 @@ export const RelatedIssueItem = observer(
       <Button
         variant="outline"
         role="combobox"
-        size="lg"
+        size="sm"
         onClick={() => {
           push(
             `/${workspaceSlug}/issue/${currentTeam.identifier}-${issue.number}`,
           );
         }}
         className={cn(
-          'flex items-center gap-2 border group text-foreground dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-3 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+          'flex items-center gap-2 border group text-foreground dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 px-2 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
         )}
       >
         <CategoryIcon
@@ -66,7 +66,7 @@ export const RelatedIssueItem = observer(
 
         <Button
           variant="ghost"
-          className="p-0"
+          className="p-0 !bg-transparent"
           onClick={(e) => {
             e.stopPropagation();
           }}
