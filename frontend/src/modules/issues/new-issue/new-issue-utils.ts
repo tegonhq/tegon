@@ -5,14 +5,17 @@ import type {
   Settings,
 } from 'common/types/integration-account';
 
-export function isBirectionalEnabled(githubAccounts: IntegrationAccountType[]) {
+export function isBirectionalEnabled(
+  githubAccounts: IntegrationAccountType[],
+  teamId: string,
+) {
   let isBirectionalEnabled = false;
 
   githubAccounts.forEach((githubAccount: IntegrationAccountType) => {
     const settings: Settings = JSON.parse(githubAccount.settings);
 
     settings.Github.repositoryMappings.forEach((mapping) => {
-      if (mapping.bidirectional) {
+      if (mapping.teamId === teamId) {
         isBirectionalEnabled = true;
       }
     });

@@ -1,8 +1,9 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { SettingsLine } from 'icons';
 import { useRouter } from 'next/router';
 import * as React from 'react';
+
+import { SettingsLine } from 'icons';
 
 import { cn } from 'common/lib/utils';
 import { AllProviders } from 'common/wrappers/all-providers';

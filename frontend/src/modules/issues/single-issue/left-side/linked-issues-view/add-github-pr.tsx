@@ -22,7 +22,7 @@ import {
 import { Input } from 'components/ui/input';
 import { useCurrentTeam } from 'hooks/teams';
 
-import { useCreateLinkedIssueMutation } from 'services/issues';
+import { useCreateLinkedIssueMutation } from 'services/linked-issues';
 
 import { URLSchema } from './add-github-issue';
 interface AddGithubPRProps {
