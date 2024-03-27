@@ -31,12 +31,12 @@ export class WorkspaceIdRequestBody {
 }
 
 export const labelSeedData = [
-  { name: 'Bug', color: '' },
-  { name: 'Feature', color: '' },
-  { name: 'Design', color: '' },
-  { name: 'Documentation', color: '' },
-  { name: 'Frontend', color: '' },
-  { name: 'Backend', color: '' },
+  { name: 'Bug', color: '#EF4E4E' },
+  { name: 'Feature', color: '#FADB5F' },
+  { name: 'Design', color: '#A368FC' },
+  { name: 'Documentation', color: '#62F4EB' },
+  { name: 'Frontend', color: '#7BC47F' },
+  { name: 'Backend', color: '#5ED0FA' },
 ];
 
 export const integrationDefinitionSeedData = [
