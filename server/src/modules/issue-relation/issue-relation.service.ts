@@ -8,12 +8,18 @@ import { PrismaService } from 'nestjs-prisma';
 import {
   IssueRelationIdRequestParams,
   IssueRelationInput,
+  IssueRelationType,
   ReverseIssueRelationType,
 } from './issue-relation.interface';
+import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
+import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
 @Injectable()
 export default class IssueRelationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationsQueue: NotificationsQueue,
+  ) {}
 
   async createIssueRelation(
     userId: string,
@@ -34,9 +40,10 @@ export default class IssueRelationService {
         createdById: userId,
         ...relationData,
       },
+      include: { issue: { include: { team: true } } },
     });
 
-    await this.prisma.issueRelation.upsert({
+    const inverseRelationData = await this.prisma.issueRelation.upsert({
       where: {
         issueId_relatedIssueId_type: {
           issueId: relationData.relatedIssueId,
@@ -57,6 +64,32 @@ export default class IssueRelationService {
 
     await this.createIssueHistory(userId, issueRelationData);
 
+    if (
+      relationData.type === IssueRelationType.BLOCKS ||
+      relationData.type === IssueRelationType.BLOCKED
+    ) {
+      const issueId =
+        relationData.type === IssueRelationType.BLOCKS
+          ? issueRelationData.issueId
+          : inverseRelationData.issueId;
+
+      const issueRelationId =
+        relationData.type === IssueRelationType.BLOCKS
+          ? issueRelationData.id
+          : inverseRelationData.id;
+
+      await this.notificationsQueue.addToNotification(
+        NotificationEventFrom.IssueBlocks,
+        userId,
+        {
+          subscriberIds: issueRelationData.issue.subscriberIds,
+          issueId,
+          issueRelationId,
+          workspaceId: issueRelationData.issue.team.workspaceId,
+        },
+      );
+    }
+
     return issueRelationData;
   }
 
@@ -69,9 +102,10 @@ export default class IssueRelationService {
     const issueRelationData = await this.prisma.issueRelation.update({
       where: { id: issueRelationId.issueRelationId },
       data: { deleted, deletedById: userId },
+      include: { issue: { include: { team: true } } },
     });
 
-    await this.prisma.issueRelation.update({
+    const inverseRelationData = await this.prisma.issueRelation.update({
       where: {
         issueId_relatedIssueId_type: {
           issueId: issueRelationData.relatedIssueId,
@@ -83,6 +117,29 @@ export default class IssueRelationService {
     });
 
     await this.createIssueHistory(userId, issueRelationData, true);
+
+    if (
+      issueRelationData.type === IssueRelationType.BLOCKS ||
+      issueRelationData.type === IssueRelationType.BLOCKED
+    ) {
+      const issueId =
+        issueRelationData.type === IssueRelationType.BLOCKS
+          ? issueRelationData.issueId
+          : inverseRelationData.issueId;
+
+      await this.notificationsQueue.deleteNotificationByEvent(
+        NotificationEventFrom.IssueBlocks,
+        {
+          subscriberIds: issueRelationData.issue.subscriberIds,
+          issueId,
+          issueRelationId:
+            issueRelationData.type === IssueRelationType.BLOCKS
+              ? issueRelationData.id
+              : inverseRelationData.id,
+          workspaceId: issueRelationData.issue.team.workspaceId,
+        },
+      );
+    }
 
     return issueRelationData;
   }

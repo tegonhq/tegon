@@ -87,7 +87,7 @@ export async function getUserId(
   userData: Record<string, string>,
 ) {
   const integrationAccount = await prisma.integrationAccount.findFirst({
-    where: { accountId: userData.id.toString() },
+    where: { accountId: userData?.id.toString() },
     select: { integratedById: true },
   });
 
@@ -100,7 +100,7 @@ export async function getIssueData(
   integrationAccount: IntegrationAccount,
   teamId: string,
 ): Promise<githubIssueData> {
-  const [stateId, userId, issueLabelIds] = await Promise.all([
+  const [stateId, userId, issueLabelIds, assigneeId] = await Promise.all([
     getState(prisma, eventBody.action, teamId),
     getUserId(prisma, eventBody.sender),
     getOrCreateLabelIds(
@@ -109,6 +109,7 @@ export async function getIssueData(
       teamId,
       integrationAccount.workspaceId,
     ),
+    getUserId(prisma, eventBody.issue.assignee),
   ]);
 
   const linkIssueData: LinkIssueData = {
@@ -132,6 +133,11 @@ export async function getIssueData(
     stateId,
     isBidirectional: true,
     ...(issueLabelIds && { labelIds: issueLabelIds }),
+    assigneeId,
+    subscriberIds: [
+      ...(userId ? [userId] : []),
+      ...(assigneeId ? [assigneeId] : []),
+    ],
   } as UpdateIssueInput;
 
   const sourceMetadata = {

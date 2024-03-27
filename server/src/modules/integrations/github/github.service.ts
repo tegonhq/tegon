@@ -18,6 +18,7 @@ import {
   handleRepositories,
 } from './github.handlers';
 import { eventsToListen } from './github.interface';
+import NotificationsService from 'modules/notifications/notifications.service';
 
 @Injectable()
 export default class GithubService {
@@ -25,6 +26,7 @@ export default class GithubService {
     private prisma: PrismaService,
     private issuesService: IssuesService,
     private linkedIssueService: LinkedIssueService,
+    private notificationsService: NotificationsService,
   ) {}
   private readonly logger: Logger = new Logger('GithubService', {
     timestamp: true,
@@ -66,6 +68,7 @@ export default class GithubService {
             this.prisma,
             this.logger,
             this.linkedIssueService,
+            this.notificationsService,
             eventBody,
             integrationAccount,
           );

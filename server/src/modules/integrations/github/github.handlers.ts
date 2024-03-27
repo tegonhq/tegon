@@ -32,6 +32,8 @@ import {
   sendGithubFirstComment,
   sendGithubPRFirstComment,
 } from './github.utils';
+import NotificationsService from 'modules/notifications/notifications.service';
+import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 
 export async function handleIssues(
   prisma: PrismaService,
@@ -54,6 +56,11 @@ export async function handleIssues(
     issue.id,
   );
 
+  if (!linkedIssue?.issueId && action !== 'opened') {
+    logger.log(`No linked issue found for GitHub issue ${issue.id}`);
+    return {};
+  }
+
   const issueData = await getIssueData(
     prisma,
     eventBody,
@@ -62,10 +69,6 @@ export async function handleIssues(
   );
 
   const updateIssue = async (input: UpdateIssueInput) => {
-    if (!linkedIssue?.issueId) {
-      logger.log(`No linked issue found for GitHub issue ${issue.id}`);
-      return {};
-    }
     logger.log(
       `Updating issue ${linkedIssue.issueId} for GitHub issue ${issue.id}`,
     );
@@ -107,7 +110,17 @@ export async function handleIssues(
       logger.log(
         `Updating issue for GitHub issue ${issue.id} with action ${action}`,
       );
-      return updateIssue(issueData.issueInput as UpdateIssueInput);
+      const existingSubscriberIds = new Set(linkedIssue.issue.subscriberIds);
+      const newSubscriberIds = new Set(
+        issueData.issueInput.subscriberIds || [],
+      );
+      const subscriberIds = [
+        ...new Set([...existingSubscriberIds, ...newSubscriberIds]),
+      ];
+      return updateIssue({
+        ...issueData.issueInput,
+        subscriberIds,
+      } as UpdateIssueInput);
 
     case 'labeled':
     case 'unlabeled': {
@@ -133,12 +146,15 @@ export async function handleIssues(
       );
       const assigneeId =
         action === 'assigned' ? await getUserId(prisma, assignee) : null;
-      return assigneeId || action !== 'assigned'
+
+      return action === 'assigned'
         ? updateIssue({
             assigneeId,
-            ...issueData.issueInput,
+            subscriberIds: [...linkedIssue.issue.subscriberIds, assigneeId],
           } as UpdateIssueInput)
-        : {};
+        : updateIssue({
+            assigneeId,
+          } as UpdateIssueInput);
     }
 
     default:
@@ -151,6 +167,7 @@ export async function handleIssueComments(
   prisma: PrismaService,
   logger: Logger,
   linkedIssueService: LinkedIssueService,
+  notificationsSerivice: NotificationsService,
   eventBody: WebhookEventBody,
   integrationAccount: IntegrationAccountWithRelations,
 ) {
@@ -185,7 +202,7 @@ export async function handleIssueComments(
       logger.log(
         `Creating new linked comment for GitHub comment ID: ${eventBody.comment.id}`,
       );
-      return await prisma.issueComment.create({
+      const issueComment = await prisma.issueComment.create({
         data: {
           body: eventBody.comment.body,
           issueId,
@@ -211,7 +228,20 @@ export async function handleIssueComments(
             },
           },
         },
+        include: { issue: { include: { team: true } } },
       });
+
+      await notificationsSerivice.createNotification(
+        NotificationEventFrom.NewComment,
+        userId,
+        {
+          subscriberIds: issueComment.issue.subscriberIds,
+          issueCommentId: issueComment.id,
+          issueId: issueComment.issueId,
+          workspaceId: issueComment.issue.team.workspaceId,
+        },
+      );
+      return issueComment;
 
     case 'edited':
       if (linkedComment) {

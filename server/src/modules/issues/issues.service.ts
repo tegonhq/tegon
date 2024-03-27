@@ -28,6 +28,8 @@ import {
   getIssueTitle,
   getLastIssueNumber,
 } from './issues.utils';
+import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
+import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
 const openaiClient = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
@@ -42,6 +44,7 @@ export default class IssuesService {
     private issueHistoryService: IssuesHistoryService,
     private issuesQueue: IssuesQueue,
     private issueRelationService: IssueRelationService,
+    private notificationsQueue: NotificationsQueue,
   ) {}
 
   async createIssue(
@@ -139,6 +142,22 @@ export default class IssuesService {
       linkMetaData,
       issueRelation,
     );
+
+    if (issue.subscriberIds) {
+      this.notificationsQueue.addToNotification(
+        NotificationEventFrom.IssueCreated,
+        issue.createdById,
+        {
+          issueId: issue.id,
+          subscriberIds: issue.subscriberIds,
+          toStateId: issue.stateId,
+          toPriority: issue.priority,
+          toAssigneeId: issue.assigneeId,
+          sourceMetadata: linkMetaData,
+          workspaceId: issue.team.workspaceId,
+        },
+      );
+    }
     return issue;
   }
 
@@ -222,6 +241,20 @@ export default class IssuesService {
       linkMetaData,
       issueRelation,
     );
+
+    if (updatedIssue.subscriberIds) {
+      await this.notificationsQueue.addToNotification(
+        NotificationEventFrom.IssueUpdated,
+        userId,
+        {
+          issueId: updatedIssue.id,
+          ...(await getIssueDiff(updatedIssue, currentIssue)),
+          sourceMetadata: linkMetaData,
+          subscriberIds: updatedIssue.subscriberIds,
+          workspaceId: updatedIssue.team.workspaceId,
+        },
+      );
+    }
 
     return updatedIssue;
   }

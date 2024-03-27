@@ -14,6 +14,7 @@ import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 import { GithubProcessor } from './github.processor';
 import { GithubQueue } from './github.queue';
 import GithubService from './github.service';
+import { NotificationsModule } from 'modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import GithubService from './github.service';
     HttpModule,
     IssuesModule,
     LinkedIssueModule,
+    NotificationsModule,
     BullModule.registerQueue({ name: 'github' }),
   ],
   controllers: [],
