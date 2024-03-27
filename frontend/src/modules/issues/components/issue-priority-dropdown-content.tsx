@@ -1,12 +1,14 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { RiCheckLine } from '@remixicon/react';
 import {
-  RiCheckLine,
-  RiErrorWarningFill,
-  RiSubtractLine,
-} from '@remixicon/react';
-
-import { PriorityHigh, PriorityLow, PriorityMedium } from 'icons';
+  CheckLine,
+  NoPriorityLine,
+  PriorityHigh,
+  PriorityLow,
+  PriorityMedium,
+  UrgentFill,
+} from 'icons';
 
 import {
   Command,
@@ -23,8 +25,8 @@ interface IssuePriorityDropdownContentProps {
 }
 
 export const PriorityIcons = [
-  { icon: RiSubtractLine, size: 16 },
-  { icon: RiErrorWarningFill, size: 16 },
+  { icon: NoPriorityLine, size: 16 },
+  { icon: UrgentFill, size: 16 },
   { icon: PriorityHigh, size: 16 },
   { icon: PriorityMedium, size: 16 },
   { icon: PriorityLow, size: 16 },
@@ -53,7 +55,7 @@ export function IssuePriorityDropdownContent({
               }}
             >
               <div className="flex justify-between w-full items-center">
-                <div className="flex">
+                <div className="flex items-center">
                   <PriorityIcon.icon
                     size={PriorityIcon.size}
                     className="text-muted-foreground mr-2"
@@ -63,7 +65,7 @@ export function IssuePriorityDropdownContent({
 
                 {index === value && (
                   <div>
-                    <RiCheckLine size={14} />
+                    <CheckLine size={14} className="text-muted-foreground" />
                   </div>
                 )}
               </div>

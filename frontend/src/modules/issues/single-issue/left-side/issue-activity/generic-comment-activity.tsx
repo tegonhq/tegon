@@ -66,9 +66,9 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
       )}
       <div
         className={cn(
-          'group relative w-full flex flex-col text-foreground rounded-md  shadow-sm',
+          'group relative w-full flex flex-col text-foreground rounded-md',
           comment.parentId && 'border-0',
-          !comment.parentId && 'border bg-white dark:bg-slate-700/20',
+          !comment.parentId && 'border bg-white dark:bg-slate-700/20 shadow-sm',
         )}
       >
         <div
