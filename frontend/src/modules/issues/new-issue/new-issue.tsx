@@ -47,7 +47,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
   });
   const team = useTeam(teamIdentfier);
   const { githubAccounts } = useGithubAccounts(IntegrationName.Github);
-  const isBidirectional = isBirectionalEnabled(githubAccounts);
+  const isBidirectional = isBirectionalEnabled(githubAccounts, team.id);
 
   const form = useForm<z.infer<typeof NewIssueSchema>>({
     resolver: zodResolver(NewIssueSchema),

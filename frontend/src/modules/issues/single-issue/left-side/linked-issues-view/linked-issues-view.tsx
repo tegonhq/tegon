@@ -6,6 +6,7 @@ import {
   RiArrowRightSFill,
   RiGithubFill,
 } from '@remixicon/react';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import {
@@ -36,7 +37,7 @@ interface LinkedIssuesView {
   issueId: string;
 }
 
-export function LinkedIssuesView({ issueId }: LinkedIssuesView) {
+export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
   const { linkedIssuesStore } = useContextStore();
   const [isOpen, setIsOpen] = React.useState(true);
   const [dialogOpen, setDialogOpen] =
@@ -166,4 +167,4 @@ export function LinkedIssuesView({ issueId }: LinkedIssuesView) {
       />
     </>
   );
-}
+});

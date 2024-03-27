@@ -22,7 +22,7 @@ import LinkedIssueService from './linked-issue.service';
 
 @Controller({
   version: '1',
-  path: 'linked-issue',
+  path: 'linked_issues',
 })
 @ApiTags('Linked Issue')
 export class LinkedIssueController {

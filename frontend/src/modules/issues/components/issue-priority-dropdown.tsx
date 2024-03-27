@@ -67,8 +67,8 @@ export function IssuePriorityDropdown({
           )}
         >
           <PriorityIcon.icon
-            size={PriorityIcon.size}
-            className={cn('mr-3', value === 0 && 'text-muted-foreground')}
+            size={18}
+            className={cn('mr-3 text-muted-foreground')}
           />
 
           <span className={cn(value === 0 && 'text-muted-foreground')}>

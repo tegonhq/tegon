@@ -98,6 +98,10 @@ export default class LinkedIssueService {
     linkedIssueIdParams: LinkedIssueIdParams,
     linkedIssueData: UpdateLinkedIssueData,
   ): Promise<ApiResponse | LinkedIssue> {
+    const linkedIssue = await this.prisma.linkedIssue.findUnique({
+      where: { id: linkedIssueIdParams.linkedIssueId },
+    });
+
     if (linkedIssueData.url) {
       const existingLinkedIssue = await this.prisma.linkedIssue.findFirst({
         where: {
@@ -115,15 +119,17 @@ export default class LinkedIssueService {
       }
     }
 
+    const sourceData = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(linkedIssue.sourceData as any),
+      title: linkedIssueData.title,
+    };
+
     return this.prisma.linkedIssue.update({
       where: { id: linkedIssueIdParams.linkedIssueId },
       data: {
         url: linkedIssueData.url,
-        sourceData: {
-          update: {
-            title: linkedIssueData.title,
-          },
-        },
+        sourceData,
       },
     });
   }
