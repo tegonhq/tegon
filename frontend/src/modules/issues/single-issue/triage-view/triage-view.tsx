@@ -12,6 +12,7 @@ import { TriageDeclineModal } from './triage-decline-modal';
 import { Header } from '../../triage/left-side/header';
 import { LeftSide } from '../left-side/left-side';
 import { RightSide } from '../right-side/right-side';
+import { CheckLine } from 'icons';
 
 export function TriageView() {
   const [triageAction, setTriageAction] = React.useState<
@@ -42,7 +43,7 @@ export function TriageView() {
               size="xs"
               onClick={() => chooseTriageAction('Accept')}
             >
-              <RiCheckLine size={14} className="mr-2" />
+              <CheckLine size={14} className="mr-2" />
               Accept
             </Button>
 

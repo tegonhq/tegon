@@ -1,15 +1,14 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { RiCloseCircleFill } from '@remixicon/react';
 import {
-  RiCheckboxCircleFill,
-  RiCircleLine,
-  RiCloseCircleFill,
-  RiLoader3Line,
-  RiProgress4Line,
-  RiProgress6Line,
-} from '@remixicon/react';
-
-import { TriageFill } from 'icons';
+  BacklogLine,
+  DoneFill,
+  InProgressLine,
+  InReviewLine,
+  TodoLine,
+  TriageFill,
+} from 'icons';
 
 import type { WorkflowType } from 'common/types/team';
 
@@ -18,11 +17,11 @@ interface WorkflowItemProps {
 }
 
 export const WORKFLOW_CATEGORY_ICONS = {
-  Backlog: RiLoader3Line,
-  Todo: RiCircleLine,
-  'In Progress': RiProgress4Line,
-  'In Review': RiProgress6Line,
-  Done: RiCheckboxCircleFill,
+  Backlog: BacklogLine,
+  Todo: TodoLine,
+  'In Progress': InProgressLine,
+  'In Review': InReviewLine,
+  Done: DoneFill,
   Duplicate: RiCloseCircleFill,
   Canceled: RiCloseCircleFill,
   Triage: TriageFill,
