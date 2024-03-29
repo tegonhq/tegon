@@ -47,7 +47,10 @@ export default class IssuesService {
     private issueHistoryService: IssuesHistoryService,
     private issuesQueue: IssuesQueue,
     private issueRelationService: IssueRelationService,
+<<<<<<< HEAD
     private notificationsQueue: NotificationsQueue,
+=======
+>>>>>>> 44d7cf4 (feat: search issues)
   ) {}
 
   async createIssue(
@@ -98,6 +101,7 @@ export default class IssuesService {
       this.logger.log(`Adding two-way sync job for issue: ${issue.id}`);
       this.issuesQueue.addTwoWaySyncJob(issue, IssueAction.CREATED, userId);
     }
+    this.issuesQueue.addIssueToVector(issue);
 
     return issue;
   }
@@ -195,6 +199,7 @@ export default class IssuesService {
       );
     }
 
+    this.issuesQueue.addIssueToVector(updatedIssue);
     return updatedIssue;
   }
 

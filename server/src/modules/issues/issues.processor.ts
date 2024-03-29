@@ -12,16 +12,19 @@ import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import {
   IssueAction,
   IssueRequestParams,
+  IssueWithRelations,
   LinkIssueInput,
   TeamRequestParams,
 } from './issues.interface';
 import { handleTwoWaySync } from './issues.utils';
+import { VectorService } from 'modules/vector/vector.service';
 
 @Processor('issues')
 export class IssuesProcessor {
   constructor(
     private prisma: PrismaService,
     private linkedIssueService: LinkedIssueService,
+    private vectorService: VectorService,
   ) {}
   private readonly logger: Logger = new Logger('IssueProcessor');
 
@@ -70,5 +73,12 @@ export class IssuesProcessor {
     }
 
     return response;
+  }
+
+  @Process('addIssueToVector')
+  async handleIssueToVector(job: Job<{ issue: IssueWithRelations }>) {
+    const { issue } = job.data;
+    this.logger.log(`Adding issue to Vector ${issue.id}`);
+    await this.vectorService.createIssueEmbedding(issue);
   }
 }

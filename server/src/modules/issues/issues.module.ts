@@ -15,6 +15,7 @@ import { IssuesController } from './issues.controller';
 import { IssuesProcessor } from './issues.processor';
 import { IssuesQueue } from './issues.queue';
 import IssuesService from './issues.service';
+import { VectorModule } from 'modules/vector/vector.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import IssuesService from './issues.service';
     IssueHistoryModule,
     LinkedIssueModule,
     NotificationsModule,
+    VectorModule,
     BullModule.registerQueue({ name: 'issues' }),
   ],
   controllers: [IssuesController],

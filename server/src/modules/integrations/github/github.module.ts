@@ -15,6 +15,7 @@ import { NotificationsModule } from 'modules/notifications/notifications.module'
 import { GithubProcessor } from './github.processor';
 import { GithubQueue } from './github.queue';
 import GithubService from './github.service';
+import { VectorModule } from 'modules/vector/vector.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import GithubService from './github.service';
     IssuesModule,
     LinkedIssueModule,
     NotificationsModule,
+    VectorModule,
     BullModule.registerQueue({ name: 'github' }),
   ],
   controllers: [],
