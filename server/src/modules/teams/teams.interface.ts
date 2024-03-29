@@ -107,7 +107,7 @@ export const workflowSeedData = [
     position: 6,
   },
   {
-    name: 'Cancelled',
+    name: 'Canceled',
     category: WorkflowCategory.CANCELED,
     color: '#9CA3AF',
     position: 7,
