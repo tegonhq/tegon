@@ -1,13 +1,14 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { HttpModule } from '@nestjs/axios';
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
-import NotificationsService from './notifications.service';
-import { BullModule } from '@nestjs/bull';
-import { NotificationsQueue } from './notifications.queue';
-import { NotificationsProcessor } from './notifications.processor';
+
 import { NotificationsController } from './notifications.controller';
+import { NotificationsProcessor } from './notifications.processor';
+import { NotificationsQueue } from './notifications.queue';
+import NotificationsService from './notifications.service';
 
 @Module({
   imports: [

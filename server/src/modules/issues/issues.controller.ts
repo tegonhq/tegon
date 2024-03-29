@@ -22,6 +22,7 @@ import {
   CreateIssueInput,
   IssueRequestParams,
   LinkIssueInput,
+  SubscribeIssueInput,
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
@@ -89,6 +90,21 @@ export class IssuesController {
       linkData,
       issueParams,
       userId,
+    );
+  }
+
+  @Post(':issueId/subscribe')
+  @UseGuards(new AuthGuard())
+  async subscribeIssue(
+    @SessionDecorator() session: SessionContainer,
+    @Param() issueParams: IssueRequestParams,
+    @Body() subscriberData: SubscribeIssueInput,
+  ) {
+    const userId = session.getUserId();
+    return await this.issuesService.handleSubscription(
+      userId,
+      issueParams.issueId,
+      subscriberData.type,
     );
   }
 }

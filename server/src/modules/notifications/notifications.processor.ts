@@ -3,11 +3,12 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
-import NotificationsService from './notifications.service';
+
 import {
   NotificationData,
   NotificationEventFrom,
 } from './notifications.interface';
+import NotificationsService from './notifications.service';
 
 @Processor('notifications')
 export class NotificationsProcessor {

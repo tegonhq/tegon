@@ -21,6 +21,8 @@ import {
   LinkedIssueSourceData,
 } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
+import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
+import NotificationsService from 'modules/notifications/notifications.service';
 import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import {
@@ -32,8 +34,6 @@ import {
   sendGithubFirstComment,
   sendGithubPRFirstComment,
 } from './github.utils';
-import NotificationsService from 'modules/notifications/notifications.service';
-import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 
 export async function handleIssues(
   prisma: PrismaService,

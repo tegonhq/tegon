@@ -1,9 +1,12 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { NotificationActionType } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
+
 import {
   NotificationData,
   NotificationEventFrom,
 } from './notifications.interface';
-import { PrismaService } from 'nestjs-prisma';
 
 export async function getNotificationCreateData(
   prisma: PrismaService,
@@ -93,7 +96,7 @@ async function createUnassignedNotification(
     data: {
       type: NotificationActionType.IssueUnAssigned,
       userId: fromAssigneeId,
-      createdById: createdById,
+      createdById,
       issueId,
       actionData: { userId: fromAssigneeId },
       sourceMetadata,

@@ -1,6 +1,8 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
 import { Notification, NotificationActionType } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
 
 import {
   NotificationData,

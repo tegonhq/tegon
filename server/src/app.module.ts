@@ -17,6 +17,7 @@ import { IssueRelationModule } from 'modules/issue-relation/issue-relation.modul
 import { IssuesModule } from 'modules/issues/issues.module';
 import { LabelsModule } from 'modules/labels/labels.module';
 import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
+import { NotificationsModule } from 'modules/notifications/notifications.module';
 import { OAuthCallbackModule } from 'modules/oauth-callback/oauth-callback.module';
 import { ReplicationModule } from 'modules/replication/replication.module';
 import { SyncModule } from 'modules/sync/sync.module';
@@ -30,7 +31,6 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { NotificationsModule } from 'modules/notifications/notifications.module';
 
 @Module({
   imports: [

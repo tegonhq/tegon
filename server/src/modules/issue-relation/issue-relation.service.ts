@@ -5,14 +5,15 @@ import { Injectable } from '@nestjs/common';
 import { IssueRelation } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
+import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
+import { NotificationsQueue } from 'modules/notifications/notifications.queue';
+
 import {
   IssueRelationIdRequestParams,
   IssueRelationInput,
   IssueRelationType,
   ReverseIssueRelationType,
 } from './issue-relation.interface';
-import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
-import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
 @Injectable()
 export default class IssueRelationService {

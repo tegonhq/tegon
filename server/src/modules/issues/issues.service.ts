@@ -5,11 +5,14 @@ import { Issue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
 
+import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import { IssueRelationInput } from 'modules/issue-relation/issue-relation.interface';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
 import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 import { getLinkType } from 'modules/linked-issue/linked-issue.utils';
+import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
+import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
 import {
   ApiResponse,
@@ -18,6 +21,7 @@ import {
   IssueRequestParams,
   IssueWithRelations,
   RelationInput,
+  SubscribeType,
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
@@ -27,9 +31,8 @@ import {
   getIssueDiff,
   getIssueTitle,
   getLastIssueNumber,
+  getSubscriberIds,
 } from './issues.utils';
-import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
-import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
 const openaiClient = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
@@ -85,7 +88,7 @@ export default class IssuesService {
       this.logger.log(
         `Adding create link issue job for link: ${linkIssue.url}`,
       );
-      await this.issuesQueue.addCreateLinkIssueJob(
+      this.issuesQueue.addCreateLinkIssueJob(
         teamRequestParams,
         linkIssue,
         { issueId: issue.id },
@@ -93,11 +96,7 @@ export default class IssuesService {
       );
     } else if (otherIssueData.isBidirectional) {
       this.logger.log(`Adding two-way sync job for issue: ${issue.id}`);
-      await this.issuesQueue.addTwoWaySyncJob(
-        issue,
-        IssueAction.CREATED,
-        userId,
-      );
+      this.issuesQueue.addTwoWaySyncJob(issue, IssueAction.CREATED, userId);
     }
 
     return issue;
@@ -116,12 +115,19 @@ export default class IssuesService {
       teamRequestParams.teamId,
     );
     const issueTitle = await getIssueTitle(openaiClient, issueData);
+    const subscriberIds = getSubscriberIds(
+      userId,
+      issueData.assigneeId,
+      null,
+      SubscribeType.SUBSCRIBE,
+    );
 
     const issue = await this.prisma.issue.create({
       data: {
         title: issueTitle,
         number: lastNumber + 1,
         team: { connect: { id: teamRequestParams.teamId } },
+        subscriberIds,
         ...otherIssueData,
         ...(userId && { createdBy: { connect: { id: userId } } }),
         ...(parentId && { parent: { connect: { id: parentId } } }),
@@ -137,7 +143,7 @@ export default class IssuesService {
 
     await this.upsertIssueHistory(
       issue,
-      null,
+      await getIssueDiff(issue, null),
       userId,
       linkMetaData,
       issueRelation,
@@ -182,7 +188,7 @@ export default class IssuesService {
 
     if (updatedIssue.isBidirectional) {
       this.logger.log(`Adding two-way sync job for issue: ${updatedIssue.id}`);
-      await this.issuesQueue.addTwoWaySyncJob(
+      this.issuesQueue.addTwoWaySyncJob(
         updatedIssue,
         IssueAction.UPDATED,
         userId,
@@ -202,53 +208,62 @@ export default class IssuesService {
   ) {
     const { parentId, issueRelation, ...otherIssueData } = issueData;
 
-    const [currentIssue, updatedIssue] = await this.prisma.$transaction([
-      this.prisma.issue.findUnique({
-        where: { id: issueParams.issueId },
-      }),
-      this.prisma.issue.update({
-        where: {
-          id: issueParams.issueId,
-          teamId: teamRequestParams.teamId,
-        },
-        data: {
-          ...otherIssueData,
-          ...(parentId && { parent: { connect: { id: parentId } } }),
-          ...(linkIssuedata && {
-            linkedIssue: {
-              upsert: {
-                where: { url: linkIssuedata.url },
-                update: linkIssuedata,
-                create: linkIssuedata,
-              },
-            },
-          }),
-        },
-        include: {
-          team: true,
+    const currentIssue = await this.prisma.issue.findUnique({
+      where: { id: issueParams.issueId },
+    });
+
+    const updatedIssueData = {
+      subscriberIds: getSubscriberIds(
+        userId,
+        issueData.assigneeId,
+        currentIssue.subscriberIds,
+        SubscribeType.SUBSCRIBE,
+      ),
+      ...otherIssueData,
+      ...(parentId && { parent: { connect: { id: parentId } } }),
+      ...(linkIssuedata && {
+        linkedIssue: {
+          upsert: {
+            where: { url: linkIssuedata.url },
+            update: linkIssuedata,
+            create: linkIssuedata,
+          },
         },
       }),
-    ]);
+    };
+
+    const updatedIssue = await this.prisma.issue.update({
+      where: {
+        id: issueParams.issueId,
+        teamId: teamRequestParams.teamId,
+      },
+      data: updatedIssueData,
+      include: {
+        team: true,
+      },
+    });
 
     this.logger.log(
       `Issue with ID ${issueParams.issueId} updated successfully`,
     );
 
-    await this.upsertIssueHistory(
+    const issueDiff = await getIssueDiff(updatedIssue, currentIssue);
+
+    this.upsertIssueHistory(
       updatedIssue,
-      currentIssue,
+      issueDiff,
       userId,
       linkMetaData,
       issueRelation,
     );
 
     if (updatedIssue.subscriberIds) {
-      await this.notificationsQueue.addToNotification(
+      this.notificationsQueue.addToNotification(
         NotificationEventFrom.IssueUpdated,
         userId,
         {
           issueId: updatedIssue.id,
-          ...(await getIssueDiff(updatedIssue, currentIssue)),
+          ...issueDiff,
           sourceMetadata: linkMetaData,
           subscriberIds: updatedIssue.subscriberIds,
           workspaceId: updatedIssue.team.workspaceId,
@@ -288,7 +303,7 @@ export default class IssuesService {
 
   private async upsertIssueHistory(
     issue: Issue,
-    currentIssue: Issue | null,
+    issueDiff: IssueHistoryData,
     userId?: string,
     linkMetaData?: Record<string, string>,
     issueRelation?: RelationInput,
@@ -297,7 +312,7 @@ export default class IssuesService {
     await this.issueHistoryService.upsertIssueHistory(
       userId,
       issue.id,
-      await getIssueDiff(issue, currentIssue),
+      issueDiff,
       linkMetaData,
     );
 
@@ -320,5 +335,25 @@ export default class IssuesService {
   private async deleteIssueHistory(issueId: string): Promise<void> {
     this.logger.log(`Deleting issue history for issue ${issueId}`);
     await this.issueHistoryService.deleteIssueHistory(issueId);
+  }
+
+  async handleSubscription(
+    userId: string,
+    issueId: string,
+    type: SubscribeType,
+  ) {
+    const issue = await this.prisma.issue.findUnique({
+      where: { id: issueId },
+    });
+    const subscriberIds = getSubscriberIds(
+      userId,
+      null,
+      issue.subscriberIds,
+      type,
+    );
+    return await this.prisma.issue.update({
+      where: { id: issueId },
+      data: { subscriberIds },
+    });
   }
 }

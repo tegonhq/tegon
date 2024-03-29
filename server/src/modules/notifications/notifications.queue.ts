@@ -3,6 +3,7 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Queue } from 'bull';
+
 import {
   NotificationData,
   NotificationEventFrom,
@@ -21,7 +22,7 @@ export class NotificationsQueue {
     notificationData: NotificationData,
   ) {
     this.logger.log(`Adding notifications to Queue with event: ${eventType}`);
-    return await this.notificationsQueue.add('addToNotification', {
+    return this.notificationsQueue.add('addToNotification', {
       eventType,
       createdById,
       notificationData,
@@ -32,7 +33,7 @@ export class NotificationsQueue {
     eventType: NotificationEventFrom,
     notificationData: NotificationData,
   ) {
-    return await this.notificationsQueue.add('deleteNotificationByEvent', {
+    return this.notificationsQueue.add('deleteNotificationByEvent', {
       eventType,
       notificationData,
     });

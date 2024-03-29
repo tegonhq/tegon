@@ -5,6 +5,7 @@ import { PrismaService } from 'nestjs-prisma';
 
 import IssuesService from 'modules/issues/issues.service';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
+import NotificationsService from 'modules/notifications/notifications.service';
 import {
   WebhookEventBody,
   WebhookEventHeaders,
@@ -18,7 +19,6 @@ import {
   handleRepositories,
 } from './github.handlers';
 import { eventsToListen } from './github.interface';
-import NotificationsService from 'modules/notifications/notifications.service';
 
 @Injectable()
 export default class GithubService {

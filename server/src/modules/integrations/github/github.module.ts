@@ -10,11 +10,11 @@ import IssueRelationService from 'modules/issue-relation/issue-relation.service'
 import { IssuesModule } from 'modules/issues/issues.module';
 import IssuesService from 'modules/issues/issues.service';
 import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
+import { NotificationsModule } from 'modules/notifications/notifications.module';
 
 import { GithubProcessor } from './github.processor';
 import { GithubQueue } from './github.queue';
 import GithubService from './github.service';
-import { NotificationsModule } from 'modules/notifications/notifications.module';
 
 @Module({
   imports: [

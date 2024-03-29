@@ -9,14 +9,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Notification } from '@prisma/client';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
-import NotificationsService from './notifications.service';
+
 import {
   NotificationIdRequestParams,
   updateNotificationBody,
 } from './notifications.interface';
-import { Notification } from '@prisma/client';
+import NotificationsService from './notifications.service';
 
 @Controller({
   version: '1',
