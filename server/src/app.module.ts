@@ -30,6 +30,7 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SearchModule } from 'modules/search/search.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { AppService } from './app.service';
     IssueHistoryModule,
     LinkedIssueModule,
     IssueRelationModule,
+    SearchModule,
 
     ReplicationModule,
     SyncActionsModule,
