@@ -7,14 +7,6 @@ import {
   RiMoreFill,
   type RemixiconComponentType,
 } from '@remixicon/react';
-import {
-  BlockedFill,
-  BlockingToLine,
-  DuplicateLine,
-  ParentIssueLine,
-  RelatedIssueLine,
-  SubIssueLine,
-} from 'icons';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -47,6 +39,14 @@ import {
 } from 'components/ui/dropdown-menu';
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
+import {
+  BlockedFill,
+  BlockingToLine,
+  DuplicateLine,
+  ParentIssueLine,
+  RelatedIssueLine,
+  SubIssueLine,
+} from 'icons';
 
 import { useDeleteIssueMutation } from 'services/issues';
 

@@ -2,9 +2,11 @@
 
 import { useRouter } from 'next/router';
 
+import type { IssueType } from 'common/types/issue';
+
 import { useContextStore } from 'store/global-context-provider';
 
-export function useIssueData() {
+export function useIssueData(): IssueType {
   const {
     query: { issueId },
   } = useRouter();

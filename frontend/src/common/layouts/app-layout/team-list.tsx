@@ -4,8 +4,6 @@ import { RiArrowRightSFill, RiFunctionFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { IssuesLine, TeamLine, TriageLine } from 'icons';
-
 import type { TeamType } from 'common/types/team';
 
 import {
@@ -14,6 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from 'components/ui/accordion';
+import { IssuesLine, TeamLine, TriageLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 

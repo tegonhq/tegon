@@ -2,10 +2,9 @@
 
 import { observer } from 'mobx-react-lite';
 
-import { TriageFill } from 'icons';
-
 import { useCurrentTeam } from 'hooks/teams';
 import { useAllTeamWorkflows } from 'hooks/workflows';
+import { TriageFill } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 

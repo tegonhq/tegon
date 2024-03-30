@@ -1,12 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Inbox } from 'icons';
-
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
 } from 'components/ui/breadcrumb';
+import { Inbox } from 'icons';
 
 export function Header() {
   return (

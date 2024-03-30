@@ -1,7 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { AssigneeLine } from 'icons';
-
 import {
   Avatar,
   AvatarFallback,
@@ -15,6 +13,7 @@ import {
   CommandInput,
   CommandItem,
 } from 'components/ui/command';
+import { AssigneeLine } from 'icons';
 
 import type { User } from 'store/user-context';
 

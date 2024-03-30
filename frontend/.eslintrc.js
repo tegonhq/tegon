@@ -23,7 +23,6 @@ module.exports = {
   },
   rules: {
     curly: 'warn',
-    'dot-location': 'warn',
     eqeqeq: 'error',
     'prettier/prettier': 'warn',
     'unused-imports/no-unused-imports': 'warn',
@@ -67,7 +66,7 @@ module.exports = {
             position: 'after',
           },
           {
-            pattern: '+(components|hooks){/**,}',
+            pattern: '+(icons|components|hooks){/**,}',
             group: 'internal',
             position: 'after',
           },

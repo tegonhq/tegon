@@ -19,6 +19,7 @@ export interface IssueType {
   labelIds: string[];
   parentId?: string;
   stateId: string;
+  subscriberIds: string[];
 
   // for frontend usage
   children?: IssueType[];
@@ -64,4 +65,9 @@ export interface IssueCommentType {
   issueId: string;
   parentId: string;
   sourceMetadata?: string;
+}
+
+export enum SubscribeType {
+  SUBSCRIBE = 'SUBSCRIBE',
+  UNSUBSCRIBE = 'UNSUBSCRIBE',
 }

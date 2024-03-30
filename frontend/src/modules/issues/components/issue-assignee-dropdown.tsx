@@ -2,8 +2,6 @@
 
 import * as React from 'react';
 
-import { AssigneeLine } from 'icons';
-
 import { cn } from 'common/lib/utils';
 
 import {
@@ -15,6 +13,7 @@ import {
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useUsersData } from 'hooks/users/use-users-data';
+import { AssigneeLine } from 'icons';
 
 import type { User } from 'store/user-context';
 

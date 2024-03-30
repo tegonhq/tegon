@@ -7,11 +7,10 @@ import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import { AssigneeLine } from 'icons';
-
 import { cn } from 'common/lib/utils';
 
 import { Button, buttonVariants } from 'components/ui/button';
+import { AssigneeLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 

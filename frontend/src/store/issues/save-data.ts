@@ -29,6 +29,7 @@ export async function saveIssuesData(
         labelIds: record.data.labelIds,
         parentId: record.data.parentId,
         stateId: record.data.stateId,
+        subscriberIds: record.data.subscriberIds,
       };
 
       switch (record.action) {

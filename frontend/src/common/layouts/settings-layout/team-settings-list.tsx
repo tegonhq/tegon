@@ -5,8 +5,6 @@ import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { TeamLine } from 'icons';
-
 import { cn } from 'common/lib/utils';
 import type { TeamType } from 'common/types/team';
 
@@ -17,6 +15,7 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 import { buttonVariants } from 'components/ui/button';
+import { TeamLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 

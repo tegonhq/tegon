@@ -1,6 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { TeamLine } from 'icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -10,6 +9,7 @@ import {
   BreadcrumbLink,
 } from 'components/ui/breadcrumb';
 import { useCurrentTeam } from 'hooks/teams';
+import { TeamLine } from 'icons';
 
 interface HeaderProps {
   title: string;

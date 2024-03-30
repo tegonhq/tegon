@@ -3,19 +3,18 @@
 import { RiCheckLine } from '@remixicon/react';
 
 import {
+  Command,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from 'components/ui/command';
+import {
   NoPriorityLine,
   PriorityHigh,
   PriorityLow,
   PriorityMedium,
   UrgentFill,
 } from 'icons';
-
-import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from 'components/ui/command';
 
 interface IssuePriorityDropdownContentProps {
   onChange?: (priority: number) => void;

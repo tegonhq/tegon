@@ -1,8 +1,6 @@
-/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiAddLine } from '@remixicon/react';
-import { LabelFill } from 'icons';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -13,6 +11,7 @@ import { Badge, BadgeColor } from 'components/ui/badge';
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useTeamLabels } from 'hooks/labels/use-team-labels';
+import { LabelFill } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 

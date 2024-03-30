@@ -2,6 +2,8 @@
 
 import { RiCloseCircleFill } from '@remixicon/react';
 
+import type { WorkflowType } from 'common/types/team';
+
 import {
   BacklogLine,
   DoneFill,
@@ -10,8 +12,6 @@ import {
   TodoLine,
   TriageFill,
 } from 'icons';
-
-import type { WorkflowType } from 'common/types/team';
 
 interface WorkflowItemProps {
   workflow: WorkflowType;

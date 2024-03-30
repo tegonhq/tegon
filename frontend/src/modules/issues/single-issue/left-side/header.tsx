@@ -1,7 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiCheckLine, RiCloseLine } from '@remixicon/react';
-import { TeamLine } from 'icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -13,6 +12,7 @@ import {
 } from 'components/ui/breadcrumb';
 import { Button } from 'components/ui/button';
 import { useCurrentTeam } from 'hooks/teams';
+import { TeamLine } from 'icons';
 
 import { IssueOptionsDropdown } from './issue-options-dropdown';
 import { TriageAcceptModal } from '../triage-view/triage-accept-modal';

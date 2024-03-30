@@ -3,8 +3,6 @@
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { FocusLine, Inbox, SettingsLine } from 'icons';
-
 import { cn } from 'common/lib/utils';
 import { AllProviders } from 'common/wrappers/all-providers';
 
@@ -13,6 +11,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from 'components/ui/resizable';
+import { FocusLine, Inbox, SettingsLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 

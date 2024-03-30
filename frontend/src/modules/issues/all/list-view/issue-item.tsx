@@ -1,7 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import { RiArrowRightSLine } from '@remixicon/react';
 import dayjs from 'dayjs';
-import { BlockedFill, BlockingToLine } from 'icons';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 
@@ -19,6 +18,7 @@ import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { Badge } from 'components/ui/badge';
 import { useCurrentTeam } from 'hooks/teams/use-current-team';
+import { BlockedFill, BlockingToLine } from 'icons';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 

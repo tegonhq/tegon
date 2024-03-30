@@ -3,14 +3,13 @@
 import { RiSearch2Line } from '@remixicon/react';
 import * as React from 'react';
 
-import { NewIssueLine } from 'icons';
-
 import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
 
 import { cn } from 'common/lib/utils';
 
 import { Button } from 'components/ui/button';
 import { Dialog, DialogTrigger } from 'components/ui/dialog';
+import { NewIssueLine } from 'icons';
 
 import { WorkspaceDropdown } from './workspace-dropdown';
 

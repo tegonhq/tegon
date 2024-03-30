@@ -5,14 +5,13 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { TeamLine } from 'icons';
-
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
 } from 'components/ui/breadcrumb';
 import { useCurrentTeam } from 'hooks/teams';
+import { TeamLine } from 'icons';
 
 import { DisplayPopover } from './display-popover';
 import { FilterDropdown } from './filter-dropdown';
