@@ -10,7 +10,7 @@
     --card-foreground: 221 39% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 221 39% 11%;
-    --primary: 221.2 83.2% 53.3%;
+    --primary: 221.2 83.2% 63.3%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 229 47.4% 11.2%;
@@ -33,7 +33,7 @@
     --card-foreground: 210 40% 98%;
     --popover: 221 39% 11%;
     --popover-foreground: 210 40% 98%;
-    --primary: 221.2 83.2% 53.3%;
+    --primary: 221.2 83.2% 60%;
     --primary-foreground: 229 47.4% 11.2%;
     --secondary: 215 28% 17%;
     --secondary-foreground: 210 40% 98%;
@@ -70,48 +70,59 @@
   }
 }
 
-.editor-checkbox label {
-  display: flex;
-  align-items: center;
-  background-color: black;
+/* Custom TODO list checkboxes – shoutout to this awesome tutorial: https://moderncss.dev/pure-css-custom-checkbox-style/ */
+ul[data-type='taskList'] li > label {
+  margin-right: 0.2rem;
+  user-select: none;
 }
 
-.editor-checkbox input {
-  @apply h-2 w-2 mr-2 focus-visible:outline-none;
+@media screen and (max-width: 768px) {
+  ul[data-type='taskList'] li > label {
+    margin-right: 0.5rem;
+  }
 }
 
-.editor-checkbox span {
-  @apply h-4 w-4 bg-background border-1 rounded-sm;
+ul[data-type='taskList'] li > label input[type='checkbox'] {
+  @apply bg-background border border-gray-300 dark:border-gray-600 rounded-sm;
 
-  position: absolute;
-  left: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  cursor: pointer;
+  width: 1rem;
+  height: 1rem;
+  position: relative;
+  margin-top: 0.3rem;
+  display: grid;
+  place-content: center;
+}
+ul[data-type='taskList'] li > label input[type='checkbox']:hover {
+  @apply bg-background/80;
 }
 
-.editor-checkbox input:checked ~ span {
-  @apply bg-primary border-primary;
+ul[data-type='taskList'] li > label input[type='checkbox']:active {
+  @apply bg-background/90;
 }
 
-.editor-checkbox span:after {
+ul[data-type='taskList'] li > label input[type='checkbox']::before {
   content: '';
-  position: absolute;
-  display: none;
+  width: 0.5em;
+  height: 0.5em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em;
+  transform-origin: center;
+  clippath: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
 }
 
-.editor-checkbox input:checked ~ span:after {
-  display: block;
+ul[data-type='taskList'] li > label input[type='checkbox']:checked::before {
+  transform: scale(1);
 }
 
-.editor-checkbox span:after {
-  @apply dark:border-slate-800 border-slate-100;
-
-  left: 5px;
-  top: 1px;
-  width: 5px;
-  height: 10px;
-  border-width: 0 1px 1px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
+ul[data-type='taskList'] li[data-checked='true'] > div > p {
+  color: rgb(var(--color-text-200));
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
 }
 
 .tiptap p.is-editor-empty:first-child::before {

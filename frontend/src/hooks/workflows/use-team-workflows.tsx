@@ -63,3 +63,35 @@ export function useTeamWorkflows(
 
   return workflows;
 }
+
+export function useAllTeamWorkflows(
+  teamIdentfier: string,
+): WorkflowType[] | undefined {
+  const team = useTeam(teamIdentfier);
+  const { workflowsStore } = useContextStore();
+  const workflowCategories = Object.values(WorkflowCategoryEnum);
+
+  const getWorkflows = () => {
+    if (!team) {
+      return [];
+    }
+
+    const workflows = workflowsStore.workflows.filter(
+      (workflow: WorkflowType) => {
+        return (
+          workflow.teamId === team.id &&
+          workflowCategories.includes(workflow.category)
+        );
+      },
+    );
+
+    return workflows;
+  };
+
+  const workflows = React.useMemo(
+    () => computed(() => getWorkflows()),
+    [team, workflowsStore],
+  ).get();
+
+  return workflows;
+}

@@ -18,7 +18,7 @@ export function Header() {
   const { toast } = useToast();
 
   return (
-    <div className="flex pl-7 px-4 py-[10px] w-full border-b justify-between items-center">
+    <div className="flex pl-7 px-4 py-3 w-full border-b justify-between items-center">
       <div className="text-sm text-muted-foreground w-[95px] text-left">
         {issueId}
       </div>

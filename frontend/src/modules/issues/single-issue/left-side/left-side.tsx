@@ -21,7 +21,11 @@ import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
 import { SubIssueView } from './sub-issue-view';
 
-export const LeftSide = observer(() => {
+interface LeftSideProps {
+  isTriageView?: boolean;
+}
+
+export const LeftSide = observer(({ isTriageView }: LeftSideProps) => {
   const issue = useIssueData();
   const team = useCurrentTeam();
   const [newIssueState, setNewIssueState] = React.useState(false);
@@ -46,7 +50,7 @@ export const LeftSide = observer(() => {
 
   return (
     <>
-      <Header />
+      <Header isTriageView={isTriageView} />
       <div className="flex xl:hidden px-8 py-2 border-b">
         <FilterSmall />
       </div>

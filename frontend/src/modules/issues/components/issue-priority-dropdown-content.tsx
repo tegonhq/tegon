@@ -1,8 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiCheckLine } from '@remixicon/react';
+
 import {
-  CheckLine,
   NoPriorityLine,
   PriorityHigh,
   PriorityLow,
@@ -65,7 +65,7 @@ export function IssuePriorityDropdownContent({
 
                 {index === value && (
                   <div>
-                    <CheckLine size={14} className="text-muted-foreground" />
+                    <RiCheckLine size={14} className="text-muted-foreground" />
                   </div>
                 )}
               </div>

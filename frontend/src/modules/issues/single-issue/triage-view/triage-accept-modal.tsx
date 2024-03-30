@@ -44,7 +44,7 @@ interface TriageAcceptModalProps {
 }
 
 const AcceptIssueSchema = z.object({
-  comment: z.string(),
+  comment: z.optional(z.string()),
 
   stateId: z.string(),
 
@@ -89,10 +89,12 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
       priority: values.priority,
     });
 
-    commentIssue({
-      body: values.comment,
-      issueId: issue.id,
-    });
+    if (values.comment) {
+      commentIssue({
+        body: values.comment,
+        issueId: issue.id,
+      });
+    }
 
     setDialogOpen(false);
   };
@@ -131,7 +133,7 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
                           </Avatar>
                           <Textarea
                             {...field}
-                            className="focus-visible:ring-0 border-0 mb-4 w-full min-h-[60px] text-foreground shadow-sm p-0"
+                            className="focus-visible:ring-0 border-0 mb-4 w-full min-h-[60px] text-foreground p-0"
                             placeholder="Add a comment"
                           />
                         </div>

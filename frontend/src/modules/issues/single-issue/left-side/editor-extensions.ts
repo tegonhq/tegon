@@ -29,9 +29,9 @@ const taskList = TaskList.configure({
 });
 const taskItem = TaskItem.configure({
   HTMLAttributes: {
-    class: cx('flex items-center gap-2 editor-checkbox mb-2'),
+    class: cx('flex items-start gap-1 my-2'),
   },
-  nested: false,
+  nested: true,
 });
 
 const horizontalRule = HorizontalRule.configure({

@@ -29,7 +29,6 @@ export async function saveIssueRelationData(
           await tegonDatabase.issueRelations.put(issueRelation);
           return (
             issueRelationsStore &&
-            issueRelationsStore.issueId === record.data.issueId &&
             (await issueRelationsStore.update(issueRelation, record.data.id))
           );
         }
@@ -38,7 +37,6 @@ export async function saveIssueRelationData(
           await tegonDatabase.issueRelations.put(issueRelation);
           return (
             issueRelationsStore &&
-            issueRelationsStore.issueId === record.data.issueId &&
             (await issueRelationsStore.update(issueRelation, record.data.id))
           );
         }
@@ -47,7 +45,6 @@ export async function saveIssueRelationData(
           await tegonDatabase.issueRelations.delete(record.data.id);
           return (
             issueRelationsStore &&
-            issueRelationsStore.issueId === record.data.issueId &&
             (await issueRelationsStore.deleteById(record.data.id))
           );
         }

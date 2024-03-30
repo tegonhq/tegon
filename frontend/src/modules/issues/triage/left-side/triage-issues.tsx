@@ -16,7 +16,7 @@ import {
 } from 'components/ui/avatar';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
-import { useTeamWorkflows } from 'hooks/workflows';
+import { useAllTeamWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
@@ -24,7 +24,7 @@ import type { User } from 'store/user-context';
 export const TriageIssues = observer(() => {
   const currentTeam = useCurrentTeam();
   const { issuesStore } = useContextStore();
-  const workflows = useTeamWorkflows(currentTeam.identifier);
+  const workflows = useAllTeamWorkflows(currentTeam.identifier);
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,
@@ -52,15 +52,21 @@ export const TriageIssues = observer(() => {
 
   return (
     <div className="flex flex-col p-2">
-      {issues.map((issue: IssueType) => {
+      {issues.map((issue: IssueType, index: number) => {
+        const nextIssue = issues[index + 1];
+        const noBorder =
+          (nextIssue &&
+            issueId === `${currentTeam.identifier}-${nextIssue.number}`) ||
+          issueId === `${currentTeam.identifier}-${issue.number}`;
+
         return (
           <div
             key={issue.id}
             className={cn(
               'p-4 py-3 flex flex-col gap-2',
-              issueId === `${currentTeam.identifier}-${issue.number}`
-                ? 'bg-primary/10 rounded-md'
-                : 'border-b',
+              issueId === `${currentTeam.identifier}-${issue.number}` &&
+                'bg-primary/10 rounded-md',
+              !noBorder && 'border-b',
             )}
             onClick={() => {
               push(

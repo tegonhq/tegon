@@ -8,7 +8,7 @@ import { type IssueType } from 'common/types/issue';
 import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { useCurrentTeam } from 'hooks/teams';
-import { useTeamWorkflows } from 'hooks/workflows';
+import { useAllTeamWorkflows } from 'hooks/workflows';
 
 import { useUpdateIssueMutation } from 'services/issues';
 
@@ -22,7 +22,7 @@ interface ModalIssueItemProps {
 export const ModalIssueItem = observer(
   ({ issue, onClose, currentIssue, type }: ModalIssueItemProps) => {
     const currentTeam = useCurrentTeam();
-    const workflows = useTeamWorkflows(currentTeam.identifier);
+    const workflows = useAllTeamWorkflows(currentTeam.identifier);
     const workflow = workflows.find(
       (workflow) => workflow.id === issue.stateId,
     );
@@ -79,7 +79,9 @@ export const ModalIssueItem = observer(
           color={workflow.color}
         />
         <div className="text-sm text-foreground mr-3">{`${currentTeam.identifier}-${issue.number}`}</div>
-        <div className="text-sm text-muted-foreground">{issue.title}</div>
+        <div className="text-sm text-muted-foreground max-w-[300px]">
+          <div className="truncate"> {issue.title}</div>
+        </div>
       </div>
     );
   },

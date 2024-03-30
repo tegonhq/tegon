@@ -5,14 +5,14 @@ import { observer } from 'mobx-react-lite';
 import { TriageFill } from 'icons';
 
 import { useCurrentTeam } from 'hooks/teams';
-import { useTeamWorkflows } from 'hooks/workflows';
+import { useAllTeamWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
 export const RightSide = observer(() => {
   const currentTeam = useCurrentTeam();
   const { issuesStore } = useContextStore();
-  const workflows = useTeamWorkflows(currentTeam.identifier);
+  const workflows = useAllTeamWorkflows(currentTeam.identifier);
   const triageWorkflow = workflows[0];
   const issues = issuesStore.getIssuesForState(
     triageWorkflow.id,

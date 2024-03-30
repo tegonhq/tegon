@@ -12,7 +12,7 @@ import type { IssueRelationType } from 'common/types/issue-relation';
 
 import { Button } from 'components/ui/button';
 import { useCurrentTeam } from 'hooks/teams';
-import { useTeamWorkflows } from 'hooks/workflows';
+import { useAllTeamWorkflows } from 'hooks/workflows';
 
 import { useDeleteIssueRelationMutation } from 'services/issue-relation';
 
@@ -24,7 +24,7 @@ interface RelatedIssueItemProps {
 export const RelatedIssueItem = observer(
   ({ issue, relation }: RelatedIssueItemProps) => {
     const currentTeam = useCurrentTeam();
-    const workflows = useTeamWorkflows(currentTeam.identifier);
+    const workflows = useAllTeamWorkflows(currentTeam.identifier);
     const workflow = workflows.find(
       (workflow) => workflow.id === issue.stateId,
     );

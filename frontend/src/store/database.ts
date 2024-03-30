@@ -14,6 +14,7 @@ import type {
 import type { IssueRelationType } from 'common/types/issue-relation';
 import type { LabelType } from 'common/types/label';
 import type { LinkedIssueType } from 'common/types/linked-issue';
+import type { NotificationType } from 'common/types/notification';
 import type { TeamType, WorkflowType } from 'common/types/team';
 import type {
   UsersOnWorkspaceType,
@@ -35,6 +36,7 @@ export class TegonDatabase extends Dexie {
   integrationAccounts: Dexie.Table<IntegrationAccountType, string>;
   linkedIssues: Dexie.Table<LinkedIssueType, string>;
   issueRelations: Dexie.Table<IssueRelationType, string>;
+  notifications: Dexie.Table<NotificationType, string>;
 
   constructor() {
     super('TegonDatabase');
@@ -62,6 +64,8 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,url,sourceId,source,sourceData,issueId,createdById',
       [MODELS.IssueRelation]:
         'id,createdAt,updatedAt,issueId,createdById,type,relatedIssueId',
+      [MODELS.Notification]:
+        'id,createdAt,updatedAt,issueId,createdById,type,userId,actionData,sourceMetadata,readAt,workspaceId',
     });
 
     this.workspaces = this.table(MODELS.Workspace);
@@ -76,6 +80,7 @@ export class TegonDatabase extends Dexie {
     this.integrationAccounts = this.table(MODELS.IntegrationAccount);
     this.linkedIssues = this.table(MODELS.LinkedIssue);
     this.issueRelations = this.table(MODELS.IssueRelation);
+    this.notifications = this.table(MODELS.Notification);
   }
 }
 

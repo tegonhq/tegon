@@ -15,10 +15,8 @@ export const IssueStoreInit = observer(
     const {
       issuesHistoryStore,
       commentsStore,
-      issuesStore,
-      workflowsStore,
+
       linkedIssuesStore,
-      issueRelationsStore,
     } = useContextStore();
 
     const {
@@ -37,20 +35,13 @@ export const IssueStoreInit = observer(
     const initIssueBasedStored = React.useCallback(async () => {
       setLoading(true);
       const id = (issueId as string).split('-')[1];
-      const identifier = (issueId as string).split('-')[0];
       const issueData = await tegonDatabase.issues.get({
         number: parseInt(id),
       });
-      const teamData = await tegonDatabase.teams.get({
-        identifier,
-      });
 
-      await issuesStore.load(teamData.id);
-      await workflowsStore.load(teamData?.id);
       await issuesHistoryStore.load(issueData.id);
       await commentsStore.load(issueData.id);
       await linkedIssuesStore.load(issueData.id);
-      await issueRelationsStore.load(issueData.id);
 
       setLoading(false);
       // eslint-disable-next-line react-hooks/exhaustive-deps

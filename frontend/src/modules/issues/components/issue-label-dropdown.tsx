@@ -1,7 +1,8 @@
 /* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiAddLine, RiPriceTagFill } from '@remixicon/react';
+import { RiAddLine } from '@remixicon/react';
+import { LabelFill } from 'icons';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -115,7 +116,7 @@ export const IssueLabelDropdown = observer(
         const label = labels.find((label: LabelType) => label.id === value[0]);
         return (
           <>
-            <RiPriceTagFill size={18} className="text-muted-foreground mr-3" />
+            <LabelFill size={18} className="text-muted-foreground mr-3" />
             {label.name}
           </>
         );
@@ -124,7 +125,7 @@ export const IssueLabelDropdown = observer(
       if (value.length > 1) {
         return (
           <>
-            <RiPriceTagFill size={18} className="text-muted-foreground mr-3" />
+            <LabelFill size={18} className="text-muted-foreground mr-3" />
             {value.length} Labels
           </>
         );
