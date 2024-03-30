@@ -1,13 +1,14 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Issue } from '@prisma/client';
 import { Queue } from 'bull';
 
 import {
   IssueAction,
   IssueRequestParams,
+  IssueWithRelations,
   LinkIssueInput,
   TeamRequestParams,
 } from './issues.interface';
@@ -15,6 +16,7 @@ import {
 @Injectable()
 export class IssuesQueue {
   constructor(@InjectQueue('issues') private readonly issuesQueue: Queue) {}
+  private readonly logger: Logger = new Logger('IssueQueue');
 
   async addTwoWaySyncJob(issue: Issue, action: IssueAction, userId: string) {
     await this.issuesQueue.add('twoWaySync', { issue, action, userId });
@@ -32,5 +34,10 @@ export class IssuesQueue {
       issueParams,
       userId,
     });
+  }
+
+  async addIssueToVector(issue: IssueWithRelations) {
+    this.logger.log(`Adding issue to vector queue ${issue.id}`);
+    await this.issuesQueue.add('addIssueToVector', { issue });
   }
 }

@@ -21,6 +21,7 @@ export class SearchController {
     return await this.searchService.searchData(
       searchData.workspaceId,
       searchData.query,
+      searchData.limit,
     );
   }
 }

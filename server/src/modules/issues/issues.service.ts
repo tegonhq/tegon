@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Issue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
@@ -28,14 +28,13 @@ import {
   getIssueTitle,
   getLastIssueNumber,
 } from './issues.utils';
-// import { VectorService } from 'modules/vector/vector.service';
 
 const openaiClient = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
 });
 
 @Injectable()
-export default class IssuesService implements OnModuleInit {
+export default class IssuesService {
   private readonly logger: Logger = new Logger('IssueService');
 
   constructor(
@@ -43,19 +42,7 @@ export default class IssuesService implements OnModuleInit {
     private issueHistoryService: IssuesHistoryService,
     private issuesQueue: IssuesQueue,
     private issueRelationService: IssueRelationService,
-    // private vectorService: VectorService,
   ) {}
-
-  async onModuleInit() {
-    // const issue = await this.prisma.issue.findUnique({
-    //   where: { id: 'a5bec589-4c0c-40cf-adb9-b3d60d374d05' },
-    //   include: { team: true },
-    // });
-    // await this.vectorService.createIssueEmbedding(
-    //   issue.team.workspaceId,
-    //   issue,
-    // );
-  }
 
   async createIssue(
     teamRequestParams: TeamRequestParams,
@@ -109,6 +96,7 @@ export default class IssuesService implements OnModuleInit {
         userId,
       );
     }
+    this.issuesQueue.addIssueToVector(issue);
 
     return issue;
   }
@@ -183,6 +171,7 @@ export default class IssuesService implements OnModuleInit {
       );
     }
 
+    this.issuesQueue.addIssueToVector(updatedIssue);
     return updatedIssue;
   }
 

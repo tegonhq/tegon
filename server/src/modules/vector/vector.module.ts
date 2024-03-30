@@ -1,15 +1,24 @@
 import { Module } from '@nestjs/common';
 import { VectorService } from './vector.service';
-import { ChromaClient } from 'chromadb';
+import { Client as TypesenseClient } from 'typesense';
+import { PrismaModule } from 'nestjs-prisma';
 
 @Module({
+  imports: [PrismaModule],
   providers: [
     VectorService,
     {
-      provide: ChromaClient,
+      provide: TypesenseClient,
       useFactory: () =>
-        new ChromaClient({
-          path: process.env.CHROMA_HOST,
+        new TypesenseClient({
+          nodes: [
+            {
+              host: process.env.TYPESENSE_HOST,
+              port: Number(process.env.TYPESENSE_PORT),
+              protocol: process.env.TYPESENSE_PROTOCOL,
+            },
+          ],
+          apiKey: process.env.TYPESENSE_API_KEY,
         }),
     },
   ],

@@ -7,14 +7,12 @@ import { VectorService } from 'modules/vector/vector.service';
 export default class SearchService {
   constructor(private vectorService: VectorService) {}
 
-  async searchData(workspaceId: string, query: string) {
+  async searchData(workspaceId: string, query: string, limit: number = 10) {
     const searchData = await this.vectorService.searchEmbeddings(
-      `issues_${workspaceId}`,
-      await this.vectorService.generateEmbedding(query),
-      5,
+      workspaceId,
+      query,
+      limit,
     );
-
-    console.log(searchData);
 
     return searchData;
   }

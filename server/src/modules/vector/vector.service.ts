@@ -1,76 +1,81 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { ChromaClient, DefaultEmbeddingFunction } from 'chromadb';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Client as TypesenseClient } from 'typesense';
 import { IssueWithRelations } from 'modules/issues/issues.interface';
 import { PrismaService } from 'nestjs-prisma';
+import { issueSchema } from './vector.interface';
 
 @Injectable()
 export class VectorService implements OnModuleInit {
-  private embeddingFunction: DefaultEmbeddingFunction;
-
   constructor(
-    private chromaClient: ChromaClient,
     private prisma: PrismaService,
-  ) {
-    this.embeddingFunction = new DefaultEmbeddingFunction();
-  }
+    private typesenseClient: TypesenseClient,
+  ) {}
+
+  private readonly logger: Logger = new Logger('VectorService');
 
   async onModuleInit() {
-    // await this.prefillIssuesData('20363b77-0125-4f34-9d62-c038835d62bc');
-    // const results = await this.searchEmbeddings(
-    //   `issues_20363b77-0125-4f34-9d62-c038835d62bc`,
-    //   await this.generateEmbedding(`create notifications`),
-    //   5,
-    // );
-    // console.log(results);
+    await this.createIssuesCollection();
   }
 
-  async generateEmbedding(text: string): Promise<number[]> {
-    const embedding = await this.embeddingFunction.generate([text]);
-    return embedding[0];
+  async createIssuesCollection() {
+    try {
+      await this.typesenseClient.collections('issues').retrieve();
+      this.logger.log('Issues collection already exists');
+    } catch (error) {
+      if (error.httpStatus === 404) {
+        await this.typesenseClient.collections().create(issueSchema);
+      } else {
+        this.logger.error('Error creating issues collection:', error);
+      }
+    }
   }
 
-  async createIssueEmbedding(workspaceId: string, issue: IssueWithRelations) {
+  async createIssueEmbedding(issue: IssueWithRelations) {
     const issueNumber = `${issue.team.identifier}-${issue.number}`;
-    const embedding = await this.generateEmbedding(
-      `${issueNumber} ${issue.title} ${issue.description}`,
-    );
-    await this.addEmbedding(`issues_${workspaceId}`, embedding, {
-      id: issue.id,
-      identifier: issueNumber,
-      title: issue.title,
-      stateId: issue.stateId,
-    });
-  }
 
-  async addEmbedding(
-    collectionName: string,
-    embedding: number[],
-    metadata: Record<string, any>,
-  ) {
-    const collection = await this.chromaClient.getOrCreateCollection({
-      name: collectionName,
-    });
-    await collection.upsert({
-      embeddings: [embedding],
-      metadatas: [metadata],
-      ids: [metadata.id],
+    await this.typesenseClient.collections('issues').documents().upsert({
+      id: issue.id,
+      teamId: issue.teamId,
+      number: issue.number,
+      numberString: issue.number.toString(),
+      issueNumber: issueNumber,
+      title: issue.title,
+      description: issue.description,
+      stateId: issue.stateId,
+      workspaceId: issue.team.workspaceId,
     });
   }
 
   async searchEmbeddings(
-    collectionName: string,
-    query: number[],
+    workspaceId: string,
+    searchQuery: string,
     limit: number,
   ) {
-    const collection = await this.chromaClient.getCollection({
-      name: collectionName,
-    });
-    const results = await collection.query({
-      queryEmbeddings: query,
-      nResults: limit,
-    });
+    const searchParameters = {
+      q: searchQuery,
+      query_by: 'numberString,issueNumber,title,description,embedding',
+      filter_by: `workspaceId:=${workspaceId}`,
+      sort_by: '_text_match:desc',
+      vector_query: 'embedding:([], distance_threshold:0.80)',
+      page: 1,
+      per_page: limit,
+    };
 
-    return results;
+    const searchResults = await this.typesenseClient
+      .collections('issues')
+      .documents()
+      .search(searchParameters);
+
+    return searchResults.hits.map((hit: any) => ({
+      id: hit.document.id,
+      title: hit.document.title,
+      description: hit.document.description,
+      stateId: hit.document.stateId,
+      teamId: hit.document.teamId,
+      number: hit.document.number,
+      issueNumber: hit.document.issueNumber,
+      score: hit.hybrid_search_info.rank_fusion_score,
+    }));
   }
 
   async prefillIssuesData(workspaceId: string) {
@@ -80,10 +85,10 @@ export class VectorService implements OnModuleInit {
     });
 
     for (const issue of issues) {
-      await this.createIssueEmbedding(workspaceId, issue);
+      await this.createIssueEmbedding(issue);
     }
 
-    console.log(
+    this.logger.log(
       `Prefilled all issues data into vector for workspaceId: ${workspaceId}`,
     );
   }

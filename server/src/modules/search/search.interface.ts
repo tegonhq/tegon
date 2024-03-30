@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class SearchInputData {
   @IsString()
@@ -6,4 +6,8 @@ export class SearchInputData {
 
   @IsString()
   workspaceId: string;
+
+  @IsOptional()
+  @IsNumber()
+  limit?: number;
 }
