@@ -7,6 +7,7 @@ import { TriageIssues } from 'modules/issues/triage/left-side/triage-issues';
 import { Header } from '../../triage/left-side/header';
 import { LeftSide } from '../left-side/left-side';
 import { RightSide } from '../right-side/right-side';
+import { CheckLine } from 'icons';
 
 export function TriageView() {
   return (
