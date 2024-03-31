@@ -2,7 +2,7 @@
 
 import type { IconProps } from './types';
 
-export function TodoLine({ size = 18, className, color }: IconProps) {
+export function TodoLine({ size = 18, className }: IconProps) {
   return (
     <svg
       width={size}
@@ -19,7 +19,7 @@ export function TodoLine({ size = 18, className, color }: IconProps) {
         height="16.2"
         rx="8.1"
         stroke="currentColor"
-        stroke-width="1.8"
+        strokeWidth="1.8"
       />
     </svg>
   );

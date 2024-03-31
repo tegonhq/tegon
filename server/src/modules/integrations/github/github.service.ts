@@ -5,6 +5,7 @@ import { PrismaService } from 'nestjs-prisma';
 
 import IssuesService from 'modules/issues/issues.service';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
+import NotificationsService from 'modules/notifications/notifications.service';
 import {
   WebhookEventBody,
   WebhookEventHeaders,
@@ -25,6 +26,7 @@ export default class GithubService {
     private prisma: PrismaService,
     private issuesService: IssuesService,
     private linkedIssueService: LinkedIssueService,
+    private notificationsService: NotificationsService,
   ) {}
   private readonly logger: Logger = new Logger('GithubService', {
     timestamp: true,
@@ -66,6 +68,7 @@ export default class GithubService {
             this.prisma,
             this.logger,
             this.linkedIssueService,
+            this.notificationsService,
             eventBody,
             integrationAccount,
           );

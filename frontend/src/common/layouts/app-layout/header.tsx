@@ -3,14 +3,13 @@
 import { RiSearch2Line } from '@remixicon/react';
 import * as React from 'react';
 
-import { NewIssueLine } from 'icons';
-
 import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
 
 import { cn } from 'common/lib/utils';
 
 import { Button } from 'components/ui/button';
 import { Dialog, DialogTrigger } from 'components/ui/dialog';
+import { NewIssueLine } from 'icons';
 
 import { WorkspaceDropdown } from './workspace-dropdown';
 
@@ -18,7 +17,7 @@ export function Header() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
   return (
-    <div className="flex flex-col m-3 text-slate-700 dark:text-slate-300">
+    <div className="flex flex-col m-3 my-2 text-slate-700 dark:text-slate-300">
       <div className="flex justify-between items-center">
         <WorkspaceDropdown />
       </div>

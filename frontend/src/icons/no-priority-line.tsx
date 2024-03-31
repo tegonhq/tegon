@@ -2,7 +2,7 @@
 
 import type { IconProps } from './types';
 
-export function NoPriorityLine({ size = 18, className, color }: IconProps) {
+export function NoPriorityLine({ size = 18, className }: IconProps) {
   return (
     <svg
       width={size}
@@ -15,8 +15,8 @@ export function NoPriorityLine({ size = 18, className, color }: IconProps) {
       <path
         d="M2 10H18"
         stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
+        strokeWidth="2"
+        strokeLinecap="round"
       />
     </svg>
   );

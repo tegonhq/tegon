@@ -33,13 +33,18 @@ export class IntegrationAccountService {
           integrationDefinitionId,
         },
       },
-      update: { integrationConfiguration: config, deleted: null },
+      update: {
+        integrationConfiguration: config,
+        deleted: null,
+        isActive: true,
+      },
       create: {
         integrationDefinition: { connect: { id: integrationDefinitionId } },
         workspace: { connect: { id: workspaceId } },
         integrationConfiguration: config,
         accountId: createIntegrationAccountBody.accountId,
         integratedBy: { connect: { id: userId } },
+        isActive: true,
       },
       include: {
         integrationDefinition: true,
@@ -80,6 +85,7 @@ export class IntegrationAccountService {
       },
       data: {
         deleted: new Date().toISOString(),
+        isActive: false,
       },
       include: {
         integrationDefinition: true,

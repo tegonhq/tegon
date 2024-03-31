@@ -30,7 +30,7 @@ export const WorkspaceDropdown = observer(() => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="px-2">
+        <Button variant="ghost" className="px-2 text-foreground">
           <div className="flex justify-between">
             <Avatar className="h-[20px] w-[25px] ">
               <AvatarImage />

@@ -3,8 +3,6 @@
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { SettingsLine } from 'icons';
-
 import { cn } from 'common/lib/utils';
 import { AllProviders } from 'common/wrappers/all-providers';
 
@@ -13,6 +11,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from 'components/ui/resizable';
+import { FocusLine, Inbox, SettingsLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -26,7 +25,7 @@ interface LayoutProps {
 }
 
 export function AppLayoutChild({ children }: LayoutProps) {
-  const { applicationStore } = useContextStore();
+  const { applicationStore, notificationsStore } = useContextStore();
   const isCollapsed = applicationStore.displaySettings.sidebarCollapsed;
   const {
     query: { workspaceSlug },
@@ -75,16 +74,17 @@ export function AppLayoutChild({ children }: LayoutProps) {
                 <Header />
                 <Nav
                   links={[
-                    // {
-                    //   title: 'Inbox',
-                    //   icon: RiInbox2Fill,
-                    //   href: '/inbox',
-                    // },
-                    // {
-                    //   title: 'My issues',
-                    //   icon: RiFocusMode,
-                    //   href: `/${workspaceSlug}/my-issues`,
-                    // },
+                    {
+                      title: 'Inbox',
+                      icon: Inbox,
+                      href: `/${workspaceSlug}/inbox`,
+                      count: notificationsStore.unReadCount,
+                    },
+                    {
+                      title: 'My issues',
+                      icon: FocusLine,
+                      href: `/${workspaceSlug}/my-issues`,
+                    },
                     {
                       title: 'Settings',
                       icon: SettingsLine,

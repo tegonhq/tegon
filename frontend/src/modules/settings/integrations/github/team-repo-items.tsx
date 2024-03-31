@@ -1,11 +1,8 @@
-/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiDeleteBin7Fill, RiGithubFill, RiPencilFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-
-import { TeamLine } from 'icons';
 
 import { cn } from 'common/lib/utils';
 import type {
@@ -31,6 +28,7 @@ import { Badge } from 'components/ui/badge';
 import { Button } from 'components/ui/button';
 import { Dialog } from 'components/ui/dialog';
 import { useToast } from 'components/ui/use-toast';
+import { TeamLine } from 'icons';
 
 import { useUpdateIntegrationAccountMutation } from 'services/oauth';
 

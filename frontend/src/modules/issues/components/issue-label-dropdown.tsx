@@ -1,7 +1,6 @@
-/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiAddLine, RiPriceTagFill } from '@remixicon/react';
+import { RiAddLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -12,6 +11,7 @@ import { Badge, BadgeColor } from 'components/ui/badge';
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useTeamLabels } from 'hooks/labels/use-team-labels';
+import { LabelFill } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -115,7 +115,7 @@ export const IssueLabelDropdown = observer(
         const label = labels.find((label: LabelType) => label.id === value[0]);
         return (
           <>
-            <RiPriceTagFill size={18} className="text-muted-foreground mr-3" />
+            <LabelFill size={18} className="text-muted-foreground mr-3" />
             {label.name}
           </>
         );
@@ -124,7 +124,7 @@ export const IssueLabelDropdown = observer(
       if (value.length > 1) {
         return (
           <>
-            <RiPriceTagFill size={18} className="text-muted-foreground mr-3" />
+            <LabelFill size={18} className="text-muted-foreground mr-3" />
             {value.length} Labels
           </>
         );

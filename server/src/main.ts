@@ -1,7 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-/* eslint-disable dot-location */
-
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';

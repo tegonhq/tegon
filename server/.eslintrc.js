@@ -22,7 +22,6 @@ module.exports = {
   },
   rules: {
     curly: 'warn',
-    'dot-location': 'warn',
     eqeqeq: 'error',
     'prettier/prettier': 'warn',
     'unused-imports/no-unused-imports': 'warn',

@@ -2,8 +2,6 @@
 
 import * as React from 'react';
 
-import { TeamLine } from 'icons';
-
 import type { TeamType } from 'common/types/team';
 
 import { Button } from 'components/ui/button';
@@ -13,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
+import { TeamLine } from 'icons';
 
 import { tegonDatabase } from 'store/database';
 

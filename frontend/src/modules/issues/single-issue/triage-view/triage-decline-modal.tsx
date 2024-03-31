@@ -38,7 +38,7 @@ interface TriageDeclineModalProps {
 }
 
 const DeclineIssueSchema = z.object({
-  comment: z.string(),
+  comment: z.optional(z.string()),
 });
 
 interface DeclineIssueParams {
@@ -68,10 +68,12 @@ export function TriageDeclineModal({ setDialogOpen }: TriageDeclineModalProps) {
       stateId: cancelledWorkflow,
     });
 
-    commentIssue({
-      body: values.comment,
-      issueId: issue.id,
-    });
+    if (values.comment) {
+      commentIssue({
+        body: values.comment,
+        issueId: issue.id,
+      });
+    }
 
     setDialogOpen(false);
   };

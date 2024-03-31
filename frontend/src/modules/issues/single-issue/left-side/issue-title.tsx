@@ -10,18 +10,14 @@ interface IssueTitleProps {
   onChange?: (value: string) => void;
 }
 
+// When the issue title changes in the background this doesn't get updated
+// TODO: fix this
 export function IssueTitle({ value, onChange }: IssueTitleProps) {
   const [inputValue, setInputValue] = React.useState(value);
 
   const debouncedUpdates = useDebouncedCallback(async (title: string) => {
     onChange && onChange(title);
   }, 500);
-
-  React.useEffect(() => {
-    if (value !== inputValue) {
-      setInputValue(value);
-    }
-  }, [inputValue, value]);
 
   const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.currentTarget.value);

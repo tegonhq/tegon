@@ -7,8 +7,6 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { TeamLine } from 'icons';
-
 import { cn } from 'common/lib/utils';
 import type {
   GithubRepositories,
@@ -39,6 +37,7 @@ import {
 import { Switch } from 'components/ui/switch';
 import { useToast } from 'components/ui/use-toast';
 import { useTeams } from 'hooks/teams';
+import { TeamLine } from 'icons';
 
 import { useUpdateIntegrationAccountMutation } from 'services/oauth';
 

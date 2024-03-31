@@ -7,7 +7,7 @@ import { WorkflowCategoryEnum } from 'common/types/team';
 
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
-import { useTeamWorkflows } from 'hooks/workflows';
+import { useAllTeamWorkflows } from 'hooks/workflows';
 
 import { LeftSide } from './left-side/left-side';
 import { RightSide } from './right-side/right-side';
@@ -15,7 +15,7 @@ import { TriageView } from './triage-view';
 
 export const IssueView = observer(() => {
   const currentTeam = useCurrentTeam();
-  const workflows = useTeamWorkflows(currentTeam.identifier);
+  const workflows = useAllTeamWorkflows(currentTeam.identifier);
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,

@@ -7,6 +7,7 @@ import ReactTimeAgo from 'react-time-ago';
 import { cn } from 'common/lib/utils';
 import type { IssueType } from 'common/types/issue';
 import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
+import { getUserData } from 'common/user-util';
 
 import {
   Avatar,
@@ -16,15 +17,14 @@ import {
 } from 'components/ui/avatar';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
-import { useTeamWorkflows } from 'hooks/workflows';
+import { useAllTeamWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
-import type { User } from 'store/user-context';
 
 export const TriageIssues = observer(() => {
   const currentTeam = useCurrentTeam();
   const { issuesStore } = useContextStore();
-  const workflows = useTeamWorkflows(currentTeam.identifier);
+  const workflows = useAllTeamWorkflows(currentTeam.identifier);
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,
@@ -35,10 +35,6 @@ export const TriageIssues = observer(() => {
 
     push,
   } = useRouter();
-
-  function getUserData(userId: string) {
-    return usersData.find((userData: User) => userData.id === userId);
-  }
 
   const issues = issuesStore.getIssuesForState(
     triageWorkflow.id,
@@ -52,15 +48,22 @@ export const TriageIssues = observer(() => {
 
   return (
     <div className="flex flex-col p-2">
-      {issues.map((issue: IssueType) => {
+      {issues.map((issue: IssueType, index: number) => {
+        const nextIssue = issues[index + 1];
+        const noBorder =
+          (nextIssue &&
+            issueId === `${currentTeam.identifier}-${nextIssue.number}`) ||
+          issueId === `${currentTeam.identifier}-${issue.number}`;
+        const userData = getUserData(usersData, issue.createdById);
+
         return (
           <div
             key={issue.id}
             className={cn(
               'p-4 py-3 flex flex-col gap-2',
-              issueId === `${currentTeam.identifier}-${issue.number}`
-                ? 'bg-primary/10 rounded-md'
-                : 'border-b',
+              issueId === `${currentTeam.identifier}-${issue.number}` &&
+                'bg-primary/10 rounded-md',
+              !noBorder && 'border-b',
             )}
             onClick={() => {
               push(
@@ -80,13 +83,13 @@ export const TriageIssues = observer(() => {
                 <Avatar className="h-[20px] w-[25px] flex items-center">
                   <AvatarImage />
                   <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
-                    {getInitials(getUserData(issue.createdById).fullname)}
+                    {getInitials(userData.fullname)}
                   </AvatarFallback>
                 </Avatar>
-                {getUserData(issue.createdById).username}
+                {userData.username}
               </div>
 
-              <div className="text-muted-foreground">
+              <div className="text-muted-foreground text-xs">
                 <ReactTimeAgo date={new Date(issue.updatedAt)} />
               </div>
             </div>

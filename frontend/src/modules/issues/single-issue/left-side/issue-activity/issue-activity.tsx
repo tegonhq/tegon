@@ -23,6 +23,7 @@ import { ActivityItem } from './activity-item';
 import { CommentActivity } from './comment-activity';
 import { IssueComment } from './issue-comment';
 import { LinkedIssueActivity } from './linked-issue-activity';
+import { SubscribeView } from './subscribe-view';
 
 enum ActivityType {
   Comment = 'Comment',
@@ -84,8 +85,9 @@ export const IssueActivity = observer(() => {
 
   return (
     <div className="px-4">
-      <div className="my-4">
+      <div className="my-4 flex justify-between">
         <div>Activity</div>
+        <SubscribeView />
       </div>
 
       <div className="my-2">
@@ -108,7 +110,7 @@ export const IssueActivity = observer(() => {
               <div className="mx-1">-</div>
 
               <div>
-                <ReactTimeAgo date={issue.createdAt} />
+                <ReactTimeAgo date={new Date(issue.createdAt)} />
               </div>
             </div>
           </TimelineItem>

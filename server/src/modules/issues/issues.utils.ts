@@ -18,6 +18,7 @@ import {
   IssueWithRelations,
   LinkIssueInput,
   LinkedIssueSubType,
+  SubscribeType,
   UpdateIssueInput,
   titlePrompt,
 } from './issues.interface';
@@ -207,4 +208,27 @@ export async function findExistingLink(
     };
   }
   return { status: 200, message: null };
+}
+
+export function getSubscriberIds(
+  userId: string,
+  assigneeId: string,
+  subscriberIds: string[] = [],
+  type: SubscribeType,
+): string[] {
+  const subscribers = new Set(subscriberIds);
+
+  switch (type) {
+    case SubscribeType.UNSUBSCRIBE:
+      subscribers.delete(userId);
+      break;
+    case SubscribeType.SUBSCRIBE:
+      userId && subscribers.add(userId);
+      assigneeId && subscribers.add(assigneeId);
+      break;
+    default:
+      return undefined;
+  }
+
+  return Array.from(subscribers);
 }

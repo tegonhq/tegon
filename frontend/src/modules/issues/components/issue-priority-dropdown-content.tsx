@@ -1,14 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiCheckLine } from '@remixicon/react';
-import {
-  CheckLine,
-  NoPriorityLine,
-  PriorityHigh,
-  PriorityLow,
-  PriorityMedium,
-  UrgentFill,
-} from 'icons';
 
 import {
   Command,
@@ -16,6 +8,13 @@ import {
   CommandInput,
   CommandItem,
 } from 'components/ui/command';
+import {
+  NoPriorityLine,
+  PriorityHigh,
+  PriorityLow,
+  PriorityMedium,
+  UrgentFill,
+} from 'icons';
 
 interface IssuePriorityDropdownContentProps {
   onChange?: (priority: number) => void;
@@ -65,7 +64,7 @@ export function IssuePriorityDropdownContent({
 
                 {index === value && (
                   <div>
-                    <CheckLine size={14} className="text-muted-foreground" />
+                    <RiCheckLine size={14} className="text-muted-foreground" />
                   </div>
                 )}
               </div>

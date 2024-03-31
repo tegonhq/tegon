@@ -45,7 +45,7 @@ export const TeamListItem = ({
             `/${router.query.workspaceSlug}/team/${team.identifier}/${href}`,
           )
         }
-        className="w-full text-sm flex justify-start px-2 mb-1"
+        className="text-foreground w-full text-sm flex justify-start px-2 mb-1"
       >
         {name}
       </Button>
@@ -62,7 +62,7 @@ export const TeamListItem = ({
           `/${router.query.workspaceSlug}/team/${team.identifier}/${href}`,
         )
       }
-      className="w-full text-sm flex justify-start px-5 mb-1"
+      className="text-foreground w-full text-sm flex justify-start px-5 mb-1"
     >
       {Icon && (
         <Icon className="mr-3 arrow-right-icon ml-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />

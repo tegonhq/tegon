@@ -384,6 +384,25 @@ model IntegrationAccount {
   @@unique([accountId, integrationDefinitionId, workspaceId])
 }
 
+model Notification {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  type           NotificationActionType
+  userId         String
+  issueId        String?
+  actionData     Json?
+  createdById    String?
+  sourceMetadata Json?
+
+  readAt       DateTime?
+  snoozedUntil DateTime?
+
+  workspaceId String
+}
+
 enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
@@ -414,6 +433,7 @@ enum ModelName {
   IntegrationAccount
   LinkedIssue
   IssueRelation
+  Notification
 }
 
 enum ActionType {
@@ -449,4 +469,13 @@ enum IssueRelationType {
   RELATED
   DUPLICATE
   DUPLICATE_OF
+}
+
+enum NotificationActionType {
+  IssueAssigned
+  IssueUnAssigned
+  IssueStatusChanged
+  IssuePriorityChanged
+  IssueNewComment
+  IssueBlocks
 }

@@ -3,14 +3,13 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { TeamLine } from 'icons';
-
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
 } from 'components/ui/breadcrumb';
 import { useCurrentTeam } from 'hooks/teams';
+import { TeamLine } from 'icons';
 
 interface HeaderProps {
   title: string;
@@ -22,7 +21,7 @@ export function Header({ title }: HeaderProps) {
     query: { workspaceSlug },
   } = useRouter();
   return (
-    <header className="flex px-4 py-4 w-full border-b justify-between items-center">
+    <header className="flex px-4 py-3.5 w-full border-b justify-between items-center">
       <div className="flex gap-4 items-center text-sm">
         <Breadcrumb className="text-xs">
           <BreadcrumbItem>
@@ -38,16 +37,7 @@ export function Header({ title }: HeaderProps) {
                 />
               </div>
 
-              <span className="inline-block">{team.name}</span>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbLink
-              as={Link}
-              href={`/${workspaceSlug}/team/${team.identifier}/triage`}
-              className="text-muted-foreground"
-            >
-              {title}
+              <span className="inline-block"> {title}</span>
             </BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>

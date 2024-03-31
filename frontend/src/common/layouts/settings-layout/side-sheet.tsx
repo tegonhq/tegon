@@ -16,7 +16,7 @@ export function SideDrawer() {
       <div className="block md:hidden">
         <header className="flex px-2 py-3 w-full border-b items-center">
           <SheetTrigger asChild>
-            <Button variant="ghost" className="">
+            <Button variant="ghost">
               <RiSideBarFill size={20} />
             </Button>
           </SheetTrigger>
@@ -24,7 +24,7 @@ export function SideDrawer() {
           <Button
             variant="ghost"
             size="sm"
-            className="text-sm flex justify-start px-1 pr-2"
+            className="text-sm flex justify-start px-1 pr-2 text-foreground"
             onClick={() => {
               replace(`/${query.workspaceSlug}`);
             }}

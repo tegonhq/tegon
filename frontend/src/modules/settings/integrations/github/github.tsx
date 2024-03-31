@@ -21,7 +21,7 @@ export function Github() {
       <div className="flex items-start justify-center">
         <div className="max-w-[100%] md:max-w-[650px] w-full">
           <Button
-            className="flex items-center text-sm text-muted-foreground px-0 !bg-transparent"
+            className="flex items-center text-sm px-0 !bg-transparent"
             variant="ghost"
             onClick={() => {
               push(pathname.replace('/github', ''));

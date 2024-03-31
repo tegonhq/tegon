@@ -31,6 +31,8 @@ services:
     image: redis:alpine3.19
     networks:
       - tegon
+    ports:
+      - 6379:6379
     restart: unless-stopped
 
   server:
@@ -85,7 +87,7 @@ services:
       - 8000:3000
 
   prisma:
-    image: "poozlehq/tegon-prisma:${VERSION}"
+    image: "tegonhq/tegon-prisma:${VERSION}"
     container_name: tegon-prisma
     restart: unless-stopped
     networks:

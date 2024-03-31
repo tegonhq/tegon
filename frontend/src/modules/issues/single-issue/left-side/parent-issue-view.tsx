@@ -9,7 +9,7 @@ import type { WorkflowType } from 'common/types/team';
 
 import { Button } from 'components/ui/button';
 import { useCurrentTeam } from 'hooks/teams';
-import { useTeamWorkflows } from 'hooks/workflows';
+import { useAllTeamWorkflows } from 'hooks/workflows';
 
 interface ParentIssueViewProps {
   issue: IssueType;
@@ -21,7 +21,7 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
     push,
     query: { workspaceSlug },
   } = useRouter();
-  const workflows = useTeamWorkflows(team.identifier);
+  const workflows = useAllTeamWorkflows(team.identifier);
 
   const workflow = workflows.find(
     (wk: WorkflowType) => wk.id === issue.parent.stateId,
@@ -37,7 +37,7 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
           `/${workspaceSlug}/issue/${team.identifier}-${issue.parent.number}`,
         );
       }}
-      className="cursor-pointer max-w-[400px] mb-1 border-1 bg-white backdrop-blur-md dark:bg-slate-700/20  p-2 rounded-md flex gap-2 items-center text-sm"
+      className="cursor-pointer max-w-[600px] mb-1 border-1 bg-white backdrop-blur-md dark:bg-slate-700/20  p-2 rounded-md flex gap-2 items-center text-sm"
     >
       <CategoryIcon
         size={16}
@@ -48,7 +48,7 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
         {team.identifier}-{issue.parent.number}
       </div>
 
-      <div className="font-medium max-w-[400px]">
+      <div className="font-medium max-w-[300px]">
         <div className="truncate">{issue.parent.title}</div>
       </div>
     </Button>

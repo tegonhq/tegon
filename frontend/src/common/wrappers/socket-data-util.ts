@@ -10,6 +10,7 @@ import { saveIssuesData } from 'store/issues';
 import { saveLabelData } from 'store/labels';
 import { saveLinkedIssueData } from 'store/linked-issues';
 import { MODELS } from 'store/models';
+import { saveNotificationData } from 'store/notifications';
 import { saveTeamData } from 'store/teams';
 import { saveWorkflowData } from 'store/workflows';
 import { saveWorkspaceData } from 'store/workspace';
@@ -95,6 +96,13 @@ export async function saveSocketData(
           return await saveIssueRelationData(
             [record],
             MODEL_STORE_MAP[MODELS.IssueRelation],
+          );
+        }
+
+        case MODELS.Notification: {
+          return await saveNotificationData(
+            [record],
+            MODEL_STORE_MAP[MODELS.Notification],
           );
         }
       }

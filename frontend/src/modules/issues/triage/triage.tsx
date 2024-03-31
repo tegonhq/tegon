@@ -8,12 +8,12 @@ import { RightSide } from './right-side';
 
 export function Triage() {
   return (
-    <main className="grid grid-cols-3 h-full">
+    <main className="grid grid-cols-4 h-full">
       <div className="flex flex-col col-span-1">
         <Header title="Triage" />
         <TriageIssues />
       </div>
-      <div className="border-l flex col-span-2 items-center justify-center">
+      <div className="border-l flex col-span-3 items-center justify-center">
         <RightSide />
       </div>
     </main>

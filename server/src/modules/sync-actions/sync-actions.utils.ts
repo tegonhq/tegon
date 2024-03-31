@@ -117,6 +117,12 @@ export async function getWorkspaceId(
       });
       return issueRelation.issue.team.workspaceId;
 
+    case ModelName.Notification:
+      const notification = await prisma.notification.findUnique({
+        where: { id: modelId },
+      });
+      return notification.workspaceId;
+
     default:
       return undefined;
   }
@@ -175,6 +181,7 @@ export async function getModelData(
     },
     LinkedIssue: prisma.linkedIssue,
     IssueRelation: prisma.issueRelation,
+    Notification: prisma.notification,
   };
 
   const model = modelMap[modelName];

@@ -1,4 +1,3 @@
-/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import {
   type IAnyStateTreeNode,
@@ -7,7 +6,10 @@ import {
   flow,
 } from 'mobx-state-tree';
 
-import type { IssueRelationType } from 'common/types/issue-relation';
+import type {
+  IssueRelationEnum,
+  IssueRelationType,
+} from 'common/types/issue-relation';
 
 import { tegonDatabase } from 'store/database';
 
@@ -16,7 +18,6 @@ import { IssueRelation } from './models';
 export const IssueRelationsStore: IAnyStateTreeNode = types
   .model({
     issueRelations: types.array(IssueRelation),
-    issueId: types.union(types.string, types.undefined),
   })
   .actions((self) => {
     const update = (issueRelation: IssueRelationType, id: string) => {
@@ -46,16 +47,8 @@ export const IssueRelationsStore: IAnyStateTreeNode = types
       }
     };
 
-    const load = flow(function* (issueId: string) {
-      self.issueId = issueId;
-
-      const issueRelations = issueId
-        ? yield tegonDatabase.issueRelations
-            .where({
-              issueId,
-            })
-            .toArray()
-        : [];
+    const load = flow(function* () {
+      const issueRelations = yield tegonDatabase.issueRelations.toArray();
 
       self.issueRelations = issueRelations;
     });
@@ -63,10 +56,22 @@ export const IssueRelationsStore: IAnyStateTreeNode = types
     return { update, deleteById, load };
   })
   .views((self) => ({
+    getIssueRelations(issueId: string) {
+      return self.issueRelations.filter(
+        (issueRelation: IssueRelationType) => issueRelation.issueId === issueId,
+      );
+    },
     getIssueRelationWithId(issueRelationId: string) {
       return self.issueRelations.find(
         (issueRelation: IssueRelationType) =>
           issueRelation.id === issueRelationId,
+      );
+    },
+
+    getIssueRelationForType(issueId: string, relationType: IssueRelationEnum) {
+      return self.issueRelations.filter(
+        (relationAct: IssueRelationType) =>
+          relationAct.type === relationType && relationAct.issueId === issueId,
       );
     },
   }));

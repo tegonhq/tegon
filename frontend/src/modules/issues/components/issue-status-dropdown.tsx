@@ -7,7 +7,7 @@ import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow
 
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
-import { useTeamWorkflows } from 'hooks/workflows/use-team-workflows';
+import { useAllTeamWorkflows } from 'hooks/workflows/use-team-workflows';
 
 export enum IssueStatusDropdownVariant {
   NO_BACKGROUND = 'NO_BACKGROUND',
@@ -29,7 +29,7 @@ export function IssueStatusDropdown({
   teamIdentfier,
 }: IssueStatusProps) {
   const [open, setOpen] = React.useState(false);
-  const workflows = useTeamWorkflows(teamIdentfier);
+  const workflows = useAllTeamWorkflows(teamIdentfier);
 
   const workflow = value
     ? workflows.find((workflow) => workflow.id === value)

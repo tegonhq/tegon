@@ -1,6 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiPriceTagFill } from '@remixicon/react';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
@@ -9,6 +8,7 @@ import type { LabelType } from 'common/types/label';
 
 import { Badge, BadgeColor } from 'components/ui/badge';
 import { TimelineItem } from 'components/ui/timeline';
+import { LabelFill } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -40,7 +40,7 @@ export function LabelActivity({
       >
         <div className="flex items-center text-xs text-muted-foreground">
           <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
-            <RiPriceTagFill size={18} className="text-muted-foreground" />
+            <LabelFill size={18} className="text-muted-foreground" />
           </div>
 
           <div className="flex items-center">
@@ -81,7 +81,7 @@ export function LabelActivity({
     >
       <div className="flex items-center text-xs text-muted-foreground">
         <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
-          <RiPriceTagFill size={18} className="text-muted-foreground" />
+          <LabelFill size={18} className="text-muted-foreground" />
         </div>
 
         <div className="flex items-center">

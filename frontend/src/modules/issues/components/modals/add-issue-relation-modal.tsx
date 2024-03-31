@@ -1,4 +1,3 @@
-/* eslint-disable dot-location */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { observer } from 'mobx-react-lite';
@@ -13,20 +12,23 @@ import { ModalIssues } from './modal-issues';
 
 interface ParentOfModalProps {
   isOpen: boolean;
-  setOpen: (open: boolean) => void;
+  onClose: () => void;
   type: IssueRelationEnum;
 }
 
 export const AddIssueRelationModal = observer(
-  ({ isOpen, setOpen, type }: ParentOfModalProps) => {
+  ({ isOpen, onClose, type }: ParentOfModalProps) => {
     const [value, setValue] = React.useState('');
 
-    const onClose = () => {
-      setOpen(false);
-    };
-
     return (
-      <Dialog open={isOpen} onOpenChange={setOpen}>
+      <Dialog
+        open={isOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            onClose();
+          }
+        }}
+      >
         <DialogContent closeIcon={false}>
           <div>
             <div className="p-3 border-b">

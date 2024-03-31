@@ -22,6 +22,8 @@ export const WorkspaceStoreInit = observer(
       issuesStore,
       workflowsStore,
       applicationStore,
+      issueRelationsStore,
+      notificationsStore,
     } = useContextStore();
     const {
       query: { teamIdentifier },
@@ -54,6 +56,8 @@ export const WorkspaceStoreInit = observer(
       await integrationAccountsStore.load();
       await issuesStore.load();
       await workflowsStore.load();
+      await issueRelationsStore.load();
+      await notificationsStore.load();
 
       setLoading(false);
       // eslint-disable-next-line react-hooks/exhaustive-deps

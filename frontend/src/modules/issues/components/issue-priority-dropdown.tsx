@@ -71,9 +71,7 @@ export function IssuePriorityDropdown({
             className={cn('mr-3 text-muted-foreground')}
           />
 
-          <span className={cn(value === 0 && 'text-muted-foreground')}>
-            {Priorities[value]}
-          </span>
+          <span>{Priorities[value]}</span>
         </Button>
       );
     }

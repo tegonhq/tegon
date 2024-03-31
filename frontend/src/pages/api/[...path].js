@@ -1,5 +1,4 @@
 /* eslint-disable import/no-anonymous-default-export */
-/* eslint-disable dot-location */
 /** Copyright (c) 2023, Tegon, all rights reserved. **/
 
 import httpProxy from 'http-proxy';

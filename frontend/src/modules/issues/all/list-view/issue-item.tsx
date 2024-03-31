@@ -14,8 +14,11 @@ import {
 } from 'modules/issues/components';
 
 import { cn } from 'common/lib/utils';
+import { IssueRelationEnum } from 'common/types/issue-relation';
 
-import { useCurrentTeam } from 'hooks/teams/use-current-team';
+import { Badge } from 'components/ui/badge';
+import { useTeamWithId } from 'hooks/teams/use-current-team';
+import { BlockedFill, BlockingToLine } from 'icons';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
@@ -28,14 +31,22 @@ interface IssueItemProps {
 }
 
 export const IssueItem = observer(({ issueId }: IssueItemProps) => {
-  const team = useCurrentTeam();
   const {
     push,
     query: { workspaceSlug },
   } = useRouter();
   const { mutate: updateIssue } = useUpdateIssueMutation({});
-  const { issuesStore } = useContextStore();
+  const { issuesStore, issueRelationsStore } = useContextStore();
   const issue = issuesStore.getIssueById(issueId);
+  const team = useTeamWithId(issue.teamId);
+  const blockedIssues = issueRelationsStore.getIssueRelationForType(
+    issue.id,
+    IssueRelationEnum.BLOCKED,
+  );
+  const blocksIssues = issueRelationsStore.getIssueRelationForType(
+    issue.id,
+    IssueRelationEnum.BLOCKS,
+  );
 
   const statusChange = (stateId: string) => {
     updateIssue({ id: issue.id, stateId, teamId: issue.teamId });
@@ -74,7 +85,11 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
         <div
           className={cn(
             'font-medium',
-            issue.parentId ? 'max-w-[500px]' : 'w-full',
+            issue.parentId ||
+              blockedIssues.length > 0 ||
+              blocksIssues.length > 0
+              ? 'max-w-[500px]'
+              : 'w-full',
           )}
         >
           <div className="truncate">{issue.title}</div>
@@ -83,8 +98,30 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
         {issue.parentId && (
           <div className="font-medium max-w-[300px] text-muted-foreground flex items-center">
             <RiArrowRightSLine size={14} className="mx-1" />
-            <div className="truncate ">{issue.parent?.title}</div>
+            <div className="truncate">{issue.parent?.title}</div>
           </div>
+        )}
+
+        {blockedIssues.length > 0 && (
+          <Badge
+            variant="outline"
+            className="mx-2 px-2 flex gap-2 text-muted-foreground"
+          >
+            <BlockedFill size={14} className="text-red-700 dark:text-red-400" />
+            {blockedIssues.length}
+          </Badge>
+        )}
+        {blocksIssues.length > 0 && (
+          <Badge
+            variant="outline"
+            className="mx-2 px-2 flex gap-2 text-muted-foreground"
+          >
+            <BlockingToLine
+              size={14}
+              className="text-red-700 dark:text-red-400"
+            />
+            {blocksIssues.length}
+          </Badge>
         )}
       </div>
       <div className="flex gap-2 items-center">

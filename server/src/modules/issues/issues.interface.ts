@@ -190,6 +190,16 @@ export enum IssueAction {
   UPDATED,
 }
 
+export enum SubscribeType {
+  SUBSCRIBE = 'SUBSCRIBE',
+  UNSUBSCRIBE = 'UNSUBSCRIBE',
+}
+
+export class SubscribeIssueInput {
+  @IsEnum(SubscribeType)
+  type: SubscribeType;
+}
+
 export const titlePrompt = ` You have deep expertise in project management and task management for software teams. Whenever a text is provided to you, you have to create an issue title for software development tasks based on the description text.
 
 Step 1: If description is null then result null output.

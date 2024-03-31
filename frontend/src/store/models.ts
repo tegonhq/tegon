@@ -15,4 +15,5 @@ export enum MODELS {
   IntegrationAccount = 'IntegrationAccount',
   LinkedIssue = 'LinkedIssue',
   IssueRelation = 'IssueRelation',
+  Notification = 'Notification',
 }

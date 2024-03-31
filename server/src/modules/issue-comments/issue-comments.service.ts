@@ -4,6 +4,9 @@ import { Injectable } from '@nestjs/common';
 import { IssueComment } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
+import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
+import { NotificationsQueue } from 'modules/notifications/notifications.queue';
+
 import {
   CommentInput,
   IssueCommentAction,
@@ -21,6 +24,7 @@ export default class IssueCommentsService {
   constructor(
     private prisma: PrismaService,
     private issueCommentsQueue: IssueCommentsQueue,
+    private notificationsQueue: NotificationsQueue,
   ) {}
 
   async createIssueComment(
@@ -43,6 +47,17 @@ export default class IssueCommentsService {
       issueComment,
       IssueCommentAction.CREATED,
       userId,
+    );
+
+    await this.notificationsQueue.addToNotification(
+      NotificationEventFrom.NewComment,
+      userId,
+      {
+        subscriberIds: issueComment.issue.subscriberIds,
+        issueCommentId: issueComment.id,
+        issueId: issueComment.issueId,
+        workspaceId: issueComment.issue.team.workspaceId,
+      },
     );
 
     return issueComment;

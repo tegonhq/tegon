@@ -50,7 +50,7 @@ export function AddGithubPR({ issueId, onClose }: AddGithubPRProps) {
   const onSubmit = (values: { url: string }) => {
     createLinkedIssue({
       url: values.url,
-      type: LinkedIssueSubType.GithubIssue,
+      type: LinkedIssueSubType.GithubPullRequest,
       issueId,
       teamId: currentTeam.id,
     });

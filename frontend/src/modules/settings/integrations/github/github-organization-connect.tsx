@@ -55,7 +55,6 @@ export const GithubOrganizationConnect = observer(() => {
           <Button
             variant="ghost"
             size="sm"
-            className="text-muted-foreground"
             isLoading={redirectURLLoading}
             onClick={() => {
               createRedirectURL({
