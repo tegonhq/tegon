@@ -57,3 +57,22 @@ export function useTeam(teamIdentifier: string): TeamType | undefined {
 
   return team;
 }
+
+export function useTeamWithId(teamId: string): TeamType | undefined {
+  const { teamsStore } = useContextStore();
+
+  const getTeam = () => {
+    const team = teamsStore.teams.find((team: TeamType) => {
+      return team.id === teamId;
+    });
+
+    return team;
+  };
+
+  const team = React.useMemo(
+    () => computed(() => getTeam()),
+    [teamId, teamsStore],
+  ).get();
+
+  return team;
+}

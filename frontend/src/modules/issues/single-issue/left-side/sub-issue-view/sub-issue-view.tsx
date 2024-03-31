@@ -38,7 +38,7 @@ export function SubIssueView({
           <Button
             variant="ghost"
             size="sm"
-            className="text-muted-foreground px-1"
+            className="px-1"
             onClick={setNewIssueState}
             disabled={newIssueState}
           >
@@ -56,11 +56,7 @@ export function SubIssueView({
             <div>
               <CollapsibleTrigger asChild>
                 <div className="flex items-center">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground px-1"
-                  >
+                  <Button variant="ghost" size="sm" className="px-1">
                     {isOpen ? (
                       <RiArrowDownSFill size={16} className="mr-1" />
                     ) : (
@@ -82,7 +78,7 @@ export function SubIssueView({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-muted-foreground px-1"
+                  className="px-1"
                   onClick={setNewIssueState}
                   disabled={newIssueState}
                 >

@@ -40,7 +40,7 @@ export function EditComment({ value, onCancel, comment }: EditCommentProps) {
       />
       <div className="flex justify-end items-center gap-2">
         <Button
-          variant="ghost"
+          variant="outline"
           className="my-2 transition-all duration-500 ease-in-out"
           size="sm"
           onClick={onCancel}

@@ -52,7 +52,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
             `/${query.workspaceSlug}/team/${teamsStore.teams[0].identifier}/all`,
           );
         }}
-        className=" group px-3 py-4 text-lg bg-transparent hover:bg-transparent dark:hover:bg-transparent flex justify-start"
+        className=" group px-3 py-4 text-lg bg-transparent hover:bg-transparent dark:hover:bg-transparent flex justify-start text-foreground"
       >
         <RiArrowLeftSLine
           className="mr-4 text-slate-400 dark:text-slate-600 dark:group-hover:text-slate-500 group-hover:text-black"

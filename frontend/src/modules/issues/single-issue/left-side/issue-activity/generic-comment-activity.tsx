@@ -99,11 +99,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           {!sourceMetadata && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  className="text-muted-foreground px-2 -mt-1"
-                >
+                <Button variant="ghost" size="xs" className="px-2 -mt-1">
                   <RiMoreFill size={16} className="text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>

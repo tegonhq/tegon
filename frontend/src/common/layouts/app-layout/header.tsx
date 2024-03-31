@@ -17,7 +17,7 @@ export function Header() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
   return (
-    <div className="flex flex-col m-3 text-slate-700 dark:text-slate-300">
+    <div className="flex flex-col m-3 my-2 text-slate-700 dark:text-slate-300">
       <div className="flex justify-between items-center">
         <WorkspaceDropdown />
       </div>

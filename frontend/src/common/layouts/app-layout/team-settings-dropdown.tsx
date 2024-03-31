@@ -22,7 +22,7 @@ export function TeamSettingsDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="xs" variant="ghost" className="text-muted-foreground">
+        <Button size="xs" variant="ghost">
           <RiMoreFill size={16} />
         </Button>
       </DropdownMenuTrigger>

@@ -9,6 +9,7 @@ import { useCurrentTeam } from 'hooks/teams';
 import { useGetUsersQuery } from 'services/users/get-users';
 
 import { useContextStore } from 'store/global-context-provider';
+import type { User } from 'store/user-context';
 
 export function useUsersData(teamId?: string) {
   const { workspaceStore } = useContextStore();
@@ -37,18 +38,22 @@ export function useUsersData(teamId?: string) {
   return { isLoading, usersData };
 }
 
-export function useUserData(userId: string) {
+export function useUserData(userId: string): {
+  isLoading: boolean;
+  userData: User | undefined;
+} {
   const currentTeam = useCurrentTeam();
 
   const { workspaceStore } = useContextStore();
   const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
+
   const {
     data: usersData,
     isLoading,
     refetch,
   } = useGetUsersQuery([
     usersOnWorkspace.find((uOW: UsersOnWorkspaceType) => {
-      if (currentTeam.id) {
+      if (currentTeam?.id) {
         return uOW.teamIds.includes(currentTeam.id) && uOW.userId === userId;
       }
 
@@ -61,5 +66,5 @@ export function useUserData(userId: string) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceStore]);
 
-  return { isLoading, userData: usersData[0] };
+  return { isLoading, userData: usersData ? usersData[0] : undefined };
 }

@@ -17,7 +17,7 @@ import { cn } from 'common/lib/utils';
 import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { Badge } from 'components/ui/badge';
-import { useCurrentTeam } from 'hooks/teams/use-current-team';
+import { useTeamWithId } from 'hooks/teams/use-current-team';
 import { BlockedFill, BlockingToLine } from 'icons';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
@@ -31,7 +31,6 @@ interface IssueItemProps {
 }
 
 export const IssueItem = observer(({ issueId }: IssueItemProps) => {
-  const team = useCurrentTeam();
   const {
     push,
     query: { workspaceSlug },
@@ -39,6 +38,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
   const { mutate: updateIssue } = useUpdateIssueMutation({});
   const { issuesStore, issueRelationsStore } = useContextStore();
   const issue = issuesStore.getIssueById(issueId);
+  const team = useTeamWithId(issue.teamId);
   const blockedIssues = issueRelationsStore.getIssueRelationForType(
     issue.id,
     IssueRelationEnum.BLOCKED,

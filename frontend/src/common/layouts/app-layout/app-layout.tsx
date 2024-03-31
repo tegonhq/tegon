@@ -25,7 +25,7 @@ interface LayoutProps {
 }
 
 export function AppLayoutChild({ children }: LayoutProps) {
-  const { applicationStore } = useContextStore();
+  const { applicationStore, notificationsStore } = useContextStore();
   const isCollapsed = applicationStore.displaySettings.sidebarCollapsed;
   const {
     query: { workspaceSlug },
@@ -78,6 +78,7 @@ export function AppLayoutChild({ children }: LayoutProps) {
                       title: 'Inbox',
                       icon: Inbox,
                       href: `/${workspaceSlug}/inbox`,
+                      count: notificationsStore.unReadCount,
                     },
                     {
                       title: 'My issues',

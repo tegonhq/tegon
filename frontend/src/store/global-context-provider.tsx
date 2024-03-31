@@ -90,7 +90,6 @@ export const storeContextStore = StoreContextModel.create({
   },
   notificationsStore: {
     notifications: [],
-    workspaceId: undefined,
   },
 });
 

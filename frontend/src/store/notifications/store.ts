@@ -51,6 +51,31 @@ export const NotificationsStore: IAnyStateTreeNode = types
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    get getNotifications() {
+      const latestCreatedAt: Record<string, string> = {};
+      const latestObjects: Record<string, NotificationType> = {};
+
+      // Iterate through the array to find the latest object for each issueId
+      self.notifications.forEach((obj) => {
+        const { issueId, updatedAt } = obj;
+
+        // Update latest updatedAt if the current object's updatedAt is later
+        if (!latestCreatedAt[issueId] || updatedAt > latestCreatedAt[issueId]) {
+          latestCreatedAt[issueId] = updatedAt;
+          latestObjects[issueId] = obj as NotificationType;
+        }
+      });
+
+      // Return the latest objects for each issueId
+      return Object.values(latestObjects);
+    },
+    get unReadCount() {
+      return (self as NotificationsStoreType).getNotifications.filter(
+        (obj: NotificationType) => !obj.readAt,
+      ).length;
+    },
+  }));
 
 export type NotificationsStoreType = Instance<typeof NotificationsStore>;

@@ -7,6 +7,7 @@ import ReactTimeAgo from 'react-time-ago';
 import { cn } from 'common/lib/utils';
 import type { IssueType } from 'common/types/issue';
 import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
+import { getUserData } from 'common/user-util';
 
 import {
   Avatar,
@@ -19,7 +20,6 @@ import { useUsersData } from 'hooks/users';
 import { useAllTeamWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
-import type { User } from 'store/user-context';
 
 export const TriageIssues = observer(() => {
   const currentTeam = useCurrentTeam();
@@ -35,10 +35,6 @@ export const TriageIssues = observer(() => {
 
     push,
   } = useRouter();
-
-  function getUserData(userId: string) {
-    return usersData.find((userData: User) => userData.id === userId);
-  }
 
   const issues = issuesStore.getIssuesForState(
     triageWorkflow.id,
@@ -58,6 +54,7 @@ export const TriageIssues = observer(() => {
           (nextIssue &&
             issueId === `${currentTeam.identifier}-${nextIssue.number}`) ||
           issueId === `${currentTeam.identifier}-${issue.number}`;
+        const userData = getUserData(usersData, issue.createdById);
 
         return (
           <div
@@ -86,13 +83,13 @@ export const TriageIssues = observer(() => {
                 <Avatar className="h-[20px] w-[25px] flex items-center">
                   <AvatarImage />
                   <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
-                    {getInitials(getUserData(issue.createdById).fullname)}
+                    {getInitials(userData.fullname)}
                   </AvatarFallback>
                 </Avatar>
-                {getUserData(issue.createdById).username}
+                {userData.username}
               </div>
 
-              <div className="text-muted-foreground">
+              <div className="text-muted-foreground text-xs">
                 <ReactTimeAgo date={new Date(issue.updatedAt)} />
               </div>
             </div>
