@@ -38,5 +38,4 @@ comments?: IssueComment[] ;
 history?: IssueHistory[] ;
 linkedIssue?: LinkedIssue[] ;
 issueRelations?: IssueRelation[] ;
-embedding: number[] ;
 }

@@ -32,7 +32,7 @@ services:
     networks:
       - tegon
     ports:
-      - 6397:6397
+      - 6379:6379
     restart: unless-stopped
 
   # server:
