@@ -57,7 +57,7 @@ export const LeftSide = observer(({ isTriageView }: LeftSideProps) => {
       </div>
       <div className="grow px-8 py-6 flex flex-col gap-2 overflow-y-auto">
         <div>
-          {isTriageView && <SimilarIssuesView title={issue.title} />}
+          {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
           {issue.parentId && <ParentIssueView issue={issue} />}
 

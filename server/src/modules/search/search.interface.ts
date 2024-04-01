@@ -12,4 +12,20 @@ export class SearchInputData {
   @IsOptional()
   @IsString()
   limit?: string;
+
+  @IsOptional()
+  @IsString()
+  threshold?: string;
+}
+
+export class SimilarIssueData {
+  @IsString()
+  workspaceId: string;
+
+  @IsString()
+  issueId: string;
+
+  @IsOptional()
+  @IsString()
+  limit?: string;
 }

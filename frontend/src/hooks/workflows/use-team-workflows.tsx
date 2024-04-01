@@ -12,12 +12,12 @@ import { useContextStore } from 'store/global-context-provider';
 import { useTeam } from '../teams/use-current-team';
 
 const categorySequence = [
-  WorkflowCategoryEnum.TRIAGE,
   WorkflowCategoryEnum.BACKLOG,
   WorkflowCategoryEnum.UNSTARTED,
   WorkflowCategoryEnum.STARTED,
   WorkflowCategoryEnum.COMPLETED,
   WorkflowCategoryEnum.CANCELED,
+  WorkflowCategoryEnum.TRIAGE,
 ];
 
 function workflowSort(a: WorkflowType, b: WorkflowType): number {
@@ -79,7 +79,7 @@ export function useTeamWorkflows(
 
   const workflows = React.useMemo(
     () => computed(() => getWorkflows()),
-    [team, workflowsStore],
+    [team, workflowsStore, teamIdentfier],
   ).get();
 
   return workflows;

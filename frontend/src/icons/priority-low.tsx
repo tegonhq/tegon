@@ -2,7 +2,7 @@
 
 import type { IconProps } from './types';
 
-export function PriorityLow({ size = 18, className}: IconProps) {
+export function PriorityLow({ size = 18, className }: IconProps) {
   return (
     <svg
       width={size}

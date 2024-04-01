@@ -8,33 +8,37 @@ import type { IssueType } from 'common/types/issue';
 /**
  * Query Key for Searching Issues.
  */
-export const SearchIssuesQuery = 'searchUserQuery';
+export const DuplicateIssuesQuery = 'duplicateIssuesQuery';
 
-export interface SearchIssuesParams {
+export interface DuplicateIssuesParams {
   workspaceId: string;
   query: string;
   limit?: number;
   threshold?: number;
 }
 
-export function searchIssue(data: SearchIssuesParams) {
+export function duplicateIssues(data: DuplicateIssuesParams) {
   return ajaxGet({
     url: `/api/v1/search`,
     query: {
-      limit: 10,
+      limit: 3,
       ...data,
     },
   });
 }
 
-export function useGetSearchIssuesQuery(
-  data: SearchIssuesParams,
+export function useGetDuplicateIssuesQuery(
+  data: DuplicateIssuesParams,
   enabled = false,
 ): UseQueryResult<IssueType[], XHRErrorResponse> {
-  return useQuery([SearchIssuesQuery, data.query], () => searchIssue(data), {
-    retry: 1,
-    staleTime: 1,
-    refetchOnWindowFocus: false, // Frequency of Change would be Low
-    enabled,
-  });
+  return useQuery(
+    [DuplicateIssuesQuery, data.query],
+    () => duplicateIssues(data),
+    {
+      retry: 1,
+      staleTime: 1,
+      refetchOnWindowFocus: false, // Frequency of Change would be Low
+      enabled,
+    },
+  );
 }

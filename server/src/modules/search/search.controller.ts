@@ -5,7 +5,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
-import { SearchInputData } from './search.interface';
+import { SearchInputData, SimilarIssueData } from './search.interface';
 import SearchService from './search.service';
 
 @Controller({
@@ -18,11 +18,22 @@ export class SearchController {
 
   @Get()
   @UseGuards(new AuthGuard())
-  async updateLabel(@Query() searchData: SearchInputData) {
+  async search(@Query() searchData: SearchInputData) {
     return await this.searchService.searchData(
       searchData.workspaceId,
       searchData.query,
       parseInt(searchData.limit),
+      Number(searchData.threshold),
+    );
+  }
+
+  @Get('similar_issues')
+  @UseGuards(new AuthGuard())
+  async similarIssue(@Query() similarIssueData: SimilarIssueData) {
+    return await this.searchService.similarData(
+      similarIssueData.workspaceId,
+      similarIssueData.issueId,
+      parseInt(similarIssueData.limit),
     );
   }
 }

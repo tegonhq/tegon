@@ -13,9 +13,9 @@ import { useDeltaRecords } from 'services/sync/delta-sync';
 
 import { useContextStore } from 'store/global-context-provider';
 import { MODELS } from 'store/models';
+import { UserContext } from 'store/user-context';
 
 import { saveSocketData } from './socket-data-util';
-import { UserContext } from 'store/user-context';
 
 interface Props {
   children: React.ReactElement;

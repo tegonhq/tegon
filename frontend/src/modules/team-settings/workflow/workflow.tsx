@@ -23,7 +23,7 @@ export const Workflow = observer(() => {
         .filter((workflow: WorkflowType) => workflow.category === categoryName);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [workflowsStore.workflows],
+    [workflowsStore.workflows, currentTeam.id],
   );
 
   return (

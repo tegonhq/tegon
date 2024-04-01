@@ -67,13 +67,14 @@ export class VectorService implements OnModuleInit {
     workspaceId: string,
     searchQuery: string,
     limit: number,
+    vectorDistance: number = 0.8,
   ) {
     const searchParameters = {
       q: searchQuery || '*',
       query_by: 'numberString,issueNumber,title,description,embedding',
       filter_by: `workspaceId:=${workspaceId}`,
       sort_by: searchQuery ? '_text_match:desc' : 'number:desc',
-      vector_query: 'embedding:([], distance_threshold:0.80)',
+      vector_query: `embedding:([], distance_threshold:${vectorDistance})`,
       page: 1,
       per_page: limit,
     };
@@ -94,6 +95,57 @@ export class VectorService implements OnModuleInit {
       issueNumber: hit.document.issueNumber,
       score: hit.hybrid_search_info?.rank_fusion_score || 0,
     }));
+  }
+
+  async similarIssues(workspaceId: string, issueId: string, limit: number) {
+    const searchRequests = {
+      searches: [
+        {
+          collection: 'issues',
+          q: '*',
+          query_by: 'numberString,issueNumber,title,description,embedding',
+          vector_query: `embedding:([], id: ${issueId}, distance_threshold:0.50)`,
+          filter_by: `workspaceId:=${workspaceId}`,
+          page: 1,
+          per_page: limit,
+        },
+      ],
+    };
+
+    const searchResults =
+      await this.typesenseClient.multiSearch.perform(searchRequests);
+
+    return (
+      searchResults.results
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .map(({ hits }: any) =>
+          hits.map(
+            ({
+              document: {
+                id,
+                title,
+                description,
+                stateId,
+                teamId,
+                number,
+                issueNumber,
+              },
+              vector_distance,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            }: any) => ({
+              id,
+              title,
+              description,
+              stateId,
+              teamId,
+              number,
+              issueNumber,
+              distance: vector_distance,
+            }),
+          ),
+        )
+        .flat()
+    );
   }
 
   async prefillIssuesData(workspaceId: string) {

@@ -18,29 +18,36 @@ import {
 import { useCurrentWorkspace } from 'hooks/workspace';
 import { DuplicateLine2 } from 'icons';
 
-import { useGetSimilarIssuesQuery } from 'services/search';
+import { useGetDuplicateIssuesQuery } from 'services/search';
 
-interface SimilarIssuesViewProps {
-  issueId: string;
+interface DuplicateIssuesViewProps {
+  description: string;
 }
 
 interface SearchIssueType extends IssueType {
   issueNumber: string;
 }
 
-export function SimilarIssuesView({ issueId }: SimilarIssuesViewProps) {
+export function DuplicateIssuesView({ description }: DuplicateIssuesViewProps) {
   const workspace = useCurrentWorkspace();
   const [isOpen, setIsOpen] = React.useState(true);
   const { push } = useRouter();
 
-  const { data: issues } = useGetSimilarIssuesQuery(
+  const { data: issues, refetch } = useGetDuplicateIssuesQuery(
     {
       workspaceId: workspace.id,
-      issueId,
+      query: description,
       limit: 3,
     },
-    true,
+    false,
   );
+
+  React.useEffect(() => {
+    if (description) {
+      refetch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [description]);
 
   if (!issues || (issues && issues.length === 0)) {
     return null;
@@ -48,7 +55,7 @@ export function SimilarIssuesView({ issueId }: SimilarIssuesViewProps) {
 
   return (
     <div
-      className={cn('rounded-md border p-2 mb-2')}
+      className={cn('p-2 rounded-none border-0 border-t mb-0')}
       onClick={(e) => {
         e.stopPropagation();
       }}
@@ -68,7 +75,7 @@ export function SimilarIssuesView({ issueId }: SimilarIssuesViewProps) {
                   <RiArrowRightSFill size={16} className="mr-2" />
                 )}
                 <DuplicateLine2 size={16} className="mr-2" />
-                Similar Issues
+                Possible duplicates
               </Button>
             </div>
           </CollapsibleTrigger>
