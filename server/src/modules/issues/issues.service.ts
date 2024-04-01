@@ -47,10 +47,7 @@ export default class IssuesService {
     private issueHistoryService: IssuesHistoryService,
     private issuesQueue: IssuesQueue,
     private issueRelationService: IssueRelationService,
-<<<<<<< HEAD
     private notificationsQueue: NotificationsQueue,
-=======
->>>>>>> 44d7cf4 (feat: search issues)
   ) {}
 
   async createIssue(

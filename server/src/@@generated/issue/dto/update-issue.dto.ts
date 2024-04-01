@@ -20,5 +20,4 @@ subscriberIds?: string[];
 assigneeId?: string;
 labelIds?: string[];
 stateId?: string;
-embedding?: number[];
 }

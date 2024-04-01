@@ -1,7 +1,9 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { Client as TypesenseClient } from 'typesense';
-import { IssueWithRelations } from 'modules/issues/issues.interface';
 import { PrismaService } from 'nestjs-prisma';
+import { Client as TypesenseClient } from 'typesense';
+
+import { IssueWithRelations } from 'modules/issues/issues.interface';
+
 import { issueSchema } from './vector.interface';
 
 @Injectable()
@@ -24,6 +26,15 @@ export class VectorService implements OnModuleInit {
     } catch (error) {
       if (error.httpStatus === 404) {
         await this.typesenseClient.collections().create(issueSchema);
+        this.logger.log('Created an issue collection');
+        const workspaces = await this.prisma.workspace.findMany({
+          where: { deleted: null },
+          select: { id: true },
+        });
+        await Promise.all(
+          workspaces.map((workspace) => this.prefillIssuesData(workspace.id)),
+        );
+        this.logger.log('Prefilled data for all workspaces');
       } else {
         this.logger.error('Error creating issues collection:', error);
       }
@@ -33,17 +44,20 @@ export class VectorService implements OnModuleInit {
   async createIssueEmbedding(issue: IssueWithRelations) {
     const issueNumber = `${issue.team.identifier}-${issue.number}`;
 
-    await this.typesenseClient.collections('issues').documents().upsert({
-      id: issue.id,
-      teamId: issue.teamId,
-      number: issue.number,
-      numberString: issue.number.toString(),
-      issueNumber: issueNumber,
-      title: issue.title,
-      description: issue.description,
-      stateId: issue.stateId,
-      workspaceId: issue.team.workspaceId,
-    });
+    await this.typesenseClient
+      .collections('issues')
+      .documents()
+      .upsert({
+        id: issue.id,
+        teamId: issue.teamId,
+        number: issue.number,
+        numberString: issue.number.toString(),
+        issueNumber,
+        title: issue.title,
+        description: issue.description || '',
+        stateId: issue.stateId,
+        workspaceId: issue.team.workspaceId,
+      });
   }
 
   async searchEmbeddings(
@@ -52,10 +66,10 @@ export class VectorService implements OnModuleInit {
     limit: number,
   ) {
     const searchParameters = {
-      q: searchQuery,
+      q: searchQuery || '*',
       query_by: 'numberString,issueNumber,title,description,embedding',
       filter_by: `workspaceId:=${workspaceId}`,
-      sort_by: '_text_match:desc',
+      sort_by: searchQuery ? '_text_match:desc' : 'number:desc',
       vector_query: 'embedding:([], distance_threshold:0.80)',
       page: 1,
       per_page: limit,
@@ -74,7 +88,7 @@ export class VectorService implements OnModuleInit {
       teamId: hit.document.teamId,
       number: hit.document.number,
       issueNumber: hit.document.issueNumber,
-      score: hit.hybrid_search_info.rank_fusion_score,
+      score: hit.hybrid_search_info?.rank_fusion_score || 0,
     }));
   }
 

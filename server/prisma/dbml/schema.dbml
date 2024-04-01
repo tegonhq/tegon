@@ -181,7 +181,6 @@ Table Issue {
   history IssueHistory [not null]
   linkedIssue LinkedIssue [not null]
   issueRelations IssueRelation [not null]
-  embedding Float[] [not null]
 
   indexes {
     (teamId, number) [unique]
