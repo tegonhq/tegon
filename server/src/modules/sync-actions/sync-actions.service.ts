@@ -1,8 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Injectable } from "@nestjs/common";
-import { ActionType, ModelName } from "@prisma/client";
-import { PrismaService } from "nestjs-prisma";
+import { Injectable } from '@nestjs/common';
+import { ActionType, ModelName } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
 
 import {
   convertLsnToInt,
@@ -11,7 +11,7 @@ import {
   getModelData,
   getSyncActionsData,
   getWorkspaceId,
-} from "./sync-actions.utils";
+} from './sync-actions.utils';
 
 @Injectable()
 export default class SyncActionsService {
@@ -58,21 +58,21 @@ export default class SyncActionsService {
     };
   }
 
-  async getBootstrap(modelNames: string, workspaceId: string) {
+  async getBootstrap(modelNames: string, workspaceId: string, userId: string) {
     let syncActions = await this.prisma.syncAction.findMany({
       where: {
         workspaceId,
-        modelName: { in: modelNames.split(",") as ModelName[] },
+        modelName: { in: modelNames.split(',') as ModelName[] },
       },
       orderBy: {
-        sequenceId: "asc",
+        sequenceId: 'asc',
       },
-      distinct: ["modelName", "workspaceId", "modelId", "action"],
+      distinct: ['modelName', 'workspaceId', 'modelId', 'action'],
     });
 
     const deleteModelIds = new Set(
       syncActions
-        .filter((action) => action.action === "D")
+        .filter((action) => action.action === 'D')
         .map((action) => action.modelId),
     );
 
@@ -81,7 +81,7 @@ export default class SyncActionsService {
     );
 
     return {
-      syncActions: await getSyncActionsData(this.prisma, syncActions),
+      syncActions: await getSyncActionsData(this.prisma, syncActions, userId),
       lastSequenceId: await getLastSequenceId(this.prisma, workspaceId),
     };
   }
@@ -90,21 +90,22 @@ export default class SyncActionsService {
     modelNames: string,
     lastSequenceId: bigint,
     workspaceId: string,
+    userId: string,
   ) {
     const syncActions = await this.prisma.syncAction.findMany({
       where: {
         workspaceId,
         sequenceId: { gt: lastSequenceId },
-        modelName: { in: modelNames.split(",") as ModelName[] },
+        modelName: { in: modelNames.split(',') as ModelName[] },
       },
       orderBy: {
-        sequenceId: "asc",
+        sequenceId: 'asc',
       },
-      distinct: ["modelId", "modelName", "workspaceId", "action"],
+      distinct: ['modelId', 'modelName', 'workspaceId', 'action'],
     });
 
     return {
-      syncActions: await getSyncActionsData(this.prisma, syncActions),
+      syncActions: await getSyncActionsData(this.prisma, syncActions, userId),
       lastSequenceId: await getLastSequenceId(this.prisma, workspaceId),
     };
   }

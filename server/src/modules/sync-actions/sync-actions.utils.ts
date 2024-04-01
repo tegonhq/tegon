@@ -132,6 +132,7 @@ export async function getModelData(
   prisma: PrismaService,
   modelName: ModelName,
   modelId: string,
+  userId?: string,
 ) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const modelMap: Record<ModelName, any> = {
@@ -181,7 +182,20 @@ export async function getModelData(
     },
     LinkedIssue: prisma.linkedIssue,
     IssueRelation: prisma.issueRelation,
-    Notification: prisma.notification,
+    Notification: {
+      findUnique: () => {
+        if (userId) {
+          return prisma.notification.findFirst({
+            where: {
+              id: modelId,
+              userId: userId,
+            },
+          });
+        } else {
+          return prisma.notification.findUnique({ where: { id: modelId } });
+        }
+      },
+    },
   };
 
   const model = modelMap[modelName];
@@ -196,21 +210,21 @@ export async function getModelData(
 export async function getSyncActionsData(
   prisma: PrismaService,
   syncActionsData: SyncAction[],
+  userId: string,
 ) {
-  return Promise.all(
-    syncActionsData.map(async (actionData) => {
-      const data = await getModelData(
-        prisma,
-        actionData.modelName,
-        actionData.modelId,
-      );
-
-      return {
-        data,
-        ...actionData,
-      };
-    }),
+  const modelDataResults = await Promise.all(
+    syncActionsData.map((actionData) =>
+      getModelData(prisma, actionData.modelName, actionData.modelId, userId),
+    ),
   );
+
+  return syncActionsData.reduce((result, actionData, index) => {
+    const data = modelDataResults[index];
+    if (data) {
+      result.push({ data, ...actionData });
+    }
+    return result;
+  }, []);
 }
 
 export async function getLastSequenceId(

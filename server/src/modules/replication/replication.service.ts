@@ -138,8 +138,12 @@ export default class ReplicationService {
                 isDeleted,
               );
 
+            const recipientId =
+              change.table === ModelName.Notification
+                ? syncActionData.data.userId
+                : syncActionData.workspaceId;
             this.syncGateway.wss
-              .to(syncActionData.workspaceId)
+              .to(recipientId)
               .emit('message', JSON.stringify(syncActionData));
           }
         });

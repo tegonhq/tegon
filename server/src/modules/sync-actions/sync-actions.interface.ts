@@ -8,6 +8,9 @@ export class BootstrapRequestQuery {
 
   @IsString()
   modelNames: string;
+
+  @IsString()
+  userId: string;
 }
 
 export class DeltaRequestQuery {
@@ -19,4 +22,7 @@ export class DeltaRequestQuery {
 
   @IsString()
   lastSequenceId: string;
+
+  @IsString()
+  userId: string;
 }

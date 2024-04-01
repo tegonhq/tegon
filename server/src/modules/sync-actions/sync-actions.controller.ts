@@ -25,6 +25,7 @@ export class SyncActionsController {
     return await this.syncActionsService.getBootstrap(
       BootstrapQuery.modelNames,
       BootstrapQuery.workspaceId,
+      BootstrapQuery.userId,
     );
   }
 
@@ -35,6 +36,7 @@ export class SyncActionsController {
       deltaQuery.modelNames,
       BigInt(deltaQuery.lastSequenceId),
       deltaQuery.workspaceId,
+      deltaQuery.userId,
     );
   }
 }
