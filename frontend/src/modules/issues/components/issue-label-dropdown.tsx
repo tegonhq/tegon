@@ -41,7 +41,7 @@ export const IssueLabelDropdown = observer(
     function getTrigger() {
       if (variant === IssueLabelDropdownVariant.LINK) {
         return (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-col flex-wrap gap-2">
             {labelsStore
               .getLabelsWithIds(value)
               .slice(0, 3)

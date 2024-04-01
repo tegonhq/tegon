@@ -37,7 +37,7 @@ export function Nav({ links }: NavProps) {
                 buttonVariants({ variant: 'ghost', size: 'sm' }),
                 'text-sm text-slate-700 dark:text-slate-300 flex items-center justify-between pr-0',
                 isActive &&
-                  'bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-800 dark:text-slate-100',
+                  'bg-active text-slate-800 hover:bg-active dark:text-slate-100',
               )}
             >
               <div className="flex items-center">
@@ -48,7 +48,7 @@ export function Nav({ links }: NavProps) {
                 )}
               </div>
               {link.count > 0 && (
-                <div className="px-2 py-[2px] rounded-md text-xs bg-slate-200 dark:bg-slate-800 text-foreground">
+                <div className="px-2 py-[2px] rounded-md text-xs bg-active text-foreground">
                   {link.count}
                 </div>
               )}

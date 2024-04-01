@@ -1,3 +1,5 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Client as TypesenseClient } from 'typesense';
@@ -16,6 +18,7 @@ export class VectorService implements OnModuleInit {
   private readonly logger: Logger = new Logger('VectorService');
 
   async onModuleInit() {
+    // await this.typesenseClient.collections('issues').delete();
     await this.createIssuesCollection();
   }
 
@@ -54,7 +57,7 @@ export class VectorService implements OnModuleInit {
         numberString: issue.number.toString(),
         issueNumber,
         title: issue.title,
-        description: issue.description || '',
+        description: issue.description ?? '',
         stateId: issue.stateId,
         workspaceId: issue.team.workspaceId,
       });
@@ -80,6 +83,7 @@ export class VectorService implements OnModuleInit {
       .documents()
       .search(searchParameters);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return searchResults.hits.map((hit: any) => ({
       id: hit.document.id,
       title: hit.document.title,

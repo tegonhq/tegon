@@ -3,9 +3,11 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { PrismaModule } from 'nestjs-prisma';
+
+import { VectorModule } from 'modules/vector/vector.module';
+
 import { SearchController } from './search.controller';
 import SearchService from './search.service';
-import { VectorModule } from 'modules/vector/vector.module';
 
 @Module({
   imports: [PrismaModule, HttpModule, VectorModule],

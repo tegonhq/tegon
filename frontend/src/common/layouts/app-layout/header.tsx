@@ -4,17 +4,18 @@ import { RiSearch2Line } from '@remixicon/react';
 import * as React from 'react';
 
 import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
+import { SearchDialog } from 'modules/search';
 
 import { cn } from 'common/lib/utils';
 
 import { Button } from 'components/ui/button';
-import { Dialog, DialogTrigger } from 'components/ui/dialog';
 import { NewIssueLine } from 'icons';
 
 import { WorkspaceDropdown } from './workspace-dropdown';
 
 export function Header() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [searchDialog, setSearchDialog] = React.useState(false);
 
   return (
     <div className="flex flex-col m-3 my-2 text-slate-700 dark:text-slate-300">
@@ -23,23 +24,26 @@ export function Header() {
       </div>
 
       <div className={cn('flex mt-4 gap-2')}>
-        <Dialog open={dialogOpen} onOpenChange={(open) => setDialogOpen(open)}>
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className={cn('flex-grow justify-start')}
-            >
-              <NewIssueLine size={16} className="text-muted-foreground" />
-              <div className="ml-3 text-sm"> New Issue </div>
-            </Button>
-          </DialogTrigger>
-          <NewIssueDialog onClose={() => setDialogOpen(false)} />
-        </Dialog>
-        <Button variant="outline" size="sm">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setDialogOpen(true)}
+          className={cn('flex-grow justify-start')}
+        >
+          <NewIssueLine size={16} className="text-muted-foreground" />
+          <div className="ml-3 text-sm"> New Issue </div>
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setSearchDialog(true)}
+        >
           <RiSearch2Line size={16} className="text-muted-foreground" />
         </Button>
       </div>
+
+      <NewIssueDialog open={dialogOpen} setOpen={setDialogOpen} />
+      <SearchDialog open={searchDialog} setOpen={setSearchDialog} />
     </div>
   );
 }

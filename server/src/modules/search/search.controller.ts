@@ -1,9 +1,10 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { AuthGuard } from 'modules/auth/auth.guard';
 
-import { ApiTags } from '@nestjs/swagger';
 import { SearchInputData } from './search.interface';
 import SearchService from './search.service';
 
@@ -15,13 +16,13 @@ import SearchService from './search.service';
 export class SearchController {
   constructor(private searchService: SearchService) {}
 
-  @Post()
+  @Get()
   @UseGuards(new AuthGuard())
-  async updateLabel(@Body() searchData: SearchInputData) {
+  async updateLabel(@Query() searchData: SearchInputData) {
     return await this.searchService.searchData(
       searchData.workspaceId,
       searchData.query,
-      searchData.limit,
+      parseInt(searchData.limit),
     );
   }
 }

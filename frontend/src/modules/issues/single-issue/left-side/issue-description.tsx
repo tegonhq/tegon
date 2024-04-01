@@ -81,7 +81,7 @@ export const IssueDescription = ({
         >
           <EditorCommand
             className={cn(
-              'z-50 h-auto font-sans max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background backdrop-blur-md dark:bg-slate-700/20 px-1 py-2 shadow-md transition-all',
+              'z-50 h-auto font-sans max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background dark:bg-slate-800 backdrop-blur-md px-1 shadow-lg transition-all',
               fontSans.variable,
             )}
           >
@@ -92,7 +92,7 @@ export const IssueDescription = ({
               <EditorCommandItem
                 value={item.title}
                 onCommand={(val) => item.command(val)}
-                className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-xs hover:bg-accent aria-selected:bg-accent `}
+                className={`flex w-full items-center space-x-2 my-2 rounded-md px-2 py-1 text-left text-xs hover:bg-accent dark:hover:bg-slate-700 aria-selected:bg-accent dark:aria-selected:bg-slate-700`}
                 key={item.title}
               >
                 <div className="flex h-5 w-5 items-center justify-center rounded-md border border-muted">

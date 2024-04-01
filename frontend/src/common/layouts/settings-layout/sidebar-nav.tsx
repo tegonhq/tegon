@@ -75,9 +75,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                 href={`/${workspaceSlug}/settings/${item.href}`}
                 className={cn(
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
-                  !teamIdentifier &&
-                    isActive(item) &&
-                    'bg-slate-200 dark:bg-slate-800',
+                  !teamIdentifier && isActive(item) && 'bg-active',
 
                   'justify-start text-sm w-full px-2 text-slate-700 dark:text-slate-300 mt-1',
                 )}
@@ -104,8 +102,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                 className={cn(
                   buttonVariants({ variant: 'ghost', size: 'sm' }),
 
-                  settingsSection === item.href &&
-                    'bg-slate-200 dark:bg-slate-800',
+                  settingsSection === item.href && 'bg-active',
                   'justify-start text-sm w-full px-2 text-slate-700 dark:text-slate-300 mt-1',
                 )}
               >

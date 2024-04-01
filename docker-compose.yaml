@@ -110,7 +110,7 @@ services:
     image: typesense/typesense:0.26.0.rc61
     container_name: typesense
     ports:
-      - "8108:8108"
+      - 8108:8108
     volumes:
       - typesense-data:/data
     networks:

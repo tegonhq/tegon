@@ -20,6 +20,7 @@ import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 import { NotificationsModule } from 'modules/notifications/notifications.module';
 import { OAuthCallbackModule } from 'modules/oauth-callback/oauth-callback.module';
 import { ReplicationModule } from 'modules/replication/replication.module';
+import { SearchModule } from 'modules/search/search.module';
 import { SyncModule } from 'modules/sync/sync.module';
 import { SyncActionsModule } from 'modules/sync-actions/sync-actions.module';
 import { TeamsModule } from 'modules/teams/teams.module';
@@ -31,7 +32,6 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { SearchModule } from 'modules/search/search.module';
 
 @Module({
   imports: [

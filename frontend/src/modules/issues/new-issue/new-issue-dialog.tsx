@@ -2,34 +2,46 @@
 
 import { RiArrowDropRightLine } from '@remixicon/react';
 import React from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
 
-import { DialogContent, DialogHeader, DialogTitle } from 'components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from 'components/ui/dialog';
 
 import { NewIssue } from './new-issue';
 import { TeamDropdown } from './team-dropdown';
 
 interface NewIssueDialogProps {
-  onClose: () => void;
+  open: boolean;
+  setOpen: (value: boolean) => void;
 }
 
-export function NewIssueDialog({ onClose }: NewIssueDialogProps) {
+export function NewIssueDialog({ open, setOpen }: NewIssueDialogProps) {
   const [team, setTeam] = React.useState(undefined);
 
+  useHotkeys('c', () => setOpen(true), { scopes: ['global'] });
   return (
-    <DialogContent className="sm:max-w-[600px]">
-      <DialogHeader className="p-3 pb-0">
-        <DialogTitle className="text-sm text-muted-foreground/80 font-normal">
-          <div className="flex gap-1 items-center">
-            <TeamDropdown onChange={(value) => setTeam(value)} value={team} />
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader className="p-3 pb-0">
+          <DialogTitle className="text-sm text-muted-foreground/80 font-normal">
+            <div className="flex gap-1 items-center">
+              <TeamDropdown onChange={(value) => setTeam(value)} value={team} />
 
-            <RiArrowDropRightLine size={18} />
+              <RiArrowDropRightLine size={18} />
 
-            <div>New issue</div>
-          </div>
-        </DialogTitle>
-      </DialogHeader>
+              <div>New issue</div>
+            </div>
+          </DialogTitle>
+        </DialogHeader>
 
-      {team && <NewIssue onClose={onClose} teamIdentfier={team} />}
-    </DialogContent>
+        {team && (
+          <NewIssue onClose={() => setOpen(false)} teamIdentfier={team} />
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }

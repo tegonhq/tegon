@@ -1,4 +1,6 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import { IsOptional, IsString } from 'class-validator';
 
 export class SearchInputData {
   @IsString()
@@ -8,6 +10,6 @@ export class SearchInputData {
   workspaceId: string;
 
   @IsOptional()
-  @IsNumber()
-  limit?: number;
+  @IsString()
+  limit?: string;
 }

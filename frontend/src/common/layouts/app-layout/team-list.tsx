@@ -12,15 +12,21 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from 'components/ui/accordion';
-import { IssuesLine, TeamLine, TriageLine } from 'icons';
+import { IssuesLine, ProjectsLine, TeamLine, TriageLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
+import { UserContext } from 'store/user-context';
 
 import { TeamListItem } from './team-list-item';
 
 export const TeamList = observer(() => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
-  const { teamsStore } = useContextStore();
+  const currentUser = React.useContext(UserContext);
+  const { teamsStore, workspaceStore } = useContextStore();
+  const teamAccessList = workspaceStore.getUserData(currentUser.id).teamIds;
+  const teams = teamsStore.teams.filter((team: TeamType) =>
+    teamAccessList.includes(team.id),
+  );
 
   return (
     <div
@@ -31,16 +37,16 @@ export const TeamList = observer(() => {
         Your teams
       </div>
 
-      {teamsStore.teams.map((team: TeamType) => (
+      {teams.map((team: TeamType) => (
         <Accordion
           type="single"
           key={team.identifier}
           collapsible
-          defaultValue="item-1"
+          defaultValue={teams[0].id}
           className="w-full text-slate-700 dark:text-slate-300 mt-0"
         >
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>div>svg]:rotate-90 hover:bg-slate-200 hover:text-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-50 rounded-md">
+          <AccordionItem value={team.id}>
+            <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>div>svg]:rotate-90 hover:bg-active hover:text-slate-800 dark:hover:text-slate-50 rounded-md">
               <div className="w-full justify-start px-3 flex items-center">
                 <div className="p-[2px] w-5 h-5 bg-red-400/10 rounded-sm">
                   <TeamLine
@@ -89,7 +95,7 @@ export const TeamList = observer(() => {
                 name="Projects"
                 team={team}
                 href="projects"
-                Icon={RiFunctionFill}
+                Icon={ProjectsLine}
               />
             </AccordionContent>
           </AccordionItem>

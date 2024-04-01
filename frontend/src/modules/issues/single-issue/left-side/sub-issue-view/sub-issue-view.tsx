@@ -65,7 +65,7 @@ export function SubIssueView({
                     Sub-issues
                   </Button>
                   {!isOpen && (
-                    <div className="px-2 ml-1 rounded-md text-sm bg-slate-100 dark:bg-slate-800 text-foreground">
+                    <div className="px-2 ml-1 rounded-md text-xs bg-active text-foreground">
                       {childIssues.length}
                     </div>
                   )}

@@ -31,7 +31,7 @@ export function IssuePriorityDropdown({
   variant = IssuePriorityDropdownVariant.DEFAULT,
 }: IssuePriorityProps) {
   const [open, setOpen] = React.useState(false);
-  const PriorityIcon = PriorityIcons[value];
+  const PriorityIcon = PriorityIcons[value ?? 0];
 
   function getTrigger() {
     if (variant === IssuePriorityDropdownVariant.NO_BACKGROUND) {

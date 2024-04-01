@@ -17,11 +17,11 @@ const buttonVariants = cva(
         destructive:
           'bg-red-700 text-slate-50 shadow-sm hover:bg-red-700/90 dark:bg-red-500 dark:text-slate-50 dark:hover:bg-red-500/90',
         outline:
-          'border border-slate-200 shadow-sm hover:bg-slate-100 hover:text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 dark:text-slate-50 dark:hover:text-slate-100',
+          'border border-slate-300 shadow-sm hover:bg-slate-100 hover:text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 dark:text-slate-50 dark:hover:text-slate-100',
         secondary:
-          'bg-slate-200 text-slate-800 shadow-sm hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-700/80',
+          'bg-active text-slate-800 shadow-sm hover:bg-slate-100 dark:text-slate-50 dark:hover:bg-slate-700/80',
         ghost:
-          'hover:bg-slate-200 hover:text-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-50 dark:focus-visible:ring-0 text-muted-foreground',
+          'hover:bg-active hover:text-slate-800 dark:hover:text-slate-50 dark:focus-visible:ring-0 text-muted-foreground',
         link: 'text-blue-600 underline-offset-4 hover:underline dark:text-blue-600',
       },
       size: {
@@ -76,7 +76,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           buttonVariants({ variant, size, full, className }),
           isActive &&
-            'bg-slate-200 text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-800 dark:text-slate-100',
+            'bg-active text-slate-800 dark:hover:bg-slate-800 dark:text-slate-100',
         )}
         ref={ref}
         {...props}

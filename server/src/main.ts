@@ -21,7 +21,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Validation
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({}));
 
   // Initiate replication service
   const replicationService = app.get(ReplicationService);

@@ -4,7 +4,11 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import type { IssueType } from 'common/types/issue';
-import type { IssueRelationEnum } from 'common/types/issue-relation';
+import { IssueRelationEnum } from 'common/types/issue-relation';
+
+import { CommandItem } from 'components/ui/command';
+
+import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -22,6 +26,7 @@ export function ModalIssues({ value, onClose, type }: ModalIssuesProps) {
   } = useRouter();
   const issueNumber = (issueId as string).split('-')[1];
   const { issuesStore } = useContextStore();
+  const { mutate: updateIssue } = useUpdateIssueMutation({});
 
   const issues = React.useMemo(() => {
     const issues = issuesStore.getIssues();
@@ -44,17 +49,62 @@ export function ModalIssues({ value, onClose, type }: ModalIssuesProps) {
 
   const currentIssue = issuesStore.getIssueByNumber(issueId);
 
+  const onSelect = (issueId: string) => {
+    if (type === IssueRelationEnum.PARENT) {
+      updateIssue({
+        id: currentIssue.id,
+        teamId: currentIssue.teamId,
+        parentId: issueId,
+      });
+    }
+
+    if (type === IssueRelationEnum.SUB_ISSUE) {
+      const issueData = issuesStore.getIssueById(issueId);
+      updateIssue({
+        id: issueId,
+        teamId: issueData.teamId,
+        parentId: currentIssue.id,
+      });
+    }
+
+    if (
+      type === IssueRelationEnum.RELATED ||
+      type === IssueRelationEnum.BLOCKS ||
+      type === IssueRelationEnum.BLOCKED ||
+      type === IssueRelationEnum.DUPLICATE ||
+      type === IssueRelationEnum.DUPLICATE_OF
+    ) {
+      updateIssue({
+        id: currentIssue.id,
+        teamId: currentIssue.teamId,
+        issueRelation: {
+          type,
+          issueId: currentIssue.id,
+          relatedIssueId: issueId,
+        },
+      });
+    }
+
+    onClose();
+  };
+
   return (
-    <div className="p-3">
+    <>
       {issues.map((issue: IssueType) => (
-        <ModalIssueItem
-          issue={issue}
+        <CommandItem
           key={issue.id}
-          onClose={onClose}
-          currentIssue={currentIssue}
-          type={type}
-        />
+          value={issue.id}
+          className="m-2"
+          onSelect={onSelect}
+        >
+          <ModalIssueItem
+            issue={issue}
+            onClose={onClose}
+            currentIssue={currentIssue}
+            type={type}
+          />
+        </CommandItem>
       ))}
-    </div>
+    </>
   );
 }
