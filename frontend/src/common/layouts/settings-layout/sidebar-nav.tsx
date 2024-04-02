@@ -10,6 +10,7 @@ import React from 'react';
 import { cn } from 'common/lib/utils';
 
 import { Button, buttonVariants } from 'components/ui/button';
+import { ScrollArea } from 'components/ui/scroll-area';
 import { AssigneeLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -61,59 +62,65 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
         Settings
       </Button>
 
-      <div className="px-4 py-3">
-        <div className="flex flex-col items-start justify-start w-full">
-          <div className="flex items-center mb-1">
-            <RiBuilding4Fill size={18} className="text-muted-foreground" />
-            <div className="text-muted-foreground text-sm ml-4">Workspace</div>
-          </div>
+      <ScrollArea className="overflow-y-auto h-[calc(100vh_-_56px)]">
+        <div className="px-4 py-3">
+          <div className="flex flex-col items-start justify-start w-full">
+            <div className="flex items-center mb-1">
+              <RiBuilding4Fill size={18} className="text-muted-foreground" />
+              <div className="text-muted-foreground text-sm ml-4">
+                Workspace
+              </div>
+            </div>
 
-          <div className="pl-7 flex flex-col w-full">
-            {WORKSPACE_LINKS.map((item) => (
-              <Link
-                key={item.href}
-                href={`/${workspaceSlug}/settings/${item.href}`}
-                className={cn(
-                  buttonVariants({ variant: 'ghost', size: 'sm' }),
-                  !teamIdentifier && isActive(item) && 'bg-active',
+            <div className="pl-7 flex flex-col w-full">
+              {WORKSPACE_LINKS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={`/${workspaceSlug}/settings/${item.href}`}
+                  className={cn(
+                    buttonVariants({ variant: 'ghost', size: 'sm' }),
+                    !teamIdentifier && isActive(item) && 'bg-active',
 
-                  'justify-start text-sm w-full px-2 text-slate-700 dark:text-slate-300 mt-1',
-                )}
-              >
-                {item.title}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="px-4 py-3">
-        <div className="flex flex-col items-start justify-start w-full">
-          <div className="flex items-center mb-1">
-            <AssigneeLine size={18} className="text-muted-foreground" />
-            <div className="text-muted-foreground text-sm ml-4">My Account</div>
-          </div>
-
-          <div className="pl-7 flex flex-col w-full">
-            {ACCOUNT_LINKS.map((item) => (
-              <Link
-                key={item.href}
-                href={`/${workspaceSlug}/settings/account/${item.href}`}
-                className={cn(
-                  buttonVariants({ variant: 'ghost', size: 'sm' }),
-
-                  settingsSection === item.href && 'bg-active',
-                  'justify-start text-sm w-full px-2 text-slate-700 dark:text-slate-300 mt-1',
-                )}
-              >
-                {item.title}
-              </Link>
-            ))}
+                    'justify-start text-sm w-full px-2 text-slate-700 dark:text-slate-300 mt-1',
+                  )}
+                >
+                  {item.title}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      <TeamSettingsList />
+        <div className="px-4 py-3">
+          <div className="flex flex-col items-start justify-start w-full">
+            <div className="flex items-center mb-1">
+              <AssigneeLine size={18} className="text-muted-foreground" />
+              <div className="text-muted-foreground text-sm ml-4">
+                My Account
+              </div>
+            </div>
+
+            <div className="pl-7 flex flex-col w-full">
+              {ACCOUNT_LINKS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={`/${workspaceSlug}/settings/account/${item.href}`}
+                  className={cn(
+                    buttonVariants({ variant: 'ghost', size: 'sm' }),
+
+                    settingsSection === item.href && 'bg-active',
+                    'justify-start text-sm w-full px-2 text-slate-700 dark:text-slate-300 mt-1',
+                  )}
+                >
+                  {item.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <TeamSettingsList />
+      </ScrollArea>
     </nav>
   );
 }

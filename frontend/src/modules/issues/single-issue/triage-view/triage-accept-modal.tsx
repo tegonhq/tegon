@@ -167,6 +167,7 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
                           <IssueLabelDropdown
                             value={field.value}
                             onChange={field.onChange}
+                            teamIdentfier={currentTeam.identifier}
                           />
                         </FormControl>
                       </FormItem>

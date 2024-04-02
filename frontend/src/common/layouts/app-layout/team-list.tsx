@@ -55,7 +55,7 @@ export const TeamList = observer(() => {
                   />
                 </div>
 
-                <div className="flex justify-start items-center text-sm ml-3">
+                <div className="flex justify-start items-center text-foreground text-sm ml-3">
                   {team?.name}
                   <RiArrowRightSFill className="arrow-right-icon ml-1 h-4 w-4 shrink-0 text-muted-foreground/50 transition-transform duration-200" />
                 </div>

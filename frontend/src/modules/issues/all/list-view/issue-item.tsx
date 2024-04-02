@@ -84,7 +84,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
         </div>
         <div
           className={cn(
-            'font-medium',
+            'font-medium mr-1',
             issue.parentId ||
               blockedIssues.length > 0 ||
               blocksIssues.length > 0
@@ -105,7 +105,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
         {blockedIssues.length > 0 && (
           <Badge
             variant="outline"
-            className="mx-2 px-2 flex gap-2 text-muted-foreground"
+            className="mx-1 px-2 flex gap-2 text-muted-foreground"
           >
             <BlockedFill size={14} className="text-red-700 dark:text-red-400" />
             {blockedIssues.length}
@@ -114,7 +114,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
         {blocksIssues.length > 0 && (
           <Badge
             variant="outline"
-            className="mx-2 px-2 flex gap-2 text-muted-foreground"
+            className="mx-1 px-2 flex gap-2 text-muted-foreground"
           >
             <BlockingToLine
               size={14}

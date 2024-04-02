@@ -14,14 +14,16 @@ import { useTeamLabels } from 'hooks/labels';
 interface IssueLabelDropdownProps {
   value?: string[];
   onChange?: (assigneeIds: string[]) => void;
+  teamIdentifier: string;
 }
 
 export function IssueLabelDropdown({
   value,
   onChange,
+  teamIdentifier,
 }: IssueLabelDropdownProps) {
   const [open, setOpen] = React.useState(false);
-  const labels = useTeamLabels();
+  const labels = useTeamLabels(teamIdentifier);
 
   const getLabel = (labelId: string) => {
     return labels.find((label: LabelType) => label.id === labelId);

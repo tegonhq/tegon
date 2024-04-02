@@ -11,11 +11,6 @@ import { useUsersData } from 'hooks/users';
 
 import type { User } from 'store/user-context';
 
-export enum IssueLabelDropdownVariant {
-  DEFAULT = 'DEFAULT',
-  LINK = 'LINK',
-}
-
 interface SubscribeDropdownProps {
   value: string[];
   onChange?: (value: string[]) => void;

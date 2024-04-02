@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiArrowRightSFill } from '@remixicon/react';
+import { RiAddLine, RiArrowRightSFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -15,7 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from 'components/ui/accordion';
-import { buttonVariants } from 'components/ui/button';
+import { Button, buttonVariants } from 'components/ui/button';
 import { TeamLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -82,6 +82,18 @@ export const TeamSettingsList = observer(() => {
             </Accordion>
           ))}
         </div>
+
+        <Link
+          className={cn(
+            buttonVariants({ variant: 'ghost', size: 'sm' }),
+            'flex items-center justify-start mb-2 w-full text',
+            settingsSection === 'new_team' && 'bg-active',
+          )}
+          href={`/${workspaceSlug}/settings/new_team`}
+        >
+          <RiAddLine size={18} className="text-muted-foreground" />
+          <div className="text-muted-foreground text-sm ml-3">Add Team</div>
+        </Link>
       </div>
     </div>
   );

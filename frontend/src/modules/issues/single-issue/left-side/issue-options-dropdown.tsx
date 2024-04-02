@@ -128,7 +128,6 @@ export function IssueOptionsDropdown() {
             </DropdownMenuPortal>
           </DropdownMenuSub>
 
-          <DropdownMenuSeparator />
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <DropdownItem Icon={RelatedIssueLine} title="Add related" />
@@ -189,6 +188,14 @@ export function IssueOptionsDropdown() {
             </DropdownMenuPortal>
           </DropdownMenuSub>
           <DropdownMenuSeparator />
+          {currentIssue.parentId && (
+            <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
+              <DropdownItem
+                Icon={ParentIssueLine}
+                title="Remove parent issue"
+              />
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
             <DropdownItem Icon={RiDeleteBin7Line} title="Delete" />
           </DropdownMenuItem>

@@ -125,6 +125,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
                       <IssueLabelDropdown
                         value={field.value}
                         onChange={field.onChange}
+                        teamIdentfier={teamIdentfier}
                       />
                     </FormControl>
                   </FormItem>

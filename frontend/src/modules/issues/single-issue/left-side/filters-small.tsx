@@ -57,7 +57,11 @@ export const FilterSmall = observer(() => {
         onChange={assigneeChange}
       />
 
-      <IssueLabelDropdown value={issue.labelIds} onChange={labelsChange} />
+      <IssueLabelDropdown
+        value={issue.labelIds}
+        onChange={labelsChange}
+        teamIdentfier={currentTeam.identifier}
+      />
     </div>
   );
 });

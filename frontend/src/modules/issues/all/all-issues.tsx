@@ -2,6 +2,8 @@
 
 import { AppLayout } from 'common/layouts/app-layout';
 
+import { ScrollArea } from 'components/ui/scroll-area';
+
 import { FiltersView } from './filters-view';
 import { Header } from './header';
 import { ListView } from './list-view';
@@ -11,9 +13,9 @@ export const AllIssues = () => {
     <main className="flex flex-col h-[100vh] overflow-hidden">
       <Header title="All issues" />
       <FiltersView />
-      <div className="grow overflow-y-auto">
+      <ScrollArea className="grow">
         <ListView />
-      </div>
+      </ScrollArea>
     </main>
   );
 };

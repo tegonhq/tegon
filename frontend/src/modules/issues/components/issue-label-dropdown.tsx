@@ -26,16 +26,18 @@ interface IssueLabelProps {
   value: string[];
   onChange?: (value: string[]) => void;
   variant?: IssueLabelDropdownVariant;
+  teamIdentfier: string;
 }
 
 export const IssueLabelDropdown = observer(
   ({
     value = [],
     onChange,
+    teamIdentfier,
     variant = IssueLabelDropdownVariant.DEFAULT,
   }: IssueLabelProps) => {
     const [open, setOpen] = React.useState(false);
-    const labels = useTeamLabels();
+    const labels = useTeamLabels(teamIdentfier);
     const { labelsStore } = useContextStore();
 
     function getTrigger() {
@@ -49,7 +51,7 @@ export const IssueLabelDropdown = observer(
                 <Badge
                   variant="outline"
                   key={label.name}
-                  className="text-muted-foreground flex items-center"
+                  className="text-foreground flex items-center"
                 >
                   <BadgeColor
                     style={{ backgroundColor: label.color }}

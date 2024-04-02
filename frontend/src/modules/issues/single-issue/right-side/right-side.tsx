@@ -90,6 +90,7 @@ export const RightSide = observer(() => {
             value={issue.labelIds}
             onChange={labelsChange}
             variant={IssueLabelDropdownVariant.LINK}
+            teamIdentfier={currentTeam.identifier}
           />
         </div>
       </div>

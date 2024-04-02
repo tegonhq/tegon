@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
@@ -24,7 +25,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export function AppLayoutChild({ children }: LayoutProps) {
+export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   const { applicationStore, notificationsStore } = useContextStore();
   const isCollapsed = applicationStore.displaySettings.sidebarCollapsed;
   const {
@@ -105,7 +106,7 @@ export function AppLayoutChild({ children }: LayoutProps) {
       <div className="px-4 flex md:hidden pt-4"> {children} </div>
     </div>
   );
-}
+});
 
 export function AppLayout(props: LayoutProps) {
   return (

@@ -7,21 +7,21 @@ import type { LabelType } from 'common/types/label';
 
 import { useContextStore } from 'store/global-context-provider';
 
-import { useCurrentTeam } from '../teams/use-current-team';
+import { useTeam } from '../teams/use-current-team';
 import { useCurrentWorkspace } from '../workspace/use-current-workspace';
 
-export function useTeamLabels() {
+export function useTeamLabels(teamIdentfier: string) {
   const { labelsStore } = useContextStore();
   const currentWorkspace = useCurrentWorkspace();
-  const currentTeam = useCurrentTeam();
+  const team = useTeam(teamIdentfier);
 
   const getLabels = () => {
-    const labelsForTeam = labelsStore.getLabelsForTeam(currentTeam.id);
+    const labelsForTeam = labelsStore.getLabelsForTeam(team.id);
     let labels = labelsStore.labels.filter(
       (label: LabelType) => label.workspaceId === currentWorkspace.id,
     );
 
-    if (currentTeam) {
+    if (team) {
       labels = [
         ...labels,
         ...labelsForTeam.filter((label: LabelType) =>
@@ -36,7 +36,7 @@ export function useTeamLabels() {
   const labels = React.useMemo(
     () => computed(() => getLabels()),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentTeam, currentWorkspace, labelsStore],
+    [team, currentWorkspace, labelsStore],
   ).get();
 
   return labels;

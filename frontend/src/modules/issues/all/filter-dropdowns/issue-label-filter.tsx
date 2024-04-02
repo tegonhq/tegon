@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { IssueLabelDropdownContent } from 'modules/issues/components';
 
 import { useTeamLabels } from 'hooks/labels';
+import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -16,7 +17,8 @@ interface IssueLabelFilterProps {
 
 export const IssueLabelFilter = observer(
   ({ onChange }: IssueLabelFilterProps) => {
-    const labels = useTeamLabels();
+    const currentTeam = useCurrentTeam();
+    const labels = useTeamLabels(currentTeam.identifier);
     const { applicationStore } = useContextStore();
 
     const labelFilters = JSON.parse(applicationStore.filters).label ?? [];

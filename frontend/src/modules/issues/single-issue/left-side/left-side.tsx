@@ -21,6 +21,7 @@ import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
 import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
+import { ScrollArea } from 'components/ui/scroll-area';
 
 interface LeftSideProps {
   isTriageView?: boolean;
@@ -55,7 +56,7 @@ export const LeftSide = observer(({ isTriageView }: LeftSideProps) => {
       <div className="flex xl:hidden px-8 py-2 border-b">
         <FilterSmall />
       </div>
-      <div className="grow px-8 py-6 flex flex-col gap-2 overflow-y-auto">
+      <ScrollArea className="grow px-8 py-6 flex flex-col gap-2">
         <div>
           {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
@@ -90,7 +91,7 @@ export const LeftSide = observer(({ isTriageView }: LeftSideProps) => {
         <LinkedIssuesView issueId={issue.id} />
         <Separator className="my-1" />
         <IssueActivity />
-      </div>
+      </ScrollArea>
     </>
   );
 });

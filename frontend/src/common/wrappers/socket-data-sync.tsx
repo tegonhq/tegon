@@ -7,6 +7,7 @@ import { Socket, io } from 'socket.io-client';
 
 import { useContextStore } from 'store/global-context-provider';
 import { MODELS } from 'store/models';
+import { UserContext } from 'store/user-context';
 
 import { saveSocketData } from './socket-data-util';
 import { Loader } from '../../components/ui/loader';
@@ -34,6 +35,7 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
       issueRelationsStore,
       notificationsStore,
     } = useContextStore();
+    const user = React.useContext(UserContext);
 
     const [socket, setSocket] = React.useState<Socket | undefined>(undefined);
 
@@ -55,6 +57,7 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
       const socket = io(publicRuntimeConfig.NEXT_PUBLIC_SYNC_SERVER, {
         query: {
           workspaceId: workspaceStore.workspace.id,
+          userId: user.id,
         },
         withCredentials: true,
       });

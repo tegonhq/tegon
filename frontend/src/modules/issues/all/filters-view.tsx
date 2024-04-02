@@ -147,6 +147,7 @@ export const FiltersView = observer(() => {
               <IssueLabelDropdown
                 value={filters['label']}
                 onChange={(value: string[]) => onChange(value, 'label')}
+                teamIdentifier={team.identifier}
               />
             </div>
             <Separator
