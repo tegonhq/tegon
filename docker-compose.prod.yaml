@@ -23,6 +23,7 @@ services:
     depends_on:
       - supertokens
       - redis
+      - typesense
     restart: unless-stopped
     networks:
       - tegon

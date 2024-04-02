@@ -42,6 +42,7 @@ services:
       - db
       - supertokens
       - redis
+      - typesense
     restart: unless-stopped
     networks:
       - tegon
