@@ -109,3 +109,4 @@ volumes:
   postgres-data:
   kafka-volume:
   zookeeper-volume:
+  typesense-data:
