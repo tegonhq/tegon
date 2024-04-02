@@ -87,13 +87,17 @@ export const IssuesStore: IAnyStateTreeNode = types
         ),
       };
     },
-    getIssueByNumber(issueNumberWithIdentifier: string): IssueType {
+    getIssueByNumber(
+      issueNumberWithIdentifier: string,
+      teamId: string,
+    ): IssueType {
       const issueNumber = parseInt(
         (issueNumberWithIdentifier as string).split('-')[1],
       );
 
       const issue = Array.from(self.issuesMap.values()).find(
-        (issue: IssueType) => issue.number === issueNumber,
+        (issue: IssueType) =>
+          issue.number === issueNumber && issue.teamId === teamId,
       );
 
       return {

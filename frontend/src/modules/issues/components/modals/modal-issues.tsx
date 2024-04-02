@@ -8,6 +8,7 @@ import type { IssueType } from 'common/types/issue';
 import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { CommandItem } from 'components/ui/command';
+import { useCurrentTeam } from 'hooks/teams';
 
 import { useUpdateIssueMutation } from 'services/issues';
 
@@ -51,24 +52,25 @@ export const ModalIssues = observer(
         .slice(0, 5);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
+    const team = useCurrentTeam();
+    const currentIssue = issuesStore.getIssueByNumber(issueId, team.id);
 
-    const currentIssue = issuesStore.getIssueByNumber(issueId);
-
-    const onSelect = (issueId: string) => {
+    const onSelect = (relatedIssueId: string) => {
       if (type === IssueRelationEnum.PARENT) {
+        const issueData = issuesStore.getIssueById(relatedIssueId);
+
         updateIssue({
-          id: currentIssue.id,
-          teamId: currentIssue.teamId,
-          parentId: issueId,
+          id: issueData.id,
+          teamId: issueData.teamId,
+          parentId: currentIssue.id,
         });
       }
 
       if (type === IssueRelationEnum.SUB_ISSUE) {
-        const issueData = issuesStore.getIssueById(issueId);
         updateIssue({
-          id: issueId,
-          teamId: issueData.teamId,
-          parentId: currentIssue.id,
+          id: currentIssue.id,
+          teamId: currentIssue.teamId,
+          parentId: relatedIssueId,
         });
       }
 
@@ -85,7 +87,7 @@ export const ModalIssues = observer(
           issueRelation: {
             type,
             issueId: currentIssue.id,
-            relatedIssueId: issueId,
+            relatedIssueId,
           },
         });
       }

@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 
 import type { IssueType } from 'common/types/issue';
 
+import { useCurrentTeam } from 'hooks/teams';
+
 import { useContextStore } from 'store/global-context-provider';
 
 export function useIssueData(): IssueType {
@@ -12,6 +14,7 @@ export function useIssueData(): IssueType {
   } = useRouter();
 
   const { issuesStore } = useContextStore();
+  const team = useCurrentTeam();
 
-  return issuesStore.getIssueByNumber(issueId);
+  return issuesStore.getIssueByNumber(issueId, team.id);
 }
