@@ -149,7 +149,7 @@ export class UpdateIssueInput {
 
   @IsOptional()
   @IsNumber()
-  estimate: number;
+  estimate?: number;
 
   @IsOptional()
   @IsArray()

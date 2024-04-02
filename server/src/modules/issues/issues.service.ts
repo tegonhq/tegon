@@ -208,7 +208,8 @@ export default class IssuesService {
     linkIssuedata?: LinkIssueData,
     linkMetaData?: Record<string, string>,
   ) {
-    const { parentId, issueRelation, ...otherIssueData } = issueData;
+    const { parentId, issueRelation, subscriberIds, ...otherIssueData } =
+      issueData;
 
     const currentIssue = await this.prisma.issue.findUnique({
       where: { id: issueParams.issueId },
@@ -218,7 +219,7 @@ export default class IssuesService {
       subscriberIds: getSubscriberIds(
         userId,
         issueData.assigneeId,
-        currentIssue.subscriberIds,
+        [...new Set([...currentIssue.subscriberIds, ...subscriberIds])],
         SubscribeType.SUBSCRIBE,
       ),
       ...otherIssueData,

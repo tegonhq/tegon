@@ -142,7 +142,8 @@ export default class ReplicationService {
               change.table === ModelName.Notification
                 ? syncActionData.data.userId
                 : syncActionData.workspaceId;
-            this.syncGateway.wss
+
+            await this.syncGateway.wss
               .to(recipientId)
               .emit('message', JSON.stringify(syncActionData));
           }

@@ -18,6 +18,7 @@ import {
   reactionDataType,
 } from './issue-comments.interface';
 import { IssueCommentsQueue } from './issue-comments.queue';
+import IssuesService from 'modules/issues/issues.service';
 
 @Injectable()
 export default class IssueCommentsService {
@@ -25,6 +26,7 @@ export default class IssueCommentsService {
     private prisma: PrismaService,
     private issueCommentsQueue: IssueCommentsQueue,
     private notificationsQueue: NotificationsQueue,
+    private issuesService: IssuesService,
   ) {}
 
   async createIssueComment(
@@ -42,6 +44,12 @@ export default class IssueCommentsService {
         issue: { include: { team: true } },
       },
     });
+
+    this.issuesService.updateIssueApi(
+      { teamId: issueComment.issue.teamId },
+      { subscriberIds: [userId] },
+      issueRequestParams,
+    );
 
     await this.issueCommentsQueue.addTwoWaySyncJob(
       issueComment,

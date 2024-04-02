@@ -46,5 +46,6 @@ export class SyncGateway implements OnGatewayInit, OnGatewayConnection {
     };
 
     client.join(query.workspaceId);
+    client.join(query.userId);
   }
 }

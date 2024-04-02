@@ -11,12 +11,14 @@ import { IssueCommentsController } from './issue-comments.controller';
 import { IssueCommentsProcessor } from './issue-comments.processor';
 import { IssueCommentsQueue } from './issue-comments.queue';
 import IssueCommentsService from './issue-comments.service';
+import { IssuesModule } from 'modules/issues/issues.module';
 
 @Module({
   imports: [
     PrismaModule,
     HttpModule,
     NotificationsModule,
+    IssuesModule,
     BullModule.registerQueue({ name: 'issueComments' }),
   ],
   controllers: [IssueCommentsController],
