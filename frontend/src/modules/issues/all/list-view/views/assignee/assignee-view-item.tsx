@@ -54,7 +54,7 @@ export const AssigneeViewItem = observer(
 
     return (
       <div className="flex flex-col">
-        <div className="flex items-center w-full pl-8 p-2 bg-slate-200 dark:bg-slate-800/60">
+        <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
           <Avatar className="h-[20px] w-[25px] flex items-center">
             <AvatarImage />
             <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm mr-1">
@@ -92,7 +92,7 @@ export const NoAssigneeView = observer(() => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center w-full pl-8 p-2 bg-slate-200 dark:bg-slate-800/60">
+      <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
         <RiAccountCircleFill size={18} className="text-muted-foreground mr-1" />
 
         <h3 className="pl-2 text-sm font-medium">

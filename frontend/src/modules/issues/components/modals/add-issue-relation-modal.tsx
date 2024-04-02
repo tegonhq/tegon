@@ -5,8 +5,11 @@ import React from 'react';
 
 import type { IssueRelationEnum } from 'common/types/issue-relation';
 
-import { Dialog, DialogContent } from 'components/ui/dialog';
-import { Input } from 'components/ui/input';
+import {
+  CommandDialog,
+  CommandInput,
+  CommandList,
+} from 'components/ui/command';
 
 import { ModalIssues } from './modal-issues';
 
@@ -21,28 +24,25 @@ export const AddIssueRelationModal = observer(
     const [value, setValue] = React.useState('');
 
     return (
-      <Dialog
+      <CommandDialog
         open={isOpen}
-        onOpenChange={(open) => {
-          if (!open) {
+        onOpenChange={(value: boolean) => {
+          if (!value) {
             onClose();
           }
         }}
+        commandProps={{
+          shouldFilter: false,
+        }}
       >
-        <DialogContent closeIcon={false}>
-          <div>
-            <div className="p-3 border-b">
-              <Input
-                value={value}
-                onChange={(e) => setValue(e.currentTarget.value)}
-                className="text-md outline-none ring-none focus-visible:ring-0 border-0 shadow-none placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                placeholder="Search for issue to add as a sub-issue"
-              />
-            </div>
-            <ModalIssues value={value} onClose={onClose} type={type} />
-          </div>
-        </DialogContent>
-      </Dialog>
+        <CommandInput
+          placeholder="Search for issue..."
+          onValueChange={(value: string) => setValue(value)}
+        />
+        <CommandList>
+          <ModalIssues value={value} onClose={onClose} type={type} />
+        </CommandList>
+      </CommandDialog>
     );
   },
 );

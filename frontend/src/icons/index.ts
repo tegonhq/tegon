@@ -29,3 +29,5 @@ export * from './related-issue-line';
 export * from './blocked-fill';
 export * from './inbox';
 export * from './focus-line';
+export * from './projects-line';
+export * from './duplicate-line-2';

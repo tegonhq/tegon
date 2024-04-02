@@ -59,9 +59,11 @@ export const CommentsStore: IAnyStateTreeNode = types
   })
   .views((self) => ({
     getComments(issueId: string) {
-      return self.comments.filter(
-        (comment: IssueCommentType) => comment.issueId === issueId,
-      );
+      return issueId === self.issueId
+        ? self.comments.filter(
+            (comment: IssueCommentType) => comment.issueId === issueId,
+          )
+        : [];
     },
   }));
 

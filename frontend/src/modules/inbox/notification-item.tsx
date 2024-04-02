@@ -95,7 +95,7 @@ export const NotificationItem = observer(
         className={cn(
           'p-4 py-3 flex gap-2 items-center',
           issueId === `${team.identifier}-${issue.number}` &&
-            'bg-primary/10 rounded-md',
+            'bg-active rounded-md',
           !noBorder && 'border-b',
         )}
         onClick={() => {

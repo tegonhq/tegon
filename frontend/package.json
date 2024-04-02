@@ -53,6 +53,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.49.3",
+    "react-hotkeys-hook": "^4.5.0",
     "react-query": "^3.39.3",
     "react-resizable-panels": "^1.0.9",
     "react-time-ago": "^7.3.1",

@@ -19,6 +19,7 @@ import { IssueDescription } from './issue-description';
 import { IssueTitle } from './issue-title';
 import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
+import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
 
 interface LeftSideProps {
@@ -56,6 +57,8 @@ export const LeftSide = observer(({ isTriageView }: LeftSideProps) => {
       </div>
       <div className="grow px-8 py-6 flex flex-col gap-2 overflow-y-auto">
         <div>
+          {isTriageView && <SimilarIssuesView issueId={issue.id} />}
+
           {issue.parentId && <ParentIssueView issue={issue} />}
 
           <IssueTitle value={issue.title} onChange={onIssueChange} />
@@ -85,9 +88,7 @@ export const LeftSide = observer(({ isTriageView }: LeftSideProps) => {
         )}
 
         <LinkedIssuesView issueId={issue.id} />
-
         <Separator className="my-1" />
-
         <IssueActivity />
       </div>
     </>

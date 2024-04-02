@@ -49,7 +49,7 @@ export const FiltersView = observer(() => {
   };
 
   return (
-    <div className="py-2 pl-8 px-4 text-xs flex justify-between gap-4 border-b">
+    <div className="py-2 pl-8 px-7 text-xs flex justify-between gap-4 border-b">
       <div className="flex gap-4 items-center">
         {/* Status  */}
         {filters['status'] && filters['status'].length > 0 && (
@@ -128,7 +128,7 @@ export const FiltersView = observer(() => {
 
         {/* Label  */}
         {filters['label'] && filters['label'].length > 0 && (
-          <div className="flex">
+          <div className="flex border rounded-md">
             <div className="px-2 p-1 rounded-md rounded-r-none transparent hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 dark:text-slate-50 dark:hover:text-slate-100">
               Label
             </div>

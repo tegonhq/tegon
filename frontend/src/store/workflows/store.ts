@@ -44,16 +44,18 @@ export const WorkflowsStore: IAnyStateTreeNode = types
     const load = flow(function* () {
       const workflows = yield tegonDatabase.workflows.toArray();
 
-      self.workflows = workflows;
+      self.workflows = workflows.map((workflow: WorkflowType) =>
+        Workflow.create(workflow),
+      );
     });
 
     return { update, deleteById, load };
   })
   .views((self) => ({
     getWorkflowsForTeam(teamId: string) {
-      return self.workflows.filter((workflow: WorkflowType) => {
-        workflow.teamId === teamId;
-      });
+      return self.workflows.filter(
+        (workflow: WorkflowType) => workflow.teamId === teamId,
+      );
     },
     getCancelledWorkflow(teamId: string) {
       return self.workflows.find((workflow: WorkflowType) => {

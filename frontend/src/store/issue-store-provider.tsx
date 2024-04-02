@@ -1,56 +1,60 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
+'use client';
 
-import { observer } from 'mobx-react-lite';
-import { useRouter } from 'next/router';
-import * as React from 'react';
+import { useParams } from 'next/navigation';
+import React from 'react';
 
 import { Loader } from 'components/ui/loader';
 
 import { tegonDatabase } from './database';
 import { useContextStore } from './global-context-provider';
 
-export const IssueStoreInit = observer(
-  ({ children }: { children: React.ReactNode }) => {
-    const [loading, setLoading] = React.useState(true);
-    const {
-      issuesHistoryStore,
-      commentsStore,
+export const IssueStoreInit = ({ children }: { children: React.ReactNode }) => {
+  const [loading, setLoading] = React.useState(true);
+  const { issuesHistoryStore, commentsStore, linkedIssuesStore } =
+    useContextStore();
 
-      linkedIssuesStore,
-    } = useContextStore();
+  const { issueId } = useParams();
 
-    const {
-      query: { issueId },
-    } = useRouter();
+  const teamIdentifier = (issueId as string).split('-')[0];
 
-    React.useEffect(() => {
-      if (issueId) {
-        initIssueBasedStored();
-      }
+  // All data related to team
+  const initIssueBasedStored = React.useCallback(async () => {
+    setLoading(true);
+    const id = (issueId as string).split('-')[1];
 
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [issueId]);
+    const team = await tegonDatabase.teams.get({
+      identifier: teamIdentifier,
+    });
 
-    // All data related to team
-    const initIssueBasedStored = React.useCallback(async () => {
-      setLoading(true);
-      const id = (issueId as string).split('-')[1];
-      const issueData = await tegonDatabase.issues.get({
-        number: parseInt(id),
-      });
+    const issueData = await tegonDatabase.issues.get({
+      number: parseInt(id),
+      teamId: team.id,
+    });
 
-      await issuesHistoryStore.load(issueData.id);
-      await commentsStore.load(issueData.id);
-      await linkedIssuesStore.load(issueData.id);
+    await issuesHistoryStore.load(issueData.id);
+    await commentsStore.load(issueData.id);
+    await linkedIssuesStore.load(issueData.id);
 
-      setLoading(false);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [issueId]);
+    setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [issueId]);
 
-    if (loading) {
-      return <Loader text="Loading issue data" className="h-full" />;
+  React.useEffect(() => {
+    if (issueId) {
+      initIssueBasedStored();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [issueId]);
 
-    return <>{children}</>;
-  },
-);
+  if (loading) {
+    return <Loader text="Loading issue data" className="h-full" />;
+  }
+
+  return (
+    <>
+      {children}
+      {issueId}
+    </>
+  );
+};

@@ -13,6 +13,7 @@ import { useDeltaRecords } from 'services/sync/delta-sync';
 
 import { useContextStore } from 'store/global-context-provider';
 import { MODELS } from 'store/models';
+import { UserContext } from 'store/user-context';
 
 import { saveSocketData } from './socket-data-util';
 
@@ -22,6 +23,7 @@ interface Props {
 
 export function BootstrapWrapper({ children }: Props) {
   const workspace = useCurrentWorkspace();
+  const user = React.useContext(UserContext);
   const [loading, setLoading] = React.useState(true);
   const lastSequenceId = localStorage && localStorage.getItem('lastSequenceId');
   const {
@@ -58,6 +60,7 @@ export function BootstrapWrapper({ children }: Props) {
   const { refetch: bootstrapIssuesRecords } = useBootstrapRecords({
     modelNames: Object.values(MODELS),
     workspaceId: workspace.id,
+    userId: user.id,
     onSuccess: (data: BootstrapResponse) => {
       saveSocketData(data.syncActions, MODEL_STORE_MAP);
       localStorage.setItem('lastSequenceId', `${data.lastSequenceId}`);
@@ -68,6 +71,7 @@ export function BootstrapWrapper({ children }: Props) {
     modelNames: Object.values(MODELS),
     workspaceId: workspace.id,
     lastSequenceId,
+    userId: user.id,
     onSuccess: (data: BootstrapResponse) => {
       saveSocketData(data.syncActions, MODEL_STORE_MAP);
       localStorage.setItem('lastSequenceId', `${data.lastSequenceId}`);

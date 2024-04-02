@@ -1,7 +1,9 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 
 import { useGithubAccounts } from 'modules/settings/integrations/github/github-utils';
@@ -25,6 +27,7 @@ import {
   useCreateIssueMutation,
 } from 'services/issues/create-issue';
 
+import { DuplicateIssuesView } from './duplicates-view';
 import { isBirectionalEnabled } from './new-issue-utils';
 import { NewIssueSchema } from './new-issues-type';
 import {
@@ -46,6 +49,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
     onSuccess: () => {},
   });
   const team = useTeam(teamIdentfier);
+  const [description, setDescription] = React.useState('');
   const { githubAccounts } = useGithubAccounts(IntegrationName.Github);
   const isBidirectional = isBirectionalEnabled(githubAccounts, team.id);
 
@@ -62,6 +66,10 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
     createIssue({ ...values, teamId: team.id, parentId });
     onClose();
   };
+
+  const setDescriptionValue = useDebouncedCallback((value) => {
+    setDescription(value);
+  }, 500);
 
   return (
     <div
@@ -80,7 +88,13 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <IssueDescription {...field} />
+                    <IssueDescription
+                      {...field}
+                      onChange={(value) => {
+                        field.onChange(value);
+                        setDescriptionValue(value);
+                      }}
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -192,6 +206,9 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
           </div>
         </form>
       </Form>
+      {form.getValues().description && (
+        <DuplicateIssuesView description={description} />
+      )}
     </div>
   );
 }

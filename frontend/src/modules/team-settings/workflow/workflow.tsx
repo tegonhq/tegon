@@ -6,6 +6,7 @@ import * as React from 'react';
 import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { Separator } from 'components/ui/separator';
+import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -13,14 +14,16 @@ import { WorkflowCategory } from './workflow-category';
 
 export const Workflow = observer(() => {
   const { workflowsStore } = useContextStore();
+  const currentTeam = useCurrentTeam();
 
   const getWorkflows = React.useCallback(
     (categoryName: string) => {
-      return workflowsStore.workflows.filter(
-        (workflow: WorkflowType) => workflow.category === categoryName,
-      );
+      return workflowsStore
+        .getWorkflowsForTeam(currentTeam.id)
+        .filter((workflow: WorkflowType) => workflow.category === categoryName);
     },
-    [workflowsStore.workflows],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [workflowsStore.workflows, currentTeam.id],
   );
 
   return (

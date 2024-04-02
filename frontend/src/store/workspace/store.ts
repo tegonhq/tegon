@@ -64,6 +64,13 @@ export const WorkspaceStore: IAnyStateTreeNode = types
     });
 
     return { update, updateUsers, deleteUser, load };
-  });
+  })
+  .views((self) => ({
+    getUserData(userId: string) {
+      return self.usersOnWorkspaces.find(
+        (uOW: UsersOnWorkspaceType) => uOW.userId === userId,
+      );
+    },
+  }));
 
 export type WorkspaceStoreType = Instance<typeof WorkspaceStore>;

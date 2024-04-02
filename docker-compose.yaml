@@ -37,7 +37,6 @@ services:
 
   server:
     image: "tegonhq/tegon-server:${VERSION}"
-    # platform: linux/amd64
     container_name: tegon-server
     depends_on:
       - db
@@ -66,12 +65,15 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
+      - TYPESENSE_HOST=${TYPESENSE_HOST}
+      - TYPESENSE_PORT=${TYPESENSE_PORT}
+      - TYPESENSE_PROTOCOL=${TYPESENSE_PROTOCOL}
     ports:
       - 3001:3001
 
   webapp:
     image: "tegonhq/tegon-webapp:${VERSION}"
-    # platform: linux/amd64
     container_name: tegon-webapp
     restart: unless-stopped
     depends_on:
@@ -104,6 +106,18 @@ services:
     ports:
       - 5555:5555
 
+  typesense:
+    image: typesense/typesense:0.26.0.rc61
+    container_name: typesense
+    ports:
+      - 8108:8108
+    volumes:
+      - typesense-data:/data
+    networks:
+      - tegon
+    restart: unless-stopped
+    command: --data-dir /data --api-key=${TYPESENSE_API_KEY} --enable-cors
+
 networks:
   app_network:
     driver: bridge
@@ -113,3 +127,4 @@ volumes:
   postgres-data:
   kafka-volume:
   zookeeper-volume:
+  typesense-data:

@@ -14,7 +14,7 @@ export function Header() {
         <Breadcrumb className="text-xs">
           <BreadcrumbItem>
             <BreadcrumbLink className="flex items-center gap-2 font-medium">
-              <div className="p-[2px] w-5 h-5 bg-primary/10 rounded-sm flex items-center">
+              <div className="p-[2px] w-5 h-5 bg-primary/10 rounded-sm flex items-center justify-center">
                 <Inbox size={14} className="text-foreground" />
               </div>
 

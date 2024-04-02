@@ -37,7 +37,7 @@ export const IssueActivity = observer(() => {
 
   const {
     commentsStore,
-    issuesHistoryStore: { issueHistories },
+    issuesHistoryStore,
     linkedIssuesStore: { linkedIssues },
   } = useContextStore();
 
@@ -46,10 +46,12 @@ export const IssueActivity = observer(() => {
       ...comment,
       type: ActivityType.Comment,
     })),
-    ...issueHistories.map((issueHistory: IssueHistoryType) => ({
-      ...issueHistory,
-      type: ActivityType.Default,
-    })),
+    ...issuesHistoryStore
+      .getIssueHistories(issue.id)
+      .map((issueHistory: IssueHistoryType) => ({
+        ...issueHistory,
+        type: ActivityType.Default,
+      })),
     ...linkedIssues.map((linkedIssue: LinkedIssueType) => ({
       ...linkedIssue,
       type: ActivityType.LinkedIssue,

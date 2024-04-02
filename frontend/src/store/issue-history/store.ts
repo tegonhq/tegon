@@ -60,6 +60,11 @@ export const IssueHistoryStore: IAnyStateTreeNode = types
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    getIssueHistories(issueId: string) {
+      return issueId === self.issueId ? self.issueHistories : [];
+    },
+  }));
 
 export type IssueHistoryStoreType = Instance<typeof IssueHistoryStore>;

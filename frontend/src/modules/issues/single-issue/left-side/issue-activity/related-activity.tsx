@@ -14,7 +14,7 @@ import { type IssueHistoryType } from 'common/types/issue';
 import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { TimelineItem } from 'components/ui/timeline';
-import { useCurrentTeam } from 'hooks/teams';
+import { useTeamWithId } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -53,8 +53,8 @@ export function RelatedActivity({
     query: { workspaceSlug },
   } = useRouter();
   const { issuesStore } = useContextStore();
-  const currentTeam = useCurrentTeam();
   const relatedIssue = issuesStore.getIssueById(relatedChanges.relatedIssueId);
+  const team = useTeamWithId(relatedIssue.teamId);
 
   const getText = () => {
     if (relatedChanges.type === IssueRelationEnum.RELATED) {
@@ -66,9 +66,9 @@ export function RelatedActivity({
           </span>
           <a
             className="text-foreground mx-1"
-            href={`/${workspaceSlug}/issue/${currentTeam.identifier}-${relatedIssue.number}`}
+            href={`/${workspaceSlug}/issue/${team.identifier}-${relatedIssue.number}`}
           >
-            {currentTeam.identifier}-{relatedIssue.number}
+            {team.identifier}-{relatedIssue.number}
           </a>
         </div>
       );
@@ -84,9 +84,9 @@ export function RelatedActivity({
           </span>
           <a
             className="text-foreground mx-1"
-            href={`/${workspaceSlug}/issue/${currentTeam.identifier}-${relatedIssue.number}`}
+            href={`/${workspaceSlug}/issue/${team.identifier}-${relatedIssue.number}`}
           >
-            {currentTeam.identifier}-{relatedIssue.number}
+            {team.identifier}-{relatedIssue.number}
           </a>
         </div>
       );
@@ -102,9 +102,9 @@ export function RelatedActivity({
           </span>
           <a
             className="text-foreground mx-1"
-            href={`/${workspaceSlug}/issue/${currentTeam.identifier}-${relatedIssue.number}`}
+            href={`/${workspaceSlug}/issue/${team.identifier}-${relatedIssue.number}`}
           >
-            {currentTeam.identifier}-{relatedIssue.number}
+            {team.identifier}-{relatedIssue.number}
           </a>
         </div>
       );

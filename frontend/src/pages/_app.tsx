@@ -7,7 +7,7 @@ import type { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import { Inter } from 'next/font/google';
-import * as React from 'react';
+import React from 'react';
 import { Hydrate, QueryClientProvider } from 'react-query';
 import { SuperTokensWrapper } from 'supertokens-auth-react';
 
