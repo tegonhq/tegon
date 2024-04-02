@@ -6,6 +6,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { NewIssue } from 'modules/issues/new-issue/new-issue';
 
+import { ScrollArea } from 'components/ui/scroll-area';
 import { Separator } from 'components/ui/separator';
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
@@ -21,7 +22,6 @@ import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
 import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
-import { ScrollArea } from 'components/ui/scroll-area';
 
 interface LeftSideProps {
   isTriageView?: boolean;

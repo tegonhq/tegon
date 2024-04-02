@@ -15,7 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from 'components/ui/accordion';
-import { Button, buttonVariants } from 'components/ui/button';
+import { buttonVariants } from 'components/ui/button';
 import { TeamLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
