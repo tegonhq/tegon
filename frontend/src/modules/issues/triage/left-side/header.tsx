@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { getTeamColor } from 'common/color-utils';
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -30,10 +32,12 @@ export function Header({ title }: HeaderProps) {
               className="flex items-center gap-2 font-medium"
               href={`/${workspaceSlug}/team/${team.identifier}/all`}
             >
-              <div className="p-[2px] w-5 h-5 bg-red-400/10 rounded-sm">
+              <div
+                className={`p-[2px] w-5 h-5 ${getTeamColor(team.name)} rounded-sm`}
+              >
                 <TeamLine
                   size={14}
-                  className="shrink-0 text-muted-foreground h-4 w-4 text-red-400"
+                  className={`shrink-0 text-muted-foreground h-4 w-4 ${getTeamColor(team.name)}`}
                 />
               </div>
 

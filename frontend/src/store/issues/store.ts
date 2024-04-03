@@ -22,6 +22,7 @@ export const IssuesStore: IAnyStateTreeNode = types
       self.issuesMap.set(id, Issue.create(issue));
     };
     const deleteById = (id: string) => {
+      console.log(id, 'asasdf');
       self.issuesMap.delete(id);
     };
 
@@ -99,6 +100,10 @@ export const IssuesStore: IAnyStateTreeNode = types
         (issue: IssueType) =>
           issue.number === issueNumber && issue.teamId === teamId,
       );
+
+      if (!issue) {
+        return undefined;
+      }
 
       return {
         ...issue,

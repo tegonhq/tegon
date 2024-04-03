@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { IssueAssigneeDropdownContent } from 'modules/issues/components';
 
+import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 
 import {
@@ -59,7 +60,12 @@ export function IssueAssigneeDropdown({
               <>
                 <Avatar className="h-[20px] w-[25px] mr-2">
                   <AvatarImage />
-                  <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+                  <AvatarFallback
+                    className={cn(
+                      'text-[0.6rem] rounded-sm',
+                      getTailwindColor(getUserData(value[0]).username),
+                    )}
+                  >
                     {getInitials(getUserData(value[0]).fullname)}
                   </AvatarFallback>
                 </Avatar>

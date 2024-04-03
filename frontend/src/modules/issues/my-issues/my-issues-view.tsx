@@ -16,8 +16,7 @@ export const MyIssuesView = observer(() => {
   const issues = issuesStore.getIssuesForUser(true, user.id);
 
   return (
-    <div className="flex flex-col">
-      {' '}
+    <div className="flex flex-col h-full">
       {issues.map((issue: IssueType) => (
         <IssueItem key={issue.id} issueId={issue.id} />
       ))}

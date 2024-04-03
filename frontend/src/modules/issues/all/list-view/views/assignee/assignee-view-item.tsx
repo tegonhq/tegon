@@ -4,6 +4,8 @@ import { RiAccountCircleFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
+import { getTailwindColor } from 'common/color-utils';
+import { cn } from 'common/lib/utils';
 import type { IssueType } from 'common/types/issue';
 import type { UsersOnWorkspaceType } from 'common/types/workspace';
 
@@ -57,7 +59,12 @@ export const AssigneeViewItem = observer(
         <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
           <Avatar className="h-[20px] w-[25px] flex items-center">
             <AvatarImage />
-            <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm mr-1">
+            <AvatarFallback
+              className={cn(
+                'text-[0.6rem] rounded-sm mr-1',
+                getTailwindColor(getUserData(userOnWorkspace.userId).username),
+              )}
+            >
               {getInitials(getUserData(userOnWorkspace.userId).fullname)}
             </AvatarFallback>
           </Avatar>

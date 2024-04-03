@@ -75,16 +75,6 @@ export const NotificationItem = observer(
       (nextIssue && issueId === `${team.identifier}-${nextIssue.number}`) ||
       issueId === `${team.identifier}-${issue.number}`;
 
-    React.useEffect(() => {
-      if (!notification.readAt) {
-        updateNotification({
-          notificationId: notification.id,
-          readAt: new Date().toISOString(),
-        });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     if (isLoading) {
       return null;
     }
@@ -100,6 +90,12 @@ export const NotificationItem = observer(
         )}
         onClick={() => {
           push(`/${workspaceSlug}/inbox/${team.identifier}-${issue.number}`);
+          if (!notification.readAt) {
+            updateNotification({
+              notificationId: notification.id,
+              readAt: new Date().toISOString(),
+            });
+          }
         }}
       >
         <div className="flex flex-col gap-1 w-full">

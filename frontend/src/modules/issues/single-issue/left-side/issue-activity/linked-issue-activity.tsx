@@ -3,6 +3,8 @@
 import { RiGithubFill } from '@remixicon/react';
 import ReactTimeAgo from 'react-time-ago';
 
+import { getTailwindColor } from 'common/color-utils';
+import { cn } from 'common/lib/utils';
 import type { LinkedIssueType } from 'common/types/linked-issue';
 
 import {
@@ -37,7 +39,12 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
       {linkedIssue.createdById ? (
         <Avatar className="h-[20px] w-[25px] mr-4 text-foreground">
           <AvatarImage />
-          <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+          <AvatarFallback
+            className={cn(
+              'text-[0.6rem] rounded-sm',
+              getTailwindColor(getUserData(linkedIssue.createdById).username),
+            )}
+          >
             {getInitials(getUserData(linkedIssue.createdById).fullname)}
           </AvatarFallback>
         </Avatar>

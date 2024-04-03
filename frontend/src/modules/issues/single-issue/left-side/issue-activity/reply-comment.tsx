@@ -2,6 +2,9 @@
 
 import * as React from 'react';
 
+import { getTailwindColor } from 'common/color-utils';
+import { cn } from 'common/lib/utils';
+
 import {
   Avatar,
   AvatarFallback,
@@ -44,7 +47,12 @@ export function ReplyComment({
     <div className="flex items-start text-xs text-muted-foreground w-full border-t p-3 pb-0">
       <Avatar className="h-[20px] w-[25px] text-foreground">
         <AvatarImage />
-        <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+        <AvatarFallback
+          className={cn(
+            'text-[0.6rem] rounded-sm',
+            getTailwindColor(currentUser.username),
+          )}
+        >
           {getInitials(currentUser.fullname)}
         </AvatarFallback>
       </Avatar>

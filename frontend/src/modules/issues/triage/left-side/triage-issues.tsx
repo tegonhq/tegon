@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import ReactTimeAgo from 'react-time-ago';
 
+import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 import type { IssueType } from 'common/types/issue';
 import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
@@ -82,7 +83,12 @@ export const TriageIssues = observer(() => {
               <div className="flex gap-2 text-muted-foreground">
                 <Avatar className="h-[20px] w-[25px] flex items-center">
                   <AvatarImage />
-                  <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+                  <AvatarFallback
+                    className={cn(
+                      'text-[0.6rem] rounded-sm',
+                      getTailwindColor(userData.username),
+                    )}
+                  >
                     {getInitials(userData.fullname)}
                   </AvatarFallback>
                 </Avatar>

@@ -4,6 +4,8 @@ import { RiArrowRightSFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
+import { getTeamColor } from 'common/color-utils';
+import { cn } from 'common/lib/utils';
 import type { TeamType } from 'common/types/team';
 
 import {
@@ -33,7 +35,7 @@ export const TeamList = observer(() => {
       ref={containerRef}
       className="h-full space-y-1 overflow-y-auto mt-4 m-3"
     >
-      <div className="px-3 text-xs text-muted-foreground font-medium">
+      <div className="px-2 text-xs text-muted-foreground font-medium">
         Your teams
       </div>
 
@@ -47,11 +49,15 @@ export const TeamList = observer(() => {
         >
           <AccordionItem value={team.id}>
             <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>div>svg]:rotate-90 hover:bg-active hover:text-slate-800 dark:hover:text-slate-50 rounded-md">
-              <div className="w-full justify-start px-3 flex items-center">
-                <div className="p-[2px] w-5 h-5 bg-red-400/10 rounded-sm">
+              <div className="w-full justify-start px-2 flex items-center">
+                <div
+                  className={cn(
+                    `p-[2px] w-5 h-5 ${getTeamColor(team.name, true)} rounded-sm`,
+                  )}
+                >
                   <TeamLine
                     size={14}
-                    className="shrink-0 text-muted-foreground h-4 w-4 text-red-400"
+                    className={cn('shrink-0 h-4 w-4', getTeamColor(team.name))}
                   />
                 </div>
 
