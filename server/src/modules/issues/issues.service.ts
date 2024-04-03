@@ -219,7 +219,7 @@ export default class IssuesService {
       subscriberIds: getSubscriberIds(
         userId,
         issueData.assigneeId,
-        [...new Set([...currentIssue.subscriberIds, ...subscriberIds])],
+        [...new Set([...currentIssue.subscriberIds, ...(subscriberIds || [])])],
         SubscribeType.SUBSCRIBE,
       ),
       ...otherIssueData,
