@@ -2,8 +2,8 @@
 
 import getConfig from 'next/config';
 import Router from 'next/router';
-import EmailPasswordReact from 'supertokens-auth-react/recipe/emailpassword';
 import SessionReact from 'supertokens-auth-react/recipe/session';
+import ThirdPartyEmailPasswordReact from 'supertokens-auth-react/recipe/thirdpartyemailpassword';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -18,7 +18,7 @@ export const frontendConfig = () => {
 
   return {
     appInfo,
-    recipeList: [EmailPasswordReact.init(), SessionReact.init()],
+    recipeList: [ThirdPartyEmailPasswordReact.init(), SessionReact.init()],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     windowHandler: (oI: any) => {
       return {
