@@ -20,6 +20,7 @@ import {
   LinkedIssueSubType,
   SubscribeType,
   UpdateIssueInput,
+  labelPrompt,
   titlePrompt,
 } from './issues.interface';
 
@@ -97,6 +98,25 @@ export async function getIssueTitle(
     return chatCompletion.choices[0].message.content;
   }
   return '';
+}
+
+export async function getSuggestedLabels(
+  openaiClient: OpenAI,
+  labels: string[],
+  description: string,
+) {
+  const chatCompletion: OpenAI.Chat.ChatCompletion =
+    await openaiClient.chat.completions.create({
+      messages: [
+        { role: 'system', content: labelPrompt },
+        {
+          role: 'user',
+          content: `Text Description  -  ${description} \n Company Specific Labels -  ${labels.join(',')}`,
+        },
+      ],
+      model: 'gpt-4',
+    });
+  return chatCompletion.choices[0].message.content;
 }
 
 export async function getLastIssueNumber(

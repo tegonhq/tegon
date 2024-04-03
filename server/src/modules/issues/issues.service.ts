@@ -22,6 +22,7 @@ import {
   IssueWithRelations,
   RelationInput,
   SubscribeType,
+  SuggestionsInput,
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
@@ -32,6 +33,7 @@ import {
   getIssueTitle,
   getLastIssueNumber,
   getSubscriberIds,
+  getSuggestedLabels,
 } from './issues.utils';
 
 const openaiClient = new OpenAI({
@@ -208,8 +210,12 @@ export default class IssuesService {
     linkIssuedata?: LinkIssueData,
     linkMetaData?: Record<string, string>,
   ) {
-    const { parentId, issueRelation, subscriberIds, ...otherIssueData } =
-      issueData;
+    const {
+      parentId,
+      issueRelation,
+      subscriberIds = null,
+      ...otherIssueData
+    } = issueData;
 
     const currentIssue = await this.prisma.issue.findUnique({
       where: { id: issueParams.issueId },
@@ -358,5 +364,33 @@ export default class IssuesService {
       where: { id: issueId },
       data: { subscriberIds },
     });
+  }
+
+  async suggestions(
+    teamRequestParams: TeamRequestParams,
+    suggestionsInput: SuggestionsInput,
+  ) {
+    const labels = await this.prisma.label.findMany({
+      where: {
+        OR: [
+          { teamId: teamRequestParams.teamId },
+          { workspaceId: suggestionsInput.workspaceId },
+        ],
+      },
+    });
+    const labelsSuggested = await getSuggestedLabels(
+      openaiClient,
+      labels.map((label) => label.name),
+      suggestionsInput.description,
+    );
+
+    const suggestedLabels = await this.prisma.label.findMany({
+      where: {
+        name: { in: labelsSuggested.split(','), mode: 'insensitive' },
+      },
+      select: { id: true, name: true, color: true },
+    });
+
+    return { labels: suggestedLabels };
   }
 }
