@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { IssueComment } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
+import IssuesService from 'modules/issues/issues.service';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
@@ -18,7 +19,6 @@ import {
   reactionDataType,
 } from './issue-comments.interface';
 import { IssueCommentsQueue } from './issue-comments.queue';
-import IssuesService from 'modules/issues/issues.service';
 
 @Injectable()
 export default class IssueCommentsService {

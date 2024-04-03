@@ -3,11 +3,13 @@
 import { Injectable } from '@nestjs/common';
 import supertokens from 'supertokens-node';
 
-import * as SuperTokensConfig from 'common/configs/config';
+import { UsersService } from 'modules/users/users.service';
+
+import { recipeList } from './supertokens.config';
 
 @Injectable()
 export class SupertokensService {
-  constructor() {
+  constructor(private usersService: UsersService) {
     supertokens.init({
       appInfo: {
         appName: 'Tegon',
@@ -19,7 +21,7 @@ export class SupertokensService {
       supertokens: {
         connectionURI: process.env.SUPERTOKEN_CONNECTION_URI,
       },
-      recipeList: SuperTokensConfig.recipeList,
+      recipeList: recipeList(this.usersService),
     });
   }
 }

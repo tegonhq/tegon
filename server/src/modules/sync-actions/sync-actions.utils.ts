@@ -188,12 +188,11 @@ export async function getModelData(
           return prisma.notification.findFirst({
             where: {
               id: modelId,
-              userId: userId,
+              userId,
             },
           });
-        } else {
-          return prisma.notification.findUnique({ where: { id: modelId } });
         }
+        return prisma.notification.findUnique({ where: { id: modelId } });
       },
     },
   };
