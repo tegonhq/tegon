@@ -35,6 +35,7 @@ import {
   getSubscriberIds,
   getSuggestedLabels,
 } from './issues.utils';
+import { VectorService } from 'modules/vector/vector.service';
 
 const openaiClient = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
@@ -50,6 +51,7 @@ export default class IssuesService {
     private issuesQueue: IssuesQueue,
     private issueRelationService: IssueRelationService,
     private notificationsQueue: NotificationsQueue,
+    private vectorService: VectorService,
   ) {}
 
   async createIssue(
@@ -378,11 +380,20 @@ export default class IssuesService {
         ],
       },
     });
-    const labelsSuggested = await getSuggestedLabels(
-      openaiClient,
-      labels.map((label) => label.name),
-      suggestionsInput.description,
-    );
+
+    const [labelsSuggested, similarIssues] = await Promise.all([
+      getSuggestedLabels(
+        openaiClient,
+        labels.map((label) => label.name),
+        suggestionsInput.description,
+      ),
+      this.vectorService.searchEmbeddings(
+        suggestionsInput.workspaceId,
+        suggestionsInput.description,
+        5,
+        0.5,
+      ),
+    ]);
 
     const suggestedLabels = await this.prisma.label.findMany({
       where: {
@@ -391,6 +402,13 @@ export default class IssuesService {
       select: { id: true, name: true, color: true },
     });
 
-    return { labels: suggestedLabels };
+    const assignees = similarIssues
+      .filter((issue) => issue.assigneeId !== null)
+      .map((issue) => ({
+        id: issue.assigneeId,
+        score: issue.score,
+      }));
+
+    return { labels: suggestedLabels, assignees };
   }
 }
