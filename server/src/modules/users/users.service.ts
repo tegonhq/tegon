@@ -9,6 +9,20 @@ import { PublicUser, UpdateUserBody, userSerializer } from './user.interface';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
+  async upsertUser(id: string, email: string, fullname: string) {
+    return await this.prisma.user.upsert({
+      where: { email },
+      create: {
+        id,
+        email,
+        fullname,
+        username: email.split('@')[0],
+        role: 'ADMIN',
+      },
+      update: {},
+    });
+  }
+
   async getUser(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: {

@@ -6,6 +6,7 @@ import jwt from 'supertokens-node/lib/build/recipe/jwt';
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
 import Session from 'supertokens-node/recipe/session';
 import UserRoles from 'supertokens-node/recipe/userroles';
+import ThirdPartyEmailPassword from 'supertokens-node/recipe/thirdpartyemailpassword';
 
 export const config: Config = {
   cors: {
@@ -30,6 +31,25 @@ export const recipeList = [
   Session.init({
     cookieSecure: true,
   }), // initializes session features
+  ThirdPartyEmailPassword.init({
+    providers: [
+      {
+        config: {
+          thirdPartyId: 'google',
+          clients: [
+            {
+              clientId: process.env.GOOGLE_LOGIN_CLIENT_ID,
+              clientSecret: process.env.GOOGLE_LOGIN_CLIENT_SECRET,
+              scope: [
+                'https://www.googleapis.com/auth/userinfo.email',
+                'https://www.googleapis.com/auth/userinfo.profile',
+              ],
+            },
+          ],
+        },
+      },
+    ],
+  }),
 ];
 
 export default (): Config => config;
