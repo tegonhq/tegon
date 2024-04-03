@@ -402,12 +402,17 @@ export default class IssuesService {
       select: { id: true, name: true, color: true },
     });
 
-    const assignees = similarIssues
-      .filter((issue) => issue.assigneeId !== null)
-      .map((issue) => ({
-        id: issue.assigneeId,
-        score: issue.score,
-      }));
+    const assigneeIds = new Set(
+      similarIssues
+        .filter((issue) => issue.assigneeId !== null)
+        .map((issue) => issue.assigneeId),
+    );
+
+    const assignees = Array.from(assigneeIds).map((assigneeId) => ({
+      id: assigneeId,
+      score: similarIssues.find((issue) => issue.assigneeId === assigneeId)
+        .score,
+    }));
 
     return { labels: suggestedLabels, assignees };
   }
