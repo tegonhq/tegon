@@ -43,7 +43,7 @@ export const IssueLabelDropdown = observer(
     function getTrigger() {
       if (variant === IssueLabelDropdownVariant.LINK) {
         return (
-          <div className="flex flex-col flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
             {labelsStore
               .getLabelsWithIds(value)
               .slice(0, 3)
@@ -117,8 +117,8 @@ export const IssueLabelDropdown = observer(
         const label = labels.find((label: LabelType) => label.id === value[0]);
         return (
           <>
-            <LabelFill size={18} className="text-muted-foreground mr-3" />
-            {label.name}
+            <LabelFill size={18} className="text-muted-foreground mr-2" />
+            {label?.name}
           </>
         );
       }
@@ -126,7 +126,7 @@ export const IssueLabelDropdown = observer(
       if (value.length > 1) {
         return (
           <>
-            <LabelFill size={18} className="text-muted-foreground mr-3" />
+            <LabelFill size={18} className="text-muted-foreground mr-2" />
             {value.length} Labels
           </>
         );

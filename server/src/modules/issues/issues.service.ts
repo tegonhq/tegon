@@ -223,7 +223,7 @@ export default class IssuesService {
         SubscribeType.SUBSCRIBE,
       ),
       ...otherIssueData,
-      ...(parentId && { parent: { connect: { id: parentId } } }),
+      ...(parentId ? { parent: { connect: { id: parentId } } } : { parentId }),
       ...(linkIssuedata && {
         linkedIssue: {
           upsert: {

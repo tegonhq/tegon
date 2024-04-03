@@ -22,6 +22,10 @@ export const IssueView = observer(() => {
   );
   const issue = useIssueData();
 
+  if (!issue) {
+    return null;
+  }
+
   if (issue.stateId === triageWorkflow.id) {
     return <TriageView />;
   }

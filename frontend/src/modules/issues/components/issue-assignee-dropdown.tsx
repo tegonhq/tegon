@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 
+import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 
 import {
@@ -64,7 +65,12 @@ export function IssueAssigneeDropdown({
             <>
               <Avatar className="h-[20px] w-[25px] flex items-center">
                 <AvatarImage />
-                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+                <AvatarFallback
+                  className={cn(
+                    'text-[0.6rem] rounded-sm',
+                    getTailwindColor(getUserData(value).username),
+                  )}
+                >
                   {getInitials(getUserData(value).fullname)}
                 </AvatarFallback>
               </Avatar>
@@ -93,7 +99,12 @@ export function IssueAssigneeDropdown({
             <>
               <Avatar className="h-[20px] w-[20px] mr-3">
                 <AvatarImage />
-                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+                <AvatarFallback
+                  className={cn(
+                    'text-[0.6rem] rounded-sm',
+                    getTailwindColor(getUserData(value).username),
+                  )}
+                >
                   {getInitials(getUserData(value).fullname)}
                 </AvatarFallback>
               </Avatar>
@@ -124,7 +135,12 @@ export function IssueAssigneeDropdown({
           <>
             <Avatar className="h-[20px] w-[30px] flex items-center">
               <AvatarImage />
-              <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm mr-2">
+              <AvatarFallback
+                className={cn(
+                  'text-[0.6rem] rounded-sm mr-2',
+                  getTailwindColor(getUserData(value).username),
+                )}
+              >
                 {getInitials(getUserData(value).fullname)}
               </AvatarFallback>
             </Avatar>
@@ -133,7 +149,7 @@ export function IssueAssigneeDropdown({
           </>
         ) : (
           <>
-            <AssigneeLine size={18} className="mr-1" /> No Assignee
+            <AssigneeLine size={18} className="mr-2" /> No Assignee
           </>
         )}
       </Button>

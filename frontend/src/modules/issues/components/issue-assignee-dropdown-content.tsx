@@ -1,5 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { getTailwindColor } from 'common/color-utils';
+import { cn } from 'common/lib/utils';
+
 import {
   Avatar,
   AvatarFallback,
@@ -103,7 +106,12 @@ export function IssueAssigneeDropdownContent({
                   )}
                   <Avatar className="h-[20px] w-[30px]">
                     <AvatarImage />
-                    <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm mr-2">
+                    <AvatarFallback
+                      className={cn(
+                        'text-[0.6rem] rounded-sm mr-2',
+                        getTailwindColor(userData.username),
+                      )}
+                    >
                       {getInitials(userData.fullname)}
                     </AvatarFallback>
                   </Avatar>

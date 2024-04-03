@@ -3,6 +3,7 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
+import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 
 import { Avatar, AvatarImage, AvatarFallback } from 'components/ui/avatar';
@@ -39,7 +40,12 @@ export const SubscribeDropdown = observer(
               key={user.id}
             >
               <AvatarImage />
-              <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-full">
+              <AvatarFallback
+                className={cn(
+                  'text-[0.6rem] rounded-full',
+                  getTailwindColor(user.username),
+                )}
+              >
                 {getInitials(user.fullname)}
               </AvatarFallback>
             </Avatar>

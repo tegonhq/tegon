@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 
+import { getTeamColor } from 'common/color-utils';
 import type { TeamType } from 'common/types/team';
 
 import { Button } from 'components/ui/button';
@@ -37,13 +38,9 @@ export function TeamDropdown({ value, onChange }: TeamProps) {
     }
   }
 
-  function getTeam() {
-    const team = teams.find((team) => team.identifier === value);
+  const team = teams.find((team) => team.identifier === value);
 
-    return team;
-  }
-
-  if (!teams) {
+  if (!teams || !team) {
     return null;
   }
 
@@ -55,13 +52,15 @@ export function TeamDropdown({ value, onChange }: TeamProps) {
           size="sm"
           className="flex items-center text-foreground"
         >
-          <div className="p-[2px] w-5 h-5 bg-red-400/10 rounded-sm mr-2">
+          <div
+            className={`p-[2px] w-5 h-5 ${getTeamColor(team?.name, true)} rounded-sm mr-2`}
+          >
             <TeamLine
               size={14}
-              className="shrink-0 text-muted-foreground h-4 w-4 text-red-400"
+              className={`shrink-0 text-muted-foreground h-4 w-4 ${getTeamColor(team?.name)}`}
             />
           </div>
-          {getTeam()?.name}
+          {team?.name}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-32">

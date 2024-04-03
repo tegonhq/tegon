@@ -5,6 +5,9 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { signOut } from 'supertokens-auth-react/recipe/session';
 
+import { getTailwindColor } from 'common/color-utils';
+import { cn } from 'common/lib/utils';
+
 import {
   Avatar,
   AvatarFallback,
@@ -34,7 +37,12 @@ export const WorkspaceDropdown = observer(() => {
           <div className="flex justify-between">
             <Avatar className="h-[20px] w-[25px] ">
               <AvatarImage />
-              <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+              <AvatarFallback
+                className={cn(
+                  'text-[0.6rem] rounded-sm',
+                  getTailwindColor(workspaceStore.workspace.name),
+                )}
+              >
                 {getInitials(workspaceStore.workspace.name)}
               </AvatarFallback>
             </Avatar>

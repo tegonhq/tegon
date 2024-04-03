@@ -3,6 +3,8 @@
 import { observer } from 'mobx-react-lite';
 import ReactTimeAgo from 'react-time-ago';
 
+import { getTailwindColor } from 'common/color-utils';
+import { cn } from 'common/lib/utils';
 import type { IssueCommentType, IssueHistoryType } from 'common/types/issue';
 import type { LinkedIssueType } from 'common/types/linked-issue';
 
@@ -98,7 +100,12 @@ export const IssueActivity = observer(() => {
             <div className="flex items-center text-xs text-muted-foreground">
               <Avatar className="h-[20px] w-[25px] mr-4 text-foreground">
                 <AvatarImage />
-                <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+                <AvatarFallback
+                  className={cn(
+                    'text-[0.6rem] rounded-sm',
+                    getTailwindColor(issueCreatedUser.username),
+                  )}
+                >
                   {getInitials(issueCreatedUser.fullname)}
                 </AvatarFallback>
               </Avatar>

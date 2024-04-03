@@ -4,6 +4,7 @@ import { RiGithubFill, RiMoreFill, RiPencilFill } from '@remixicon/react';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
+import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 import { type IssueCommentType } from 'common/types/issue';
 
@@ -55,7 +56,12 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
       {user ? (
         <Avatar className="h-[20px] w-[25px] mr-3 text-foreground">
           <AvatarImage />
-          <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+          <AvatarFallback
+            className={cn(
+              'text-[0.6rem] rounded-sm',
+              getTailwindColor(user?.username),
+            )}
+          >
             {getInitials(user?.fullname)}
           </AvatarFallback>
         </Avatar>

@@ -5,6 +5,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 
 import {
@@ -106,7 +107,12 @@ export function TriageDeclineModal({ setDialogOpen }: TriageDeclineModalProps) {
                         <div className="flex items-start gap-4">
                           <Avatar className="h-[20px] w-[25px] text-foreground">
                             <AvatarImage />
-                            <AvatarFallback className="bg-teal-500 dark:bg-teal-900 text-[0.6rem] rounded-sm">
+                            <AvatarFallback
+                              className={cn(
+                                'text-[0.6rem] rounded-sm',
+                                getTailwindColor(currentUser.username),
+                              )}
+                            >
                               {getInitials(currentUser.fullname)}
                             </AvatarFallback>
                           </Avatar>
