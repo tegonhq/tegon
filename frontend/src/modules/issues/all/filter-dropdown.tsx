@@ -12,7 +12,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { AssigneeLine, BacklogLine, LabelFill } from 'icons';
 
-import type { FilterType } from 'store/application';
+import type { FilterTypeEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
 import {
@@ -77,7 +77,7 @@ export function FilterDropdown() {
 
   const ContentComponent = filter ? ContentMap[filter] : ContentMap.status;
 
-  const onChange = (value: string[], filterType: FilterType) => {
+  const onChange = (value: string[], filterType: FilterTypeEnum) => {
     if (value.length === 0) {
       return applicationStore.deleteFilter(filter);
     }

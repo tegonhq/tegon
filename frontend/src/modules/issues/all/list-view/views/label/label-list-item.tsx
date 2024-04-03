@@ -6,11 +6,12 @@ import React from 'react';
 import type { IssueType } from 'common/types/issue';
 import type { LabelType } from 'common/types/label';
 
+import { useCurrentTeam } from 'hooks/teams';
+
 import { useContextStore } from 'store/global-context-provider';
 
 import { IssueItem } from '../../issue-item';
 import { useFilterIssues } from '../../list-view-utils';
-import { useCurrentTeam } from 'hooks/teams';
 
 interface LabelListItemProps {
   label: LabelType;

@@ -56,7 +56,7 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-muted-foreground px-1"
+                className="text-muted-foreground px-1 mt-2"
               >
                 <RiAddLine size={14} className="mr-1" /> Add link
               </Button>

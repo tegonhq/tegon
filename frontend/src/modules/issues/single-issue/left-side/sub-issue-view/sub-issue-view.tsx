@@ -50,7 +50,7 @@ export function SubIssueView({
         <Collapsible
           open={isOpen}
           onOpenChange={setOpen}
-          className="w-full space-y-1"
+          className="w-full space-y-1 mb-2"
         >
           <div className="flex justify-between">
             <div>
