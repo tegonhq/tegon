@@ -372,6 +372,10 @@ export default class IssuesService {
     teamRequestParams: TeamRequestParams,
     suggestionsInput: SuggestionsInput,
   ) {
+    if (!suggestionsInput.description) {
+      return { labels: [], assignees: [] };
+    }
+
     const labels = await this.prisma.label.findMany({
       where: {
         OR: [
