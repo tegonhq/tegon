@@ -379,8 +379,8 @@ export default class IssuesService {
     const labels = await this.prisma.label.findMany({
       where: {
         OR: [
-          { teamId: teamRequestParams.teamId },
           { workspaceId: suggestionsInput.workspaceId },
+          { teamId: teamRequestParams.teamId },
         ],
       },
     });
@@ -401,7 +401,11 @@ export default class IssuesService {
 
     const suggestedLabels = await this.prisma.label.findMany({
       where: {
-        name: { in: labelsSuggested.split(','), mode: 'insensitive' },
+        name: { in: labelsSuggested.split(/,\s*/), mode: 'insensitive' },
+        OR: [
+          { workspaceId: suggestionsInput.workspaceId },
+          { teamId: teamRequestParams.teamId },
+        ],
       },
       select: { id: true, name: true, color: true },
     });
