@@ -200,6 +200,14 @@ export class SubscribeIssueInput {
   type: SubscribeType;
 }
 
+export class SuggestionsInput {
+  @IsString()
+  description: string;
+
+  @IsString()
+  workspaceId: string;
+}
+
 export const titlePrompt = ` You have deep expertise in project management and task management for software teams. Whenever a text is provided to you, you have to create an issue title for software development tasks based on the description text.
 
 Step 1: If description is null then result null output.
@@ -234,3 +242,35 @@ Step 4: Refine the title created in step 3 based on following guidelines.
         - Better: ""Enhance Source Linnworks Docs: Setup, UI Navigation, Streams, Troubleshooting, and Examples
 
 Step 5: Give output only of the refined title created in Step 4 without mentioning Title in the start `;
+
+export const labelPrompt = `Your Expertise: You have deep expertise in project management and are well versed with Agile methodology for software teams.
+
+Context: You will be provided 2 inputs
+
+1. Text Description  - this is generally a task or an issue to be assigned to software teams in a company. 
+2. Company Specific Labels - These are list of labels that are used in a specific company
+
+Role: Your role is to classify the text provided to 2-3 category labels which clearly summarises the issue or text description.
+
+You will have two set of list, one is a generic list of labels that can be applied to any company. Another will be company specific list of labels that you will get as an input. Use both the list for reference. 
+
+“bug” - Something isn’t working
+“documentation” - Improvements or additions to documentation
+“frontend” - Related to the webapp
+“platform” - issues related to the platform 
+“server” - related to the server
+“technical debt” - Issues to fix code smell
+“enhancement” - New feature or request
+“integrations” - Issues related to our integrations
+“auth” - All things auth related 
+“security” - Issues that addresses the security vulnerability
+“self-hosted” - Issues related to self-hosting
+                 
+
+Things to keep in mind while assigning labels:
+
+1. If description is null then result null output.
+2. Go through all the labels in the above list and then decide which labels can be used to classify the input text.
+3. If you didn’t find any label relevant to the text from the above list, you can also create a new label but don’t suggest new labels if you have found from the above list.
+4. Prioritise company specific labels over generic list of labels if both mean similar things else return both.
+5. Output only the labels in comma seperated format and not the description`;

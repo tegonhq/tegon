@@ -13,6 +13,7 @@ import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 import { getLinkType } from 'modules/linked-issue/linked-issue.utils';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
+import { VectorService } from 'modules/vector/vector.service';
 
 import {
   ApiResponse,
@@ -22,6 +23,7 @@ import {
   IssueWithRelations,
   RelationInput,
   SubscribeType,
+  SuggestionsInput,
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
@@ -32,6 +34,7 @@ import {
   getIssueTitle,
   getLastIssueNumber,
   getSubscriberIds,
+  getSuggestedLabels,
 } from './issues.utils';
 
 const openaiClient = new OpenAI({
@@ -48,6 +51,7 @@ export default class IssuesService {
     private issuesQueue: IssuesQueue,
     private issueRelationService: IssueRelationService,
     private notificationsQueue: NotificationsQueue,
+    private vectorService: VectorService,
   ) {}
 
   async createIssue(
@@ -208,8 +212,12 @@ export default class IssuesService {
     linkIssuedata?: LinkIssueData,
     linkMetaData?: Record<string, string>,
   ) {
-    const { parentId, issueRelation, subscriberIds, ...otherIssueData } =
-      issueData;
+    const {
+      parentId,
+      issueRelation,
+      subscriberIds = null,
+      ...otherIssueData
+    } = issueData;
 
     const currentIssue = await this.prisma.issue.findUnique({
       where: { id: issueParams.issueId },
@@ -358,5 +366,58 @@ export default class IssuesService {
       where: { id: issueId },
       data: { subscriberIds },
     });
+  }
+
+  async suggestions(
+    teamRequestParams: TeamRequestParams,
+    suggestionsInput: SuggestionsInput,
+  ) {
+    if (!suggestionsInput.description) {
+      return { labels: [], assignees: [] };
+    }
+
+    const labels = await this.prisma.label.findMany({
+      where: {
+        OR: [
+          { teamId: teamRequestParams.teamId },
+          { workspaceId: suggestionsInput.workspaceId },
+        ],
+      },
+    });
+
+    const [labelsSuggested, similarIssues] = await Promise.all([
+      getSuggestedLabels(
+        openaiClient,
+        labels.map((label) => label.name),
+        suggestionsInput.description,
+      ),
+      this.vectorService.searchEmbeddings(
+        suggestionsInput.workspaceId,
+        suggestionsInput.description,
+        5,
+        0.5,
+      ),
+    ]);
+
+    const suggestedLabels = await this.prisma.label.findMany({
+      where: {
+        name: { in: labelsSuggested.split(','), mode: 'insensitive' },
+      },
+      select: { id: true, name: true, color: true },
+    });
+
+    const assigneeIds = new Set(
+      similarIssues
+        .filter((issue) => issue.assigneeId)
+        .map((issue) => issue.assigneeId),
+    );
+
+    const assignees = Array.from(assigneeIds).map((assigneeId) => ({
+      id: assigneeId,
+      score: similarIssues.find((issue) => issue.assigneeId === assigneeId)
+        .score,
+    }));
+
+    return { labels: suggestedLabels, assignees };
   }
 }

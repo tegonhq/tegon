@@ -60,6 +60,7 @@ export class VectorService implements OnModuleInit {
         description: issue.description ?? '',
         stateId: issue.stateId,
         workspaceId: issue.team.workspaceId,
+        assigneeId: issue.assigneeId ?? '',
       });
   }
 
@@ -93,6 +94,7 @@ export class VectorService implements OnModuleInit {
       teamId: hit.document.teamId,
       number: hit.document.number,
       issueNumber: hit.document.issueNumber,
+      assigneeId: hit.document.assigneeId,
       score: hit.hybrid_search_info?.rank_fusion_score || 0,
     }));
   }
@@ -119,7 +121,7 @@ export class VectorService implements OnModuleInit {
       searchResults.results
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map(({ hits }: any) =>
-          hits.map(
+          hits?.map(
             ({
               document: {
                 id,

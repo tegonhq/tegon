@@ -4,6 +4,9 @@ import type {
   IntegrationAccountType,
   Settings,
 } from 'common/types/integration-account';
+import type { WorkflowType } from 'common/types/team';
+
+import { getDefaultStatus } from '../components/status-dropdown-utils';
 
 export function isBirectionalEnabled(
   githubAccounts: IntegrationAccountType[],
@@ -22,4 +25,23 @@ export function isBirectionalEnabled(
   });
 
   return isBirectionalEnabled;
+}
+
+interface DefaultValues {
+  labelIds: string[];
+  priority: number;
+  isBidirectional: boolean;
+  stateId: string;
+}
+
+export function getDefaultValues(
+  workflows: WorkflowType[],
+  pathname: string,
+): DefaultValues {
+  return {
+    labelIds: [],
+    stateId: getDefaultStatus(workflows, pathname),
+    priority: 0,
+    isBidirectional: false,
+  };
 }

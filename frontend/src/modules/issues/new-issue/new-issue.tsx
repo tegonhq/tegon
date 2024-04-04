@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDebouncedCallback } from 'use-debounce';
@@ -21,6 +22,7 @@ import {
 } from 'components/ui/form';
 import { Switch } from 'components/ui/switch';
 import { useTeam } from 'hooks/teams';
+import { useAllTeamWorkflows } from 'hooks/workflows';
 
 import {
   type CreateIssueParams,
@@ -28,7 +30,8 @@ import {
 } from 'services/issues/create-issue';
 
 import { DuplicateIssuesView } from './duplicates-view';
-import { isBirectionalEnabled } from './new-issue-utils';
+import { IssueSuggestions } from './issue-suggestions';
+import { getDefaultValues, isBirectionalEnabled } from './new-issue-utils';
 import { NewIssueSchema } from './new-issues-type';
 import {
   IssueAssigneeDropdown,
@@ -49,17 +52,17 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
     onSuccess: () => {},
   });
   const team = useTeam(teamIdentfier);
+  const workflows = useAllTeamWorkflows(teamIdentfier);
+  const pathname = usePathname();
   const [description, setDescription] = React.useState('');
+  const [, rerenderHack] = React.useState('');
+
   const { githubAccounts } = useGithubAccounts(IntegrationName.Github);
   const isBidirectional = isBirectionalEnabled(githubAccounts, team.id);
 
   const form = useForm<z.infer<typeof NewIssueSchema>>({
     resolver: zodResolver(NewIssueSchema),
-    defaultValues: {
-      labelIds: [],
-      priority: 0,
-      isBidirectional: false,
-    },
+    defaultValues: getDefaultValues(workflows, pathname),
   });
 
   const onSubmit = (values: CreateIssueParams) => {
@@ -99,6 +102,23 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
                 </FormItem>
               )}
             />
+
+            {description.trim() && (
+              <IssueSuggestions
+                teamId={team.id}
+                labelIds={form.getValues('labelIds')}
+                assigneeId={form.getValues('assigneeId')}
+                setLabelValue={(labelIds: string[]) => {
+                  form.setValue('labelIds', labelIds);
+                  rerenderHack('rerender');
+                }}
+                setAssigneeValue={(assigneeId: string) => {
+                  form.setValue('assigneeId', assigneeId);
+                  rerenderHack('rerender');
+                }}
+                description={description}
+              />
+            )}
 
             <div className="flex gap-2 items-center">
               <FormField

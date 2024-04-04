@@ -23,6 +23,7 @@ import {
   IssueRequestParams,
   LinkIssueInput,
   SubscribeIssueInput,
+  SuggestionsInput,
   TeamRequestParams,
   UpdateIssueInput,
 } from './issues.interface';
@@ -48,6 +49,18 @@ export class IssuesController {
   ) {
     const userId = session.getUserId();
     return await this.issuesService.createIssue(teamParams, issueData, userId);
+  }
+
+  @Post('suggestions')
+  @UseGuards(new AuthGuard())
+  async suggestions(
+    @Query() teamRequestParams: TeamRequestParams,
+    @Body() suggestionsInput: SuggestionsInput,
+  ) {
+    return await this.issuesService.suggestions(
+      teamRequestParams,
+      suggestionsInput,
+    );
   }
 
   @Post(':issueId')

@@ -14,6 +14,7 @@ export const issueSchema: CollectionCreateSchema = {
     { name: 'description', type: 'string' },
     { name: 'stateId', type: 'string' },
     { name: 'workspaceId', type: 'string' },
+    { name: 'assigneeId', type: 'string' },
     {
       name: 'embedding',
       type: 'float[]',

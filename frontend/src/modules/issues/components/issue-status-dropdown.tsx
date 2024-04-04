@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { usePathname } from 'next/navigation';
 import * as React from 'react';
 
 import { IssueStatusDropdownContent } from 'modules/issues/components';
@@ -8,6 +9,8 @@ import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useAllTeamWorkflows } from 'hooks/workflows/use-team-workflows';
+
+import { getDefaultStatus } from './status-dropdown-utils';
 
 export enum IssueStatusDropdownVariant {
   NO_BACKGROUND = 'NO_BACKGROUND',
@@ -30,17 +33,22 @@ export function IssueStatusDropdown({
 }: IssueStatusProps) {
   const [open, setOpen] = React.useState(false);
   const workflows = useAllTeamWorkflows(teamIdentfier);
+  const pathname = usePathname();
 
   const workflow = value
     ? workflows.find((workflow) => workflow.id === value)
     : workflows[0];
 
   React.useEffect(() => {
-    if (!value) {
-      onChange(workflows[0].id);
+    if (!value || !workflow) {
+      onChange(getDefaultStatus(workflows, pathname));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [workflow]);
+
+  if (!workflow) {
+    return null;
+  }
 
   const CategoryIcon = workflow
     ? WORKFLOW_CATEGORY_ICONS[workflow.name]
@@ -93,7 +101,7 @@ export function IssueStatusDropdown({
         className="flex items-center justify-between shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
       >
         <CategoryIcon
-          size={18}
+          size={14}
           className="text-muted-foreground mr-2"
           color={workflow.color}
         />

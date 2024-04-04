@@ -133,7 +133,7 @@ export function IssueAssigneeDropdown({
       >
         {value ? (
           <>
-            <Avatar className="h-[20px] w-[30px] flex items-center">
+            <Avatar className="h-[15] w-[20px] flex items-center">
               <AvatarImage />
               <AvatarFallback
                 className={cn(
@@ -149,7 +149,7 @@ export function IssueAssigneeDropdown({
           </>
         ) : (
           <>
-            <AssigneeLine size={18} className="mr-2" /> No Assignee
+            <AssigneeLine size={14} className="mr-1" /> No Assignee
           </>
         )}
       </Button>
