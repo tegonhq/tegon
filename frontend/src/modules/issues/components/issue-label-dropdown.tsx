@@ -74,7 +74,7 @@ export const IssueLabelDropdown = observer(
                 )}
               >
                 <div className="flex items-center text-muted-foreground">
-                  <RiAddLine size={18} className="mr-1" />
+                  <RiAddLine size={14} className="mr-1" />
                   Add Label
                 </div>
               </Button>
@@ -117,8 +117,8 @@ export const IssueLabelDropdown = observer(
         const label = labels.find((label: LabelType) => label.id === value[0]);
         return (
           <>
-            <LabelFill size={18} className="text-muted-foreground mr-2" />
-            {label?.name}
+            <LabelFill size={14} className="text-muted-foreground mr-2" />
+            {label.name}
           </>
         );
       }
@@ -126,7 +126,7 @@ export const IssueLabelDropdown = observer(
       if (value.length > 1) {
         return (
           <>
-            <LabelFill size={18} className="text-muted-foreground mr-2" />
+            <LabelFill size={14} className="text-muted-foreground mr-2" />
             {value.length} Labels
           </>
         );
@@ -134,7 +134,7 @@ export const IssueLabelDropdown = observer(
 
       return (
         <div className="flex items-center text-muted-foreground">
-          <RiAddLine size={18} className="mr-1" />
+          <RiAddLine size={14} className="mr-1" />
           Add Label
         </div>
       );

@@ -95,7 +95,7 @@ export const IssueDescription = ({
                 className={`flex w-full items-center space-x-2 my-2 rounded-md px-2 py-1 text-left text-xs hover:bg-accent dark:hover:bg-slate-700 aria-selected:bg-accent dark:aria-selected:bg-slate-700`}
                 key={item.title}
               >
-                <div className="flex h-5 w-5 items-center justify-center rounded-md border border-muted">
+                <div className="flex h-5 w-5 items-center justify-center rounded-md text-muted-foreground">
                   {item.icon}
                 </div>
                 <div>

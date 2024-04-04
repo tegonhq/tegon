@@ -80,8 +80,8 @@ export const TriageIssues = observer(() => {
             </div>
 
             <div className="flex justify-between text-sm">
-              <div className="flex gap-2 text-muted-foreground">
-                <Avatar className="h-[20px] w-[25px] flex items-center">
+              <div className="flex gap-2 text-muted-foreground items-center">
+                <Avatar className="h-[15px] w-[20px] flex items-center">
                   <AvatarImage />
                   <AvatarFallback
                     className={cn(

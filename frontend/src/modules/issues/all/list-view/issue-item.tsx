@@ -17,6 +17,7 @@ import { cn } from 'common/lib/utils';
 import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { Badge } from 'components/ui/badge';
+import { Checkbox } from 'components/ui/checkbox';
 import { useTeamWithId } from 'hooks/teams/use-current-team';
 import { BlockedFill, BlockingToLine } from 'icons';
 
@@ -62,12 +63,14 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
 
   return (
     <a
-      className="pl-8 p-2.5 flex justify-between cursor-default text-sm hover:bg-slate-100 dark:hover:bg-slate-800/20 border-b-[0.5px]"
+      className="pl-3 p-2.5 flex justify-between group cursor-default text-sm hover:bg-slate-100 dark:hover:bg-slate-800/20 border-b-[0.5px]"
       onClick={() => {
         push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
       }}
     >
-      <div className="flex items-center grow">
+      <div className="flex items-center pl-5 group-hover:pl-0">
+        <Checkbox className="hidden group-hover:block border-slate-300 shadow-none mr-1" />
+
         <IssuePriorityDropdown
           value={issue.priority ?? 0}
           onChange={priorityChange}

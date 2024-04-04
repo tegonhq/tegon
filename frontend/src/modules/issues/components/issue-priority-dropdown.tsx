@@ -85,7 +85,7 @@ export function IssuePriorityDropdown({
         className="flex items-center justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary"
       >
         <PriorityIcon.icon
-          size={PriorityIcon.size}
+          size={14}
           className={cn(
             'mr-2 text-muted-foreground',
             value === 1 && 'text-[#F9703E]',

@@ -13,6 +13,7 @@ import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 import { getLinkType } from 'modules/linked-issue/linked-issue.utils';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
+import { VectorService } from 'modules/vector/vector.service';
 
 import {
   ApiResponse,
@@ -35,7 +36,6 @@ import {
   getSubscriberIds,
   getSuggestedLabels,
 } from './issues.utils';
-import { VectorService } from 'modules/vector/vector.service';
 
 const openaiClient = new OpenAI({
   apiKey: process.env['OPENAI_API_KEY'],
@@ -404,7 +404,7 @@ export default class IssuesService {
 
     const assigneeIds = new Set(
       similarIssues
-        .filter((issue) => issue.assigneeId !== null)
+        .filter((issue) => issue.assigneeId)
         .map((issue) => issue.assigneeId),
     );
 
