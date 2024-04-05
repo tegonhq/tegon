@@ -24,8 +24,14 @@ export default class WebhookService {
         // await this.githubService.handleEvents(eventHeaders, eventBody);
         this.githubQueue.handleEventsJob(eventHeaders, eventBody);
         break;
+      case 'slack':
+        if (eventBody.type === 'url_verification') {
+          return { challenge: eventBody.challenge };
+        }
+        break;
       default:
         console.warn(`Invalid event source ${webhookEventParams.eventSource}`);
     }
+    return { status: 200 };
   }
 }

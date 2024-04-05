@@ -23,6 +23,7 @@ export interface AuthSpecification extends GenericInputSpecification {
   scope_seperator?: string;
   default_scopes?: string[];
   headers?: Record<string, string>;
+  channel_url?: string;
 }
 
 export interface Specification {
