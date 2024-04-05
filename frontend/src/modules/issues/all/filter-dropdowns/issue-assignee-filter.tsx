@@ -6,10 +6,11 @@ import { IssueAssigneeDropdownContent } from 'modules/issues/components';
 
 import { useUsersData } from 'hooks/users';
 
+import { FilterType } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
 interface IssueAssigneeFilterProps {
-  onChange?: (assigneeId: string) => void;
+  onChange?: (assigneeId: string[], filterType: FilterType) => void;
   onClose: () => void;
 }
 
@@ -18,11 +19,17 @@ export const IssueAssigneeFilter = observer(
     const { usersData } = useUsersData();
     const { applicationStore } = useContextStore();
 
-    const assigneeFilters = JSON.parse(applicationStore.filters).assignee ?? [];
+    const assigneeFilters = applicationStore.filters.assignee
+      ? applicationStore.filters.assignee.values
+      : [];
+
+    const change = (value: string[]) => {
+      onChange(value, FilterType.IS);
+    };
 
     return (
       <IssueAssigneeDropdownContent
-        onChange={onChange}
+        onChange={change}
         onClose={onClose}
         usersData={usersData}
         value={assigneeFilters}

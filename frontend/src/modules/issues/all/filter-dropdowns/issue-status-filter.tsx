@@ -7,11 +7,12 @@ import { IssueStatusDropdownContent } from 'modules/issues/components';
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
 
+import { FilterType } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
 interface IssueStatusFilterProps {
   value?: string;
-  onChange?: (newStatus: string) => void;
+  onChange?: (status: string[], filterType: FilterType) => void;
   onClose: () => void;
 }
 
@@ -21,11 +22,17 @@ export const IssueStatusFilter = observer(
     const workflows = useTeamWorkflows(currentTeam.identifier);
     const { applicationStore } = useContextStore();
 
-    const statusFilters = JSON.parse(applicationStore.filters).status ?? [];
+    const statusFilters = applicationStore.filters.status
+      ? applicationStore.filters.status.value
+      : [];
+
+    const change = (value: string[]) => {
+      onChange(value, FilterType.IS);
+    };
 
     return (
       <IssueStatusDropdownContent
-        onChange={onChange}
+        onChange={change}
         onClose={onClose}
         workflows={workflows}
         multiple

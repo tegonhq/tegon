@@ -63,7 +63,7 @@ export const TriageIssues = observer(() => {
             className={cn(
               'p-4 py-3 flex flex-col gap-2',
               issueId === `${currentTeam.identifier}-${issue.number}` &&
-                'bg-primary/10 rounded-md',
+                'bg-active rounded-md',
               !noBorder && 'border-b',
             )}
             onClick={() => {

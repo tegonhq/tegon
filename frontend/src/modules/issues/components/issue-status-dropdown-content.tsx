@@ -54,13 +54,16 @@ export function IssueStatusDropdownContent({
               key={workflow.name}
               value={workflow.name}
               onSelect={(currentValue) => {
+                const workflow = workflows.find(
+                  (workflow: WorkflowType) =>
+                    workflow.name.toLowerCase() === currentValue,
+                );
+
                 if (!multiple) {
-                  const workflow = workflows.find(
-                    (workflow: WorkflowType) =>
-                      workflow.name.toLowerCase() === currentValue,
-                  );
                   onClose();
                   onChange && onChange(workflow.id);
+                } else {
+                  onValueChange(true, workflow.id);
                 }
               }}
             >

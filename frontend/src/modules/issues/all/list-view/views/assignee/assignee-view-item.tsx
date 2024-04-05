@@ -21,7 +21,7 @@ import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
 
 import { IssueItem } from '../../issue-item';
-import { filterIssues } from '../../list-view-utils';
+import { useFilterIssues } from '../../list-view-utils';
 
 interface AssigneeViewItemProps {
   userOnWorkspace: UsersOnWorkspaceType;
@@ -35,9 +35,7 @@ export const AssigneeViewItem = observer(
       userOnWorkspace.userId,
     );
     const { usersData, isLoading } = useUsersData();
-    const computedIssues = React.useMemo(() => {
-      return filterIssues(issues, applicationStore.filters);
-    }, [issues, applicationStore.filters]);
+    const computedIssues = useFilterIssues(issues);
 
     if (isLoading) {
       return null;

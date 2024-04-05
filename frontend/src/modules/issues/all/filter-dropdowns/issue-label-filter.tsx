@@ -7,11 +7,12 @@ import { IssueLabelDropdownContent } from 'modules/issues/components';
 import { useTeamLabels } from 'hooks/labels';
 import { useCurrentTeam } from 'hooks/teams';
 
+import { FilterType } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
 interface IssueLabelFilterProps {
   value?: string[];
-  onChange?: (value: string[]) => void;
+  onChange?: (value: string[], filterType: FilterType) => void;
   onClose: () => void;
 }
 
@@ -21,12 +22,18 @@ export const IssueLabelFilter = observer(
     const labels = useTeamLabels(currentTeam.identifier);
     const { applicationStore } = useContextStore();
 
-    const labelFilters = JSON.parse(applicationStore.filters).label ?? [];
+    const labelFilters = applicationStore.filters.label
+      ? applicationStore.filters.label.value
+      : [];
+
+    const change = (value: string[]) => {
+      onChange(value, FilterType.IS);
+    };
 
     return (
       <IssueLabelDropdownContent
         value={labelFilters}
-        onChange={onChange}
+        onChange={change}
         labels={labels}
       />
     );

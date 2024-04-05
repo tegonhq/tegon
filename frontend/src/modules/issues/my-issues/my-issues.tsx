@@ -16,7 +16,7 @@ export function MyIssues() {
   return (
     <main className="flex flex-col overflow-hidden h-[100vh]">
       <Header />
-      {/* <FiltersView /> */}
+
       <ScrollArea className="grow">
         <MyIssuesView />
       </ScrollArea>

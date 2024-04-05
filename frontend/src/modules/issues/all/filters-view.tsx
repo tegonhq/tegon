@@ -1,7 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiCloseLine } from '@remixicon/react';
-import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
 import { Separator } from 'components/ui/separator';
@@ -18,41 +17,22 @@ import { IssueStatusDropdown } from './filter-dropdowns/issue-status-dropdown';
 export const FiltersView = observer(() => {
   const { applicationStore } = useContextStore();
   const team = useCurrentTeam();
-  const filters = JSON.parse(applicationStore.filters);
+  const filters = applicationStore.filters;
 
   const onChange = (value: string | string[], filter: string) => {
-    autorun(() => {
-      let filters = applicationStore.filters
-        ? JSON.parse(applicationStore.filters)
-        : {};
-
-      if (value.length === 0) {
-        delete filters[filter];
-      } else {
-        filters = { ...filters, [filter]: value };
-      }
-
-      applicationStore.update({ filters: JSON.stringify(filters) });
-    });
+    const filterValue = filters[filter];
+    applicationStore.updateFilters({ [filter]: { ...filterValue, value } });
   };
 
   const removeFilter = (filter: string) => {
-    autorun(() => {
-      const filters = applicationStore.filters
-        ? JSON.parse(applicationStore.filters)
-        : {};
-
-      delete filters[filter];
-
-      applicationStore.update({ filters: JSON.stringify(filters) });
-    });
+    applicationStore.deleteFilter(filter);
   };
 
   return (
     <div className="py-2 pl-8 px-7 text-xs flex justify-between gap-4 border-b">
       <div className="flex gap-4 items-center">
         {/* Status  */}
-        {filters['status'] && filters['status'].length > 0 && (
+        {filters.status && (
           <div className="flex border rounded-md">
             <div className="px-2 p-1 rounded-md rounded-r-none transparent hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 dark:text-slate-50 dark:hover:text-slate-100">
               Status
@@ -62,7 +42,7 @@ export const FiltersView = observer(() => {
               orientation="vertical"
             />
             <div className="px-2 p-1 rounded-md rounded-l-none rounded-r-none hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 text-muted-foreground">
-              {filters['status'].length > 1 ? 'is any of' : 'is'}
+              {filters.status.value.length > 1 ? 'is any of' : 'is'}
             </div>
             <Separator
               className="bg-background w-[2px]"
@@ -70,7 +50,7 @@ export const FiltersView = observer(() => {
             />
             <div className="flex items-center px-2 rounded-md rounded-l-none rounded-r-none hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 dark:text-slate-50 dark:hover:text-slate-100">
               <IssueStatusDropdown
-                value={filters['status']}
+                value={filters.status.value}
                 onChange={(value: string[]) => onChange(value, 'status')}
                 teamIdentifier={team.identifier}
               />
@@ -90,7 +70,7 @@ export const FiltersView = observer(() => {
         )}
 
         {/* Assignee  */}
-        {filters['assignee'] && filters['assignee'].length > 0 && (
+        {filters.assignee && (
           <div className="flex border rounded-md">
             <div className="px-2 p-1 rounded-md rounded-r-none transparent hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 dark:text-slate-50 dark:hover:text-slate-100">
               Assignee
@@ -100,7 +80,7 @@ export const FiltersView = observer(() => {
               orientation="vertical"
             />
             <div className="px-2 p-1 rounded-md rounded-l-none rounded-r-none hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 text-muted-foreground">
-              {filters['assignee'].length > 1 ? 'is any of' : 'is'}
+              {filters.assignee.value.length > 1 ? 'is any of' : 'is'}
             </div>
             <Separator
               className="bg-background w-[2px]"
@@ -108,7 +88,7 @@ export const FiltersView = observer(() => {
             />
             <div className="flex items-center px-2 rounded-md rounded-l-none rounded-r-none hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 dark:text-slate-50 dark:hover:text-slate-100">
               <IssueAssigneeDropdown
-                value={filters['assignee']}
+                value={filters.assignee.value}
                 onChange={(value: string[]) => onChange(value, 'assignee')}
               />
             </div>
@@ -127,7 +107,7 @@ export const FiltersView = observer(() => {
         )}
 
         {/* Label  */}
-        {filters['label'] && filters['label'].length > 0 && (
+        {filters['label'] && (
           <div className="flex border rounded-md">
             <div className="px-2 p-1 rounded-md rounded-r-none transparent hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 dark:text-slate-50 dark:hover:text-slate-100">
               Label
@@ -137,7 +117,7 @@ export const FiltersView = observer(() => {
               orientation="vertical"
             />
             <div className="px-2 p-1 rounded-md rounded-l-none rounded-r-none hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 text-muted-foreground">
-              {filters['label'].length > 1 ? 'is any of' : 'is'}
+              {filters.label.valuelength > 1 ? 'is any of' : 'is'}
             </div>
             <Separator
               className="bg-background w-[2px]"
@@ -145,7 +125,7 @@ export const FiltersView = observer(() => {
             />
             <div className="flex items-center px-2 rounded-md rounded-l-none rounded-r-none hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 dark:text-slate-50 dark:hover:text-slate-100">
               <IssueLabelDropdown
-                value={filters['label']}
+                value={filters.label.value}
                 onChange={(value: string[]) => onChange(value, 'label')}
                 teamIdentifier={team.identifier}
               />

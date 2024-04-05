@@ -33,6 +33,10 @@ export function IssueAssigneeDropdown({
   const { usersData, isLoading } = useUsersData();
 
   function getUserData(userId: string) {
+    if (userId === 'no-user') {
+      return { username: 'No Assignee', fullname: 'No Assignee' };
+    }
+
     return usersData.find((userData: User) => userData.id === userId);
   }
 
@@ -74,7 +78,7 @@ export function IssueAssigneeDropdown({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-72 p-0" align="start">
           <IssueAssigneeDropdownContent
             onClose={() => setOpen(false)}
             usersData={usersData}

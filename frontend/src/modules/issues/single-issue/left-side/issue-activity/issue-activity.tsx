@@ -133,7 +133,7 @@ export const IssueActivity = observer(() => {
               ) {
                 return (
                   <TimelineItem
-                    className="my-2 w-full"
+                    className="w-full"
                     key={`${activity.id}-comment`}
                     hasMore
                   >
@@ -152,7 +152,7 @@ export const IssueActivity = observer(() => {
               if (activity.type === ActivityType.LinkedIssue) {
                 return (
                   <TimelineItem
-                    className="my-2 w-full"
+                    className="w-full"
                     key={`${activity.id}-comment`}
                     hasMore
                   >

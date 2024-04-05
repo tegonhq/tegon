@@ -50,7 +50,7 @@ export function IssueLabelDropdown({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-72 p-0" align="start">
           <IssueLabelDropdownContent
             labels={labels}
             onChange={onChange}

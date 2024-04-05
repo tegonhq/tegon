@@ -66,9 +66,8 @@ export const WorkspaceStoreInit = observer(
     // All data related to team
     const initTeamBasedStore = React.useCallback(async () => {
       await applicationStore.load(pathname);
-
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [teamIdentifier]);
+    }, [pathname]);
 
     if (loading) {
       return <Loader text="Loading workspace" />;

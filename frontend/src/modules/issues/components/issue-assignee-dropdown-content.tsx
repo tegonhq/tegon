@@ -54,30 +54,33 @@ export function IssueAssigneeDropdownContent({
   };
 
   return (
-    <Command>
+    <Command className="w-72">
       <CommandInput placeholder="Set assignee..." />
       <CommandGroup>
         <CommandItem
           key="no-user"
           value="no-user"
+          className="w-full"
           onSelect={() => {
             onChange && onChange(null);
             onClose();
           }}
         >
-          {multiple && (
-            <Checkbox
-              id="no-user"
-              checked={value.includes('no-user')}
-              onCheckedChange={(value: boolean) =>
-                onValueChange(value, 'no-user')
-              }
-            />
-          )}
-          <div className="h-[20px] w-[30px] flex items-center justify-center mr-2">
-            <AssigneeLine size={16} className="mr-2 text-muted-foreground" />
+          <div className="flex gap-2 items-center">
+            {multiple && (
+              <Checkbox
+                id="no-user"
+                checked={value.includes('no-user')}
+                onCheckedChange={(value: boolean) =>
+                  onValueChange(value, 'no-user')
+                }
+              />
+            )}
+            <div className="h-[20px] w-[30px] flex items-center justify-center">
+              <AssigneeLine size={16} className="text-muted-foreground mr-2" />
+            </div>
+            No Assignee
           </div>
-          No Assignee
         </CommandItem>
         {usersData &&
           usersData.map((user: User) => {
@@ -94,7 +97,7 @@ export function IssueAssigneeDropdownContent({
                   }
                 }}
               >
-                <div className="flex gap-2 items-center ">
+                <div className="flex gap-2 items-center">
                   {multiple && (
                     <Checkbox
                       id={userData.fullname}

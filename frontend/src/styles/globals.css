@@ -16,7 +16,7 @@
     --secondary-foreground: 229 47.4% 11.2%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 50.9%;
-    --accent: 210 40% 93.1%;
+    --accent: 214 32% 92%;
     --accent-foreground: 229 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -24,7 +24,7 @@
     --input: 214.3 31.8% 87%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
-    --active: 214 32% 91%;
+    --active: 214 32% 92%;
   }
 
   .dark {

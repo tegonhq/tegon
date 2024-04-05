@@ -3,7 +3,7 @@
 import { types, type Instance } from 'mobx-state-tree';
 import React from 'react';
 
-import { ApplicationStore } from './application';
+import { ApplicationStore, defaultApplicationStoreValue } from './application';
 import { CommentsStore } from './comments';
 import { IntegrationAccountsStore } from './integration-accounts';
 import { IntegrationDefinitionsStore } from './integration-definitions';
@@ -61,16 +61,9 @@ export const storeContextStore = StoreContextModel.create({
     usersOnWorkspaces: [],
   },
   applicationStore: {
-    filters: JSON.stringify({}),
+    filters: {},
     identifier: '',
-    displaySettings: {
-      grouping: 'status',
-      showSubIssues: true,
-      showEmptyGroups: false,
-      showCompletedIssues: true,
-      showTriageIssues: false,
-      sidebarCollapsed: false,
-    },
+    displaySettings: defaultApplicationStoreValue.displaySettings,
   },
   integrationDefinitionsStore: {
     integrationDefinitions: [],

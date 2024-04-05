@@ -10,7 +10,7 @@ import { Priorities, type IssueType } from 'common/types/issue';
 import { useContextStore } from 'store/global-context-provider';
 
 import { IssueItem } from '../../issue-item';
-import { filterIssues } from '../../list-view-utils';
+import { useFilterIssues } from '../../list-view-utils';
 
 interface PriorityViewItemProps {
   priority: number;
@@ -23,9 +23,7 @@ export const PriorityViewItem = observer(
       priority,
       applicationStore.displaySettings.showSubIssues,
     );
-    const computedIssues = React.useMemo(() => {
-      return filterIssues(issues, applicationStore.filters);
-    }, [issues, applicationStore.filters]);
+    const computedIssues = useFilterIssues(issues);
 
     if (
       computedIssues.length === 0 &&

@@ -133,7 +133,7 @@ export function IssueAssigneeDropdown({
       >
         {value ? (
           <>
-            <Avatar className="h-[15] w-[20px] flex items-center">
+            <Avatar className="h-[15px] w-[20px] flex items-center">
               <AvatarImage />
               <AvatarFallback
                 className={cn(
@@ -164,7 +164,7 @@ export function IssueAssigneeDropdown({
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="p-0" align="start">
           <IssueAssigneeDropdownContent
             onClose={() => setOpen(false)}
             usersData={usersData}
