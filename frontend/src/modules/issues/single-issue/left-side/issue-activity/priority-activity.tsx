@@ -24,11 +24,7 @@ export function PriorityActivity({
   const PriorityIcon = PriorityIcons[issueHistory.toPriority];
 
   return (
-    <TimelineItem
-      className="my-2"
-      key={`${issueHistory.id}-removedLabels`}
-      hasMore
-    >
+    <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
       <div className="flex items-center text-xs text-muted-foreground">
         <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
           <PriorityIcon.icon

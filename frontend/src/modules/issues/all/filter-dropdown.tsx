@@ -1,6 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import { RiFilter3Line } from '@remixicon/react';
-import { autorun } from 'mobx';
 import * as React from 'react';
 
 import { Button } from 'components/ui/button';
@@ -11,7 +10,9 @@ import {
   CommandItem,
 } from 'components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
+import { AssigneeLine, BacklogLine, LabelFill } from 'icons';
 
+import type { FilterType } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
 import {
@@ -30,13 +31,30 @@ function DefaultPopoverContent({
       <CommandInput placeholder="Filter..." />
 
       <CommandGroup>
-        <CommandItem key="Status" value="Status" onSelect={onSelect}>
-          Status
+        <CommandItem
+          key="Status"
+          value="Status"
+          className="flex items-center"
+          onSelect={onSelect}
+        >
+          <BacklogLine size={14} className="mr-2" /> Status
         </CommandItem>
-        <CommandItem key="Assignee" value="Assignee" onSelect={onSelect}>
+        <CommandItem
+          key="Assignee"
+          value="Assignee"
+          className="flex items-center"
+          onSelect={onSelect}
+        >
+          <AssigneeLine size={14} className="mr-2" />
           Assignee
         </CommandItem>
-        <CommandItem key="Label" value="Label" onSelect={onSelect}>
+        <CommandItem
+          key="Label"
+          value="Label"
+          className="flex items-center"
+          onSelect={onSelect}
+        >
+          <LabelFill size={14} className="mr-2" />
           Label
         </CommandItem>
       </CommandGroup>
@@ -59,20 +77,12 @@ export function FilterDropdown() {
 
   const ContentComponent = filter ? ContentMap[filter] : ContentMap.status;
 
-  const onChange = (value: string | string[]) => {
-    autorun(() => {
-      let filters = applicationStore.filters
-        ? JSON.parse(applicationStore.filters)
-        : {};
+  const onChange = (value: string[], filterType: FilterType) => {
+    if (value.length === 0) {
+      return applicationStore.deleteFilter(filter);
+    }
 
-      if (value.length === 0) {
-        delete filters[filter];
-      } else {
-        filters = { ...filters, [filter]: value };
-      }
-
-      applicationStore.update({ filters: JSON.stringify(filters) });
-    });
+    applicationStore.updateFilters({ [filter]: { filterType, value } });
   };
 
   return (
@@ -92,7 +102,7 @@ export function FilterDropdown() {
           Filter
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
+      <PopoverContent className="w-72 p-0" align="start">
         {filter ? (
           <ContentComponent
             onClose={() => {

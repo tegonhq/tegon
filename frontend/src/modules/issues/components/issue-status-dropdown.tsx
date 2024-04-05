@@ -118,7 +118,7 @@ export function IssueStatusDropdown({
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-72 p-0" align="start">
           <IssueStatusDropdownContent
             onChange={onChange}
             onClose={() => setOpen(false)}

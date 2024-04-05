@@ -14,15 +14,14 @@ export function generateHexColor(): string {
 export function getTailwindColor(name: string): string {
   // Define Tailwind CSS colors at shade 400
   const colors = [
-    'bg-blue-500 dark:bg-blue-800',
-    'bg-green-500 dark:bg-green-800',
-    'bg-yellow-500 dark:bg-yellow-800',
-    'bg-red-500 dark:bg-red-800',
-    'bg-indigo-500 dark:bg-indigo-800',
-    'bg-purple-500 dark:bg-purple-800',
-    'bg-pink-500 dark:bg-pink-800',
-    'bg-teal-500 dark:bg-teal-800',
-    'bg-orange-500 dark:bg-orange-800',
+    'bg-blue-400 dark:bg-blue-900',
+    'bg-green-400 dark:bg-green-900',
+    'bg-yellow-400 dark:bg-yellow-900',
+    'bg-indigo-400 dark:bg-indigo-900',
+    'bg-purple-400 dark:bg-purple-900',
+    'bg-pink-400 dark:bg-pink-900',
+    'bg-teal-400 dark:bg-teal-900',
+    'bg-orange-400 dark:bg-orange-900',
   ];
 
   // Generate a hash value for the input name
@@ -43,7 +42,6 @@ export function getTeamColor(name: string, background = false): string {
     'text-blue-500',
     'text-purple-500',
     'text-green-500',
-    'text-red-500',
     'text-indigo-500',
     'text-teal-500',
     'text-orange-500',
@@ -53,7 +51,6 @@ export function getTeamColor(name: string, background = false): string {
     'bg-blue-500/10',
     'bg-purple-500/10',
     'bg-green-500/10',
-    'bg-red-500/10',
     'bg-indigo-500/10',
     'bg-teal-500/10',
     'bg-orange-500/10',

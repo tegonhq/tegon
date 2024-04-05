@@ -13,7 +13,7 @@ import { useCurrentTeam } from 'hooks/teams';
 import { useContextStore } from 'store/global-context-provider';
 
 import { IssueItem } from '../../issue-item';
-import { filterIssues } from '../../list-view-utils';
+import { useFilterIssues } from '../../list-view-utils';
 
 interface CategoryViewItemProps {
   workflow: WorkflowType;
@@ -31,9 +31,7 @@ export const CategoryViewItem = observer(
       currentTeam.id,
       applicationStore.displaySettings.showSubIssues,
     );
-    const computedIssues = React.useMemo(() => {
-      return filterIssues(issues, applicationStore.filters);
-    }, [issues, applicationStore.filters]);
+    const computedIssues = useFilterIssues(issues);
 
     if (
       computedIssues.length === 0 &&

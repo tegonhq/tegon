@@ -38,7 +38,7 @@ export function Header({ title }: HeaderProps) {
             >
               <TeamLine
                 size={16}
-                className={`shrink-0 text-muted-foreground h-4 w-4 ${getTeamColor(team.name)}`}
+                className={`shrink-0 h-4 w-4 ${getTeamColor(team.name)}`}
               />
             </div>
 

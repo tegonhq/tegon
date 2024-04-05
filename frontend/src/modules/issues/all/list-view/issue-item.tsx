@@ -63,7 +63,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
 
   return (
     <a
-      className="pl-3 p-2.5 flex justify-between group cursor-default text-sm hover:bg-slate-100 dark:hover:bg-slate-800/20 border-b-[0.5px]"
+      className="pl-3 pr-6 p-2.5 flex justify-between group cursor-default text-sm hover:bg-slate-100 dark:hover:bg-slate-800/20 border-b-[0.5px]"
       onClick={() => {
         push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
       }}

@@ -105,7 +105,7 @@ export function IssuePriorityDropdown({
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-72 p-0" align="start">
           <IssuePriorityDropdownContent
             onChange={onChange}
             onClose={() => setOpen(false)}

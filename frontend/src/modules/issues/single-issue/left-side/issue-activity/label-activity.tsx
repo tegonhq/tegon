@@ -33,11 +33,7 @@ export function LabelActivity({
 
   if (added) {
     return (
-      <TimelineItem
-        className="my-2"
-        key={`${issueHistory.id}-removedLabels`}
-        hasMore
-      >
+      <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
         <div className="flex items-center text-xs text-muted-foreground">
           <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
             <LabelFill size={18} className="text-muted-foreground" />
@@ -74,11 +70,7 @@ export function LabelActivity({
   }
 
   return (
-    <TimelineItem
-      className="my-2"
-      key={`${issueHistory.id}-removedLabels`}
-      hasMore
-    >
+    <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
       <div className="flex items-center text-xs text-muted-foreground">
         <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
           <LabelFill size={18} className="text-muted-foreground" />
