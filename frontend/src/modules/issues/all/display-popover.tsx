@@ -1,7 +1,13 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiEqualizerFill } from '@remixicon/react';
+import {
+  RiDashboardLine,
+  RiEqualizerFill,
+  RiListCheck,
+} from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
+
+import { cn } from 'common/lib/utils';
 
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
@@ -16,10 +22,15 @@ import {
 import { Separator } from 'components/ui/separator';
 import { Switch } from 'components/ui/switch';
 
+import { ViewEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
 export const DisplayPopover = observer(() => {
   const { applicationStore } = useContextStore();
+
+  const updateView = (view: ViewEnum) => {
+    applicationStore.updateDisplaySettings({ view });
+  };
 
   return (
     <Popover>
@@ -30,7 +41,35 @@ export const DisplayPopover = observer(() => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-72 p-0" align="end">
-        <div>
+        <div className="w-full">
+          <div className="flex gap-2 items-center w-full p-3 justify-center">
+            <Button
+              variant="ghost"
+              className={cn(
+                'flex flex-col gap-1 items-center h-auto w-full bg-transparent border',
+                applicationStore.displaySettings.view === ViewEnum.list &&
+                  'bg-active',
+              )}
+              onClick={() => updateView(ViewEnum.list)}
+            >
+              <RiListCheck size={16} />
+              List
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => updateView(ViewEnum.board)}
+              className={cn(
+                'flex flex-col gap-1 items-center h-auto w-full bg-transparent border',
+                applicationStore.displaySettings.view === ViewEnum.board &&
+                  'bg-active',
+              )}
+            >
+              <RiDashboardLine size={16} />
+              Board
+            </Button>
+          </div>
+          <Separator />
+
           <div className="flex items-center gap-2 flex-col w-full p-3">
             <div className="flex justify-between text-xs items-center w-full">
               <div className="text-muted-foreground min-w-[150px]">
@@ -46,7 +85,7 @@ export const DisplayPopover = observer(() => {
                   <SelectTrigger className="w-[100px] h-[25px]">
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
-                  <SelectContent className="text-sm">
+                  <SelectContent className="text-xs">
                     <SelectGroup>
                       <SelectItem value="status">Status</SelectItem>
                       <SelectItem value="assignee">Assignee</SelectItem>
@@ -72,7 +111,7 @@ export const DisplayPopover = observer(() => {
                   <SelectTrigger className="w-[100px] h-[25px]">
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
-                  <SelectContent className="text-sm">
+                  <SelectContent className="text-xs">
                     <SelectGroup>
                       <SelectItem value="status">Status</SelectItem>
                       <SelectItem value="assignee">Assignee</SelectItem>

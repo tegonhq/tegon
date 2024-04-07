@@ -42,7 +42,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
               sizes,
             )}`;
           }}
-          className="h-full max-h-[100%] items-stretch"
+          className="h-full max-h-[100vh] items-stretch max-w-[100vw]"
         >
           <ResizablePanel
             defaultSize={14}

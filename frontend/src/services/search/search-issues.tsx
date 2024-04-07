@@ -36,5 +36,6 @@ export function useGetSearchIssuesQuery(
     staleTime: 1,
     refetchOnWindowFocus: false, // Frequency of Change would be Low
     enabled,
+    keepPreviousData: true,
   });
 }

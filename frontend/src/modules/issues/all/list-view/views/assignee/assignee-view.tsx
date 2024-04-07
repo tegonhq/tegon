@@ -3,23 +3,23 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import type { UsersOnWorkspaceType } from 'common/types/workspace';
-
+import { ViewEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
-import { AssigneeViewItem, NoAssigneeView } from './assignee-view-item';
+import { AssigneeBoard } from './assignee-board';
+import { AssigneeListView } from './assignee-list-view';
 
 export const AssigneeView = observer(() => {
   const {
     workspaceStore: { usersOnWorkspaces },
+    applicationStore: {
+      displaySettings: { view },
+    },
   } = useContextStore();
 
-  return (
-    <div>
-      {usersOnWorkspaces.map((uOW: UsersOnWorkspaceType) => (
-        <AssigneeViewItem key={uOW.id} userOnWorkspace={uOW} />
-      ))}
-      <NoAssigneeView />
-    </div>
+  return view === ViewEnum.list ? (
+    <AssigneeListView usersOnWorkspaces={usersOnWorkspaces} />
+  ) : (
+    <AssigneeBoard usersOnWorkspaces={usersOnWorkspaces} />
   );
 });

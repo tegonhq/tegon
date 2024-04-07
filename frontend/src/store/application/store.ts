@@ -12,6 +12,7 @@ import { DisplaySettingsModel, FiltersModel } from './models';
 export const defaultApplicationStoreValue = {
   filters: {},
   displaySettings: {
+    view: 'list',
     grouping: 'status',
     ordering: 'updated_at',
     showSubIssues: true,

@@ -49,7 +49,6 @@ export function LabelActivity({
               <Badge variant="outline" key={labelId} className="text-xs ml-2">
                 <BadgeColor
                   style={{ backgroundColor: getLabel(labelId).color }}
-                  className="mr-2"
                 />
                 {getLabel(labelId).name}
               </Badge>
@@ -86,7 +85,6 @@ export function LabelActivity({
             <Badge variant="outline" key={labelId} className="text-xs ml-2">
               <BadgeColor
                 style={{ backgroundColor: getLabel(labelId).color }}
-                className="mr-2"
               />
               {getLabel(labelId).name}
             </Badge>

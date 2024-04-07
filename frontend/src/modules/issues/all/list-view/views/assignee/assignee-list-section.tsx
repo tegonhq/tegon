@@ -15,6 +15,7 @@ import {
   AvatarImage,
   getInitials,
 } from 'components/ui/avatar';
+import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -23,16 +24,17 @@ import type { User } from 'store/user-context';
 import { IssueItem } from '../../issue-item';
 import { useFilterIssues } from '../../list-view-utils';
 
-interface AssigneeViewItemProps {
+interface AssigneeListItemProps {
   userOnWorkspace: UsersOnWorkspaceType;
 }
 
-export const AssigneeViewItem = observer(
-  ({ userOnWorkspace }: AssigneeViewItemProps) => {
+export const AssigneeListSection = observer(
+  ({ userOnWorkspace }: AssigneeListItemProps) => {
     const { issuesStore, applicationStore } = useContextStore();
+    const team = useCurrentTeam();
     const issues = issuesStore.getIssuesForUser(
       applicationStore.displaySettings.showSubIssues,
-      userOnWorkspace.userId,
+      { userId: userOnWorkspace.userId, teamId: team.id },
     );
     const { usersData, isLoading } = useUsersData();
     const computedIssues = useFilterIssues(issues);
@@ -86,9 +88,11 @@ export const AssigneeViewItem = observer(
 
 export const NoAssigneeView = observer(() => {
   const { issuesStore, applicationStore } = useContextStore();
+  const team = useCurrentTeam();
+
   const issues = issuesStore.getIssuesForUser(
     applicationStore.displaySettings.showSubIssues,
-    undefined,
+    { userId: undefined, teamId: team.id },
   );
 
   if (issues.length === 0) {

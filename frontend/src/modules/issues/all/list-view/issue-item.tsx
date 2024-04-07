@@ -71,11 +71,13 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
       <div className="flex items-center pl-5 group-hover:pl-0">
         <Checkbox className="hidden group-hover:block border-slate-300 shadow-none mr-1" />
 
-        <IssuePriorityDropdown
-          value={issue.priority ?? 0}
-          onChange={priorityChange}
-          variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
-        />
+        <div className="mr-2">
+          <IssuePriorityDropdown
+            value={issue.priority ?? 0}
+            onChange={priorityChange}
+            variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
+          />
+        </div>
         <div className="pr-3 text-muted-foreground min-w-[68px]">{`${team.identifier}-${issue.number}`}</div>
         <div className="pr-3">
           <IssueStatusDropdown
@@ -99,7 +101,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
         </div>
 
         {issue.parentId && (
-          <div className="font-medium max-w-[300px] text-muted-foreground flex items-center">
+          <div className="font-medium max-w-[300px] text-muted-foreground flex items-center mr-1">
             <RiArrowRightSLine size={14} className="mx-1" />
             <div className="truncate">{issue.parent?.title}</div>
           </div>

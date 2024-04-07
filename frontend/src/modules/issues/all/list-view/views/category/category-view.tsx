@@ -8,15 +8,17 @@ import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
 
+import { ViewEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
-import { CategoryViewItem } from './category-view-item';
+import { CategoryBoard } from './category-board';
+import { CategoryList } from './category-list';
 
 export const CategoryView = observer(() => {
   const currentTeam = useCurrentTeam();
   const {
     applicationStore: {
-      displaySettings: { showCompletedIssues, showTriageIssues },
+      displaySettings: { showCompletedIssues, showTriageIssues, view },
     },
   } = useContextStore();
 
@@ -58,11 +60,9 @@ export const CategoryView = observer(() => {
     })
     .sort(workflowSort);
 
-  return (
-    <div>
-      {workflows.map((workflow: WorkflowType) => (
-        <CategoryViewItem key={workflow.id} workflow={workflow} />
-      ))}
-    </div>
+  return view === ViewEnum.list ? (
+    <CategoryList workflows={workflows} />
+  ) : (
+    <CategoryBoard workflows={workflows} />
   );
 });

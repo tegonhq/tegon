@@ -14,12 +14,11 @@ interface IssueLabelsProps {
 
 export const IssueLabels = observer(({ labelIds }: IssueLabelsProps) => {
   const { labelsStore } = useContextStore();
+  const labels = labelsStore.labels.filter((label: LabelType) =>
+    labelIds.includes(label.id),
+  );
 
   const getLabels = () => {
-    const labels = labelsStore.labels.filter((label: LabelType) =>
-      labelIds.includes(label.id),
-    );
-
     return (
       <>
         {labels.slice(0, 3).map((label: LabelType) => (
@@ -28,10 +27,7 @@ export const IssueLabels = observer(({ labelIds }: IssueLabelsProps) => {
             key={label.name}
             className="text-muted-foreground flex items-center"
           >
-            <BadgeColor
-              style={{ backgroundColor: label.color }}
-              className="mr-2"
-            />
+            <BadgeColor style={{ backgroundColor: label.color }} />
             {label.name}
           </Badge>
         ))}
@@ -48,5 +44,7 @@ export const IssueLabels = observer(({ labelIds }: IssueLabelsProps) => {
     );
   };
 
-  return <div className="flex gap-2">{getLabels()}</div>;
+  return labels.length > 0 ? (
+    <div className="flex gap-2">{getLabels()}</div>
+  ) : null;
 });
