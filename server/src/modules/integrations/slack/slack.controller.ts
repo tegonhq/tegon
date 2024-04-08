@@ -15,10 +15,10 @@ import SlackService from './slack.service';
   path: 'slack',
 })
 @ApiTags('slack')
-export class LabelsController {
+export class SlackController {
   constructor(private slackService: SlackService) {}
 
-  @Post('')
+  @Post('channel/redirect')
   @UseGuards(new AuthGuard())
   async channelRedirectURL(
     @SessionDecorator() session: SessionContainer,
@@ -32,7 +32,4 @@ export class LabelsController {
       userId,
     );
   }
-
-  @Post('channel/callback')
-  async channelCallBack() {}
 }

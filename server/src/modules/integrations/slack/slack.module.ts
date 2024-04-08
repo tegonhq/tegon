@@ -7,7 +7,11 @@ import { PrismaModule, PrismaService } from 'nestjs-prisma';
 import { IssuesModule } from 'modules/issues/issues.module';
 import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 import { NotificationsModule } from 'modules/notifications/notifications.module';
+import { OAuthCallbackModule } from 'modules/oauth-callback/oauth-callback.module';
 import { VectorModule } from 'modules/vector/vector.module';
+
+import { SlackController } from './slack.controller';
+import SlackService from './slack.service';
 
 @Module({
   imports: [
@@ -17,9 +21,10 @@ import { VectorModule } from 'modules/vector/vector.module';
     LinkedIssueModule,
     NotificationsModule,
     VectorModule,
+    OAuthCallbackModule,
   ],
-  controllers: [],
-  providers: [PrismaService],
-  exports: [],
+  controllers: [SlackController],
+  providers: [PrismaService, SlackService],
+  exports: [SlackService],
 })
 export class SlackModule {}

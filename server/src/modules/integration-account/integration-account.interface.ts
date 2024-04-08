@@ -76,7 +76,7 @@ export class CreateIntegrationAccountBody extends WorkspaceIdRequestBody {
 
   @IsObject()
   @IsOptional()
-  settings: Settings;
+  settings?: Settings;
 
   @IsString()
   @IsOptional()

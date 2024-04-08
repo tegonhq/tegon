@@ -15,6 +15,7 @@ import { deleteRequest } from 'modules/integrations/integrations.utils';
 import {
   Config,
   IntegrationAccountWithRelations,
+  Settings,
 } from './integration-account.interface';
 
 export async function storeIntegrationRelatedData(
@@ -23,6 +24,8 @@ export async function storeIntegrationRelatedData(
   integrationName: IntegrationName,
   userId: string,
   workspaceId: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  settingsData?: Record<string, any>,
 ): Promise<undefined> {
   const integrationConfig =
     integrationAccount.integrationConfiguration as Config;
@@ -76,6 +79,37 @@ export async function storeIntegrationRelatedData(
         },
       });
 
+      break;
+
+    case IntegrationName.Slack:
+      const integrationSettings = integrationAccount.settings as Settings;
+      const existingChannelMappings =
+        integrationSettings?.Slack.channelMappings || [];
+      const newChannelMapping = {
+        channelName: settingsData.incoming_webhook.channel.replace(/^#/, ''),
+        channelId: settingsData.incoming_webhook.channel_id,
+        webhookUrl: settingsData.incoming_webhooks.url,
+      };
+
+      const channelMappings = existingChannelMappings.some(
+        (mapping: Record<string, string>) =>
+          mapping.channelId === newChannelMapping.channelId,
+      )
+        ? existingChannelMappings
+        : [...existingChannelMappings, newChannelMapping];
+
+      await prisma.integrationAccount.update({
+        where: { id: integrationAccount.id },
+        data: {
+          settings: {
+            [IntegrationName.Slack]: {
+              teamId: settingsData.team.id,
+              teamName: settingsData.team.name,
+              channelMappings,
+            },
+          },
+        },
+      });
       break;
 
     default:
