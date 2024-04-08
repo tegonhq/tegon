@@ -11,6 +11,8 @@ import {
   getGithubUser,
 } from 'modules/integrations/github/github.utils';
 import { deleteRequest } from 'modules/integrations/integrations.utils';
+import { ChannelMappings } from 'modules/integrations/slack/slack.interface';
+import { addBotToChannel } from 'modules/integrations/slack/slack.utils';
 
 import {
   Config,
@@ -83,20 +85,30 @@ export async function storeIntegrationRelatedData(
 
     case IntegrationName.Slack:
       const integrationSettings = integrationAccount.settings as Settings;
-      const existingChannelMappings =
-        integrationSettings?.Slack.channelMappings || [];
-      const newChannelMapping = {
-        channelName: settingsData.incoming_webhook.channel.replace(/^#/, ''),
-        channelId: settingsData.incoming_webhook.channel_id,
-        webhookUrl: settingsData.incoming_webhooks.url,
-      };
+      const channelMappings = integrationSettings?.Slack.channelMappings || [];
 
-      const channelMappings = existingChannelMappings.some(
-        (mapping: Record<string, string>) =>
-          mapping.channelId === newChannelMapping.channelId,
-      )
-        ? existingChannelMappings
-        : [...existingChannelMappings, newChannelMapping];
+      if (settingsData.incoming_webhook) {
+        const newChannelMapping: ChannelMappings = {
+          channelName: settingsData.incoming_webhook.channel.replace(/^#/, ''),
+          channelId: settingsData.incoming_webhook.channel_id,
+          webhookUrl: settingsData.incoming_webhooks.url,
+        };
+
+        if (
+          !channelMappings.some(
+            (mapping: ChannelMappings) =>
+              mapping.channelId === newChannelMapping.channelId,
+          )
+        ) {
+          const botJoined = await addBotToChannel(
+            integrationAccount,
+            newChannelMapping.channelId,
+          );
+          console.log(botJoined);
+          newChannelMapping.botJoined = botJoined;
+          channelMappings.push(newChannelMapping);
+        }
+      }
 
       await prisma.integrationAccount.update({
         where: { id: integrationAccount.id },

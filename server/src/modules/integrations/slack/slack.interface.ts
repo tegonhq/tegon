@@ -16,3 +16,5 @@ export class ChannelBody {
   @IsString()
   redirectURL: string;
 }
+
+export type ChannelMappings = Record<string, string>;

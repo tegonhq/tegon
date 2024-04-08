@@ -52,6 +52,8 @@ export class IntegrationAccountService {
       },
     });
 
+    console.log(settings);
+
     await storeIntegrationRelatedData(
       this.prisma,
       integrationAccount,

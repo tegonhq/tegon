@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { HttpModule } from '@nestjs/axios';
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
@@ -22,6 +23,7 @@ import SlackService from './slack.service';
     NotificationsModule,
     VectorModule,
     OAuthCallbackModule,
+    BullModule.registerQueue({ name: 'slack' }),
   ],
   controllers: [SlackController],
   providers: [PrismaService, SlackService],
