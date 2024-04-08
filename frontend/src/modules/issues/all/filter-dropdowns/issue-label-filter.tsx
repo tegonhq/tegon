@@ -7,12 +7,12 @@ import { IssueLabelDropdownContent } from 'modules/issues/components';
 import { useTeamLabels } from 'hooks/labels';
 import { useCurrentTeam } from 'hooks/teams';
 
-import { FilterType } from 'store/application';
+import { FilterTypeEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
 interface IssueLabelFilterProps {
   value?: string[];
-  onChange?: (value: string[], filterType: FilterType) => void;
+  onChange?: (value: string[], filterType: FilterTypeEnum) => void;
   onClose: () => void;
 }
 
@@ -27,7 +27,7 @@ export const IssueLabelFilter = observer(
       : [];
 
     const change = (value: string[]) => {
-      onChange(value, FilterType.IS);
+      onChange(value, FilterTypeEnum.INCLUDES_ANY);
     };
 
     return (

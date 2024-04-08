@@ -7,6 +7,7 @@ import { useContextStore } from 'store/global-context-provider';
 
 import { AssigneeView } from './views/assignee';
 import { CategoryView } from './views/category';
+import { LabelView } from './views/label';
 import { PriorityView } from './views/priority';
 
 export const ListView = observer(() => {
@@ -19,6 +20,10 @@ export const ListView = observer(() => {
 
   if (grouping === 'priority') {
     return <PriorityView />;
+  }
+
+  if (grouping === 'label') {
+    return <LabelView />;
   }
 
   return <CategoryView />;

@@ -22,6 +22,7 @@ export const FiltersModel = types.model({
 });
 
 export const DisplaySettingsModel = types.model({
+  view: types.enumeration(['list', 'board']),
   grouping: types.enumeration(['assignee', 'priority', 'status', 'label']),
   ordering: types.enumeration([
     'assignee',

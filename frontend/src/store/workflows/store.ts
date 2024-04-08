@@ -62,6 +62,11 @@ export const WorkflowsStore: IAnyStateTreeNode = types
         workflow.teamId === teamId && workflow.name === 'Canceled';
       });
     },
+    getTriageWorkflow(teamId: string) {
+      return self.workflows.find((workflow: WorkflowType) => {
+        workflow.teamId === teamId && workflow.name === 'Triage';
+      });
+    },
   }));
 
 export type WorkflowsStoreType = Instance<typeof WorkflowsStore>;

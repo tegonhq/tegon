@@ -46,7 +46,9 @@ interface TimelineProps {
 }
 
 const Timeline: React.FC<TimelineProps> = ({ children }) => {
-  return <div className={cn('flex flex-col items-start')}>{children}</div>;
+  return (
+    <div className={cn('flex flex-col items-start gap-1')}>{children}</div>
+  );
 };
 Timeline.displayName = 'Timeline';
 

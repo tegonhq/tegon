@@ -22,7 +22,6 @@ export const IssuesStore: IAnyStateTreeNode = types
       self.issuesMap.set(id, Issue.create(issue));
     };
     const deleteById = (id: string) => {
-      console.log(id, 'asasdf');
       self.issuesMap.delete(id);
     };
 
@@ -49,15 +48,17 @@ export const IssuesStore: IAnyStateTreeNode = types
             !issue.parentId,
       );
     },
-    getIssuesForUser(showSubIssues: boolean, userId?: string) {
+    getIssuesForUser(
+      showSubIssues: boolean,
+      { userId, teamId }: { userId?: string; teamId?: string },
+    ) {
       if (userId) {
         return Array.from(self.issuesMap.values()).filter(
           (issue: IssueType) => {
-            if (!showSubIssues) {
-              return issue.assigneeId === userId && !issue.parentId;
-            }
+            const isTeamIssues = teamId ? issue.teamId === teamId : true;
+            const isSubIssue = showSubIssues ? !issue.parentId : true;
 
-            return issue.assigneeId === userId;
+            return issue.assigneeId === userId && isSubIssue && isTeamIssues;
           },
         );
       }
@@ -75,6 +76,30 @@ export const IssuesStore: IAnyStateTreeNode = types
         showSubIssues
           ? issue.priority === priority
           : issue.priority === priority && !issue.parentId,
+      );
+    },
+    getIssuesForLabel(labelId: string | undefined, showSubIssues: boolean) {
+      if (!labelId) {
+        return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
+          showSubIssues
+            ? issue.labelIds.length === 0
+            : issue.labelIds.length === 0 && !issue.parentId,
+        );
+      }
+
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
+        showSubIssues
+          ? issue.labelIds.includes(labelId)
+          : issue.labelIds.includes(labelId) && !issue.parentId,
+      );
+    },
+    getIssuesForNoLabel(showSubIssues: boolean, teamId: string) {
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
+        showSubIssues
+          ? issue.labelIds.length === 0 && issue.teamId === teamId
+          : issue.labelIds.length === 0 &&
+            issue.teamId === teamId &&
+            !issue.parentId,
       );
     },
     getIssueById(issueId: string): IssueType {

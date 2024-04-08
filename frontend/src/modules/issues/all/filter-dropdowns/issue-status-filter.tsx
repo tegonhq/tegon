@@ -7,12 +7,12 @@ import { IssueStatusDropdownContent } from 'modules/issues/components';
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
 
-import { FilterType } from 'store/application';
+import { FilterTypeEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
 interface IssueStatusFilterProps {
   value?: string;
-  onChange?: (status: string[], filterType: FilterType) => void;
+  onChange?: (status: string[], filterType: FilterTypeEnum) => void;
   onClose: () => void;
 }
 
@@ -27,7 +27,7 @@ export const IssueStatusFilter = observer(
       : [];
 
     const change = (value: string[]) => {
-      onChange(value, FilterType.IS);
+      onChange(value, FilterTypeEnum.IS);
     };
 
     return (

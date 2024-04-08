@@ -53,10 +53,7 @@ export const IssueLabelDropdown = observer(
                   key={label.name}
                   className="text-foreground flex items-center"
                 >
-                  <BadgeColor
-                    style={{ backgroundColor: label.color }}
-                    className="mr-2"
-                  />
+                  <BadgeColor style={{ backgroundColor: label.color }} />
                   {label.name}
                 </Badge>
               ))}

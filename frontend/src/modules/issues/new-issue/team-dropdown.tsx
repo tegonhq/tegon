@@ -14,7 +14,7 @@ import {
 } from 'components/ui/dropdown-menu';
 import { TeamLine } from 'icons';
 
-import { tegonDatabase } from 'store/database';
+import { useContextStore } from 'store/global-context-provider';
 
 interface TeamProps {
   value?: string;
@@ -22,23 +22,17 @@ interface TeamProps {
 }
 
 export function TeamDropdown({ value, onChange }: TeamProps) {
-  const [teams, setTeams] = React.useState<TeamType[]>([]);
+  const { teamsStore } = useContextStore();
+  const teams = teamsStore.teams;
 
   React.useEffect(() => {
-    getTeams();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function getTeams() {
-    const teams = await tegonDatabase.teams.toArray();
-    setTeams(teams);
-
     if (!value) {
       onChange(teams[0].identifier);
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
-  const team = teams.find((team) => team.identifier === value);
+  const team = teams.find((team: TeamType) => team.identifier === value);
 
   if (!teams || !team) {
     return null;

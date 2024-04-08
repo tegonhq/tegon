@@ -136,3 +136,7 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
   height: 0;
   pointer-events: none;
 }
+
+.scroll-area > div {
+  height: 100%;
+}

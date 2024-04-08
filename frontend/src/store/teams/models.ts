@@ -9,3 +9,5 @@ export const Team = types.model({
   name: types.string,
   identifier: types.string,
 });
+
+export const Teams = types.array(Team);

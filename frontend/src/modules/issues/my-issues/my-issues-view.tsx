@@ -14,7 +14,9 @@ import { useFilterIssues } from '../all/list-view/list-view-utils';
 export const MyIssuesView = observer(() => {
   const user = React.useContext(UserContext);
   const { issuesStore } = useContextStore();
-  const issues = useFilterIssues(issuesStore.getIssuesForUser(true, user.id));
+  const issues = useFilterIssues(
+    issuesStore.getIssuesForUser(true, { userId: user.id }),
+  );
 
   return (
     <div className="flex flex-col h-full">

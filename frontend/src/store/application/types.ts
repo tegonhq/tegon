@@ -5,6 +5,7 @@ export interface UpdateBody {
 }
 
 export interface DisplaySettingsModelType {
+  view: ViewEnum;
   grouping: GroupingEnum;
   ordering: OrderingEnum;
   showSubIssues: boolean;
@@ -17,18 +18,19 @@ export interface DisplaySettingsModelType {
 export interface UpdateDisplaySettingsBody
   extends Partial<DisplaySettingsModelType> {}
 
-export enum FilterType {
+export enum FilterTypeEnum {
   IS = 'IS',
   IS_NOT = 'IS_NOT',
   INCLUDES = 'INCLUDLES',
   INCLUDES_ANY = 'INCLUDES_ANY',
   EXCLUDES = 'EXCLUDES',
   EXCLUDES_ANY = 'EXCLUDES_ANY',
+  UNDEFINED = 'UNDEFINED',
 }
 
 export interface FilterModelType {
   value: string[];
-  filterType: FilterType;
+  filterType: FilterTypeEnum;
 }
 
 export interface FiltersModelType {
@@ -50,4 +52,9 @@ export enum OrderingEnum {
   status = 'status',
   updated_at = 'updated_at',
   created_at = 'created_at',
+}
+
+export enum ViewEnum {
+  list = 'list',
+  board = 'board',
 }

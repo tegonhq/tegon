@@ -116,3 +116,25 @@ export function useAllTeamWorkflows(
 
   return workflows;
 }
+
+export function useAllWorkflows(): WorkflowType[] | undefined {
+  const { workflowsStore } = useContextStore();
+  const workflowCategories = Object.values(WorkflowCategoryEnum);
+
+  const getWorkflows = () => {
+    const workflows = workflowsStore.workflows
+      .filter((workflow: WorkflowType) => {
+        return workflowCategories.includes(workflow.category);
+      })
+      .sort(workflowSort);
+
+    return workflows;
+  };
+
+  const workflows = React.useMemo(
+    () => computed(() => getWorkflows()),
+    [workflowsStore],
+  ).get();
+
+  return workflows;
+}

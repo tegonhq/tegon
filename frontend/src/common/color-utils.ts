@@ -21,7 +21,6 @@ export function getTailwindColor(name: string): string {
     'bg-purple-400 dark:bg-purple-900',
     'bg-pink-400 dark:bg-pink-900',
     'bg-teal-400 dark:bg-teal-900',
-    'bg-orange-400 dark:bg-orange-900',
   ];
 
   // Generate a hash value for the input name
@@ -44,7 +43,6 @@ export function getTeamColor(name: string, background = false): string {
     'text-green-500',
     'text-indigo-500',
     'text-teal-500',
-    'text-orange-500',
   ];
 
   const bgColors = [
@@ -53,7 +51,6 @@ export function getTeamColor(name: string, background = false): string {
     'bg-green-500/10',
     'bg-indigo-500/10',
     'bg-teal-500/10',
-    'bg-orange-500/10',
   ];
 
   // Generate a hash value for the input name

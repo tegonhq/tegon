@@ -34,7 +34,7 @@ function DefaultPopoverContent({
         <CommandItem
           key="Status"
           value="Status"
-          className="flex items-center"
+          className="flex items-center text-muted-foreground"
           onSelect={onSelect}
         >
           <BacklogLine size={14} className="mr-2" /> Status
@@ -42,7 +42,7 @@ function DefaultPopoverContent({
         <CommandItem
           key="Assignee"
           value="Assignee"
-          className="flex items-center"
+          className="flex items-center text-muted-foreground"
           onSelect={onSelect}
         >
           <AssigneeLine size={14} className="mr-2" />
@@ -51,7 +51,7 @@ function DefaultPopoverContent({
         <CommandItem
           key="Label"
           value="Label"
-          className="flex items-center"
+          className="flex items-center text-muted-foreground"
           onSelect={onSelect}
         >
           <LabelFill size={14} className="mr-2" />

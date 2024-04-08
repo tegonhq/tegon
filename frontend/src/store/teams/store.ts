@@ -1,4 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { sort } from 'fast-sort';
 import {
   type IAnyStateTreeNode,
   type Instance,
@@ -10,11 +11,11 @@ import type { TeamType } from 'common/types/team';
 
 import { tegonDatabase } from 'store/database';
 
-import { Team } from './models';
+import { Teams } from './models';
 
 export const TeamsStore: IAnyStateTreeNode = types
   .model({
-    teams: types.array(Team),
+    teams: Teams,
     workspaceId: types.union(types.string, types.undefined),
   })
   .actions((self) => {
@@ -44,7 +45,9 @@ export const TeamsStore: IAnyStateTreeNode = types
     const load = flow(function* () {
       const teams = yield tegonDatabase.teams.toArray();
 
-      self.teams = teams;
+      self.teams = Teams.create(
+        sort(teams).asc((team: TeamType) => team.createdAt),
+      );
     });
 
     return { update, deleteById, load };
