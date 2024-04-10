@@ -22,14 +22,24 @@ export const CategoryView = observer(() => {
     },
   } = useContextStore();
 
-  const categorySequence = [
-    WorkflowCategoryEnum.STARTED,
-    WorkflowCategoryEnum.UNSTARTED,
-    WorkflowCategoryEnum.BACKLOG,
-    WorkflowCategoryEnum.TRIAGE,
-    WorkflowCategoryEnum.COMPLETED,
-    WorkflowCategoryEnum.CANCELED,
-  ];
+  const categorySequence =
+    view === ViewEnum.list
+      ? [
+          WorkflowCategoryEnum.STARTED,
+          WorkflowCategoryEnum.UNSTARTED,
+          WorkflowCategoryEnum.BACKLOG,
+          WorkflowCategoryEnum.TRIAGE,
+          WorkflowCategoryEnum.COMPLETED,
+          WorkflowCategoryEnum.CANCELED,
+        ]
+      : [
+          WorkflowCategoryEnum.TRIAGE,
+          WorkflowCategoryEnum.BACKLOG,
+          WorkflowCategoryEnum.UNSTARTED,
+          WorkflowCategoryEnum.STARTED,
+          WorkflowCategoryEnum.COMPLETED,
+          WorkflowCategoryEnum.CANCELED,
+        ];
 
   function workflowSort(a: WorkflowType, b: WorkflowType): number {
     // Compare categories based on their sequence

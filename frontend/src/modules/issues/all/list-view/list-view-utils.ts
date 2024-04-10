@@ -25,6 +25,7 @@ export function filterIssue(issue: IssueType, filter: FilterType) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fieldValue = (issue as any)[key];
+  console.log(issue);
 
   switch (filterType) {
     case FilterTypeEnum.IS:
@@ -40,7 +41,7 @@ export function filterIssue(issue: IssueType, filter: FilterType) {
     case FilterTypeEnum.EXCLUDES_ANY:
       return !value.some((value) => fieldValue.includes(value));
     case FilterTypeEnum.UNDEFINED:
-      return fieldValue.parentId === undefined;
+      return fieldValue === null || fieldValue === undefined;
     default:
       return true; // No filter, return all issues
   }

@@ -16,6 +16,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from 'components/ui/resizable';
+import { useCurrentTeam } from 'hooks/teams';
 import { FocusLine, Inbox, SettingsLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -35,6 +36,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   const {
     query: { workspaceSlug },
   } = useRouter();
+  const team = useCurrentTeam();
   const ref = React.useRef<ImperativePanelHandle>(null);
 
   React.useEffect(() => {
@@ -108,7 +110,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
       </div>
 
       <div className="px-4 flex md:hidden pt-4"> {children} </div>
-      <ShortcutDialogs />
+      {team && <ShortcutDialogs />}
     </div>
   );
 });
