@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import type { UsersOnWorkspaceType } from 'common/types/workspace';
 
-import { useCurrentTeam } from 'hooks/teams';
+import { useCurrentTeam, useTeamWithId } from 'hooks/teams';
 
 import { useGetUsersQuery } from 'services/users/get-users';
 
@@ -38,11 +38,14 @@ export function useUsersData(teamId?: string) {
   return { isLoading, usersData };
 }
 
-export function useUserData(userId: string): {
+export function useUserData(
+  userId: string,
+  teamId: string,
+): {
   isLoading: boolean;
   userData: User | undefined;
 } {
-  const currentTeam = useCurrentTeam();
+  const team = useTeamWithId(teamId);
 
   const { workspaceStore } = useContextStore();
   const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
@@ -53,8 +56,8 @@ export function useUserData(userId: string): {
     refetch,
   } = useGetUsersQuery([
     usersOnWorkspace.find((uOW: UsersOnWorkspaceType) => {
-      if (currentTeam?.id) {
-        return uOW.teamIds.includes(currentTeam.id) && uOW.userId === userId;
+      if (team?.id) {
+        return uOW.teamIds.includes(team.id) && uOW.userId === userId;
       }
 
       return uOW.userId === userId;

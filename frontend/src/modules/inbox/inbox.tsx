@@ -9,7 +9,7 @@ import { NotificationRightSide } from './right-side';
 export function Inbox() {
   return (
     <main className="grid grid-cols-4 h-full">
-      <div className="flex flex-col col-span-1">
+      <div className="flex flex-col col-span-1 overflow-hidden">
         <Header />
         <NotificationsList />
       </div>

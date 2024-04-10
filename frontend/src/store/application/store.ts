@@ -1,26 +1,35 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import type {
-  UpdateDisplaySettingsBody,
-  UpdateBody,
-  FiltersModelType,
-} from './types';
 
 import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 
 import { DisplaySettingsModel, FiltersModel } from './models';
+import {
+  type UpdateDisplaySettingsBody,
+  type UpdateBody,
+  type FiltersModelType,
+  type DisplaySettingsModelType,
+  ViewEnum,
+  GroupingEnum,
+  OrderingEnum,
+} from './types';
 
-export const defaultApplicationStoreValue = {
+export const defaultApplicationStoreValue: {
+  filters: FiltersModelType;
+  displaySettings: DisplaySettingsModelType;
+  selectedIssues: string[];
+} = {
   filters: {},
   displaySettings: {
-    view: 'list',
-    grouping: 'status',
-    ordering: 'updated_at',
+    view: ViewEnum.list,
+    grouping: GroupingEnum.status,
+    ordering: OrderingEnum.updated_at,
     showSubIssues: true,
     showEmptyGroups: false,
     showCompletedIssues: true,
     showTriageIssues: false,
     sidebarCollapsed: false,
   },
+  selectedIssues: [],
 };
 
 export const ApplicationStore: IAnyStateTreeNode = types
@@ -28,6 +37,8 @@ export const ApplicationStore: IAnyStateTreeNode = types
     filters: FiltersModel,
     displaySettings: DisplaySettingsModel,
     identifier: types.string,
+    selectedIssues: types.array(types.string),
+    hoverIssue: types.union(types.string, types.undefined),
   })
   .actions((self) => ({
     updateFilters(updateBody: UpdateBody) {
@@ -67,6 +78,30 @@ export const ApplicationStore: IAnyStateTreeNode = types
         Object.keys(displayData).length > 0
           ? displayData
           : defaultApplicationStoreValue.displaySettings;
+    },
+    addToSelectedIssues(issue: string, reset: boolean) {
+      if (reset) {
+        self.selectedIssues.replace([issue]);
+      } else {
+        self.selectedIssues.push(issue);
+      }
+
+      self.hoverIssue = undefined;
+    },
+    removeSelectedIssue(issue: string) {
+      if (self.selectedIssues.length === 1) {
+        self.selectedIssues.replace([]);
+      } else {
+        const index = self.selectedIssues.indexOf(issue);
+        self.selectedIssues.splice(1, index);
+      }
+    },
+    clearSelectedIssues() {
+      self.selectedIssues.replace([]);
+      self.hoverIssue = undefined;
+    },
+    setHoverIssue(issue: string) {
+      self.hoverIssue = issue;
     },
   }));
 

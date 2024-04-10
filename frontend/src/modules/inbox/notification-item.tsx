@@ -17,6 +17,7 @@ import { useUserData } from 'hooks/users';
 import { useUpdateNotificationMutation } from 'services/notifications';
 
 import { useContextStore } from 'store/global-context-provider';
+import { BadgeColor } from 'components/ui/badge';
 
 interface NotificationItemProps {
   notification: NotificationType;
@@ -62,7 +63,10 @@ export const NotificationItem = observer(
     const issue = issuesStore.getIssueById(notification.issueId);
     const nextIssue =
       nextNotification && issuesStore.getIssueById(nextNotification.issueId);
-    const { userData, isLoading } = useUserData(notification.createdById);
+    const { userData, isLoading } = useUserData(
+      notification.createdById,
+      issue.teamId,
+    );
     const {
       query: { issueId, workspaceSlug },
       push,

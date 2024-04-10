@@ -1,15 +1,19 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Priorities } from 'common/types/issue';
+import { observer } from 'mobx-react-lite';
 
-import { PriorityViewItem } from './priority-view-item';
+import { ViewEnum } from 'store/application';
+import { useContextStore } from 'store/global-context-provider';
 
-export function PriorityView() {
-  return (
-    <div>
-      {Priorities.map((priority: string, index: number) => (
-        <PriorityViewItem key={priority} priority={index} />
-      ))}
-    </div>
-  );
-}
+import { PriorityBoard } from './priority-board';
+import { PriorityList } from './priority-list';
+
+export const PriorityView = observer(() => {
+  const {
+    applicationStore: {
+      displaySettings: { view },
+    },
+  } = useContextStore();
+
+  return view === ViewEnum.list ? <PriorityList /> : <PriorityBoard />;
+});

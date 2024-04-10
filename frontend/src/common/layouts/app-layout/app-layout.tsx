@@ -1,8 +1,12 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import type { ImperativePanelHandle } from 'react-resizable-panels';
+
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import * as React from 'react';
+
+import { ShortcutDialogs } from 'modules/shortcuts';
 
 import { cn } from 'common/lib/utils';
 import { AllProviders } from 'common/wrappers/all-providers';
@@ -31,22 +35,28 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   const {
     query: { workspaceSlug },
   } = useRouter();
+  const ref = React.useRef<ImperativePanelHandle>(null);
+
+  React.useEffect(() => {
+    if (!applicationStore.displaySettings.sidebarCollapsed) {
+      const panel = ref.current;
+      if (panel) {
+        panel.expand();
+      }
+    }
+  }, [applicationStore.displaySettings.sidebarCollapsed]);
 
   return (
     <div className="md:flex flex-col flex-grow">
       <div className="hidden md:block h-full">
         <ResizablePanelGroup
           direction="horizontal"
-          onLayout={(sizes: number[]) => {
-            document.cookie = `react-resizable-panels:layout=${JSON.stringify(
-              sizes,
-            )}`;
-          }}
           className="h-full max-h-[100vh] items-stretch max-w-[100vw]"
         >
           <ResizablePanel
             defaultSize={14}
             collapsible
+            ref={ref}
             collapsedSize={0}
             minSize={14}
             maxSize={14}
@@ -54,17 +64,11 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
               applicationStore.updateDisplaySettings({
                 sidebarCollapsed: false,
               });
-              document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-                false,
-              )}`;
             }}
             onCollapse={() => {
               applicationStore.updateDisplaySettings({
                 sidebarCollapsed: true,
               });
-              document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
-                true,
-              )}`;
             }}
             className={cn(
               isCollapsed && 'transition-all duration-300 ease-in-out',
@@ -104,6 +108,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
       </div>
 
       <div className="px-4 flex md:hidden pt-4"> {children} </div>
+      <ShortcutDialogs />
     </div>
   );
 });

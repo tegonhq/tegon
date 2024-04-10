@@ -8,10 +8,9 @@ import {
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
+import { PriorityIcons } from 'modules/issues/components';
 
-import type { IssueType } from 'common/types/issue';
-import type { WorkflowType } from 'common/types/team';
+import { Priorities, type IssueType } from 'common/types/issue';
 
 import { BoardColumn, BoardItem } from 'components/ui/board';
 import { useCurrentTeam } from 'hooks/teams';
@@ -21,20 +20,17 @@ import { useContextStore } from 'store/global-context-provider';
 import { BoardIssueItem } from '../../issue-board-item';
 import { useFilterIssues } from '../../list-view-utils';
 
-interface CategoryBoardItemProps {
-  workflow: WorkflowType;
+interface PriorityBoardListProps {
+  priority: number;
 }
 
-export const CategoryBoardList = observer(
-  ({ workflow }: CategoryBoardItemProps) => {
-    const CategoryIcon =
-      WORKFLOW_CATEGORY_ICONS[workflow.name] ??
-      WORKFLOW_CATEGORY_ICONS['Backlog'];
-    const currentTeam = useCurrentTeam();
+export const PriorityBoardList = observer(
+  ({ priority }: PriorityBoardListProps) => {
     const { issuesStore, applicationStore } = useContextStore();
-    const issues = issuesStore.getIssuesForState(
-      workflow.id,
-      currentTeam.id,
+    const team = useCurrentTeam();
+    const issues = issuesStore.getIssuesForPriority(
+      priority,
+      team.id,
       applicationStore.displaySettings.showSubIssues,
     );
     const computedIssues = useFilterIssues(issues);
@@ -46,17 +42,18 @@ export const CategoryBoardList = observer(
       return null;
     }
 
+    const PriorityIcon = PriorityIcons[priority];
+
     return (
-      <BoardColumn key={workflow.id} id={workflow.id}>
+      <BoardColumn key={priority} id={`${priority}`}>
         <div className="flex flex-col max-h-[100%]">
           <div className="flex items-center w-full p-4 pb-1">
-            <CategoryIcon
-              size={16}
-              className="text-muted-foreground"
-              color={workflow.color}
+            <PriorityIcon.icon
+              size={18}
+              className="text-muted-foreground mr-2"
             />
             <h3 className="pl-2 text-sm font-medium">
-              {workflow.name}
+              {Priorities[priority]}
               <span className="text-muted-foreground ml-2">
                 {computedIssues.length}
               </span>

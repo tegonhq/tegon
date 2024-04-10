@@ -41,7 +41,7 @@ export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
   return (
     <BoardColumn key={label.id} id={label.id}>
       <div className="flex flex-col max-h-[100%]">
-        <div className="flex items-center w-full p-3">
+        <div className="flex items-center w-full p-4 pb-1">
           <h3 className="pl-2 text-sm font-medium">
             {label.name}
             <span className="text-muted-foreground ml-2">
@@ -96,7 +96,7 @@ export const NoLabelBoardList = observer(() => {
   return (
     <BoardColumn key="no-label" id="no-label">
       <div className="flex flex-col max-h-[100%]">
-        <div className="flex items-center w-full p-3">
+        <div className="flex items-center w-full p-4 pb-1">
           <h3 className="pl-2 text-sm font-medium">
             No Label
             <span className="text-muted-foreground ml-2">

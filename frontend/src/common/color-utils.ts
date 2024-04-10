@@ -15,7 +15,7 @@ export function getTailwindColor(name: string): string {
   // Define Tailwind CSS colors at shade 400
   const colors = [
     'bg-blue-400 dark:bg-blue-900',
-    'bg-green-400 dark:bg-green-900',
+    'bg-green-600 dark:bg-green-900',
     'bg-yellow-400 dark:bg-yellow-900',
     'bg-indigo-400 dark:bg-indigo-900',
     'bg-purple-400 dark:bg-purple-900',

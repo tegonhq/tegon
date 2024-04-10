@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiCheckLine, RiCloseLine } from '@remixicon/react';
+import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -14,7 +15,9 @@ import {
 } from 'components/ui/breadcrumb';
 import { Button } from 'components/ui/button';
 import { useCurrentTeam } from 'hooks/teams';
-import { TeamLine } from 'icons';
+import { SidebarLine, TeamLine } from 'icons';
+
+import { useContextStore } from 'store/global-context-provider';
 
 import { IssueOptionsDropdown } from './issue-actions/issue-options-dropdown';
 import { TriageAcceptModal } from '../triage-view/triage-accept-modal';
@@ -24,11 +27,12 @@ interface HeaderProps {
   isTriageView?: boolean;
 }
 
-export function Header({ isTriageView = false }: HeaderProps) {
+export const Header = observer(({ isTriageView = false }: HeaderProps) => {
   const team = useCurrentTeam();
   const [triageAction, setTriageAction] = React.useState<
     'Accept' | 'Decline' | 'Duplicate'
   >(undefined);
+  const { applicationStore } = useContextStore();
 
   const {
     query: { issueId, workspaceSlug },
@@ -47,6 +51,19 @@ export function Header({ isTriageView = false }: HeaderProps) {
   return (
     <header className="flex pl-8 px-4 py-3 w-full border-b gap-2 justify-between items-center">
       <div className="flex gap-2 items-center">
+        {applicationStore.displaySettings.sidebarCollapsed && (
+          <Button
+            variant="ghost"
+            size="xs"
+            onClick={() => {
+              applicationStore.updateDisplaySettings({
+                sidebarCollapsed: false,
+              });
+            }}
+          >
+            <SidebarLine size={16} />
+          </Button>
+        )}
         <Breadcrumb className="text-xs">
           <BreadcrumbItem>
             <BreadcrumbLink
@@ -108,4 +125,4 @@ export function Header({ isTriageView = false }: HeaderProps) {
       )}
     </header>
   );
-}
+});

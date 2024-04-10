@@ -21,12 +21,16 @@ import { DeleteIssueItem } from './delete-issue-item';
 import { LinkedIssueItems } from './linked-issue-items';
 import { RelatedDropdownItems } from './related-dropdown-items';
 import { RemoveParentIssue } from './remove-parent-issue';
+import { AddLinkedIssueDialog } from '../linked-issues-view/add-linked-issue-dialog';
+import type { LinkedIssueSubType } from 'common/types/linked-issue';
 
 export function IssueOptionsDropdown() {
   const currentIssue = useIssueData();
   const [relatedModal, setRelatedModal] =
     React.useState<IssueRelationEnum>(undefined);
   const [deleteIssueDialog, setDeleteIssueDialog] = React.useState(false);
+  const [dialogOpen, setDialogOpen] =
+    React.useState<LinkedIssueSubType>(undefined);
 
   return (
     <>
@@ -43,7 +47,7 @@ export function IssueOptionsDropdown() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="text-muted-foreground">
-          <LinkedIssueItems issue={currentIssue} />
+          <LinkedIssueItems setDialogOpen={setDialogOpen} />
           <RelatedDropdownItems setRelatedModal={setRelatedModal} />
           <DropdownMenuSeparator />
           {currentIssue.parentId && <RemoveParentIssue issue={currentIssue} />}
@@ -60,6 +64,12 @@ export function IssueOptionsDropdown() {
         issue={currentIssue}
         deleteIssueDialog={deleteIssueDialog}
         setDeleteIssueDialog={setDeleteIssueDialog}
+      />
+
+      <AddLinkedIssueDialog
+        open={dialogOpen}
+        setOpen={setDialogOpen}
+        issueId={currentIssue.id}
       />
     </>
   );

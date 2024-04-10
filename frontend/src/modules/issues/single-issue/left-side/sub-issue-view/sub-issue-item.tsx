@@ -47,7 +47,7 @@ export function SubIssueItem({ issue }: SubIssueItemProps) {
   };
 
   return (
-    <div className="p-2 flex justify-between cursor-default text-sm hover:bg-slate-100/50 dark:hover:bg-slate-800/20 rounded-md">
+    <div className="p-2 flex justify-between cursor-default text-sm hover:bg-active/50 rounded-md">
       <div className="flex items-center">
         <IssuePriorityDropdown
           value={issue.priority}
@@ -55,7 +55,7 @@ export function SubIssueItem({ issue }: SubIssueItemProps) {
           variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
         />
         <div
-          className="pr-3 text-muted-foreground min-w-[68px]"
+          className="ml-2 pr-3 text-muted-foreground min-w-[68px]"
           onClick={openIssue}
         >{`${team.identifier}-${issue.number}`}</div>
         <div className="pr-3">

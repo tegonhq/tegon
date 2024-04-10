@@ -37,7 +37,8 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
     query: { workspaceSlug },
   } = useRouter();
   const { mutate: updateIssue } = useUpdateIssueMutation({});
-  const { issuesStore, issueRelationsStore } = useContextStore();
+  const { issuesStore, issueRelationsStore, applicationStore } =
+    useContextStore();
   const issue = issuesStore.getIssueById(issueId);
   const team = useTeamWithId(issue.teamId);
   const blockedIssues = issueRelationsStore.getIssueRelationForType(
@@ -48,6 +49,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
     issue.id,
     IssueRelationEnum.BLOCKS,
   );
+  const issueSelected = applicationStore.selectedIssues.includes(issue.id);
 
   const statusChange = (stateId: string) => {
     updateIssue({ id: issue.id, stateId, teamId: issue.teamId });
@@ -63,13 +65,46 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
 
   return (
     <a
-      className="pl-3 pr-6 p-2.5 flex justify-between group cursor-default text-sm hover:bg-slate-100 dark:hover:bg-slate-800/20 border-b-[0.5px]"
+      className={cn(
+        'pl-3 pr-6 p-2.5 flex justify-between group cursor-default text-sm hover:bg-active/50 border-b-[0.5px]',
+        issueSelected && 'bg-primary/10',
+      )}
       onClick={() => {
         push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
       }}
+      onMouseOver={() => {
+        const { selectedIssues } = applicationStore;
+        if (selectedIssues.length === 0) {
+          applicationStore.setHoverIssue(issue.id);
+        }
+      }}
     >
-      <div className="flex items-center pl-5 group-hover:pl-0">
-        <Checkbox className="hidden group-hover:block border-slate-300 shadow-none mr-1" />
+      <div
+        className={cn(
+          'flex items-center pl-5 group-hover:pl-0',
+          issueSelected && 'pl-0',
+        )}
+      >
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <Checkbox
+            className={cn(
+              'hidden group-hover:block border-slate-300 shadow-none mr-1',
+              issueSelected && 'block',
+            )}
+            checked={issueSelected}
+            onCheckedChange={(checked) => {
+              if (checked) {
+                applicationStore.addToSelectedIssues(issue.id);
+              } else {
+                applicationStore.removeSelectedIssue(issue.id);
+              }
+            }}
+          />
+        </div>
 
         <div className="mr-2">
           <IssuePriorityDropdown

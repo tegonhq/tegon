@@ -3,7 +3,6 @@
 import { RiExternalLinkLine, RiGithubFill } from '@remixicon/react';
 import * as React from 'react';
 
-import type { IssueType } from 'common/types/issue';
 import { LinkedIssueSubType } from 'common/types/linked-issue';
 
 import {
@@ -15,16 +14,12 @@ import {
 } from 'components/ui/dropdown-menu';
 
 import { DropdownItem } from './dropdown-item';
-import { AddLinkedIssueDialog } from '../linked-issues-view/add-linked-issue-dialog';
 
 interface LinkedIssueItemsProps {
-  issue: IssueType;
+  setDialogOpen: (type: LinkedIssueSubType) => void;
 }
 
-export function LinkedIssueItems({ issue }: LinkedIssueItemsProps) {
-  const [dialogOpen, setDialogOpen] =
-    React.useState<LinkedIssueSubType>(undefined);
-
+export function LinkedIssueItems({ setDialogOpen }: LinkedIssueItemsProps) {
   return (
     <>
       <DropdownMenuSub>
@@ -48,12 +43,6 @@ export function LinkedIssueItems({ issue }: LinkedIssueItemsProps) {
           </DropdownMenuSubContent>
         </DropdownMenuPortal>
       </DropdownMenuSub>
-
-      <AddLinkedIssueDialog
-        open={dialogOpen}
-        setOpen={setDialogOpen}
-        issueId={issue.id}
-      />
     </>
   );
 }

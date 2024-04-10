@@ -44,6 +44,7 @@ export enum GroupingEnum {
   assignee = 'assignee',
   label = 'label',
   status = 'status',
+  priority = 'priority',
 }
 
 export enum OrderingEnum {

@@ -49,25 +49,20 @@ export const AssigneeBoardList = observer(
       return null;
     }
 
+    function getUserData(userId: string) {
+      return usersData.find((userData: User) => userData.id === userId);
+    }
+
     if (
       computedIssues.length === 0 &&
       !applicationStore.displaySettings.showEmptyGroups
     ) {
       return null;
     }
-
-    function getUserData(userId: string) {
-      return usersData.find((userData: User) => userData.id === userId);
-    }
-
-    if (computedIssues.length === 0) {
-      return null;
-    }
-
     return (
       <BoardColumn key={userOnWorkspace.userId} id={userOnWorkspace.userId}>
         <div className="flex flex-col max-h-[100%]">
-          <div className="flex items-center w-full p-3">
+          <div className="flex items-center w-full px-4">
             <Avatar className="h-[20px] w-[25px] flex items-center">
               <AvatarImage />
               <AvatarFallback
@@ -129,7 +124,7 @@ export const NoAssigneeView = observer(() => {
   return (
     <BoardColumn key="no-user" id="no-user">
       <div className="flex flex-col max-h-[100%]">
-        <div className="flex items-center w-full p-3">
+        <div className="flex items-center w-full p-4 pb-1">
           <RiAccountCircleFill
             size={18}
             className="text-muted-foreground mr-1"

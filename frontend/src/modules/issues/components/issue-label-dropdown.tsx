@@ -66,11 +66,9 @@ export const IssueLabelDropdown = observer(
                 aria-expanded={open}
                 className={cn(
                   'flex items-center justify-between text-xs font-normal border-0 shadow-none',
-                  value.length > 0 && 'text-foreground',
-                  value.length === 0 && 'text-muted-foreground',
                 )}
               >
-                <div className="flex items-center text-muted-foreground">
+                <div className="flex items-center">
                   <RiAddLine size={14} className="mr-1" />
                   Add Label
                 </div>

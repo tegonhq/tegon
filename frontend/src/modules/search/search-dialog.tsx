@@ -35,7 +35,7 @@ export function SearchDialog({ open, setOpen }: SearchDialogProps) {
   const [query, setQuery] = React.useState('');
   const { push } = useRouter();
 
-  useHotkeys('meta+k', () => setOpen(true), { scopes: ['global'] });
+  useHotkeys('meta+/', () => setOpen(true), { scopes: ['global'] });
   const {
     data: issues,
     isLoading,

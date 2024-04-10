@@ -1,10 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiArrowLeftSLine, RiSideBarFill } from '@remixicon/react';
+import { RiArrowLeftSLine } from '@remixicon/react';
 import { useRouter } from 'next/router';
 
 import { Button } from 'components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from 'components/ui/sheet';
+import { SidebarLine } from 'icons';
 
 import { SidebarNav } from './sidebar-nav';
 
@@ -17,7 +18,7 @@ export function SideDrawer() {
         <header className="flex px-2 py-3 w-full border-b items-center">
           <SheetTrigger asChild>
             <Button variant="ghost">
-              <RiSideBarFill size={20} />
+              <SidebarLine size={20} />
             </Button>
           </SheetTrigger>
 

@@ -20,6 +20,7 @@ import { Toaster } from 'components/ui/toaster';
 import { TooltipProvider } from 'components/ui/tooltip';
 
 import { StoreContext, storeContextStore } from 'store/global-context-provider';
+import { HotkeysProvider } from 'react-hotkeys-hook';
 
 // Inter as default font
 export const fontSans = Inter({
@@ -50,23 +51,25 @@ export const MyApp: NextComponentType<
         enableSystem
         disableTransitionOnChange
       >
-        <TooltipProvider delayDuration={0}>
-          <StoreContext.Provider value={storeContextStore}>
-            <QueryClientProvider client={queryClientRef.current}>
-              <Hydrate state={dehydratedState}>
-                <div
-                  className={cn(
-                    'min-h-screen dark:bg-background font-sans antialiased flex',
-                    fontSans.variable,
-                  )}
-                >
-                  {getLayout(<Component {...pageProps} />)}
-                </div>
-                <Toaster />
-              </Hydrate>
-            </QueryClientProvider>
-          </StoreContext.Provider>
-        </TooltipProvider>
+        <HotkeysProvider initiallyActiveScopes={['global']}>
+          <TooltipProvider delayDuration={0}>
+            <StoreContext.Provider value={storeContextStore}>
+              <QueryClientProvider client={queryClientRef.current}>
+                <Hydrate state={dehydratedState}>
+                  <div
+                    className={cn(
+                      'min-h-screen dark:bg-background font-sans antialiased flex',
+                      fontSans.variable,
+                    )}
+                  >
+                    {getLayout(<Component {...pageProps} />)}
+                  </div>
+                  <Toaster />
+                </Hydrate>
+              </QueryClientProvider>
+            </StoreContext.Provider>
+          </TooltipProvider>
+        </HotkeysProvider>
       </ThemeProvider>
     </SuperTokensWrapper>
   );

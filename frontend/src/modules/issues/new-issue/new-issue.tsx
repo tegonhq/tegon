@@ -11,6 +11,7 @@ import { useGithubAccounts } from 'modules/settings/integrations/github/github-u
 
 import { cn } from 'common/lib/utils';
 import { IntegrationName } from 'common/types/integration-definition';
+import type { IssueType } from 'common/types/issue';
 
 import { Button } from 'components/ui/button';
 import {
@@ -21,6 +22,7 @@ import {
   FormLabel,
 } from 'components/ui/form';
 import { Switch } from 'components/ui/switch';
+import { useToast } from 'components/ui/use-toast';
 import { useTeam } from 'hooks/teams';
 import { useAllTeamWorkflows } from 'hooks/workflows';
 
@@ -49,13 +51,19 @@ interface NewIssueProps {
 
 export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
   const { mutate: createIssue, isLoading } = useCreateIssueMutation({
-    onSuccess: () => {},
+    onSuccess: (data: IssueType) => {
+      toast({
+        title: 'Issue Created',
+        description: `${data.number} - ${data.title}`,
+      });
+    },
   });
   const team = useTeam(teamIdentfier);
   const workflows = useAllTeamWorkflows(teamIdentfier);
   const pathname = usePathname();
   const [description, setDescription] = React.useState('');
   const [, rerenderHack] = React.useState('');
+  const { toast } = useToast();
 
   const { githubAccounts } = useGithubAccounts(IntegrationName.Github);
   const isBidirectional = isBirectionalEnabled(githubAccounts, team.id);
@@ -67,6 +75,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
 
   const onSubmit = (values: CreateIssueParams) => {
     createIssue({ ...values, teamId: team.id, parentId });
+
     onClose();
   };
 

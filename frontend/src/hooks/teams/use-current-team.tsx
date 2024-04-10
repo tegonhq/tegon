@@ -62,9 +62,7 @@ export function useTeamWithId(teamId: string): TeamType | undefined {
   const { teamsStore } = useContextStore();
 
   const getTeam = () => {
-    const team = teamsStore.teams.find((team: TeamType) => {
-      return team.id === teamId;
-    });
+    const team = teamsStore.getTeamWithId(teamId);
 
     return team;
   };

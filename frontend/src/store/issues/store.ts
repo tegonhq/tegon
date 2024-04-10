@@ -71,12 +71,17 @@ export const IssuesStore: IAnyStateTreeNode = types
         return !issue.assigneeId;
       });
     },
-    getIssuesForPriority(priority: number, showSubIssues: boolean) {
-      return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
-        showSubIssues
-          ? issue.priority === priority
-          : issue.priority === priority && !issue.parentId,
-      );
+    getIssuesForPriority(
+      priority: number,
+      teamId: string,
+      showSubIssues: boolean,
+    ) {
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
+        const isSubIssue = showSubIssues ? !issue.parentId : true;
+        const isTeamIssues = teamId ? issue.teamId === teamId : true;
+
+        return issue.priority === priority && isTeamIssues && isSubIssue;
+      });
     },
     getIssuesForLabel(labelId: string | undefined, showSubIssues: boolean) {
       if (!labelId) {
@@ -112,6 +117,11 @@ export const IssuesStore: IAnyStateTreeNode = types
           (is: IssueType) => is.parentId === issue.id,
         ),
       };
+    },
+    getIssuesFromArray(issueIds: string[]): IssueType[] {
+      return issueIds.map((issueId: string) =>
+        (self as IssuesStoreType).getIssueById(issueId),
+      );
     },
     getIssueByNumber(
       issueNumberWithIdentifier: string,

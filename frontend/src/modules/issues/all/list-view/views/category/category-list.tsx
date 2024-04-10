@@ -4,7 +4,7 @@ import type { WorkflowType } from 'common/types/team';
 
 import { ScrollArea } from 'components/ui/scroll-area';
 
-import { CategoryViewItem } from './category-view-item';
+import { CategoryViewList } from './category-view-list';
 
 interface CategoryListProps {
   workflows: WorkflowType[];
@@ -14,7 +14,7 @@ export function CategoryList({ workflows }: CategoryListProps) {
   return (
     <ScrollArea className="w-full h-full">
       {workflows.map((workflow: WorkflowType) => (
-        <CategoryViewItem key={workflow.id} workflow={workflow} />
+        <CategoryViewList key={workflow.id} workflow={workflow} />
       ))}
     </ScrollArea>
   );

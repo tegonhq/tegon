@@ -51,6 +51,15 @@ export const TeamsStore: IAnyStateTreeNode = types
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    getTeamWithId(teamId: string) {
+      const team = self.teams.find((team: TeamType) => {
+        return team.id === teamId;
+      });
+
+      return team;
+    },
+  }));
 
 export type TeamsStoreType = Instance<typeof TeamsStore>;

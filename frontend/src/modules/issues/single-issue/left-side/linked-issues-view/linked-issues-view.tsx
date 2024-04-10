@@ -53,15 +53,11 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground px-1 mt-2"
-              >
+              <Button variant="ghost" size="sm" className="px-1 mt-2">
                 <RiAddLine size={14} className="mr-1" /> Add link
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="start">
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   onClick={() => setDialogOpen(LinkedIssueSubType.GithubIssue)}

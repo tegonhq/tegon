@@ -48,7 +48,7 @@ export const DisplayPopover = observer(() => {
               className={cn(
                 'flex flex-col gap-1 items-center h-auto w-full bg-transparent border',
                 applicationStore.displaySettings.view === ViewEnum.list &&
-                  'bg-active',
+                  'bg-active text-foreground',
               )}
               onClick={() => updateView(ViewEnum.list)}
             >
@@ -61,7 +61,7 @@ export const DisplayPopover = observer(() => {
               className={cn(
                 'flex flex-col gap-1 items-center h-auto w-full bg-transparent border',
                 applicationStore.displaySettings.view === ViewEnum.board &&
-                  'bg-active',
+                  'bg-active text-foreground',
               )}
             >
               <RiDashboardLine size={16} />

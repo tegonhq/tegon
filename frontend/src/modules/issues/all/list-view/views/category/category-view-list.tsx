@@ -3,24 +3,32 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { PriorityIcons } from 'modules/issues/components';
+import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
 
-import { Priorities, type IssueType } from 'common/types/issue';
+import type { IssueType } from 'common/types/issue';
+import type { WorkflowType } from 'common/types/team';
+
+import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { IssueItem } from '../../issue-item';
 import { useFilterIssues } from '../../list-view-utils';
 
-interface PriorityViewItemProps {
-  priority: number;
+interface CategoryViewListProps {
+  workflow: WorkflowType;
 }
 
-export const PriorityViewItem = observer(
-  ({ priority }: PriorityViewItemProps) => {
+export const CategoryViewList = observer(
+  ({ workflow }: CategoryViewListProps) => {
+    const CategoryIcon =
+      WORKFLOW_CATEGORY_ICONS[workflow.name] ??
+      WORKFLOW_CATEGORY_ICONS['Backlog'];
+    const currentTeam = useCurrentTeam();
     const { issuesStore, applicationStore } = useContextStore();
-    const issues = issuesStore.getIssuesForPriority(
-      priority,
+    const issues = issuesStore.getIssuesForState(
+      workflow.id,
+      currentTeam.id,
       applicationStore.displaySettings.showSubIssues,
     );
     const computedIssues = useFilterIssues(issues);
@@ -32,14 +40,16 @@ export const PriorityViewItem = observer(
       return null;
     }
 
-    const PriorityIcon = PriorityIcons[priority];
-
     return (
       <div className="flex flex-col">
-        <div className="flex items-center w-full pl-8 p-2 bg-slate-100 dark:bg-slate-800/60">
-          <PriorityIcon.icon size={18} className="text-muted-foreground mr-2" />
+        <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
+          <CategoryIcon
+            size={18}
+            className="text-muted-foreground"
+            color={workflow.color}
+          />
           <h3 className="pl-2 text-sm font-medium">
-            {Priorities[priority]}
+            {workflow.name}
             <span className="text-muted-foreground ml-2">
               {computedIssues.length}
             </span>
