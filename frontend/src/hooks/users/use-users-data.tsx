@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import type { UsersOnWorkspaceType } from 'common/types/workspace';
 
-import { useCurrentTeam, useTeamWithId } from 'hooks/teams';
+import { useTeamWithId } from 'hooks/teams';
 
 import { useGetUsersQuery } from 'services/users/get-users';
 

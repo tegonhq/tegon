@@ -6,6 +6,7 @@ import React from 'react';
 import { AddIssueRelationModal } from 'modules/issues/components/modals';
 
 import type { IssueRelationEnum } from 'common/types/issue-relation';
+import type { LinkedIssueSubType } from 'common/types/linked-issue';
 
 import { Button } from 'components/ui/button';
 import {
@@ -22,7 +23,6 @@ import { LinkedIssueItems } from './linked-issue-items';
 import { RelatedDropdownItems } from './related-dropdown-items';
 import { RemoveParentIssue } from './remove-parent-issue';
 import { AddLinkedIssueDialog } from '../linked-issues-view/add-linked-issue-dialog';
-import type { LinkedIssueSubType } from 'common/types/linked-issue';
 
 export function IssueOptionsDropdown() {
   const currentIssue = useIssueData();

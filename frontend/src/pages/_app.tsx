@@ -8,6 +8,7 @@ import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import { Inter } from 'next/font/google';
 import React from 'react';
+import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Hydrate, QueryClientProvider } from 'react-query';
 import { SuperTokensWrapper } from 'supertokens-auth-react';
 
@@ -20,7 +21,6 @@ import { Toaster } from 'components/ui/toaster';
 import { TooltipProvider } from 'components/ui/tooltip';
 
 import { StoreContext, storeContextStore } from 'store/global-context-provider';
-import { HotkeysProvider } from 'react-hotkeys-hook';
 
 // Inter as default font
 export const fontSans = Inter({

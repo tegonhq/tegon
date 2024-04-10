@@ -5,8 +5,6 @@ import { observer } from 'mobx-react-lite';
 
 import type { NotificationType } from 'common/types/notification';
 
-import { ScrollArea } from 'components/ui/scroll-area';
-
 import { useContextStore } from 'store/global-context-provider';
 
 import { NotificationItem } from './notification-item';

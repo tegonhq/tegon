@@ -17,7 +17,6 @@ import { useUserData } from 'hooks/users';
 import { useUpdateNotificationMutation } from 'services/notifications';
 
 import { useContextStore } from 'store/global-context-provider';
-import { BadgeColor } from 'components/ui/badge';
 
 interface NotificationItemProps {
   notification: NotificationType;
