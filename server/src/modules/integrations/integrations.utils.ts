@@ -1,8 +1,13 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import axios from 'axios';
+import { PrismaService } from 'nestjs-prisma';
 
-import { PostRequestBody, RequestHeaders } from './integrations.interface';
+import {
+  PostRequestBody,
+  RequestHeaders,
+  labelDataType,
+} from './integrations.interface';
 
 export async function getRequest(url: string, headers: RequestHeaders) {
   try {
@@ -56,4 +61,60 @@ export async function deleteRequest(url: string, headers: RequestHeaders) {
       error: error.response.data,
     };
   }
+}
+
+export async function getOrCreateLabelIds(
+  prisma: PrismaService,
+  labels: labelDataType[],
+  teamId: string,
+  workspaceId: string,
+): Promise<string[]> {
+  // Extract label names from the input
+  const labelNames = labels.map((label) => label.name);
+
+  // Find existing labels with matching names (case-insensitive)
+  const existingLabels = await prisma.label.findMany({
+    where: {
+      name: { in: labelNames, mode: 'insensitive' },
+    },
+  });
+
+  // Create a map of existing label names to their IDs
+  const existingLabelMap = new Map(
+    existingLabels.map((label) => [label.name.toLowerCase(), label.id]),
+  );
+
+  // Create new labels for names that don't have a match
+  const newLabels = await Promise.all(
+    labels
+      .filter((label) => !existingLabelMap.has(label.name.toLowerCase()))
+      .map((label) =>
+        prisma.label.create({
+          data: {
+            name: label.name,
+            color: `#${label.color}`,
+            teamId,
+            workspaceId,
+          },
+        }),
+      ),
+  );
+
+  // Combine the IDs of existing and new labels
+  return [
+    ...existingLabels.map((label) => label.id),
+    ...newLabels.map((label) => label.id),
+  ];
+}
+
+export async function getUserId(
+  prisma: PrismaService,
+  userData: Record<string, string>,
+) {
+  const integrationAccount = await prisma.integrationAccount.findFirst({
+    where: { accountId: userData?.id.toString() },
+    select: { integratedById: true },
+  });
+
+  return integrationAccount?.integratedById || null;
 }

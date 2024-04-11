@@ -106,6 +106,9 @@ export async function getAccountId(
       }
       return undefined;
 
+    case IntegrationName.SlackPersonal:
+      return response.token.authed_user.id;
+
     default:
       return undefined;
   }

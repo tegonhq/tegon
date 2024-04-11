@@ -11,10 +11,10 @@ import {
   getGithubUser,
 } from 'modules/integrations/github/github.utils';
 import { deleteRequest } from 'modules/integrations/integrations.utils';
-import { ChannelMappings } from 'modules/integrations/slack/slack.interface';
 import { addBotToChannel } from 'modules/integrations/slack/slack.utils';
 
 import {
+  ChannelMapping,
   Config,
   IntegrationAccountWithRelations,
   Settings,
@@ -85,18 +85,20 @@ export async function storeIntegrationRelatedData(
 
     case IntegrationName.Slack:
       const integrationSettings = integrationAccount.settings as Settings;
-      const channelMappings = integrationSettings?.Slack.channelMappings || [];
+      const channelMappings =
+        integrationSettings?.Slack.channelMappings || ([] as ChannelMapping[]);
 
       if (settingsData.incoming_webhook) {
-        const newChannelMapping: ChannelMappings = {
+        const newChannelMapping: ChannelMapping = {
           channelName: settingsData.incoming_webhook.channel.replace(/^#/, ''),
           channelId: settingsData.incoming_webhook.channel_id,
           webhookUrl: settingsData.incoming_webhooks.url,
+          botJoined: false,
         };
 
         if (
           !channelMappings.some(
-            (mapping: ChannelMappings) =>
+            (mapping: ChannelMapping) =>
               mapping.channelId === newChannelMapping.channelId,
           )
         ) {
@@ -104,7 +106,6 @@ export async function storeIntegrationRelatedData(
             integrationAccount,
             newChannelMapping.channelId,
           );
-          console.log(botJoined);
           newChannelMapping.botJoined = botJoined;
           channelMappings.push(newChannelMapping);
         }
@@ -115,11 +116,11 @@ export async function storeIntegrationRelatedData(
         data: {
           settings: {
             [IntegrationName.Slack]: {
-              teamId: settingsData.team.id,
-              teamName: settingsData.team.name,
-              channelMappings,
+              teamId: settingsData.team.id as string,
+              teamName: settingsData.team.name as string,
+              channelMappings: channelMappings as ChannelMapping[],
             },
-          },
+          } as unknown as Prisma.JsonValue,
         },
       });
       break;

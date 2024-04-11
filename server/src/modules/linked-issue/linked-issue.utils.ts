@@ -18,6 +18,7 @@ import {
   LinkedIssueSubType,
   githubIssueRegex,
   githubPRRegex,
+  slackRegex,
 } from './linked-issue.interface';
 import LinkedIssueService from './linked-issue.service';
 
@@ -27,6 +28,8 @@ export function isValidLinkUrl(linkData: LinkIssueInput): boolean {
     return githubIssueRegex.test(url);
   } else if (type === LinkedIssueSubType.GithubPullRequest) {
     return githubPRRegex.test(url);
+  } else if (type === LinkedIssueSubType.Slack) {
+    return slackRegex.test(url);
   } else if (type === LinkedIssueSubType.ExternalLink) {
     return true;
   }
@@ -34,11 +37,13 @@ export function isValidLinkUrl(linkData: LinkIssueInput): boolean {
   return false;
 }
 
-export function getLinkType(url: string): LinkedIssueSubType | null {
+export function getLinkType(url: string): LinkedIssueSubType {
   if (githubIssueRegex.test(url)) {
     return LinkedIssueSubType.GithubIssue;
   } else if (githubPRRegex.test(url)) {
     return LinkedIssueSubType.GithubPullRequest;
+  } else if (slackRegex.test(url)) {
+    return LinkedIssueSubType.Slack;
   }
   return LinkedIssueSubType.ExternalLink;
 }

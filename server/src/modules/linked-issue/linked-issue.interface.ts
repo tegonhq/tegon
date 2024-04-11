@@ -6,6 +6,7 @@ export enum LinkedIssueSubType {
   GithubIssue = 'GithubIssue',
   GithubPullRequest = 'GithubPullRequest',
   ExternalLink = 'ExternalLink',
+  Slack = 'Slack',
 }
 
 export class LinkIssueInput {
@@ -40,6 +41,8 @@ export const githubIssueRegex =
   /^https:\/\/github\.com\/[^/]+\/[^/]+\/issues\/\d+$/;
 export const githubPRRegex = /^https:\/\/github\.com\/[^/]+\/[^/]+\/pull\/\d+$/;
 
+export const slackRegex =
+  /^https:\/\/\w+\.slack\.com\/archives\/[A-Z0-9]+\/p\d+$/;
 export class LinkIssueData {
   @IsString()
   url: string;

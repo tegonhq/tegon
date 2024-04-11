@@ -21,6 +21,7 @@ import {
   IssueAction,
   IssueRequestParams,
   IssueWithRelations,
+  LinkedIssueSubType,
   RelationInput,
   SubscribeType,
   SuggestionsInput,
@@ -88,7 +89,7 @@ export default class IssuesService {
     this.logger.log(`Created issue: ${issue.number}`);
 
     if (linkIssue) {
-      linkIssue.type = await getLinkType(linkIssue.url);
+      linkIssue.type = getLinkType(linkIssue.url) as LinkedIssueSubType;
       this.logger.log(
         `Adding create link issue job for link: ${linkIssue.url}`,
       );

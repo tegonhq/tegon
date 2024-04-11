@@ -27,13 +27,12 @@ import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import {
   getIssueData,
-  getOrCreateLabelIds,
   getState,
   getTeamId,
-  getUserId,
   sendGithubFirstComment,
   sendGithubPRFirstComment,
 } from './github.utils';
+import { getOrCreateLabelIds, getUserId } from '../integrations.utils';
 
 export async function handleIssues(
   prisma: PrismaService,

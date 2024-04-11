@@ -406,6 +406,7 @@ Enum IntegrationName {
   Github
   GithubPersonal
   Slack
+  SlackPersonal
 }
 
 Enum IssueRelationType {
