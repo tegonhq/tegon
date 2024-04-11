@@ -89,7 +89,7 @@ export default class LinkedIssueService {
 
   async getLinkedIssueBySourceId(sourceId: string) {
     return this.prisma.linkedIssue.findFirst({
-      where: { sourceId: sourceId.toString(), deleted: null },
+      where: { sourceId, deleted: null },
       include: { issue: true },
     });
   }

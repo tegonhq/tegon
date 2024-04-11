@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { IntegrationName } from '@prisma/client';
+import { Injectable, Logger } from '@nestjs/common';
+import { IntegrationName, IssueComment } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
@@ -14,8 +14,8 @@ import {
 } from 'modules/issues/issues.interface';
 import IssuesService from 'modules/issues/issues.service';
 import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { OAuthCallbackService } from 'modules/oauth-callback/oauth-callback.service';
-import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import {
   IntegrationAccountQueryParams,
@@ -30,35 +30,29 @@ import {
   getSlackUserIntegrationAccount,
 } from './slack.utils';
 import { EventBody } from '../integrations.interface';
-import { postRequest } from '../integrations.utils';
+import { getUserId, postRequest } from '../integrations.utils';
 
 @Injectable()
-export default class SlackService implements OnModuleInit {
+export default class SlackService {
   // TODO(Manoj): Move this to Redis once we have multiple servers
   session: Record<string, SlashCommandSessionRecord> = {};
   constructor(
     private prisma: PrismaService,
     private oauthCallbackService: OAuthCallbackService,
     private issuesService: IssuesService,
+    private linkedIssueService: LinkedIssueService,
   ) {}
 
-  async onModuleInit() {
-    const issue = await this.prisma.issue.findUnique({
-      where: { id: 'e3645432-3f52-45c6-8c8c-99226e54d4ae' },
-      include: { team: true },
-    });
-    const integrationAccount = await this.prisma.integrationAccount.findUnique({
-      where: { id: '75184002-fc4e-49c3-89f2-6fc1ad60e269' },
-      include: { workspace: true, integrationDefinition: true },
-    });
-    console.log(issue.id, integrationAccount.id);
-    // this.sendIssueMessage(integrationAccount, 'C06SRE02QSJ', issue);
-  }
-  async handleEvents(eventBody: WebhookEventBody) {
+  private readonly logger: Logger = new Logger('SlackService', {
+    timestamp: true,
+  });
+
+  async handleEvents(eventBody: EventBody) {
     if (eventBody.type === 'url_verification') {
       return { challenge: eventBody.challenge };
+    } else if (eventBody.event.type === 'message') {
+      return await this.handleThread(eventBody.event);
     }
-    console.log(eventBody);
     return undefined;
   }
   async getChannelRedirectURL(
@@ -137,7 +131,6 @@ export default class SlackService implements OnModuleInit {
       };
     } else if (containsDescription) {
       this.createSlackIssue(integrationAccount, this.session[token], payload);
-      console.log(payload);
     }
     return {
       response_action: 'clear',
@@ -149,7 +142,7 @@ export default class SlackService implements OnModuleInit {
     sessionData: SlashCommandSessionRecord,
     eventBody: EventBody,
   ) {
-    const issueData = await getIssueData(
+    const { issueInput, userId, sourceMetadata } = await getIssueData(
       this.prisma,
       sessionData,
       eventBody,
@@ -158,10 +151,10 @@ export default class SlackService implements OnModuleInit {
 
     const createdIssue = await this.issuesService.createIssueAPI(
       { teamId: sessionData.teamId } as TeamRequestParams,
-      issueData.issueInput as CreateIssueInput,
-      issueData.userId,
+      issueInput as CreateIssueInput,
+      userId,
       null,
-      issueData.sourceMetadata,
+      sourceMetadata,
     );
 
     const messageResponse = await this.sendIssueMessage(
@@ -171,16 +164,28 @@ export default class SlackService implements OnModuleInit {
     );
 
     if (messageResponse.data.ok) {
+      const {
+        ts: messageTs,
+        thread_ts: parentTs,
+        channel,
+        channel_type,
+      } = messageResponse.data.message;
       const commentBody = `${IntegrationName.Slack} thread in ${createdIssue.title}`;
+
       const issueComment = await this.prisma.issueComment.create({
         data: {
           body: commentBody,
           issueId: createdIssue.id,
-          sourceMetadata: issueData.sourceMetadata,
+          sourceMetadata: {
+            idTs: messageTs,
+            parentTs,
+            channelId: channel,
+            channelType: channel_type,
+            type: IntegrationName.Slack,
+          },
         },
       });
 
-      const messageTs = messageResponse.data.message.ts;
       const linkIssueData: LinkIssueData = {
         url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${messageTs.replace('.', '')}`,
         sourceId: `${sessionData.channelId}_${messageTs}`,
@@ -193,16 +198,16 @@ export default class SlackService implements OnModuleInit {
           messageTs,
           slackTeamDomain: sessionData.slackTeamDomain,
         },
-        createdById: issueData.userId,
+        createdById: userId,
       };
 
-      this.issuesService.updateIssueApi(
+      await this.issuesService.updateIssueApi(
         { teamId: sessionData.teamId } as TeamRequestParams,
         {} as UpdateIssueInput,
         { issueId: createdIssue.id } as IssueRequestParams,
-        issueData.userId,
+        userId,
         linkIssueData,
-        issueData.sourceMetadata,
+        sourceMetadata,
       );
     }
   }
@@ -217,7 +222,6 @@ export default class SlackService implements OnModuleInit {
       issue.createdById,
       issue.team.workspaceId,
     );
-    console.log(await getIssueMessageModal(this.prisma, issue));
     const response = await postRequest(
       'https://slack.com/api/chat.postMessage',
       getSlackHeaders(integrationAccount),
@@ -227,8 +231,68 @@ export default class SlackService implements OnModuleInit {
         attachments: await getIssueMessageModal(this.prisma, issue),
       },
     );
-    console.log(JSON.stringify(response));
-
     return response;
+  }
+
+  async handleThread(eventBody: EventBody): Promise<IssueComment> {
+    const message =
+      eventBody.subtype === 'message_changed' ? eventBody.message : eventBody;
+    const threadId = `${eventBody.channel}_${message.ts}`;
+    const parentThreadId = `${eventBody.channel}_${message.thread_ts}`;
+
+    const linkedIssue =
+      await this.linkedIssueService.getLinkedIssueBySourceId(parentThreadId);
+
+    if (!linkedIssue) {
+      this.logger.debug(
+        `No linked issue found for Slack issue ID: ${parentThreadId}`,
+      );
+      return undefined;
+    }
+
+    const { issueId, source: linkedIssueSource } = linkedIssue;
+    const userId = message.user
+      ? await getUserId(this.prisma, { id: message.user })
+      : null;
+    const parentId = (linkedIssueSource as Record<string, string>)
+      .syncedCommentId;
+
+    const sourceData = {
+      idTs: message.ts,
+      parentTs: message.thread_ts,
+      channelId: eventBody.channel,
+      channelType: eventBody.channel_type,
+      type: IntegrationName.Slack,
+      userDisplayName: message.username ? message.username : message.user,
+    };
+
+    const linkedComment = await this.prisma.linkedComment.findFirst({
+      where: { sourceId: threadId },
+      include: { comment: true },
+    });
+
+    if (linkedComment) {
+      return this.prisma.issueComment.update({
+        where: { id: linkedComment.commentId },
+        data: { body: message.text },
+      });
+    }
+    return this.prisma.issueComment.create({
+      data: {
+        body: message.text,
+        issueId,
+        userId,
+        parentId,
+        sourceMetadata: sourceData,
+        linkedComment: {
+          create: {
+            url: threadId,
+            sourceId: threadId,
+            source: { type: IntegrationName.Slack },
+            sourceData,
+          },
+        },
+      },
+    });
   }
 }

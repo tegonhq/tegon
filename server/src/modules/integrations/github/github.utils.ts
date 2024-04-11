@@ -154,7 +154,7 @@ export async function sendGithubFirstComment(
   const [accessToken, team, linkedIssue] = await Promise.all([
     getBotAccessToken(prisma, integrationAccount),
     prisma.team.findUnique({ where: { id: teamId } }),
-    linkedIssueService.getLinkedIssueBySourceId(issueSourceId),
+    linkedIssueService.getLinkedIssueBySourceId(issueSourceId.toString()),
   ]);
 
   logger.debug(

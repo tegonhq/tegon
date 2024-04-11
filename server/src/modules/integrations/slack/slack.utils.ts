@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { Logger } from '@nestjs/common';
 import { IntegrationAccount, IntegrationName } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -9,6 +10,10 @@ import {
   IntegrationAccountWithRelations,
   Settings,
 } from 'modules/integration-account/integration-account.interface';
+import {
+  IssueCommentAction,
+  IssueCommentWithRelations,
+} from 'modules/issue-comments/issue-comments.interface';
 import {
   IssueWithRelations,
   UpdateIssueInput,
@@ -229,7 +234,6 @@ export async function getIssueMessageModal(
   const issueTitle = `${issueIdentifier} ${issue.title}`;
   return [
     {
-      color: '#111827',
       blocks: [
         {
           type: 'section',
@@ -258,4 +262,65 @@ export async function getIssueMessageModal(
       ],
     },
   ];
+}
+
+export async function upsertSlackMessage(
+  prisma: PrismaService,
+  logger: Logger,
+  issueComment: IssueCommentWithRelations,
+  integrationAccount: IntegrationAccountWithRelations,
+  userId: string,
+  action: IssueCommentAction,
+) {
+  logger.debug(`Upserting Slack issue comment for action: ${action}`);
+
+  const [parentIssueComment, user] = await Promise.all([
+    prisma.issueComment.findUnique({
+      where: { id: issueComment.parentId },
+    }),
+    prisma.user.findUnique({ where: { id: userId } }),
+  ]);
+
+  const parentSourceData = parentIssueComment.sourceMetadata as Record<
+    string,
+    string
+  >;
+
+  const response = await postRequest(
+    'https://slack.com/api/chat.postMessage',
+    await getSlackHeaders(integrationAccount),
+    {
+      channel: parentSourceData.channelId,
+      thread_ts: parentSourceData.idTs,
+      text: issueComment.body,
+      username: `${user.fullname} (via Tegon)`,
+    },
+  );
+
+  if (response.data.ok) {
+    const messageData = response.data;
+    const message =
+      messageData.subtype === 'message_changed'
+        ? messageData.message
+        : messageData;
+    const threadId = `${messageData.channel}_${message.ts}`;
+    const sourceData = {
+      idTs: message.ts,
+      parentTs: message.thread_ts,
+      channelId: messageData.channel,
+      channelType: messageData.channel_type,
+      type: IntegrationName.Slack,
+      userDisplayName: message.username ? message.username : message.user,
+    };
+
+    await prisma.linkedComment.create({
+      data: {
+        url: threadId,
+        sourceId: threadId,
+        source: { type: IntegrationName.Slack },
+        commentId: issueComment.id,
+        sourceData,
+      },
+    });
+  }
 }

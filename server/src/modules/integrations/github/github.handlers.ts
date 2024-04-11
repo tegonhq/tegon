@@ -52,7 +52,7 @@ export async function handleIssues(
 
   const { action, issue, assignee } = eventBody;
   const linkedIssue = await linkedIssueService.getLinkedIssueBySourceId(
-    issue.id,
+    issue.id.toString(),
   );
 
   if (!linkedIssue?.issueId && action !== 'opened') {
@@ -171,7 +171,7 @@ export async function handleIssueComments(
   integrationAccount: IntegrationAccountWithRelations,
 ) {
   const linkedIssue = await linkedIssueService.getLinkedIssueBySourceId(
-    eventBody.issue.id,
+    eventBody.issue.id.toString(),
   );
   if (!linkedIssue) {
     logger.debug(
