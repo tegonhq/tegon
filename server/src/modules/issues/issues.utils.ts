@@ -114,7 +114,7 @@ export async function getSuggestedLabels(
           content: `Text Description  -  ${description} \n Company Specific Labels -  ${labels.join(',')}`,
         },
       ],
-      model: 'gpt-4',
+      model: 'gpt-3.5-turbo',
     });
   return chatCompletion.choices[0].message.content;
 }
