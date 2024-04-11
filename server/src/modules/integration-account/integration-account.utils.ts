@@ -92,7 +92,7 @@ export async function storeIntegrationRelatedData(
         const newChannelMapping: ChannelMapping = {
           channelName: settingsData.incoming_webhook.channel.replace(/^#/, ''),
           channelId: settingsData.incoming_webhook.channel_id,
-          webhookUrl: settingsData.incoming_webhooks.url,
+          webhookUrl: settingsData.incoming_webhook.url,
           botJoined: false,
         };
 

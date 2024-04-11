@@ -58,19 +58,13 @@ export class SlackController {
     @Headers() _eventHeaders: EventHeaders,
     @Body() eventBody: EventBody,
   ) {
-    this.slackService.slashOpenModal(
-      eventBody.team_id,
-      eventBody.channel_id,
-      eventBody.trigger_id,
-      eventBody.token,
-      eventBody.team_domain,
-    );
+    this.slackService.slashOpenModal(eventBody);
   }
 
   @Post('interactions')
   async handleInteractions(
-    @Headers() _eventHeaders: WebhookEventHeaders,
-    @Body() eventBody: WebhookEventBody,
+    @Headers() eventHeaders: EventHeaders,
+    @Body() eventBody: EventBody,
   ) {
     const payload = JSON.parse(eventBody.payload);
     if (payload.type === 'view_submission') {
@@ -78,6 +72,11 @@ export class SlackController {
         payload.token,
         payload,
       );
+    } else if (
+      payload.type === 'message_action' &&
+      payload.callback_id === 'create_issue_shortcut'
+    ) {
+      return await this.slashCommand(eventHeaders, payload as EventBody);
     }
     return { status: 200 };
   }

@@ -74,29 +74,35 @@ export default class SlackService {
     );
   }
 
-  async slashOpenModal(
-    slackTeamId: string,
-    channelId: string,
-    triggerId: string,
-    token: string,
-    teamDomain: string,
-  ) {
+  async slashOpenModal(eventBody: EventBody) {
+    const { trigger_id: triggerId, token, message } = eventBody;
+
+    const channelId = eventBody?.channel_id || eventBody.channel.id;
+
+    const slackTeamId = eventBody?.team_id || eventBody.team.id;
+    const teamDomain = eventBody?.team_domain || eventBody.team.domain;
+
     const integrationAccount = await this.prisma.integrationAccount.findFirst({
       where: { accountId: slackTeamId },
       include: { workspace: true, integrationDefinition: true },
     });
-    const { view, sessionData } = getModalView(
-      integrationAccount,
-      channelId,
-      ModelViewType.CREATE,
-    );
-    this.session[token] = {
+
+    const sessionData = {
       slackTeamId,
       channelId,
       IntegrationAccountId: integrationAccount.id,
       slackTeamDomain: teamDomain,
-      ...sessionData,
+      threadTs: message?.ts || null,
+      messageText: message?.text || null,
+      messagedById: message?.user || null,
     };
+    const { view, sessionData: updatedSessionData } = getModalView(
+      integrationAccount,
+      channelId,
+      ModelViewType.CREATE,
+      sessionData,
+    );
+    this.session[token] = updatedSessionData as SlashCommandSessionRecord;
     await postRequest(
       'https://slack.com/api/views.open',
       getSlackHeaders(integrationAccount),
@@ -119,12 +125,10 @@ export default class SlackService {
         integrationAccount,
         otherSessionData.channelId,
         ModelViewType.UPDATE,
+        otherSessionData,
         payload,
       );
-      this.session[token] = {
-        ...otherSessionData,
-        ...sessionData,
-      };
+      this.session[token] = sessionData as SlashCommandSessionRecord;
       return {
         response_action: 'update',
         view,
@@ -161,6 +165,7 @@ export default class SlackService {
       integrationAccount,
       sessionData.channelId,
       createdIssue,
+      sessionData.threadTs,
     );
 
     if (messageResponse.data.ok) {
@@ -186,9 +191,10 @@ export default class SlackService {
         },
       });
 
+      const mainTs = parentTs || messageTs;
       const linkIssueData: LinkIssueData = {
-        url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${messageTs.replace('.', '')}`,
-        sourceId: `${sessionData.channelId}_${messageTs}`,
+        url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${mainTs.replace('.', '')}`,
+        sourceId: `${sessionData.channelId}_${mainTs}`,
         source: {
           type: IntegrationName.Slack,
           syncedCommentId: issueComment.id,
@@ -196,6 +202,7 @@ export default class SlackService {
         sourceData: {
           channelId: sessionData.channelId,
           messageTs,
+          parentTs,
           slackTeamDomain: sessionData.slackTeamDomain,
         },
         createdById: userId,
@@ -216,6 +223,7 @@ export default class SlackService {
     integrationAccount: IntegrationAccountWithRelations,
     channelId: string,
     issue: IssueWithRelations,
+    threadTs?: string,
   ) {
     const slackIntegrationAccount = await getSlackUserIntegrationAccount(
       this.prisma,
@@ -229,8 +237,10 @@ export default class SlackService {
         channel: channelId,
         text: `<@${slackIntegrationAccount.accountId}> created a Issue`,
         attachments: await getIssueMessageModal(this.prisma, issue),
+        ...(threadTs ? { thread_ts: threadTs } : {}),
       },
     );
+
     return response;
   }
 

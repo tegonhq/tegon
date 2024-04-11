@@ -24,6 +24,9 @@ export interface SlashCommandSessionRecord {
   containsDescription?: boolean;
   teamId?: string;
   slackTeamDomain?: string;
+  threadTs?: string;
+  messageText?: string;
+  messagedById?: string;
 }
 
 export enum ModelViewType {

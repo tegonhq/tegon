@@ -18,10 +18,8 @@ import {
   IssueWithRelations,
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
-import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import {
-  ModalBlockType,
   ModalType,
   ModelViewType,
   SlashCommandSessionRecord,
@@ -54,24 +52,12 @@ export async function addBotToChannel(
   return botResponse.data.ok;
 }
 
-export function getModalView(
-  integrationAccount: IntegrationAccountWithRelations,
-  channelId: string,
-  modelViewType: ModelViewType,
-  payload?: WebhookEventBody,
-): Record<string, ModalType | SlashCommandSessionRecord> {
-  const slackSettings = integrationAccount.settings as Settings;
-  const channel = slackSettings.Slack.channelMappings.find(
-    (mapping) => mapping.channelId === channelId,
-  );
-
-  let blocks: ModalBlockType[] = [];
-  let sessionData: SlashCommandSessionRecord = {};
-
-  const createBlocks = (
-    team: ChannelTeamMapping,
-    containsDescription: boolean,
-  ) => [
+function createBlocks(
+  team: ChannelTeamMapping,
+  containsDescription: boolean,
+  sessionData: SlashCommandSessionRecord,
+) {
+  return [
     {
       type: 'input',
       block_id: team.teamId,
@@ -108,6 +94,7 @@ export function getModalView(
               type: 'plain_text_input',
               multiline: true,
               action_id: 'description_action',
+              initial_value: sessionData.messageText ?? undefined,
             },
             label: {
               type: 'plain_text',
@@ -117,31 +104,102 @@ export function getModalView(
         ]
       : []),
   ];
+}
 
+function getBlocks(
+  modelViewType: ModelViewType,
+  slackSettings: Settings,
+  channelId: string,
+  sessionData: SlashCommandSessionRecord,
+  payload: EventBody,
+) {
+  const channel = slackSettings.Slack.channelMappings.find(
+    (mapping) => mapping.channelId === channelId,
+  );
   if (modelViewType === ModelViewType.CREATE) {
     if (channel.teams?.length > 1) {
-      blocks = channel.teams.flatMap((team: ChannelTeamMapping) =>
-        createBlocks(team, false),
+      sessionData.containsDescription = false;
+      return channel.teams.flatMap((team: ChannelTeamMapping) =>
+        createBlocks(team, false, sessionData),
       );
-      sessionData = { containsDescription: false };
-    } else {
-      const team = channel.teams[0];
-      blocks = createBlocks(team, true);
-      sessionData = { containsDescription: true, teamId: team.teamId };
     }
+
+    const team = channel.teams[0];
+    sessionData.containsDescription = true;
+    sessionData.teamId = team.teamId;
+
+    return createBlocks(team, true, sessionData);
   } else if (modelViewType === ModelViewType.UPDATE) {
     const stateValue = payload.view.state.values;
 
-    blocks = channel.teams.flatMap((team) => {
+    sessionData.containsDescription = true;
+
+    return channel.teams.flatMap((team) => {
       const teamState = stateValue[team.teamId];
       if (teamState && teamState[`${team.teamId}_action`]?.selected_option) {
         sessionData.teamId = team.teamId;
-        return createBlocks(team, true);
+        return createBlocks(team, true, sessionData);
       }
       return [];
     });
-    sessionData.containsDescription = true;
   }
+  return [];
+}
+
+function getMessagesBlock(sessionData: SlashCommandSessionRecord) {
+  if (!sessionData.messageText) {
+    return [];
+  }
+  return [
+    {
+      type: 'header',
+      block_id: 'message_header',
+      text: {
+        type: 'plain_text',
+        text: 'Message',
+        emoji: true,
+      },
+    },
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: sessionData.messageText,
+      },
+    },
+    ...(sessionData.messagedById
+      ? [
+          {
+            type: 'context',
+            elements: [
+              {
+                type: 'mrkdwn',
+                text: `Sent by: <@${sessionData.messagedById}>`,
+              },
+            ],
+          },
+        ]
+      : []),
+  ];
+}
+
+export function getModalView(
+  integrationAccount: IntegrationAccountWithRelations,
+  channelId: string,
+  modelViewType: ModelViewType,
+  sessionData: SlashCommandSessionRecord,
+  payload?: EventBody,
+): Record<string, ModalType | SlashCommandSessionRecord> {
+  const slackSettings = integrationAccount.settings as Settings;
+
+  const blocks = getBlocks(
+    modelViewType,
+    slackSettings,
+    channelId,
+    sessionData,
+    payload,
+  );
+  const messagesBlock = getMessagesBlock(sessionData);
 
   return {
     view: {
@@ -150,7 +208,7 @@ export function getModalView(
         type: 'plain_text',
         text: 'Create an Issue',
       },
-      blocks,
+      blocks: [...blocks, ...messagesBlock],
       submit: {
         type: 'plain_text',
         text: 'Submit',
