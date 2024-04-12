@@ -54,6 +54,9 @@ export interface ChannelMapping {
 export interface SlackSettings {
   teamId: string;
   teamName: string;
+  teamDomain: string;
+  teamUrl: string;
+  botUserId: string;
   channelMappings: ChannelMapping[];
 }
 

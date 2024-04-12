@@ -11,7 +11,10 @@ import {
   getGithubUser,
 } from 'modules/integrations/github/github.utils';
 import { deleteRequest } from 'modules/integrations/integrations.utils';
-import { addBotToChannel } from 'modules/integrations/slack/slack.utils';
+import {
+  addBotToChannel,
+  getSlackTeamInfo,
+} from 'modules/integrations/slack/slack.utils';
 
 import {
   ChannelMapping,
@@ -111,6 +114,11 @@ export async function storeIntegrationRelatedData(
         }
       }
 
+      const slackTeamInfo = await getSlackTeamInfo(
+        integrationAccount,
+        integrationAccount.accountId,
+      );
+
       await prisma.integrationAccount.update({
         where: { id: integrationAccount.id },
         data: {
@@ -118,6 +126,9 @@ export async function storeIntegrationRelatedData(
             [IntegrationName.Slack]: {
               teamId: settingsData.team.id as string,
               teamName: settingsData.team.name as string,
+              teamDomain: slackTeamInfo.team.domain,
+              teamUrl: slackTeamInfo.team.url,
+              botUserId: settingsData.bot_user_id,
               channelMappings: channelMappings as ChannelMapping[],
             },
           } as unknown as Prisma.JsonValue,

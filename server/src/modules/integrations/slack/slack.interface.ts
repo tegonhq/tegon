@@ -1,6 +1,9 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { IntegrationName } from '@prisma/client';
 import { IsString } from 'class-validator';
+import { UpdateIssueInput } from 'modules/issues/issues.interface';
+import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 
 export class WorkspaceQueryParams {
   @IsString()
@@ -43,4 +46,15 @@ export interface ModalType {
   blocks: ModalBlockType[];
   submit?: Record<string, string>;
   close?: Record<string, string>;
+}
+
+export interface slackIssueData {
+  linkIssueData?: LinkIssueData;
+  issueInput: UpdateIssueInput;
+  sourceMetadata: {
+    id: string;
+    type: IntegrationName;
+    channelId: string;
+  };
+  userId: string | null;
 }

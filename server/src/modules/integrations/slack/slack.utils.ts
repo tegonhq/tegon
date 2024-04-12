@@ -23,9 +23,10 @@ import {
   ModalType,
   ModelViewType,
   SlashCommandSessionRecord,
+  slackIssueData,
 } from './slack.interface';
 import { EventBody } from '../integrations.interface';
-import { getUserId, postRequest } from '../integrations.utils';
+import { getRequest, getUserId, postRequest } from '../integrations.utils';
 
 export function getSlackHeaders(
   integrationAccount: IntegrationAccountWithRelations,
@@ -246,7 +247,7 @@ export async function getIssueData(
   sessionData: SlashCommandSessionRecord,
   eventBody: EventBody,
   integrationAccount: IntegrationAccount,
-) {
+): Promise<slackIssueData> {
   const [stateId, userId] = await Promise.all([
     getState(prisma, 'opened', sessionData.teamId),
     getUserId(prisma, eventBody.user),
@@ -281,6 +282,21 @@ export async function getSlackUserIntegrationAccount(
         name: IntegrationName.SlackPersonal,
       },
     },
+  });
+}
+
+export async function getSlackIntegrationAccount(
+  prisma: PrismaService,
+  slackTeamId: string,
+): Promise<IntegrationAccountWithRelations> {
+  return prisma.integrationAccount.findFirst({
+    where: {
+      accountId: slackTeamId,
+      integrationDefinition: {
+        name: IntegrationName.Slack,
+      },
+    },
+    include: { integrationDefinition: true, workspace: true },
   });
 }
 
@@ -353,7 +369,7 @@ export async function upsertSlackMessage(
     await getSlackHeaders(integrationAccount),
     {
       channel: parentSourceData.channelId,
-      thread_ts: parentSourceData.idTs,
+      thread_ts: parentSourceData.parentTs || parentSourceData.idTs,
       text: issueComment.body,
       username: `${user.fullname} (via Tegon)`,
     },
@@ -385,4 +401,34 @@ export async function upsertSlackMessage(
       },
     });
   }
+}
+
+export async function getSlackMessage(
+  integrationAccount: IntegrationAccountWithRelations,
+  sessionData: SlashCommandSessionRecord,
+) {
+  const response = await postRequest(
+    'https://slack.com/api/conversations.history',
+    await getSlackHeaders(integrationAccount),
+    {
+      channel: sessionData.channelId,
+      latest: sessionData.threadTs,
+      inclusive: true,
+      limit: 1,
+    },
+  );
+
+  return response.data;
+}
+
+export async function getSlackTeamInfo(
+  integrationAccount: IntegrationAccountWithRelations,
+  slackTeamId: string,
+) {
+  const response = await getRequest(
+    `https://slack.com/api/team.info?team=${slackTeamId}`,
+    await getSlackHeaders(integrationAccount),
+  );
+
+  return response.data;
 }
