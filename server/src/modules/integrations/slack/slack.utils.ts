@@ -116,6 +116,10 @@ function getBlocks(
   const channel = slackSettings.Slack.channelMappings.find(
     (mapping) => mapping.channelId === channelId,
   );
+  if (!channel) {
+    // TODO(Manoj): return a message that Bot is not present in the channel
+    return [];
+  }
   if (modelViewType === ModelViewType.CREATE) {
     if (channel.teams?.length > 1) {
       sessionData.containsDescription = false;
