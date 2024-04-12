@@ -50,7 +50,6 @@ export const githubPRRegex = /^https:\/\/github\.com\/[^/]+\/[^/]+\/pull\/\d+$/;
 
 export const slackRegex =
   /^https:\/\/(\w+)\.slack\.com\/archives\/([A-Z0-9]+)\/p(\d{10})(\d{6})(?:\?thread_ts=(\d{10}\.\d{6}))?/;
-// /^https:\/\/\w+\.slack\.com\/archives\/[A-Z0-9]+\/p\d+$/;
 export class LinkIssueData {
   @IsString()
   url: string;

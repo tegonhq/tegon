@@ -27,6 +27,7 @@ import {
   slackIssueData,
 } from './slack.interface';
 import {
+  getChannelNameFromIntegrationAccount,
   getExternalSlackUser,
   getIssueData,
   getIssueMessageModal,
@@ -209,7 +210,7 @@ export default class SlackService {
         thread_ts: parentTs,
         channel_type,
       } = messageResponse.message;
-      const commentBody = `${IntegrationName.Slack} thread in ${createdIssue.title}`;
+      const commentBody = `${IntegrationName.Slack} thread in #${getChannelNameFromIntegrationAccount(integrationAccount, sessionData.channelId)}`;
 
       const issueComment = await this.prisma.issueComment.create({
         data: {

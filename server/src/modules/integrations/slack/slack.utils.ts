@@ -469,7 +469,8 @@ export async function sendSlackLinkedMessage(
   linkedIssue: LinkedIssueWithRelations,
 ) {
   try {
-    const { sourceData, issue } = linkedIssue;
+    const { issue } = linkedIssue;
+    const sourceData = linkedIssue.sourceData as LinkedIssueSourceData;
     const { team, number: issueNumber } = issue;
     const { identifier: teamIdentifier, workspaceId } = team;
 
@@ -482,7 +483,7 @@ export async function sendSlackLinkedMessage(
 
     const issueUrl = `${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${issueIdentifier}`;
     const messagePayload: EventBody = {
-      channel: (sourceData as LinkedIssueSourceData).channelId,
+      channel: sourceData.channelId,
       blocks: [
         {
           type: 'context',
@@ -494,17 +495,64 @@ export async function sendSlackLinkedMessage(
           ],
         },
       ],
-      thread_ts: (sourceData as LinkedIssueSourceData).parentTs,
+      thread_ts: sourceData.parentTs,
     };
 
-    await sendSlackMessage(integrationAccount, messagePayload);
+    const messageData = await sendSlackMessage(
+      integrationAccount,
+      messagePayload,
+    );
     logger.debug(
       `Slack message sent successfully for linked issue: ${issueIdentifier}`,
     );
+
+    // TODO(Manoj): move this to function
+    const {
+      ts: messageTs,
+      thread_ts: parentTs,
+      channel_type,
+    } = messageData.message;
+    const commentBody = `${IntegrationName.Slack} thread in ${getChannelNameFromIntegrationAccount(integrationAccount, sourceData.channelId)}`;
+
+    const issueComment = await prisma.issueComment.create({
+      data: {
+        body: commentBody,
+        issueId: linkedIssue.issueId,
+        sourceMetadata: {
+          idTs: messageTs,
+          parentTs,
+          channelId: sourceData.channelId,
+          channelType: channel_type,
+          type: IntegrationName.Slack,
+        },
+      },
+    });
+
+    await prisma.linkedIssue.update({
+      where: { id: linkedIssue.id },
+      data: {
+        source: {
+          type: IntegrationName.Slack,
+          syncedCommentId: issueComment.id,
+        },
+      },
+    });
   } catch (error) {
     logger.error(
       `Error sending Slack message for linked issue: ${error.message}`,
     );
     throw error;
   }
+}
+
+export function getChannelNameFromIntegrationAccount(
+  integrationAccount: IntegrationAccountWithRelations,
+  channelId: string,
+) {
+  const slackSettings = integrationAccount.settings as Settings;
+
+  const channelMapping = slackSettings.Slack.channelMappings.find(
+    (mapping) => mapping.channelId === channelId,
+  );
+  return channelMapping ? channelMapping.channelName : '';
 }

@@ -169,9 +169,7 @@ export async function getLinkedIssueDataWithUrl(
       };
 
     case LinkedIssueSubType.Slack:
-      const slackPermalinkUrlRegex =
-        /^https:\/\/(\w+)\.slack\.com\/archives\/([A-Z0-9]+)\/p(\d{10})(\d{6})(?:\?thread_ts=(\d{10}\.\d{6}))?/;
-      const match = linkData.url.match(slackPermalinkUrlRegex);
+      const match = linkData.url.match(slackRegex);
 
       if (match) {
         const [
