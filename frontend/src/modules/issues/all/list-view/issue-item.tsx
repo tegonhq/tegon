@@ -18,6 +18,7 @@ import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { Badge } from 'components/ui/badge';
 import { Checkbox } from 'components/ui/checkbox';
+import { Tooltip, TooltipContent, TooltipTrigger } from 'components/ui/tooltip';
 import { useTeamWithId } from 'hooks/teams/use-current-team';
 import { BlockedFill, BlockingToLine } from 'icons';
 
@@ -143,25 +144,42 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
         )}
 
         {blockedIssues.length > 0 && (
-          <Badge
-            variant="outline"
-            className="mx-1 px-2 flex gap-2 text-muted-foreground"
-          >
-            <BlockedFill size={14} className="text-red-700 dark:text-red-400" />
-            {blockedIssues.length}
-          </Badge>
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge
+                variant="outline"
+                className="mx-1 px-2 flex gap-2 text-muted-foreground"
+              >
+                <BlockedFill
+                  size={14}
+                  className="text-red-700 dark:text-red-400"
+                />
+                {blockedIssues.length}
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>
+              Blocked by {blockedIssues.length} issues
+            </TooltipContent>
+          </Tooltip>
         )}
         {blocksIssues.length > 0 && (
-          <Badge
-            variant="outline"
-            className="mx-1 px-2 flex gap-2 text-muted-foreground"
-          >
-            <BlockingToLine
-              size={14}
-              className="text-red-700 dark:text-red-400"
-            />
-            {blocksIssues.length}
-          </Badge>
+          <Tooltip>
+            <TooltipTrigger>
+              <Badge
+                variant="outline"
+                className="mx-1 px-2 flex gap-2 text-muted-foreground"
+              >
+                <BlockingToLine
+                  size={14}
+                  className="text-red-700 dark:text-red-400"
+                />
+                {blocksIssues.length}
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>
+              Blocking {blocksIssues.length} issues
+            </TooltipContent>
+          </Tooltip>
         )}
       </div>
       <div className="flex gap-2 items-center">

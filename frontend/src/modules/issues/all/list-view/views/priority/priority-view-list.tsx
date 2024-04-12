@@ -41,7 +41,7 @@ export const PriorityViewList = observer(
     return (
       <div className="flex flex-col">
         <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
-          <PriorityIcon.icon size={18} className="text-muted-foreground mr-2" />
+          <PriorityIcon.icon size={16} className="text-muted-foreground mr-2" />
           <h3 className="pl-2 text-sm font-medium">
             {Priorities[priority]}
             <span className="text-muted-foreground ml-2">

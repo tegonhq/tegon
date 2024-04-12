@@ -11,7 +11,7 @@ import {
   AvatarImage,
   getInitials,
 } from 'components/ui/avatar';
-import { useIssuesHotKeys } from 'hooks';
+import { useShortcutHotKeys } from 'hooks';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
 
@@ -29,7 +29,7 @@ export const AssigneeDialog = observer(() => {
   const team = useCurrentTeam();
   const { usersData, isLoading } = useUsersData(team.id);
 
-  useIssuesHotKeys('a', setOpen, ['all-issues']);
+  useShortcutHotKeys('a', setOpen, ['all-issues']);
 
   if (
     isLoading ||

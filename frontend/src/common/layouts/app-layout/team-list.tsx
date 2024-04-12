@@ -39,15 +39,14 @@ export const TeamList = observer(() => {
         Your teams
       </div>
 
-      {teams.map((team: TeamType) => (
-        <Accordion
-          type="single"
-          key={team.identifier}
-          collapsible
-          defaultValue={teams[0].id}
-          className="w-full text-slate-700 dark:text-slate-300 mt-0"
-        >
-          <AccordionItem value={team.id}>
+      <Accordion
+        type="single"
+        collapsible
+        defaultValue={teams[0].id}
+        className="w-full text-slate-700 dark:text-slate-300 mt-0"
+      >
+        {teams.map((team: TeamType) => (
+          <AccordionItem value={team.id} key={team.identifier}>
             <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>div>svg]:rotate-90 hover:bg-active hover:text-slate-800 dark:hover:text-slate-50 rounded-md">
               <div className="w-full justify-start px-2 flex items-center">
                 <div
@@ -105,8 +104,8 @@ export const TeamList = observer(() => {
               />
             </AccordionContent>
           </AccordionItem>
-        </Accordion>
-      ))}
+        ))}
+      </Accordion>
     </div>
   );
 });

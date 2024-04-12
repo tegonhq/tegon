@@ -78,14 +78,14 @@ export function IssueLabelDropdownContent({
               <CommandItem key={label.name} className="my-1" value={label.name}>
                 <div className="flex gap-2 items-center">
                   <Checkbox
-                    id={label.name}
+                    id={label.id}
                     checked={value.includes(label.id)}
                     onCheckedChange={(value: boolean) =>
                       onValueChange(value, label.id)
                     }
                   />
                   <label
-                    htmlFor="terms"
+                    htmlFor={label.id}
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     {label.name}
@@ -94,31 +94,30 @@ export function IssueLabelDropdownContent({
               </CommandItem>
             );
           })}
-          <Separator />
           {labelSearch && exactMatch().length === 0 && (
-            <CommandItem
-              className="my-1"
-              value={labelSearch}
-              onSelect={() => {
-                createLabel({
-                  name: labelSearch,
-                  workspaceId: workspace.id,
-                  color: generateHexColor(),
-                });
-              }}
-            >
-              <div className="flex gap-2 items-center">
-                <label
-                  htmlFor="terms"
-                  className="text-sm flex items-center font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  <RiAddLine size={16} className="mr-2" /> Create
-                  <span className="text-muted-foreground ml-1">
-                    {labelSearch}
-                  </span>
-                </label>
-              </div>
-            </CommandItem>
+            <>
+              {filter().length > 0 && <Separator />}
+              <CommandItem
+                className="my-1"
+                value={labelSearch}
+                onSelect={() => {
+                  createLabel({
+                    name: labelSearch,
+                    workspaceId: workspace.id,
+                    color: generateHexColor(),
+                  });
+                }}
+              >
+                <div className="flex gap-2 items-center">
+                  <label className="text-sm flex items-center font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    <RiAddLine size={16} className="mr-2" /> Create
+                    <span className="text-muted-foreground ml-1">
+                      {labelSearch}
+                    </span>
+                  </label>
+                </div>
+              </CommandItem>
+            </>
           )}
         </CommandGroup>
       </CommandList>

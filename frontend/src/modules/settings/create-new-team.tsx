@@ -30,7 +30,7 @@ export const CreateNewTeamSchema = z.object({
       message: 'Team name must be atleast 2 characters',
     })
     .max(50),
-  identifier: z.string().max(3),
+  identifier: z.string().min(3).max(3),
 });
 
 export function CreateNewTeam() {

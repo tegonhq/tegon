@@ -93,11 +93,10 @@ export const ApplicationStore: IAnyStateTreeNode = types
         self.selectedIssues.replace([]);
       } else {
         const index = self.selectedIssues.indexOf(issue);
-        self.selectedIssues.splice(1, index);
+        self.selectedIssues.splice(index, 1);
       }
     },
     clearSelectedIssues() {
-      self.selectedIssues.replace([]);
       self.hoverIssue = undefined;
     },
     setHoverIssue(issue: string) {

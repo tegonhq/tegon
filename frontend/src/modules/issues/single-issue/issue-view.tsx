@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { observer } from 'mobx-react-lite';
+import React from 'react';
 
 import type { WorkflowType } from 'common/types/team';
 import { WorkflowCategoryEnum } from 'common/types/team';
@@ -9,6 +10,8 @@ import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
 import { useAllTeamWorkflows } from 'hooks/workflows';
 
+import { useContextStore } from 'store/global-context-provider';
+
 import { LeftSide } from './left-side/left-side';
 import { RightSide } from './right-side/right-side';
 import { TriageView } from './triage-view';
@@ -16,11 +19,23 @@ import { TriageView } from './triage-view';
 export const IssueView = observer(() => {
   const currentTeam = useCurrentTeam();
   const workflows = useAllTeamWorkflows(currentTeam.identifier);
+  const { applicationStore } = useContextStore();
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,
   );
   const issue = useIssueData();
+
+  React.useEffect(() => {
+    if (issue) {
+      applicationStore.addToSelectedIssues(issue.id, true);
+    }
+
+    return () => {
+      applicationStore.removeSelectedIssue(issue.id);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!issue) {
     return null;

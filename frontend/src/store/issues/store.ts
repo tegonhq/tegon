@@ -110,6 +110,10 @@ export const IssuesStore: IAnyStateTreeNode = types
     getIssueById(issueId: string): IssueType {
       const issue = self.issuesMap.get(issueId);
 
+      if (!issue) {
+        return undefined;
+      }
+
       return {
         ...issue,
         parent: issue.parentId ? self.issuesMap.get(issue.parentId) : undefined,
@@ -119,9 +123,12 @@ export const IssuesStore: IAnyStateTreeNode = types
       };
     },
     getIssuesFromArray(issueIds: string[]): IssueType[] {
-      return issueIds.map((issueId: string) =>
-        (self as IssuesStoreType).getIssueById(issueId),
-      );
+      console.log(issueIds);
+      return issueIds
+        .map((issueId: string) =>
+          (self as IssuesStoreType).getIssueById(issueId),
+        )
+        .filter(Boolean);
     },
     getIssueByNumber(
       issueNumberWithIdentifier: string,

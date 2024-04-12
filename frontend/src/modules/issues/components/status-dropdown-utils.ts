@@ -14,6 +14,12 @@ export function getDefaultStatus(workflows: WorkflowType[], pathname: string) {
     ).id;
   }
 
+  if (pathname.includes('triage')) {
+    return workflows.find(
+      (workflow: WorkflowType) => workflow.name === 'Triage',
+    ).id;
+  }
+
   return workflows.find((workflow: WorkflowType) => workflow.name === 'Backlog')
     .id;
 }

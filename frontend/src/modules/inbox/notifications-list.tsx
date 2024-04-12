@@ -16,28 +16,7 @@ export const NotificationsList = observer(() => {
   ) as NotificationType[];
 
   return (
-    <div className="flex flex-col pr-2 overflow-y-auto">
-      {notifications.map((notification: NotificationType, index: number) => (
-        <NotificationItem
-          notification={notification}
-          key={notification.id}
-          nextNotification={notifications[index + 1]}
-        />
-      ))}
-      {notifications.map((notification: NotificationType, index: number) => (
-        <NotificationItem
-          notification={notification}
-          key={notification.id}
-          nextNotification={notifications[index + 1]}
-        />
-      ))}
-      {notifications.map((notification: NotificationType, index: number) => (
-        <NotificationItem
-          notification={notification}
-          key={notification.id}
-          nextNotification={notifications[index + 1]}
-        />
-      ))}
+    <div className="flex flex-col p-2 overflow-y-auto gap-2">
       {notifications.map((notification: NotificationType, index: number) => (
         <NotificationItem
           notification={notification}

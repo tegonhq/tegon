@@ -44,7 +44,7 @@ export const CategoryViewList = observer(
       <div className="flex flex-col">
         <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
           <CategoryIcon
-            size={18}
+            size={16}
             className="text-muted-foreground"
             color={workflow.color}
           />

@@ -59,7 +59,9 @@ function getNotificationText(
 export const NotificationItem = observer(
   ({ notification, nextNotification }: NotificationItemProps) => {
     const { issuesStore } = useContextStore();
+
     const issue = issuesStore.getIssueById(notification.issueId);
+
     const nextIssue =
       nextNotification && issuesStore.getIssueById(nextNotification.issueId);
     const { userData, isLoading } = useUserData(

@@ -10,15 +10,13 @@ import {
   getInitials,
 } from 'components/ui/avatar';
 import { Checkbox } from 'components/ui/checkbox';
-import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from 'components/ui/command';
+import { Command, CommandGroup, CommandInput } from 'components/ui/command';
+import { useScope } from 'hooks';
 import { AssigneeLine } from 'icons';
 
 import type { User } from 'store/user-context';
+
+import { DropdownItem } from './dropdown-item';
 
 interface IssueAssigneeDropdownContentProps {
   onChange?: (assigneeId: string | string[]) => void;
@@ -35,6 +33,8 @@ export function IssueAssigneeDropdownContent({
   multiple = false,
   value,
 }: IssueAssigneeDropdownContentProps) {
+  useScope('command');
+
   function getUserData(userId: string) {
     return usersData.find((userData: User) => userData.id === userId);
   }
@@ -54,13 +54,12 @@ export function IssueAssigneeDropdownContent({
   };
 
   return (
-    <Command className="w-72">
+    <Command>
       <CommandInput placeholder="Set assignee..." />
       <CommandGroup>
-        <CommandItem
-          key="no-user"
-          value="no-user"
-          className="w-full"
+        <DropdownItem
+          id="no-user"
+          index={0}
           onSelect={() => {
             onChange && onChange(null);
             onClose();
@@ -81,15 +80,16 @@ export function IssueAssigneeDropdownContent({
             </div>
             No Assignee
           </div>
-        </CommandItem>
+        </DropdownItem>
         {usersData &&
-          usersData.map((user: User) => {
+          usersData.map((user: User, index: number) => {
             const userData = getUserData(user.id);
 
             return (
-              <CommandItem
+              <DropdownItem
                 key={user.id}
-                value={user.id}
+                id={user.id}
+                index={index + 1}
                 onSelect={(currentValue) => {
                   if (!multiple) {
                     onChange && onChange(currentValue);
@@ -121,7 +121,7 @@ export function IssueAssigneeDropdownContent({
 
                   {userData.fullname}
                 </div>
-              </CommandItem>
+              </DropdownItem>
             );
           })}
       </CommandGroup>

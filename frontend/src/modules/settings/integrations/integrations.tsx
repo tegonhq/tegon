@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiGithubFill } from '@remixicon/react';
+import { RiGithubFill, type RemixiconComponentType } from '@remixicon/react';
 import { useRouter } from 'next/router';
 
 import { SettingsLayout } from 'common/layouts/settings-layout';
@@ -12,22 +12,28 @@ interface IntegrationCardProps {
   name: string;
   description: string;
   href: string;
+  Icon: RemixiconComponentType;
 }
 
-function IntegrationCard({ name, description, href }: IntegrationCardProps) {
+function IntegrationCard({
+  name,
+  description,
+  href,
+  Icon,
+}: IntegrationCardProps) {
   const { push } = useRouter();
   const currentWorkspace = useCurrentWorkspace();
 
   return (
     <div
-      className="p-3 border rounded-md text-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800"
+      className="p-3 border rounded-md text-sm cursor-pointer hover:bg-active/50"
       onClick={() =>
         push(`/${currentWorkspace.slug}/settings/integrations/${href}`)
       }
     >
       <div className="flex items-center gap-2">
         <div className="border p-1 rounded-md bg-background">
-          <RiGithubFill className="" />
+          <Icon className="" />
         </div>
         <div>
           <div className="font-medium"> {name} </div>
@@ -59,6 +65,7 @@ export function Integrations() {
               name="Github"
               description="Automate your pull request and commit workflows and keep issues synced both ways"
               href="github"
+              Icon={RiGithubFill}
             />
           </div>
         </div>

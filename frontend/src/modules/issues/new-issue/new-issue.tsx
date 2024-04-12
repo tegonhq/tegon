@@ -33,14 +33,9 @@ import {
 
 import { DuplicateIssuesView } from './duplicates-view';
 import { IssueSuggestions } from './issue-suggestions';
+import { NewIssueDropdowns } from './new-issue-dropdowns';
 import { getDefaultValues, isBirectionalEnabled } from './new-issue-utils';
 import { NewIssueSchema } from './new-issues-type';
-import {
-  IssueAssigneeDropdown,
-  IssueLabelDropdown,
-  IssuePriorityDropdown,
-  IssueStatusDropdown,
-} from '../components';
 import { IssueDescription } from '../single-issue/left-side/issue-description';
 
 interface NewIssueProps {
@@ -129,68 +124,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
               />
             )}
 
-            <div className="flex gap-2 items-center">
-              <FormField
-                control={form.control}
-                name="stateId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <IssueStatusDropdown
-                        onChange={field.onChange}
-                        value={field.value}
-                        teamIdentfier={teamIdentfier}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="labelIds"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <IssueLabelDropdown
-                        value={field.value}
-                        onChange={field.onChange}
-                        teamIdentfier={teamIdentfier}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="priority"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <IssuePriorityDropdown
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="assigneeId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <IssueAssigneeDropdown
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
+            <NewIssueDropdowns form={form} teamIdentfier={teamIdentfier} />
           </div>
 
           <div

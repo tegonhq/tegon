@@ -6,7 +6,7 @@ import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow
 
 import type { WorkflowType } from 'common/types/team';
 
-import { useIssuesHotKeys } from 'hooks';
+import { useShortcutHotKeys } from 'hooks';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useUpdateIssueMutation } from 'services/issues';
@@ -21,7 +21,7 @@ export const StatusDialog = observer(() => {
   const { mutate: updateIssue } = useUpdateIssueMutation({});
   const team = useCurrentTeam();
 
-  useIssuesHotKeys('s', setOpen, ['all-issues']);
+  useShortcutHotKeys('s', setOpen, ['all-issues']);
 
   if (
     applicationStore.selectedIssues.length === 0 &&

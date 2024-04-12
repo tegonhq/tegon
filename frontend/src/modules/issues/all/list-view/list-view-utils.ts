@@ -25,7 +25,6 @@ export function filterIssue(issue: IssueType, filter: FilterType) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fieldValue = (issue as any)[key];
-  console.log(issue);
 
   switch (filterType) {
     case FilterTypeEnum.IS:
