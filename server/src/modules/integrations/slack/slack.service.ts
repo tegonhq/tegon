@@ -355,6 +355,21 @@ export default class SlackService {
       sessionData,
     );
 
+    const parentTs = slackMessageResponse.messages[0].thread_ts || threadTs;
+    const linkedIssue = await this.prisma.linkedIssue.findFirst({
+      where: { sourceId: `${channelId}_${parentTs}` },
+    });
+    if (linkedIssue) {
+      await this.sendEphemeralMessage(
+        integrationAccount,
+        channelId,
+        `This thread is already linked with an existing Issue. so we can't create a new Issue`,
+        parentTs,
+      );
+
+      return undefined;
+    }
+
     const [stateId, userId] = await Promise.all([
       getState(this.prisma, 'opened', sessionData.teamId),
       getUserId(this.prisma, { id: slackUserId }),
@@ -379,5 +394,28 @@ export default class SlackService {
       sessionData,
       issueData,
     );
+  }
+
+  async sendEphemeralMessage(
+    integrationAccount: IntegrationAccountWithRelations,
+    channelId: string,
+    text: string,
+    threadTs: string,
+  ) {
+    const slackSettings = integrationAccount.settings as Settings;
+
+    const response = await postRequest(
+      'https://slack.com/api/chat.postEphemeral',
+      getSlackHeaders(integrationAccount),
+      {
+        channel: channelId,
+        text,
+        thread_ts: threadTs,
+        user: slackSettings.Slack.botUserId,
+        parse: 'full',
+      },
+    );
+
+    return response;
   }
 }
