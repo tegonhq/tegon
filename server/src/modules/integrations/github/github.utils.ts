@@ -30,12 +30,12 @@ import {
 } from 'modules/issue-comments/issue-comments.interface';
 import {
   IssueWithRelations,
-  LinkedIssueSubType,
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
 import {
   LinkIssueData,
   LinkedIssueSourceData,
+  LinkedIssueSubType,
 } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';

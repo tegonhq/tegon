@@ -27,6 +27,10 @@ import {
 } from './slack.interface';
 import { EventBody } from '../integrations.interface';
 import { getRequest, getUserId, postRequest } from '../integrations.utils';
+import {
+  LinkedIssueSourceData,
+  LinkedIssueWithRelations,
+} from 'modules/linked-issue/linked-issue.interface';
 
 export function getSlackHeaders(
   integrationAccount: IntegrationAccountWithRelations,
@@ -431,4 +435,76 @@ export async function getSlackTeamInfo(
   );
 
   return response.data;
+}
+
+export async function getExternalSlackUser(
+  integrationAccount: IntegrationAccountWithRelations,
+  slackUserId: string,
+) {
+  const response = await getRequest(
+    `https://slack.com/api/users.info?user=${slackUserId}`,
+    await getSlackHeaders(integrationAccount),
+  );
+
+  return response.data;
+}
+
+export async function sendSlackMessage(
+  integrationAccount: IntegrationAccountWithRelations,
+  payload: EventBody,
+) {
+  const response = await postRequest(
+    'https://slack.com/api/chat.postMessage',
+    getSlackHeaders(integrationAccount),
+    payload,
+  );
+
+  return response.data;
+}
+
+export async function sendSlackLinkedMessage(
+  prisma: PrismaService,
+  logger: Logger,
+  integrationAccount: IntegrationAccountWithRelations,
+  linkedIssue: LinkedIssueWithRelations,
+) {
+  try {
+    const { sourceData, issue } = linkedIssue;
+    const { team, number: issueNumber } = issue;
+    const { identifier: teamIdentifier, workspaceId } = team;
+
+    const issueIdentifier = `${teamIdentifier}-${issueNumber}`;
+    logger.debug(`Sending Slack message for linked issue: ${issueIdentifier}`);
+
+    const workspace = await prisma.workspace.findUnique({
+      where: { id: workspaceId },
+    });
+
+    const issueUrl = `${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${issueIdentifier}`;
+    const messagePayload: EventBody = {
+      channel: (sourceData as LinkedIssueSourceData).channelId,
+      blocks: [
+        {
+          type: 'context',
+          elements: [
+            {
+              type: 'mrkdwn',
+              text: `This thread is linked with a Tegon issue <${issueUrl}|${issueIdentifier}>`,
+            },
+          ],
+        },
+      ],
+      thread_ts: (sourceData as LinkedIssueSourceData).parentTs,
+    };
+
+    await sendSlackMessage(integrationAccount, messagePayload);
+    logger.debug(
+      `Slack message sent successfully for linked issue: ${issueIdentifier}`,
+    );
+  } catch (error) {
+    logger.error(
+      `Error sending Slack message for linked issue: ${error.message}`,
+    );
+    throw error;
+  }
 }

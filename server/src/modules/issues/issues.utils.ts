@@ -10,6 +10,7 @@ import {
   upsertGithubIssue,
 } from 'modules/integrations/github/github.utils';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
+import { LinkedIssueSubType } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 
 import {
@@ -17,7 +18,6 @@ import {
   IssueAction,
   IssueWithRelations,
   LinkIssueInput,
-  LinkedIssueSubType,
   SubscribeType,
   UpdateIssueInput,
   labelPrompt,

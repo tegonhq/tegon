@@ -9,7 +9,10 @@ import { IssueHistoryData } from 'modules/issue-history/issue-history.interface'
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import { IssueRelationInput } from 'modules/issue-relation/issue-relation.interface';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
-import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
+import {
+  LinkIssueData,
+  LinkedIssueSubType,
+} from 'modules/linked-issue/linked-issue.interface';
 import { getLinkType } from 'modules/linked-issue/linked-issue.utils';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
@@ -21,7 +24,6 @@ import {
   IssueAction,
   IssueRequestParams,
   IssueWithRelations,
-  LinkedIssueSubType,
   RelationInput,
   SubscribeType,
   SuggestionsInput,

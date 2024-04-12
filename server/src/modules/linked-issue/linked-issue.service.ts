@@ -50,6 +50,7 @@ export default class LinkedIssueService {
       };
     }
     try {
+      console.log('here');
       const { integrationAccount, linkInput } = await getLinkedIssueDataWithUrl(
         this.prisma,
         linkData,
@@ -57,6 +58,8 @@ export default class LinkedIssueService {
         issueParams.issueId,
         userId,
       );
+
+      console.log(linkInput);
 
       const linkedIssue = await this.createLinkIssueAPI(linkInput);
 
@@ -66,8 +69,7 @@ export default class LinkedIssueService {
         this.logger,
         this,
         integrationAccount,
-        linkedIssue.issue,
-        linkedIssue.sourceId,
+        linkedIssue,
         linkData.type,
       );
       return linkedIssue;

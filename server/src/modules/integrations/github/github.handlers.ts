@@ -11,7 +11,6 @@ import {
 import {
   CreateIssueInput,
   IssueRequestParams,
-  LinkedIssueSubType,
   TeamRequestParams,
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
@@ -19,6 +18,7 @@ import IssuesService from 'modules/issues/issues.service';
 import {
   LinkedIssueSource,
   LinkedIssueSourceData,
+  LinkedIssueSubType,
 } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';

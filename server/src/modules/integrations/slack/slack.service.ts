@@ -27,6 +27,7 @@ import {
   slackIssueData,
 } from './slack.interface';
 import {
+  getExternalSlackUser,
   getIssueData,
   getIssueMessageModal,
   getModalView,
@@ -57,13 +58,38 @@ export default class SlackService {
   async handleEvents(eventBody: EventBody) {
     if (eventBody.type === 'url_verification') {
       return { challenge: eventBody.challenge };
-    } else if (eventBody.event.type === 'message') {
-      return await this.handleThread(eventBody.event);
-    } else if (eventBody.event.type === 'reaction_added') {
-      await this.handleMessageReaction(eventBody);
     }
+
+    const { event, team_id } = eventBody;
+    const integrationAccount = await getSlackIntegrationAccount(
+      this.prisma,
+      team_id,
+    );
+
+    if (!integrationAccount) {
+      return undefined;
+    }
+
+    const slackSettings = integrationAccount.settings as Settings;
+    const isBotMessage = slackSettings.Slack.botUserId === event.user;
+
+    if (isBotMessage) {
+      return undefined;
+    }
+
+    switch (event.type) {
+      case 'message':
+        return await this.handleThread(event, integrationAccount);
+      case 'reaction_added':
+        await this.handleMessageReaction(eventBody, integrationAccount);
+        break;
+      default:
+        break;
+    }
+
     return undefined;
   }
+
   async getChannelRedirectURL(
     integrationAccountQueryParams: IntegrationAccountQueryParams,
     redirectURL: string,
@@ -177,12 +203,12 @@ export default class SlackService {
       sessionData.threadTs,
     );
 
-    if (messageResponse.data.ok) {
+    if (messageResponse.ok) {
       const {
         ts: messageTs,
         thread_ts: parentTs,
         channel_type,
-      } = messageResponse.data.message;
+      } = messageResponse.message;
       const commentBody = `${IntegrationName.Slack} thread in ${createdIssue.title}`;
 
       const issueComment = await this.prisma.issueComment.create({
@@ -250,10 +276,13 @@ export default class SlackService {
       },
     );
 
-    return response;
+    return response.data;
   }
 
-  async handleThread(eventBody: EventBody): Promise<IssueComment> {
+  async handleThread(
+    eventBody: EventBody,
+    integrationAccount: IntegrationAccountWithRelations,
+  ): Promise<IssueComment> {
     const message =
       eventBody.subtype === 'message_changed' ? eventBody.message : eventBody;
 
@@ -277,13 +306,21 @@ export default class SlackService {
     const parentId = (linkedIssueSource as Record<string, string>)
       .syncedCommentId;
 
+    let displayName;
+    if (message.user) {
+      const userData = await getExternalSlackUser(
+        integrationAccount,
+        message.user,
+      );
+      displayName = userData.user.real_name;
+    }
     const sourceData = {
       idTs: message.ts,
       parentTs: message.thread_ts,
       channelId: eventBody.channel,
       channelType: eventBody.channel_type,
       type: IntegrationName.Slack,
-      userDisplayName: message.username ? message.username : message.user,
+      userDisplayName: message.username ? message.username : displayName,
     };
 
     const linkedComment = await this.prisma.linkedComment.findFirst({
@@ -318,14 +355,11 @@ export default class SlackService {
 
   async handleMessageReaction(
     eventBody: EventBody,
+    integrationAccount: IntegrationAccountWithRelations,
   ): Promise<IssueWithRelations> {
     if (eventBody.event.reaction !== 'eyes') {
       return undefined;
     }
-    const integrationAccount = await getSlackIntegrationAccount(
-      this.prisma,
-      eventBody.team_id,
-    );
 
     const slackSettings = integrationAccount.settings as Settings;
 

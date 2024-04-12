@@ -136,6 +136,30 @@ export async function storeIntegrationRelatedData(
       });
       break;
 
+    case IntegrationName.SlackPersonal:
+      const slackUsersOnWorkspace = await prisma.usersOnWorkspaces.findUnique({
+        where: {
+          userId_workspaceId: { userId, workspaceId },
+        },
+      });
+
+      const externalAccountMappings =
+        (slackUsersOnWorkspace.externalAccountMappings as Record<
+          string,
+          string
+        >) || {};
+      externalAccountMappings[IntegrationName.Slack] =
+        integrationAccount.accountId;
+
+      await prisma.usersOnWorkspaces.update({
+        where: {
+          userId_workspaceId: { userId, workspaceId },
+        },
+        data: { externalAccountMappings },
+      });
+
+      break;
+
     default:
       return undefined;
   }
