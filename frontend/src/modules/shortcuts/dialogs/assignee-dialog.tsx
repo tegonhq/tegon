@@ -21,6 +21,7 @@ import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
 
 import { CommonDialog } from './common-dialog';
+import { SCOPES } from 'common/scopes';
 
 export const AssigneeDialog = observer(() => {
   const [open, setOpen] = React.useState(false);
@@ -29,7 +30,7 @@ export const AssigneeDialog = observer(() => {
   const team = useCurrentTeam();
   const { usersData, isLoading } = useUsersData(team.id);
 
-  useShortcutHotKeys('a', setOpen, ['all-issues']);
+  useShortcutHotKeys('a', setOpen, [SCOPES.AllIssues]);
 
   if (
     isLoading ||

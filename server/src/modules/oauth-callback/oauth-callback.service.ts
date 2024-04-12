@@ -102,6 +102,7 @@ export class OAuthCallbackService {
         ...scopesString.split(','),
         ...(template.default_scopes || []),
       ];
+
       const authorizationUri = simpleOAuthClient.authorizeURL({
         redirect_uri: CALLBACK_URL,
         scope: scopes.join(template.scope_separator || ' '),

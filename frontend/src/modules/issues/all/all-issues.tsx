@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
+import { SCOPES } from 'common/scopes';
 
 import { useScope } from 'hooks';
 
@@ -11,7 +12,7 @@ import { Header } from './header';
 import { ListView } from './list-view';
 
 export const AllIssues = () => {
-  useScope('all-issues');
+  useScope(SCOPES.AllIssues);
 
   return (
     <main className="flex flex-col h-[100vh] overflow-hidden">

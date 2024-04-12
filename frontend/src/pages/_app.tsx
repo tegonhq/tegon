@@ -21,6 +21,7 @@ import { Toaster } from 'components/ui/toaster';
 import { TooltipProvider } from 'components/ui/tooltip';
 
 import { StoreContext, storeContextStore } from 'store/global-context-provider';
+import { SCOPES } from 'common/scopes';
 
 // Inter as default font
 export const fontSans = Inter({
@@ -51,7 +52,7 @@ export const MyApp: NextComponentType<
         enableSystem
         disableTransitionOnChange
       >
-        <HotkeysProvider initiallyActiveScopes={['global']}>
+        <HotkeysProvider initiallyActiveScopes={[SCOPES.Global]}>
           <TooltipProvider delayDuration={1000}>
             <StoreContext.Provider value={storeContextStore}>
               <QueryClientProvider client={queryClientRef.current}>

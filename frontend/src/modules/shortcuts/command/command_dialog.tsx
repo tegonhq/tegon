@@ -12,11 +12,12 @@ import {
   CommandSeparator,
   CommandDialog as CommandDialogC,
 } from 'components/ui/command';
+import { SCOPES } from 'common/scopes';
 
 export function CommandDialog() {
   const [open, setOpen] = React.useState(false);
 
-  useHotkeys('meta+k', () => setOpen(true), { scopes: ['global'] });
+  useHotkeys('meta+k', () => setOpen(true), { scopes: [SCOPES.Global] });
 
   return (
     <CommandDialogC

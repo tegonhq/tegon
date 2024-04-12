@@ -39,6 +39,9 @@ export function AddLinkedIssueDialog({
         {open === LinkedIssueSubType.GithubPullRequest && (
           <AddGithubPR issueId={issueId} onClose={() => setOpen(undefined)} />
         )}
+        {open === LinkedIssueSubType.ExternalLink && (
+          <AddGithubPR issueId={issueId} onClose={() => setOpen(undefined)} />
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -3,40 +3,35 @@
 import { useMutation } from 'react-query';
 
 import { ajaxPost } from 'common/lib/ajax';
-import type { IssueType } from 'common/types/issue';
 
-export interface CreateIssueParams {
-  title: string;
-  description: string;
-  priority?: number;
-
-  labelIds?: string[];
-  stateId: string;
-  assigneeId?: string;
-  teamId: string;
-  parentId?: string;
-  isBidirectional: boolean;
+export interface SlackChannelCreateRedirectURLParams {
+  integrationAccountId: string;
+  redirectURL: string;
 }
 
-export function createIssue({ teamId, ...otherParams }: CreateIssueParams) {
+interface RedirectURLResponse {
+  status: number;
+  redirectURL: string;
+}
+
+export function slackChannelCreateRedirectURL(
+  params: SlackChannelCreateRedirectURLParams,
+) {
   return ajaxPost({
-    url: `/api/v1/issues?teamId=${teamId}`,
+    url: `/api/v1/slack/channel/redirect?integrationAccountId=${params.integrationAccountId}`,
     data: {
-      ...otherParams,
-      sortOrder: 0,
-      estimate: 0,
-      subscriberIds: [],
+      redirectURL: params.redirectURL,
     },
   });
 }
 
-export interface MutationParams {
+interface MutationParams {
   onMutate?: () => void;
-  onSuccess?: (data: IssueType) => void;
+  onSuccess?: (data: RedirectURLResponse) => void;
   onError?: (error: string) => void;
 }
 
-export function useCreateIssueMutation({
+export function useSlackChannelCreateRedirectURLMutation({
   onMutate,
   onSuccess,
   onError,
@@ -52,11 +47,11 @@ export function useCreateIssueMutation({
     onError && onError(errorText);
   };
 
-  const onMutationSuccess = (data: IssueType) => {
+  const onMutationSuccess = (data: RedirectURLResponse) => {
     onSuccess && onSuccess(data);
   };
 
-  return useMutation(createIssue, {
+  return useMutation(slackChannelCreateRedirectURL, {
     onError: onMutationError,
     onMutate: onMutationTriggered,
     onSuccess: onMutationSuccess,

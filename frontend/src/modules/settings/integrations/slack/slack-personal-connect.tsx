@@ -14,7 +14,7 @@ import {
 
 import { useIntegrationAccount } from '../integration-util';
 
-export const GithubPersonalConnect = observer(() => {
+export const SlackPersonalConnect = observer(() => {
   const { mutate: createRedirectURL, isLoading: redirectURLLoading } =
     useCreateRedirectURLMutation({
       onSuccess: (data) => {
@@ -27,38 +27,37 @@ export const GithubPersonalConnect = observer(() => {
     useDeleteIntegrationAccount({});
 
   const {
-    integrationDefinition: githubDefinition,
-    integrationAccount: githubAccount,
-  } = useIntegrationAccount(IntegrationName.GithubPersonal);
-
+    integrationDefinition: slackDefinition,
+    integrationAccount: slackAccount,
+  } = useIntegrationAccount(IntegrationName.SlackPersonal);
   return (
     <div className="mt-8 p-3 border text-sm rounded-md flex items-center justify-between">
       <div className="flex flex-col items-start justify-center">
-        {githubAccount ? (
+        {slackAccount ? (
           <>
             <p className="font-medium"> Connected personal account</p>
             <p className="text-muted-foreground">
-              Your personal github account is connected
+              Your personal slack account is connected
             </p>
           </>
         ) : (
           <>
             <p className="font-medium"> Connect personal account</p>
             <p className="text-muted-foreground">
-              Connect your Githubaccount to use the integration
+              Connect your Slack account to use the integration
             </p>
           </>
         )}
       </div>
 
       <div>
-        {githubAccount ? (
+        {slackAccount ? (
           <Button
             variant="destructive"
             size="sm"
             onClick={() => {
               deleteIntegrationAccount({
-                integrationAccountId: githubAccount.id,
+                integrationAccountId: slackAccount.id,
               });
             }}
             isLoading={deleting}
@@ -72,8 +71,8 @@ export const GithubPersonalConnect = observer(() => {
             onClick={() => {
               createRedirectURL({
                 redirectURL: window.location.href,
-                integrationDefinitionId: githubDefinition.id,
-                workspaceId: githubDefinition.workspaceId,
+                integrationDefinitionId: slackDefinition.id,
+                workspaceId: slackDefinition.workspaceId,
               });
             }}
             isLoading={redirectURLLoading}

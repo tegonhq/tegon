@@ -96,7 +96,7 @@ export const IssueActivity = observer(() => {
 
       <div className="my-2">
         <Timeline>
-          <TimelineItem className="mb-2" hasMore={false}>
+          <TimelineItem hasMore={false}>
             <div className="flex items-center text-xs text-muted-foreground">
               <Avatar className="h-[20px] w-[25px] mr-4 text-foreground">
                 <AvatarImage />

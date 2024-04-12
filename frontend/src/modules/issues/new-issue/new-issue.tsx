@@ -34,7 +34,11 @@ import {
 import { DuplicateIssuesView } from './duplicates-view';
 import { IssueSuggestions } from './issue-suggestions';
 import { NewIssueDropdowns } from './new-issue-dropdowns';
-import { getDefaultValues, isBirectionalEnabled } from './new-issue-utils';
+import {
+  getDefaultValues,
+  isBirectionalEnabled,
+  setDefaultValuesAgain,
+} from './new-issue-utils';
 import { NewIssueSchema } from './new-issues-type';
 import { IssueDescription } from '../single-issue/left-side/issue-description';
 
@@ -55,6 +59,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
   });
   const team = useTeam(teamIdentfier);
   const workflows = useAllTeamWorkflows(teamIdentfier);
+
   const pathname = usePathname();
   const [description, setDescription] = React.useState('');
   const [, rerenderHack] = React.useState('');
@@ -67,6 +72,12 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
     resolver: zodResolver(NewIssueSchema),
     defaultValues: getDefaultValues(workflows, pathname),
   });
+
+  // This is to change the default value for the workflow
+  React.useEffect(() => {
+    setDefaultValuesAgain(form, workflows, pathname);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamIdentfier]);
 
   const onSubmit = (values: CreateIssueParams) => {
     createIssue({ ...values, teamId: team.id, parentId });

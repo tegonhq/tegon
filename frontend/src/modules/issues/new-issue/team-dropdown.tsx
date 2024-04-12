@@ -15,6 +15,7 @@ import {
 import { TeamLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
+import { TeamIcon } from 'components/ui/team-icon';
 
 interface TeamProps {
   value?: string;
@@ -44,16 +45,9 @@ export function TeamDropdown({ value, onChange }: TeamProps) {
         <Button
           variant="outline"
           size="sm"
-          className="flex items-center text-foreground"
+          className="flex items-center text-foreground gap-2"
         >
-          <div
-            className={`p-[2px] w-5 h-5 ${getTeamColor(team?.name, true)} rounded-sm mr-2`}
-          >
-            <TeamLine
-              size={14}
-              className={`shrink-0 text-muted-foreground h-4 w-4 ${getTeamColor(team?.name)}`}
-            />
-          </div>
+          <TeamIcon name={team.name} />
           {team?.name}
         </Button>
       </DropdownMenuTrigger>

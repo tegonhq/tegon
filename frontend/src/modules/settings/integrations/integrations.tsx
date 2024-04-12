@@ -1,6 +1,10 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiGithubFill, type RemixiconComponentType } from '@remixicon/react';
+import {
+  RiGithubFill,
+  RiSlackFill,
+  type RemixiconComponentType,
+} from '@remixicon/react';
 import { useRouter } from 'next/router';
 
 import { SettingsLayout } from 'common/layouts/settings-layout';
@@ -66,6 +70,12 @@ export function Integrations() {
               description="Automate your pull request and commit workflows and keep issues synced both ways"
               href="github"
               Icon={RiGithubFill}
+            />
+            <IntegrationCard
+              name="Slack"
+              description="Create issues from Slack messages and sync threads"
+              href="slack"
+              Icon={RiSlackFill}
             />
           </div>
         </div>

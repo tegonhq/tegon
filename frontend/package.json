@@ -65,6 +65,7 @@
     "supertokens-web-js": "^0.8.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "ts-key-enum": "^2.0.12",
     "use-debounce": "^10.0.0",
     "uuid": "^9.0.1",
     "vaul": "^0.8.9",

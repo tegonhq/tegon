@@ -53,7 +53,15 @@ export const IntegrationAccountsStore: IAnyStateTreeNode = types
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    getAccountWithId(id: string) {
+      return self.integrationAccounts.find(
+        (integrationAccount: IntegrationAccountType) =>
+          integrationAccount.id === id,
+      );
+    },
+  }));
 
 export type IntegrationAccountsStoreType = Instance<
   typeof IntegrationAccountsStore

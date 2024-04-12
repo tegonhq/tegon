@@ -7,6 +7,7 @@ import type {
 import type { WorkflowType } from 'common/types/team';
 
 import { getDefaultStatus } from '../components/status-dropdown-utils';
+import type { UseFormReturn } from 'react-hook-form';
 
 export function isBirectionalEnabled(
   githubAccounts: IntegrationAccountType[],
@@ -44,4 +45,17 @@ export function getDefaultValues(
     priority: 0,
     isBidirectional: false,
   };
+}
+
+export function setDefaultValuesAgain(
+  form: UseFormReturn,
+  workflows: WorkflowType[],
+  pathname: string,
+) {
+  const defaultValues = getDefaultValues(workflows, pathname);
+  const defaultValuesKeys = Object.keys(defaultValues);
+
+  defaultValuesKeys.forEach((key: keyof DefaultValues) => {
+    form.setValue(key, defaultValues[key]);
+  });
 }

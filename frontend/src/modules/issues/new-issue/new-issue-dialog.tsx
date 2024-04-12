@@ -4,6 +4,8 @@ import { RiArrowDropRightLine } from '@remixicon/react';
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
+import { SCOPES } from 'common/scopes';
+
 import {
   Dialog,
   DialogContent,
@@ -22,7 +24,7 @@ interface NewIssueDialogProps {
 export function NewIssueDialog({ open, setOpen }: NewIssueDialogProps) {
   const [team, setTeam] = React.useState(undefined);
 
-  useHotkeys('c', () => setOpen(true), { scopes: ['global'] });
+  useHotkeys('c', () => setOpen(true), { scopes: [SCOPES.Global] });
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[600px]">

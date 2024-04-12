@@ -20,6 +20,7 @@ import { Loader } from 'components/ui/loader';
 import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { useGetSearchIssuesQuery } from 'services/search';
+import { SCOPES } from 'common/scopes';
 
 interface SearchDialogProps {
   open: boolean;
@@ -35,7 +36,7 @@ export function SearchDialog({ open, setOpen }: SearchDialogProps) {
   const [query, setQuery] = React.useState('');
   const { push } = useRouter();
 
-  useHotkeys('meta+/', () => setOpen(true), { scopes: ['global'] });
+  useHotkeys('meta+/', () => setOpen(true), { scopes: [SCOPES.Global] });
   const {
     data: issues,
     isLoading,

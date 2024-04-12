@@ -18,6 +18,7 @@ import { useCurrentTeam } from 'hooks/teams';
 import { SidebarLine, TeamLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
+import { TeamIcon } from 'components/ui/team-icon';
 
 interface HeaderProps {
   title: string;
@@ -50,14 +51,7 @@ export const Header = observer(({ title }: HeaderProps) => {
             className="flex items-center gap-2 font-medium"
             href={`/${workspaceSlug}/team/${team.identifier}/all`}
           >
-            <div
-              className={`p-[2px] w-5 h-5 ${getTeamColor(team.name, true)} rounded-sm`}
-            >
-              <TeamLine
-                size={16}
-                className={`shrink-0 h-4 w-4 ${getTeamColor(team.name)}`}
-              />
-            </div>
+            <TeamIcon name={team.name} />
 
             <span className="inline-block">{team.name}</span>
           </BreadcrumbLink>

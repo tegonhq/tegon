@@ -137,7 +137,9 @@ export function getFilters(
 
   if (!showCompletedIssues) {
     const filteredWorkflows = workflows.filter(
-      (workflow) => workflow.category === WorkflowCategoryEnum.COMPLETED,
+      (workflow) =>
+        workflow.category === WorkflowCategoryEnum.COMPLETED ||
+        workflow.category === WorkflowCategoryEnum.CANCELED,
     );
 
     filters.push({

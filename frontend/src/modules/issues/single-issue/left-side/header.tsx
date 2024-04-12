@@ -22,6 +22,7 @@ import { useContextStore } from 'store/global-context-provider';
 import { IssueOptionsDropdown } from './issue-actions/issue-options-dropdown';
 import { TriageAcceptModal } from '../triage-view/triage-accept-modal';
 import { TriageDeclineModal } from '../triage-view/triage-decline-modal';
+import { TeamIcon } from 'components/ui/team-icon';
 
 interface HeaderProps {
   isTriageView?: boolean;
@@ -71,14 +72,7 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
               className="flex items-center gap-2 font-medium"
               href={`/${workspaceSlug}/team/${team.identifier}/all`}
             >
-              <div
-                className={`p-[2px] w-5 h-5 ${getTeamColor(team.name)} rounded-sm`}
-              >
-                <TeamLine
-                  size={14}
-                  className={`shrink-0 text-muted-foreground h-4 w-4 ${getTeamColor(team.name)}`}
-                />
-              </div>
+              <TeamIcon name={team.name} />
 
               <span className="inline-block">{team.name}</span>
             </BreadcrumbLink>

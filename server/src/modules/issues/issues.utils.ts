@@ -142,7 +142,7 @@ export async function handleTwoWaySync(
     where: {
       settings: {
         path: [IntegrationName.Github, 'repositoryMappings'],
-        array_contains: [{ teamId: issue.teamId, bidirectional: true }],
+        array_contains: [{ teamId: issue.teamId }],
       } as Prisma.JsonFilter,
       isActive: true,
       deleted: null,
