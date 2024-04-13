@@ -18,6 +18,10 @@ import {
   IssueWithRelations,
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
+import {
+  LinkedIssueSourceData,
+  LinkedIssueWithRelations,
+} from 'modules/linked-issue/linked-issue.interface';
 
 import {
   ModalType,
@@ -27,10 +31,6 @@ import {
 } from './slack.interface';
 import { EventBody } from '../integrations.interface';
 import { getRequest, getUserId, postRequest } from '../integrations.utils';
-import {
-  LinkedIssueSourceData,
-  LinkedIssueWithRelations,
-} from 'modules/linked-issue/linked-issue.interface';
 
 export function getSlackHeaders(
   integrationAccount: IntegrationAccountWithRelations,
@@ -44,6 +44,7 @@ export function getSlackHeaders(
     },
   };
 }
+
 export async function addBotToChannel(
   integrationAccount: IntegrationAccountWithRelations,
   channelId: string,
@@ -462,6 +463,29 @@ export async function sendSlackMessage(
   return response.data;
 }
 
+export async function sendEphemeralMessage(
+  integrationAccount: IntegrationAccountWithRelations,
+  channelId: string,
+  text: string,
+  threadTs: string,
+) {
+  const slackSettings = integrationAccount.settings as Settings;
+
+  const response = await postRequest(
+    'https://slack.com/api/chat.postEphemeral',
+    getSlackHeaders(integrationAccount),
+    {
+      channel: channelId,
+      text,
+      thread_ts: threadTs,
+      user: slackSettings.Slack.botUserId,
+      parse: 'full',
+    },
+  );
+
+  return response.data;
+}
+
 export async function sendSlackLinkedMessage(
   prisma: PrismaService,
   logger: Logger,
@@ -506,35 +530,21 @@ export async function sendSlackLinkedMessage(
       `Slack message sent successfully for linked issue: ${issueIdentifier}`,
     );
 
-    // TODO(Manoj): move this to function
-    const {
-      ts: messageTs,
-      thread_ts: parentTs,
-      channel_type,
-    } = messageData.message;
-    const commentBody = `${IntegrationName.Slack} thread in ${getChannelNameFromIntegrationAccount(integrationAccount, sourceData.channelId)}`;
-
-    const issueComment = await prisma.issueComment.create({
-      data: {
-        body: commentBody,
-        issueId: linkedIssue.issueId,
-        sourceMetadata: {
-          idTs: messageTs,
-          parentTs,
-          channelId: sourceData.channelId,
-          channelType: channel_type,
-          type: IntegrationName.Slack,
-        },
+    const linkedIssueData = await createIssueCommentAndLinkIssue(
+      prisma,
+      messageData,
+      {
+        channelId: sourceData.channelId,
+        slackTeamDomain: sourceData.slackTeamDomain,
       },
-    });
+      integrationAccount,
+      linkedIssue.issue,
+    );
 
     await prisma.linkedIssue.update({
       where: { id: linkedIssue.id },
       data: {
-        source: {
-          type: IntegrationName.Slack,
-          syncedCommentId: issueComment.id,
-        },
+        source: linkedIssueData.source,
       },
     });
   } catch (error) {
@@ -543,6 +553,49 @@ export async function sendSlackLinkedMessage(
     );
     throw error;
   }
+}
+
+export async function createIssueCommentAndLinkIssue(
+  prisma: PrismaService,
+  messageData: EventBody,
+  sessionData: SlashCommandSessionRecord,
+  integrationAccount: IntegrationAccountWithRelations,
+  createdIssue: IssueWithRelations,
+  userId?: string,
+) {
+  const { ts: messageTs, thread_ts: parentTs, channel_type } = messageData;
+  const commentBody = `${IntegrationName.Slack} thread in #${getChannelNameFromIntegrationAccount(integrationAccount, sessionData.channelId)}`;
+
+  const issueComment = await prisma.issueComment.create({
+    data: {
+      body: commentBody,
+      issueId: createdIssue.id,
+      sourceMetadata: {
+        idTs: messageTs,
+        parentTs,
+        channelId: sessionData.channelId,
+        channelType: channel_type,
+        type: IntegrationName.Slack,
+      },
+    },
+  });
+
+  const mainTs = parentTs || messageTs;
+  return {
+    url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${mainTs.replace('.', '')}`,
+    sourceId: `${sessionData.channelId}_${mainTs}`,
+    source: {
+      type: IntegrationName.Slack,
+      syncedCommentId: issueComment.id,
+    },
+    sourceData: {
+      channelId: sessionData.channelId,
+      messageTs,
+      parentTs,
+      slackTeamDomain: sessionData.slackTeamDomain,
+    },
+    createdById: userId,
+  };
 }
 
 export function getChannelNameFromIntegrationAccount(

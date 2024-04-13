@@ -16,7 +16,6 @@ import {
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
 import IssuesService from 'modules/issues/issues.service';
-import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { OAuthCallbackService } from 'modules/oauth-callback/oauth-callback.service';
 
@@ -27,7 +26,7 @@ import {
   slackIssueData,
 } from './slack.interface';
 import {
-  getChannelNameFromIntegrationAccount,
+  createIssueCommentAndLinkIssue,
   getExternalSlackUser,
   getIssueData,
   getIssueMessageModal,
@@ -37,6 +36,8 @@ import {
   getSlackMessage,
   getSlackUserIntegrationAccount,
   getState,
+  sendEphemeralMessage,
+  sendSlackMessage,
 } from './slack.utils';
 import { EventBody } from '../integrations.interface';
 import { getUserId, postRequest } from '../integrations.utils';
@@ -58,6 +59,7 @@ export default class SlackService {
 
   async handleEvents(eventBody: EventBody) {
     if (eventBody.type === 'url_verification') {
+      this.logger.log('Responding to Slack URL verification challenge');
       return { challenge: eventBody.challenge };
     }
 
@@ -68,6 +70,7 @@ export default class SlackService {
     );
 
     if (!integrationAccount) {
+      this.logger.debug('No integration account found for team:', team_id);
       return undefined;
     }
 
@@ -75,20 +78,22 @@ export default class SlackService {
     const isBotMessage = slackSettings.Slack.botUserId === event.user;
 
     if (isBotMessage) {
+      this.logger.debug('Ignoring bot message');
       return undefined;
     }
+
+    this.logger.log('Processing Slack event:', event.type);
 
     switch (event.type) {
       case 'message':
         return await this.handleThread(event, integrationAccount);
       case 'reaction_added':
         await this.handleMessageReaction(eventBody, integrationAccount);
-        break;
+        return undefined;
       default:
-        break;
+        this.logger.debug('Unhandled Slack event type:', event.type);
+        return undefined;
     }
-
-    return undefined;
   }
 
   async getChannelRedirectURL(
@@ -111,17 +116,25 @@ export default class SlackService {
   }
 
   async slashOpenModal(eventBody: EventBody) {
-    const { trigger_id: triggerId, token, message } = eventBody;
+    const { trigger_id: triggerId, token } = eventBody;
+    const channelId = eventBody?.channel_id || eventBody.channel?.id;
+    const slackTeamId = eventBody?.team_id || eventBody.team?.id;
+    const teamDomain = eventBody?.team_domain || eventBody.team?.domain;
+    const message = eventBody.message;
 
-    const channelId = eventBody?.channel_id || eventBody.channel.id;
-
-    const slackTeamId = eventBody?.team_id || eventBody.team.id;
-    const teamDomain = eventBody?.team_domain || eventBody.team.domain;
+    this.logger.debug(
+      `Received slash command event for team ${slackTeamId} in channel ${channelId}`,
+    );
 
     const integrationAccount = await this.prisma.integrationAccount.findFirst({
       where: { accountId: slackTeamId },
       include: { workspace: true, integrationDefinition: true },
     });
+
+    if (!integrationAccount) {
+      this.logger.log(`No integration account found for team ${slackTeamId}`);
+      return;
+    }
 
     const sessionData = {
       slackTeamId,
@@ -132,31 +145,62 @@ export default class SlackService {
       messageText: message?.text || null,
       messagedById: message?.user || null,
     };
+
+    this.logger.debug(
+      `Creating modal view for team ${slackTeamId} in channel ${channelId}`,
+    );
+
     const { view, sessionData: updatedSessionData } = getModalView(
       integrationAccount,
       channelId,
       ModelViewType.CREATE,
       sessionData,
     );
+
     this.session[token] = updatedSessionData as SlashCommandSessionRecord;
-    await postRequest(
-      'https://slack.com/api/views.open',
-      getSlackHeaders(integrationAccount),
-      {
-        trigger_id: triggerId,
-        view,
-      },
+
+    this.logger.debug(
+      `Opening modal view for team ${slackTeamId} in channel ${channelId}`,
+    );
+
+    try {
+      await postRequest(
+        'https://slack.com/api/views.open',
+        getSlackHeaders(integrationAccount),
+        {
+          trigger_id: triggerId,
+          view,
+        },
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error opening modal view for team ${slackTeamId} in channel ${channelId}:`,
+        error,
+      );
+      throw error;
+    }
+
+    this.logger.debug(
+      `Modal view opened successfully for team ${slackTeamId} in channel ${channelId}`,
     );
   }
 
   async handleViewSubmission(token: string, payload: EventBody) {
+    this.logger.debug(`Handling view submission for token: ${token}`);
+
     const { containsDescription, ...otherSessionData } = this.session[token];
     const integrationAccount = await this.prisma.integrationAccount.findUnique({
       where: { id: otherSessionData.IntegrationAccountId },
       include: { workspace: true, integrationDefinition: true },
     });
 
+    if (!integrationAccount) {
+      this.logger.log(`Integration account not found for token: ${token}`);
+      return { response_action: 'clear' };
+    }
+
     if (!containsDescription) {
+      this.logger.debug('Description not provided, updating modal view');
       const { view, sessionData } = getModalView(
         integrationAccount,
         otherSessionData.channelId,
@@ -165,22 +209,23 @@ export default class SlackService {
         payload,
       );
       this.session[token] = sessionData as SlashCommandSessionRecord;
-      return {
-        response_action: 'update',
-        view,
-      };
-    } else if (containsDescription) {
-      const issueData = await getIssueData(
-        this.prisma,
-        this.session[token],
-        payload,
-        integrationAccount,
-      );
-      this.createSlackIssue(integrationAccount, this.session[token], issueData);
+      return { response_action: 'update', view };
     }
-    return {
-      response_action: 'clear',
-    };
+
+    this.logger.debug('Description provided, creating Slack issue');
+    const issueData = await getIssueData(
+      this.prisma,
+      this.session[token],
+      payload,
+      integrationAccount,
+    );
+    await this.createSlackIssue(
+      integrationAccount,
+      this.session[token],
+      issueData,
+    );
+
+    return { response_action: 'clear' };
   }
 
   async createSlackIssue(
@@ -197,87 +242,41 @@ export default class SlackService {
       sourceMetadata,
     );
 
-    const messageResponse = await this.sendIssueMessage(
-      integrationAccount,
-      sessionData.channelId,
-      createdIssue,
-      sessionData.threadTs,
+    const slackIntegrationAccount = await getSlackUserIntegrationAccount(
+      this.prisma,
+      createdIssue.createdById,
+      createdIssue.team.workspaceId,
     );
 
+    const payload = {
+      channel: sessionData.channelId,
+      text: `<@${slackIntegrationAccount.accountId}> created a Issue`,
+      attachments: await getIssueMessageModal(this.prisma, createdIssue),
+      ...(sessionData.threadTs ? { thread_ts: sessionData.threadTs } : {}),
+    };
+
+    const messageResponse = await sendSlackMessage(integrationAccount, payload);
     if (messageResponse.ok) {
-      const {
-        ts: messageTs,
-        thread_ts: parentTs,
-        channel_type,
-      } = messageResponse.message;
-      const commentBody = `${IntegrationName.Slack} thread in #${getChannelNameFromIntegrationAccount(integrationAccount, sessionData.channelId)}`;
-
-      const issueComment = await this.prisma.issueComment.create({
-        data: {
-          body: commentBody,
-          issueId: createdIssue.id,
-          sourceMetadata: {
-            idTs: messageTs,
-            parentTs,
-            channelId: sessionData.channelId,
-            channelType: channel_type,
-            type: IntegrationName.Slack,
-          },
-        },
-      });
-
-      const mainTs = parentTs || messageTs;
-      const linkIssueData: LinkIssueData = {
-        url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${mainTs.replace('.', '')}`,
-        sourceId: `${sessionData.channelId}_${mainTs}`,
-        source: {
-          type: IntegrationName.Slack,
-          syncedCommentId: issueComment.id,
-        },
-        sourceData: {
-          channelId: sessionData.channelId,
-          messageTs,
-          parentTs,
-          slackTeamDomain: sessionData.slackTeamDomain,
-        },
-        createdById: userId,
-      };
+      const linkedIssueData = await createIssueCommentAndLinkIssue(
+        this.prisma,
+        messageResponse.message,
+        sessionData,
+        integrationAccount,
+        createdIssue,
+        userId,
+      );
 
       await this.issuesService.updateIssueApi(
         { teamId: sessionData.teamId } as TeamRequestParams,
         {} as UpdateIssueInput,
         { issueId: createdIssue.id } as IssueRequestParams,
         userId,
-        linkIssueData,
+        linkedIssueData,
         sourceMetadata,
       );
     }
+
     return createdIssue;
-  }
-
-  async sendIssueMessage(
-    integrationAccount: IntegrationAccountWithRelations,
-    channelId: string,
-    issue: IssueWithRelations,
-    threadTs?: string,
-  ) {
-    const slackIntegrationAccount = await getSlackUserIntegrationAccount(
-      this.prisma,
-      issue.createdById,
-      issue.team.workspaceId,
-    );
-    const response = await postRequest(
-      'https://slack.com/api/chat.postMessage',
-      getSlackHeaders(integrationAccount),
-      {
-        channel: channelId,
-        text: `<@${slackIntegrationAccount.accountId}> created a Issue`,
-        attachments: await getIssueMessageModal(this.prisma, issue),
-        ...(threadTs ? { thread_ts: threadTs } : {}),
-      },
-    );
-
-    return response.data;
   }
 
   async handleThread(
@@ -289,6 +288,8 @@ export default class SlackService {
 
     const threadId = `${eventBody.channel}_${message.ts}`;
     const parentThreadId = `${eventBody.channel}_${message.thread_ts}`;
+
+    this.logger.debug(`Handling Slack thread with ID: ${threadId}`);
 
     const linkedIssue =
       await this.linkedIssueService.getLinkedIssueBySourceId(parentThreadId);
@@ -330,11 +331,14 @@ export default class SlackService {
     });
 
     if (linkedComment) {
+      this.logger.debug(`Updating existing comment for thread ID: ${threadId}`);
       return this.prisma.issueComment.update({
         where: { id: linkedComment.commentId },
         data: { body: message.text },
       });
     }
+
+    this.logger.debug(`Creating new comment for thread ID: ${threadId}`);
     return this.prisma.issueComment.create({
       data: {
         body: message.text,
@@ -357,18 +361,20 @@ export default class SlackService {
   async handleMessageReaction(
     eventBody: EventBody,
     integrationAccount: IntegrationAccountWithRelations,
-  ): Promise<IssueWithRelations> {
-    if (eventBody.event.reaction !== 'eyes') {
+  ): Promise<IssueWithRelations | undefined> {
+    const { event, team_id: slackTeamId } = eventBody;
+    const { reaction } = event;
+
+    if (reaction !== 'eyes') {
+      this.logger.debug(`Ignoring reaction event with reaction: ${reaction}`);
       return undefined;
     }
 
-    const slackSettings = integrationAccount.settings as Settings;
-
-    const { event, team_id: slackTeamId } = eventBody;
     const {
       item: { channel: channelId, ts: threadTs },
       user: slackUserId,
     } = event;
+    const slackSettings = integrationAccount.settings as Settings;
     const {
       Slack: { teamDomain: slackTeamDomain, channelMappings },
     } = slackSettings;
@@ -385,30 +391,38 @@ export default class SlackService {
       teamId,
     };
 
+    this.logger.debug(`Session data: ${JSON.stringify(sessionData)}`);
+
     const slackMessageResponse = await getSlackMessage(
       integrationAccount,
       sessionData,
     );
 
-    const parentTs = slackMessageResponse.messages[0].thread_ts || threadTs;
-    const linkedIssue = await this.prisma.linkedIssue.findFirst({
-      where: { sourceId: `${channelId}_${parentTs}` },
-    });
+    const [linkedIssue, [stateId, userId]] = await Promise.all([
+      this.prisma.linkedIssue.findFirst({
+        where: {
+          sourceId: `${channelId}_${slackMessageResponse.messages[0].thread_ts || threadTs}`,
+        },
+      }),
+      Promise.all([
+        getState(this.prisma, 'opened', sessionData.teamId),
+        getUserId(this.prisma, { id: slackUserId }),
+      ]),
+    ]);
+
     if (linkedIssue) {
-      await this.sendEphemeralMessage(
+      await sendEphemeralMessage(
         integrationAccount,
         channelId,
         `This thread is already linked with an existing Issue. so we can't create a new Issue`,
-        parentTs,
+        slackMessageResponse.messages[0].thread_ts || threadTs,
       );
 
+      this.logger.debug(
+        `Thread already linked to an existing issue. Skipping issue creation.`,
+      );
       return undefined;
     }
-
-    const [stateId, userId] = await Promise.all([
-      getState(this.prisma, 'opened', sessionData.teamId),
-      getUserId(this.prisma, { id: slackUserId }),
-    ]);
 
     const issueInput: UpdateIssueInput = {
       description: slackMessageResponse.messages[0].text,
@@ -424,33 +438,15 @@ export default class SlackService {
     };
 
     const issueData: slackIssueData = { issueInput, sourceMetadata, userId };
+
+    this.logger.debug(
+      `Creating Slack issue with data: ${JSON.stringify(issueData)}`,
+    );
+
     return await this.createSlackIssue(
       integrationAccount,
       sessionData,
       issueData,
     );
-  }
-
-  async sendEphemeralMessage(
-    integrationAccount: IntegrationAccountWithRelations,
-    channelId: string,
-    text: string,
-    threadTs: string,
-  ) {
-    const slackSettings = integrationAccount.settings as Settings;
-
-    const response = await postRequest(
-      'https://slack.com/api/chat.postEphemeral',
-      getSlackHeaders(integrationAccount),
-      {
-        channel: channelId,
-        text,
-        thread_ts: threadTs,
-        user: slackSettings.Slack.botUserId,
-        parse: 'full',
-      },
-    );
-
-    return response;
   }
 }
