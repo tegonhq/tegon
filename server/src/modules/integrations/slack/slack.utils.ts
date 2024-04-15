@@ -672,6 +672,7 @@ export async function createIssueCommentAndLinkIssue(
     sourceId: `${sessionData.channelId}_${mainTs}`,
     source: {
       type: IntegrationName.Slack,
+      subType: LinkedSlackMessageType.Thread,
       syncedCommentId: issueComment.id,
     },
     sourceData: {

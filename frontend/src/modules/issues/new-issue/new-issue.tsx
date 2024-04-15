@@ -86,7 +86,6 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
 
   React.useEffect(() => {
     return () => {
-      console.log(form.formState);
       if (
         !form.formState.isSubmitted &&
         Object.keys(form.formState.dirtyFields).length > 0

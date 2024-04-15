@@ -132,20 +132,14 @@ export const IssueActivity = observer(() => {
                 !activity.parentId
               ) {
                 return (
-                  <TimelineItem
-                    className="w-full"
-                    key={`${activity.id}-comment`}
-                    hasMore
-                  >
-                    <CommentActivity
-                      comment={activity}
-                      key={activity.id}
-                      user={getUserData(activity.userId)}
-                      childComments={getChildComments(activity.id)}
-                      allowReply
-                      getUserData={getUserData}
-                    />
-                  </TimelineItem>
+                  <CommentActivity
+                    comment={activity}
+                    key={activity.id}
+                    user={getUserData(activity.userId)}
+                    childComments={getChildComments(activity.id)}
+                    allowReply
+                    getUserData={getUserData}
+                  />
                 );
               }
 

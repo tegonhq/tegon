@@ -5,7 +5,11 @@ import ReactTimeAgo from 'react-time-ago';
 
 import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
-import { Integration, type LinkedIssueType } from 'common/types/linked-issue';
+import {
+  Integration,
+  LinkedSlackMessageType,
+  type LinkedIssueType,
+} from 'common/types/linked-issue';
 
 import {
   Avatar,
@@ -49,7 +53,17 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
 
   function getTitle() {
     if (sourceMetaData.type === Integration.Slack) {
-      return <>{getIcon()} Thread from slack</>;
+      return (
+        <>
+          {getIcon()}
+          <span className="mx-[2px]">
+            {sourceMetaData.subType === LinkedSlackMessageType.Thread
+              ? 'Thread'
+              : 'Message'}
+          </span>
+          from slack
+        </>
+      );
     }
 
     if (sourceMetaData.type === Integration.Github) {

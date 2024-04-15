@@ -4,6 +4,8 @@ import * as React from 'react';
 
 import { Integration } from 'common/types/linked-issue';
 
+import { TimelineItem } from 'components/ui/timeline';
+
 import {
   GenericCommentActivity,
   type GenericCommentActivityProps,
@@ -25,5 +27,9 @@ export function CommentActivity(props: GenericCommentActivityProps) {
     return <SlackCommentActivity {...props} />;
   }
 
-  return <GenericCommentActivity {...props} />;
+  return (
+    <TimelineItem className="w-full" key={`${comment.id}-comment`} hasMore>
+      <GenericCommentActivity {...props} />
+    </TimelineItem>
+  );
 }

@@ -7,6 +7,11 @@ export enum LinkedIssueSubType {
   Slack = 'Slack',
 }
 
+export enum LinkedSlackMessageType {
+  Message = 'Message',
+  Thread = 'Thread',
+}
+
 export enum Integration {
   Slack = 'Slack',
   Github = 'Github',

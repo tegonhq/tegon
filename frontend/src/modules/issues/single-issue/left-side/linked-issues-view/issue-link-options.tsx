@@ -65,7 +65,7 @@ export function IssueLinkOptions({ setDialogOpen }: IssueLinkOptionsProps) {
         onClick={() => onSelect(LinkedIssueSubType.Slack, 'slack')}
       >
         <div className="flex items-center gap-2">
-          <RiSlackFill size={16} /> Link Slack thread
+          <RiSlackFill size={16} /> Link Slack message
         </div>
       </DropdownMenuItem>
       <DropdownMenuItem

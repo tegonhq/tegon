@@ -10,7 +10,11 @@ import {
 } from '@remixicon/react';
 import React from 'react';
 
-import { Integration, type LinkedIssueType } from 'common/types/linked-issue';
+import {
+  Integration,
+  LinkedSlackMessageType,
+  type LinkedIssueType,
+} from 'common/types/linked-issue';
 
 import {
   AlertDialog,
@@ -63,7 +67,19 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
 
   function getTitle() {
     if (sourceMetaData.type === Integration.Slack) {
-      return `Thread from slack`;
+      return (
+        <div className="flex">
+          <div className="mr-1">
+            {sourceMetaData.subType === LinkedSlackMessageType.Thread
+              ? 'Thread'
+              : 'Message'}
+          </div>
+          from slack
+          <div className="mx-1 text-muted-foreground max-w-[200px]">
+            <div className="truncate">{sourceData.message}</div>
+          </div>
+        </div>
+      );
     }
 
     if (sourceMetaData.type === Integration.Github) {
