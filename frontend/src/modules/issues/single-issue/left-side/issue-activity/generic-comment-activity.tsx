@@ -1,12 +1,19 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiGithubFill, RiMoreFill, RiPencilFill } from '@remixicon/react';
+import {
+  RiAccountBoxFill,
+  RiGithubFill,
+  RiMoreFill,
+  RiPencilFill,
+  RiSlackFill,
+} from '@remixicon/react';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
 import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 import { type IssueCommentType } from 'common/types/issue';
+import { Integration } from 'common/types/linked-issue';
 
 import {
   Avatar,
@@ -37,6 +44,21 @@ export interface GenericCommentActivityProps {
   getUserData: (userId: string) => User;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getIcon(sourceMetadata: any) {
+  if (sourceMetadata) {
+    if (sourceMetadata.type === Integration.Github) {
+      return <RiGithubFill size={18} className="text-foreground" />;
+    }
+
+    if (sourceMetadata.type === Integration.Slack) {
+      return <RiSlackFill size={18} className="text-foreground" />;
+    }
+  }
+
+  return <RiAccountBoxFill size={18} className="text-foreground" />;
+}
+
 export function GenericCommentActivity(props: GenericCommentActivityProps) {
   const {
     user,
@@ -49,6 +71,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
   const sourceMetadata = comment.sourceMetadata
     ? JSON.parse(comment.sourceMetadata)
     : undefined;
+
   const [edit, setEdit] = React.useState(false);
 
   return (
@@ -67,7 +90,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         </Avatar>
       ) : (
         <div className="h-[20px] w-[25px] flex items-center justify-center mr-4 border rounded-sm">
-          <RiGithubFill size={18} className="text-foreground" />
+          {getIcon(sourceMetadata)}
         </div>
       )}
       <div

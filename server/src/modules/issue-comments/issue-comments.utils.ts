@@ -20,14 +20,14 @@ export async function handleTwoWaySync(
   action: IssueCommentAction,
   userId: string,
 ) {
-  const issueSourceMetadata = issueComment.issue.sourceMetadata as Record<
+  const parentSourceMetadata = issueComment.parent.sourceMetadata as Record<
     string,
     string
   >;
-  if (issueSourceMetadata) {
+  if (parentSourceMetadata) {
     const integrationAccount = await prisma.integrationAccount.findUnique({
       where: {
-        id: issueSourceMetadata.id,
+        id: parentSourceMetadata.id,
         deleted: null,
       },
       include: {
@@ -43,7 +43,6 @@ export async function handleTwoWaySync(
 
     if (githubSettings) {
       // Two-way sync is enabled for this team
-
       await upsertGithubIssueComment(
         prisma,
         logger,

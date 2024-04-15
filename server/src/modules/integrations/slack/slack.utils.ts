@@ -436,7 +436,7 @@ export async function upsertSlackMessage(
   // Send a POST request to the Slack API to post the message
   const response = await postRequest(
     'https://slack.com/api/chat.postMessage',
-    await getSlackHeaders(integrationAccount),
+    getSlackHeaders(integrationAccount),
     {
       channel: parentSourceData.channelId,
       thread_ts: parentSourceData.parentTs || parentSourceData.idTs,
@@ -654,6 +654,7 @@ export async function createIssueCommentAndLinkIssue(
       body: commentBody,
       issueId: createdIssue.id,
       sourceMetadata: {
+        id: integrationAccount.id,
         idTs: messageTs,
         parentTs,
         channelId: sessionData.channelId,
