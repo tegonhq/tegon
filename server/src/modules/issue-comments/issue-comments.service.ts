@@ -42,6 +42,7 @@ export default class IssueCommentsService {
       },
       include: {
         issue: { include: { team: true } },
+        parent: true,
       },
     });
 
@@ -83,6 +84,7 @@ export default class IssueCommentsService {
       data: commentData,
       include: {
         issue: { include: { team: true } },
+        parent: true,
       },
     });
 
@@ -107,6 +109,7 @@ export default class IssueCommentsService {
       },
       include: {
         issue: { include: { team: true } },
+        parent: true,
       },
     });
 

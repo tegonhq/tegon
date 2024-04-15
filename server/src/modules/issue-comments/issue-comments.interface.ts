@@ -56,6 +56,7 @@ export enum IssueCommentAction {
 
 export interface IssueCommentWithRelations extends IssueComment {
   issue: IssueWithRelations;
+  parent: IssueComment;
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type LinkedCommentSource = Record<string, any>;

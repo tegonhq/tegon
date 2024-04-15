@@ -147,7 +147,7 @@ export async function sendGithubFirstComment(
   issueSourceId: string,
 ) {
   const { workspace } = integrationAccount;
-  const { id: issueId, teamId, number, title, sourceMetadata } = issue;
+  const { id: issueId, teamId, number, title } = issue;
 
   logger.log(`Sending first comment for issue ${issueId} to GitHub`);
 
@@ -162,6 +162,9 @@ export async function sendGithubFirstComment(
   );
 
   const commentBody = `${IntegrationName.Github} thread in ${title}`;
+  const sourceMetadata = issue.sourceMetadata
+    ? issue.sourceMetadata
+    : { id: integrationAccount.id, type: IntegrationName.Github };
   const issueComment = await prisma.issueComment.create({
     data: {
       body: commentBody,
