@@ -67,7 +67,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
   return (
     <a
       className={cn(
-        'pl-3 pr-6 p-2.5 flex justify-between group cursor-default text-sm hover:bg-active/50 border-b-[0.5px]',
+        'p-2.5 pl-3 pr-6 flex justify-between group cursor-default text-sm hover:bg-active/50 border-b-[0.5px]',
         issueSelected && 'bg-primary/10',
       )}
       onClick={() => {

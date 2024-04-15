@@ -1,11 +1,15 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiGithubFill } from '@remixicon/react';
+import { RiGithubFill, RiLink, RiSlackFill } from '@remixicon/react';
 import ReactTimeAgo from 'react-time-ago';
 
 import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
-import type { LinkedIssueType } from 'common/types/linked-issue';
+import {
+  Integration,
+  LinkedSlackMessageType,
+  type LinkedIssueType,
+} from 'common/types/linked-issue';
 
 import {
   Avatar,
@@ -33,6 +37,45 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
   }
 
   const sourceData = JSON.parse(linkedIssue.sourceData);
+  const sourceMetaData = JSON.parse(linkedIssue.source);
+
+  function getIcon() {
+    if (sourceMetaData.type === Integration.Slack) {
+      return <RiSlackFill size={18} className="text-foreground" />;
+    }
+
+    if (sourceMetaData.type === Integration.Github) {
+      return <RiGithubFill size={18} className="text-foreground" />;
+    }
+
+    return <RiLink size={18} className="text-foreground" />;
+  }
+
+  function getTitle() {
+    if (sourceMetaData.type === Integration.Slack) {
+      return (
+        <>
+          {getIcon()}
+          <span className="mx-[2px]">
+            {sourceMetaData.subType === LinkedSlackMessageType.Thread
+              ? 'Thread'
+              : 'Message'}
+          </span>
+          from slack
+        </>
+      );
+    }
+
+    if (sourceMetaData.type === Integration.Github) {
+      return (
+        <>
+          {getIcon()} {sourceData.title}
+        </>
+      );
+    }
+
+    return <RiLink size={18} className="text-foreground" />;
+  }
 
   return (
     <div className="flex items-center text-xs text-muted-foreground">
@@ -50,7 +93,7 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
         </Avatar>
       ) : (
         <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
-          <RiGithubFill size={18} className="text-foreground" />
+          {getIcon()}
         </div>
       )}
 
@@ -66,7 +109,7 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
           target="_blank"
           className="flex items-center gap-1 ml-2 mr-1 text-foreground"
         >
-          <RiGithubFill size={16} /> {sourceData.title}
+          {getTitle()}
         </a>
       </div>
       <div className="mx-1">-</div>

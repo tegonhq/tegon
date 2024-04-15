@@ -2,11 +2,16 @@
 
 import * as React from 'react';
 
+import { Integration } from 'common/types/linked-issue';
+
+import { TimelineItem } from 'components/ui/timeline';
+
 import {
   GenericCommentActivity,
   type GenericCommentActivityProps,
 } from './generic-comment-activity';
 import { GithubCommentActivity } from './github-comment-activity';
+import { SlackCommentActivity } from './slack-comment-activity';
 
 export function CommentActivity(props: GenericCommentActivityProps) {
   const { comment } = props;
@@ -14,9 +19,17 @@ export function CommentActivity(props: GenericCommentActivityProps) {
     ? JSON.parse(comment.sourceMetadata)
     : undefined;
 
-  if (sourceMetadata) {
+  if (sourceMetadata && sourceMetadata.type === Integration.Github) {
     return <GithubCommentActivity {...props} />;
   }
 
-  return <GenericCommentActivity {...props} />;
+  if (sourceMetadata && sourceMetadata.type === Integration.Slack) {
+    return <SlackCommentActivity {...props} />;
+  }
+
+  return (
+    <TimelineItem className="w-full" key={`${comment.id}-comment`} hasMore>
+      <GenericCommentActivity {...props} />
+    </TimelineItem>
+  );
 }

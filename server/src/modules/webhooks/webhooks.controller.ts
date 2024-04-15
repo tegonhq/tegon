@@ -24,11 +24,10 @@ export class WebhookController {
     @Headers() eventHeaders: WebhookEventHeaders,
     @Body() eventBody: WebhookEventBody,
   ) {
-    this.webhookService.handleEvents(
+    return await this.webhookService.handleEvents(
       webhookEventParams,
       eventHeaders,
       eventBody,
     );
-    return { status: 200 };
   }
 }

@@ -4,7 +4,6 @@ import {
   RiAddLine,
   RiArrowDownSFill,
   RiArrowRightSFill,
-  RiGithubFill,
 } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -23,14 +22,13 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { AddLinkedIssueDialog } from './add-linked-issue-dialog';
+import { IssueLinkOptions } from './issue-link-options';
 import { LinkedIssueItem } from './linked-issue-item';
 
 interface LinkedIssuesView {
@@ -58,24 +56,7 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-              <DropdownMenuGroup>
-                <DropdownMenuItem
-                  onClick={() => setDialogOpen(LinkedIssueSubType.GithubIssue)}
-                >
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <RiGithubFill size={16} /> Link Github issue
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() =>
-                    setDialogOpen(LinkedIssueSubType.GithubPullRequest)
-                  }
-                >
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <RiGithubFill size={16} /> Link Github pull request
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
+              <IssueLinkOptions setDialogOpen={setDialogOpen} />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -124,26 +105,7 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          setDialogOpen(LinkedIssueSubType.GithubIssue)
-                        }
-                      >
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <RiGithubFill size={16} /> Link Github issue
-                        </div>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          setDialogOpen(LinkedIssueSubType.GithubPullRequest)
-                        }
-                      >
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <RiGithubFill size={16} /> Link Github pull request
-                        </div>
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
+                    <IssueLinkOptions setDialogOpen={setDialogOpen} />
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>

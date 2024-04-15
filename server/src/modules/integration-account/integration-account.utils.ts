@@ -11,10 +11,16 @@ import {
   getGithubUser,
 } from 'modules/integrations/github/github.utils';
 import { deleteRequest } from 'modules/integrations/integrations.utils';
+import {
+  addBotToChannel,
+  getSlackTeamInfo,
+} from 'modules/integrations/slack/slack.utils';
 
 import {
+  ChannelMapping,
   Config,
   IntegrationAccountWithRelations,
+  Settings,
 } from './integration-account.interface';
 
 export async function storeIntegrationRelatedData(
@@ -23,6 +29,8 @@ export async function storeIntegrationRelatedData(
   integrationName: IntegrationName,
   userId: string,
   workspaceId: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  settingsData?: Record<string, any>,
 ): Promise<undefined> {
   const integrationConfig =
     integrationAccount.integrationConfiguration as Config;
@@ -74,6 +82,80 @@ export async function storeIntegrationRelatedData(
             [IntegrationName.GithubPersonal]: { login: userData.login },
           },
         },
+      });
+
+      break;
+
+    case IntegrationName.Slack:
+      const integrationSettings = integrationAccount.settings as Settings;
+      const channelMappings =
+        integrationSettings?.Slack.channelMappings || ([] as ChannelMapping[]);
+
+      if (settingsData.incoming_webhook) {
+        const newChannelMapping: ChannelMapping = {
+          channelName: settingsData.incoming_webhook.channel.replace(/^#/, ''),
+          channelId: settingsData.incoming_webhook.channel_id,
+          webhookUrl: settingsData.incoming_webhook.url,
+          botJoined: false,
+        };
+
+        if (
+          !channelMappings.some(
+            (mapping: ChannelMapping) =>
+              mapping.channelId === newChannelMapping.channelId,
+          )
+        ) {
+          const botJoined = await addBotToChannel(
+            integrationAccount,
+            newChannelMapping.channelId,
+          );
+          newChannelMapping.botJoined = botJoined;
+          channelMappings.push(newChannelMapping);
+        }
+      }
+
+      const slackTeamInfo = await getSlackTeamInfo(
+        integrationAccount,
+        integrationAccount.accountId,
+      );
+
+      await prisma.integrationAccount.update({
+        where: { id: integrationAccount.id },
+        data: {
+          settings: {
+            [IntegrationName.Slack]: {
+              teamId: settingsData.team.id as string,
+              teamName: settingsData.team.name as string,
+              teamDomain: slackTeamInfo.team.domain,
+              teamUrl: slackTeamInfo.team.url,
+              botUserId: settingsData.bot_user_id,
+              channelMappings: channelMappings as ChannelMapping[],
+            },
+          } as unknown as Prisma.JsonValue,
+        },
+      });
+      break;
+
+    case IntegrationName.SlackPersonal:
+      const slackUsersOnWorkspace = await prisma.usersOnWorkspaces.findUnique({
+        where: {
+          userId_workspaceId: { userId, workspaceId },
+        },
+      });
+
+      const externalAccountMappings =
+        (slackUsersOnWorkspace.externalAccountMappings as Record<
+          string,
+          string
+        >) || {};
+      externalAccountMappings[IntegrationName.Slack] =
+        integrationAccount.accountId;
+
+      await prisma.usersOnWorkspaces.update({
+        where: {
+          userId_workspaceId: { userId, workspaceId },
+        },
+        data: { externalAccountMappings },
       });
 
       break;

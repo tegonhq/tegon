@@ -123,7 +123,6 @@ export const IssuesStore: IAnyStateTreeNode = types
       };
     },
     getIssuesFromArray(issueIds: string[]): IssueType[] {
-      console.log(issueIds);
       return issueIds
         .map((issueId: string) =>
           (self as IssuesStoreType).getIssueById(issueId),

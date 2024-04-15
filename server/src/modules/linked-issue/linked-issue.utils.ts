@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Logger } from '@nestjs/common';
-import { IntegrationName, Issue, Prisma } from '@prisma/client';
+import { IntegrationName, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
@@ -11,13 +11,21 @@ import {
   sendGithubFirstComment,
 } from 'modules/integrations/github/github.utils';
 import { getRequest } from 'modules/integrations/integrations.utils';
+import {
+  getSlackMessage,
+  sendSlackLinkedMessage,
+} from 'modules/integrations/slack/slack.utils';
 
 import {
   CreateLinkIssueInput,
   LinkIssueInput,
+  LinkedIssueSource,
   LinkedIssueSubType,
+  LinkedIssueWithRelations,
+  LinkedSlackMessageType,
   githubIssueRegex,
   githubPRRegex,
+  slackRegex,
 } from './linked-issue.interface';
 import LinkedIssueService from './linked-issue.service';
 
@@ -27,6 +35,8 @@ export function isValidLinkUrl(linkData: LinkIssueInput): boolean {
     return githubIssueRegex.test(url);
   } else if (type === LinkedIssueSubType.GithubPullRequest) {
     return githubPRRegex.test(url);
+  } else if (type === LinkedIssueSubType.Slack) {
+    return slackRegex.test(url);
   } else if (type === LinkedIssueSubType.ExternalLink) {
     return true;
   }
@@ -34,11 +44,13 @@ export function isValidLinkUrl(linkData: LinkIssueInput): boolean {
   return false;
 }
 
-export function getLinkType(url: string): LinkedIssueSubType | null {
+export function getLinkType(url: string): LinkedIssueSubType {
   if (githubIssueRegex.test(url)) {
     return LinkedIssueSubType.GithubIssue;
   } else if (githubPRRegex.test(url)) {
     return LinkedIssueSubType.GithubPullRequest;
+  } else if (slackRegex.test(url)) {
+    return LinkedIssueSubType.Slack;
   }
   return LinkedIssueSubType.ExternalLink;
 }
@@ -73,88 +85,168 @@ export async function getLinkedIssueDataWithUrl(
   integrationAccount: IntegrationAccountWithRelations | null;
   linkInput: CreateLinkIssueInput;
 }> {
-  const integrationAccount = await prisma.integrationAccount.findFirst({
-    where: {
-      settings: {
-        path: [IntegrationName.Github, 'repositoryMappings'],
-        array_contains: [{ teamId, bidirectional: true }],
-      } as Prisma.JsonFilter,
-    },
-    include: {
-      integrationDefinition: true,
-      workspace: true,
-    },
-  });
+  let integrationAccount: IntegrationAccountWithRelations;
+  switch (linkData.type) {
+    case LinkedIssueSubType.GithubIssue:
+    case LinkedIssueSubType.GithubPullRequest:
+      integrationAccount = await prisma.integrationAccount.findFirst({
+        where: {
+          settings: {
+            path: [IntegrationName.Github, 'repositoryMappings'],
+            array_contains: [{ teamId, bidirectional: true }],
+          } as Prisma.JsonFilter,
+        },
+        include: {
+          integrationDefinition: true,
+          workspace: true,
+        },
+      });
 
-  if (
-    !integrationAccount ||
-    linkData.type === LinkedIssueSubType.ExternalLink
-  ) {
-    return {
-      integrationAccount,
-      linkInput: { url: linkData.url, issueId, createdById: userId },
-    };
-  }
-
-  const accessToken = await getBotAccessToken(prisma, integrationAccount);
-  const response =
-    (await getRequest(convertToAPIUrl(linkData), getGithubHeaders(accessToken)))
-      .data ?? {};
-
-  if (!response) {
-    return {
-      integrationAccount,
-      linkInput: {
-        url: linkData.url,
-        issueId,
-        createdById: userId,
-        sourceData: linkData,
-      },
-    };
-  }
-  const isGithubPR = linkData.type === LinkedIssueSubType.GithubPullRequest;
-
-  const sourceData = isGithubPR
-    ? {
-        branch: response.head.ref,
-        id: response.id.toString(),
-        closedAt: response.closed_at,
-        createdAt: response.created_at,
-        updatedAt: response.updated_at,
-        number: response.number,
-        state: response.state,
-        title: response.title,
-        apiUrl: response.url,
-        mergedAt: response.merged_at,
+      if (!integrationAccount) {
+        return {
+          integrationAccount,
+          linkInput: { url: linkData.url, issueId, createdById: userId },
+        };
       }
-    : {
-        id: response.id.toString(),
-        title: response.title,
-        apiUrl: response.url,
+
+      const accessToken = await getBotAccessToken(prisma, integrationAccount);
+      const response =
+        (
+          await getRequest(
+            convertToAPIUrl(linkData),
+            getGithubHeaders(accessToken),
+          )
+        ).data ?? {};
+
+      if (!response) {
+        return {
+          integrationAccount,
+          linkInput: {
+            url: linkData.url,
+            issueId,
+            createdById: userId,
+            sourceData: linkData,
+          },
+        };
+      }
+      const isGithubPR = linkData.type === LinkedIssueSubType.GithubPullRequest;
+
+      const sourceData = isGithubPR
+        ? {
+            branch: response.head.ref,
+            id: response.id.toString(),
+            closedAt: response.closed_at,
+            createdAt: response.created_at,
+            updatedAt: response.updated_at,
+            number: response.number,
+            state: response.state,
+            title: response.title,
+            apiUrl: response.url,
+            mergedAt: response.merged_at,
+          }
+        : {
+            id: response.id.toString(),
+            title: response.title,
+            apiUrl: response.url,
+          };
+
+      const source = isGithubPR
+        ? {
+            type: IntegrationName.Github,
+            subType: LinkedIssueSubType.GithubPullRequest,
+            pullRequestId: response.id,
+          }
+        : {
+            type: IntegrationName.Github,
+            subType: LinkedIssueSubType.GithubIssue,
+          };
+
+      return {
+        integrationAccount,
+        linkInput: {
+          url: response.html_url,
+          issueId,
+          sourceId: response.id.toString(),
+          source,
+          sourceData,
+          createdById: userId,
+        } as CreateLinkIssueInput,
       };
 
-  const source = isGithubPR
-    ? {
-        type: IntegrationName.Github,
-        subType: LinkedIssueSubType.GithubPullRequest,
-        pullRequestId: response.id,
+    case LinkedIssueSubType.Slack:
+      const match = linkData.url.match(slackRegex);
+
+      if (match) {
+        const [
+          ,
+          slackTeamDomain,
+          channelId,
+          messageTimestamp,
+          messageTimestampMicro,
+          threadTs,
+        ] = match;
+        const parentTs = `${messageTimestamp}.${messageTimestampMicro}`;
+        const messageTs = threadTs ? threadTs.replace('p', '') : parentTs;
+
+        integrationAccount = await prisma.integrationAccount.findFirst({
+          where: {
+            settings: {
+              path: [IntegrationName.Slack, 'channelMappings'],
+              array_contains: [{ channelId }],
+            } as Prisma.JsonFilter,
+          },
+          include: {
+            integrationDefinition: true,
+            workspace: true,
+          },
+        });
+
+        const subType = integrationAccount
+          ? LinkedSlackMessageType.Thread
+          : LinkedSlackMessageType.Message;
+
+        let message: string;
+        if (integrationAccount) {
+          const slackMessageResponse = await getSlackMessage(
+            integrationAccount,
+            { channelId, threadTs },
+          );
+          message = slackMessageResponse.messages[0].text;
+        }
+
+        return {
+          integrationAccount,
+          linkInput: {
+            url: linkData.url,
+            sourceId: `${channelId}_${parentTs || messageTs}`,
+            source: {
+              type: IntegrationName.Slack,
+              subType,
+              syncedCommentId: null,
+            },
+            sourceData: {
+              channelId,
+              messageTs,
+              parentTs,
+              slackTeamDomain,
+              message,
+            },
+            createdById: userId,
+            issueId,
+          },
+        };
       }
-    : {
-        type: IntegrationName.Github,
-        subType: LinkedIssueSubType.GithubIssue,
+      return {
+        integrationAccount,
+        linkInput: { url: linkData.url, issueId, createdById: userId },
       };
 
-  return {
-    integrationAccount,
-    linkInput: {
-      url: response.html_url,
-      issueId,
-      sourceId: response.id.toString(),
-      source,
-      sourceData,
-      createdById: userId,
-    } as CreateLinkIssueInput,
-  };
+    default:
+      return {
+        integrationAccount,
+        linkInput: { url: linkData.url, issueId, createdById: userId },
+      };
+  }
 }
 
 export async function sendFirstComment(
@@ -162,18 +254,28 @@ export async function sendFirstComment(
   logger: Logger,
   linkedIssueService: LinkedIssueService,
   integrationAccount: IntegrationAccountWithRelations,
-  issue: Issue,
-  sourceId: string,
+  linkedIssue: LinkedIssueWithRelations,
   type: LinkedIssueSubType,
 ) {
+  const subType = (linkedIssue.source as LinkedIssueSource).subType || null;
   if (type === LinkedIssueSubType.GithubIssue) {
     await sendGithubFirstComment(
       prisma,
       logger,
       linkedIssueService,
       integrationAccount,
-      issue,
-      sourceId,
+      linkedIssue.issue,
+      linkedIssue.sourceId,
+    );
+  } else if (
+    type === LinkedIssueSubType.Slack &&
+    subType === LinkedSlackMessageType.Thread
+  ) {
+    await sendSlackLinkedMessage(
+      prisma,
+      logger,
+      integrationAccount,
+      linkedIssue,
     );
   }
 }

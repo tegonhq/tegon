@@ -1,10 +1,12 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { IntegrationName } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
+import { Settings } from 'modules/integration-account/integration-account.interface';
 import { upsertGithubIssueComment } from 'modules/integrations/github/github.utils';
+import { upsertSlackMessage } from 'modules/integrations/slack/slack.utils';
 
 import {
   IssueCommentAction,
@@ -18,33 +20,47 @@ export async function handleTwoWaySync(
   action: IssueCommentAction,
   userId: string,
 ) {
-  const integrationAccount = await prisma.integrationAccount.findFirst({
-    where: {
-      settings: {
-        path: ['Github', 'repositoryMappings'],
-        array_contains: [
-          { teamId: issueComment.issue.teamId, bidirectional: true },
-        ],
-      } as Prisma.JsonFilter,
-    },
-    include: {
-      integrationDefinition: true,
-      workspace: true,
-    },
-  });
+  const issueSourceMetadata = issueComment.issue.sourceMetadata as Record<
+    string,
+    string
+  >;
+  if (issueSourceMetadata) {
+    const integrationAccount = await prisma.integrationAccount.findUnique({
+      where: {
+        id: issueSourceMetadata.id,
+        deleted: null,
+      },
+      include: {
+        integrationDefinition: true,
+        workspace: true,
+      },
+    });
 
-  if (integrationAccount) {
-    // Two-way sync is enabled for this team
-    // Perform the necessary sync operations here
-    // ...
+    const integrationAccountSettings = integrationAccount.settings as Settings;
 
-    await upsertGithubIssueComment(
-      prisma,
-      logger,
-      issueComment,
-      integrationAccount,
-      userId,
-      action,
-    );
+    const githubSettings = integrationAccountSettings[IntegrationName.Github];
+    const slackSettings = integrationAccountSettings[IntegrationName.Slack];
+
+    if (githubSettings) {
+      // Two-way sync is enabled for this team
+
+      await upsertGithubIssueComment(
+        prisma,
+        logger,
+        issueComment,
+        integrationAccount,
+        userId,
+        action,
+      );
+    } else if (slackSettings) {
+      await upsertSlackMessage(
+        prisma,
+        logger,
+        issueComment,
+        integrationAccount,
+        userId,
+        action,
+      );
+    }
   }
 }

@@ -4,8 +4,6 @@ import { RiArrowRightSFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { getTeamColor } from 'common/color-utils';
-import { cn } from 'common/lib/utils';
 import type { TeamType } from 'common/types/team';
 
 import {
@@ -14,7 +12,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from 'components/ui/accordion';
-import { IssuesLine, ProjectsLine, TeamLine, TriageLine } from 'icons';
+import { TeamIcon } from 'components/ui/team-icon';
+import { IssuesLine, ProjectsLine, TriageLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
@@ -35,7 +34,7 @@ export const TeamList = observer(() => {
       ref={containerRef}
       className="h-full space-y-1 overflow-y-auto mt-4 m-3"
     >
-      <div className="px-2 text-xs text-muted-foreground font-medium">
+      <div className="px-2 mb-2 text-xs text-muted-foreground font-medium">
         Your teams
       </div>
 
@@ -46,19 +45,10 @@ export const TeamList = observer(() => {
         className="w-full text-slate-700 dark:text-slate-300 mt-0"
       >
         {teams.map((team: TeamType) => (
-          <AccordionItem value={team.id} key={team.identifier}>
+          <AccordionItem value={team.id} key={team.identifier} className="mb-1">
             <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>div>svg]:rotate-90 hover:bg-active hover:text-slate-800 dark:hover:text-slate-50 rounded-md">
               <div className="w-full justify-start px-2 flex items-center">
-                <div
-                  className={cn(
-                    `p-[2px] w-5 h-5 ${getTeamColor(team.name, true)} rounded-sm`,
-                  )}
-                >
-                  <TeamLine
-                    size={14}
-                    className={cn('shrink-0 h-4 w-4', getTeamColor(team.name))}
-                  />
-                </div>
+                <TeamIcon name={team.name} />
 
                 <div className="flex justify-start items-center text-foreground text-sm ml-3">
                   {team?.name}

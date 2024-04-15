@@ -3,11 +3,7 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import type { IntegrationAccountType } from 'common/types/integration-account';
-import {
-  IntegrationName,
-  type IntegrationDefinitionType,
-} from 'common/types/integration-definition';
+import { IntegrationName } from 'common/types/integration-definition';
 
 import { Button } from 'components/ui/button';
 
@@ -16,15 +12,9 @@ import {
   useDeleteIntegrationAccount,
 } from 'services/oauth';
 
-import { useContextStore } from 'store/global-context-provider';
-import { UserContext } from 'store/user-context';
+import { useIntegrationAccount } from '../integration-util';
 
 export const GithubPersonalConnect = observer(() => {
-  const {
-    integrationDefinitionsStore: { integrationDefinitions },
-    integrationAccountsStore: { integrationAccounts },
-  } = useContextStore();
-  const userData = React.useContext(UserContext);
   const { mutate: createRedirectURL, isLoading: redirectURLLoading } =
     useCreateRedirectURLMutation({
       onSuccess: (data) => {
@@ -36,25 +26,10 @@ export const GithubPersonalConnect = observer(() => {
   const { mutate: deleteIntegrationAccount, isLoading: deleting } =
     useDeleteIntegrationAccount({});
 
-  const githubDefinition = React.useMemo(
-    () =>
-      integrationDefinitions.find(
-        (integrationDefinition: IntegrationDefinitionType) =>
-          integrationDefinition.name === IntegrationName.GithubPersonal,
-      ),
-    [integrationDefinitions],
-  );
-
-  const githubAccount = React.useMemo(
-    () =>
-      integrationAccounts.find(
-        (integrationAccount: IntegrationAccountType) =>
-          integrationAccount.integratedById === userData.id &&
-          integrationAccount.integrationDefinitionId === githubDefinition.id,
-      ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [integrationAccounts],
-  );
+  const {
+    integrationDefinition: githubDefinition,
+    integrationAccount: githubAccount,
+  } = useIntegrationAccount(IntegrationName.GithubPersonal);
 
   return (
     <div className="mt-8 p-3 border text-sm rounded-md flex items-center justify-between">

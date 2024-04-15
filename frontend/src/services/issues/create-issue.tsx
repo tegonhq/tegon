@@ -15,6 +15,7 @@ export interface CreateIssueParams {
   assigneeId?: string;
   teamId: string;
   parentId?: string;
+  isBidirectional: boolean;
 }
 
 export function createIssue({ teamId, ...otherParams }: CreateIssueParams) {

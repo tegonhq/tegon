@@ -64,6 +64,7 @@ export const storeContextStore = StoreContextModel.create({
     filters: {},
     identifier: '',
     displaySettings: defaultApplicationStoreValue.displaySettings,
+    sidebarCollapsed: false,
   },
   integrationDefinitionsStore: {
     integrationDefinitions: [],

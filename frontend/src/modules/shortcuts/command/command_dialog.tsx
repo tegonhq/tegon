@@ -3,6 +3,8 @@
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
+import { SCOPES } from 'common/scopes';
+
 import {
   CommandEmpty,
   CommandGroup,
@@ -16,7 +18,7 @@ import {
 export function CommandDialog() {
   const [open, setOpen] = React.useState(false);
 
-  useHotkeys('meta+k', () => setOpen(true), { scopes: ['global'] });
+  useHotkeys('meta+k', () => setOpen(true), { scopes: [SCOPES.Global] });
 
   return (
     <CommandDialogC

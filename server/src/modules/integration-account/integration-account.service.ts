@@ -22,7 +22,7 @@ export class IntegrationAccountService {
   async createIntegrationAccount(
     createIntegrationAccountBody: CreateIntegrationAccountBody,
   ) {
-    const { integrationDefinitionId, config, workspaceId, userId } =
+    const { integrationDefinitionId, config, workspaceId, userId, settings } =
       createIntegrationAccountBody;
 
     const integrationAccount = await this.prisma.integrationAccount.upsert({
@@ -58,6 +58,7 @@ export class IntegrationAccountService {
       integrationAccount.integrationDefinition.name,
       userId,
       workspaceId,
+      settings,
     );
 
     return integrationAccount;

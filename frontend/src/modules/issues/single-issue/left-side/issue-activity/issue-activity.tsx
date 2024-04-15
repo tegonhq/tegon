@@ -96,7 +96,7 @@ export const IssueActivity = observer(() => {
 
       <div className="my-2">
         <Timeline>
-          <TimelineItem className="mb-2" hasMore={false}>
+          <TimelineItem hasMore={false}>
             <div className="flex items-center text-xs text-muted-foreground">
               <Avatar className="h-[20px] w-[25px] mr-4 text-foreground">
                 <AvatarImage />
@@ -132,20 +132,14 @@ export const IssueActivity = observer(() => {
                 !activity.parentId
               ) {
                 return (
-                  <TimelineItem
-                    className="w-full"
-                    key={`${activity.id}-comment`}
-                    hasMore
-                  >
-                    <CommentActivity
-                      comment={activity}
-                      key={activity.id}
-                      user={getUserData(activity.userId)}
-                      childComments={getChildComments(activity.id)}
-                      allowReply
-                      getUserData={getUserData}
-                    />
-                  </TimelineItem>
+                  <CommentActivity
+                    comment={activity}
+                    key={activity.id}
+                    user={getUserData(activity.userId)}
+                    childComments={getChildComments(activity.id)}
+                    allowReply
+                    getUserData={getUserData}
+                  />
                 );
               }
 

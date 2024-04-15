@@ -103,7 +103,7 @@ export function EditLink({
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input placeholder="Issue/PR title" {...field} />
+                        <Input placeholder="Issue/PR/Link title" {...field} />
                       </FormControl>
 
                       <FormMessage />

@@ -1,10 +1,9 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
 import { IntegrationName } from '@prisma/client';
 
 import { UpdateIssueInput } from 'modules/issues/issues.interface';
 import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
-
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-export type labelDataType = Record<string, string>;
 
 export const eventsToListen = new Map([
   ['issues', true],

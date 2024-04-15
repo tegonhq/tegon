@@ -6,16 +6,15 @@ import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { getTeamColor } from 'common/color-utils';
-
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
 } from 'components/ui/breadcrumb';
 import { Button } from 'components/ui/button';
+import { TeamIcon } from 'components/ui/team-icon';
 import { useCurrentTeam } from 'hooks/teams';
-import { SidebarLine, TeamLine } from 'icons';
+import { SidebarLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -37,7 +36,7 @@ export const Header = observer(({ title }: HeaderProps) => {
           variant="ghost"
           size="xs"
           onClick={() => {
-            applicationStore.updateDisplaySettings({ sidebarCollapsed: false });
+            applicationStore.updateSideBar(false);
           }}
         >
           <SidebarLine size={16} />
@@ -50,14 +49,7 @@ export const Header = observer(({ title }: HeaderProps) => {
             className="flex items-center gap-2 font-medium"
             href={`/${workspaceSlug}/team/${team.identifier}/all`}
           >
-            <div
-              className={`p-[2px] w-5 h-5 ${getTeamColor(team.name, true)} rounded-sm`}
-            >
-              <TeamLine
-                size={16}
-                className={`shrink-0 h-4 w-4 ${getTeamColor(team.name)}`}
-              />
-            </div>
+            <TeamIcon name={team.name} />
 
             <span className="inline-block">{team.name}</span>
           </BreadcrumbLink>

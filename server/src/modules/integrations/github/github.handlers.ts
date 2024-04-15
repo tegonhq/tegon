@@ -11,7 +11,6 @@ import {
 import {
   CreateIssueInput,
   IssueRequestParams,
-  LinkedIssueSubType,
   TeamRequestParams,
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
@@ -19,6 +18,7 @@ import IssuesService from 'modules/issues/issues.service';
 import {
   LinkedIssueSource,
   LinkedIssueSourceData,
+  LinkedIssueSubType,
 } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
@@ -27,13 +27,12 @@ import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import {
   getIssueData,
-  getOrCreateLabelIds,
   getState,
   getTeamId,
-  getUserId,
   sendGithubFirstComment,
   sendGithubPRFirstComment,
 } from './github.utils';
+import { getOrCreateLabelIds, getUserId } from '../integrations.utils';
 
 export async function handleIssues(
   prisma: PrismaService,
@@ -53,7 +52,7 @@ export async function handleIssues(
 
   const { action, issue, assignee } = eventBody;
   const linkedIssue = await linkedIssueService.getLinkedIssueBySourceId(
-    issue.id,
+    issue.id.toString(),
   );
 
   if (!linkedIssue?.issueId && action !== 'opened') {
@@ -172,7 +171,7 @@ export async function handleIssueComments(
   integrationAccount: IntegrationAccountWithRelations,
 ) {
   const linkedIssue = await linkedIssueService.getLinkedIssueBySourceId(
-    eventBody.issue.id,
+    eventBody.issue.id.toString(),
   );
   if (!linkedIssue) {
     logger.debug(

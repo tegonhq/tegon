@@ -4,6 +4,7 @@ import React from 'react';
 
 import { PriorityIcons } from 'modules/issues/components';
 
+import { SCOPES } from 'common/scopes';
 import { Priorities } from 'common/types/issue';
 
 import { useShortcutHotKeys } from 'hooks';
@@ -21,7 +22,7 @@ export const PriorityDialog = observer(() => {
   const { mutate: updateIssue } = useUpdateIssueMutation({});
   const team = useCurrentTeam();
 
-  useShortcutHotKeys('p', setOpen, ['all-issues']);
+  useShortcutHotKeys('p', setOpen, [SCOPES.AllIssues]);
 
   if (
     applicationStore.selectedIssues.length === 0 &&

@@ -13,6 +13,7 @@ import { PriorityIcons } from 'modules/issues/components';
 import { Priorities, type IssueType } from 'common/types/issue';
 
 import { BoardColumn, BoardItem } from 'components/ui/board';
+import { ScrollArea } from 'components/ui/scroll-area';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -60,24 +61,30 @@ export const PriorityBoardList = observer(
             </h3>
           </div>
 
-          <div className="p-3 flex flex-col gap-2 grow overflow-y-auto pb-10">
-            {computedIssues.map((issue: IssueType, index: number) => (
-              <BoardItem key={issue.id} id={issue.id}>
-                <Draggable key={issue.id} draggableId={issue.id} index={index}>
-                  {(
-                    dragProvided: DraggableProvided,
-                    dragSnapshot: DraggableStateSnapshot,
-                  ) => (
-                    <BoardIssueItem
-                      issueId={issue.id}
-                      isDragging={dragSnapshot.isDragging}
-                      provided={dragProvided}
-                    />
-                  )}
-                </Draggable>
-              </BoardItem>
-            ))}
-          </div>
+          <ScrollArea className="p-3 pb-10">
+            <div className="flex flex-col gap-2 grow">
+              {computedIssues.map((issue: IssueType, index: number) => (
+                <BoardItem key={issue.id} id={issue.id}>
+                  <Draggable
+                    key={issue.id}
+                    draggableId={issue.id}
+                    index={index}
+                  >
+                    {(
+                      dragProvided: DraggableProvided,
+                      dragSnapshot: DraggableStateSnapshot,
+                    ) => (
+                      <BoardIssueItem
+                        issueId={issue.id}
+                        isDragging={dragSnapshot.isDragging}
+                        provided={dragProvided}
+                      />
+                    )}
+                  </Draggable>
+                </BoardItem>
+              ))}
+            </div>
+          </ScrollArea>
         </div>
       </BoardColumn>
     );

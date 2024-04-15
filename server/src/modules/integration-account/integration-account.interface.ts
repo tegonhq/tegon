@@ -40,11 +40,30 @@ export interface GithubPersonalSettings {
   login: string;
 }
 
+export interface ChannelTeamMapping {
+  teamId: string;
+  teamName: string;
+}
+export interface ChannelMapping {
+  botJoined: boolean;
+  channelId: string;
+  channelName: string;
+  teams?: ChannelTeamMapping[];
+  webhookUrl: string;
+}
+export interface SlackSettings {
+  teamId: string;
+  teamName: string;
+  teamDomain: string;
+  teamUrl: string;
+  botUserId: string;
+  channelMappings: ChannelMapping[];
+}
+
 export interface Settings {
   [IntegrationName.Github]?: GithubSettings;
   [IntegrationName.GithubPersonal]?: GithubPersonalSettings;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [IntegrationName.Slack]?: Record<string, any>;
+  [IntegrationName.Slack]?: SlackSettings;
 }
 
 export class IntegrationAccountRequestIdBody {
@@ -76,7 +95,7 @@ export class CreateIntegrationAccountBody extends WorkspaceIdRequestBody {
 
   @IsObject()
   @IsOptional()
-  settings: Settings;
+  settings?: Settings;
 
   @IsString()
   @IsOptional()

@@ -83,4 +83,22 @@ export default class WorkspacesService {
       },
     });
   }
+
+  async seedWorkspaces(): Promise<void> {
+    const workspaces = await this.prisma.workspace.findMany();
+
+    workspaces.map(async (workspace) => {
+      await this.prisma.workspace.update({
+        where: { id: workspace.id },
+        data: {
+          integrationDefinition: {
+            createMany: {
+              data: integrationDefinitionSeedData,
+              skipDuplicates: true,
+            },
+          },
+        },
+      });
+    });
+  }
 }

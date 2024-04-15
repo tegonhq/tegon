@@ -16,6 +16,7 @@ import {
 export const defaultApplicationStoreValue: {
   filters: FiltersModelType;
   displaySettings: DisplaySettingsModelType;
+  sidebarCollapsed: boolean;
   selectedIssues: string[];
 } = {
   filters: {},
@@ -27,8 +28,8 @@ export const defaultApplicationStoreValue: {
     showEmptyGroups: false,
     showCompletedIssues: true,
     showTriageIssues: false,
-    sidebarCollapsed: false,
   },
+  sidebarCollapsed: false,
   selectedIssues: [],
 };
 
@@ -37,6 +38,7 @@ export const ApplicationStore: IAnyStateTreeNode = types
     filters: FiltersModel,
     displaySettings: DisplaySettingsModel,
     identifier: types.string,
+    sidebarCollapsed: types.boolean,
     selectedIssues: types.array(types.string),
     hoverIssue: types.union(types.string, types.undefined),
   })
@@ -101,6 +103,9 @@ export const ApplicationStore: IAnyStateTreeNode = types
     },
     setHoverIssue(issue: string) {
       self.hoverIssue = issue;
+    },
+    updateSideBar(collapsed: boolean) {
+      self.sidebarCollapsed = collapsed;
     },
   }));
 

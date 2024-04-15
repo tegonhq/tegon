@@ -4,6 +4,7 @@ import React from 'react';
 
 import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
+import { SCOPES } from 'common/scopes';
 
 import {
   Avatar,
@@ -29,7 +30,7 @@ export const AssigneeDialog = observer(() => {
   const team = useCurrentTeam();
   const { usersData, isLoading } = useUsersData(team.id);
 
-  useShortcutHotKeys('a', setOpen, ['all-issues']);
+  useShortcutHotKeys('a', setOpen, [SCOPES.AllIssues]);
 
   if (
     isLoading ||

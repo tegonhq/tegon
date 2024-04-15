@@ -27,8 +27,8 @@ import {
 import { Badge } from 'components/ui/badge';
 import { Button } from 'components/ui/button';
 import { Dialog } from 'components/ui/dialog';
+import { TeamIcon } from 'components/ui/team-icon';
 import { useToast } from 'components/ui/use-toast';
-import { TeamLine } from 'icons';
 
 import { useUpdateIntegrationAccountMutation } from 'services/oauth';
 
@@ -100,8 +100,8 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
 
   return (
     <div className="w-full">
-      <div className="py-2 px-2 flex gap-2 bg-slate-100 dark:bg-slate-800 w-full rounded-md text-muted-foreground items-center">
-        <TeamLine size={16} />
+      <div className="py-2 px-2 flex gap-2 bg-active/50 w-full rounded-md text-foreground items-center">
+        <TeamIcon name={team.name} />
         {team.name} ({team.identifier})
       </div>
 

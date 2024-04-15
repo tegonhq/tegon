@@ -19,10 +19,11 @@ import {
   getTemplate,
 } from './oauth-callback.utils';
 
-const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/api/v1/oauth/callback`;
+const CALLBACK_URL = `https://9c70-122-171-20-204.ngrok-free.app/api/v1/oauth/callback`;
 
 @Injectable()
 export class OAuthCallbackService {
+  // TODO(Manoj): Move this to Redis once we have multiple servers
   session: Record<string, SessionRecord> = {};
   private readonly logger = new Logger(OAuthCallbackService.name);
 
@@ -59,6 +60,7 @@ export class OAuthCallbackService {
     integrationDefinitionId: string,
     redirectURL: string,
     userId: string,
+    specificScopes?: string,
   ) {
     this.logger.log(
       `We got OAuth request for ${workspaceId}: ${integrationDefinitionId}`,
@@ -67,16 +69,12 @@ export class OAuthCallbackService {
     const integrationDefinition = await this.getIntegrationDefinition(
       integrationDefinitionId,
     );
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const spec = integrationDefinition.spec as Record<string, any>;
     const externalConfig = spec.auth_specification['OAuth2'];
     const template = await getTemplate(integrationDefinition);
-
-    let additionalAuthParams: Record<string, string> = {};
-    if (template.authorization_params) {
-      additionalAuthParams = template.authorization_params;
-    }
+    const scopesString = specificScopes || integrationDefinition.scopes;
+    const additionalAuthParams = template.authorization_params || {};
 
     try {
       const simpleOAuthClient = new simpleOauth2.AuthorizationCode(
@@ -84,14 +82,14 @@ export class OAuthCallbackService {
           {
             client_id: integrationDefinition.clientId,
             client_secret: integrationDefinition.clientSecret,
-            scopes: integrationDefinition.scopes,
+            scopes: scopesString,
           },
           template,
           externalConfig,
         ),
       );
 
-      const uniqueId = new Date().getTime().toString(36);
+      const uniqueId = Date.now().toString(36);
       this.session[uniqueId] = {
         integrationDefinitionId: integrationDefinition.id,
         redirectURL,
@@ -100,11 +98,10 @@ export class OAuthCallbackService {
         userId,
       };
 
-      let scopes = integrationDefinition.scopes.split(',');
-
-      if (template.default_scopes) {
-        scopes = scopes.concat(template.default_scopes);
-      }
+      const scopes = [
+        ...scopesString.split(','),
+        ...(template.default_scopes || []),
+      ];
 
       const authorizationUri = simpleOAuthClient.authorizeURL({
         redirect_uri: CALLBACK_URL,
@@ -117,15 +114,10 @@ export class OAuthCallbackService {
         `OAuth 2.0 for ${integrationDefinition.name} - redirecting to: ${authorizationUri}`,
       );
 
-      return {
-        status: 200,
-        redirectURL: authorizationUri,
-      };
+      return { status: 200, redirectURL: authorizationUri };
     } catch (e) {
-      console.warn(e);
-      throw new BadRequestException({
-        error: e.message,
-      });
+      this.logger.warn(e);
+      throw new BadRequestException({ error: e.message });
     }
   }
 
@@ -250,6 +242,7 @@ export class OAuthCallbackService {
         workspaceId: sessionRecord.workspaceId,
         accountId,
         userId: sessionRecord.userId,
+        settings: tokensResponse.token,
       } as CreateIntegrationAccountBody);
 
       res.redirect(

@@ -14,6 +14,7 @@ import {
 } from 'class-validator';
 
 import { IssueRelationType } from 'modules/issue-relation/issue-relation.interface';
+import { LinkedIssueSubType } from 'modules/linked-issue/linked-issue.interface';
 
 export class TeamRequestParams {
   @IsString()
@@ -24,13 +25,6 @@ export class IssueRequestParams {
   @IsString()
   issueId: string;
 }
-
-export enum LinkedIssueSubType {
-  GithubIssue = 'GithubIssue',
-  GithubPullRequest = 'GithubPullRequest',
-  ExternalLink = 'ExternalLink',
-}
-
 export interface ApiResponse {
   status: number;
   message: string;

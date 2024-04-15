@@ -65,7 +65,6 @@ export function IssueOptionsDropdown() {
         deleteIssueDialog={deleteIssueDialog}
         setDeleteIssueDialog={setDeleteIssueDialog}
       />
-
       <AddLinkedIssueDialog
         open={dialogOpen}
         setOpen={setDialogOpen}

@@ -24,14 +24,30 @@ import { useCurrentTeam } from 'hooks/teams';
 
 import { useCreateLinkedIssueMutation } from 'services/linked-issues';
 
-import { URLSchema } from './add-github-issue';
-interface AddGithubPRProps {
-  issueId: string;
+export const URLSchema = z.object({
+  url: z.string().url(),
+  title: z.optional(z.string()),
+});
 
+interface AddGithubIssueProps {
+  issueId: string;
+  placeholder: string;
+  type: LinkedIssueSubType;
+  title: string;
+  description?: string;
+  askTitleInForm: boolean;
   onClose: () => void;
 }
 
-export function AddGithubPR({ issueId, onClose }: AddGithubPRProps) {
+export function AddLinkedIssue({
+  issueId,
+  onClose,
+  title,
+  description,
+  askTitleInForm,
+  type,
+  placeholder,
+}: AddGithubIssueProps) {
   const currentTeam = useCurrentTeam();
   const form = useForm<z.infer<typeof URLSchema>>({
     resolver: zodResolver(URLSchema),
@@ -44,13 +60,17 @@ export function AddGithubPR({ issueId, onClose }: AddGithubPRProps) {
       onError: (error: string) => {
         form.setError('url', { message: error });
       },
+      onSuccess: () => {
+        onClose();
+      },
     },
   );
 
-  const onSubmit = (values: { url: string }) => {
+  const onSubmit = (values: { url: string; title: string }) => {
     createLinkedIssue({
       url: values.url,
-      type: LinkedIssueSubType.GithubPullRequest,
+      title: values.title,
+      type,
       issueId,
       teamId: currentTeam.id,
     });
@@ -60,11 +80,9 @@ export function AddGithubPR({ issueId, onClose }: AddGithubPRProps) {
     <div className="p-6">
       <DialogHeader>
         <DialogTitle className="text-md text-foreground font-normal">
-          Enter URL of Github PR to link
+          {title}
         </DialogTitle>
-        <DialogDescription>
-          Copy the URL from the browser when viewing the issue
-        </DialogDescription>
+        {description && <DialogDescription>{description}</DialogDescription>}
       </DialogHeader>
 
       <div className="mt-4">
@@ -76,16 +94,31 @@ export function AddGithubPR({ issueId, onClose }: AddGithubPRProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      placeholder="https://github.com/tegonhq/tegon/pull/1"
-                      {...field}
-                    />
+                    <Input placeholder={placeholder} {...field} />
                   </FormControl>
 
                   <FormMessage />
                 </FormItem>
               )}
             />
+            {askTitleInForm && (
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Title for the above link"
+                        {...field}
+                      />
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <div className="flex justify-end gap-2">
               <Button variant="outline" disabled={isLoading} onClick={onClose}>

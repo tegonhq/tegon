@@ -30,22 +30,24 @@ import {
 } from 'modules/issue-comments/issue-comments.interface';
 import {
   IssueWithRelations,
-  LinkedIssueSubType,
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
 import {
   LinkIssueData,
   LinkedIssueSourceData,
+  LinkedIssueSubType,
 } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
+import { githubHeaders, githubIssueData } from './github.interface';
 import {
-  githubHeaders,
-  githubIssueData,
-  labelDataType,
-} from './github.interface';
-import { deleteRequest, getRequest, postRequest } from '../integrations.utils';
+  deleteRequest,
+  getOrCreateLabelIds,
+  getRequest,
+  getUserId,
+  postRequest,
+} from '../integrations.utils';
 
 export async function getState(
   prisma: PrismaService,
@@ -79,18 +81,6 @@ export function getTeamId(
     (mapping) => mapping.githubRepoId === repoId && mapping.bidirectional,
   );
   return mapping?.teamId;
-}
-
-export async function getUserId(
-  prisma: PrismaService,
-  userData: Record<string, string>,
-) {
-  const integrationAccount = await prisma.integrationAccount.findFirst({
-    where: { accountId: userData?.id.toString() },
-    select: { integratedById: true },
-  });
-
-  return integrationAccount?.integratedById || null;
 }
 
 export async function getIssueData(
@@ -148,50 +138,6 @@ export async function getIssueData(
   return { linkIssueData, issueInput, sourceMetadata, userId };
 }
 
-export async function getOrCreateLabelIds(
-  prisma: PrismaService,
-  labels: labelDataType[],
-  teamId: string,
-  workspaceId: string,
-): Promise<string[]> {
-  // Extract label names from the input
-  const labelNames = labels.map((label) => label.name);
-
-  // Find existing labels with matching names (case-insensitive)
-  const existingLabels = await prisma.label.findMany({
-    where: {
-      name: { in: labelNames, mode: 'insensitive' },
-    },
-  });
-
-  // Create a map of existing label names to their IDs
-  const existingLabelMap = new Map(
-    existingLabels.map((label) => [label.name.toLowerCase(), label.id]),
-  );
-
-  // Create new labels for names that don't have a match
-  const newLabels = await Promise.all(
-    labels
-      .filter((label) => !existingLabelMap.has(label.name.toLowerCase()))
-      .map((label) =>
-        prisma.label.create({
-          data: {
-            name: label.name,
-            color: `#${label.color}`,
-            teamId,
-            workspaceId,
-          },
-        }),
-      ),
-  );
-
-  // Combine the IDs of existing and new labels
-  return [
-    ...existingLabels.map((label) => label.id),
-    ...newLabels.map((label) => label.id),
-  ];
-}
-
 export async function sendGithubFirstComment(
   prisma: PrismaService,
   logger: Logger,
@@ -208,7 +154,7 @@ export async function sendGithubFirstComment(
   const [accessToken, team, linkedIssue] = await Promise.all([
     getBotAccessToken(prisma, integrationAccount),
     prisma.team.findUnique({ where: { id: teamId } }),
-    linkedIssueService.getLinkedIssueBySourceId(issueSourceId),
+    linkedIssueService.getLinkedIssueBySourceId(issueSourceId.toString()),
   ]);
 
   logger.debug(

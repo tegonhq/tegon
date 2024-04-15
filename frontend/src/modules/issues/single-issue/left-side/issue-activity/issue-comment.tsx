@@ -38,7 +38,7 @@ export function IssueComment() {
 
   return (
     <TimelineItem hasMore className="w-full">
-      <div className="flex items-center text-xs text-muted-foreground w-full">
+      <div className="flex items-start text-xs text-muted-foreground w-full">
         <Avatar className="h-[20px] w-[25px] mr-4 text-foreground">
           <AvatarImage />
           <AvatarFallback

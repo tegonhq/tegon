@@ -2,6 +2,7 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
+import { SCOPES } from 'common/scopes';
 import type { LabelType } from 'common/types/label';
 
 import { BadgeColor } from 'components/ui/badge';
@@ -22,7 +23,7 @@ export const LabelDialog = observer(() => {
   const team = useCurrentTeam();
   const labels = useTeamLabels(team.identifier);
 
-  useShortcutHotKeys('l', setOpen, ['all-issues']);
+  useShortcutHotKeys('l', setOpen, [SCOPES.AllIssues]);
 
   if (
     applicationStore.selectedIssues.length === 0 &&
@@ -64,13 +65,31 @@ export const LabelDialog = observer(() => {
         });
       }
     });
+
+    // Delete the label when only one issue is selected
+    if (issues.length === 1) {
+      const issue = issuesStore.getIssueById(issues[0]);
+
+      if (issue.labelIds.includes(labelId)) {
+        const labelIds = [...issue.labelIds];
+        const indexToDelete = labelIds.indexOf(labelId);
+        labelIds.splice(indexToDelete, 1);
+
+        updateIssue({
+          id: issues[0],
+          teamId: team.id,
+          labelIds,
+        });
+      }
+    }
   };
 
   const getCurrentValue = () => {
     const issues = getIssueIds();
 
     if (issues.length === 1) {
-      return issues[0].labelIds;
+      const issue = issuesStore.getIssueById(issues[0]);
+      return issue.labelIds;
     }
 
     return [];

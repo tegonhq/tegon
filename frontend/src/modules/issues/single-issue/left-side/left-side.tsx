@@ -89,7 +89,7 @@ export const LeftSide = observer(({ isTriageView }: LeftSideProps) => {
         )}
 
         <LinkedIssuesView issueId={issue.id} />
-        <Separator className="my-1" />
+        <Separator className="my-1 mt-3" />
         <IssueActivity />
       </ScrollArea>
     </>

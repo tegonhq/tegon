@@ -6,16 +6,15 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import { getTeamColor } from 'common/color-utils';
-
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
 } from 'components/ui/breadcrumb';
 import { Button } from 'components/ui/button';
+import { TeamIcon } from 'components/ui/team-icon';
 import { useCurrentTeam } from 'hooks/teams';
-import { SidebarLine, TeamLine } from 'icons';
+import { SidebarLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -51,14 +50,12 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
   return (
     <header className="flex pl-8 px-4 py-3 w-full border-b gap-2 justify-between items-center">
       <div className="flex gap-2 items-center">
-        {applicationStore.displaySettings.sidebarCollapsed && (
+        {applicationStore.sidebarCollapsed && (
           <Button
             variant="ghost"
             size="xs"
             onClick={() => {
-              applicationStore.updateDisplaySettings({
-                sidebarCollapsed: false,
-              });
+              applicationStore.updateSideBar(false);
             }}
           >
             <SidebarLine size={16} />
@@ -71,14 +68,7 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
               className="flex items-center gap-2 font-medium"
               href={`/${workspaceSlug}/team/${team.identifier}/all`}
             >
-              <div
-                className={`p-[2px] w-5 h-5 ${getTeamColor(team.name)} rounded-sm`}
-              >
-                <TeamLine
-                  size={14}
-                  className={`shrink-0 text-muted-foreground h-4 w-4 ${getTeamColor(team.name)}`}
-                />
-              </div>
+              <TeamIcon name={team.name} />
 
               <span className="inline-block">{team.name}</span>
             </BreadcrumbLink>

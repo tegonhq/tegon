@@ -1,6 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiExternalLinkLine, RiGithubFill } from '@remixicon/react';
+import {
+  RiExternalLinkLine,
+  RiGithubFill,
+  RiLink,
+  RiSlackFill,
+} from '@remixicon/react';
 import * as React from 'react';
 
 import { LinkedIssueSubType } from 'common/types/linked-issue';
@@ -39,6 +44,16 @@ export function LinkedIssueItems({ setDialogOpen }: LinkedIssueItemsProps) {
               }
             >
               <DropdownItem Icon={RiGithubFill} title="Github pull request" />
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => setDialogOpen(LinkedIssueSubType.Slack)}
+            >
+              <DropdownItem Icon={RiSlackFill} title="Link Slack message" />
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => setDialogOpen(LinkedIssueSubType.ExternalLink)}
+            >
+              <DropdownItem Icon={RiLink} title="Link external" />
             </DropdownMenuItem>
           </DropdownMenuSubContent>
         </DropdownMenuPortal>

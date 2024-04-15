@@ -96,7 +96,7 @@ export async function getAccountId(
       return params.installation_id;
 
     case IntegrationName.Slack:
-      return response.team.id;
+      return response.token.team.id;
 
     case IntegrationName.GithubPersonal:
       if (response.token.access_token) {
@@ -105,6 +105,9 @@ export async function getAccountId(
         return userData.id.toString();
       }
       return undefined;
+
+    case IntegrationName.SlackPersonal:
+      return response.token.authed_user.id;
 
     default:
       return undefined;

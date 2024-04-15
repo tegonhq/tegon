@@ -30,7 +30,7 @@ export interface IssueHistoryType {
   id: string;
   createdAt: string;
   updatedAt: string;
-  userId: string;
+  userId?: string;
   issueId: string;
   addedLabelIds: string[];
   removedLabelIds: string[];

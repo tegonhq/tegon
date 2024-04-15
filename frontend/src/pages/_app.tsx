@@ -15,6 +15,7 @@ import { SuperTokensWrapper } from 'supertokens-auth-react';
 import { initSuperTokens } from 'common/init-config';
 import { useGetQueryClient } from 'common/lib/react-query-client';
 import { cn } from 'common/lib/utils';
+import { SCOPES } from 'common/scopes';
 
 import { ThemeProvider } from 'components/theme-provider';
 import { Toaster } from 'components/ui/toaster';
@@ -51,7 +52,7 @@ export const MyApp: NextComponentType<
         enableSystem
         disableTransitionOnChange
       >
-        <HotkeysProvider initiallyActiveScopes={['global']}>
+        <HotkeysProvider initiallyActiveScopes={[SCOPES.Global]}>
           <TooltipProvider delayDuration={1000}>
             <StoreContext.Provider value={storeContextStore}>
               <QueryClientProvider client={queryClientRef.current}>

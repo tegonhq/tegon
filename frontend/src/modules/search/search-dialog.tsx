@@ -7,6 +7,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { ModalIssueItem } from 'modules/issues/components/modals/modal-issue-item';
 
+import { SCOPES } from 'common/scopes';
 import type { IssueType } from 'common/types/issue';
 
 import {
@@ -35,7 +36,7 @@ export function SearchDialog({ open, setOpen }: SearchDialogProps) {
   const [query, setQuery] = React.useState('');
   const { push } = useRouter();
 
-  useHotkeys('meta+/', () => setOpen(true), { scopes: ['global'] });
+  useHotkeys('meta+/', () => setOpen(true), { scopes: [SCOPES.Global] });
   const {
     data: issues,
     isLoading,

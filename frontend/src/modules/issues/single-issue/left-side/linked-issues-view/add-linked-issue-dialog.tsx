@@ -4,8 +4,7 @@ import { LinkedIssueSubType } from 'common/types/linked-issue';
 
 import { Dialog, DialogContent } from 'components/ui/dialog';
 
-import { AddGithubIssue } from './add-github-issue';
-import { AddGithubPR } from './add-github-pr';
+import { AddLinkedIssue } from './add-linked-issue';
 
 interface AddLinkedIssueDialogProps {
   open: LinkedIssueSubType;
@@ -31,13 +30,47 @@ export function AddLinkedIssueDialog({
     >
       <DialogContent className="sm:max-w-[600px]" closeIcon={false}>
         {open === LinkedIssueSubType.GithubIssue && (
-          <AddGithubIssue
+          <AddLinkedIssue
             issueId={issueId}
             onClose={() => setOpen(undefined)}
+            title="Enter URL of Github Issue to link"
+            description="Copy the URL from the browser when viewing the issue"
+            placeholder="https://github.com/tegonhq/tegon/issues/1"
+            type={LinkedIssueSubType.GithubIssue}
+            askTitleInForm={false}
           />
         )}
         {open === LinkedIssueSubType.GithubPullRequest && (
-          <AddGithubPR issueId={issueId} onClose={() => setOpen(undefined)} />
+          <AddLinkedIssue
+            issueId={issueId}
+            onClose={() => setOpen(undefined)}
+            title="Enter URL of Github PR to link"
+            description="Copy the URL from the browser when viewing the issue"
+            placeholder="https://github.com/tegonhq/tegon/pull/1"
+            type={LinkedIssueSubType.GithubPullRequest}
+            askTitleInForm={false}
+          />
+        )}
+        {open === LinkedIssueSubType.Slack && (
+          <AddLinkedIssue
+            issueId={issueId}
+            onClose={() => setOpen(undefined)}
+            title="Enter Slack thread link"
+            description="Copy the URL from the thread"
+            placeholder="https://test-app.slack.com/archives/C03B0DC55DE/p1712922413073899"
+            type={LinkedIssueSubType.Slack}
+            askTitleInForm={false}
+          />
+        )}
+        {open === LinkedIssueSubType.ExternalLink && (
+          <AddLinkedIssue
+            issueId={issueId}
+            onClose={() => setOpen(undefined)}
+            title="Add link to issue"
+            placeholder="https://"
+            type={LinkedIssueSubType.ExternalLink}
+            askTitleInForm
+          />
         )}
       </DialogContent>
     </Dialog>
