@@ -89,7 +89,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           </AvatarFallback>
         </Avatar>
       ) : (
-        <div className="h-[20px] w-[25px] flex items-center justify-center mr-4 border rounded-sm">
+        <div className="h-[20px] w-[25px] flex items-center justify-center mr-4 rounded-sm">
           {getIcon(sourceMetadata)}
         </div>
       )}
@@ -113,7 +113,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
               </span>
             ) : (
               <span className="text-foreground font-medium">
-                {sourceMetadata.userDisplayName}
+                {sourceMetadata.userDisplayName} via {sourceMetadata.type}
               </span>
             )}
 

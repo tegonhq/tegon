@@ -40,7 +40,10 @@ export function useIntegrationAccounts(integrationName: IntegrationName) {
   return { integrationAccountsForName, integrationDefinition };
 }
 
-export function useIntegrationAccount(integrationName: IntegrationName) {
+export function useIntegrationAccount(
+  integrationName: IntegrationName,
+  userId?: string,
+) {
   const {
     integrationDefinitionsStore: { integrationDefinitions },
     integrationAccountsStore: { integrationAccounts },
@@ -59,11 +62,16 @@ export function useIntegrationAccount(integrationName: IntegrationName) {
 
   const integrationAccount = React.useMemo(
     () =>
-      integrationAccounts.find(
-        (integrationAccount: IntegrationAccountType) =>
+      integrationAccounts.find((integrationAccount: IntegrationAccountType) => {
+        const userFilter = userId
+          ? integrationAccount.integratedById === userId
+          : true;
+
+        return (
           integrationAccount.integrationDefinitionId ===
-          integrationDefinition.id,
-      ),
+            integrationDefinition.id && userFilter
+        );
+      }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [integrationAccounts],
   );

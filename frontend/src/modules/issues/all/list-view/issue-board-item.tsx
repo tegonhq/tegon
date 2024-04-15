@@ -68,7 +68,7 @@ export const BoardIssueItem = observer(
 
     return (
       <a
-        className="p-2 flex flex-col justify-between group cursor-default text-sm border-[0.5px] rounded-md bg-background w-[100%]"
+        className="p-2 flex flex-col justify-between group cursor-default text-sm rounded-md bg-background w-[100%]"
         onClick={() => {
           push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
         }}
@@ -129,7 +129,7 @@ export const BoardIssueItem = observer(
             </Badge>
           )}
 
-          <IssueLabels labelIds={issue.labelIds} />
+          <IssueLabels labelIds={issue.labelIds} boardView />
         </div>
       </a>
     );

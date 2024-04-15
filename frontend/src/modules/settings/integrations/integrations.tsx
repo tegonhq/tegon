@@ -1,16 +1,13 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import {
-  RiGithubFill,
-  RiSlackFill,
-  type RemixiconComponentType,
-} from '@remixicon/react';
+import { RiGithubFill, type RemixiconComponentType } from '@remixicon/react';
 import { useRouter } from 'next/router';
 
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { Separator } from 'components/ui/separator';
 import { useCurrentWorkspace } from 'hooks/workspace';
+import { SlackIcon } from 'icons';
 
 interface IntegrationCardProps {
   name: string;
@@ -37,7 +34,7 @@ function IntegrationCard({
     >
       <div className="flex items-center gap-2">
         <div className="border p-1 rounded-md bg-background">
-          <Icon className="" />
+          <Icon size={18} />
         </div>
         <div>
           <div className="font-medium"> {name} </div>
@@ -75,7 +72,7 @@ export function Integrations() {
               name="Slack"
               description="Create issues from Slack messages and sync threads"
               href="slack"
-              Icon={RiSlackFill}
+              Icon={SlackIcon}
             />
           </div>
         </div>

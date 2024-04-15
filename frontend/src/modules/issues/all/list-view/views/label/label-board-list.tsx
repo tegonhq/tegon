@@ -52,7 +52,7 @@ export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
         </div>
 
         <ScrollArea className="p-3 pb-10">
-          <div className="flex flex-col gap-2 grow">
+          <div className="flex flex-col gap-3 grow">
             {computedIssues.map((issue: IssueType, index: number) => {
               const id = `${label.name}__${issue.id}`;
 
@@ -108,26 +108,32 @@ export const NoLabelBoardList = observer(() => {
           </h3>
         </div>
 
-        <div className="p-3 flex flex-col gap-2 grow overflow-y-auto pb-10">
-          {computedIssues.map((issue: IssueType, index: number) => {
-            return (
-              <BoardItem key={issue.id} id={issue.id}>
-                <Draggable key={issue.id} draggableId={issue.id} index={index}>
-                  {(
-                    dragProvided: DraggableProvided,
-                    dragSnapshot: DraggableStateSnapshot,
-                  ) => (
-                    <BoardIssueItem
-                      issueId={issue.id}
-                      isDragging={dragSnapshot.isDragging}
-                      provided={dragProvided}
-                    />
-                  )}
-                </Draggable>
-              </BoardItem>
-            );
-          })}
-        </div>
+        <ScrollArea className="p-3 pb-10">
+          <div className="flex flex-col gap-3 grow">
+            {computedIssues.map((issue: IssueType, index: number) => {
+              return (
+                <BoardItem key={issue.id} id={issue.id}>
+                  <Draggable
+                    key={issue.id}
+                    draggableId={issue.id}
+                    index={index}
+                  >
+                    {(
+                      dragProvided: DraggableProvided,
+                      dragSnapshot: DraggableStateSnapshot,
+                    ) => (
+                      <BoardIssueItem
+                        issueId={issue.id}
+                        isDragging={dragSnapshot.isDragging}
+                        provided={dragProvided}
+                      />
+                    )}
+                  </Draggable>
+                </BoardItem>
+              );
+            })}
+          </div>
+        </ScrollArea>
       </div>
     </BoardColumn>
   );

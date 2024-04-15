@@ -32,3 +32,4 @@ export * from './focus-line';
 export * from './projects-line';
 export * from './duplicate-line-2';
 export * from './sidebar-line';
+export * from './slack-icon';

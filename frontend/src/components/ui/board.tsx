@@ -54,7 +54,7 @@ export function BoardColumn({ children, id }: BoardColumnProps) {
     <Droppable droppableId={id} type="BoardColumn" ignoreContainerClipping>
       {(dropProvided: DroppableProvided) => (
         <div className="p-2" ref={dropProvided.innerRef}>
-          <div className="bg-active/50 rounded-md w-[350px] flex flex-col h-full">
+          <div className="bg-active/40 rounded-md w-[350px] flex flex-col h-full">
             {children}
           </div>
         </div>

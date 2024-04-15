@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { sort } from 'fast-sort';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import ReactTimeAgo from 'react-time-ago';
@@ -37,11 +38,9 @@ export const TriageIssues = observer(() => {
     push,
   } = useRouter();
 
-  const issues = issuesStore.getIssuesForState(
-    triageWorkflow.id,
-    currentTeam.id,
-    false,
-  );
+  const issues = sort(
+    issuesStore.getIssuesForState(triageWorkflow.id, currentTeam.id, false),
+  ).desc((issue: IssueType) => issue.updatedAt);
 
   if (isLoading) {
     return null;
@@ -50,7 +49,7 @@ export const TriageIssues = observer(() => {
   return (
     <div className="flex flex-col p-2">
       {issues.map((issue: IssueType, index: number) => {
-        const nextIssue = issues[index + 1];
+        const nextIssue = issues[index + 1] as IssueType;
         const noBorder =
           (nextIssue &&
             issueId === `${currentTeam.identifier}-${nextIssue.number}`) ||
@@ -61,7 +60,7 @@ export const TriageIssues = observer(() => {
           <div
             key={issue.id}
             className={cn(
-              'p-4 py-3 flex flex-col gap-2',
+              'p-4 py-2 flex flex-col gap-2',
               issueId === `${currentTeam.identifier}-${issue.number}` &&
                 'bg-active rounded-md',
               !noBorder && 'border-b',

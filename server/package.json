@@ -64,6 +64,7 @@
     "@nestjs/swagger": "7.2.0",
     "@nestjs/websockets": "^10.3.1",
     "@prisma/client": "^5.8.1",
+    "@tiptap/core": "^2.3.0",
     "@vegardit/prisma-generator-nestjs-dto": "^1.5.1",
     "@xenova/transformers": "^2.16.1",
     "axios": "^1.6.7",

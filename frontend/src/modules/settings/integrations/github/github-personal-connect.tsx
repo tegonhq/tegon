@@ -12,9 +12,12 @@ import {
   useDeleteIntegrationAccount,
 } from 'services/oauth';
 
+import { UserContext } from 'store/user-context';
+
 import { useIntegrationAccount } from '../integration-util';
 
 export const GithubPersonalConnect = observer(() => {
+  const user = React.useContext(UserContext);
   const { mutate: createRedirectURL, isLoading: redirectURLLoading } =
     useCreateRedirectURLMutation({
       onSuccess: (data) => {
@@ -29,7 +32,7 @@ export const GithubPersonalConnect = observer(() => {
   const {
     integrationDefinition: githubDefinition,
     integrationAccount: githubAccount,
-  } = useIntegrationAccount(IntegrationName.GithubPersonal);
+  } = useIntegrationAccount(IntegrationName.GithubPersonal, user.id);
 
   return (
     <div className="mt-8 p-3 border text-sm rounded-md flex items-center justify-between">

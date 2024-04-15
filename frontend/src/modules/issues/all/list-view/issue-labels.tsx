@@ -10,41 +10,48 @@ import { useContextStore } from 'store/global-context-provider';
 
 interface IssueLabelsProps {
   labelIds: string[];
+  boardView?: boolean;
 }
 
-export const IssueLabels = observer(({ labelIds }: IssueLabelsProps) => {
-  const { labelsStore } = useContextStore();
-  const labels = labelsStore.labels.filter((label: LabelType) =>
-    labelIds.includes(label.id),
-  );
-
-  const getLabels = () => {
-    return (
-      <>
-        {labels.slice(0, 3).map((label: LabelType) => (
-          <Badge
-            variant="outline"
-            key={label.name}
-            className="text-muted-foreground flex items-center"
-          >
-            <BadgeColor style={{ backgroundColor: label.color }} />
-            {label.name}
-          </Badge>
-        ))}
-        {labels.length > 3 && (
-          <Badge
-            variant="outline"
-            key="extra"
-            className="text-muted-foreground"
-          >
-            +{labels.length - 3} labels
-          </Badge>
-        )}
-      </>
+export const IssueLabels = observer(
+  ({ labelIds, boardView = false }: IssueLabelsProps) => {
+    const { labelsStore } = useContextStore();
+    const labels = labelsStore.labels.filter((label: LabelType) =>
+      labelIds.includes(label.id),
     );
-  };
 
-  return labels.length > 0 ? (
-    <div className="flex gap-2">{getLabels()}</div>
-  ) : null;
-});
+    const getLabels = () => {
+      return (
+        <>
+          {labels.slice(0, 3).map((label: LabelType) => (
+            <Badge
+              variant="outline"
+              key={label.name}
+              className="text-muted-foreground flex items-center"
+            >
+              <BadgeColor style={{ backgroundColor: label.color }} />
+              {label.name}
+            </Badge>
+          ))}
+          {labels.length > 3 && (
+            <Badge
+              variant="outline"
+              key="extra"
+              className="text-muted-foreground"
+            >
+              +{labels.length - 3} labels
+            </Badge>
+          )}
+        </>
+      );
+    };
+
+    if (boardView) {
+      return labels.length > 0 ? <>{getLabels()}</> : null;
+    }
+
+    return labels.length > 0 ? (
+      <div className="flex gap-2">{getLabels()}</div>
+    ) : null;
+  },
+);

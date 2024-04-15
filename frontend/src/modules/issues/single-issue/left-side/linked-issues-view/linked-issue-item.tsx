@@ -6,7 +6,6 @@ import {
   RiLink,
   RiMoreFill,
   RiPencilFill,
-  RiSlackFill,
 } from '@remixicon/react';
 import React from 'react';
 
@@ -34,6 +33,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
+import { SlackIcon } from 'icons';
 
 import { useDeleteLinkedIssueMutation } from 'services/linked-issues';
 
@@ -55,7 +55,7 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
 
   function getIcon() {
     if (sourceMetaData.type === Integration.Slack) {
-      return <RiSlackFill size={18} className="text-foreground" />;
+      return <SlackIcon size={16} className="text-foreground" />;
     }
 
     if (sourceMetaData.type === Integration.Github) {
@@ -94,7 +94,7 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
       <a
         href={linkedIssue.url}
         target="_blank"
-        className="cursor-pointer w-full mb-1 border-1 hover:bg-active shadow-sm bg-white dark:bg-slate-700/20  p-3 py-2 rounded-md flex gap-2 items-center justify-between text-sm"
+        className="cursor-pointer w-full mb-1 border-1 hover:bg-active/50 shadow-sm bg-white dark:bg-slate-700/20  p-3 py-2 rounded-md flex gap-2 items-center justify-between text-sm"
       >
         <div className="flex items-center gap-2">
           {getIcon()}
