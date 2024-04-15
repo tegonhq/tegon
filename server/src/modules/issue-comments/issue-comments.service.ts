@@ -49,6 +49,7 @@ export default class IssueCommentsService {
       { teamId: issueComment.issue.teamId },
       { subscriberIds: [userId] },
       issueRequestParams,
+      userId,
     );
 
     await this.issueCommentsQueue.addTwoWaySyncJob(

@@ -21,6 +21,7 @@ import {
 import {
   LinkedIssueSourceData,
   LinkedIssueWithRelations,
+  LinkedSlackMessageType,
 } from 'modules/linked-issue/linked-issue.interface';
 
 import {
@@ -63,8 +64,10 @@ function createBlocks(
   containsDescription: boolean,
   sessionData: SlashCommandSessionRecord,
 ) {
+  // Return an array of blocks for the Slack message
   return [
     {
+      // Define an input block for selecting an issue type
       type: 'input',
       block_id: team.teamId,
       dispatch_action: true,
@@ -91,6 +94,7 @@ function createBlocks(
         text: team.teamName,
       },
     },
+    // Conditionally include a description input block
     ...(containsDescription
       ? [
           {
@@ -119,31 +123,43 @@ function getBlocks(
   sessionData: SlashCommandSessionRecord,
   payload: EventBody,
 ) {
+  // Find the channel mapping based on the provided channelId
   const channel = slackSettings.Slack.channelMappings.find(
     (mapping) => mapping.channelId === channelId,
   );
+
+  // If channel mapping is not found, return an empty array
   if (!channel) {
     // TODO(Manoj): return a message that Bot is not present in the channel
     return [];
   }
+
+  // Handle the CREATE model view type
   if (modelViewType === ModelViewType.CREATE) {
+    // If there are more than one team in the channel
     if (channel.teams?.length > 1) {
       sessionData.containsDescription = false;
+      // Create blocks for each team without description
       return channel.teams.flatMap((team: ChannelTeamMapping) =>
         createBlocks(team, false, sessionData),
       );
     }
 
+    // If there is only one team in the channel
     const team = channel.teams[0];
     sessionData.containsDescription = true;
     sessionData.teamId = team.teamId;
 
+    // Create blocks for the single team with description
     return createBlocks(team, true, sessionData);
-  } else if (modelViewType === ModelViewType.UPDATE) {
+  }
+  // Handle the UPDATE model view type
+  else if (modelViewType === ModelViewType.UPDATE) {
     const stateValue = payload.view.state.values;
 
     sessionData.containsDescription = true;
 
+    // Create blocks for each team based on the selected action
     return channel.teams.flatMap((team) => {
       const teamState = stateValue[team.teamId];
       if (teamState && teamState[`${team.teamId}_action`]?.selected_option) {
@@ -153,13 +169,23 @@ function getBlocks(
       return [];
     });
   }
+
+  // Return an empty array if the model view type is not handled
   return [];
 }
 
+/**
+ * Generates the message block for the Slack modal view.
+ * @param sessionData The session data containing the message text and sender ID.
+ * @returns An array of Slack block elements representing the message block.
+ */
 function getMessagesBlock(sessionData: SlashCommandSessionRecord) {
+  // If there is no message text, return an empty array
   if (!sessionData.messageText) {
     return [];
   }
+
+  // Create the message block
   return [
     {
       type: 'header',
@@ -177,6 +203,7 @@ function getMessagesBlock(sessionData: SlashCommandSessionRecord) {
         text: sessionData.messageText,
       },
     },
+    // If there is a sender ID, include a context block with the sender information
     ...(sessionData.messagedById
       ? [
           {
@@ -193,6 +220,15 @@ function getMessagesBlock(sessionData: SlashCommandSessionRecord) {
   ];
 }
 
+/**
+ * Generates the modal view for Slack integration.
+ * @param integrationAccount The integration account with relations.
+ * @param channelId The ID of the Slack channel.
+ * @param modelViewType The type of the model view.
+ * @param sessionData The session data from the slash command.
+ * @param payload Optional event body payload.
+ * @returns An object containing the modal view and session data.
+ */
 export function getModalView(
   integrationAccount: IntegrationAccountWithRelations,
   channelId: string,
@@ -200,8 +236,10 @@ export function getModalView(
   sessionData: SlashCommandSessionRecord,
   payload?: EventBody,
 ): Record<string, ModalType | SlashCommandSessionRecord> {
+  // Get the Slack settings from the integration account
   const slackSettings = integrationAccount.settings as Settings;
 
+  // Get the blocks for the modal view
   const blocks = getBlocks(
     modelViewType,
     slackSettings,
@@ -209,8 +247,11 @@ export function getModalView(
     sessionData,
     payload,
   );
+
+  // Get the messages block for the modal view
   const messagesBlock = getMessagesBlock(sessionData);
 
+  // Return the modal view and session data
   return {
     view: {
       type: 'modal',
@@ -253,10 +294,13 @@ export async function getIssueData(
   eventBody: EventBody,
   integrationAccount: IntegrationAccount,
 ): Promise<slackIssueData> {
+  // Get the state ID and user ID concurrently
   const [stateId, userId] = await Promise.all([
     getState(prisma, 'opened', sessionData.teamId),
     getUserId(prisma, eventBody.user),
   ]);
+
+  // Create the issue input object
   const issueInput: UpdateIssueInput = {
     description:
       eventBody.view.state.values.description_block.description_action.value,
@@ -265,12 +309,15 @@ export async function getIssueData(
     subscriberIds: [...(userId ? [userId] : [])],
   } as UpdateIssueInput;
 
+  // Create the source metadata object
   const sourceMetadata = {
     id: integrationAccount.id,
     type: IntegrationName.Slack,
+    subType: LinkedSlackMessageType.Thread,
     channelId: sessionData.channelId,
   };
 
+  // Return the issue data
   return { issueInput, sourceMetadata, userId };
 }
 
@@ -305,16 +352,31 @@ export async function getSlackIntegrationAccount(
   });
 }
 
+/**
+ * Retrieves the issue message modal for Slack.
+ * @param prisma The Prisma service instance.
+ * @param issue The issue with relations.
+ * @returns An array containing the Slack message modal blocks.
+ */
 export async function getIssueMessageModal(
   prisma: PrismaService,
   issue: IssueWithRelations,
 ) {
+  // Find the workspace based on the issue's team workspace ID
   const workspace = await prisma.workspace.findUnique({
     where: { id: issue.team.workspaceId },
   });
+
+  // Generate the issue identifier using the team identifier and issue number
   const issueIdentifier = `${issue.team.identifier}-${issue.number}`;
+
+  // Construct the issue URL using the workspace slug and issue identifier
   const issueUrl = `${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${issueIdentifier}`;
+
+  // Generate the issue title by combining the issue identifier and title
   const issueTitle = `${issueIdentifier} ${issue.title}`;
+
+  // Return an array containing the Slack message modal blocks
   return [
     {
       blocks: [
@@ -357,6 +419,7 @@ export async function upsertSlackMessage(
 ) {
   logger.debug(`Upserting Slack issue comment for action: ${action}`);
 
+  // Fetch the parent issue comment and user in parallel
   const [parentIssueComment, user] = await Promise.all([
     prisma.issueComment.findUnique({
       where: { id: issueComment.parentId },
@@ -364,11 +427,13 @@ export async function upsertSlackMessage(
     prisma.user.findUnique({ where: { id: userId } }),
   ]);
 
+  // Extract the source metadata from the parent issue comment
   const parentSourceData = parentIssueComment.sourceMetadata as Record<
     string,
     string
   >;
 
+  // Send a POST request to the Slack API to post the message
   const response = await postRequest(
     'https://slack.com/api/chat.postMessage',
     await getSlackHeaders(integrationAccount),
@@ -380,13 +445,17 @@ export async function upsertSlackMessage(
     },
   );
 
+  // Check if the response from Slack API is successful
   if (response.data.ok) {
     const messageData = response.data;
+    // Determine the message based on the subtype
     const message =
       messageData.subtype === 'message_changed'
         ? messageData.message
         : messageData;
+    // Generate the thread ID using the channel and message timestamp
     const threadId = `${messageData.channel}_${message.ts}`;
+    // Prepare the source data object
     const sourceData = {
       idTs: message.ts,
       parentTs: message.thread_ts,
@@ -396,6 +465,7 @@ export async function upsertSlackMessage(
       userDisplayName: message.username ? message.username : message.user,
     };
 
+    // Create a linked comment in the database
     await prisma.linkedComment.create({
       data: {
         url: threadId,
@@ -493,19 +563,25 @@ export async function sendSlackLinkedMessage(
   linkedIssue: LinkedIssueWithRelations,
 ) {
   try {
+    // Extract issue and source data from the linked issue
     const { issue } = linkedIssue;
     const sourceData = linkedIssue.sourceData as LinkedIssueSourceData;
     const { team, number: issueNumber } = issue;
     const { identifier: teamIdentifier, workspaceId } = team;
 
+    // Create the issue identifier
     const issueIdentifier = `${teamIdentifier}-${issueNumber}`;
     logger.debug(`Sending Slack message for linked issue: ${issueIdentifier}`);
 
+    // Find the workspace using the workspaceId
     const workspace = await prisma.workspace.findUnique({
       where: { id: workspaceId },
     });
 
+    // Create the issue URL using the workspace slug and issue identifier
     const issueUrl = `${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${issueIdentifier}`;
+
+    // Create the message payload with the issue URL and thread details
     const messagePayload: EventBody = {
       channel: sourceData.channelId,
       blocks: [
@@ -522,6 +598,7 @@ export async function sendSlackLinkedMessage(
       thread_ts: sourceData.parentTs,
     };
 
+    // Send the Slack message using the integration account and message payload
     const messageData = await sendSlackMessage(
       integrationAccount,
       messagePayload,
@@ -530,6 +607,7 @@ export async function sendSlackLinkedMessage(
       `Slack message sent successfully for linked issue: ${issueIdentifier}`,
     );
 
+    // Create an issue comment and link the issue using the message data and integration account
     const linkedIssueData = await createIssueCommentAndLinkIssue(
       prisma,
       messageData,
@@ -541,6 +619,7 @@ export async function sendSlackLinkedMessage(
       linkedIssue.issue,
     );
 
+    // Update the linked issue with the new source data
     await prisma.linkedIssue.update({
       where: { id: linkedIssue.id },
       data: {
@@ -563,9 +642,13 @@ export async function createIssueCommentAndLinkIssue(
   createdIssue: IssueWithRelations,
   userId?: string,
 ) {
+  // Extract relevant data from the Slack message event
   const { ts: messageTs, thread_ts: parentTs, channel_type } = messageData;
+
+  // Generate the comment body with the Slack channel name
   const commentBody = `${IntegrationName.Slack} thread in #${getChannelNameFromIntegrationAccount(integrationAccount, sessionData.channelId)}`;
 
+  // Create an issue comment in the database
   const issueComment = await prisma.issueComment.create({
     data: {
       body: commentBody,
@@ -580,7 +663,10 @@ export async function createIssueCommentAndLinkIssue(
     },
   });
 
+  // Determine the main timestamp (parent or message timestamp)
   const mainTs = parentTs || messageTs;
+
+  // Return the linked issue data
   return {
     url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${mainTs.replace('.', '')}`,
     sourceId: `${sessionData.channelId}_${mainTs}`,

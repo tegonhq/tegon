@@ -11,13 +11,18 @@ import {
   sendGithubFirstComment,
 } from 'modules/integrations/github/github.utils';
 import { getRequest } from 'modules/integrations/integrations.utils';
-import { sendSlackLinkedMessage } from 'modules/integrations/slack/slack.utils';
+import {
+  getSlackMessage,
+  sendSlackLinkedMessage,
+} from 'modules/integrations/slack/slack.utils';
 
 import {
   CreateLinkIssueInput,
   LinkIssueInput,
+  LinkedIssueSource,
   LinkedIssueSubType,
   LinkedIssueWithRelations,
+  LinkedSlackMessageType,
   githubIssueRegex,
   githubPRRegex,
   slackRegex,
@@ -196,11 +201,17 @@ export async function getLinkedIssueDataWithUrl(
           },
         });
 
-        if (!integrationAccount) {
-          return {
+        const subType = integrationAccount
+          ? LinkedSlackMessageType.Thread
+          : LinkedSlackMessageType.Message;
+
+        let message: string;
+        if (integrationAccount) {
+          const slackMessageResponse = await getSlackMessage(
             integrationAccount,
-            linkInput: { url: linkData.url, issueId, createdById: userId },
-          };
+            { channelId, threadTs },
+          );
+          message = slackMessageResponse.messages[0].text;
         }
 
         return {
@@ -210,6 +221,7 @@ export async function getLinkedIssueDataWithUrl(
             sourceId: `${channelId}_${parentTs || messageTs}`,
             source: {
               type: IntegrationName.Slack,
+              subType,
               syncedCommentId: null,
             },
             sourceData: {
@@ -217,6 +229,7 @@ export async function getLinkedIssueDataWithUrl(
               messageTs,
               parentTs,
               slackTeamDomain,
+              message,
             },
             createdById: userId,
             issueId,
@@ -244,6 +257,7 @@ export async function sendFirstComment(
   linkedIssue: LinkedIssueWithRelations,
   type: LinkedIssueSubType,
 ) {
+  const subType = (linkedIssue.source as LinkedIssueSource).subType || null;
   if (type === LinkedIssueSubType.GithubIssue) {
     await sendGithubFirstComment(
       prisma,
@@ -253,7 +267,10 @@ export async function sendFirstComment(
       linkedIssue.issue,
       linkedIssue.sourceId,
     );
-  } else if (type === LinkedIssueSubType.Slack) {
+  } else if (
+    type === LinkedIssueSubType.Slack &&
+    subType === LinkedSlackMessageType.Thread
+  ) {
     await sendSlackLinkedMessage(
       prisma,
       logger,

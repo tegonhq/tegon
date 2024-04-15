@@ -50,6 +50,12 @@ export class WorkspacesController {
     return await this.workspacesService.getAllWorkspaces(userId);
   }
 
+  @Post('seed_workspaces')
+  async seedWorkspaces() {
+    await this.workspacesService.seedWorkspaces();
+    return { status: 200 };
+  }
+
   @Get(':workspaceId')
   @UseGuards(new AuthGuard())
   async getWorkspace(

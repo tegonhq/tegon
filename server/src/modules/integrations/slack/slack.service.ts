@@ -41,6 +41,7 @@ import {
 } from './slack.utils';
 import { EventBody } from '../integrations.interface';
 import { getUserId, postRequest } from '../integrations.utils';
+import { LinkedSlackMessageType } from 'modules/linked-issue/linked-issue.interface';
 
 @Injectable()
 export default class SlackService {
@@ -58,25 +59,30 @@ export default class SlackService {
   });
 
   async handleEvents(eventBody: EventBody) {
+    // Check if the event is a URL verification challenge
     if (eventBody.type === 'url_verification') {
       this.logger.log('Responding to Slack URL verification challenge');
       return { challenge: eventBody.challenge };
     }
 
     const { event, team_id } = eventBody;
+    // Get the integration account for the Slack team
     const integrationAccount = await getSlackIntegrationAccount(
       this.prisma,
       team_id,
     );
 
+    // If no integration account is found, log and return undefined
     if (!integrationAccount) {
       this.logger.debug('No integration account found for team:', team_id);
       return undefined;
     }
 
     const slackSettings = integrationAccount.settings as Settings;
+    // Check if the message is from the bot user
     const isBotMessage = slackSettings.Slack.botUserId === event.user;
 
+    // If the message is from the bot, ignore it
     if (isBotMessage) {
       this.logger.debug('Ignoring bot message');
       return undefined;
@@ -84,10 +90,13 @@ export default class SlackService {
 
     this.logger.log('Processing Slack event:', event.type);
 
+    // Handle different event types
     switch (event.type) {
       case 'message':
+        // Handle thread messages
         return await this.handleThread(event, integrationAccount);
       case 'reaction_added':
+        // Handle message reactions
         await this.handleMessageReaction(eventBody, integrationAccount);
         return undefined;
       default:
@@ -116,6 +125,7 @@ export default class SlackService {
   }
 
   async slashOpenModal(eventBody: EventBody) {
+    // Extract relevant data from the event body
     const { trigger_id: triggerId, token } = eventBody;
     const channelId = eventBody?.channel_id || eventBody.channel?.id;
     const slackTeamId = eventBody?.team_id || eventBody.team?.id;
@@ -126,16 +136,19 @@ export default class SlackService {
       `Received slash command event for team ${slackTeamId} in channel ${channelId}`,
     );
 
+    // Find the integration account associated with the Slack team ID
     const integrationAccount = await this.prisma.integrationAccount.findFirst({
       where: { accountId: slackTeamId },
       include: { workspace: true, integrationDefinition: true },
     });
 
+    // If no integration account is found, log a message and return
     if (!integrationAccount) {
       this.logger.log(`No integration account found for team ${slackTeamId}`);
       return;
     }
 
+    // Create session data object with relevant information
     const sessionData = {
       slackTeamId,
       channelId,
@@ -150,6 +163,7 @@ export default class SlackService {
       `Creating modal view for team ${slackTeamId} in channel ${channelId}`,
     );
 
+    // Get the modal view and updated session data based on the integration account and other parameters
     const { view, sessionData: updatedSessionData } = getModalView(
       integrationAccount,
       channelId,
@@ -157,6 +171,7 @@ export default class SlackService {
       sessionData,
     );
 
+    // Store the updated session data in the session object using the token as the key
     this.session[token] = updatedSessionData as SlashCommandSessionRecord;
 
     this.logger.debug(
@@ -164,6 +179,7 @@ export default class SlackService {
     );
 
     try {
+      // Make a POST request to the Slack API to open the modal view
       await postRequest(
         'https://slack.com/api/views.open',
         getSlackHeaders(integrationAccount),
@@ -188,19 +204,23 @@ export default class SlackService {
   async handleViewSubmission(token: string, payload: EventBody) {
     this.logger.debug(`Handling view submission for token: ${token}`);
 
+    // Destructure the session data and get the integration account
     const { containsDescription, ...otherSessionData } = this.session[token];
     const integrationAccount = await this.prisma.integrationAccount.findUnique({
       where: { id: otherSessionData.IntegrationAccountId },
       include: { workspace: true, integrationDefinition: true },
     });
 
+    // Check if the integration account exists
     if (!integrationAccount) {
       this.logger.log(`Integration account not found for token: ${token}`);
       return { response_action: 'clear' };
     }
 
+    // Check if the description is provided
     if (!containsDescription) {
       this.logger.debug('Description not provided, updating modal view');
+      // Get the updated modal view and session data
       const { view, sessionData } = getModalView(
         integrationAccount,
         otherSessionData.channelId,
@@ -208,23 +228,29 @@ export default class SlackService {
         otherSessionData,
         payload,
       );
+      // Update the session data
       this.session[token] = sessionData as SlashCommandSessionRecord;
+      // Return the updated modal view
       return { response_action: 'update', view };
     }
 
+    // Description is provided, create the Slack issue
     this.logger.debug('Description provided, creating Slack issue');
+    // Get the issue data
     const issueData = await getIssueData(
       this.prisma,
       this.session[token],
       payload,
       integrationAccount,
     );
+    // Create the Slack issue
     await this.createSlackIssue(
       integrationAccount,
       this.session[token],
       issueData,
     );
 
+    // Clear the modal view
     return { response_action: 'clear' };
   }
 
@@ -233,7 +259,10 @@ export default class SlackService {
     sessionData: SlashCommandSessionRecord,
     issueData: slackIssueData,
   ) {
+    // Extract issueInput, sourceMetadata, and userId from issueData
     const { issueInput, sourceMetadata, userId } = issueData;
+
+    // Create a new issue using the IssuesService
     const createdIssue = await this.issuesService.createIssueAPI(
       { teamId: sessionData.teamId } as TeamRequestParams,
       issueInput as CreateIssueInput,
@@ -242,12 +271,14 @@ export default class SlackService {
       sourceMetadata,
     );
 
+    // Get the Slack integration account for the user who created the issue
     const slackIntegrationAccount = await getSlackUserIntegrationAccount(
       this.prisma,
       createdIssue.createdById,
       createdIssue.team.workspaceId,
     );
 
+    // Prepare the payload for sending a Slack message
     const payload = {
       channel: sessionData.channelId,
       text: `<@${slackIntegrationAccount.accountId}> created a Issue`,
@@ -255,8 +286,11 @@ export default class SlackService {
       ...(sessionData.threadTs ? { thread_ts: sessionData.threadTs } : {}),
     };
 
+    // Send the Slack message
     const messageResponse = await sendSlackMessage(integrationAccount, payload);
+
     if (messageResponse.ok) {
+      // If the message was sent successfully, create an issue comment and link the issue
       const linkedIssueData = await createIssueCommentAndLinkIssue(
         this.prisma,
         messageResponse.message,
@@ -266,6 +300,7 @@ export default class SlackService {
         userId,
       );
 
+      // Update the issue with the linked issue data
       await this.issuesService.updateIssueApi(
         { teamId: sessionData.teamId } as TeamRequestParams,
         {} as UpdateIssueInput,
@@ -276,6 +311,7 @@ export default class SlackService {
       );
     }
 
+    // Return the created issue
     return createdIssue;
   }
 
@@ -283,17 +319,30 @@ export default class SlackService {
     eventBody: EventBody,
     integrationAccount: IntegrationAccountWithRelations,
   ): Promise<IssueComment> {
+    // Get the message from the event body based on the subtype
     const message =
       eventBody.subtype === 'message_changed' ? eventBody.message : eventBody;
 
+    // Find the channel mapping in the integration account settings
+    const channelMapping = (
+      integrationAccount.settings as Settings
+    ).Slack.channelMappings.find(
+      ({ channelId: mappedChannelId }) => mappedChannelId === eventBody.channel,
+    );
+    // If no channel mapping is found, return undefined
+    if (!channelMapping) return undefined;
+
+    // Generate thread ID and parent thread ID
     const threadId = `${eventBody.channel}_${message.ts}`;
     const parentThreadId = `${eventBody.channel}_${message.thread_ts}`;
 
     this.logger.debug(`Handling Slack thread with ID: ${threadId}`);
 
+    // Get the linked issue by the parent thread ID
     const linkedIssue =
       await this.linkedIssueService.getLinkedIssueBySourceId(parentThreadId);
 
+    // If no linked issue is found, log and return undefined
     if (!linkedIssue) {
       this.logger.debug(
         `No linked issue found for Slack issue ID: ${parentThreadId}`,
@@ -301,6 +350,7 @@ export default class SlackService {
       return undefined;
     }
 
+    // Extract issue ID and synced comment ID from the linked issue
     const { issueId, source: linkedIssueSource } = linkedIssue;
     const userId = message.user
       ? await getUserId(this.prisma, { id: message.user })
@@ -310,12 +360,14 @@ export default class SlackService {
 
     let displayName;
     if (message.user) {
+      // Get the Slack user data if user ID is available
       const userData = await getExternalSlackUser(
         integrationAccount,
         message.user,
       );
       displayName = userData.user.real_name;
     }
+    // Prepare source data for the linked comment
     const sourceData = {
       idTs: message.ts,
       parentTs: message.thread_ts,
@@ -325,12 +377,14 @@ export default class SlackService {
       userDisplayName: message.username ? message.username : displayName,
     };
 
+    // Check if a linked comment already exists for the thread ID
     const linkedComment = await this.prisma.linkedComment.findFirst({
       where: { sourceId: threadId },
       include: { comment: true },
     });
 
     if (linkedComment) {
+      // If a linked comment exists, update the existing comment
       this.logger.debug(`Updating existing comment for thread ID: ${threadId}`);
       return this.prisma.issueComment.update({
         where: { id: linkedComment.commentId },
@@ -338,6 +392,7 @@ export default class SlackService {
       });
     }
 
+    // If no linked comment exists, create a new comment
     this.logger.debug(`Creating new comment for thread ID: ${threadId}`);
     return this.prisma.issueComment.create({
       data: {
@@ -362,27 +417,39 @@ export default class SlackService {
     eventBody: EventBody,
     integrationAccount: IntegrationAccountWithRelations,
   ): Promise<IssueWithRelations | undefined> {
+    // Extract relevant data from the event body
     const { event, team_id: slackTeamId } = eventBody;
     const { reaction } = event;
-
-    if (reaction !== 'eyes') {
-      this.logger.debug(`Ignoring reaction event with reaction: ${reaction}`);
-      return undefined;
-    }
-
     const {
       item: { channel: channelId, ts: threadTs },
       user: slackUserId,
     } = event;
+
+    // Find the channel mapping for the given channel ID
+    const channelMapping = (
+      integrationAccount.settings as Settings
+    ).Slack.channelMappings.find(
+      ({ channelId: mappedChannelId }) => mappedChannelId === channelId,
+    );
+
+    // If the reaction is not 'eyes' or the channel mapping doesn't exist, ignore the event
+    if (reaction !== 'eyes' || !channelMapping) {
+      this.logger.debug(`Ignoring reaction event with reaction: ${reaction}`);
+      return undefined;
+    }
+
+    // Extract Slack settings from the integration account
     const slackSettings = integrationAccount.settings as Settings;
     const {
       Slack: { teamDomain: slackTeamDomain, channelMappings },
     } = slackSettings;
 
+    // Find the team ID based on the channel mapping
     const teamId = channelMappings.find(
       (mapping) => mapping.channelId === channelId,
     )?.teams[0].teamId;
 
+    // Create session data object
     const sessionData: SlashCommandSessionRecord = {
       channelId,
       threadTs,
@@ -393,11 +460,13 @@ export default class SlackService {
 
     this.logger.debug(`Session data: ${JSON.stringify(sessionData)}`);
 
+    // Get the Slack message using the integration account and session data
     const slackMessageResponse = await getSlackMessage(
       integrationAccount,
       sessionData,
     );
 
+    // Check if the thread is already linked to an existing issue
     const [linkedIssue, [stateId, userId]] = await Promise.all([
       this.prisma.linkedIssue.findFirst({
         where: {
@@ -410,6 +479,7 @@ export default class SlackService {
       ]),
     ]);
 
+    // If the thread is already linked to an issue, send an ephemeral message and return
     if (linkedIssue) {
       await sendEphemeralMessage(
         integrationAccount,
@@ -424,6 +494,7 @@ export default class SlackService {
       return undefined;
     }
 
+    // Create issue input data
     const issueInput: UpdateIssueInput = {
       description: slackMessageResponse.messages[0].text,
       stateId,
@@ -431,18 +502,22 @@ export default class SlackService {
       subscriberIds: [...(userId ? [userId] : [])],
     } as UpdateIssueInput;
 
+    // Create source metadata object
     const sourceMetadata = {
       id: integrationAccount.id,
       type: IntegrationName.Slack,
+      subType: LinkedSlackMessageType.Thread,
       channelId: sessionData.channelId,
     };
 
+    // Create issue data object
     const issueData: slackIssueData = { issueInput, sourceMetadata, userId };
 
     this.logger.debug(
       `Creating Slack issue with data: ${JSON.stringify(issueData)}`,
     );
 
+    // Create a new Slack issue using the integration account, session data, and issue data
     return await this.createSlackIssue(
       integrationAccount,
       sessionData,

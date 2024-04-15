@@ -12,6 +12,11 @@ export enum LinkedIssueSubType {
   Slack = 'Slack',
 }
 
+export enum LinkedSlackMessageType {
+  Message = 'Message',
+  Thread = 'Thread',
+}
+
 export class LinkIssueInput {
   @IsString()
   url: string;

@@ -20,21 +20,6 @@ export async function handleTwoWaySync(
   action: IssueCommentAction,
   userId: string,
 ) {
-  // const integrationAccount = await prisma.integrationAccount.findFirst({
-  //   where: {
-  //     settings: {
-  //       path: ['Github', 'repositoryMappings'],
-  //       array_contains: [
-  //         { teamId: issueComment.issue.teamId, bidirectional: true },
-  //       ],
-  //     } as Prisma.JsonFilter,
-  //   },
-  //   include: {
-  //     integrationDefinition: true,
-  //     workspace: true,
-  //   },
-  // });
-
   const issueSourceMetadata = issueComment.issue.sourceMetadata as Record<
     string,
     string
@@ -58,8 +43,6 @@ export async function handleTwoWaySync(
 
     if (githubSettings) {
       // Two-way sync is enabled for this team
-      // Perform the necessary sync operations here
-      // ...
 
       await upsertGithubIssueComment(
         prisma,

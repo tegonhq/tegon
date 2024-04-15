@@ -1,6 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { LinkedIssue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -36,7 +41,7 @@ export default class LinkedIssueService {
     userId: string,
   ): Promise<ApiResponse | LinkedIssue> {
     if (!isValidLinkUrl(linkData)) {
-      return { status: 400, message: "Provided url doesn't exists" };
+      throw new BadRequestException("Provided url doesn't exist");
     }
 
     const linkedIssue = await this.prisma.linkedIssue.findFirst({
@@ -44,13 +49,11 @@ export default class LinkedIssueService {
       include: { issue: { include: { team: true } } },
     });
     if (linkedIssue) {
-      return {
-        status: 400,
-        message: `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
-      };
+      throw new BadRequestException(
+        `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
+      );
     }
     try {
-      console.log('here');
       const { integrationAccount, linkInput } = await getLinkedIssueDataWithUrl(
         this.prisma,
         linkData,
@@ -58,8 +61,6 @@ export default class LinkedIssueService {
         issueParams.issueId,
         userId,
       );
-
-      console.log(linkInput);
 
       const linkedIssue = await this.createLinkIssueAPI(linkInput);
 
@@ -74,7 +75,7 @@ export default class LinkedIssueService {
       );
       return linkedIssue;
     } catch (error) {
-      return { status: 500, message: 'Failed to create linked issue' };
+      throw new InternalServerErrorException('Failed to create linked issue');
     }
   }
 
@@ -114,10 +115,9 @@ export default class LinkedIssueService {
         include: { issue: { include: { team: true } } },
       });
       if (existingLinkedIssue) {
-        return {
-          status: 400,
-          message: `This URL has already been linked to an issue ${existingLinkedIssue.issue.team.identifier}-${existingLinkedIssue.issue.number}`,
-        };
+        throw new BadRequestException(
+          `This URL has already been linked to an issue ${existingLinkedIssue.issue.team.identifier}-${existingLinkedIssue.issue.number}`,
+        );
       }
     }
 
