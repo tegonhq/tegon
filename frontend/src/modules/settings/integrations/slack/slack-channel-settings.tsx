@@ -4,6 +4,8 @@ import { RiDeleteBin7Line } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
+import type { IntegrationAccountType } from 'common/types/integration-account';
+
 import { Button } from 'components/ui/button';
 import { TeamIcon } from 'components/ui/team-icon';
 
@@ -16,7 +18,6 @@ import {
   type ChannelMapping,
   type Team,
 } from './add-team-popover';
-import type { IntegrationAccountType } from 'common/types/integration-account';
 
 interface SlackChannelSettingsProps {
   slackAccount: IntegrationAccountType;

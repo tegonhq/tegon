@@ -3,6 +3,8 @@
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
+import { SCOPES } from 'common/scopes';
+
 import {
   CommandEmpty,
   CommandGroup,
@@ -12,7 +14,6 @@ import {
   CommandSeparator,
   CommandDialog as CommandDialogC,
 } from 'components/ui/command';
-import { SCOPES } from 'common/scopes';
 
 export function CommandDialog() {
   const [open, setOpen] = React.useState(false);

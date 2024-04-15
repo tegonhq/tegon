@@ -35,5 +35,4 @@ export const DisplaySettingsModel = types.model({
   showEmptyGroups: types.boolean,
   showTriageIssues: types.boolean,
   showCompletedIssues: types.boolean,
-  sidebarCollapsed: types.boolean,
 });

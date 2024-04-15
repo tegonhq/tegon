@@ -16,6 +16,7 @@ import {
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
 import IssuesService from 'modules/issues/issues.service';
+import { LinkedSlackMessageType } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { OAuthCallbackService } from 'modules/oauth-callback/oauth-callback.service';
 
@@ -41,7 +42,6 @@ import {
 } from './slack.utils';
 import { EventBody } from '../integrations.interface';
 import { getUserId, postRequest } from '../integrations.utils';
-import { LinkedSlackMessageType } from 'modules/linked-issue/linked-issue.interface';
 
 @Injectable()
 export default class SlackService {
@@ -330,7 +330,9 @@ export default class SlackService {
       ({ channelId: mappedChannelId }) => mappedChannelId === eventBody.channel,
     );
     // If no channel mapping is found, return undefined
-    if (!channelMapping) return undefined;
+    if (!channelMapping) {
+      return undefined;
+    }
 
     // Generate thread ID and parent thread ID
     const threadId = `${eventBody.channel}_${message.ts}`;

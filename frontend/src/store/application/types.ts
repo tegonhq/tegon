@@ -12,7 +12,6 @@ export interface DisplaySettingsModelType {
   showEmptyGroups: boolean;
   showTriageIssues: boolean;
   showCompletedIssues: boolean;
-  sidebarCollapsed: boolean;
 }
 
 export interface UpdateDisplaySettingsBody

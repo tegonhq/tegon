@@ -1,13 +1,15 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import type { UseFormReturn } from 'react-hook-form';
+
 import type {
   IntegrationAccountType,
   Settings,
 } from 'common/types/integration-account';
 import type { WorkflowType } from 'common/types/team';
 
+import { draftKey } from './new-issues-type';
 import { getDefaultStatus } from '../components/status-dropdown-utils';
-import type { UseFormReturn } from 'react-hook-form';
 
 export function isBirectionalEnabled(
   githubAccounts: IntegrationAccountType[],
@@ -39,11 +41,21 @@ export function getDefaultValues(
   workflows: WorkflowType[],
   pathname: string,
 ): DefaultValues {
+  const draftData = localStorage.getItem(draftKey);
+  let defaultValues = {};
+
+  if (draftData) {
+    defaultValues = JSON.parse(draftData);
+    localStorage.removeItem(draftKey);
+  }
+
   return {
     labelIds: [],
     stateId: getDefaultStatus(workflows, pathname),
     priority: 0,
     isBidirectional: false,
+
+    ...defaultValues,
   };
 }
 

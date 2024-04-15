@@ -6,23 +6,21 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import { getTeamColor } from 'common/color-utils';
-
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
 } from 'components/ui/breadcrumb';
 import { Button } from 'components/ui/button';
+import { TeamIcon } from 'components/ui/team-icon';
 import { useCurrentTeam } from 'hooks/teams';
-import { SidebarLine, TeamLine } from 'icons';
+import { SidebarLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { IssueOptionsDropdown } from './issue-actions/issue-options-dropdown';
 import { TriageAcceptModal } from '../triage-view/triage-accept-modal';
 import { TriageDeclineModal } from '../triage-view/triage-decline-modal';
-import { TeamIcon } from 'components/ui/team-icon';
 
 interface HeaderProps {
   isTriageView?: boolean;
@@ -52,14 +50,12 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
   return (
     <header className="flex pl-8 px-4 py-3 w-full border-b gap-2 justify-between items-center">
       <div className="flex gap-2 items-center">
-        {applicationStore.displaySettings.sidebarCollapsed && (
+        {applicationStore.sidebarCollapsed && (
           <Button
             variant="ghost"
             size="xs"
             onClick={() => {
-              applicationStore.updateDisplaySettings({
-                sidebarCollapsed: false,
-              });
+              applicationStore.updateSideBar(false);
             }}
           >
             <SidebarLine size={16} />

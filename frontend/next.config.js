@@ -1,7 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { withSentryConfig } from '@sentry/nextjs';
-
 module.exports = {
   output: 'standalone',
   async redirects() {
@@ -41,13 +39,14 @@ module.exports = {
   publicRuntimeConfig: {
     // Will be available on both server and client
     NEXT_PUBLIC_BASE_HOST: process.env.NEXT_PUBLIC_BASE_HOST,
-    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_SYNC_SERVER: process.env.NEXT_PUBLIC_SYNC_SERVER,
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   },
   output: 'standalone',
 };
 
 // Injected content via Sentry wizard below
+const { withSentryConfig } = require('@sentry/nextjs');
 
 module.exports = withSentryConfig(
   module.exports,

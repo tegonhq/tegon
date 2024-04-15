@@ -6,19 +6,17 @@ import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { getTeamColor } from 'common/color-utils';
-
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
 } from 'components/ui/breadcrumb';
 import { Button } from 'components/ui/button';
+import { TeamIcon } from 'components/ui/team-icon';
 import { useCurrentTeam } from 'hooks/teams';
-import { SidebarLine, TeamLine } from 'icons';
+import { SidebarLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
-import { TeamIcon } from 'components/ui/team-icon';
 
 interface HeaderProps {
   title: string;
@@ -38,7 +36,7 @@ export const Header = observer(({ title }: HeaderProps) => {
           variant="ghost"
           size="xs"
           onClick={() => {
-            applicationStore.updateDisplaySettings({ sidebarCollapsed: false });
+            applicationStore.updateSideBar(false);
           }}
         >
           <SidebarLine size={16} />

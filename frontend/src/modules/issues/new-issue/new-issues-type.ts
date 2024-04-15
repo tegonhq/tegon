@@ -12,3 +12,5 @@ export const NewIssueSchema = z.object({
   assigneeId: z.optional(z.string()),
   isBidirectional: z.boolean(),
 });
+
+export const draftKey = 'CreateIssueDraft';

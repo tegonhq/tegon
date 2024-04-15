@@ -7,9 +7,9 @@ import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { Button } from 'components/ui/button';
 
-import { SlackPersonalConnect } from './slack-personal-connect';
-import { SlackOrganizationConnect } from './slack-organization-connect';
 import { SlackChannelConnext } from './slack-channel-connect';
+import { SlackOrganizationConnect } from './slack-organization-connect';
+import { SlackPersonalConnect } from './slack-personal-connect';
 
 export function Slack() {
   const pathname = usePathname();

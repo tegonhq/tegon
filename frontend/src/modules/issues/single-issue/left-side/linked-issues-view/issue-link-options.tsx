@@ -3,7 +3,7 @@
 import { RiGithubFill, RiLink, RiSlackFill } from '@remixicon/react';
 import { useRouter } from 'next/router';
 
-import { useGithubAccounts } from 'modules/settings/integrations/github/github-utils';
+import { useIntegrationAccounts } from 'modules/settings/integrations/integration-util';
 
 import { IntegrationName } from 'common/types/integration-definition';
 import { LinkedIssueSubType } from 'common/types/linked-issue';
@@ -12,7 +12,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from 'components/ui/dropdown-menu';
-import { useIntegrationAccounts } from 'modules/settings/integrations/integration-util';
 
 interface IssueLinkOptionsProps {
   setDialogOpen: (type: LinkedIssueSubType) => void;

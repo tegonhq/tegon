@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 
-import { getTeamColor } from 'common/color-utils';
 import type { TeamType } from 'common/types/team';
 
 import { Button } from 'components/ui/button';
@@ -12,10 +11,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
-import { TeamLine } from 'icons';
+import { TeamIcon } from 'components/ui/team-icon';
 
 import { useContextStore } from 'store/global-context-provider';
-import { TeamIcon } from 'components/ui/team-icon';
 
 interface TeamProps {
   value?: string;

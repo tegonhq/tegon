@@ -39,7 +39,7 @@ import {
   isBirectionalEnabled,
   setDefaultValuesAgain,
 } from './new-issue-utils';
-import { NewIssueSchema } from './new-issues-type';
+import { draftKey, NewIssueSchema } from './new-issues-type';
 import { IssueDescription } from '../single-issue/left-side/issue-description';
 
 interface NewIssueProps {
@@ -81,9 +81,20 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
 
   const onSubmit = (values: CreateIssueParams) => {
     createIssue({ ...values, teamId: team.id, parentId });
-
     onClose();
   };
+
+  React.useEffect(() => {
+    return () => {
+      console.log(form.formState);
+      if (
+        !form.formState.isSubmitted &&
+        Object.keys(form.formState.dirtyFields).length > 0
+      ) {
+        localStorage.setItem(draftKey, JSON.stringify(form.getValues()));
+      }
+    };
+  }, [form]);
 
   const setDescriptionValue = useDebouncedCallback((value) => {
     setDescription(value);

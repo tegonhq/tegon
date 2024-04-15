@@ -4,6 +4,7 @@ import React from 'react';
 
 import { PriorityIcons } from 'modules/issues/components';
 
+import { SCOPES } from 'common/scopes';
 import { Priorities } from 'common/types/issue';
 
 import { useShortcutHotKeys } from 'hooks';
@@ -14,7 +15,6 @@ import { useUpdateIssueMutation } from 'services/issues';
 import { useContextStore } from 'store/global-context-provider';
 
 import { CommonDialog } from './common-dialog';
-import { SCOPES } from 'common/scopes';
 
 export const PriorityDialog = observer(() => {
   const [open, setOpen] = React.useState(false);

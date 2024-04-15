@@ -7,6 +7,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { ModalIssueItem } from 'modules/issues/components/modals/modal-issue-item';
 
+import { SCOPES } from 'common/scopes';
 import type { IssueType } from 'common/types/issue';
 
 import {
@@ -20,7 +21,6 @@ import { Loader } from 'components/ui/loader';
 import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { useGetSearchIssuesQuery } from 'services/search';
-import { SCOPES } from 'common/scopes';
 
 interface SearchDialogProps {
   open: boolean;

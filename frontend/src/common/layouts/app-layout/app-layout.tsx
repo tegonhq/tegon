@@ -32,7 +32,7 @@ interface LayoutProps {
 
 export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   const { applicationStore, notificationsStore } = useContextStore();
-  const isCollapsed = applicationStore.displaySettings.sidebarCollapsed;
+  const isCollapsed = applicationStore.sidebarCollapsed;
   const {
     query: { workspaceSlug },
   } = useRouter();
@@ -40,13 +40,13 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   const ref = React.useRef<ImperativePanelHandle>(null);
 
   React.useEffect(() => {
-    if (!applicationStore.displaySettings.sidebarCollapsed) {
+    if (!applicationStore.sidebarCollapsed) {
       const panel = ref.current;
       if (panel) {
         panel.expand();
       }
     }
-  }, [applicationStore.displaySettings.sidebarCollapsed]);
+  }, [applicationStore.sidebarCollapsed]);
 
   return (
     <div className="md:flex flex-col flex-grow">
@@ -63,14 +63,10 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
             minSize={14}
             maxSize={14}
             onExpand={() => {
-              applicationStore.updateDisplaySettings({
-                sidebarCollapsed: false,
-              });
+              applicationStore.updateSideBar(false);
             }}
             onCollapse={() => {
-              applicationStore.updateDisplaySettings({
-                sidebarCollapsed: true,
-              });
+              applicationStore.updateSideBar(true);
             }}
             className={cn(
               isCollapsed && 'transition-all duration-300 ease-in-out',

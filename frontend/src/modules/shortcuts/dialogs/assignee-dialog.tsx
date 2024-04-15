@@ -4,6 +4,7 @@ import React from 'react';
 
 import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
+import { SCOPES } from 'common/scopes';
 
 import {
   Avatar,
@@ -21,7 +22,6 @@ import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
 
 import { CommonDialog } from './common-dialog';
-import { SCOPES } from 'common/scopes';
 
 export const AssigneeDialog = observer(() => {
   const [open, setOpen] = React.useState(false);

@@ -2,6 +2,7 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
+import { SCOPES } from 'common/scopes';
 import type { LabelType } from 'common/types/label';
 
 import { BadgeColor } from 'components/ui/badge';
@@ -14,7 +15,6 @@ import { useUpdateIssueMutation } from 'services/issues';
 import { useContextStore } from 'store/global-context-provider';
 
 import { CommonDialog } from './common-dialog';
-import { SCOPES } from 'common/scopes';
 
 export const LabelDialog = observer(() => {
   const [open, setOpen] = React.useState(false);
