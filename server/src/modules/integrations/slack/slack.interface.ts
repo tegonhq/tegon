@@ -2,6 +2,7 @@
 
 import { IntegrationName } from '@prisma/client';
 import { IsString } from 'class-validator';
+
 import { UpdateIssueInput } from 'modules/issues/issues.interface';
 import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 

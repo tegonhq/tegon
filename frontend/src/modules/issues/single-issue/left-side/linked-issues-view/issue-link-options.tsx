@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiGithubFill } from '@remixicon/react';
+import { RiGithubFill, RiLink, RiSlackFill } from '@remixicon/react';
 import { useRouter } from 'next/router';
 
 import { useGithubAccounts } from 'modules/settings/integrations/github/github-utils';
@@ -12,21 +12,34 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from 'components/ui/dropdown-menu';
+import { useIntegrationAccounts } from 'modules/settings/integrations/integration-util';
 
 interface IssueLinkOptionsProps {
   setDialogOpen: (type: LinkedIssueSubType) => void;
 }
 
 export function IssueLinkOptions({ setDialogOpen }: IssueLinkOptionsProps) {
-  const { githubAccounts } = useGithubAccounts(IntegrationName.Github);
-  const githubIsIntegrated = githubAccounts.length > 0;
+  const { integrationAccountsForName: githubAccounts } = useIntegrationAccounts(
+    IntegrationName.Github,
+  );
+  const { integrationAccountsForName: slackAccounts } = useIntegrationAccounts(
+    IntegrationName.Slack,
+  );
+
   const {
     push,
     query: { workspaceSlug },
   } = useRouter();
 
-  const onSelect = (type: LinkedIssueSubType, integrationName: string) => {
-    if (githubIsIntegrated) {
+  const onSelect = (type: LinkedIssueSubType, integrationName?: string) => {
+    const githubIsIntegrated = githubAccounts.length > 0;
+    const slackIsIntegrated = slackAccounts.length > 0;
+
+    if (
+      !integrationName ||
+      (integrationName === 'github' && githubIsIntegrated) ||
+      (integrationName === 'slack' && slackIsIntegrated)
+    ) {
       setDialogOpen(type);
     } else {
       push(`/${workspaceSlug}/settings/integrations/${integrationName}`);
@@ -47,6 +60,20 @@ export function IssueLinkOptions({ setDialogOpen }: IssueLinkOptionsProps) {
       >
         <div className="flex items-center gap-2">
           <RiGithubFill size={16} /> Link Github pull request
+        </div>
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        onClick={() => onSelect(LinkedIssueSubType.Slack, 'slack')}
+      >
+        <div className="flex items-center gap-2">
+          <RiSlackFill size={16} /> Link Slack thread
+        </div>
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        onClick={() => onSelect(LinkedIssueSubType.ExternalLink)}
+      >
+        <div className="flex items-center gap-2">
+          <RiLink size={16} /> Link external
         </div>
       </DropdownMenuItem>
     </DropdownMenuGroup>

@@ -444,10 +444,17 @@ export default class SlackService {
       Slack: { teamDomain: slackTeamDomain, channelMappings },
     } = slackSettings;
 
-    // Find the team ID based on the channel mapping
-    const teamId = channelMappings.find(
+    // Check if the channel is connected
+    const channelConnection = channelMappings.find(
       (mapping) => mapping.channelId === channelId,
-    )?.teams[0].teamId;
+    );
+
+    if (!channelConnection) {
+      this.logger.debug(`The channel is not connected`);
+      return undefined;
+    }
+
+    const teamId = channelConnection.teams[0].teamId;
 
     // Create session data object
     const sessionData: SlashCommandSessionRecord = {

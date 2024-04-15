@@ -44,6 +44,7 @@ export function useIntegrationAccount(integrationName: IntegrationName) {
   const {
     integrationDefinitionsStore: { integrationDefinitions },
     integrationAccountsStore: { integrationAccounts },
+    integrationAccountsStore,
   } = useContextStore();
 
   const integrationDefinition = React.useMemo(
@@ -67,5 +68,9 @@ export function useIntegrationAccount(integrationName: IntegrationName) {
     [integrationAccounts],
   );
 
-  return { integrationAccount, integrationDefinition };
+  const iAccount = integrationAccount
+    ? integrationAccountsStore.getAccountWithId(integrationAccount.id)
+    : undefined;
+
+  return { integrationAccount: iAccount, integrationDefinition };
 }

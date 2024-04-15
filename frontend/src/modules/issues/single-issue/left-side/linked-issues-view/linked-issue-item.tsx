@@ -3,12 +3,14 @@
 import {
   RiDeleteBin7Fill,
   RiGithubFill,
+  RiLink,
   RiMoreFill,
   RiPencilFill,
+  RiSlackFill,
 } from '@remixicon/react';
 import React from 'react';
 
-import type { LinkedIssueType } from 'common/types/linked-issue';
+import { Integration, type LinkedIssueType } from 'common/types/linked-issue';
 
 import {
   AlertDialog,
@@ -39,24 +41,48 @@ interface LinkedIssueItemProps {
 
 export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
   const sourceData = JSON.parse(linkedIssue.sourceData);
+  const sourceMetaData = JSON.parse(linkedIssue.source);
+
   const number =
     linkedIssue.url.split('/')[linkedIssue.url.split('/').length - 1];
   const { mutate: deleteLinkedIssue } = useDeleteLinkedIssueMutation({});
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
+  function getIcon() {
+    if (sourceMetaData.type === Integration.Slack) {
+      return <RiSlackFill size={18} className="text-foreground" />;
+    }
+
+    if (sourceMetaData.type === Integration.Github) {
+      return <RiGithubFill size={18} className="text-foreground" />;
+    }
+
+    return <RiLink size={18} className="text-foreground" />;
+  }
+
+  function getTitle() {
+    if (sourceMetaData.type === Integration.Slack) {
+      return `Thread from slack`;
+    }
+
+    if (sourceMetaData.type === Integration.Github) {
+      return ` #${number} ${sourceData.title}`;
+    }
+
+    return <RiLink size={18} className="text-foreground" />;
+  }
+
   return (
     <>
       <a
         href={linkedIssue.url}
         target="_blank"
-        className="cursor-pointer w-full mb-1 border-1 hover:bg-active shadow-sm bg-white dark:bg-slate-700/20  p-3 py-3 rounded-md flex gap-2 items-center justify-between text-sm"
+        className="cursor-pointer w-full mb-1 border-1 hover:bg-active shadow-sm bg-white dark:bg-slate-700/20  p-3 py-2 rounded-md flex gap-2 items-center justify-between text-sm"
       >
         <div className="flex items-center gap-2">
-          <RiGithubFill size={18} className="text-muted-foreground" />
-          <div className="text-foreground">
-            #{number} {sourceData.title}
-          </div>
+          {getIcon()}
+          <div className="text-foreground">{getTitle()}</div>
         </div>
 
         <div>

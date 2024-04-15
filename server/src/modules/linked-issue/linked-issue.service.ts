@@ -1,11 +1,15 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+<<<<<<< HEAD
 import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
+=======
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+>>>>>>> 35fbe6f (Feat: added slack)
 import { LinkedIssue } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 

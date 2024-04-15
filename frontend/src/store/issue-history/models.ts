@@ -19,7 +19,7 @@ export const IssueHistory = types.model({
   id: types.string,
   createdAt: types.string,
   updatedAt: types.string,
-  userId: types.string,
+  userId: types.union(types.string, types.null),
   issueId: types.string,
 
   addedLabelIds: types.array(types.string),

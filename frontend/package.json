@@ -30,6 +30,7 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@remixicon/react": "^4.2.0",
+    "@sentry/nextjs": "^7.105.0",
     "@tiptap/core": "^2.2.4",
     "@tiptap/extension-heading": "^2.2.4",
     "@tiptap/extension-placeholder": "^2.2.4",

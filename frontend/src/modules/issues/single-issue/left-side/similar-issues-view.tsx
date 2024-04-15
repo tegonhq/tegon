@@ -46,6 +46,8 @@ export function SimilarIssuesView({ issueId }: SimilarIssuesViewProps) {
     return null;
   }
 
+  return null;
+
   return (
     <div
       className={cn('rounded-md border p-2 mb-2')}

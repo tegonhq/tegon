@@ -33,6 +33,7 @@ export const SlackChannelConnext = observer(() => {
       redirectURL: window.location.href,
     });
   };
+
   if (!slackAccount) {
     return null;
   }
@@ -56,9 +57,7 @@ export const SlackChannelConnext = observer(() => {
         </Button>
       </div>
 
-      {channelMappings && (
-        <SlackChannelSettings integrationAccountId={slackAccount.id} />
-      )}
+      {channelMappings && <SlackChannelSettings slackAccount={slackAccount} />}
     </div>
   );
 });

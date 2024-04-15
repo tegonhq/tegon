@@ -15,13 +15,13 @@ import { SuperTokensWrapper } from 'supertokens-auth-react';
 import { initSuperTokens } from 'common/init-config';
 import { useGetQueryClient } from 'common/lib/react-query-client';
 import { cn } from 'common/lib/utils';
+import { SCOPES } from 'common/scopes';
 
 import { ThemeProvider } from 'components/theme-provider';
 import { Toaster } from 'components/ui/toaster';
 import { TooltipProvider } from 'components/ui/tooltip';
 
 import { StoreContext, storeContextStore } from 'store/global-context-provider';
-import { SCOPES } from 'common/scopes';
 
 // Inter as default font
 export const fontSans = Inter({
