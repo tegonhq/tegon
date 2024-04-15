@@ -143,7 +143,7 @@ export const IssueLabelDropdown = observer(
       >
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
-          <PopoverContent className="w-72 p-0" align="start">
+          <PopoverContent className="w-72 p-0" align="end">
             <IssueLabelDropdownContent
               onChange={onChange}
               value={value}

@@ -88,6 +88,10 @@ Table Label {
   group Label
   groupId String
   labels Label [not null]
+
+  indexes {
+    (name, workspaceId) [unique]
+  }
 }
 
 Table Template {

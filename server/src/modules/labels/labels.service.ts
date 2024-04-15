@@ -16,16 +16,16 @@ export default class LabelsService {
   constructor(private prisma: PrismaService) {}
 
   async createLabel(labelData: CreateLabelInput): Promise<Label> {
-    const label = await this.prisma.label.create({
-      data: {
-        ...labelData,
+    return await this.prisma.label.upsert({
+      where: {
+        name_workspaceId: {
+          name: labelData.name,
+          workspaceId: labelData.workspaceId,
+        },
       },
-      include: {
-        group: true,
-      },
+      update: { deleted: null, name: labelData.name, color: labelData.color },
+      create: labelData,
     });
-
-    return label;
   }
 
   async getAllLabels(requestIdParams: RequestIdParams): Promise<Label[]> {
@@ -69,7 +69,7 @@ export default class LabelsService {
   }
 
   async deleteLabel(labelRequestIdParams: LabelRequestIdParams) {
-    return await this.prisma.label.update({
+    const label = await this.prisma.label.update({
       where: {
         id: labelRequestIdParams.labelId,
       },
@@ -77,5 +77,20 @@ export default class LabelsService {
         deleted: new Date().toISOString(),
       },
     });
+
+    await this.prisma.$executeRaw`
+      UPDATE "Issue"
+      SET "labelIds" = array_remove("labelIds", ${labelRequestIdParams.labelId})
+      WHERE ${labelRequestIdParams.labelId} = ANY("labelIds")
+    `;
+
+    await this.prisma.$executeRaw`
+    UPDATE "IssueHistory"
+    SET "addedLabelIds" = array_remove("addedLabelIds", ${labelRequestIdParams.labelId}), 
+    "removedLabelIds" = array_remove("removedLabelIds", ${labelRequestIdParams.labelId})
+    WHERE ${labelRequestIdParams.labelId} = ANY("addedLabelIds") or ${labelRequestIdParams.labelId} = ANY("removedLabelIds")
+    `;
+
+    return label;
   }
 }

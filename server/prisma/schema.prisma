@@ -116,6 +116,8 @@ model Label {
   group       Label?    @relation("Group", fields: [groupId], references: [id])
   groupId     String?
   labels      Label[]   @relation("Group")
+
+  @@unique([name, workspaceId])
 }
 
 model Template {
