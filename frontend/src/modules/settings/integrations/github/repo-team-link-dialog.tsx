@@ -110,20 +110,28 @@ export function RepoTeamLinkDialog({
       repositoryMappings = [
         {
           teamId: values.teamId,
-          default: false,
+          default: true,
           githubRepoId: values.githubRepoId,
           bidirectional: values.bidirectional,
           githubRepoFullName: repository.fullName,
         },
       ];
-    } else {
+    } else if (indexToUpdate > -1) {
       repositoryMappings[indexToUpdate] = {
+        ...repositoryMappings[indexToUpdate],
         teamId: values.teamId,
-        default: false,
         githubRepoId: values.githubRepoId,
         bidirectional: values.bidirectional,
         githubRepoFullName: repository.fullName,
       };
+    } else {
+      repositoryMappings.push({
+        teamId: values.teamId,
+        githubRepoId: values.githubRepoId,
+        bidirectional: values.bidirectional,
+        githubRepoFullName: repository.fullName,
+        default: false,
+      });
     }
 
     updateIntegrationAccount({
@@ -335,7 +343,7 @@ export function RepoTeamLinkDialog({
                   <FormItem className="flex flex-row items-center justify-between rounded-lg mt-4">
                     <div className="space-y-0.5">
                       <FormLabel>Enable bidirectional sync</FormLabel>
-                      <FormDescription>
+                      <FormDescription className="max-w-[calc(100%_-_100px)]">
                         When enabled, issues created in Tegon will also sync to
                         Github. Otherwise only issues created in GitHub will
                         sync to Tegon

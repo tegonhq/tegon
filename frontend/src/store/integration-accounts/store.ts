@@ -61,6 +61,18 @@ export const IntegrationAccountsStore: IAnyStateTreeNode = types
           integrationAccount.id === id,
       );
     },
+    getAccountWithIds(ids: string[]) {
+      return self.integrationAccounts.filter(
+        (integrationAccount: IntegrationAccountType) =>
+          ids.includes(integrationAccount.id),
+      );
+    },
+    getAccountForIntegrationDefinition(id: string) {
+      return self.integrationAccounts.filter(
+        (integrationAccount: IntegrationAccountType) =>
+          integrationAccount.integrationDefinitionId === id,
+      );
+    },
   }));
 
 export type IntegrationAccountsStoreType = Instance<

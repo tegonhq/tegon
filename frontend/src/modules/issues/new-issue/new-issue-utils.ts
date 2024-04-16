@@ -21,7 +21,11 @@ export function isBirectionalEnabled(
     const settings: Settings = JSON.parse(githubAccount.settings);
 
     settings.Github.repositoryMappings.forEach((mapping) => {
-      if (mapping.teamId === teamId) {
+      if (
+        mapping.teamId === teamId &&
+        mapping.default &&
+        !mapping.bidirectional
+      ) {
         isBirectionalEnabled = true;
       }
     });

@@ -26,7 +26,7 @@ export function ProjectsLine({ size = 18, className, color }: IconProps) {
           height="6.10289"
           rx="2"
           stroke={color ? color : 'currentColor'}
-          stroke-width="2"
+          strokeWidth="2"
         />
         <rect
           x="11.8972"
@@ -35,7 +35,7 @@ export function ProjectsLine({ size = 18, className, color }: IconProps) {
           height="6.10289"
           rx="2"
           stroke={color ? color : 'currentColor'}
-          stroke-width="2"
+          strokeWidth="2"
         />
         <rect
           x="2"
@@ -44,7 +44,7 @@ export function ProjectsLine({ size = 18, className, color }: IconProps) {
           height="6.10289"
           rx="2"
           stroke={color ? color : 'currentColor'}
-          stroke-width="2"
+          strokeWidth="2"
         />
         <rect
           x="11.8972"
@@ -53,7 +53,7 @@ export function ProjectsLine({ size = 18, className, color }: IconProps) {
           height="6.10289"
           rx="2"
           stroke={color ? color : 'currentColor'}
-          stroke-width="2"
+          strokeWidth="2"
         />
       </svg>
     </svg>

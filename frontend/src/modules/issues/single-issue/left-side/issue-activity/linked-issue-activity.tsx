@@ -53,29 +53,30 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
   }
 
   function getTitle() {
-    if (sourceMetaData.type === Integration.Slack) {
-      return (
-        <>
-          {getIcon()}
-          <span className="mx-[2px]">
-            {sourceMetaData.subType === LinkedSlackMessageType.Thread
-              ? 'Thread'
-              : 'Message'}
-          </span>
-          from slack
-        </>
-      );
-    }
+    if (sourceMetaData) {
+      if (sourceMetaData.type === Integration.Slack) {
+        return (
+          <>
+            {getIcon()}
+            <span className="mx-[2px]">
+              {sourceMetaData.subType === LinkedSlackMessageType.Thread
+                ? 'Thread'
+                : 'Message'}
+            </span>
+            from slack
+          </>
+        );
+      }
 
-    if (sourceMetaData.type === Integration.Github) {
-      return (
-        <>
-          {getIcon()} {sourceData.title}
-        </>
-      );
+      if (sourceMetaData.type === Integration.Github) {
+        return (
+          <>
+            {getIcon()} {sourceData.title}
+          </>
+        );
+      }
     }
-
-    return <RiLink size={18} className="text-foreground" />;
+    return <>{sourceData?.title}</>;
   }
 
   return (

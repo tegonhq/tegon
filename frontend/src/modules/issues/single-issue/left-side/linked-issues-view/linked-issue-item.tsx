@@ -54,39 +54,43 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
   function getIcon() {
-    if (sourceMetaData.type === Integration.Slack) {
-      return <SlackIcon size={16} className="text-foreground" />;
-    }
+    if (sourceMetaData) {
+      if (sourceMetaData.type === Integration.Slack) {
+        return <SlackIcon size={16} className="text-foreground" />;
+      }
 
-    if (sourceMetaData.type === Integration.Github) {
-      return <RiGithubFill size={18} className="text-foreground" />;
+      if (sourceMetaData.type === Integration.Github) {
+        return <RiGithubFill size={18} className="text-foreground" />;
+      }
     }
 
     return <RiLink size={18} className="text-foreground" />;
   }
 
   function getTitle() {
-    if (sourceMetaData.type === Integration.Slack) {
-      return (
-        <div className="flex">
-          <div className="mr-1">
-            {sourceMetaData.subType === LinkedSlackMessageType.Thread
-              ? 'Thread'
-              : 'Message'}
+    if (sourceMetaData) {
+      if (sourceMetaData.type === Integration.Slack) {
+        return (
+          <div className="flex">
+            <div className="mr-1">
+              {sourceMetaData.subType === LinkedSlackMessageType.Thread
+                ? 'Thread'
+                : 'Message'}
+            </div>
+            from slack
+            <div className="mx-1 text-muted-foreground max-w-[200px]">
+              <div className="truncate">{sourceData.message}</div>
+            </div>
           </div>
-          from slack
-          <div className="mx-1 text-muted-foreground max-w-[200px]">
-            <div className="truncate">{sourceData.message}</div>
-          </div>
-        </div>
-      );
+        );
+      }
+
+      if (sourceMetaData.type === Integration.Github) {
+        return ` #${number} ${sourceData.title}`;
+      }
     }
 
-    if (sourceMetaData.type === Integration.Github) {
-      return ` #${number} ${sourceData.title}`;
-    }
-
-    return <RiLink size={18} className="text-foreground" />;
+    return <div className="flex">{sourceData?.title}</div>;
   }
 
   return (

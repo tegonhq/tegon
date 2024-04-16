@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-import type { IntegrationAccountType } from 'common/types/integration-account';
 import {
   IntegrationName,
   type IntegrationDefinitionType,
@@ -13,7 +12,8 @@ import { useContextStore } from 'store/global-context-provider';
 export function useGithubAccounts(integrationName: IntegrationName) {
   const {
     integrationDefinitionsStore: { integrationDefinitions },
-    integrationAccountsStore: { integrationAccounts },
+
+    integrationAccountsStore,
   } = useContextStore();
 
   const githubDefinition = React.useMemo(
@@ -26,15 +26,10 @@ export function useGithubAccounts(integrationName: IntegrationName) {
     [integrationDefinitions],
   );
 
-  const githubAccounts = React.useMemo(
-    () =>
-      integrationAccounts.filter(
-        (integrationAccount: IntegrationAccountType) =>
-          integrationAccount.integrationDefinitionId === githubDefinition.id,
-      ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [integrationAccounts],
-  );
+  const githubAccounts =
+    integrationAccountsStore.getAccountForIntegrationDefinition(
+      githubDefinition.id,
+    );
 
   return { githubAccounts, githubDefinition };
 }

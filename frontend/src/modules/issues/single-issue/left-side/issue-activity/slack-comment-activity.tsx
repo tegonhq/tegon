@@ -38,9 +38,12 @@ export function SlackCommentActivity({
   const { linkedIssuesStore } = useContextStore();
   const linkedIssue = linkedIssuesStore.linkedIssues.find(
     (linkedIssue: LinkedIssueType) => {
+      const source = JSON.parse(linkedIssue.source);
+
       return (
         linkedIssue.issueId === comment.issueId &&
-        JSON.parse(linkedIssue.source).subType === LinkedSlackMessageType.Thread
+        source &&
+        source.subType === LinkedSlackMessageType.Thread
       );
     },
   );

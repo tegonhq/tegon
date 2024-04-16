@@ -30,6 +30,7 @@ export async function saveIssuesData(
         parentId: record.data.parentId,
         stateId: record.data.stateId,
         subscriberIds: record.data.subscriberIds,
+        sourceMetadata: JSON.stringify(record.data.sourceMetadata),
       };
 
       switch (record.action) {

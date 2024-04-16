@@ -95,7 +95,9 @@ export const BoardIssueItem = observer(
               teamIdentfier={team.identifier}
             />
           </div>
-          <div className="font-medium mr-1 line-clamp-2">{issue.title}</div>
+          <div className="font-medium mr-1 mt-[2px] line-clamp-2">
+            {issue.title}
+          </div>
         </div>
 
         <div className="flex gap-2 items-center flex-wrap">

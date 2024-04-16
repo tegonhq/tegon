@@ -19,12 +19,12 @@ export function DuplicateLine2({ size = 18, className, color }: IconProps) {
         height="12"
         rx="2.11"
         stroke={color ? color : 'currentColor'}
-        stroke-width="2"
+        strokeWidth="2"
       />
       <path
         d="M5 6.64286V5.11C5 3.39239 6.39239 2 8.11 2H14.89C16.6076 2 18 3.39239 18 5.11V11.89C18 13.6076 16.6076 15 14.89 15H13.3571"
         stroke={color ? color : 'currentColor'}
-        stroke-width="2"
+        strokeWidth="2"
       />
     </svg>
   );

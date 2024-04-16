@@ -20,12 +20,12 @@ export function SidebarLine({ size = 18, className, color }: IconProps) {
           height="16"
           fill={color ? color : 'currentColor'}
           stroke={color ? color : 'currentColor'}
-          stroke-width="2"
+          strokeWidth="2"
         />
         <path
           d="M9 2H8V3V17V18H9H17H18V17V3V2H17H9Z"
           stroke={color ? color : 'currentColor'}
-          stroke-width="2"
+          strokeWidth="2"
         />
       </g>
       <rect
@@ -35,7 +35,7 @@ export function SidebarLine({ size = 18, className, color }: IconProps) {
         height="16"
         rx="3"
         stroke={color ? color : 'currentColor'}
-        stroke-width="2"
+        strokeWidth="2"
       />
       <defs>
         <clipPath id="clip0_154_269">
