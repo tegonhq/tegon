@@ -22,6 +22,8 @@ import { SlackIcon } from 'icons';
 
 import type { User } from 'store/user-context';
 
+import { getUserDetails } from './user-activity-utils';
+
 interface LinkedIssueActivityProps {
   linkedIssue: LinkedIssueType;
 }
@@ -101,9 +103,10 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
 
       <div className="flex items-center">
         <span className="text-foreground mr-2 font-medium">
-          {linkedIssue.createdById
-            ? `${getUserData(linkedIssue.createdById).username}`
-            : 'Github'}
+          {
+            getUserDetails(sourceMetaData, getUserData(linkedIssue.createdById))
+              .username
+          }
         </span>
         linked
         <a

@@ -74,7 +74,6 @@ export const IssueDescription = ({
         <EditorContent
           initialContent={getInitialValue()}
           extensions={extensions}
-          autofocus
           className="relative min-h-[50px] w-full max-w-screen-lg mb-[40px] text-base text-slate-600 dark:text-slate-400 sm:rounded-lg"
           editorProps={{
             handleDOMEvents: {

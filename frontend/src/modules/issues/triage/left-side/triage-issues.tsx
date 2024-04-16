@@ -87,7 +87,7 @@ export const TriageIssues = observer(() => {
 
   const issues = sort(
     issuesStore.getIssuesForState(triageWorkflow.id, currentTeam.id, false),
-  ).desc((issue: IssueType) => issue.updatedAt);
+  ).desc((issue: IssueType) => new Date(issue.updatedAt));
 
   if (isLoading) {
     return null;

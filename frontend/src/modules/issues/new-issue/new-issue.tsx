@@ -90,6 +90,8 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
   };
 
   React.useEffect(() => {
+    form.setFocus('description');
+
     return () => {
       if (
         !form.formState.isSubmitted &&

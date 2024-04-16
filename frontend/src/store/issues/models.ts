@@ -14,7 +14,7 @@ export const Issue = types.model('Issue', {
   sortOrder: types.union(types.number, types.null),
   estimate: types.union(types.number, types.null),
   teamId: types.string,
-  createdById: types.string,
+  createdById: types.union(types.string, types.null),
   assigneeId: types.union(types.string, types.null),
   labelIds: types.array(types.string),
   parentId: types.union(types.string, types.null),
