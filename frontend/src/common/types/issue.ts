@@ -6,6 +6,7 @@ import type { Integration } from './linked-issue';
 export interface IssueSourceMetadataType {
   type: Integration;
   id: string;
+  userDisplayName: string;
 }
 
 export interface IssueType {
@@ -20,7 +21,7 @@ export interface IssueType {
   sortOrder: number;
   estimate?: number;
   teamId: string;
-  createdById: string;
+  createdById?: string;
   assigneeId?: string;
   labelIds: string[];
   parentId?: string;

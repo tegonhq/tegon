@@ -3,17 +3,9 @@
 import { observer } from 'mobx-react-lite';
 import ReactTimeAgo from 'react-time-ago';
 
-import { getTailwindColor } from 'common/color-utils';
-import { cn } from 'common/lib/utils';
 import type { IssueCommentType, IssueHistoryType } from 'common/types/issue';
 import type { LinkedIssueType } from 'common/types/linked-issue';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  getInitials,
-} from 'components/ui/avatar';
 import { Timeline, TimelineItem } from 'components/ui/timeline';
 import { useIssueData } from 'hooks/issues';
 import { useUsersData } from 'hooks/users';
@@ -26,6 +18,7 @@ import { CommentActivity } from './comment-activity';
 import { IssueComment } from './issue-comment';
 import { LinkedIssueActivity } from './linked-issue-activity';
 import { SubscribeView } from './subscribe-view';
+import { getUserDetails, getUserIcon } from './user-activity-utils';
 
 enum ActivityType {
   Comment = 'Comment',
@@ -35,6 +28,7 @@ enum ActivityType {
 
 export const IssueActivity = observer(() => {
   const issue = useIssueData();
+  const issueSourceMetadata = JSON.parse(issue.sourceMetadata);
   const { usersData, isLoading } = useUsersData(issue.teamId);
 
   const {
@@ -76,8 +70,10 @@ export const IssueActivity = observer(() => {
     return null;
   }
 
-  const issueCreatedUser =
-    usersData && usersData.find((user: User) => user.id === issue.createdById);
+  const issueCreatedUser = getUserDetails(
+    issueSourceMetadata,
+    usersData && getUserData(issue.createdById),
+  );
 
   function getChildComments(issueCommentId: string) {
     return activities.filter(
@@ -98,17 +94,7 @@ export const IssueActivity = observer(() => {
         <Timeline>
           <TimelineItem hasMore={false}>
             <div className="flex items-center text-xs text-muted-foreground">
-              <Avatar className="h-[20px] w-[25px] mr-4 text-foreground">
-                <AvatarImage />
-                <AvatarFallback
-                  className={cn(
-                    'text-[0.6rem] rounded-sm',
-                    getTailwindColor(issueCreatedUser.username),
-                  )}
-                >
-                  {getInitials(issueCreatedUser.fullname)}
-                </AvatarFallback>
-              </Avatar>
+              {getUserIcon(issueCreatedUser, issueSourceMetadata?.type)}
 
               <div className="flex items-center">
                 <span className="text-foreground mr-2 font-medium">
@@ -156,11 +142,18 @@ export const IssueActivity = observer(() => {
               }
 
               if (activity.type === ActivityType.Default) {
+                const sourceMetadata = activity.userId
+                  ? undefined
+                  : JSON.parse(activity.sourceMetadata);
+
                 return (
                   <ActivityItem
                     issueHistory={activity}
                     key={activity.id}
-                    user={getUserData(activity.userId)}
+                    user={getUserDetails(
+                      sourceMetadata,
+                      getUserData(activity.userId),
+                    )}
                   />
                 );
               }

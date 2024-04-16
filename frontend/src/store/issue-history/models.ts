@@ -35,4 +35,5 @@ export const IssueHistory = types.model({
   fromParentId: types.union(types.string, types.null),
   toParentId: types.union(types.string, types.null),
   relationChanges: types.union(types.null, RelationChangeModel),
+  sourceMetadata: types.union(types.null, types.string, types.undefined),
 });
