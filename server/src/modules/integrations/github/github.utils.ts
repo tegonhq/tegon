@@ -78,7 +78,7 @@ export function getTeamId(
 ): string | undefined {
   const githubSettings = accountSettings[IntegrationName.Github];
   const mapping = githubSettings.repositoryMappings.find(
-    (mapping) => mapping.githubRepoId === repoId && mapping.bidirectional,
+    (mapping) => mapping.githubRepoId === repoId,
   );
   return mapping?.teamId;
 }

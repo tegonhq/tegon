@@ -3,7 +3,7 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
+  // InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
 import { LinkedIssue } from '@prisma/client';
@@ -44,7 +44,7 @@ export default class LinkedIssueService {
       throw new BadRequestException("Provided url doesn't exist");
     }
 
-    const linkedIssue = await this.prisma.linkedIssue.findFirst({
+    let linkedIssue = await this.prisma.linkedIssue.findFirst({
       where: { url: linkData.url, deleted: null },
       include: { issue: { include: { team: true } } },
     });
@@ -53,8 +53,9 @@ export default class LinkedIssueService {
         `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
       );
     }
-    try {
-      const { integrationAccount, linkInput } = await getLinkedIssueDataWithUrl(
+    // try {
+    const { integrationAccount, linkInput, linkDataType } =
+      await getLinkedIssueDataWithUrl(
         this.prisma,
         linkData,
         teamParams.teamId,
@@ -62,21 +63,21 @@ export default class LinkedIssueService {
         userId,
       );
 
-      const linkedIssue = await this.createLinkIssueAPI(linkInput);
+    linkedIssue = await this.createLinkIssueAPI(linkInput);
 
-      //   send a first comment function
-      await sendFirstComment(
-        this.prisma,
-        this.logger,
-        this,
-        integrationAccount,
-        linkedIssue,
-        linkData.type,
-      );
-      return linkedIssue;
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to create linked issue');
-    }
+    //   send a first comment function
+    await sendFirstComment(
+      this.prisma,
+      this.logger,
+      this,
+      integrationAccount,
+      linkedIssue,
+      linkDataType,
+    );
+    return linkedIssue;
+    // } catch (error) {
+    //   throw new InternalServerErrorException('Failed to create linked issue');
+    // }
   }
 
   async createLinkIssueAPI(linkIssueData: CreateLinkIssueInput) {
