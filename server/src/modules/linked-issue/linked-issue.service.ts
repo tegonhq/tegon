@@ -44,7 +44,7 @@ export default class LinkedIssueService {
       throw new BadRequestException("Provided url doesn't exist");
     }
 
-    const linkedIssue = await this.prisma.linkedIssue.findFirst({
+    let linkedIssue = await this.prisma.linkedIssue.findFirst({
       where: { url: linkData.url, deleted: null },
       include: { issue: { include: { team: true } } },
     });
@@ -54,15 +54,16 @@ export default class LinkedIssueService {
       );
     }
     try {
-      const { integrationAccount, linkInput } = await getLinkedIssueDataWithUrl(
-        this.prisma,
-        linkData,
-        teamParams.teamId,
-        issueParams.issueId,
-        userId,
-      );
+      const { integrationAccount, linkInput, linkDataType } =
+        await getLinkedIssueDataWithUrl(
+          this.prisma,
+          linkData,
+          teamParams.teamId,
+          issueParams.issueId,
+          userId,
+        );
 
-      const linkedIssue = await this.createLinkIssueAPI(linkInput);
+      linkedIssue = await this.createLinkIssueAPI(linkInput);
 
       //   send a first comment function
       await sendFirstComment(
@@ -71,7 +72,7 @@ export default class LinkedIssueService {
         this,
         integrationAccount,
         linkedIssue,
-        linkData.type,
+        linkDataType,
       );
       return linkedIssue;
     } catch (error) {

@@ -62,7 +62,7 @@ export const PriorityBoardList = observer(
           </div>
 
           <ScrollArea className="p-3 pb-10">
-            <div className="flex flex-col gap-2 grow">
+            <div className="flex flex-col gap-3 grow">
               {computedIssues.map((issue: IssueType, index: number) => (
                 <BoardItem key={issue.id} id={issue.id}>
                   <Draggable

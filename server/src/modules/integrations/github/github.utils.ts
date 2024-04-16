@@ -78,7 +78,7 @@ export function getTeamId(
 ): string | undefined {
   const githubSettings = accountSettings[IntegrationName.Github];
   const mapping = githubSettings.repositoryMappings.find(
-    (mapping) => mapping.githubRepoId === repoId && mapping.bidirectional,
+    (mapping) => mapping.githubRepoId === repoId,
   );
   return mapping?.teamId;
 }
@@ -412,20 +412,25 @@ export async function upsertGithubIssue(
   integrationAccount: IntegrationAccountWithRelations,
   userId: string,
 ) {
+  // Get the integration settings from the integration account
   const IntegrationSettings = integrationAccount.settings as Settings;
 
+  // Fetch the state category, assignee GitHub user, and linked issue in parallel
   const [stateCategory, assigneeGithubUser, linkedIssue] = await Promise.all([
+    // Get the state category from the workflow
     prisma.workflow
       .findUnique({
         where: { id: issue.stateId },
         select: { category: true },
       })
       .then((result) => result.category as WorkflowCategory),
+    // Get the assignee's GitHub integration account
     getGithubUserIntegrationAccount(
       prisma,
       issue.assigneeId,
       issue.team.workspaceId,
     ),
+    // Find the linked issue for the current issue
     prisma.linkedIssue.findFirst({
       where: {
         issueId: issue.id,
@@ -436,11 +441,12 @@ export async function upsertGithubIssue(
 
   logger.debug(`Assignee GitHub user: ${JSON.stringify(assigneeGithubUser)}`);
 
-  const issueBody = {
+  // Prepare the issue body for GitHub API
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const issueBody: any = {
     title: issue.title,
     body: issue.description,
     labels: await getGithubLabels(prisma, issue.labelIds),
-    assignees: [(assigneeGithubUser.settings as Settings).GithubPersonal.login],
     state:
       stateCategory === WorkflowCategory.COMPLETED
         ? 'closed'
@@ -449,9 +455,18 @@ export async function upsertGithubIssue(
           : 'open',
   };
 
+  // Add assignee to the issue body if available
+  if (assigneeGithubUser) {
+    issueBody.assignees = [
+      (assigneeGithubUser.settings as Settings).GithubPersonal.login,
+    ];
+  }
+
+  // If a linked issue exists, update it on GitHub
   if (linkedIssue) {
     logger.debug(`Found a Linked issue: ${linkedIssue.id}`);
 
+    // Get the user's GitHub integration account
     const userGithubIntegrationAccount = await getGithubUserIntegrationAccount(
       prisma,
       userId,
@@ -462,10 +477,12 @@ export async function upsertGithubIssue(
       `User GitHub integration account: ${userGithubIntegrationAccount.id}`,
     );
 
+    // Get the access token based on user or bot integration account
     const accessToken = userGithubIntegrationAccount
       ? await getAccessToken(prisma, userGithubIntegrationAccount)
       : await getBotAccessToken(prisma, integrationAccount);
 
+    // Update the linked issue on GitHub
     return (
       await postRequest(
         (linkedIssue.sourceData as LinkedIssueSourceData).apiUrl,
@@ -475,8 +492,11 @@ export async function upsertGithubIssue(
     ).data;
   }
 
+  // If no linked issue, create a new issue on the default repository
   const [accessToken, defaultRepo] = await Promise.all([
+    // Get the bot access token
     getBotAccessToken(prisma, integrationAccount),
+    // Find the default repository mapping
     IntegrationSettings[IntegrationName.Github].repositoryMappings.find(
       (repo: GithubRepositoryMappings) => repo.default,
     ),
@@ -484,6 +504,7 @@ export async function upsertGithubIssue(
 
   logger.debug(`Default repo: ${JSON.stringify(defaultRepo)}`);
 
+  // If a default repository is found, create the issue on GitHub
   if (defaultRepo) {
     const url = `https://api.github.com/repos/${defaultRepo.githubRepoFullName}/issues`;
     logger.log(`URL: ${url}`);
@@ -491,6 +512,7 @@ export async function upsertGithubIssue(
       .data;
   }
 
+  // If no default repository is found, return undefined
   return undefined;
 }
 

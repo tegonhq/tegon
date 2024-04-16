@@ -78,22 +78,30 @@ export function convertToAPIUrl(linkData: LinkIssueInput): string {
 export async function getLinkedIssueDataWithUrl(
   prisma: PrismaService,
   linkData: LinkIssueInput,
-  teamId: string,
+  _teamId: string,
   issueId: string,
   userId: string,
 ): Promise<{
   integrationAccount: IntegrationAccountWithRelations | null;
   linkInput: CreateLinkIssueInput;
+  linkDataType: LinkedIssueSubType;
 }> {
   let integrationAccount: IntegrationAccountWithRelations;
   switch (linkData.type) {
     case LinkedIssueSubType.GithubIssue:
     case LinkedIssueSubType.GithubPullRequest:
+      const isGithubPR = linkData.type === LinkedIssueSubType.GithubPullRequest;
+
+      const githubUrlMatch = linkData.url.match(
+        isGithubPR ? githubPRRegex : githubIssueRegex,
+      );
+      const [, repository] = githubUrlMatch;
+
       integrationAccount = await prisma.integrationAccount.findFirst({
         where: {
           settings: {
-            path: [IntegrationName.Github, 'repositoryMappings'],
-            array_contains: [{ teamId, bidirectional: true }],
+            path: [IntegrationName.Github, 'repositories'],
+            array_contains: [{ fullName: repository }],
           } as Prisma.JsonFilter,
         },
         include: {
@@ -105,7 +113,14 @@ export async function getLinkedIssueDataWithUrl(
       if (!integrationAccount) {
         return {
           integrationAccount,
-          linkInput: { url: linkData.url, issueId, createdById: userId },
+          linkInput: {
+            url: linkData.url,
+            issueId,
+            createdById: userId,
+            source: { type: LinkedIssueSubType.ExternalLink },
+            sourceData: { title: `Github ${isGithubPR ? 'PR' : 'Issue'}` },
+          },
+          linkDataType: LinkedIssueSubType.ExternalLink,
         };
       }
 
@@ -125,11 +140,12 @@ export async function getLinkedIssueDataWithUrl(
             url: linkData.url,
             issueId,
             createdById: userId,
-            sourceData: linkData,
+            source: { type: LinkedIssueSubType.ExternalLink },
+            sourceData: { title: linkData.title },
           },
+          linkDataType: linkData.type,
         };
       }
-      const isGithubPR = linkData.type === LinkedIssueSubType.GithubPullRequest;
 
       const sourceData = isGithubPR
         ? {
@@ -171,6 +187,7 @@ export async function getLinkedIssueDataWithUrl(
           sourceData,
           createdById: userId,
         } as CreateLinkIssueInput,
+        linkDataType: linkData.type,
       };
 
     case LinkedIssueSubType.Slack:
@@ -234,19 +251,23 @@ export async function getLinkedIssueDataWithUrl(
             createdById: userId,
             issueId,
           },
+          linkDataType: linkData.type,
         };
       }
-      return {
-        integrationAccount,
-        linkInput: { url: linkData.url, issueId, createdById: userId },
-      };
-
-    default:
-      return {
-        integrationAccount,
-        linkInput: { url: linkData.url, issueId, createdById: userId },
-      };
+      break;
   }
+
+  return {
+    integrationAccount,
+    linkInput: {
+      url: linkData.url,
+      issueId,
+      createdById: userId,
+      source: { type: LinkedIssueSubType.ExternalLink },
+      sourceData: { title: linkData.title },
+    },
+    linkDataType: LinkedIssueSubType.ExternalLink,
+  };
 }
 
 export async function sendFirstComment(
@@ -257,7 +278,7 @@ export async function sendFirstComment(
   linkedIssue: LinkedIssueWithRelations,
   type: LinkedIssueSubType,
 ) {
-  const subType = (linkedIssue.source as LinkedIssueSource).subType || null;
+  const subType = (linkedIssue.source as LinkedIssueSource)?.subType || null;
   if (type === LinkedIssueSubType.GithubIssue) {
     await sendGithubFirstComment(
       prisma,

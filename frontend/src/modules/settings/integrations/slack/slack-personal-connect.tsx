@@ -12,9 +12,12 @@ import {
   useDeleteIntegrationAccount,
 } from 'services/oauth';
 
+import { UserContext } from 'store/user-context';
+
 import { useIntegrationAccount } from '../integration-util';
 
 export const SlackPersonalConnect = observer(() => {
+  const user = React.useContext(UserContext);
   const { mutate: createRedirectURL, isLoading: redirectURLLoading } =
     useCreateRedirectURLMutation({
       onSuccess: (data) => {
@@ -29,7 +32,7 @@ export const SlackPersonalConnect = observer(() => {
   const {
     integrationDefinition: slackDefinition,
     integrationAccount: slackAccount,
-  } = useIntegrationAccount(IntegrationName.SlackPersonal);
+  } = useIntegrationAccount(IntegrationName.SlackPersonal, user.id);
   return (
     <div className="mt-8 p-3 border text-sm rounded-md flex items-center justify-between">
       <div className="flex flex-col items-start justify-center">

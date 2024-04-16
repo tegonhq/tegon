@@ -18,7 +18,7 @@ export function TriageView() {
       <div className="border-l flex col-span-3">
         <div className="flex flex-col h-full w-full">
           <main className="grid grid-cols-4 h-full">
-            <div className="col-span-4 xl:col-span-3 flex flex-col h-[calc(100vh_-_52px)]">
+            <div className="col-span-4 xl:col-span-3 flex flex-col h-[calc(100vh)]">
               <LeftSide isTriageView />
             </div>
             <div className="bg-background border-l dark:bg-slate-800/50 hidden flex-col xl:col-span-1 xl:flex">

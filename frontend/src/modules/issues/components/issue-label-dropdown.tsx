@@ -44,19 +44,16 @@ export const IssueLabelDropdown = observer(
       if (variant === IssueLabelDropdownVariant.LINK) {
         return (
           <div className="flex flex-wrap gap-2">
-            {labelsStore
-              .getLabelsWithIds(value)
-              .slice(0, 3)
-              .map((label: LabelType) => (
-                <Badge
-                  variant="outline"
-                  key={label.name}
-                  className="text-foreground flex items-center"
-                >
-                  <BadgeColor style={{ backgroundColor: label.color }} />
-                  {label?.name}
-                </Badge>
-              ))}
+            {labelsStore.getLabelsWithIds(value).map((label: LabelType) => (
+              <Badge
+                variant="outline"
+                key={label.name}
+                className="text-foreground flex items-center"
+              >
+                <BadgeColor style={{ backgroundColor: label.color }} />
+                {label?.name}
+              </Badge>
+            ))}
 
             {value.length > 0 ? (
               <Button

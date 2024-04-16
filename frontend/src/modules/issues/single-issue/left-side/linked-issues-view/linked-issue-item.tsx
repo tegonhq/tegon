@@ -6,7 +6,6 @@ import {
   RiLink,
   RiMoreFill,
   RiPencilFill,
-  RiSlackFill,
 } from '@remixicon/react';
 import React from 'react';
 
@@ -34,6 +33,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
+import { SlackIcon } from 'icons';
 
 import { useDeleteLinkedIssueMutation } from 'services/linked-issues';
 
@@ -54,39 +54,43 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
   function getIcon() {
-    if (sourceMetaData.type === Integration.Slack) {
-      return <RiSlackFill size={18} className="text-foreground" />;
-    }
+    if (sourceMetaData) {
+      if (sourceMetaData.type === Integration.Slack) {
+        return <SlackIcon size={16} className="text-foreground" />;
+      }
 
-    if (sourceMetaData.type === Integration.Github) {
-      return <RiGithubFill size={18} className="text-foreground" />;
+      if (sourceMetaData.type === Integration.Github) {
+        return <RiGithubFill size={18} className="text-foreground" />;
+      }
     }
 
     return <RiLink size={18} className="text-foreground" />;
   }
 
   function getTitle() {
-    if (sourceMetaData.type === Integration.Slack) {
-      return (
-        <div className="flex">
-          <div className="mr-1">
-            {sourceMetaData.subType === LinkedSlackMessageType.Thread
-              ? 'Thread'
-              : 'Message'}
+    if (sourceMetaData) {
+      if (sourceMetaData.type === Integration.Slack) {
+        return (
+          <div className="flex">
+            <div className="mr-1">
+              {sourceMetaData.subType === LinkedSlackMessageType.Thread
+                ? 'Thread'
+                : 'Message'}
+            </div>
+            from slack
+            <div className="mx-1 text-muted-foreground max-w-[200px]">
+              <div className="truncate">{sourceData.message}</div>
+            </div>
           </div>
-          from slack
-          <div className="mx-1 text-muted-foreground max-w-[200px]">
-            <div className="truncate">{sourceData.message}</div>
-          </div>
-        </div>
-      );
+        );
+      }
+
+      if (sourceMetaData.type === Integration.Github) {
+        return ` #${number} ${sourceData.title}`;
+      }
     }
 
-    if (sourceMetaData.type === Integration.Github) {
-      return ` #${number} ${sourceData.title}`;
-    }
-
-    return <RiLink size={18} className="text-foreground" />;
+    return <div className="flex">{sourceData?.title}</div>;
   }
 
   return (
@@ -94,7 +98,7 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
       <a
         href={linkedIssue.url}
         target="_blank"
-        className="cursor-pointer w-full mb-1 border-1 hover:bg-active shadow-sm bg-white dark:bg-slate-700/20  p-3 py-2 rounded-md flex gap-2 items-center justify-between text-sm"
+        className="cursor-pointer w-full mb-1 border-1 hover:bg-active/50 shadow-sm bg-white dark:bg-slate-700/20  p-3 py-2 rounded-md flex gap-2 items-center justify-between text-sm"
       >
         <div className="flex items-center gap-2">
           {getIcon()}

@@ -278,10 +278,14 @@ export default class SlackService {
       createdIssue.team.workspaceId,
     );
 
+    const slackUserId = slackIntegrationAccount
+      ? slackIntegrationAccount.accountId
+      : sessionData.messagedById;
+
     // Prepare the payload for sending a Slack message
     const payload = {
       channel: sessionData.channelId,
-      text: `<@${slackIntegrationAccount.accountId}> created a Issue`,
+      text: `<@${slackUserId}> created a Issue`,
       attachments: await getIssueMessageModal(this.prisma, createdIssue),
       ...(sessionData.threadTs ? { thread_ts: sessionData.threadTs } : {}),
     };
@@ -465,6 +469,7 @@ export default class SlackService {
       slackTeamId,
       slackTeamDomain,
       teamId,
+      messagedById: slackUserId,
     };
 
     this.logger.debug(`Session data: ${JSON.stringify(sessionData)}`);

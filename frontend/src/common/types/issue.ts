@@ -1,6 +1,12 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import type { IssueRelationEnum } from './issue-relation';
+import type { Integration } from './linked-issue';
+
+export interface IssueSourceMetadataType {
+  type: Integration;
+  id: string;
+}
 
 export interface IssueType {
   id: string;
@@ -20,6 +26,7 @@ export interface IssueType {
   parentId?: string;
   stateId: string;
   subscriberIds: string[];
+  sourceMetadata?: string;
 
   // for frontend usage
   children?: IssueType[];

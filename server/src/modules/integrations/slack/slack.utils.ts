@@ -1,7 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { IntegrationAccount } from '@@generated/integrationAccount/entities';
 import { Logger } from '@nestjs/common';
-import { IntegrationAccount, IntegrationName } from '@prisma/client';
+import { IntegrationName } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -326,15 +327,19 @@ export async function getSlackUserIntegrationAccount(
   userId: string,
   workspaceId: string,
 ) {
-  return prisma.integrationAccount.findFirst({
-    where: {
-      integratedById: userId,
-      integrationDefinition: {
-        workspaceId,
-        name: IntegrationName.SlackPersonal,
+  let integrationAccount = null;
+  if (userId) {
+    integrationAccount = await prisma.integrationAccount.findFirst({
+      where: {
+        integratedById: userId,
+        integrationDefinition: {
+          workspaceId,
+          name: IntegrationName.SlackPersonal,
+        },
       },
-    },
-  });
+    });
+  }
+  return integrationAccount;
 }
 
 export async function getSlackIntegrationAccount(

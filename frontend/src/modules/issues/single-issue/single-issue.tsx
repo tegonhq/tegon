@@ -14,7 +14,7 @@ import { IssueStoreInit } from 'store/issue-store-provider';
 import { IssueView } from './issue-view';
 
 export function SingleIssue() {
-  useScope('all-issues');
+  useScope(SCOPES.AllIssues);
 
   const { back } = useRouter();
 

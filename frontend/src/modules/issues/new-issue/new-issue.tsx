@@ -36,8 +36,9 @@ import { IssueSuggestions } from './issue-suggestions';
 import { NewIssueDropdowns } from './new-issue-dropdowns';
 import {
   getDefaultValues,
-  isBirectionalEnabled,
+  enableBidirectionalSwitch,
   setDefaultValuesAgain,
+  isBidirectionalEnabled,
 } from './new-issue-utils';
 import { draftKey, NewIssueSchema } from './new-issues-type';
 import { IssueDescription } from '../single-issue/left-side/issue-description';
@@ -66,16 +67,20 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
   const { toast } = useToast();
 
   const { githubAccounts } = useGithubAccounts(IntegrationName.Github);
-  const isBidirectional = isBirectionalEnabled(githubAccounts, team.id);
+  const enableBidirectionalOption = enableBidirectionalSwitch(
+    githubAccounts,
+    team.id,
+  );
+  const isBidirectional = isBidirectionalEnabled(githubAccounts, team.id);
 
   const form = useForm<z.infer<typeof NewIssueSchema>>({
     resolver: zodResolver(NewIssueSchema),
-    defaultValues: getDefaultValues(workflows, pathname),
+    defaultValues: getDefaultValues(workflows, pathname, isBidirectional),
   });
 
   // This is to change the default value for the workflow
   React.useEffect(() => {
-    setDefaultValuesAgain(form, workflows, pathname);
+    setDefaultValuesAgain(form, workflows, pathname, isBidirectional);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamIdentfier]);
 
@@ -153,10 +158,10 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
               'flex items-center justify-between p-3',
               !parentId && 'border-t gap-2',
               parentId && 'gap-2',
-              !isBidirectional && 'justify-end',
+              !enableBidirectionalOption && 'justify-end',
             )}
           >
-            {isBidirectional && (
+            {enableBidirectionalOption && (
               <div className="flex justify-between text-xs items-center">
                 <div>
                   <div className="flex items-center">

@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiGithubFill, RiLink, RiSlackFill } from '@remixicon/react';
+import { RiGithubFill, RiLink } from '@remixicon/react';
 import ReactTimeAgo from 'react-time-ago';
 
 import { getTailwindColor } from 'common/color-utils';
@@ -18,6 +18,7 @@ import {
   getInitials,
 } from 'components/ui/avatar';
 import { useUsersData } from 'hooks/users';
+import { SlackIcon } from 'icons';
 
 import type { User } from 'store/user-context';
 
@@ -41,7 +42,7 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
 
   function getIcon() {
     if (sourceMetaData.type === Integration.Slack) {
-      return <RiSlackFill size={18} className="text-foreground" />;
+      return <SlackIcon size={16} className="text-foreground" />;
     }
 
     if (sourceMetaData.type === Integration.Github) {
@@ -52,29 +53,30 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
   }
 
   function getTitle() {
-    if (sourceMetaData.type === Integration.Slack) {
-      return (
-        <>
-          {getIcon()}
-          <span className="mx-[2px]">
-            {sourceMetaData.subType === LinkedSlackMessageType.Thread
-              ? 'Thread'
-              : 'Message'}
-          </span>
-          from slack
-        </>
-      );
-    }
+    if (sourceMetaData) {
+      if (sourceMetaData.type === Integration.Slack) {
+        return (
+          <>
+            {getIcon()}
+            <span className="mx-[2px]">
+              {sourceMetaData.subType === LinkedSlackMessageType.Thread
+                ? 'Thread'
+                : 'Message'}
+            </span>
+            from slack
+          </>
+        );
+      }
 
-    if (sourceMetaData.type === Integration.Github) {
-      return (
-        <>
-          {getIcon()} {sourceData.title}
-        </>
-      );
+      if (sourceMetaData.type === Integration.Github) {
+        return (
+          <>
+            {getIcon()} {sourceData.title}
+          </>
+        );
+      }
     }
-
-    return <RiLink size={18} className="text-foreground" />;
+    return <>{sourceData?.title}</>;
   }
 
   return (

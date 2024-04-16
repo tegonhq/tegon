@@ -31,7 +31,7 @@ export const Header = observer(({ title }: HeaderProps) => {
 
   return (
     <header className="flex pl-8 px-4 py-3 w-full border-b items-center gap-2">
-      {applicationStore.displaySettings.sidebarCollapsed && (
+      {applicationStore.sidebarCollapsed && (
         <Button
           variant="ghost"
           size="xs"

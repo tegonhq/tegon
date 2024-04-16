@@ -12,6 +12,7 @@ import {
 } from 'common/types/linked-issue';
 
 import { TimelineItem } from 'components/ui/timeline';
+import { SlackIcon } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
@@ -37,9 +38,12 @@ export function SlackCommentActivity({
   const { linkedIssuesStore } = useContextStore();
   const linkedIssue = linkedIssuesStore.linkedIssues.find(
     (linkedIssue: LinkedIssueType) => {
+      const source = JSON.parse(linkedIssue.source);
+
       return (
         linkedIssue.issueId === comment.issueId &&
-        JSON.parse(linkedIssue.source).subType === LinkedSlackMessageType.Thread
+        source &&
+        source.subType === LinkedSlackMessageType.Thread
       );
     },
   );
@@ -52,7 +56,7 @@ export function SlackCommentActivity({
     <TimelineItem className="w-full" key={`${comment.id}-comment`} hasMore>
       <div className="flex items-start text-xs text-muted-foreground ">
         <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
-          <RiSlackFill size={18} className="text-foreground" />
+          <SlackIcon size={16} className="text-foreground" />
         </div>
 
         <div
@@ -64,7 +68,7 @@ export function SlackCommentActivity({
         >
           <div className={cn('flex gap-2', !comment.parentId && 'p-3')}>
             <span className="text-foreground font-medium flex items-center gap-1">
-              <RiSlackFill size={16} className="mr-2" /> Slack
+              <SlackIcon size={16} className="mr-2" /> Slack
             </span>
             <span className="text-muted-foreground"> thread connected </span>
 

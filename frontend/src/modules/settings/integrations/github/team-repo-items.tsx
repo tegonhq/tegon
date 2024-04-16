@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiDeleteBin7Fill, RiGithubFill, RiPencilFill } from '@remixicon/react';
+import { RiGithubFill, RiPencilFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
@@ -13,17 +13,6 @@ import type {
 import { IntegrationName } from 'common/types/integration-definition';
 import type { TeamType } from 'common/types/team';
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from 'components/ui/alert-dialog';
 import { Badge } from 'components/ui/badge';
 import { Button } from 'components/ui/button';
 import { Dialog } from 'components/ui/dialog';
@@ -32,12 +21,12 @@ import { useToast } from 'components/ui/use-toast';
 
 import { useUpdateIntegrationAccountMutation } from 'services/oauth';
 
+import {
+  DeleteRepoTeamLink,
+  type GithubRepositoryMappingsWithAccount,
+} from './delete-repo-team-link';
 import { useGithubAccounts } from './github-utils';
 import { RepoTeamLinkDialog } from './repo-team-link-dialog';
-
-interface GithubRepositoryMappingsWithAccount extends GithubRepositoryMappings {
-  integrationAccountId: string;
-}
 
 export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
   const [open, setOpen] = React.useState(false);
@@ -51,8 +40,7 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
       onSuccess: () => {
         toast({
           title: 'Github settings updated!',
-          description:
-            'Issues from github repo now will not be added to the team',
+          description: 'Default repo is changed',
         });
       },
     });
@@ -70,16 +58,24 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
     return accounts;
   }, [githubAccounts, team.id]);
 
-  const onDelete = (account: GithubRepositoryMappingsWithAccount) => {
+  if (accounts.length === 0) {
+    return null;
+  }
+
+  const onUpdate = (account: GithubRepositoryMappingsWithAccount) => {
     const integrationAccount = githubAccounts.find(
       (inAccount: IntegrationAccountType) =>
         inAccount.id === account.integrationAccountId,
     );
     const settings: Settings = JSON.parse(integrationAccount.settings);
 
-    const repositoryMappings = settings.Github.repositoryMappings.filter(
-      (repoMap: GithubRepositoryMappings) =>
-        repoMap.githubRepoId !== account.githubRepoId,
+    const repositoryMappings = settings.Github.repositoryMappings.map(
+      (repoMap: GithubRepositoryMappings) => {
+        return {
+          ...repoMap,
+          default: repoMap.githubRepoId === account.githubRepoId,
+        };
+      },
     );
 
     updateIntegrationAccount({
@@ -93,10 +89,6 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
       },
     });
   };
-
-  if (accounts.length === 0) {
-    return null;
-  }
 
   return (
     <div className="w-full">
@@ -130,6 +122,17 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
                 )}
               </div>
               <div className="hidden group-hover:flex">
+                {!account.default && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      onUpdate(account);
+                    }}
+                  >
+                    Make default
+                  </Button>
+                )}
                 <Button
                   size="sm"
                   variant="ghost"
@@ -140,34 +143,10 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
                 >
                   <RiPencilFill size={14} className="text-muted-foreground" />
                 </Button>
-                <AlertDialog>
-                  <AlertDialogTrigger>
-                    <Button size="sm" variant="ghost">
-                      <RiDeleteBin7Fill
-                        size={14}
-                        className="text-muted-foreground"
-                      />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you absolutely sure?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => onDelete(account)}>
-                        Continue
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <DeleteRepoTeamLink
+                  account={account}
+                  githubAccounts={githubAccounts}
+                />
               </div>
             </div>
           );
