@@ -28,7 +28,12 @@ enum ActivityType {
 
 export const IssueActivity = observer(() => {
   const issue = useIssueData();
-  const issueSourceMetadata = JSON.parse(issue.sourceMetadata);
+
+  // Clear this out later
+  const issueSourceMetadata = issue.sourceMetadata
+    ? JSON.parse(issue.sourceMetadata)
+    : undefined;
+
   const { usersData, isLoading } = useUsersData(issue.teamId);
 
   const {
