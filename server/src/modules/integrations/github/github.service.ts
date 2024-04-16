@@ -39,7 +39,7 @@ export default class GithubService {
     const eventType = eventHeaders['x-github-event'];
     if (
       eventsToListen.has(eventType) &&
-      eventBody.sender.login !== 'tegon-bot[bot]'
+      !['tegon-bot[bot]', 'tegon-bot-dev[bot]'].includes(eventBody.sender.login)
     ) {
       const integrationAccount = await this.prisma.integrationAccount.findFirst(
         {
