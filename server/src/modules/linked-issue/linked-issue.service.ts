@@ -3,7 +3,7 @@
 import {
   BadRequestException,
   Injectable,
-  // InternalServerErrorException,
+  InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
 import { LinkedIssue } from '@prisma/client';
@@ -53,31 +53,31 @@ export default class LinkedIssueService {
         `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
       );
     }
-    // try {
-    const { integrationAccount, linkInput, linkDataType } =
-      await getLinkedIssueDataWithUrl(
+    try {
+      const { integrationAccount, linkInput, linkDataType } =
+        await getLinkedIssueDataWithUrl(
+          this.prisma,
+          linkData,
+          teamParams.teamId,
+          issueParams.issueId,
+          userId,
+        );
+
+      linkedIssue = await this.createLinkIssueAPI(linkInput);
+
+      //   send a first comment function
+      await sendFirstComment(
         this.prisma,
-        linkData,
-        teamParams.teamId,
-        issueParams.issueId,
-        userId,
+        this.logger,
+        this,
+        integrationAccount,
+        linkedIssue,
+        linkDataType,
       );
-
-    linkedIssue = await this.createLinkIssueAPI(linkInput);
-
-    //   send a first comment function
-    await sendFirstComment(
-      this.prisma,
-      this.logger,
-      this,
-      integrationAccount,
-      linkedIssue,
-      linkDataType,
-    );
-    return linkedIssue;
-    // } catch (error) {
-    //   throw new InternalServerErrorException('Failed to create linked issue');
-    // }
+      return linkedIssue;
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to create linked issue');
+    }
   }
 
   async createLinkIssueAPI(linkIssueData: CreateLinkIssueInput) {
