@@ -11,7 +11,26 @@ import type { WorkflowType } from 'common/types/team';
 import { draftKey } from './new-issues-type';
 import { getDefaultStatus } from '../components/status-dropdown-utils';
 
-export function isBirectionalEnabled(
+export function enableBidirectionalSwitch(
+  githubAccounts: IntegrationAccountType[],
+  teamId: string,
+) {
+  let enableBidirectionalSwitch = false;
+
+  githubAccounts.forEach((githubAccount: IntegrationAccountType) => {
+    const settings: Settings = JSON.parse(githubAccount.settings);
+
+    settings.Github.repositoryMappings.forEach((mapping) => {
+      if (mapping.teamId === teamId && mapping.default) {
+        enableBidirectionalSwitch = true;
+      }
+    });
+  });
+
+  return enableBidirectionalSwitch;
+}
+
+export function isBidirectionalEnabled(
   githubAccounts: IntegrationAccountType[],
   teamId: string,
 ) {
@@ -24,7 +43,7 @@ export function isBirectionalEnabled(
       if (
         mapping.teamId === teamId &&
         mapping.default &&
-        !mapping.bidirectional
+        mapping.bidirectional
       ) {
         isBirectionalEnabled = true;
       }
@@ -44,6 +63,7 @@ interface DefaultValues {
 export function getDefaultValues(
   workflows: WorkflowType[],
   pathname: string,
+  isBidirectional: boolean,
 ): DefaultValues {
   const draftData = localStorage.getItem(draftKey);
   let defaultValues = {};
@@ -57,7 +77,7 @@ export function getDefaultValues(
     labelIds: [],
     stateId: getDefaultStatus(workflows, pathname),
     priority: 0,
-    isBidirectional: false,
+    isBidirectional,
 
     ...defaultValues,
   };
@@ -67,8 +87,9 @@ export function setDefaultValuesAgain(
   form: UseFormReturn,
   workflows: WorkflowType[],
   pathname: string,
+  isBidirectional: boolean,
 ) {
-  const defaultValues = getDefaultValues(workflows, pathname);
+  const defaultValues = getDefaultValues(workflows, pathname, isBidirectional);
   const defaultValuesKeys = Object.keys(defaultValues);
 
   defaultValuesKeys.forEach((key: keyof DefaultValues) => {
