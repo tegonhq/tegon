@@ -516,12 +516,20 @@ export default class SlackService {
       subscriberIds: [...(userId ? [userId] : [])],
     } as UpdateIssueInput;
 
+    const slackUserResponse = await getExternalSlackUser(
+      integrationAccount,
+      event.user,
+    );
+
+    const slackUsername = slackUserResponse.user?.real_name || 'Slack';
+
     // Create source metadata object
     const sourceMetadata = {
       id: integrationAccount.id,
       type: IntegrationName.Slack,
       subType: LinkedSlackMessageType.Thread,
       channelId: sessionData.channelId,
+      userDisplayName: slackUsername,
     };
 
     // Create issue data object

@@ -1,6 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { IntegrationAccount } from '@@generated/integrationAccount/entities';
 import { Logger } from '@nestjs/common';
 import { IntegrationName } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
@@ -293,7 +292,7 @@ export async function getIssueData(
   prisma: PrismaService,
   sessionData: SlashCommandSessionRecord,
   eventBody: EventBody,
-  integrationAccount: IntegrationAccount,
+  integrationAccount: IntegrationAccountWithRelations,
 ): Promise<slackIssueData> {
   // Get the state ID and user ID concurrently
   const [stateId, userId] = await Promise.all([
@@ -310,12 +309,20 @@ export async function getIssueData(
     subscriberIds: [...(userId ? [userId] : [])],
   } as UpdateIssueInput;
 
+  const slackUserResponse = await getExternalSlackUser(
+    integrationAccount,
+    eventBody.user,
+  );
+
+  const slackUsername = slackUserResponse.user?.real_name || 'Slack';
+
   // Create the source metadata object
   const sourceMetadata = {
     id: integrationAccount.id,
     type: IntegrationName.Slack,
     subType: LinkedSlackMessageType.Thread,
     channelId: sessionData.channelId,
+    userDisplayName: slackUsername,
   };
 
   // Return the issue data
