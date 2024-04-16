@@ -7,6 +7,8 @@ import {
   RiPencilFill,
   RiSlackFill,
 } from '@remixicon/react';
+import { EditorRoot, EditorContent } from 'novel';
+import { StarterKit } from 'novel/extensions';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
@@ -172,7 +174,17 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
                   comment.parentId && 'pb-3',
                 )}
               >
-                {comment.body}
+                <EditorRoot>
+                  <EditorContent
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    initialContent={comment.body as any}
+                    editorProps={{ editable: () => false }}
+                    extensions={[StarterKit]}
+                    className="relative w-full max-w-screen-lg text-base text-foreground sm:rounded-lg focus-visible:outline-none"
+                    // eslint-disable-next-line react/no-children-prop
+                    children={''}
+                  ></EditorContent>
+                </EditorRoot>
               </div>
             )}
           </>

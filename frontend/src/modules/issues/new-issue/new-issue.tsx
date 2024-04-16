@@ -63,7 +63,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
 
   const pathname = usePathname();
   const [description, setDescription] = React.useState('');
-  const [, rerenderHack] = React.useState('');
+  const [, rerenderHack] = React.useState<string[]>([]);
   const { toast } = useToast();
 
   const { githubAccounts } = useGithubAccounts(IntegrationName.Github);
@@ -90,8 +90,6 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
   };
 
   React.useEffect(() => {
-    form.setFocus('description');
-
     return () => {
       if (
         !form.formState.isSubmitted &&
@@ -120,19 +118,22 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
             <FormField
               control={form.control}
               name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <IssueDescription
-                      {...field}
-                      onChange={(value) => {
-                        field.onChange(value);
-                        setDescriptionValue(value);
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormControl>
+                      <IssueDescription
+                        {...field}
+                        onChange={(value) => {
+                          field.onChange(value);
+                          setDescriptionValue(value);
+                        }}
+                        autoFocus
+                      />
+                    </FormControl>
+                  </FormItem>
+                );
+              }}
             />
 
             {description.trim() && (
@@ -142,11 +143,11 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
                 assigneeId={form.getValues('assigneeId')}
                 setLabelValue={(labelIds: string[]) => {
                   form.setValue('labelIds', labelIds);
-                  rerenderHack('rerender');
+                  rerenderHack(labelIds);
                 }}
                 setAssigneeValue={(assigneeId: string) => {
                   form.setValue('assigneeId', assigneeId);
-                  rerenderHack('rerender');
+                  rerenderHack([assigneeId]);
                 }}
                 description={description}
               />
