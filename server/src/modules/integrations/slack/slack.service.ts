@@ -65,6 +65,8 @@ export default class SlackService {
       return { challenge: eventBody.challenge };
     }
 
+    console.log(eventBody);
+
     const { event, team_id } = eventBody;
     // Get the integration account for the Slack team
     const integrationAccount = await getSlackIntegrationAccount(

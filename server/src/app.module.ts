@@ -7,6 +7,7 @@ import { PrismaModule } from 'nestjs-prisma';
 import config from 'common/configs/config';
 import { loggingMiddleware } from 'common/middleware/logging.middleware';
 
+import { AttachmentModule } from 'modules/attachments/attachments.module';
 import { AuthModule } from 'modules/auth/auth.module';
 import { BullConfigModule } from 'modules/bull/bull.module';
 import { IntegrationAccountModule } from 'modules/integration-account/integration-account.module';
@@ -58,6 +59,7 @@ import { AppService } from './app.service';
     IssueRelationModule,
     NotificationsModule,
     SearchModule,
+    AttachmentModule,
 
     SlackModule,
 

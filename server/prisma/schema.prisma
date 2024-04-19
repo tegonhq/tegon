@@ -41,6 +41,7 @@ model User {
   template           Template[]
   createdBy          Issue[]
   integrationAccount IntegrationAccount[]
+  attachment         Attachment[]
 }
 
 model Workspace {
@@ -95,6 +96,7 @@ model Team {
   template       Template[]
   workflow       Workflow[]
   teamPreference TeamPreference[]
+  attachment     Attachment[]
 
   @@unique([name, identifier, workspaceId])
 }
@@ -405,6 +407,25 @@ model Notification {
   workspaceId String
 }
 
+model Attachment {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  fileName     String?
+  originalName String
+  fileType     String
+  fileExt      String
+  size         Int
+  status       AttachmentStatus
+
+  uploadedBy   User    @relation(fields: [uploadedById], references: [id])
+  uploadedById String
+  team         Team?   @relation(fields: [teamId], references: [id])
+  teamId       String?
+}
+
 enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
@@ -481,4 +502,11 @@ enum NotificationActionType {
   IssuePriorityChanged
   IssueNewComment
   IssueBlocks
+}
+
+enum AttachmentStatus {
+  Pending
+  Failed
+  Uploaded
+  Deleted
 }

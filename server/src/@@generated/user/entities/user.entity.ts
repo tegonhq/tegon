@@ -4,6 +4,7 @@ import {UsersOnWorkspaces} from '../../usersOnWorkspaces/entities/usersOnWorkspa
 import {Template} from '../../template/entities/template.entity'
 import {Issue} from '../../issue/entities/issue.entity'
 import {IntegrationAccount} from '../../integrationAccount/entities/integrationAccount.entity'
+import {Attachment} from '../../attachment/entities/attachment.entity'
 
 
 export class User {
@@ -20,4 +21,5 @@ usersOnWorkspaces?: UsersOnWorkspaces[] ;
 template?: Template[] ;
 createdBy?: Issue[] ;
 integrationAccount?: IntegrationAccount[] ;
+attachment?: Attachment[] ;
 }

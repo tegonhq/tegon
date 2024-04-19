@@ -16,6 +16,7 @@ Table User {
   template Template [not null]
   createdBy Issue [not null]
   integrationAccount IntegrationAccount [not null]
+  attachment Attachment [not null]
 }
 
 Table Workspace {
@@ -67,6 +68,7 @@ Table Team {
   template Template [not null]
   workflow Workflow [not null]
   teamPreference TeamPreference [not null]
+  attachment Attachment [not null]
 
   indexes {
     (name, identifier, workspaceId) [unique]
@@ -352,6 +354,23 @@ Table Notification {
   workspaceId String [not null]
 }
 
+Table Attachment {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  fileName String
+  originalName String [not null]
+  fileType String [not null]
+  fileExt String [not null]
+  size Int [not null]
+  status AttachmentStatus [not null]
+  uploadedBy User [not null]
+  uploadedById String [not null]
+  team Team
+  teamId String
+}
+
 Enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
@@ -430,6 +449,13 @@ Enum NotificationActionType {
   IssueBlocks
 }
 
+Enum AttachmentStatus {
+  Pending
+  Failed
+  Uploaded
+  Deleted
+}
+
 Ref: UsersOnWorkspaces.userId > User.id
 
 Ref: UsersOnWorkspaces.workspaceId > Workspace.id
@@ -483,3 +509,7 @@ Ref: IntegrationAccount.integratedById > User.id
 Ref: IntegrationAccount.integrationDefinitionId > IntegrationDefinition.id
 
 Ref: IntegrationAccount.workspaceId > Workspace.id
+
+Ref: Attachment.uploadedById > User.id
+
+Ref: Attachment.teamId > Team.id
