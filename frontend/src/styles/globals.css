@@ -59,6 +59,7 @@
     @apply bg-background text-foreground;
     @apply antialiased;
     overflow: hidden;
+    overflow-anchor: none;
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-color) transparent;
     /* shape-rendering: auto; */

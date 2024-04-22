@@ -21,7 +21,7 @@ export class ViewsService {
   }
 
   async createView(
-    { workspaceId, filters, ...data }: CreateViewsRequestBody,
+    { workspaceId, filters, description, ...data }: CreateViewsRequestBody,
     createdById: string,
   ) {
     return await this.prismaService.view.create({
@@ -33,6 +33,7 @@ export class ViewsService {
         workspace: { connect: { id: workspaceId } },
         isFavorite: false,
         createdById,
+        description: description ?? '',
       },
     });
   }

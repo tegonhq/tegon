@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 'use client';
-import type { EditorEvents, Extension, Extensions } from '@tiptap/core';
+import type { Extension } from '@tiptap/core';
 
 import { Inter } from 'next/font/google';
 import {
@@ -16,6 +16,7 @@ import {
   EditorCommandList,
 } from 'novel';
 import { ImageResizer, handleCommandNavigation } from 'novel/extensions';
+import { handleImagePaste } from 'novel/plugins';
 import * as React from 'react';
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
@@ -32,7 +33,6 @@ import {
   LinkSelector,
 } from './selectors';
 import { slashCommand, suggestionItems } from './slash-command';
-import { handleImagePaste } from 'novel/plugins';
 import { uploadFn } from './utils';
 
 // Inter as default font
@@ -85,7 +85,7 @@ export const EditorChild = ({
     <div className="relative w-full max-w-screen-lg">
       <EditorCommand
         className={cn(
-          'z-50 h-auto font-sans max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background dark:bg-slate-800 backdrop-blur-md px-1 shadow-lg transition-all',
+          'z-50 h-auto font-sans max-h-[330px] overflow-y-auto w-72 rounded-md border border-muted bg-background dark:bg-slate-800 backdrop-blur-md px-1 shadow-lg transition-all',
           fontSans.variable,
         )}
       >

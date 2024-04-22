@@ -44,7 +44,8 @@ export class CreateViewsRequestBody {
   name: string;
 
   @IsString()
-  description: string;
+  @IsOptional()
+  description?: string;
 
   @IsDefined()
   @IsNotEmptyObject()

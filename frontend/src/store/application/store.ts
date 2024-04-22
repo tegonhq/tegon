@@ -59,6 +59,14 @@ export const ApplicationStore: IAnyStateTreeNode = types
         JSON.stringify(self.filters),
       );
     },
+    clearFilters() {
+      self.filters = FiltersModel.create({});
+
+      localStorage.setItem(
+        `filters/${self.identifier}`,
+        JSON.stringify(self.filters),
+      );
+    },
     updateDisplaySettings(updateBody: UpdateDisplaySettingsBody) {
       self.displaySettings = { ...self.displaySettings, ...updateBody };
 

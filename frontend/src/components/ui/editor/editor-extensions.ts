@@ -11,11 +11,9 @@ import {
   StarterKit,
   Placeholder,
   TiptapImage,
+  UpdatedImage,
 } from 'novel/extensions';
 import { UploadImagesPlugin } from 'novel/plugins';
-import { createImageUpload } from 'novel/plugins';
-
-// TODO I am using cx here to get tailwind autocomplete working, idk if someone else can write a regex to just capture the class key in objects
 
 const tiptapLink = TiptapLink.configure({
   HTMLAttributes: {
@@ -61,42 +59,16 @@ const heading = Heading.extend({
   },
 }).configure({ levels: [1, 2, 3] });
 
-const onUpload = async (file: File) => {
-  const promise = fetch('/api/upload', {
-    method: 'POST',
-    headers: {
-      'content-type': file?.type || 'application/octet-stream',
-      'x-vercel-filename': file?.name || 'image.png',
-    },
-    body: file,
-  });
-
-  // This should return a src of the uploaded image
-  return promise;
-};
-
-export const uploadFn = createImageUpload({
-  onUpload,
-  validateFn: (file) => {
-    if (!file.type.includes('image/')) {
-      return false;
-    } else if (file.size / 1024 / 1024 > 20) {
-      return false;
-    }
-    return true;
-  },
-});
-
 const tiptapImage = TiptapImage.extend({
   addProseMirrorPlugins() {
     return [
       UploadImagesPlugin({
-        imageClass: cx('opacity-40 rounded-lg border border-stone-200'),
+        imageClass: cx('opacity-40 rounded-lg border border-slate-200'),
       }),
     ];
   },
 }).configure({
-  allowBase64: true,
+  allowBase64: false,
   HTMLAttributes: {
     class: cx('rounded-lg border border-muted'),
   },
@@ -184,5 +156,6 @@ export const defaultExtensions = [
   taskItem,
   horizontalRule,
   heading,
+  UpdatedImage,
   tiptapImage,
 ];

@@ -16,8 +16,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
+import { Session } from 'modules/auth/session.decorator';
 
 import {
   CreateViewsRequestBody,
@@ -26,8 +28,6 @@ import {
   ViewsRequestBody,
 } from './views.interface';
 import { ViewsService } from './views.service';
-import { SessionContainer } from 'supertokens-node/recipe/session';
-import { Session } from 'modules/auth/session.decorator';
 
 @Controller({
   version: '1',

@@ -3,9 +3,13 @@
 import { RiCloseLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 
+import type { ViewType } from 'common/types/view';
+
 import { Button } from 'components/ui/button';
 import { Separator } from 'components/ui/separator';
 import { useCurrentTeam } from 'hooks/teams';
+
+import { useCreateViewMutation } from 'services/views';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -15,11 +19,18 @@ import { IssueAssigneeDropdown } from './filter-dropdowns/issue-assignee-dropdow
 import { IssueLabelDropdown } from './filter-dropdowns/issue-label-dropdown';
 import { IssueStatusDropdown } from './filter-dropdowns/issue-status-dropdown';
 import { isEmpty } from './filter-utils';
+import { useCurrentWorkspace } from 'hooks/workspace';
 
 export const FiltersView = observer(() => {
   const { applicationStore } = useContextStore();
+  const workspace = useCurrentWorkspace();
   const team = useCurrentTeam();
   const filters = applicationStore.filters;
+  const { mutate: createView } = useCreateViewMutation({
+    onSuccess: (data: ViewType) => {
+      console.log(data);
+    },
+  });
 
   const onChange = (value: string | string[], filter: string) => {
     const filterValue = filters[filter];
@@ -28,6 +39,18 @@ export const FiltersView = observer(() => {
 
   const removeFilter = (filter: string) => {
     applicationStore.deleteFilter(filter);
+  };
+
+  const clearFilters = () => {
+    applicationStore.clearFilters();
+  };
+
+  const onSave = () => {
+    createView({
+      workspaceId: workspace.id,
+      name: 'View 1',
+      filters,
+    });
   };
 
   return (
@@ -152,10 +175,10 @@ export const FiltersView = observer(() => {
         {!isEmpty(filters) && (
           <>
             <Separator orientation="vertical" />
-            <Button variant="ghost" size="xs">
+            <Button variant="ghost" size="xs" onClick={clearFilters}>
               Clear
             </Button>
-            <Button variant="outline" size="xs">
+            <Button variant="outline" size="xs" onClick={onSave}>
               Save
             </Button>
           </>

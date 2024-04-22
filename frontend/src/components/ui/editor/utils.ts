@@ -8,9 +8,7 @@ const onUpload = async (file: File) => {
   const formData = new FormData();
 
   formData.append('files', file);
-
-  formData.append('workspaceId', '222940f7-2a22-41cb-bd83-02f999033a93');
-  const promise = fetch(
+  const response = await fetch(
     `/api/v1/attachment/upload?workspaceId=${workspaceId}`,
     {
       method: 'POST',
@@ -18,18 +16,15 @@ const onUpload = async (file: File) => {
     },
   );
 
+  const responseJSON = await response.json();
+
   // This should return a src of the uploaded image
-  return promise;
+  return responseJSON[0].publicURL;
 };
 
 export const uploadFn = createImageUpload({
   onUpload,
-  validateFn: (file) => {
-    if (!file.type.includes('image/')) {
-      return false;
-    } else if (file.size / 1024 / 1024 > 20) {
-      return false;
-    }
+  validateFn: () => {
     return true;
   },
 });

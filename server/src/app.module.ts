@@ -28,6 +28,7 @@ import { SyncActionsModule } from 'modules/sync-actions/sync-actions.module';
 import { TeamsModule } from 'modules/teams/teams.module';
 import { TemplatesModule } from 'modules/templates/templates.module';
 import { UsersModule } from 'modules/users/users.module';
+import { ViewsModule } from 'modules/views/views.module';
 import { WebhooksModule } from 'modules/webhooks/webhooks.module';
 import { WorkflowsModule } from 'modules/workflows/workflows.module';
 import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
@@ -60,6 +61,7 @@ import { AppService } from './app.service';
     NotificationsModule,
     SearchModule,
     AttachmentModule,
+    ViewsModule,
 
     SlackModule,
 
