@@ -885,6 +885,39 @@ export function convertSlackMessageToTiptapJson(
             return undefined;
         }
       });
+    } else if (block.type === 'header') {
+      const headingText = block.text.text;
+      return [
+        {
+          type: 'heading',
+          attrs: { level: 1 },
+          content: [{ type: 'text', text: headingText }],
+        },
+      ];
+    } else if (block.type === 'section' && block.text.type === 'mrkdwn') {
+      const taskListItems = block.text.text
+        .toString()
+        .split('\n')
+        .map((item: string) => {
+          const checked = item.startsWith(':white_check_mark:');
+          const itemText = item.slice(item.indexOf(' ') + 1);
+          return {
+            type: 'taskItem',
+            attrs: { checked },
+            content: [
+              {
+                type: 'paragraph',
+                content: [{ type: 'text', text: itemText }],
+              },
+            ],
+          };
+        });
+      return [
+        {
+          type: 'taskList',
+          content: taskListItems,
+        },
+      ];
     }
     return [];
   });
@@ -908,7 +941,7 @@ export function convertSlackMessageToTiptapJson(
   return JSON.stringify({ type: 'doc', content });
 }
 
-function processNode(node: TiptapNode, blocks: SlackBlock[]) {
+function processTiptapNode(node: TiptapNode, blocks: SlackBlock[]) {
   switch (node.type) {
     case 'paragraph':
       // Create a rich text section for the paragraph node
@@ -1067,6 +1100,43 @@ function processNode(node: TiptapNode, blocks: SlackBlock[]) {
         alt_text: node.attrs?.alt || '',
       });
       break;
+    case 'heading':
+      const headingText = node.content
+        ?.map((child: TiptapNode) =>
+          child.type === 'text' ? child.text || '' : '',
+        )
+        .join('');
+      blocks.push({
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: headingText,
+          emoji: true,
+        },
+      });
+      break;
+    case 'taskList':
+      const taskListItems = node.content?.map((listItem: TiptapNode) => {
+        const checked = listItem.attrs?.checked
+          ? ':white_check_mark:'
+          : ':black_medium_square:';
+        const itemText = listItem.content
+          ?.map((child: TiptapNode) =>
+            child.content
+              ?.map((grandChild: TiptapNode) => grandChild.text || '')
+              .join(''),
+          )
+          .join('');
+        return `${checked} ${itemText}`;
+      });
+      blocks.push({
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: taskListItems?.join('\n'),
+        },
+      });
+      break;
   }
 }
 
@@ -1078,7 +1148,9 @@ export function convertTiptapJsonToSlackBlocks(message: string): SlackBlock[] {
     const blocks: SlackBlock[] = [];
 
     // Iterate over each node in the parsed JSON content
-    parsedJson.content.forEach((node: TiptapNode) => processNode(node, blocks));
+    parsedJson.content.forEach((node: TiptapNode) =>
+      processTiptapNode(node, blocks),
+    );
 
     // Return the generated Slack blocks
     return blocks;

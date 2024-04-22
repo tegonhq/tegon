@@ -63,7 +63,7 @@ export interface slackIssueData {
 export interface SlackBlock {
   type: string;
   elements?: SlackElement[];
-  text?: Record<string, string>;
+  text?: Record<string, string | boolean>;
   image_url?: string;
   alt_text?: string;
 }

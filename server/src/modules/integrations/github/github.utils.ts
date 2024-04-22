@@ -42,6 +42,8 @@ import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import { githubHeaders, githubIssueData } from './github.interface';
 import {
+  convertMarkdownToTiptapJson,
+  convertTiptapJsonToMarkdown,
   deleteRequest,
   getOrCreateLabelIds,
   getRequest,
@@ -118,7 +120,7 @@ export async function getIssueData(
 
   const issueInput: UpdateIssueInput = {
     title: eventBody.issue.title,
-    description: eventBody.issue.body,
+    description: convertMarkdownToTiptapJson(eventBody.issue.body),
     stateId,
     isBidirectional: true,
     ...(issueLabelIds && { labelIds: issueLabelIds }),
@@ -188,7 +190,7 @@ export async function sendGithubFirstComment(
 
   logger.debug(`Linked issue updated for issue ${issueId}`);
 
-  const githubCommentBody = `<p><a href="${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${team.identifier}-${number}">${team.identifier}-${number} ${title}</a></p>`;
+  const githubCommentBody = `[${team.identifier}-${number} ${title}](${process.env.PUBLIC_FRONTEND_HOST}/${workspace.slug}/issue/${team.identifier}-${number})`;
 
   await sendGithubComment(linkedIssue, accessToken, githubCommentBody);
 
@@ -572,7 +574,7 @@ export async function upsertGithubIssueComment(
         const url = `${(linkedIssue.sourceData as LinkedIssueSourceData).apiUrl}/comments`;
         const githubIssueComment = (
           await postRequest(url, getGithubHeaders(accessToken), {
-            body: issueComment.body,
+            body: convertTiptapJsonToMarkdown(issueComment.body),
           })
         ).data;
         const sourceMetadata = {
@@ -610,7 +612,7 @@ export async function upsertGithubIssueComment(
           (linkedComment.sourceData as LinkedCommentSourceData).apiUrl,
           getGithubHeaders(accessToken),
           {
-            body: issueComment.body,
+            body: convertTiptapJsonToMarkdown(issueComment.body),
           },
         );
         logger.debug('GitHub issue comment updated successfully');

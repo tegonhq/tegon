@@ -32,7 +32,11 @@ import {
   sendGithubFirstComment,
   sendGithubPRFirstComment,
 } from './github.utils';
-import { getOrCreateLabelIds, getUserId } from '../integrations.utils';
+import {
+  convertMarkdownToTiptapJson,
+  getOrCreateLabelIds,
+  getUserId,
+} from '../integrations.utils';
 
 export async function handleIssues(
   prisma: PrismaService,
@@ -203,7 +207,7 @@ export async function handleIssueComments(
       );
       const issueComment = await prisma.issueComment.create({
         data: {
-          body: eventBody.comment.body,
+          body: convertMarkdownToTiptapJson(eventBody.comment.body),
           issueId,
           userId,
           parentId,
@@ -250,7 +254,7 @@ export async function handleIssueComments(
         return await prisma.issueComment.update({
           where: { id: linkedComment.commentId },
           data: {
-            body: eventBody.comment.body,
+            body: convertMarkdownToTiptapJson(eventBody.comment.body),
             linkedComment: {
               update: {
                 where: { id: linkedComment.id },

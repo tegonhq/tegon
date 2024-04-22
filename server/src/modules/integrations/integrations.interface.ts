@@ -13,6 +13,7 @@ export type EventHeaders = Record<string, any>;
 
 export type labelDataType = Record<string, string>;
 
+export type TiptapListTypes = 'orderedList' | 'bulletList' | 'taskList' | null;
 export interface TiptapAttrs {
   src?: string;
   alt?: string;
@@ -24,6 +25,8 @@ export interface TiptapAttrs {
   tight?: boolean;
   start?: number;
   language?: string;
+  level?: number;
+  checked?: boolean;
 }
 
 export interface TiptapMarks {
