@@ -32,4 +32,5 @@ export const tablesToSendMessagesFor = new Map([
   [ModelName.LinkedIssue, true],
   [ModelName.IssueRelation, true],
   [ModelName.Notification, true],
+  [ModelName.View, true],
 ]);

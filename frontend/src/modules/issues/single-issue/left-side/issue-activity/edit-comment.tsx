@@ -8,6 +8,7 @@ import { Button } from 'components/ui/button';
 import { Textarea } from 'components/ui/textarea';
 
 import { useUpdateIssueCommentMutation } from 'services/issues/update-issue-comment';
+import { Editor } from 'components/ui/editor';
 
 interface EditCommentProps {
   value: string;
@@ -31,12 +32,11 @@ export function EditComment({ value, onCancel, comment }: EditCommentProps) {
 
   return (
     <div className="mt-2">
-      <Textarea
+      <Editor
         placeholder="Leave a reply..."
-        rows={5}
         value={commentValue}
-        onChange={(e) => setCommentValue(e.currentTarget.value)}
-        className="w-full resize-none text-foreground bg-transparent border-0 py-0 focus-visible:ring-0 outline-none px-0"
+        onChange={(e) => setCommentValue(e)}
+        className="w-full text-foreground bg-transparent p-3 pt-0 pl-0"
       />
       <div className="flex justify-end items-center gap-2">
         <Button

@@ -24,9 +24,5 @@ export function SingleIssue() {
 }
 
 SingleIssue.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <AppLayout>
-      <IssueStoreInit>{page}</IssueStoreInit>
-    </AppLayout>
-  );
+  return <AppLayout>{page}</AppLayout>;
 };

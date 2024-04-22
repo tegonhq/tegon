@@ -7,8 +7,6 @@ import {
   RiPencilFill,
   RiSlackFill,
 } from '@remixicon/react';
-import { EditorRoot, EditorContent } from 'novel';
-import { StarterKit } from 'novel/extensions';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
@@ -31,6 +29,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
+import { Editor } from 'components/ui/editor';
 
 import type { User } from 'store/user-context';
 
@@ -79,11 +78,11 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
   return (
     <div className="flex items-start text-xs text-muted-foreground ">
       {user ? (
-        <Avatar className="h-[20px] w-[25px] mr-3 text-foreground">
+        <Avatar className="h-[15px] w-[20px] mr-3 mt-[2px] text-foreground">
           <AvatarImage />
           <AvatarFallback
             className={cn(
-              'text-[0.6rem] rounded-sm',
+              'text-[0.55rem] rounded-sm',
               getTailwindColor(user?.username),
             )}
           >
@@ -91,7 +90,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           </AvatarFallback>
         </Avatar>
       ) : (
-        <div className="h-[20px] w-[25px] flex items-center justify-center mr-4 rounded-sm">
+        <div className="h-[15px] w-[20px] flex items-center justify-center mr-4 rounded-sm">
           {getIcon(sourceMetadata)}
         </div>
       )}
@@ -174,17 +173,11 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
                   comment.parentId && 'pb-3',
                 )}
               >
-                <EditorRoot>
-                  <EditorContent
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    initialContent={comment.body as any}
-                    editorProps={{ editable: () => false }}
-                    extensions={[StarterKit]}
-                    className="relative w-full max-w-screen-lg text-base text-foreground sm:rounded-lg focus-visible:outline-none"
-                    // eslint-disable-next-line react/no-children-prop
-                    children={''}
-                  ></EditorContent>
-                </EditorRoot>
+                <Editor
+                  value={comment.body}
+                  editable={false}
+                  className="mb-0"
+                />
               </div>
             )}
           </>

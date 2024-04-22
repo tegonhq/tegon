@@ -14,6 +14,7 @@ import { IntegrationName } from 'common/types/integration-definition';
 import type { IssueType } from 'common/types/issue';
 
 import { Button } from 'components/ui/button';
+import { Editor } from 'components/ui/editor';
 import {
   Form,
   FormControl,
@@ -41,7 +42,6 @@ import {
   isBidirectionalEnabled,
 } from './new-issue-utils';
 import { draftKey, NewIssueSchema } from './new-issues-type';
-import { IssueDescription } from '../single-issue/left-side/issue-description';
 
 interface NewIssueProps {
   onClose: () => void;
@@ -122,12 +122,13 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
                 return (
                   <FormItem>
                     <FormControl>
-                      <IssueDescription
+                      <Editor
                         {...field}
                         onChange={(value) => {
                           field.onChange(value);
                           setDescriptionValue(value);
                         }}
+                        className="text-slate-600 dark:text-slate-400 min-h-[50px] mb-8"
                         autoFocus
                       />
                     </FormControl>

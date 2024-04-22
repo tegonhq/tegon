@@ -35,6 +35,7 @@ Table Workspace {
   integrationAccount IntegrationAccount [not null]
   integrationDefinition IntegrationDefinition [not null]
   attachments Attachment [not null]
+  View View [not null]
 }
 
 Table UsersOnWorkspaces {
@@ -69,6 +70,7 @@ Table Team {
   template Template [not null]
   workflow Workflow [not null]
   teamPreference TeamPreference [not null]
+  View View [not null]
 
   indexes {
     (name, identifier, workspaceId) [unique]
@@ -374,6 +376,22 @@ Table Attachment {
   workspaceId String
 }
 
+Table View {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  workspaceId String [not null]
+  workspace Workspace [not null]
+  teamId String
+  team Team
+  name String [not null]
+  description String [not null]
+  filters Json [not null]
+  isFavorite Boolean [not null, default: false]
+  createdById String [not null]
+}
+
 Enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
@@ -405,6 +423,7 @@ Enum ModelName {
   LinkedIssue
   IssueRelation
   Notification
+  View
 }
 
 Enum ActionType {
@@ -516,3 +535,7 @@ Ref: IntegrationAccount.workspaceId > Workspace.id
 Ref: Attachment.uploadedById > User.id
 
 Ref: Attachment.workspaceId > Workspace.id
+
+Ref: View.workspaceId > Workspace.id
+
+Ref: View.teamId > Team.id

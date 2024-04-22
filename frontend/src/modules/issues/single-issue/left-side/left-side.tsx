@@ -6,30 +6,36 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { NewIssue } from 'modules/issues/new-issue/new-issue';
 
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
+
 import { ScrollArea } from 'components/ui/scroll-area';
 import { Separator } from 'components/ui/separator';
 import { useIssueData } from 'hooks/issues';
-import { useCurrentTeam } from 'hooks/teams';
+import { useTeamWithId } from 'hooks/teams';
+import { useAllTeamWorkflows } from 'hooks/workflows';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
 import { FilterSmall } from './filters-small';
 import { Header } from './header';
 import { IssueActivity } from './issue-activity';
-import { IssueDescription } from './issue-description';
 import { IssueTitle } from './issue-title';
 import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
 import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
+import { Editor } from 'components/ui/editor';
 
-interface LeftSideProps {
-  isTriageView?: boolean;
-}
-
-export const LeftSide = observer(({ isTriageView }: LeftSideProps) => {
+export const LeftSide = observer(() => {
   const issue = useIssueData();
-  const team = useCurrentTeam();
+  const team = useTeamWithId(issue.teamId);
+  const workflows = useAllTeamWorkflows(team.identifier);
+  const triageWorkflow = workflows.find(
+    (workflow: WorkflowType) =>
+      workflow.category === WorkflowCategoryEnum.TRIAGE,
+  );
+  const isTriageView = issue.stateId === triageWorkflow.id;
+
   const [newIssueState, setNewIssueState] = React.useState(false);
 
   const { mutate: updateIssue } = useUpdateIssueMutation({});
@@ -63,9 +69,10 @@ export const LeftSide = observer(({ isTriageView }: LeftSideProps) => {
           {issue.parentId && <ParentIssueView issue={issue} />}
 
           <IssueTitle value={issue.title} onChange={onIssueChange} />
-          <IssueDescription
+          <Editor
             value={issue.description}
             onChange={onDescriptionChange}
+            className="text-slate-700 dark:text-slate-300 min-h-[50px] mb-8"
           />
 
           <SubIssueView

@@ -39,7 +39,7 @@ export function getUserIcon(
 ) {
   if (type === Integration.Slack) {
     return (
-      <div className="h-[20px] w-[25px] mr-4 flex items-center justify-center">
+      <div className="h-[15px] w-[20px] mr-4 flex items-center justify-center">
         <SlackIcon size={16} />
       </div>
     );
@@ -47,18 +47,18 @@ export function getUserIcon(
 
   if (type === Integration.Github) {
     return (
-      <div className="h-[20px] w-[25px] mr-4 flex items-center justify-center">
+      <div className="h-[15px] w-[20px] mr-4 flex items-center justify-center">
         <RiGithubFill size={18} className="text-foreground" />
       </div>
     );
   }
 
   return (
-    <Avatar className="h-[20px] w-[25px] mr-4 text-foreground">
+    <Avatar className="h-[15px] w-[20px] mr-4 text-foreground">
       <AvatarImage />
       <AvatarFallback
         className={cn(
-          'text-[0.6rem] rounded-sm',
+          'text-[0.55rem] rounded-sm',
           getTailwindColor(user.username),
         )}
       >

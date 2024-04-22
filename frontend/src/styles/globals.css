@@ -138,5 +138,5 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
 }
 
 .scroll-area > div {
-  height: 100%;
+  display: block !important;
 }

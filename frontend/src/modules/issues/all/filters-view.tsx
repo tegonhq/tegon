@@ -3,6 +3,7 @@
 import { RiCloseLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 
+import { Button } from 'components/ui/button';
 import { Separator } from 'components/ui/separator';
 import { useCurrentTeam } from 'hooks/teams';
 
@@ -13,6 +14,7 @@ import { FilterDropdown } from './filter-dropdown';
 import { IssueAssigneeDropdown } from './filter-dropdowns/issue-assignee-dropdown';
 import { IssueLabelDropdown } from './filter-dropdowns/issue-label-dropdown';
 import { IssueStatusDropdown } from './filter-dropdowns/issue-status-dropdown';
+import { isEmpty } from './filter-utils';
 
 export const FiltersView = observer(() => {
   const { applicationStore } = useContextStore();
@@ -145,8 +147,19 @@ export const FiltersView = observer(() => {
         )}
         <FilterDropdown />
       </div>
-      <div>
+      <div className="flex gap-2">
         <DisplayPopover />
+        {!isEmpty(filters) && (
+          <>
+            <Separator orientation="vertical" />
+            <Button variant="ghost" size="xs">
+              Clear
+            </Button>
+            <Button variant="outline" size="xs">
+              Save
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

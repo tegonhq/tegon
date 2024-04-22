@@ -12,7 +12,7 @@ import {
   getInitials,
 } from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
-import { Textarea } from 'components/ui/textarea';
+import { Editor } from 'components/ui/editor';
 import { useIssueData } from 'hooks/issues';
 
 import { useCreateIssueCommentMutation } from 'services/issues/create-issue-comment';
@@ -45,11 +45,11 @@ export function ReplyComment({
 
   return (
     <div className="flex items-start text-xs text-muted-foreground w-full border-t p-3 pb-0">
-      <Avatar className="h-[20px] w-[25px] text-foreground">
+      <Avatar className="h-[15px] w-[20px] text-foreground">
         <AvatarImage />
         <AvatarFallback
           className={cn(
-            'text-[0.6rem] rounded-sm',
+            'text-[0.55rem] rounded-sm',
             getTailwindColor(currentUser.username),
           )}
         >
@@ -58,9 +58,8 @@ export function ReplyComment({
       </Avatar>
 
       <div className="w-full relative">
-        <Textarea
+        <Editor
           placeholder="Leave a reply..."
-          rows={showReplyButton && !commentValue ? 5 : 1}
           value={commentValue}
           onFocus={() => {
             setShowReplyButton(true);
@@ -68,8 +67,8 @@ export function ReplyComment({
           onBlur={() => {
             !commentValue && setShowReplyButton(false);
           }}
-          onChange={(e) => setCommentValue(e.currentTarget.value)}
-          className="w-full resize-none text-foreground bg-transparent border-0 py-0 focus-visible:ring-0 outline-none"
+          onChange={(e) => setCommentValue(e)}
+          className="w-full text-foreground bg-transparent p-3 pt-0"
         />
         <div className="flex justify-between items-center">
           {showReplyButton && (

@@ -111,7 +111,7 @@ export function IssueAssigneeDropdownContent({
                     <AvatarImage />
                     <AvatarFallback
                       className={cn(
-                        'text-[0.6rem] rounded-sm mr-2',
+                        'text-[0.55rem] rounded-sm mr-2',
                         getTailwindColor(userData.username),
                       )}
                     >

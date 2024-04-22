@@ -63,11 +63,11 @@ export function IssueAssigneeDropdown({
         >
           {value ? (
             <>
-              <Avatar className="h-[20px] w-[25px] flex items-center">
+              <Avatar className="h-[15px] w-[20px] flex items-center">
                 <AvatarImage />
                 <AvatarFallback
                   className={cn(
-                    'text-[0.6rem] rounded-sm',
+                    'text-[0.55rem] rounded-sm',
                     getTailwindColor(getUserData(value).username),
                   )}
                 >
@@ -76,7 +76,7 @@ export function IssueAssigneeDropdown({
               </Avatar>
             </>
           ) : (
-            <div className="h-[20px] w-[25px] flex items-center justify-center">
+            <div className="h-[15px] w-[20px] flex items-center justify-center">
               <AssigneeLine size={18} className="mr-1 text-muted-foreground" />
             </div>
           )}
@@ -101,7 +101,7 @@ export function IssueAssigneeDropdown({
                 <AvatarImage />
                 <AvatarFallback
                   className={cn(
-                    'text-[0.6rem] rounded-sm',
+                    'text-[0.55rem] rounded-sm',
                     getTailwindColor(getUserData(value).username),
                   )}
                 >
@@ -137,7 +137,7 @@ export function IssueAssigneeDropdown({
               <AvatarImage />
               <AvatarFallback
                 className={cn(
-                  'text-[0.6rem] rounded-sm mr-2',
+                  'text-[0.55rem] rounded-sm mr-2',
                   getTailwindColor(getUserData(value).username),
                 )}
               >

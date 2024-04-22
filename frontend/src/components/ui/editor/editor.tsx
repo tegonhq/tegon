@@ -1,6 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 'use client';
+import type { EditorEvents, Extension, Extensions } from '@tiptap/core';
+
 import { Inter } from 'next/font/google';
 import {
   EditorInstance,
@@ -11,6 +13,7 @@ import {
   EditorContent,
   EditorBubble,
   useEditor,
+  EditorCommandList,
 } from 'novel';
 import { ImageResizer, handleCommandNavigation } from 'novel/extensions';
 import * as React from 'react';
@@ -21,7 +24,7 @@ import { cn } from 'common/lib/utils';
 
 import { Separator } from 'components/ui/separator';
 
-import { defaultExtensions } from './editor-extensions';
+import { defaultExtensions, getPlaceholder } from './editor-extensions';
 import {
   NodeSelector,
   TextButtons,
@@ -29,6 +32,8 @@ import {
   LinkSelector,
 } from './selectors';
 import { slashCommand, suggestionItems } from './slash-command';
+import { handleImagePaste } from 'novel/plugins';
+import { uploadFn } from './utils';
 
 // Inter as default font
 export const fontSans = Inter({
@@ -36,18 +41,25 @@ export const fontSans = Inter({
   variable: '--font-sans',
 });
 
-interface IssueDescriptionProps {
+interface EditorProps {
   value?: string;
   onChange?: (value: string) => void;
   autoFocus?: boolean;
+  className?: string;
+  placeholder?: string | Extension;
+  editable?: boolean;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 const extensions = [...defaultExtensions, slashCommand];
 
-export const IssueDescriptionChild = ({
+export const EditorChild = ({
   autoFocus,
+  value,
 }: {
   autoFocus: boolean;
+  value: string;
 }) => {
   const [openNode, setOpenNode] = useState(false);
   const [openColor, setOpenColor] = useState(false);
@@ -61,6 +73,14 @@ export const IssueDescriptionChild = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editor]);
 
+  React.useEffect(() => {
+    if (value === undefined || value === '') {
+      editor.commands.clearContent();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
   return (
     <div className="relative w-full max-w-screen-lg">
       <EditorCommand
@@ -72,24 +92,26 @@ export const IssueDescriptionChild = ({
         <EditorCommandEmpty className="px-2 text-muted-foreground">
           No results
         </EditorCommandEmpty>
-        {suggestionItems.map((item) => (
-          <EditorCommandItem
-            value={item.title}
-            onCommand={(val) => item.command(val)}
-            className={`flex w-full items-center space-x-2 my-2 rounded-md px-2 py-1 text-left text-xs hover:bg-accent dark:hover:bg-slate-700 aria-selected:bg-accent dark:aria-selected:bg-slate-700`}
-            key={item.title}
-          >
-            <div className="flex h-5 w-5 items-center justify-center">
-              {item.icon}
-            </div>
-            <div>
-              <p className="font-medium">{item.title}</p>
-              <p className="text-xs text-muted-foreground">
-                {item.description}
-              </p>
-            </div>
-          </EditorCommandItem>
-        ))}
+        <EditorCommandList>
+          {suggestionItems.map((item) => (
+            <EditorCommandItem
+              value={item.title}
+              onCommand={(val) => item.command(val)}
+              className={`flex w-full items-center space-x-2 my-2 rounded-md px-2 py-1 text-left text-xs hover:bg-accent dark:hover:bg-slate-700 aria-selected:bg-accent dark:aria-selected:bg-slate-700`}
+              key={item.title}
+            >
+              <div className="flex h-5 w-5 items-center justify-center">
+                {item.icon}
+              </div>
+              <div>
+                <p className="font-medium">{item.title}</p>
+                <p className="text-xs text-muted-foreground">
+                  {item.description}
+                </p>
+              </div>
+            </EditorCommandItem>
+          ))}
+        </EditorCommandList>
       </EditorCommand>
 
       <EditorBubble
@@ -111,11 +133,16 @@ export const IssueDescriptionChild = ({
   );
 };
 
-export const IssueDescription = ({
+export const Editor = ({
   value,
   onChange,
   autoFocus = false,
-}: IssueDescriptionProps) => {
+  className,
+  placeholder,
+  onFocus,
+  onBlur,
+  editable = true,
+}: EditorProps) => {
   function getInitialValue() {
     try {
       return value ? JSON.parse(value) : undefined;
@@ -135,28 +162,37 @@ export const IssueDescription = ({
   );
 
   return (
-    <EditorRoot>
-      <EditorContent
-        initialContent={getInitialValue()}
-        extensions={extensions}
-        className="relative min-h-[50px] w-full max-w-screen-lg mb-[40px] text-base text-slate-600 dark:text-slate-400 sm:rounded-lg"
-        autofocus
-        onCreate={({ editor }) => editor.commands.focus()}
-        editorProps={{
-          handleDOMEvents: {
-            keydown: (_view, event) => handleCommandNavigation(event),
-          },
-          attributes: {
-            class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`,
-          },
-        }}
-        onUpdate={({ editor }) => {
-          debouncedUpdates(editor);
-        }}
-        slotAfter={<ImageResizer />}
-      >
-        <IssueDescriptionChild autoFocus={autoFocus} />
-      </EditorContent>
-    </EditorRoot>
+    // TODO: Change this to the editor input
+    <div onFocus={onFocus} onBlur={onBlur}>
+      <EditorRoot>
+        <EditorContent
+          initialContent={getInitialValue()}
+          extensions={[...extensions, getPlaceholder(placeholder)]}
+          className={cn(
+            'relative w-full max-w-screen-lg text-base sm:rounded-lg',
+            className,
+          )}
+          autofocus
+          onCreate={({ editor }) => editor.commands.focus()}
+          editorProps={{
+            handlePaste: (view, event) =>
+              handleImagePaste(view, event, uploadFn),
+            handleDOMEvents: {
+              keydown: (_view, event) => handleCommandNavigation(event),
+            },
+            editable: () => editable,
+            attributes: {
+              class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`,
+            },
+          }}
+          onUpdate={({ editor }) => {
+            debouncedUpdates(editor);
+          }}
+          slotAfter={<ImageResizer />}
+        >
+          <EditorChild autoFocus={autoFocus} value={value} />
+        </EditorContent>
+      </EditorRoot>
+    </div>
   );
 };

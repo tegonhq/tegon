@@ -16,6 +16,7 @@ import { NotificationsStore } from './notifications';
 import { TeamsStore } from './teams';
 import { WorkflowsStore } from './workflows';
 import { WorkspaceStore } from './workspace';
+import { ViewsStore } from './views';
 
 const StoreContextModel = types.model({
   commentsStore: CommentsStore,
@@ -31,6 +32,7 @@ const StoreContextModel = types.model({
   linkedIssuesStore: LinkedIssuesStore,
   issueRelationsStore: IssueRelationsStore,
   notificationsStore: NotificationsStore,
+  viewsStore: ViewsStore,
 });
 
 export const storeContextStore = StoreContextModel.create({
@@ -84,6 +86,9 @@ export const storeContextStore = StoreContextModel.create({
   },
   notificationsStore: {
     notifications: [],
+  },
+  viewsStore: {
+    views: [],
   },
 });
 

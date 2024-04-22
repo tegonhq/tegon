@@ -34,7 +34,7 @@ export const SubscribeDropdown = observer(
           return (
             <Avatar
               className={cn(
-                'h-[20px] w-[25px] flex items-center border rounded-full',
+                'h-[15px] w-[20px] flex items-center border rounded-full',
                 index > 0 && '-ml-2',
               )}
               key={user.id}
@@ -42,7 +42,7 @@ export const SubscribeDropdown = observer(
               <AvatarImage />
               <AvatarFallback
                 className={cn(
-                  'text-[0.6rem] rounded-full',
+                  'text-[0.55rem] rounded-full',
                   getTailwindColor(user.username),
                 )}
               >

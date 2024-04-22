@@ -107,7 +107,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
           />
         </div>
 
-        <div className="mr-2">
+        <div className="mr-2.5">
           <IssuePriorityDropdown
             value={issue.priority ?? 0}
             onChange={priorityChange}

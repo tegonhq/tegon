@@ -35,11 +35,11 @@ export const WorkspaceDropdown = observer(() => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="px-2 text-foreground">
           <div className="flex justify-between">
-            <Avatar className="h-[20px] w-[25px] ">
+            <Avatar className="h-[15px] w-[20px] ">
               <AvatarImage />
               <AvatarFallback
                 className={cn(
-                  'text-[0.6rem] rounded-sm',
+                  'text-[0.55rem] rounded-sm',
                   getTailwindColor(workspaceStore.workspace.name),
                 )}
               >

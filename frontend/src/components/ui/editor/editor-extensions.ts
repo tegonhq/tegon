@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { mergeAttributes } from '@tiptap/core';
+import { Extension, mergeAttributes } from '@tiptap/core';
 import Heading from '@tiptap/extension-heading';
 import { cx } from 'class-variance-authority';
 import {
@@ -10,7 +10,10 @@ import {
   HorizontalRule,
   StarterKit,
   Placeholder,
+  TiptapImage,
 } from 'novel/extensions';
+import { UploadImagesPlugin } from 'novel/plugins';
+import { createImageUpload } from 'novel/plugins';
 
 // TODO I am using cx here to get tailwind autocomplete working, idk if someone else can write a regex to just capture the class key in objects
 
@@ -58,6 +61,47 @@ const heading = Heading.extend({
   },
 }).configure({ levels: [1, 2, 3] });
 
+const onUpload = async (file: File) => {
+  const promise = fetch('/api/upload', {
+    method: 'POST',
+    headers: {
+      'content-type': file?.type || 'application/octet-stream',
+      'x-vercel-filename': file?.name || 'image.png',
+    },
+    body: file,
+  });
+
+  // This should return a src of the uploaded image
+  return promise;
+};
+
+export const uploadFn = createImageUpload({
+  onUpload,
+  validateFn: (file) => {
+    if (!file.type.includes('image/')) {
+      return false;
+    } else if (file.size / 1024 / 1024 > 20) {
+      return false;
+    }
+    return true;
+  },
+});
+
+const tiptapImage = TiptapImage.extend({
+  addProseMirrorPlugins() {
+    return [
+      UploadImagesPlugin({
+        imageClass: cx('opacity-40 rounded-lg border border-stone-200'),
+      }),
+    ];
+  },
+}).configure({
+  allowBase64: true,
+  HTMLAttributes: {
+    class: cx('rounded-lg border border-muted'),
+  },
+});
+
 const starterKit = StarterKit.configure({
   heading: false,
   bulletList: {
@@ -99,7 +143,7 @@ const starterKit = StarterKit.configure({
   gapcursor: false,
 });
 
-const placeholder = Placeholder.configure({
+const defaultPlaceholder = Placeholder.configure({
   placeholder: ({ node }) => {
     if (node.type.name === 'heading') {
       return `Heading ${node.attrs.level}`;
@@ -116,12 +160,29 @@ const placeholder = Placeholder.configure({
   includeChildren: true,
 });
 
+export const getPlaceholder = (placeholder: string | Extension) => {
+  if (!placeholder) {
+    return defaultPlaceholder;
+  }
+
+  if (typeof placeholder === 'string') {
+    return Placeholder.configure({
+      placeholder: () => {
+        return placeholder;
+      },
+      includeChildren: true,
+    });
+  }
+
+  return placeholder;
+};
+
 export const defaultExtensions = [
   starterKit,
-  placeholder,
   tiptapLink,
   taskList,
   taskItem,
   horizontalRule,
   heading,
+  tiptapImage,
 ];

@@ -84,11 +84,11 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
   return (
     <div className="flex items-center text-xs text-muted-foreground">
       {linkedIssue.createdById ? (
-        <Avatar className="h-[20px] w-[25px] mr-4 text-foreground">
+        <Avatar className="h-[15px] w-[20px] mr-4 text-foreground">
           <AvatarImage />
           <AvatarFallback
             className={cn(
-              'text-[0.6rem] rounded-sm',
+              'text-[0.55rem] rounded-sm',
               getTailwindColor(getUserData(linkedIssue.createdById).username),
             )}
           >
@@ -96,7 +96,7 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
           </AvatarFallback>
         </Avatar>
       ) : (
-        <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
+        <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
           {getIcon()}
         </div>
       )}

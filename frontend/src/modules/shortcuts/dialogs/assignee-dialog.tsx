@@ -52,11 +52,11 @@ export const AssigneeDialog = observer(() => {
     return usersData.map((user: User) => {
       return {
         Icon: (
-          <Avatar className="h-[20px] w-[25px] flex items-center">
+          <Avatar className="h-[15px] w-[20px] flex items-center">
             <AvatarImage />
             <AvatarFallback
               className={cn(
-                'text-[0.6rem] rounded-sm',
+                'text-[0.55rem] rounded-sm',
                 getTailwindColor(user.username),
               )}
             >

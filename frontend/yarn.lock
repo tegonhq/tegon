@@ -4059,10 +4059,10 @@ normalize-range@^0.1.2:
   resolved "https://registry.yarnpkg.com/normalize-range/-/normalize-range-0.1.2.tgz#2d10c06bdfd312ea9777695a4d28439456b75942"
   integrity sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==
 
-novel@^0.2.10:
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/novel/-/novel-0.2.10.tgz#9e1185124e7aadf1e7a4e4107d649a2ff38a2210"
-  integrity sha512-cO5F8ODzIz8WHDfz/xLAyOiS3EFxc7s/I6Y0r5s1t4Nsf72g3oY6iT/Of1tkmQJs4knI+CSQe7cMAISUNFvAcw==
+novel@^0.2.12:
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/novel/-/novel-0.2.13.tgz#b9df75aeddf2ea00baa0755e4644c888efcca088"
+  integrity sha512-YNye8L2mdinrEZ46jqvvZftA4ZMqrN+s8RGsgKdD55f1I91W1ifm1cq4m+jMLY9/wNMGJUksL7h7fQGDzvvu7Q==
   dependencies:
     "@radix-ui/react-slot" "^1.0.2"
     "@tiptap/core" "^2.1.7"

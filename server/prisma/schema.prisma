@@ -62,6 +62,7 @@ model Workspace {
   integrationAccount    IntegrationAccount[]
   integrationDefinition IntegrationDefinition[]
   attachments           Attachment[]
+  View                  View[]
 }
 
 model UsersOnWorkspaces {
@@ -97,6 +98,7 @@ model Team {
   template       Template[]
   workflow       Workflow[]
   teamPreference TeamPreference[]
+  View           View[]
 
   @@unique([name, identifier, workspaceId])
 }
@@ -429,6 +431,27 @@ model Attachment {
   workspaceId  String?
 }
 
+model View {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  teamId String?
+  team   Team?   @relation(fields: [teamId], references: [id])
+
+  name        String
+  description String
+
+  filters    Json
+  isFavorite Boolean @default(false)
+
+  createdById String
+}
+
 enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
@@ -460,6 +483,7 @@ enum ModelName {
   LinkedIssue
   IssueRelation
   Notification
+  View
 }
 
 enum ActionType {

@@ -74,12 +74,6 @@ export const TeamList = observer(() => {
                 <div className="border-l-1 pl-3 w-full">
                   <TeamListItem
                     subList
-                    name="Active"
-                    team={team}
-                    href="active"
-                  />
-                  <TeamListItem
-                    subList
                     name="Backlog"
                     team={team}
                     href="backlog"
