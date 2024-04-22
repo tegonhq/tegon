@@ -1,6 +1,12 @@
 -- CreateEnum
 CREATE TYPE "AttachmentStatus" AS ENUM ('Pending', 'Failed', 'Uploaded', 'Deleted');
 
+-- AlterTable
+ALTER TABLE "Issue" ADD COLUMN     "attachments" TEXT[];
+
+-- AlterTable
+ALTER TABLE "IssueComment" ADD COLUMN     "attachments" TEXT[];
+
 -- CreateTable
 CREATE TABLE "Attachment" (
     "id" TEXT NOT NULL,
@@ -13,14 +19,15 @@ CREATE TABLE "Attachment" (
     "fileExt" TEXT NOT NULL,
     "size" INTEGER NOT NULL,
     "status" "AttachmentStatus" NOT NULL,
-    "uploadedById" TEXT NOT NULL,
-    "teamId" TEXT,
+    "sourceMetadata" JSONB,
+    "uploadedById" TEXT,
+    "workspaceId" TEXT,
 
     CONSTRAINT "Attachment_pkey" PRIMARY KEY ("id")
 );
 
 -- AddForeignKey
-ALTER TABLE "Attachment" ADD CONSTRAINT "Attachment_uploadedById_fkey" FOREIGN KEY ("uploadedById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Attachment" ADD CONSTRAINT "Attachment_uploadedById_fkey" FOREIGN KEY ("uploadedById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Attachment" ADD CONSTRAINT "Attachment_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Attachment" ADD CONSTRAINT "Attachment_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "Workspace"("id") ON DELETE SET NULL ON UPDATE CASCADE;

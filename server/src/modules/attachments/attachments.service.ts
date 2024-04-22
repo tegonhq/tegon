@@ -9,7 +9,10 @@ import {
 import { AttachmentStatus } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
-import { AttachmentRequestParams } from './attachments.interface';
+import {
+  AttachmentRequestParams,
+  AttachmentResponse,
+} from './attachments.interface';
 
 @Injectable()
 export class AttachmentService {
@@ -25,8 +28,11 @@ export class AttachmentService {
   async uploadToGCP(
     files: Express.Multer.File[],
     userId: string,
-    teamId: string,
-  ) {
+    workspaceId: string,
+    sourceMetadata?: Record<string, string>,
+  ): Promise<AttachmentResponse[]> {
+    const bucket = this.storage.bucket(this.bucketName);
+
     const attachmentPromises = files.map(async (file) => {
       const attachment = await this.prisma.attachment.create({
         data: {
@@ -37,106 +43,96 @@ export class AttachmentService {
           status: AttachmentStatus.Pending,
           fileExt: file.originalname.split('.').pop(),
           uploadedById: userId,
-          teamId,
+          workspaceId,
+          sourceMetadata,
         },
         include: {
-          team: true,
+          workspace: true,
         },
       });
 
-      const bucket = this.storage.bucket(this.bucketName);
       const blob = bucket.file(
-        `${attachment.team.workspaceId}/${teamId}/${attachment.id}.${attachment.fileExt}`,
+        `${workspaceId}/${attachment.id}.${attachment.fileExt}`,
       );
-      const blobStream = blob.createWriteStream({
+      await blob.save(file.buffer, {
         resumable: false,
         validation: false,
+        metadata: {
+          contentType: file.mimetype,
+        },
       });
 
-      return new Promise((resolve, reject) => {
-        blobStream.on('error', (err) => {
-          console.error('Error uploading file:', err);
-          reject(new BadRequestException('Error uploading file'));
-        });
-
-        blobStream.on('finish', async () => {
-          await this.prisma.attachment.update({
-            where: { id: attachment.id },
-            data: { status: AttachmentStatus.Uploaded },
-          });
-          const publicUrl = `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/${attachment.teamId}/${attachment.id}`;
-          resolve(publicUrl);
-        });
-
-        blobStream.end(file.buffer);
+      await this.prisma.attachment.update({
+        where: { id: attachment.id },
+        data: { status: AttachmentStatus.Uploaded },
       });
+
+      return {
+        publicURL: `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/${workspaceId}/${attachment.id}`,
+        fileType: attachment.fileType,
+        originalName: attachment.originalName,
+      } as AttachmentResponse;
     });
 
-    const attachments = await Promise.all(attachmentPromises);
-    return attachments;
+    return await Promise.all(attachmentPromises);
   }
 
   async getFileFromGCS(attachementRequestParams: AttachmentRequestParams) {
-    const attachement = await this.prisma.attachment.findUnique({
-      where: {
-        id: attachementRequestParams.attachmentId,
-        teamId: attachementRequestParams.teamId,
-      },
-      include: {
-        team: true,
-      },
+    const { attachmentId, workspaceId } = attachementRequestParams;
+
+    const attachment = await this.prisma.attachment.findFirst({
+      where: { id: attachmentId, workspaceId },
     });
-    if (!attachement) {
+
+    if (!attachment) {
       throw new BadRequestException(
-        `No attachment found for this id: ${attachementRequestParams.attachmentId}`,
+        `No attachment found for this id: ${attachmentId}`,
       );
     }
-    const bucket = this.storage.bucket(this.bucketName);
-    const blob = bucket.file(
-      `${attachement.team.workspaceId}/${attachement.teamId}/${attachement.id}.${attachement.fileExt}`,
-    );
 
-    const [exists] = await blob.exists();
-    if (!exists) {
+    const bucket = this.storage.bucket(this.bucketName);
+    const filePath = `${workspaceId}/${attachment.id}.${attachment.fileExt}`;
+    const [fileExists] = await bucket.file(filePath).exists();
+
+    if (!fileExists) {
       throw new BadRequestException('File not found');
     }
 
-    const [buffer] = await blob.download();
+    const [buffer] = await bucket.file(filePath).download();
+
     return {
       buffer,
-      contentType: blob.metadata.contentType,
-      originalName: attachement.originalName,
+      contentType: attachment.fileType,
+      originalName: attachment.originalName,
     };
   }
 
   async deleteAttachment(attachementRequestParams: AttachmentRequestParams) {
-    const { attachmentId, teamId } = attachementRequestParams;
+    const { attachmentId, workspaceId } = attachementRequestParams;
+
     const attachment = await this.prisma.attachment.findFirst({
-      where: { id: attachmentId, teamId },
-      include: { team: true },
+      where: { id: attachmentId, workspaceId },
     });
 
     if (!attachment) {
       throw new BadRequestException('Attachment not found');
     }
 
-    const bucket = this.storage.bucket(this.bucketName);
-    const blob = bucket.file(
-      `${attachment.team.workspaceId}/${teamId}/${attachment.id}.${attachment.fileExt}`,
-    );
+    const filePath = `${workspaceId}/${attachment.id}.${attachment.fileExt}`;
 
     try {
-      await blob.delete();
+      await Promise.all([
+        this.storage.bucket(this.bucketName).file(filePath).delete(),
+        this.prisma.attachment.update({
+          where: { id: attachmentId },
+          data: {
+            deleted: new Date().toISOString(),
+            status: AttachmentStatus.Deleted,
+          },
+        }),
+      ]);
     } catch (error) {
-      throw new InternalServerErrorException('Error deleting file from GCS');
+      throw new InternalServerErrorException('Error deleting attachment');
     }
-
-    await this.prisma.attachment.update({
-      where: { id: attachmentId },
-      data: {
-        deleted: new Date().toISOString(),
-        status: AttachmentStatus.Deleted,
-      },
-    });
   }
 }

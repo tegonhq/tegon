@@ -34,6 +34,7 @@ Table Workspace {
   syncAction SyncAction [not null]
   integrationAccount IntegrationAccount [not null]
   integrationDefinition IntegrationDefinition [not null]
+  attachments Attachment [not null]
 }
 
 Table UsersOnWorkspaces {
@@ -68,7 +69,6 @@ Table Team {
   template Template [not null]
   workflow Workflow [not null]
   teamPreference TeamPreference [not null]
-  attachment Attachment [not null]
 
   indexes {
     (name, identifier, workspaceId) [unique]
@@ -183,6 +183,7 @@ Table Issue {
   parent Issue
   parentId String
   subIssue Issue [not null]
+  attachments String[] [not null]
   comments IssueComment [not null]
   history IssueHistory [not null]
   linkedIssue LinkedIssue [not null]
@@ -221,6 +222,7 @@ Table IssueComment {
   issueId String [not null]
   parent IssueComment
   parentId String
+  attachments String[] [not null]
   replies IssueComment [not null]
   linkedComment LinkedComment [not null]
 }
@@ -365,10 +367,11 @@ Table Attachment {
   fileExt String [not null]
   size Int [not null]
   status AttachmentStatus [not null]
-  uploadedBy User [not null]
-  uploadedById String [not null]
-  team Team
-  teamId String
+  sourceMetadata Json
+  uploadedBy User
+  uploadedById String
+  workspace Workspace
+  workspaceId String
 }
 
 Enum Preference {
@@ -512,4 +515,4 @@ Ref: IntegrationAccount.workspaceId > Workspace.id
 
 Ref: Attachment.uploadedById > User.id
 
-Ref: Attachment.teamId > Team.id
+Ref: Attachment.workspaceId > Workspace.id

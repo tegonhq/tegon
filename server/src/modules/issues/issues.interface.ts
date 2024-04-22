@@ -114,6 +114,10 @@ export class CreateIssueInput {
   @IsOptional()
   @IsObject()
   issueRelation?: RelationInput;
+
+  @IsOptional()
+  @IsArray()
+  attachments?: string[];
 }
 
 export class UpdateIssueInput {
@@ -172,6 +176,10 @@ export class UpdateIssueInput {
   @IsOptional()
   @IsObject()
   issueRelation?: RelationInput;
+
+  @IsOptional()
+  @IsArray()
+  attachments?: string[];
 }
 
 export interface IssueWithRelations extends Issue {

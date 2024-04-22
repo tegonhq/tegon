@@ -61,6 +61,7 @@ model Workspace {
   syncAction            SyncAction[]
   integrationAccount    IntegrationAccount[]
   integrationDefinition IntegrationDefinition[]
+  attachments           Attachment[]
 }
 
 model UsersOnWorkspaces {
@@ -96,7 +97,6 @@ model Team {
   template       Template[]
   workflow       Workflow[]
   teamPreference TeamPreference[]
-  attachment     Attachment[]
 
   @@unique([name, identifier, workspaceId])
 }
@@ -215,6 +215,7 @@ model Issue {
   parent        Issue?   @relation("Report", fields: [parentId], references: [id])
   parentId      String?
   subIssue      Issue[]  @relation("Report")
+  attachments   String[]
 
   comments       IssueComment[]
   history        IssueHistory[]
@@ -258,6 +259,7 @@ model IssueComment {
   issueId       String
   parent        IssueComment? @relation("Report", fields: [parentId], references: [id])
   parentId      String?
+  attachments   String[]
 
   replies       IssueComment[]  @relation("Report")
   linkedComment LinkedComment[]
@@ -413,17 +415,18 @@ model Attachment {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  fileName     String?
-  originalName String
-  fileType     String
-  fileExt      String
-  size         Int
-  status       AttachmentStatus
+  fileName       String?
+  originalName   String
+  fileType       String
+  fileExt        String
+  size           Int
+  status         AttachmentStatus
+  sourceMetadata Json?
 
-  uploadedBy   User    @relation(fields: [uploadedById], references: [id])
-  uploadedById String
-  team         Team?   @relation(fields: [teamId], references: [id])
-  teamId       String?
+  uploadedBy   User?      @relation(fields: [uploadedById], references: [id])
+  uploadedById String?
+  workspace    Workspace? @relation(fields: [workspaceId], references: [id])
+  workspaceId  String?
 }
 
 enum Preference {

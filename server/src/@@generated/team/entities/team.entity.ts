@@ -5,7 +5,6 @@ import {Label} from '../../label/entities/label.entity'
 import {Template} from '../../template/entities/template.entity'
 import {Workflow} from '../../workflow/entities/workflow.entity'
 import {TeamPreference} from '../../teamPreference/entities/teamPreference.entity'
-import {Attachment} from '../../attachment/entities/attachment.entity'
 
 
 export class Team {
@@ -23,5 +22,4 @@ label?: Label[] ;
 template?: Template[] ;
 workflow?: Workflow[] ;
 teamPreference?: TeamPreference[] ;
-attachment?: Attachment[] ;
 }

@@ -2,41 +2,21 @@
 
 import { IsString } from 'class-validator';
 
-export class TeamRequestParams {
+export class WorkspaceRequestParams {
   @IsString()
-  teamId: string;
+  workspaceId: string;
 }
 
 export class AttachmentRequestParams {
   @IsString()
-  teamId: string;
+  workspaceId: string;
 
   @IsString()
   attachmentId: string;
 }
 
-export interface BufferedFile {
-  fileName: string;
-  originalname: string;
-  encoding: string;
+export interface AttachmentResponse {
+  publicURL: string;
   fileType: string;
-  size: number;
-  buffer: Buffer | string;
+  originalName: string;
 }
-
-export interface StoredFile extends HasFile, StoredFileMetadata {}
-
-export interface HasFile {
-  file: Buffer | string;
-}
-export interface StoredFileMetadata {
-  id: string;
-  name: string;
-  encoding: string;
-  mimetype: AppMimeType;
-  size: number;
-  updatedAt: Date;
-  fileSrc?: string;
-}
-
-export type AppMimeType = 'image/png' | 'image/jpeg';

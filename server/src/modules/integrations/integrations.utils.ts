@@ -2,10 +2,14 @@
 
 import axios from 'axios';
 import { PrismaService } from 'nestjs-prisma';
+import { Schema } from 'prosemirror-model';
+
+import { AttachmentResponse } from 'modules/attachments/attachments.interface';
 
 import {
   PostRequestBody,
   RequestHeaders,
+  TiptapNode,
   labelDataType,
 } from './integrations.interface';
 
@@ -117,4 +121,57 @@ export async function getUserId(
   });
 
   return integrationAccount?.integratedById || null;
+}
+// Define the Tiptap-compatible schema
+const schema = new Schema({
+  nodes: {
+    doc: { content: 'block+' },
+    paragraph: { content: 'inline*', group: 'block' },
+    text: { group: 'inline' },
+    image: { attrs: { src: {}, alt: { default: null } }, group: 'block' },
+  },
+});
+
+export function convertToTiptapJSON(
+  message: string,
+  attachmentUrls: AttachmentResponse[],
+): string {
+  const contentNodes = [
+    schema.nodes.paragraph.create({}, schema.text(message)),
+    ...(attachmentUrls || [])
+      .filter((attachment) => attachment?.fileType?.startsWith('image/'))
+      .map((attachment) =>
+        schema.nodes.paragraph.create(
+          {},
+          schema.nodes.image.create({ src: attachment.publicURL }),
+        ),
+      ),
+  ];
+
+  const doc = schema.nodes.doc.create({}, contentNodes);
+
+  return JSON.stringify({
+    type: 'doc',
+    content: doc.content.toJSON(),
+  });
+}
+
+export function convertTiptapToPlainText(
+  json: TiptapNode,
+  ignoreImage?: boolean,
+): string {
+  if (json.type === 'doc') {
+    return json.content
+      .map((node: TiptapNode) => convertTiptapToPlainText(node))
+      .join('\n');
+  } else if (json.type === 'paragraph') {
+    return json.content
+      .map((node: TiptapNode) => convertTiptapToPlainText(node))
+      .join('');
+  } else if (json.type === 'text') {
+    return json.text;
+  } else if (json.type === 'image' && !ignoreImage) {
+    return `[Image: ${json.attrs.src}]`;
+  }
+  return '';
 }

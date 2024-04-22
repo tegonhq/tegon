@@ -1,5 +1,5 @@
 
-import {AttachmentStatus} from '@prisma/client'
+import {Prisma,AttachmentStatus} from '@prisma/client'
 import {ApiProperty} from '@nestjs/swagger'
 
 
@@ -14,4 +14,5 @@ fileExt: string;
 size: number;
 @ApiProperty({ enum: AttachmentStatus})
 status: AttachmentStatus;
+sourceMetadata?: Prisma.InputJsonValue;
 }

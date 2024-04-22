@@ -19,6 +19,7 @@ issue?: Issue ;
 issueId: string ;
 parent?: IssueComment  | null;
 parentId: string  | null;
+attachments: string[] ;
 replies?: IssueComment[] ;
 linkedComment?: LinkedComment[] ;
 }

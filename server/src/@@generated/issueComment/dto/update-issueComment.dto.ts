@@ -10,4 +10,5 @@ body?: string;
 userId?: string;
 sourceMetadata?: Prisma.InputJsonValue;
 reactionsData?: Prisma.InputJsonValue[];
+attachments?: string[];
 }

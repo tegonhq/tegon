@@ -6,6 +6,7 @@ import {Template} from '../../template/entities/template.entity'
 import {SyncAction} from '../../syncAction/entities/syncAction.entity'
 import {IntegrationAccount} from '../../integrationAccount/entities/integrationAccount.entity'
 import {IntegrationDefinition} from '../../integrationDefinition/entities/integrationDefinition.entity'
+import {Attachment} from '../../attachment/entities/attachment.entity'
 
 
 export class Workspace {
@@ -23,4 +24,5 @@ template?: Template[] ;
 syncAction?: SyncAction[] ;
 integrationAccount?: IntegrationAccount[] ;
 integrationDefinition?: IntegrationDefinition[] ;
+attachments?: Attachment[] ;
 }

@@ -1,7 +1,7 @@
 
-import {AttachmentStatus} from '@prisma/client'
+import {Prisma,AttachmentStatus} from '@prisma/client'
 import {User} from '../../user/entities/user.entity'
-import {Team} from '../../team/entities/team.entity'
+import {Workspace} from '../../workspace/entities/workspace.entity'
 
 
 export class Attachment {
@@ -15,8 +15,9 @@ fileType: string ;
 fileExt: string ;
 size: number ;
 status: AttachmentStatus ;
-uploadedBy?: User ;
-uploadedById: string ;
-team?: Team  | null;
-teamId: string  | null;
+sourceMetadata: Prisma.JsonValue  | null;
+uploadedBy?: User  | null;
+uploadedById: string  | null;
+workspace?: Workspace  | null;
+workspaceId: string  | null;
 }

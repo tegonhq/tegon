@@ -1,9 +1,12 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { Readable } from 'stream';
+
 import { Logger } from '@nestjs/common';
 import { IntegrationName } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
+import { AttachmentResponse } from 'modules/attachments/attachments.interface';
 import {
   ChannelTeamMapping,
   Config,
@@ -27,10 +30,17 @@ import {
 import {
   ModalType,
   ModelViewType,
+  SlackBlock,
+  SlackElement,
   SlashCommandSessionRecord,
   slackIssueData,
 } from './slack.interface';
-import { EventBody } from '../integrations.interface';
+import {
+  EventBody,
+  RequestHeaders,
+  TiptapMarks,
+  TiptapNode,
+} from '../integrations.interface';
 import { getRequest, getUserId, postRequest } from '../integrations.utils';
 
 export function getSlackHeaders(
@@ -50,6 +60,9 @@ export async function addBotToChannel(
   integrationAccount: IntegrationAccountWithRelations,
   channelId: string,
 ) {
+  console.log('here');
+  console.log(getSlackHeaders(integrationAccount));
+  console.log(channelId);
   const botResponse = await postRequest(
     'https://slack.com/api/conversations.join',
     getSlackHeaders(integrationAccount),
@@ -388,6 +401,9 @@ export async function getIssueMessageModal(
   // Generate the issue title by combining the issue identifier and title
   const issueTitle = `${issueIdentifier} ${issue.title}`;
 
+  // Convert Tiptap JSON to slack blocks
+  const descriptionBlocks = convertTiptapJsonToSlackBlocks(issue.description);
+
   // Return an array containing the Slack message modal blocks
   return [
     {
@@ -399,13 +415,7 @@ export async function getIssueMessageModal(
             text: `<${issueUrl}|${issueTitle}>`,
           },
         },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: issue.description,
-          },
-        },
+        ...descriptionBlocks,
         {
           type: 'context',
           elements: [
@@ -452,8 +462,10 @@ export async function upsertSlackMessage(
     {
       channel: parentSourceData.channelId,
       thread_ts: parentSourceData.parentTs || parentSourceData.idTs,
-      text: issueComment.body,
+      // text: issueComment.body,
+      blocks: convertTiptapJsonToSlackBlocks(issueComment.body),
       username: `${user.fullname} (via Tegon)`,
+      // TODO(Manoj): Add User Icon
     },
   );
 
@@ -708,4 +720,378 @@ export function getChannelNameFromIntegrationAccount(
     (mapping) => mapping.channelId === channelId,
   );
   return channelMapping ? channelMapping.channelName : '';
+}
+
+/**
+ * Retrieves the files buffer from Slack.
+ * @param integrationAccount The integration account with relations.
+ * @param files The array of files from the Slack event body.
+ * @returns An array of Multer files.
+ */
+export async function getFilesBuffer(
+  integrationAccount: IntegrationAccountWithRelations,
+  files: EventBody[],
+): Promise<Express.Multer.File[]> {
+  // Set the headers for the Slack API request
+  const headers = {
+    ...getSlackHeaders(integrationAccount),
+    responseType: 'arraybuffer',
+  } as RequestHeaders;
+
+  // Retrieve the files buffer for each file
+  const multerFiles = await Promise.all(
+    files.map(async (file) => {
+      // Send a GET request to retrieve the file data
+      const response = await getRequest(file.url_private, headers);
+
+      // Convert the file data to a buffer
+      const fileBuffer = Buffer.from(response.data, 'binary');
+
+      // Create a Multer file object
+      const multerFile: Express.Multer.File = {
+        fieldname: 'file',
+        originalname: file.name,
+        encoding: '7bit',
+        mimetype: file.mimetype,
+        size: file.size,
+        buffer: fileBuffer,
+        destination: '',
+        filename: file.name,
+        path: '',
+        stream: new Readable(),
+      };
+
+      return multerFile;
+    }),
+  );
+
+  return multerFiles;
+}
+
+export function convertSlackMessageToTiptapJson(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  blocks: any,
+  attachmentUrls: AttachmentResponse[],
+): string {
+  const content: TiptapNode[] = blocks.flatMap((block: SlackBlock) => {
+    if (block.type === 'rich_text') {
+      return block.elements.flatMap((element: SlackElement) => {
+        switch (element.type) {
+          case 'rich_text_section':
+            // Create a paragraph node for rich text sections
+            const paragraph: TiptapNode = {
+              type: 'paragraph',
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              content: element.elements.flatMap((sectionElement: any) => {
+                if (sectionElement.type === 'text') {
+                  // Split the text by newline characters
+                  const textParts = sectionElement.text.split('\n');
+                  return textParts.flatMap((text: string, index: number) => {
+                    if (text === '') {
+                      return [];
+                    }
+                    // Create marks based on the text style
+                    const marks: TiptapMarks[] = Object.entries(
+                      sectionElement.style || {},
+                    )
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                      .filter(([_, value]) => value)
+                      .map(([type]) => ({ type }));
+                    return [
+                      { type: 'text', text, marks },
+                      // Add a hardBreak if it's not the last line
+                      ...(index < textParts.length - 1
+                        ? [{ type: 'hardBreak' }]
+                        : []),
+                    ];
+                  });
+                } else if (sectionElement.type === 'link') {
+                  // Create a text node with a link mark for links
+                  return [
+                    {
+                      type: 'text',
+                      text: sectionElement.text,
+                      marks: [
+                        {
+                          type: 'link',
+                          attrs: {
+                            href: sectionElement.url,
+                            target: '_blank',
+                            rel: 'noopener noreferrer',
+                            class: 'c-link',
+                          },
+                        },
+                      ],
+                    },
+                  ];
+                }
+                return [];
+              }),
+            };
+            return [paragraph];
+
+          case 'rich_text_list':
+            // Determine the list type based on the style
+            const listType =
+              element.style === 'ordered' ? 'orderedList' : 'bulletList';
+            // Create list items with paragraphs for each list element
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const listItems = element.elements.map((item: any) => ({
+              type: 'listItem',
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              content: item.elements.flatMap((listElement: any) =>
+                listElement.text.split('\n').map((part: string) => ({
+                  type: 'paragraph',
+                  content: [{ type: 'text', text: part.trim() }],
+                })),
+              ),
+            }));
+            // Add the list to the content
+            return [
+              {
+                type: listType,
+                attrs: { tight: true, start: 1 },
+                content: listItems,
+              },
+            ];
+
+          case 'rich_text_quote':
+            // Create blockquote nodes for each line of the quote
+            const blockquoteContent = element.elements[0].text
+              .split('\n')
+              .map((line: string) => ({
+                type: 'paragraph',
+                content: [{ type: 'text', text: line.trim() }],
+              }));
+
+            return [
+              {
+                type: 'blockquote',
+                content: blockquoteContent,
+              },
+            ];
+
+          case 'rich_text_preformatted':
+            // Create a codeBlock node for preformatted text
+            return [
+              {
+                type: 'codeBlock',
+                attrs: { language: null },
+                content: [{ type: 'text', text: element.elements[0].text }],
+              },
+            ];
+
+          default:
+            return undefined;
+        }
+      });
+    }
+    return [];
+  });
+
+  // Add image nodes for attachments with image file types
+  if (attachmentUrls && attachmentUrls.length > 0) {
+    content.push(
+      ...attachmentUrls
+        .filter((attachment) => attachment.fileType.startsWith('image/'))
+        .map((attachment) => ({
+          type: 'image',
+          attrs: {
+            src: attachment.publicURL,
+            alt: attachment.originalName,
+          },
+        })),
+    );
+  }
+
+  // Return the stringified Tiptap JSON
+  return JSON.stringify({ type: 'doc', content });
+}
+
+function processNode(node: TiptapNode, blocks: SlackBlock[]) {
+  switch (node.type) {
+    case 'paragraph':
+      // Create a rich text section for the paragraph node
+      const richTextSection: SlackElement = {
+        type: 'rich_text_section',
+        elements:
+          node.content
+            ?.flatMap((child: TiptapNode) => {
+              if (child.type === 'text') {
+                // Create a text element for the text node
+                const textElement: SlackElement = {
+                  type: 'text',
+                  text: child.text || '',
+                  style: {},
+                };
+                // Apply marks to the text element based on the node's marks
+                (child.marks || []).forEach((mark: TiptapMarks) => {
+                  switch (mark.type) {
+                    case 'bold':
+                      textElement.style.bold = true;
+                      break;
+                    case 'italic':
+                      textElement.style.italic = true;
+                      break;
+                    case 'code':
+                      textElement.style.code = true;
+                      break;
+                    case 'strike':
+                      textElement.style.strike = true;
+                      break;
+                    case 'link':
+                      textElement.type = 'link';
+                      textElement.url = mark.attrs.href;
+                      break;
+                  }
+                });
+                return textElement;
+              } else if (child.type === 'hardBreak') {
+                // Create a text element for the hard break
+                return {
+                  type: 'text',
+                  text: '\n',
+                };
+              }
+              return null;
+            })
+            .filter(Boolean) || [],
+      };
+      // Add the rich text section to the blocks array
+      blocks.push({
+        type: 'rich_text',
+        elements: [richTextSection],
+      });
+      break;
+    case 'hardBreak':
+      // Handle hard breaks by appending a newline character to the last text element
+      const lastBlockIndex = blocks.length - 1;
+      const lastBlock = blocks[lastBlockIndex];
+      if (lastBlock && lastBlock.type === 'rich_text') {
+        const lastElementIndex = lastBlock.elements.length - 1;
+        const lastElement = lastBlock.elements[lastElementIndex];
+        if (lastElement && lastElement.type === 'rich_text_section') {
+          const lastTextElementIndex = lastElement.elements.length - 1;
+          const lastTextElement = lastElement.elements[lastTextElementIndex];
+          if (lastTextElement && lastTextElement.type === 'text') {
+            lastTextElement.text += '\n';
+          } else {
+            lastElement.elements.push({
+              type: 'text',
+              text: '\n',
+            });
+          }
+          lastBlock.elements[lastElementIndex] = lastElement;
+        } else {
+          lastBlock.elements.push({
+            type: 'rich_text_section',
+            elements: [
+              {
+                type: 'text',
+                text: '\n',
+              },
+            ],
+          });
+        }
+        blocks[lastBlockIndex] = lastBlock;
+      }
+      break;
+    case 'blockquote':
+      // Create a rich text quote for the blockquote node
+      const blockquoteElements =
+        node.content?.flatMap((child: TiptapNode) =>
+          child.content?.map((content) => ({
+            type: 'text',
+            text: `${content.text}\n`,
+          })),
+        ) || [];
+
+      if (blockquoteElements.length > 0) {
+        blocks.push({
+          type: 'rich_text',
+          elements: [
+            {
+              type: 'rich_text_quote',
+              elements: blockquoteElements,
+            },
+          ],
+        });
+      }
+      break;
+    case 'orderedList':
+    case 'bulletList':
+      // Create a rich text list for the ordered or bullet list node
+      const listElements =
+        node.content?.map((listItem: TiptapNode) => ({
+          type: 'rich_text_section',
+          elements:
+            listItem.content?.map((paragraph: TiptapNode) => ({
+              type: 'text',
+              text: paragraph.content?.[0]?.text || '',
+            })) || [],
+        })) || [];
+      blocks.push({
+        type: 'rich_text',
+        elements: [
+          {
+            type: 'rich_text_list',
+            style: node.type === 'orderedList' ? 'ordered' : 'bullet',
+            elements: listElements,
+          },
+        ],
+      });
+      break;
+    case 'codeBlock':
+      // Create a rich text preformatted block for the code block node
+      const codeBlockElements =
+        node.content?.map((content) => ({
+          type: 'text',
+          text: content.text,
+        })) || [];
+
+      blocks.push({
+        type: 'rich_text',
+        elements: [
+          {
+            type: 'rich_text_preformatted',
+            elements: codeBlockElements,
+          },
+        ],
+      });
+      break;
+    case 'image':
+      // Create an image block for the image node
+      blocks.push({
+        type: 'image',
+        image_url: node.attrs?.src || '',
+        alt_text: node.attrs?.alt || '',
+      });
+      break;
+  }
+}
+
+export function convertTiptapJsonToSlackBlocks(message: string): SlackBlock[] {
+  try {
+    // Parse the input message as JSON
+    const parsedJson = JSON.parse(message);
+    // Initialize an empty array to store the Slack blocks
+    const blocks: SlackBlock[] = [];
+
+    // Iterate over each node in the parsed JSON content
+    parsedJson.content.forEach((node: TiptapNode) => processNode(node, blocks));
+
+    // Return the generated Slack blocks
+    return blocks;
+  } catch (error) {
+    // If the input is not a valid Tiptap JSON, return a section block with the raw text
+    return [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: message,
+        },
+      },
+    ];
+  }
 }

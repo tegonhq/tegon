@@ -82,6 +82,7 @@
     "passport-jwt": "4.0.1",
     "pg": "^8.11.3",
     "pg-logical-replication": "^2.0.3",
+    "prosemirror-model": "^1.20.0",
     "reflect-metadata": "^0.2.1",
     "rxjs": "7.8.1",
     "simple-oauth2": "^5.0.0",

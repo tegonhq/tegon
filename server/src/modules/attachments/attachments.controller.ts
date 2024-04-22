@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Res,
   UploadedFiles,
   UseGuards,
@@ -21,7 +22,7 @@ import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import {
   AttachmentRequestParams,
-  TeamRequestParams,
+  WorkspaceRequestParams,
 } from './attachments.interface';
 import { AttachmentService } from './attachments.service';
 
@@ -33,12 +34,12 @@ import { AttachmentService } from './attachments.service';
 export class AttachmentController {
   constructor(private readonly attachementService: AttachmentService) {}
 
-  @Post('upload/:teamId')
+  @Post('upload')
   @UseInterceptors(FilesInterceptor('files'))
   @UseGuards(new AuthGuard())
   async uploadFiles(
     @SessionDecorator() session: SessionContainer,
-    @Param() teamRequestParams: TeamRequestParams,
+    @Query() workspaceRequestParams: WorkspaceRequestParams,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
     const userId = session.getUserId();
@@ -46,11 +47,11 @@ export class AttachmentController {
     return this.attachementService.uploadToGCP(
       files,
       userId,
-      teamRequestParams.teamId,
+      workspaceRequestParams.workspaceId,
     );
   }
 
-  @Get(':teamId/:attachmentId')
+  @Get(':workspaceId/:attachmentId')
   async getFileFromGCS(
     @Param() attachementRequestParams: AttachmentRequestParams,
     @Res() res: Response,
@@ -66,7 +67,7 @@ export class AttachmentController {
     }
   }
 
-  @Delete(':teamId/:attachmentId')
+  @Delete(':workspaceId/:attachmentId')
   @UseGuards(new AuthGuard())
   async deleteAttachment(
     @Param() attachementRequestParams: AttachmentRequestParams,
