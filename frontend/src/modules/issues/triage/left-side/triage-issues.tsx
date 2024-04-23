@@ -2,7 +2,6 @@
 
 import { RiGithubFill } from '@remixicon/react';
 import { sort } from 'fast-sort';
-import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import ReactTimeAgo from 'react-time-ago';
 

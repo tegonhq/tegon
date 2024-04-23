@@ -427,4 +427,15 @@ export default class IssuesService {
 
     return { labels: suggestedLabels, assignees };
   }
+
+  async updateSubscribers(issueId: string, subscriberIds: string[]) {
+    return await this.prisma.issue.update({
+      where: { id: issueId },
+      data: {
+        subscriberIds: {
+          push: subscriberIds,
+        },
+      },
+    });
+  }
 }

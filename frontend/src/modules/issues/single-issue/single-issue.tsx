@@ -9,8 +9,6 @@ import { SCOPES } from 'common/scopes';
 
 import { useScope } from 'hooks';
 
-import { IssueStoreInit } from 'store/issue-store-provider';
-
 import { IssueView } from './issue-view';
 
 export function SingleIssue() {

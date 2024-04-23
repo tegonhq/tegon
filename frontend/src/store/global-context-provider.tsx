@@ -14,9 +14,9 @@ import { LabelsStore } from './labels';
 import { LinkedIssuesStore } from './linked-issues';
 import { NotificationsStore } from './notifications';
 import { TeamsStore } from './teams';
+import { ViewsStore } from './views';
 import { WorkflowsStore } from './workflows';
 import { WorkspaceStore } from './workspace';
-import { ViewsStore } from './views';
 
 const StoreContextModel = types.model({
   commentsStore: CommentsStore,

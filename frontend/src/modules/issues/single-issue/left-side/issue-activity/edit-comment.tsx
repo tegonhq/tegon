@@ -5,10 +5,9 @@ import React from 'react';
 import type { IssueCommentType } from 'common/types/issue';
 
 import { Button } from 'components/ui/button';
-import { Textarea } from 'components/ui/textarea';
+import { Editor } from 'components/ui/editor';
 
 import { useUpdateIssueCommentMutation } from 'services/issues/update-issue-comment';
-import { Editor } from 'components/ui/editor';
 
 interface EditCommentProps {
   value: string;

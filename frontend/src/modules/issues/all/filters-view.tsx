@@ -8,6 +8,7 @@ import type { ViewType } from 'common/types/view';
 import { Button } from 'components/ui/button';
 import { Separator } from 'components/ui/separator';
 import { useCurrentTeam } from 'hooks/teams';
+import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { useCreateViewMutation } from 'services/views';
 
@@ -19,7 +20,6 @@ import { IssueAssigneeDropdown } from './filter-dropdowns/issue-assignee-dropdow
 import { IssueLabelDropdown } from './filter-dropdowns/issue-label-dropdown';
 import { IssueStatusDropdown } from './filter-dropdowns/issue-status-dropdown';
 import { isEmpty } from './filter-utils';
-import { useCurrentWorkspace } from 'hooks/workspace';
 
 export const FiltersView = observer(() => {
   const { applicationStore } = useContextStore();

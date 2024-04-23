@@ -16,13 +16,13 @@ import type { LabelType } from 'common/types/label';
 import type { LinkedIssueType } from 'common/types/linked-issue';
 import type { NotificationType } from 'common/types/notification';
 import type { TeamType, WorkflowType } from 'common/types/team';
+import type { ViewType } from 'common/types/view';
 import type {
   UsersOnWorkspaceType,
   WorkspaceType,
 } from 'common/types/workspace';
 
 import { MODELS } from './models';
-import type { ViewType } from 'common/types/view';
 
 export class TegonDatabase extends Dexie {
   workspaces: Dexie.Table<WorkspaceType, string>;

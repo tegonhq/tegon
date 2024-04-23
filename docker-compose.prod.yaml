@@ -5,6 +5,8 @@ services:
     image: registry.supertokens.io/supertokens/supertokens-postgresql:latest
     environment:
       POSTGRESQL_CONNECTION_URI: ${SUPERTOKEN_DATABASE_URL}
+      REFRESH_TOKEN_VALIDITY: 2592000 # 30 days in seconds
+      ACCESS_TOKEN_VALIDITY: 2592000 # 30 days in seconds
     ports:
       - 3567:3567
     networks:
@@ -55,6 +57,9 @@ services:
       - GOOGLE_LOGIN_CLIENT_SECRET=${GOOGLE_LOGIN_CLIENT_SECRET}
       - SLACK_CLIENT_ID=${SLACK_CLIENT_ID}
       - SLACK_CLIENT_SECRET=${SLACK_CLIENT_SECRET}
+      - GCP_BUCKET_NAME=${GCP_BUCKET_NAME}
+      - GCP_SERVICE_ACCOUNT_FILE=${GCP_SERVICE_ACCOUNT_FILE}
+      - PUBLIC_ATTACHMENT_URL={PUBLIC_ATTACHMENT_URL}
     ports:
       - 3001:3001
 

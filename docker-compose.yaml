@@ -21,6 +21,8 @@ services:
       - db
     environment:
       POSTGRESQL_CONNECTION_URI: ${SUPERTOKEN_DATABASE_URL}
+      REFRESH_TOKEN_VALIDITY: 2592000 # 30 days in seconds
+      ACCESS_TOKEN_VALIDITY: 2592000 # 30 days in seconds
     ports:
       - 3567:3567
     networks:
