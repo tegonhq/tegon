@@ -4,6 +4,8 @@ import { Logger } from '@nestjs/common';
 import { IntegrationName, LinkedIssue, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
+import { convertMarkdownToTiptapJson } from 'common/utils/tiptap.utils';
+
 import {
   IntegrationAccountWithRelations,
   Settings,
@@ -32,11 +34,7 @@ import {
   sendGithubFirstComment,
   sendGithubPRFirstComment,
 } from './github.utils';
-import {
-  convertMarkdownToTiptapJson,
-  getOrCreateLabelIds,
-  getUserId,
-} from '../integrations.utils';
+import { getOrCreateLabelIds, getUserId } from '../integrations.utils';
 
 export async function handleIssues(
   prisma: PrismaService,

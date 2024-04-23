@@ -6,6 +6,8 @@ import { Logger } from '@nestjs/common';
 import { IntegrationName } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
+import { TiptapMarks, TiptapNode } from 'common/common.interface';
+
 import { AttachmentResponse } from 'modules/attachments/attachments.interface';
 import {
   ChannelTeamMapping,
@@ -35,12 +37,7 @@ import {
   SlashCommandSessionRecord,
   slackIssueData,
 } from './slack.interface';
-import {
-  EventBody,
-  RequestHeaders,
-  TiptapMarks,
-  TiptapNode,
-} from '../integrations.interface';
+import { EventBody, RequestHeaders } from '../integrations.interface';
 import { getRequest, getUserId, postRequest } from '../integrations.utils';
 
 export function getSlackHeaders(

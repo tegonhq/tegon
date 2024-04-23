@@ -45,7 +45,6 @@ services:
       - supertokens
       - redis
       - typesense
-      - minio
     restart: unless-stopped
     networks:
       - tegon

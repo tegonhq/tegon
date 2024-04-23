@@ -17,6 +17,11 @@ import jwt from 'jsonwebtoken';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
+  convertMarkdownToTiptapJson,
+  convertTiptapJsonToMarkdown,
+} from 'common/utils/tiptap.utils';
+
+import {
   GithubRepositoryMappings,
   GithubSettings,
   IntegrationAccountWithRelations,
@@ -42,8 +47,6 @@ import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import { githubHeaders, githubIssueData } from './github.interface';
 import {
-  convertMarkdownToTiptapJson,
-  convertTiptapJsonToMarkdown,
   deleteRequest,
   getOrCreateLabelIds,
   getRequest,
