@@ -3,6 +3,7 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { Key } from 'ts-key-enum';
 import { useDebouncedCallback } from 'use-debounce';
 
 import { ModalIssueItem } from 'modules/issues/components/modals/modal-issue-item';
@@ -36,7 +37,7 @@ export function SearchDialog({ open, setOpen }: SearchDialogProps) {
   const [query, setQuery] = React.useState('');
   const { push } = useRouter();
 
-  useHotkeys('meta+/', () => setOpen(true), { scopes: [SCOPES.Global] });
+  useHotkeys(`${Key.Meta}+/`, () => setOpen(true), { scopes: [SCOPES.Global] });
   const {
     data: issues,
     isLoading,

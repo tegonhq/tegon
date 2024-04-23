@@ -76,7 +76,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
   const [edit, setEdit] = React.useState(false);
 
   return (
-    <div className="flex items-start text-xs text-muted-foreground ">
+    <div className="flex items-start text-sm text-muted-foreground ">
       {user ? (
         <Avatar className="h-[15px] w-[20px] mr-3 mt-[2px] text-foreground">
           <AvatarImage />
@@ -184,7 +184,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         )}
 
         {childComments.length > 0 && (
-          <div className="text-xs text-muted-foreground w-full border-t p-3 pb-0">
+          <div className="text-sm text-muted-foreground w-full border-t p-3 pb-0">
             {childComments.map(
               (subComment: IssueCommentType, index: number) => (
                 <div

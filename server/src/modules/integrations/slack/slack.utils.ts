@@ -57,9 +57,6 @@ export async function addBotToChannel(
   integrationAccount: IntegrationAccountWithRelations,
   channelId: string,
 ) {
-  console.log('here');
-  console.log(getSlackHeaders(integrationAccount));
-  console.log(channelId);
   const botResponse = await postRequest(
     'https://slack.com/api/conversations.join',
     getSlackHeaders(integrationAccount),

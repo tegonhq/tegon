@@ -59,6 +59,7 @@ export function IssueAssigneeDropdownContent({
       <CommandGroup>
         <DropdownItem
           id="no-user"
+          value="No Assignee"
           index={0}
           onSelect={() => {
             onChange && onChange(null);
@@ -89,6 +90,7 @@ export function IssueAssigneeDropdownContent({
               <DropdownItem
                 key={user.id}
                 id={user.id}
+                value={user.fullname}
                 index={index + 1}
                 onSelect={(currentValue) => {
                   if (!multiple) {

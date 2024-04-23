@@ -27,9 +27,7 @@ export const FiltersView = observer(() => {
   const team = useCurrentTeam();
   const filters = applicationStore.filters;
   const { mutate: createView } = useCreateViewMutation({
-    onSuccess: (data: ViewType) => {
-      console.log(data);
-    },
+    onSuccess: (data: ViewType) => {},
   });
 
   const onChange = (value: string | string[], filter: string) => {

@@ -43,13 +43,14 @@ export const fontSans = Inter({
 
 interface EditorProps {
   value?: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: string, valueString?: string) => void;
   autoFocus?: boolean;
   className?: string;
   placeholder?: string | Extension;
   editable?: boolean;
   onFocus?: () => void;
   onBlur?: () => void;
+  onSubmit?: () => void;
 }
 
 const extensions = [...defaultExtensions, slashCommand];
@@ -141,6 +142,7 @@ export const Editor = ({
   placeholder,
   onFocus,
   onBlur,
+  onSubmit,
   editable = true,
 }: EditorProps) => {
   function getInitialValue() {
@@ -156,7 +158,7 @@ export const Editor = ({
     async (editor: EditorInstance) => {
       const json = editor.getJSON();
 
-      onChange && onChange(JSON.stringify(json));
+      onChange && onChange(JSON.stringify(json), editor.getText());
     },
     500,
   );
@@ -172,13 +174,21 @@ export const Editor = ({
             'relative w-full max-w-screen-lg text-base sm:rounded-lg',
             className,
           )}
-          autofocus
+          autofocus="end"
           onCreate={({ editor }) => editor.commands.focus()}
           editorProps={{
             handlePaste: (view, event) =>
               handleImagePaste(view, event, uploadFn),
+
             handleDOMEvents: {
-              keydown: (_view, event) => handleCommandNavigation(event),
+              keydown: (_view, event) => {
+                if (event.keyCode === 13 && event.metaKey) {
+                  onSubmit();
+                  event.preventDefault();
+                  return false;
+                }
+                return handleCommandNavigation(event);
+              },
             },
             editable: () => editable,
             attributes: {
