@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 
 import { Team } from '@@generated/team/entities';
-import { Logger } from '@nestjs/common';
+import { BadRequestException, Logger } from '@nestjs/common';
 import {
   IntegrationAccount,
   IntegrationName,
@@ -370,6 +370,10 @@ async function getGithubUserIntegrationAccount(
   userId: string,
   workspaceId: string,
 ) {
+  if (!userId) {
+    return null;
+  }
+
   return prisma.integrationAccount.findFirst({
     where: {
       integratedById: userId,
@@ -415,29 +419,38 @@ export async function upsertGithubIssue(
   // Get the integration settings from the integration account
   const IntegrationSettings = integrationAccount.settings as Settings;
 
-  // Fetch the state category, assignee GitHub user, and linked issue in parallel
-  const [stateCategory, assigneeGithubUser, linkedIssue] = await Promise.all([
-    // Get the state category from the workflow
-    prisma.workflow
-      .findUnique({
-        where: { id: issue.stateId },
-        select: { category: true },
-      })
-      .then((result) => result.category as WorkflowCategory),
-    // Get the assignee's GitHub integration account
-    getGithubUserIntegrationAccount(
-      prisma,
-      issue.assigneeId,
-      issue.team.workspaceId,
-    ),
-    // Find the linked issue for the current issue
-    prisma.linkedIssue.findFirst({
-      where: {
-        issueId: issue.id,
-        source: { path: ['type'], equals: IntegrationName.Github },
-      },
-    }),
-  ]);
+  let stateCategory: WorkflowCategory | null = null;
+  let assigneeGithubUser: IntegrationAccount | null = null;
+  let linkedIssue: LinkedIssue | null = null;
+
+  try {
+    // Fetch the state category, assignee GitHub user, and linked issue in parallel
+    [stateCategory, assigneeGithubUser, linkedIssue] = await Promise.all([
+      // Get the state category from the workflow
+      prisma.workflow
+        .findUnique({
+          where: { id: issue.stateId },
+          select: { category: true },
+        })
+        .then((result) => result?.category as WorkflowCategory),
+      // Get the assignee's GitHub integration account
+      getGithubUserIntegrationAccount(
+        prisma,
+        issue.assigneeId,
+        issue.team.workspaceId,
+      ),
+      // Find the linked issue for the current issue
+      prisma.linkedIssue.findFirst({
+        where: {
+          issueId: issue.id,
+          source: { path: ['type'], equals: IntegrationName.Github },
+        },
+      }),
+    ]);
+  } catch (error) {
+    logger.error(`Error fetching data: ${error.message}`);
+    return new BadRequestException(`Error fetching data`);
+  }
 
   logger.debug(`Assignee GitHub user: ${JSON.stringify(assigneeGithubUser)}`);
 
