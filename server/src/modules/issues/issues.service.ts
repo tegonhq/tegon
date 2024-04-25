@@ -239,7 +239,7 @@ export default class IssuesService {
         linkedIssue: {
           upsert: {
             where: { url: linkIssuedata.url },
-            update: linkIssuedata,
+            update: { sourceData: linkIssuedata.sourceData },
             create: linkIssuedata,
           },
         },
