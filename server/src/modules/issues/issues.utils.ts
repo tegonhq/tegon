@@ -166,34 +166,38 @@ export async function handleTwoWaySync(
           userId,
         );
 
-        logger.debug(
-          `Linking GitHub issue ${githubIssue.id} to Tegon issue ${issue.id}`,
-        );
-        await linkedIssueService.createLinkIssueAPI({
-          url: githubIssue.html_url,
-          sourceId: githubIssue.id.toString(),
-          source: {
-            type: IntegrationName.Github,
-            subType: LinkedIssueSubType.GithubIssue,
-          },
-          sourceData: {
-            id: githubIssue.id.toString(),
-            title: githubIssue.title,
-            apiUrl: githubIssue.url,
-          },
-          issueId: issue.id,
-          createdById: userId,
-        });
+        if (githubIssue.id) {
+          logger.debug(
+            `Linking GitHub issue ${githubIssue.id} to Tegon issue ${issue.id}`,
+          );
+          await linkedIssueService.createLinkIssueAPI({
+            url: githubIssue.html_url,
+            sourceId: githubIssue.id.toString(),
+            source: {
+              type: IntegrationName.Github,
+              subType: LinkedIssueSubType.GithubIssue,
+            },
+            sourceData: {
+              id: githubIssue.id.toString(),
+              title: githubIssue.title,
+              apiUrl: githubIssue.url,
+            },
+            issueId: issue.id,
+            createdById: userId,
+          });
 
-        logger.debug(`Sending first comment to GitHub issue ${githubIssue.id}`);
-        await sendGithubFirstComment(
-          prisma,
-          logger,
-          linkedIssueService,
-          integrationAccount,
-          issue,
-          githubIssue.id.toString(),
-        );
+          logger.debug(
+            `Sending first comment to GitHub issue ${githubIssue.id}`,
+          );
+          await sendGithubFirstComment(
+            prisma,
+            logger,
+            linkedIssueService,
+            integrationAccount,
+            issue,
+            githubIssue.id.toString(),
+          );
+        }
         break;
       }
 
@@ -212,7 +216,6 @@ export async function handleTwoWaySync(
     logger.log(`No integration account found for team ${issue.teamId}`);
   }
 }
-
 export async function findExistingLink(
   prisma: PrismaService,
   linkData: LinkIssueInput,
