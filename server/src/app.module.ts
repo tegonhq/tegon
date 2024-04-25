@@ -13,6 +13,7 @@ import { BullConfigModule } from 'modules/bull/bull.module';
 import { IntegrationAccountModule } from 'modules/integration-account/integration-account.module';
 import { IntegrationDefinitionModule } from 'modules/integration-definition/integration-definition.module';
 import { GithubModule } from 'modules/integrations/github/github.module';
+import { SentryModule } from 'modules/integrations/sentry/sentry.module';
 import { SlackModule } from 'modules/integrations/slack/slack.module';
 import { IssueCommentsModule } from 'modules/issue-comments/issue-comments.module';
 import { IssueHistoryModule } from 'modules/issue-history/issue-history.module';
@@ -62,6 +63,7 @@ import { AppService } from './app.service';
     SearchModule,
     AttachmentModule,
     ViewsModule,
+    SentryModule,
 
     GithubModule,
     SlackModule,

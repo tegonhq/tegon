@@ -60,10 +60,15 @@ export interface SlackSettings {
   channelMappings: ChannelMapping[];
 }
 
+export interface SentrySettings {
+  orgSlug: string;
+}
+
 export interface Settings {
   [IntegrationName.Github]?: GithubSettings;
   [IntegrationName.GithubPersonal]?: GithubPersonalSettings;
   [IntegrationName.Slack]?: SlackSettings;
+  [IntegrationName.Sentry]?: SentrySettings;
 }
 
 export class IntegrationAccountRequestIdBody {

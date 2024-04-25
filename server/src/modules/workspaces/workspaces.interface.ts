@@ -103,4 +103,22 @@ export const integrationDefinitionSeedData = [
     clientSecret: process.env.SLACK_CLIENT_SECRET,
     scopes: 'chat:write,im:history,im:write,reactions:read',
   },
+  {
+    name: IntegrationName.Sentry,
+    icon: 'sentry.svg',
+    spec: {
+      auth_specification: {
+        OAuth2: {
+          token_url:
+            'https://sentry.io/api/0/sentry-app-installations/${installationId}/authorizations/',
+          authorization_url:
+            'https://sentry.io/sentry-apps/tegon/external-install',
+        },
+      },
+    },
+    clientId: process.env.SLACK_CLIENT_ID,
+    clientSecret: process.env.SLACK_CLIENT_SECRET,
+    scopes:
+      'event:read,event:write,issue:read,issue:write,org:read,org:write,member:read,member:write',
+  },
 ];

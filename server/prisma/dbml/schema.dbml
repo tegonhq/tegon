@@ -452,6 +452,7 @@ Enum IntegrationName {
   GithubPersonal
   Slack
   SlackPersonal
+  Sentry
 }
 
 Enum IssueRelationType {

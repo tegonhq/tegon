@@ -160,6 +160,15 @@ export async function storeIntegrationRelatedData(
 
       break;
 
+    case IntegrationName.Sentry:
+      await prisma.integrationAccount.update({
+        where: { id: integrationAccount.id },
+        data: {
+          settings: settingsData,
+        },
+      });
+      break;
+
     default:
       return undefined;
   }
