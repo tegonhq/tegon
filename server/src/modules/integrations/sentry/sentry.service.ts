@@ -28,7 +28,6 @@ export default class SentryService {
       });
 
     this.logger.log('In sentry redirectURl');
-    console.log(integrationDefinition);
     const template = await getTemplate(integrationDefinition);
 
     return { status: 200, redirectURL: template.authorization_url };
@@ -41,7 +40,6 @@ export default class SentryService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     res: any,
   ) {
-    console.log(installationData);
     const integrationDefinition =
       await this.prisma.integrationDefinition.findFirst({
         where: {

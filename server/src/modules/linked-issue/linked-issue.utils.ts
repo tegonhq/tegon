@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Logger } from '@nestjs/common';
-import { IntegrationName, Prisma } from '@prisma/client';
+import { IntegrationName, LinkedIssue, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
@@ -11,6 +11,7 @@ import {
   sendGithubFirstComment,
 } from 'modules/integrations/github/github.utils';
 import { getRequest } from 'modules/integrations/integrations.utils';
+import { getSentryIssue } from 'modules/integrations/sentry/sentry.utils';
 import {
   getSlackMessage,
   sendSlackLinkedMessage,
@@ -25,6 +26,7 @@ import {
   LinkedSlackMessageType,
   githubIssueRegex,
   githubPRRegex,
+  sentryRegex,
   slackRegex,
 } from './linked-issue.interface';
 import LinkedIssueService from './linked-issue.service';
@@ -37,6 +39,8 @@ export function isValidLinkUrl(linkData: LinkIssueInput): boolean {
     return githubPRRegex.test(url);
   } else if (type === LinkedIssueSubType.Slack) {
     return slackRegex.test(url);
+  } else if (type === LinkedIssueSubType.Sentry) {
+    return true;
   } else if (type === LinkedIssueSubType.ExternalLink) {
     return true;
   }
@@ -256,6 +260,68 @@ export async function getLinkedIssueDataWithUrl(
         };
       }
       break;
+
+    case LinkedIssueSubType.Sentry:
+      const sentryMatch = linkData.url.match(sentryRegex);
+
+      if (sentryMatch) {
+        const [, orgSlug, sentryIssueId] = sentryMatch;
+
+        integrationAccount = await prisma.integrationAccount.findFirst({
+          where: {
+            settings: {
+              path: [IntegrationName.Sentry, 'orgSlug'],
+              equals: orgSlug,
+            } as Prisma.JsonFilter,
+          },
+          include: {
+            integrationDefinition: true,
+            workspace: true,
+          },
+        });
+
+        if (integrationAccount) {
+          const sentryResponse = await getSentryIssue(
+            prisma,
+            integrationAccount,
+            orgSlug,
+            sentryIssueId,
+          );
+
+          if (sentryResponse.status !== 200) {
+            break;
+          }
+          const sentryData = sentryResponse.data;
+          return {
+            integrationAccount,
+            linkInput: {
+              url: linkData.url,
+              sourceId: sentryData.id,
+              source: {
+                type: IntegrationName.Sentry,
+                syncedCommentId: null,
+              },
+              sourceData: {
+                title: sentryData.title,
+                projectId: sentryData.project.id,
+                projectName: sentryData.project.name,
+                type: sentryData.type,
+                metadata: {
+                  value: sentryData.metadata.value,
+                  type: sentryData.metadata.type,
+                  filename: sentryData.metadata.filename,
+                },
+                firstSeen: sentryData.firstSeen,
+                issueType: sentryData.issueType,
+                issueCategory: sentryData.issueCategory,
+              },
+              createdById: userId,
+              issueId,
+            },
+            linkDataType: linkData.type,
+          };
+        }
+      }
   }
 
   return {
@@ -300,4 +366,51 @@ export async function sendFirstComment(
       linkedIssue,
     );
   }
+}
+
+export async function getLinkDetails(
+  prisma: PrismaService,
+  linkedIssue: LinkedIssue,
+) {
+  const linkedIssueSource = linkedIssue.source as LinkedIssueSource;
+  let integrationAccount: IntegrationAccountWithRelations;
+  switch (linkedIssueSource.type) {
+    case IntegrationName.Sentry:
+      const sentryMatch = linkedIssue.url.match(sentryRegex);
+      const [, orgSlug, sentryIssueId] = sentryMatch;
+
+      integrationAccount = await prisma.integrationAccount.findFirst({
+        where: {
+          settings: {
+            path: [IntegrationName.Sentry, 'orgSlug'],
+            equals: orgSlug,
+          } as Prisma.JsonFilter,
+        },
+        include: {
+          integrationDefinition: true,
+          workspace: true,
+        },
+      });
+
+      const sentryResponse = await getSentryIssue(
+        prisma,
+        integrationAccount,
+        orgSlug,
+        sentryIssueId,
+      );
+      if (sentryResponse.status !== 200) {
+        return undefined;
+      }
+      const sentryData = sentryResponse.data;
+      return {
+        status: sentryData.status,
+        events: sentryData.count,
+        lastSeen: sentryData.lastSeen,
+        seenByUser: sentryData.seenBy.length > 0 ? true : false,
+        priority: sentryData.priority,
+      };
+      break;
+  }
+
+  return undefined;
 }

@@ -35,7 +35,6 @@ export class SentryController {
     @Headers() eventHeaders: WebhookEventHeaders,
     @Body() eventBody: WebhookEventBody,
   ) {
-    console.log(JSON.stringify(eventBody), eventHeaders);
     return this.sentryService.handleEvents(eventHeaders, eventBody);
   }
 

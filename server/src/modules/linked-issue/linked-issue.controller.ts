@@ -4,6 +4,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   UseGuards,
@@ -46,5 +47,13 @@ export class LinkedIssueController {
     @Param() linkedIssueIdParams: LinkedIssueIdParams,
   ): Promise<LinkedIssue> {
     return await this.linkedIssueService.deleteLinkIssue(linkedIssueIdParams);
+  }
+
+  @Get(':linkedIssueId/details')
+  @UseGuards(new AuthGuard())
+  async linkedIssueDetails(@Param() linkedIssueIdParams: LinkedIssueIdParams) {
+    return await this.linkedIssueService.linkedIssueDetails(
+      linkedIssueIdParams,
+    );
   }
 }
