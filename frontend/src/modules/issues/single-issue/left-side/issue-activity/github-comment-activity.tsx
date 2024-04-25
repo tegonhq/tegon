@@ -38,7 +38,7 @@ export function GithubCommentActivity({
   const linkedIssue = linkedIssuesStore.linkedIssues.find(
     (linkedIssue: LinkedIssueType) => {
       return (
-        linkedIssue.issueId === comment.issueId &&
+        JSON.parse(linkedIssue.source).syncedCommentId === comment.id &&
         JSON.parse(linkedIssue.source).subType ===
           LinkedIssueSubType.GithubIssue
       );

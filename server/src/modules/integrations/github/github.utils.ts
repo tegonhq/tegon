@@ -415,6 +415,7 @@ export async function upsertGithubIssue(
   issue: IssueWithRelations,
   integrationAccount: IntegrationAccountWithRelations,
   userId: string,
+  linkedIssueId?: string,
 ) {
   // Get the integration settings from the integration account
   const IntegrationSettings = integrationAccount.settings as Settings;
@@ -440,12 +441,14 @@ export async function upsertGithubIssue(
         issue.team.workspaceId,
       ),
       // Find the linked issue for the current issue
-      prisma.linkedIssue.findFirst({
-        where: {
-          issueId: issue.id,
-          source: { path: ['type'], equals: IntegrationName.Github },
-        },
-      }),
+      linkedIssueId
+        ? prisma.linkedIssue.findUnique({ where: { id: linkedIssueId } })
+        : prisma.linkedIssue.findFirst({
+            where: {
+              issueId: issue.id,
+              source: { path: ['type'], equals: IntegrationName.Github },
+            },
+          }),
     ]);
   } catch (error) {
     logger.error(`Error fetching data: ${error.message}`);
@@ -458,7 +461,7 @@ export async function upsertGithubIssue(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const issueBody: any = {
     title: issue.title,
-    body: issue.description,
+    ...(issue.description ? { body: issue.description } : {}),
     labels: await getGithubLabels(prisma, issue.labelIds),
     state:
       stateCategory === WorkflowCategory.COMPLETED
@@ -560,7 +563,9 @@ export async function upsertGithubIssueComment(
     case IssueCommentAction.CREATED:
       logger.debug('Creating GitHub issue comment');
       const linkedIssue = await prisma.linkedIssue.findFirst({
-        where: { issueId: issueComment.issueId },
+        where: {
+          source: { path: ['syncedCommentId'], equals: issueComment.parentId },
+        },
       });
 
       if (linkedIssue) {

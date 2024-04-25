@@ -1,16 +1,20 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Logger } from '@nestjs/common';
-import { IntegrationName, Issue, Prisma } from '@prisma/client';
+import { IntegrationName, Issue, LinkedIssue, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
 
+import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
 import {
   sendGithubFirstComment,
   upsertGithubIssue,
 } from 'modules/integrations/github/github.utils';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
-import { LinkedIssueSubType } from 'modules/linked-issue/linked-issue.interface';
+import {
+  LinkedIssueSource,
+  LinkedIssueSubType,
+} from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 
 import {
@@ -130,6 +134,47 @@ export async function getLastIssueNumber(
   return lastIssue?.number ?? 0;
 }
 
+export async function getLinkedIntegrationAccount(
+  prisma: PrismaService,
+  integrationName: IntegrationName,
+  teamId: string,
+) {
+  switch (integrationName) {
+    case IntegrationName.Github:
+      return await prisma.integrationAccount.findFirst({
+        where: {
+          settings: {
+            path: [IntegrationName.Github, 'repositoryMappings'],
+            array_contains: [{ teamId }],
+          } as Prisma.JsonFilter,
+          isActive: true,
+          deleted: null,
+        },
+        include: {
+          integrationDefinition: true,
+          workspace: true,
+        },
+      });
+
+    case IntegrationName.Slack:
+      return await prisma.integrationAccount.findFirst({
+        where: {
+          settings: {
+            path: [IntegrationName.Slack, 'channelMappings'],
+            array_contains: [{ teams: [{ teamId }] }],
+          } as Prisma.JsonFilter,
+        },
+        include: {
+          integrationDefinition: true,
+          workspace: true,
+        },
+      });
+
+    default:
+      return undefined;
+  }
+}
+
 export async function handleTwoWaySync(
   prisma: PrismaService,
   logger: Logger,
@@ -138,84 +183,135 @@ export async function handleTwoWaySync(
   action: IssueAction,
   userId: string,
 ) {
-  const integrationAccount = await prisma.integrationAccount.findFirst({
-    where: {
-      settings: {
-        path: [IntegrationName.Github, 'repositoryMappings'],
-        array_contains: [{ teamId: issue.teamId }],
-      } as Prisma.JsonFilter,
-      isActive: true,
-      deleted: null,
-    },
-    include: {
-      integrationDefinition: true,
-      workspace: true,
-    },
+  const linkedIssues = await prisma.linkedIssue.findMany({
+    where: { issueId: issue.id },
   });
 
-  if (integrationAccount) {
-    logger.debug(`Found integration account for team ${issue.teamId}`);
-    switch (action) {
-      case IssueAction.CREATED: {
-        logger.log(`Creating GitHub issue for Tegon issue ${issue.id}`);
-        const githubIssue = await upsertGithubIssue(
-          prisma,
-          logger,
-          issue,
-          integrationAccount,
-          userId,
-        );
-
-        if (githubIssue.id) {
-          logger.debug(
-            `Linking GitHub issue ${githubIssue.id} to Tegon issue ${issue.id}`,
-          );
-          await linkedIssueService.createLinkIssueAPI({
-            url: githubIssue.html_url,
-            sourceId: githubIssue.id.toString(),
-            source: {
-              type: IntegrationName.Github,
-              subType: LinkedIssueSubType.GithubIssue,
-            },
-            sourceData: {
-              id: githubIssue.id.toString(),
-              title: githubIssue.title,
-              apiUrl: githubIssue.url,
-            },
-            issueId: issue.id,
-            createdById: userId,
-          });
-
-          logger.debug(
-            `Sending first comment to GitHub issue ${githubIssue.id}`,
-          );
-          await sendGithubFirstComment(
+  if (linkedIssues.length > 0) {
+    linkedIssues.map(async (linkedIssue: LinkedIssue) => {
+      const linkedSource = linkedIssue.source as LinkedIssueSource;
+      let integrationAccount: IntegrationAccountWithRelations;
+      switch (linkedSource.type) {
+        case IntegrationName.Github: {
+          integrationAccount = await getLinkedIntegrationAccount(
             prisma,
-            logger,
-            linkedIssueService,
-            integrationAccount,
-            issue,
-            githubIssue.id.toString(),
+            IntegrationName.Github,
+            issue.teamId,
           );
-        }
-        break;
-      }
 
-      case IssueAction.UPDATED: {
-        logger.debug(`Updating GitHub issue for Tegon issue ${issue.id}`);
-        await upsertGithubIssue(
-          prisma,
-          logger,
-          issue,
-          integrationAccount,
-          userId,
-        );
+          if (integrationAccount) {
+            logger.debug(
+              `Found integration account for linked issue ${linkedIssue.id} for team ${issue.teamId}`,
+            );
+            switch (action) {
+              case IssueAction.CREATED: {
+                logger.debug(
+                  `Creating GitHub issue for Tegon issue ${issue.id}`,
+                );
+                await createGithubIssue(
+                  prisma,
+                  logger,
+                  linkedIssueService,
+                  issue,
+                  userId,
+                  linkedIssue.id,
+                );
+                break;
+              }
+              case IssueAction.UPDATED: {
+                logger.debug(
+                  `Updating GitHub issue for Tegon issue ${issue.id}`,
+                );
+                await upsertGithubIssue(
+                  prisma,
+                  logger,
+                  issue,
+                  integrationAccount,
+                  userId,
+                  linkedIssue.id,
+                );
+              }
+            }
+          } else {
+            logger.log(
+              `No integration account found for linked issue ${linkedIssue.id} for team ${issue.teamId}`,
+            );
+          }
+          break;
+        }
+
+        case IntegrationName.Slack: {
+          integrationAccount = await getLinkedIntegrationAccount(
+            prisma,
+            IntegrationName.Slack,
+            issue.teamId,
+          );
+          break;
+        }
       }
-    }
-  } else {
-    logger.log(`No integration account found for team ${issue.teamId}`);
+    });
+  } else if (action === IssueAction.CREATED) {
+    // TODO(Manoj): Handle it based on the destination
+    logger.log(`No linked issue found for this issue ${issue.id}`);
+    await createGithubIssue(prisma, logger, linkedIssueService, issue, userId);
   }
 }
+
+export async function createGithubIssue(
+  prisma: PrismaService,
+  logger: Logger,
+  linkedIssueService: LinkedIssueService,
+  issue: IssueWithRelations,
+  userId: string,
+  linkedIssueId?: string,
+) {
+  const integrationAccount = await getLinkedIntegrationAccount(
+    prisma,
+    IntegrationName.Github,
+    issue.teamId,
+  );
+  logger.log(`Creating GitHub issue for Tegon issue ${issue.id}`);
+  const githubIssue = await upsertGithubIssue(
+    prisma,
+    logger,
+    issue,
+    integrationAccount,
+    userId,
+    linkedIssueId,
+  );
+
+  if (githubIssue.id) {
+    logger.debug(
+      `Linking GitHub issue ${githubIssue.id} to Tegon issue ${issue.id}`,
+    );
+    await linkedIssueService.createLinkIssueAPI({
+      url: githubIssue.html_url,
+      sourceId: githubIssue.id.toString(),
+      source: {
+        type: IntegrationName.Github,
+        subType: LinkedIssueSubType.GithubIssue,
+      },
+      sourceData: {
+        id: githubIssue.id.toString(),
+        title: githubIssue.title,
+        apiUrl: githubIssue.url,
+      },
+      issueId: issue.id,
+      createdById: userId,
+    });
+
+    logger.debug(`Sending first comment to GitHub issue ${githubIssue.id}`);
+    await sendGithubFirstComment(
+      prisma,
+      logger,
+      linkedIssueService,
+      integrationAccount,
+      issue,
+      githubIssue.id.toString(),
+    );
+  }
+}
+
 export async function findExistingLink(
   prisma: PrismaService,
   linkData: LinkIssueInput,
