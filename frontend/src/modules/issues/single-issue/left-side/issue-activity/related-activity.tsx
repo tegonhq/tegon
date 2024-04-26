@@ -116,9 +116,9 @@ export function RelatedActivity({
   return (
     <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
       <div className="flex items-center text-xs text-muted-foreground">
-        <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
+        <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
           <Icon.icon
-            size={18}
+            size={16}
             className={cn(
               'text-muted-foreground',
               !relatedChanges.isDeleted && Icon.color,

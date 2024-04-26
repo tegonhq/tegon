@@ -9,7 +9,7 @@ import type { WorkflowType } from 'common/types/team';
 
 import { Button } from 'components/ui/button';
 import { useCurrentTeam } from 'hooks/teams';
-import { useAllTeamWorkflows } from 'hooks/workflows';
+import { useTeamWorkflows } from 'hooks/workflows';
 
 interface ParentIssueViewProps {
   issue: IssueType;
@@ -21,7 +21,7 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
     push,
     query: { workspaceSlug },
   } = useRouter();
-  const workflows = useAllTeamWorkflows(team.identifier);
+  const workflows = useTeamWorkflows(team.identifier);
 
   const workflow = workflows.find(
     (wk: WorkflowType) => wk.id === issue.parent.stateId,

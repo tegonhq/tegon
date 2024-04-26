@@ -123,6 +123,12 @@ export async function getWorkspaceId(
       });
       return notification.workspaceId;
 
+    case ModelName.View:
+      const view = await prisma.view.findUnique({
+        where: { id: modelId },
+      });
+      return view.workspaceId;
+
     default:
       return undefined;
   }
@@ -195,6 +201,7 @@ export async function getModelData(
         return prisma.notification.findUnique({ where: { id: modelId } });
       },
     },
+    View: prisma.view,
   };
 
   const model = modelMap[modelName];

@@ -59,6 +59,7 @@ export function IssueAssigneeDropdownContent({
       <CommandGroup>
         <DropdownItem
           id="no-user"
+          value="No Assignee"
           index={0}
           onSelect={() => {
             onChange && onChange(null);
@@ -75,10 +76,15 @@ export function IssueAssigneeDropdownContent({
                 }
               />
             )}
-            <div className="h-[20px] w-[30px] flex items-center justify-center">
-              <AssigneeLine size={16} className="text-muted-foreground mr-2" />
+            <div className="flex grow">
+              <div className="h-[20px] w-[30px] flex items-center justify-center">
+                <AssigneeLine
+                  size={16}
+                  className="text-muted-foreground mr-2"
+                />
+              </div>
+              No Assignee
             </div>
-            No Assignee
           </div>
         </DropdownItem>
         {usersData &&
@@ -89,6 +95,7 @@ export function IssueAssigneeDropdownContent({
               <DropdownItem
                 key={user.id}
                 id={user.id}
+                value={user.fullname}
                 index={index + 1}
                 onSelect={(currentValue) => {
                   if (!multiple) {
@@ -107,19 +114,20 @@ export function IssueAssigneeDropdownContent({
                       }}
                     />
                   )}
-                  <Avatar className="h-[20px] w-[30px]">
-                    <AvatarImage />
-                    <AvatarFallback
-                      className={cn(
-                        'text-[0.6rem] rounded-sm mr-2',
-                        getTailwindColor(userData.username),
-                      )}
-                    >
-                      {getInitials(userData.fullname)}
-                    </AvatarFallback>
-                  </Avatar>
-
-                  {userData.fullname}
+                  <label htmlFor={user.fullname} className="flex grow">
+                    <Avatar className="h-[20px] w-[30px]">
+                      <AvatarImage />
+                      <AvatarFallback
+                        className={cn(
+                          'text-[0.55rem] rounded-sm mr-2',
+                          getTailwindColor(userData.username),
+                        )}
+                      >
+                        {getInitials(userData.fullname)}
+                      </AvatarFallback>
+                    </Avatar>
+                    {userData.fullname}
+                  </label>
                 </div>
               </DropdownItem>
             );

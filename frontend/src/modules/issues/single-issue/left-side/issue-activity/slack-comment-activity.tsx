@@ -55,7 +55,7 @@ export function SlackCommentActivity({
   return (
     <TimelineItem className="w-full" key={`${comment.id}-comment`} hasMore>
       <div className="flex items-start text-xs text-muted-foreground ">
-        <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
+        <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
           <SlackIcon size={16} className="text-foreground" />
         </div>
 

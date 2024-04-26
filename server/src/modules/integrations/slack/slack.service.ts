@@ -4,6 +4,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { IntegrationName, IssueComment } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
+import { AttachmentResponse } from 'modules/attachments/attachments.interface';
+import { AttachmentService } from 'modules/attachments/attachments.service';
 import {
   IntegrationAccountWithRelations,
   Settings,
@@ -27,8 +29,10 @@ import {
   slackIssueData,
 } from './slack.interface';
 import {
+  convertSlackMessageToTiptapJson,
   createIssueCommentAndLinkIssue,
   getExternalSlackUser,
+  getFilesBuffer,
   getIssueData,
   getIssueMessageModal,
   getModalView,
@@ -52,6 +56,7 @@ export default class SlackService {
     private oauthCallbackService: OAuthCallbackService,
     private issuesService: IssuesService,
     private linkedIssueService: LinkedIssueService,
+    private attachmentService: AttachmentService,
   ) {}
 
   private readonly logger: Logger = new Logger('SlackService', {
@@ -97,8 +102,7 @@ export default class SlackService {
         return await this.handleThread(event, integrationAccount);
       case 'reaction_added':
         // Handle message reactions
-        await this.handleMessageReaction(eventBody, integrationAccount);
-        return undefined;
+        return await this.handleMessageReaction(eventBody, integrationAccount);
       default:
         this.logger.debug('Unhandled Slack event type:', event.type);
         return undefined;
@@ -327,6 +331,10 @@ export default class SlackService {
     const message =
       eventBody.subtype === 'message_changed' ? eventBody.message : eventBody;
 
+    if (message.username && message.username.includes('(via Tegon)')) {
+      return undefined;
+    }
+
     // Find the channel mapping in the integration account settings
     const channelMapping = (
       integrationAccount.settings as Settings
@@ -374,12 +382,13 @@ export default class SlackService {
       displayName = userData.user.real_name;
     }
     // Prepare source data for the linked comment
-    const sourceData = {
+    const sourceMetadata = {
       idTs: message.ts,
       parentTs: message.thread_ts,
       channelId: eventBody.channel,
       channelType: eventBody.channel_type,
       type: IntegrationName.Slack,
+      id: integrationAccount.id,
       userDisplayName: message.username ? message.username : displayName,
     };
 
@@ -389,12 +398,31 @@ export default class SlackService {
       include: { comment: true },
     });
 
+    let attachmentUrls;
+    if (message.files) {
+      const multerFiles = await getFilesBuffer(
+        integrationAccount,
+        message.files,
+      );
+      attachmentUrls = await this.attachmentService.uploadToGCP(
+        multerFiles,
+        userId,
+        integrationAccount.workspaceId,
+        sourceMetadata,
+      );
+    }
+
+    const tiptapMessage = convertSlackMessageToTiptapJson(
+      message.blocks,
+      attachmentUrls,
+    );
+
     if (linkedComment) {
       // If a linked comment exists, update the existing comment
       this.logger.debug(`Updating existing comment for thread ID: ${threadId}`);
       return this.prisma.issueComment.update({
         where: { id: linkedComment.commentId },
-        data: { body: message.text },
+        data: { body: tiptapMessage },
       });
     }
 
@@ -402,17 +430,17 @@ export default class SlackService {
     this.logger.debug(`Creating new comment for thread ID: ${threadId}`);
     return this.prisma.issueComment.create({
       data: {
-        body: message.text,
+        body: tiptapMessage,
         issueId,
         userId,
         parentId,
-        sourceMetadata: sourceData,
+        sourceMetadata,
         linkedComment: {
           create: {
             url: threadId,
             sourceId: threadId,
             source: { type: IntegrationName.Slack },
-            sourceData,
+            sourceData: sourceMetadata,
           },
         },
       },
@@ -508,14 +536,7 @@ export default class SlackService {
       return undefined;
     }
 
-    // Create issue input data
-    const issueInput: UpdateIssueInput = {
-      description: slackMessageResponse.messages[0].text,
-      stateId,
-      isBidirectional: true,
-      subscriberIds: [...(userId ? [userId] : [])],
-    } as UpdateIssueInput;
-
+    // Get the Slack user details using the integration account and the user ID from the event
     const slackUserResponse = await getExternalSlackUser(
       integrationAccount,
       event.user,
@@ -531,6 +552,36 @@ export default class SlackService {
       channelId: sessionData.channelId,
       userDisplayName: slackUsername,
     };
+
+    let attachmentUrls: AttachmentResponse[];
+    if (slackMessageResponse.messages[0].files) {
+      // Get the files buffer from Slack using the integration account and message files
+      const multerFiles = await getFilesBuffer(
+        integrationAccount,
+        slackMessageResponse.messages[0].files,
+      );
+      // Upload the files to GCP and get the attachment URLs
+      attachmentUrls = await this.attachmentService.uploadToGCP(
+        multerFiles,
+        userId,
+        integrationAccount.workspaceId,
+        sourceMetadata,
+      );
+    }
+
+    // Convert the Slack message blocks to Tiptap JSON format, including the attachment URLs
+    const description = convertSlackMessageToTiptapJson(
+      slackMessageResponse.messages[0].blocks,
+      attachmentUrls,
+    );
+
+    // Create issue input data
+    const issueInput: UpdateIssueInput = {
+      description,
+      stateId,
+      isBidirectional: true,
+      subscriberIds: [...(userId ? [userId] : [])],
+    } as UpdateIssueInput;
 
     // Create issue data object
     const issueData: slackIssueData = { issueInput, sourceMetadata, userId };

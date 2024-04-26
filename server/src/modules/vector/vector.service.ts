@@ -4,6 +4,8 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Client as TypesenseClient } from 'typesense';
 
+import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
+
 import { IssueWithRelations } from 'modules/issues/issues.interface';
 
 import { issueSchema } from './vector.interface';
@@ -58,6 +60,7 @@ export class VectorService implements OnModuleInit {
         issueNumber,
         title: issue.title,
         description: issue.description ?? '',
+        descriptionString: convertTiptapJsonToText(issue.description),
         stateId: issue.stateId,
         workspaceId: issue.team.workspaceId,
         assigneeId: issue.assigneeId ?? '',
@@ -72,7 +75,7 @@ export class VectorService implements OnModuleInit {
   ) {
     const searchParameters = {
       q: searchQuery || '*',
-      query_by: 'numberString,issueNumber,title,description,embedding',
+      query_by: 'numberString,issueNumber,title,descriptionString,embedding',
       filter_by: `workspaceId:=${workspaceId}`,
       sort_by: searchQuery ? '_text_match:desc' : 'number:desc',
       vector_query: `embedding:([], distance_threshold:${vectorDistance})`,

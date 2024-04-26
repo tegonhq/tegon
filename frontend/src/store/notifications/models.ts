@@ -24,3 +24,5 @@ export const Notification = types.model({
   readAt: types.union(types.string, types.null),
   workspaceId: types.string,
 });
+
+export const Notifications = types.array(Notification);

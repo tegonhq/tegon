@@ -9,8 +9,6 @@ import { SCOPES } from 'common/scopes';
 
 import { useScope } from 'hooks';
 
-import { IssueStoreInit } from 'store/issue-store-provider';
-
 import { IssueView } from './issue-view';
 
 export function SingleIssue() {
@@ -24,9 +22,5 @@ export function SingleIssue() {
 }
 
 SingleIssue.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <AppLayout>
-      <IssueStoreInit>{page}</IssueStoreInit>
-    </AppLayout>
-  );
+  return <AppLayout>{page}</AppLayout>;
 };

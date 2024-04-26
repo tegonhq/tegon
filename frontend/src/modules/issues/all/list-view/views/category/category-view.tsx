@@ -46,7 +46,7 @@ export const CategoryView = observer(() => {
     const categoryAIndex = categorySequence.indexOf(a.category);
     const categoryBIndex = categorySequence.indexOf(b.category);
     if (categoryAIndex !== categoryBIndex) {
-      return categoryAIndex - categoryBIndex;
+      return categoryBIndex - categoryAIndex;
     }
 
     // If categories are the same, compare by position

@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@devoxa/prisma-relay-cursor-connection": "3.1.1",
+    "@google-cloud/storage": "^7.10.0",
     "@nestjs/axios": "^3.0.1",
     "@nestjs/bull": "^10.1.0",
     "@nestjs/common": "10.3.1",
@@ -65,6 +66,7 @@
     "@nestjs/websockets": "^10.3.1",
     "@prisma/client": "^5.8.1",
     "@tiptap/core": "^2.3.0",
+    "@types/multer": "^1.4.11",
     "@vegardit/prisma-generator-nestjs-dto": "^1.5.1",
     "@xenova/transformers": "^2.16.1",
     "axios": "^1.6.7",
@@ -80,6 +82,7 @@
     "passport-jwt": "4.0.1",
     "pg": "^8.11.3",
     "pg-logical-replication": "^2.0.3",
+    "prosemirror-model": "^1.20.0",
     "reflect-metadata": "^0.2.1",
     "rxjs": "7.8.1",
     "simple-oauth2": "^5.0.0",

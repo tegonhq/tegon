@@ -66,7 +66,7 @@ export function TriageDeclineModal({ setDialogOpen }: TriageDeclineModalProps) {
     updateIssue({
       id: issue.id,
       teamId: currentTeam.id,
-      stateId: cancelledWorkflow,
+      stateId: cancelledWorkflow.id,
     });
 
     if (values.comment) {
@@ -105,11 +105,11 @@ export function TriageDeclineModal({ setDialogOpen }: TriageDeclineModalProps) {
                     <FormItem>
                       <FormControl>
                         <div className="flex items-start gap-4">
-                          <Avatar className="h-[20px] w-[25px] text-foreground">
+                          <Avatar className="h-[15px] w-[20px] text-foreground">
                             <AvatarImage />
                             <AvatarFallback
                               className={cn(
-                                'text-[0.6rem] rounded-sm',
+                                'text-[0.55rem] rounded-sm',
                                 getTailwindColor(currentUser.username),
                               )}
                             >

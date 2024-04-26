@@ -41,6 +41,7 @@ model User {
   template           Template[]
   createdBy          Issue[]
   integrationAccount IntegrationAccount[]
+  attachment         Attachment[]
 }
 
 model Workspace {
@@ -60,6 +61,8 @@ model Workspace {
   syncAction            SyncAction[]
   integrationAccount    IntegrationAccount[]
   integrationDefinition IntegrationDefinition[]
+  attachments           Attachment[]
+  View                  View[]
 }
 
 model UsersOnWorkspaces {
@@ -95,6 +98,7 @@ model Team {
   template       Template[]
   workflow       Workflow[]
   teamPreference TeamPreference[]
+  View           View[]
 
   @@unique([name, identifier, workspaceId])
 }
@@ -213,6 +217,7 @@ model Issue {
   parent        Issue?   @relation("Report", fields: [parentId], references: [id])
   parentId      String?
   subIssue      Issue[]  @relation("Report")
+  attachments   String[]
 
   comments       IssueComment[]
   history        IssueHistory[]
@@ -256,6 +261,7 @@ model IssueComment {
   issueId       String
   parent        IssueComment? @relation("Report", fields: [parentId], references: [id])
   parentId      String?
+  attachments   String[]
 
   replies       IssueComment[]  @relation("Report")
   linkedComment LinkedComment[]
@@ -405,6 +411,47 @@ model Notification {
   workspaceId String
 }
 
+model Attachment {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  fileName       String?
+  originalName   String
+  fileType       String
+  fileExt        String
+  size           Int
+  status         AttachmentStatus
+  sourceMetadata Json?
+
+  uploadedBy   User?      @relation(fields: [uploadedById], references: [id])
+  uploadedById String?
+  workspace    Workspace? @relation(fields: [workspaceId], references: [id])
+  workspaceId  String?
+}
+
+model View {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  teamId String?
+  team   Team?   @relation(fields: [teamId], references: [id])
+
+  name        String
+  description String
+
+  filters      Json
+  isBookmarked Boolean @default(false)
+
+  createdById String
+}
+
 enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
@@ -436,6 +483,7 @@ enum ModelName {
   LinkedIssue
   IssueRelation
   Notification
+  View
 }
 
 enum ActionType {
@@ -481,4 +529,11 @@ enum NotificationActionType {
   IssuePriorityChanged
   IssueNewComment
   IssueBlocks
+}
+
+enum AttachmentStatus {
+  Pending
+  Failed
+  Uploaded
+  Deleted
 }

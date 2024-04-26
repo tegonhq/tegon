@@ -71,6 +71,13 @@ export const IssuesStore: IAnyStateTreeNode = types
         return !issue.assigneeId;
       });
     },
+    getIssuesForTeam(teamId: string) {
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
+        const isTeamIssues = teamId ? issue.teamId === teamId : true;
+
+        return isTeamIssues;
+      });
+    },
     getIssuesForPriority(
       priority: number,
       teamId: string,

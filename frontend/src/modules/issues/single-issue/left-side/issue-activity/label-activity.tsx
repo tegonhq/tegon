@@ -35,8 +35,8 @@ export function LabelActivity({
     return (
       <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
         <div className="flex items-center text-xs text-muted-foreground">
-          <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
-            <LabelFill size={18} className="text-muted-foreground" />
+          <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
+            <LabelFill size={16} className="text-muted-foreground" />
           </div>
 
           <div className="flex items-center">
@@ -71,8 +71,8 @@ export function LabelActivity({
   return (
     <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
       <div className="flex items-center text-xs text-muted-foreground">
-        <div className="h-[20px] w-[25px] flex items-center justify-center mr-4">
-          <LabelFill size={18} className="text-muted-foreground" />
+        <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
+          <LabelFill size={16} className="text-muted-foreground" />
         </div>
 
         <div className="flex items-center">

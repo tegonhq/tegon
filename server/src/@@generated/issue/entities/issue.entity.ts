@@ -34,6 +34,7 @@ stateId: string ;
 parent?: Issue  | null;
 parentId: string  | null;
 subIssue?: Issue[] ;
+attachments: string[] ;
 comments?: IssueComment[] ;
 history?: IssueHistory[] ;
 linkedIssue?: LinkedIssue[] ;

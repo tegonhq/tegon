@@ -13,7 +13,7 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 import { TeamIcon } from 'components/ui/team-icon';
-import { IssuesLine, ProjectsLine, TriageLine } from 'icons';
+import { IssuesLine, StackLine, TriageLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
@@ -74,12 +74,6 @@ export const TeamList = observer(() => {
                 <div className="border-l-1 pl-3 w-full">
                   <TeamListItem
                     subList
-                    name="Active"
-                    team={team}
-                    href="active"
-                  />
-                  <TeamListItem
-                    subList
                     name="Backlog"
                     team={team}
                     href="backlog"
@@ -87,10 +81,10 @@ export const TeamList = observer(() => {
                 </div>
               </div>
               <TeamListItem
-                name="Projects"
+                name="Views"
                 team={team}
-                href="projects"
-                Icon={ProjectsLine}
+                href="views"
+                Icon={StackLine}
               />
             </AccordionContent>
           </AccordionItem>

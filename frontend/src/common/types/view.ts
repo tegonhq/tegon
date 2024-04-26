@@ -1,0 +1,16 @@
+/** Copyright (c) 2024, Tegon, all rights reserved. **/
+
+import type { FiltersModelType } from 'store/application';
+
+export interface ViewType {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  filters: FiltersModelType;
+  workspaceId: string;
+  name: string;
+  description: string;
+  isBookmarked: boolean;
+  createdById: string;
+  teamId?: string;
+}

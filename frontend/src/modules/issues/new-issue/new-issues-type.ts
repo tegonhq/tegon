@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 export const NewIssueSchema = z.object({
   description: z.string(),
+  descriptionString: z.string(),
 
   stateId: z.string(),
 

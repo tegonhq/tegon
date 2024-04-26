@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { mergeAttributes } from '@tiptap/core';
+import { Extension, mergeAttributes } from '@tiptap/core';
 import Heading from '@tiptap/extension-heading';
 import { cx } from 'class-variance-authority';
 import {
@@ -10,9 +10,9 @@ import {
   HorizontalRule,
   StarterKit,
   Placeholder,
+  TiptapImage,
 } from 'novel/extensions';
-
-// TODO I am using cx here to get tailwind autocomplete working, idk if someone else can write a regex to just capture the class key in objects
+import { UploadImagesPlugin } from 'novel/plugins';
 
 const tiptapLink = TiptapLink.configure({
   HTMLAttributes: {
@@ -58,6 +58,21 @@ const heading = Heading.extend({
   },
 }).configure({ levels: [1, 2, 3] });
 
+const tiptapImage = TiptapImage.extend({
+  addProseMirrorPlugins() {
+    return [
+      UploadImagesPlugin({
+        imageClass: cx('opacity-40 rounded-lg border'),
+      }),
+    ];
+  },
+}).configure({
+  allowBase64: false,
+  HTMLAttributes: {
+    class: cx('rounded-lg border'),
+  },
+});
+
 const starterKit = StarterKit.configure({
   heading: false,
   bulletList: {
@@ -99,7 +114,7 @@ const starterKit = StarterKit.configure({
   gapcursor: false,
 });
 
-const placeholder = Placeholder.configure({
+const defaultPlaceholder = Placeholder.configure({
   placeholder: ({ node }) => {
     if (node.type.name === 'heading') {
       return `Heading ${node.attrs.level}`;
@@ -111,17 +126,34 @@ const placeholder = Placeholder.configure({
       return 'Type in your code here...';
     }
 
-    return 'Add description...';
+    return 'Describe your issue...';
   },
   includeChildren: true,
 });
 
+export const getPlaceholder = (placeholder: string | Extension) => {
+  if (!placeholder) {
+    return defaultPlaceholder;
+  }
+
+  if (typeof placeholder === 'string') {
+    return Placeholder.configure({
+      placeholder: () => {
+        return placeholder;
+      },
+      includeChildren: true,
+    });
+  }
+
+  return placeholder;
+};
+
 export const defaultExtensions = [
   starterKit,
-  placeholder,
   tiptapLink,
   taskList,
   taskItem,
   horizontalRule,
   heading,
+  tiptapImage,
 ];

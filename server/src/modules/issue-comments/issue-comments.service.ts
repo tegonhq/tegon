@@ -46,12 +46,7 @@ export default class IssueCommentsService {
       },
     });
 
-    this.issuesService.updateIssueApi(
-      { teamId: issueComment.issue.teamId },
-      { subscriberIds: [userId] },
-      issueRequestParams,
-      userId,
-    );
+    this.issuesService.updateSubscribers(issueRequestParams.issueId, [userId]);
 
     await this.issueCommentsQueue.addTwoWaySyncJob(
       issueComment,

@@ -60,6 +60,10 @@ export function IssueSuggestions({
     .filter((assignee) => assignee.id !== assigneeId)
     .map((assignee) => assignee.id);
 
+  if (labels.length === 0 && assignees.length === 0) {
+    return null;
+  }
+
   return (
     <div className="flex my-3 items-center gap-2 text-muted-foreground">
       {(filteredLabels.length > 0 || filteredAssignees.length > 0) && (

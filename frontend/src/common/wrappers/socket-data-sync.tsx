@@ -34,6 +34,7 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
       linkedIssuesStore,
       issueRelationsStore,
       notificationsStore,
+      viewsStore,
     } = useContextStore();
     const user = React.useContext(UserContext);
 
@@ -78,6 +79,7 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
         [MODELS.LinkedIssue]: linkedIssuesStore,
         [MODELS.IssueRelation]: issueRelationsStore,
         [MODELS.Notification]: notificationsStore,
+        [MODELS.View]: viewsStore,
       };
 
       socket.on('message', (newMessage: string) => {

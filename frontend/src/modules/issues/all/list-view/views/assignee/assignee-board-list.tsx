@@ -63,12 +63,12 @@ export const AssigneeBoardList = observer(
     return (
       <BoardColumn key={userOnWorkspace.userId} id={userOnWorkspace.userId}>
         <div className="flex flex-col max-h-[100%]">
-          <div className="flex items-center w-full px-4">
-            <Avatar className="h-[20px] w-[25px] flex items-center">
+          <div className="flex items-center w-full p-4 pb-0">
+            <Avatar className="h-[15px] w-[20px] flex items-center">
               <AvatarImage />
               <AvatarFallback
                 className={cn(
-                  'text-[0.6rem] rounded-sm mr-1',
+                  'text-[0.55rem] rounded-sm mr-1',
                   getTailwindColor(
                     getUserData(userOnWorkspace.userId).username,
                   ),

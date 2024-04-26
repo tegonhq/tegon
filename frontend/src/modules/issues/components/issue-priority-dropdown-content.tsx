@@ -47,9 +47,9 @@ export function IssuePriorityDropdownContent({
           return (
             <CommandItem
               key={priority}
-              value={`${index}`}
-              onSelect={(currentValue) => {
-                onChange && onChange(parseInt(currentValue, 10));
+              value={priority}
+              onSelect={() => {
+                onChange && onChange(index);
                 onClose();
               }}
             >

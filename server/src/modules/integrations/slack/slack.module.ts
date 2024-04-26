@@ -5,6 +5,7 @@ import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
+import { AttachmentService } from 'modules/attachments/attachments.service';
 import { IssuesModule } from 'modules/issues/issues.module';
 import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 import { NotificationsModule } from 'modules/notifications/notifications.module';
@@ -26,7 +27,7 @@ import SlackService from './slack.service';
     BullModule.registerQueue({ name: 'slack' }),
   ],
   controllers: [SlackController],
-  providers: [PrismaService, SlackService],
+  providers: [PrismaService, SlackService, AttachmentService],
   exports: [SlackService],
 })
 export class SlackModule {}

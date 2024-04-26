@@ -8,6 +8,8 @@ import type { IssueType } from 'common/types/issue';
 export interface CreateIssueParams {
   title: string;
   description: string;
+  // Used while creating new issue
+  descriptionString?: string;
   priority?: number;
 
   labelIds?: string[];

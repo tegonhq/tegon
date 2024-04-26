@@ -4,6 +4,7 @@ import { CommandItem } from 'components/ui/command';
 
 interface DropdownItemProps {
   id: string;
+  value: string;
   onSelect: (value: string) => void;
   index: number;
   children: React.ReactElement;
@@ -11,12 +12,12 @@ interface DropdownItemProps {
 
 export function DropdownItem({
   id,
+  value,
   onSelect,
-
   children,
 }: DropdownItemProps) {
   return (
-    <CommandItem key={id} value={id} onSelect={onSelect}>
+    <CommandItem key={id} value={value} onSelect={() => onSelect(id)}>
       <div className="flex w-full">
         <div className="grow">{children}</div>
       </div>

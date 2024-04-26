@@ -77,12 +77,14 @@ export function IssueStatusDropdownContent({
                     }}
                   />
                 )}
-                <CategoryIcon
-                  size={18}
-                  className="text-muted-foreground mr-2"
-                  color={workflow.color}
-                />
-                {workflow.name}
+                <label className="flex grow" htmlFor={workflow.name}>
+                  <CategoryIcon
+                    size={18}
+                    className="text-muted-foreground mr-2"
+                    color={workflow.color}
+                  />
+                  {workflow.name}
+                </label>
               </div>
             </CommandItem>
           );

@@ -58,6 +58,7 @@ interface DefaultValues {
   priority: number;
   isBidirectional: boolean;
   stateId: string;
+  description?: string;
 }
 
 export function getDefaultValues(

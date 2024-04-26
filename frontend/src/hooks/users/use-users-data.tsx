@@ -40,7 +40,7 @@ export function useUsersData(teamId?: string) {
 
 export function useUserData(
   userId: string,
-  teamId: string,
+  teamId?: string,
 ): {
   isLoading: boolean;
   userData: User | undefined;

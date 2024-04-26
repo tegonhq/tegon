@@ -12,7 +12,7 @@ import {
   getInitials,
 } from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
-import { Textarea } from 'components/ui/textarea';
+import { Editor } from 'components/ui/editor';
 import { TimelineItem } from 'components/ui/timeline';
 import { useIssueData } from 'hooks/issues';
 
@@ -38,12 +38,12 @@ export function IssueComment() {
 
   return (
     <TimelineItem hasMore className="w-full">
-      <div className="flex items-start text-xs text-muted-foreground w-full">
-        <Avatar className="h-[20px] w-[25px] mr-4 text-foreground">
+      <div className="flex items-start text-sm text-muted-foreground w-full">
+        <Avatar className="h-[15px] w-[20px] mr-4 text-foreground">
           <AvatarImage />
           <AvatarFallback
             className={cn(
-              'text-[0.6rem] rounded-sm',
+              'text-[0.55rem] rounded-sm',
               getTailwindColor(currentUser.username),
             )}
           >
@@ -52,12 +52,12 @@ export function IssueComment() {
         </Avatar>
 
         <div className="w-full relative">
-          <Textarea
-            placeholder="Leave a comment..."
-            rows={5}
+          <Editor
             value={commentValue}
-            onChange={(e) => setCommentValue(e.currentTarget.value)}
-            className="w-full min-h-[60px] text-foreground bg-white backdrop-blur-md dark:bg-slate-700/20 shadow-sm"
+            onChange={(e) => setCommentValue(e)}
+            placeholder="Leave your comment..."
+            onSubmit={onSubmit}
+            className="w-full min-h-[60px] bg-white backdrop-blur-md dark:bg-slate-700/20 shadow-sm mb-0 p-2 border text-foreground"
           />
           <Button
             variant="outline"

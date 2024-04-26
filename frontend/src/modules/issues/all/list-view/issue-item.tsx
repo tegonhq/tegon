@@ -67,7 +67,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
   return (
     <a
       className={cn(
-        'p-2.5 pl-3 pr-6 flex justify-between group cursor-default text-sm hover:bg-active/50 border-b-[0.5px]',
+        'p-2.5 pl-3 pr-4 flex justify-between group cursor-default text-sm hover:bg-active/50 border-b-[0.5px]',
         issueSelected && 'bg-primary/10',
       )}
       onClick={() => {
@@ -107,7 +107,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
           />
         </div>
 
-        <div className="mr-2">
+        <div className="mr-2.5">
           <IssuePriorityDropdown
             value={issue.priority ?? 0}
             onChange={priorityChange}

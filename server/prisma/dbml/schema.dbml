@@ -16,6 +16,7 @@ Table User {
   template Template [not null]
   createdBy Issue [not null]
   integrationAccount IntegrationAccount [not null]
+  attachment Attachment [not null]
 }
 
 Table Workspace {
@@ -33,6 +34,8 @@ Table Workspace {
   syncAction SyncAction [not null]
   integrationAccount IntegrationAccount [not null]
   integrationDefinition IntegrationDefinition [not null]
+  attachments Attachment [not null]
+  View View [not null]
 }
 
 Table UsersOnWorkspaces {
@@ -67,6 +70,7 @@ Table Team {
   template Template [not null]
   workflow Workflow [not null]
   teamPreference TeamPreference [not null]
+  View View [not null]
 
   indexes {
     (name, identifier, workspaceId) [unique]
@@ -181,6 +185,7 @@ Table Issue {
   parent Issue
   parentId String
   subIssue Issue [not null]
+  attachments String[] [not null]
   comments IssueComment [not null]
   history IssueHistory [not null]
   linkedIssue LinkedIssue [not null]
@@ -219,6 +224,7 @@ Table IssueComment {
   issueId String [not null]
   parent IssueComment
   parentId String
+  attachments String[] [not null]
   replies IssueComment [not null]
   linkedComment LinkedComment [not null]
 }
@@ -352,6 +358,40 @@ Table Notification {
   workspaceId String [not null]
 }
 
+Table Attachment {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  fileName String
+  originalName String [not null]
+  fileType String [not null]
+  fileExt String [not null]
+  size Int [not null]
+  status AttachmentStatus [not null]
+  sourceMetadata Json
+  uploadedBy User
+  uploadedById String
+  workspace Workspace
+  workspaceId String
+}
+
+Table View {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  workspaceId String [not null]
+  workspace Workspace [not null]
+  teamId String
+  team Team
+  name String [not null]
+  description String [not null]
+  filters Json [not null]
+  isBookmarked Boolean [not null, default: false]
+  createdById String [not null]
+}
+
 Enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
@@ -383,6 +423,7 @@ Enum ModelName {
   LinkedIssue
   IssueRelation
   Notification
+  View
 }
 
 Enum ActionType {
@@ -428,6 +469,13 @@ Enum NotificationActionType {
   IssuePriorityChanged
   IssueNewComment
   IssueBlocks
+}
+
+Enum AttachmentStatus {
+  Pending
+  Failed
+  Uploaded
+  Deleted
 }
 
 Ref: UsersOnWorkspaces.userId > User.id
@@ -483,3 +531,11 @@ Ref: IntegrationAccount.integratedById > User.id
 Ref: IntegrationAccount.integrationDefinitionId > IntegrationDefinition.id
 
 Ref: IntegrationAccount.workspaceId > Workspace.id
+
+Ref: Attachment.uploadedById > User.id
+
+Ref: Attachment.workspaceId > Workspace.id
+
+Ref: View.workspaceId > Workspace.id
+
+Ref: View.teamId > Team.id

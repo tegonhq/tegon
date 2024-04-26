@@ -6,30 +6,36 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { NewIssue } from 'modules/issues/new-issue/new-issue';
 
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
+
+import { Editor } from 'components/ui/editor';
 import { ScrollArea } from 'components/ui/scroll-area';
 import { Separator } from 'components/ui/separator';
 import { useIssueData } from 'hooks/issues';
-import { useCurrentTeam } from 'hooks/teams';
+import { useTeamWithId } from 'hooks/teams';
+import { useTeamWorkflows } from 'hooks/workflows';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
 import { FilterSmall } from './filters-small';
 import { Header } from './header';
 import { IssueActivity } from './issue-activity';
-import { IssueDescription } from './issue-description';
 import { IssueTitle } from './issue-title';
 import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
 import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
 
-interface LeftSideProps {
-  isTriageView?: boolean;
-}
-
-export const LeftSide = observer(({ isTriageView }: LeftSideProps) => {
+export const LeftSide = observer(() => {
   const issue = useIssueData();
-  const team = useCurrentTeam();
+  const team = useTeamWithId(issue.teamId);
+  const workflows = useTeamWorkflows(team.identifier);
+  const triageWorkflow = workflows.find(
+    (workflow: WorkflowType) =>
+      workflow.category === WorkflowCategoryEnum.TRIAGE,
+  );
+  const isTriageView = issue.stateId === triageWorkflow.id;
+
   const [newIssueState, setNewIssueState] = React.useState(false);
 
   const { mutate: updateIssue } = useUpdateIssueMutation({});
@@ -56,41 +62,44 @@ export const LeftSide = observer(({ isTriageView }: LeftSideProps) => {
       <div className="flex xl:hidden px-8 py-2 border-b">
         <FilterSmall />
       </div>
-      <ScrollArea className="grow px-8 py-6 flex flex-col gap-2">
-        <div>
-          {isTriageView && <SimilarIssuesView issueId={issue.id} />}
+      <ScrollArea className="grow flex flex-col gap-2">
+        <div className="px-8 py-6 flex flex-col gap-2">
+          <div>
+            {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
-          {issue.parentId && <ParentIssueView issue={issue} />}
+            {issue.parentId && <ParentIssueView issue={issue} />}
 
-          <IssueTitle value={issue.title} onChange={onIssueChange} />
-          <IssueDescription
-            value={issue.description}
-            onChange={onDescriptionChange}
-          />
+            <IssueTitle value={issue.title} onChange={onIssueChange} />
+            <Editor
+              value={issue.description}
+              onChange={onDescriptionChange}
+              className="text-slate-700 dark:text-slate-300 min-h-[50px] mb-8"
+            />
 
-          <SubIssueView
-            childIssues={issue.children}
-            setNewIssueState={() => setNewIssueState(true)}
-            newIssueState={newIssueState}
-          />
+            <SubIssueView
+              childIssues={issue.children}
+              setNewIssueState={() => setNewIssueState(true)}
+              newIssueState={newIssueState}
+            />
+          </div>
+
+          {newIssueState && (
+            <>
+              <div className="my-1">
+                <NewIssue
+                  onClose={() => setNewIssueState(false)}
+                  teamIdentfier={team.identifier}
+                  parentId={issue.id}
+                />
+              </div>
+              <Separator className="my-1" />
+            </>
+          )}
+
+          <LinkedIssuesView issueId={issue.id} />
+          <Separator className="my-1 mt-3" />
+          <IssueActivity />
         </div>
-
-        {newIssueState && (
-          <>
-            <div className="my-1">
-              <NewIssue
-                onClose={() => setNewIssueState(false)}
-                teamIdentfier={team.identifier}
-                parentId={issue.id}
-              />
-            </div>
-            <Separator className="my-1" />
-          </>
-        )}
-
-        <LinkedIssuesView issueId={issue.id} />
-        <Separator className="my-1 mt-3" />
-        <IssueActivity />
       </ScrollArea>
     </>
   );

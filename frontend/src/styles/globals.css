@@ -59,6 +59,7 @@
     @apply bg-background text-foreground;
     @apply antialiased;
     overflow: hidden;
+    overflow-anchor: none;
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-color) transparent;
     /* shape-rendering: auto; */
@@ -77,6 +78,8 @@
 ul[data-type='taskList'] li > label {
   margin-right: 0.2rem;
   user-select: none;
+  width: 1rem;
+  height: 1rem;
 }
 
 @media screen and (max-width: 768px) {
@@ -138,5 +141,5 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
 }
 
 .scroll-area > div {
-  height: 100%;
+  display: block !important;
 }

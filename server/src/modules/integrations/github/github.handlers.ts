@@ -4,6 +4,8 @@ import { Logger } from '@nestjs/common';
 import { IntegrationName, LinkedIssue, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
+import { convertMarkdownToTiptapJson } from 'common/utils/tiptap.utils';
+
 import {
   IntegrationAccountWithRelations,
   Settings,
@@ -203,7 +205,7 @@ export async function handleIssueComments(
       );
       const issueComment = await prisma.issueComment.create({
         data: {
-          body: eventBody.comment.body,
+          body: convertMarkdownToTiptapJson(eventBody.comment.body),
           issueId,
           userId,
           parentId,
@@ -250,7 +252,7 @@ export async function handleIssueComments(
         return await prisma.issueComment.update({
           where: { id: linkedComment.commentId },
           data: {
-            body: eventBody.comment.body,
+            body: convertMarkdownToTiptapJson(eventBody.comment.body),
             linkedComment: {
               update: {
                 where: { id: linkedComment.id },

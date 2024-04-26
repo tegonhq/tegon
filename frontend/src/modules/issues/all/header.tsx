@@ -55,11 +55,7 @@ export const Header = observer(({ title }: HeaderProps) => {
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink
-            as={Link}
-            href={`/${workspaceSlug}/team/${team.identifier}/triage`}
-            className="text-muted-foreground"
-          >
+          <BreadcrumbLink className="text-muted-foreground">
             {title}
           </BreadcrumbLink>
         </BreadcrumbItem>

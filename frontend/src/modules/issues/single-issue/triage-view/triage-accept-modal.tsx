@@ -126,11 +126,11 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
                     <FormItem>
                       <FormControl>
                         <div className="flex items-start gap-4">
-                          <Avatar className="h-[20px] w-[25px] text-foreground">
+                          <Avatar className="h-[15px] w-[20px] text-foreground">
                             <AvatarImage />
                             <AvatarFallback
                               className={cn(
-                                'text-[0.6rem] rounded-sm',
+                                'text-[0.55rem] rounded-sm',
                                 getTailwindColor(currentUser.username),
                               )}
                             >

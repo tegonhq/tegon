@@ -12,6 +12,7 @@ export const issueSchema: CollectionCreateSchema = {
     { name: 'issueNumber', type: 'string' },
     { name: 'title', type: 'string' },
     { name: 'description', type: 'string' },
+    { name: 'descriptionString', type: 'string' },
     { name: 'stateId', type: 'string' },
     { name: 'workspaceId', type: 'string' },
     { name: 'assigneeId', type: 'string' },

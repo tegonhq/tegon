@@ -39,6 +39,7 @@ export function BootstrapWrapper({ children }: Props) {
     linkedIssuesStore,
     issueRelationsStore,
     notificationsStore,
+    viewsStore,
   } = useContextStore();
 
   const MODEL_STORE_MAP = {
@@ -55,6 +56,7 @@ export function BootstrapWrapper({ children }: Props) {
     [MODELS.LinkedIssue]: linkedIssuesStore,
     [MODELS.IssueRelation]: issueRelationsStore,
     [MODELS.Notification]: notificationsStore,
+    [MODELS.View]: viewsStore,
   };
 
   const { refetch: bootstrapIssuesRecords } = useBootstrapRecords({

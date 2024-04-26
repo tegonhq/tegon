@@ -5,6 +5,7 @@ export enum MODELS {
   Team = 'Team',
   Label = 'Label',
   UsersOnWorkspaces = 'UsersOnWorkspaces',
+  View = 'View',
 
   // Team
   Workflow = 'Workflow',

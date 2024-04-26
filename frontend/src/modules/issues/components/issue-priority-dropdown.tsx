@@ -44,11 +44,8 @@ export function IssuePriorityDropdown({
           className="flex items-center px-0 shadow-none !bg-transparent hover:bg-transparent border-none justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary"
         >
           <PriorityIcon.icon
-            size={PriorityIcon.size}
-            className={cn(
-              'text-muted-foreground',
-              value === 1 && 'text-[#F9703E]',
-            )}
+            size={14}
+            className={cn('text-muted-foreground')}
           />
         </Button>
       );
@@ -86,10 +83,7 @@ export function IssuePriorityDropdown({
       >
         <PriorityIcon.icon
           size={14}
-          className={cn(
-            'mr-2 text-muted-foreground',
-            value === 1 && 'text-[#F9703E]',
-          )}
+          className={cn('mr-2 text-muted-foreground')}
         />
 
         {Priorities[value]}

@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { sort } from 'fast-sort';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
 import type { IssueType } from 'common/types/issue';
@@ -88,6 +89,7 @@ export function getSortArray(displaySettings: DisplaySettingsModelType) {
 export function getFilters(
   applicationStore: ApplicationStoreType,
   workflows: WorkflowType[],
+  pathname: string,
 ) {
   const { status, assignee, label, priority } = applicationStore.filters;
   const { showSubIssues, showCompletedIssues, showTriageIssues } =
@@ -161,14 +163,31 @@ export function getFilters(
     });
   }
 
+  if (pathname.includes('/backlog')) {
+    const filteredWorkflow = workflows.filter(
+      (workflow) => workflow.category === WorkflowCategoryEnum.BACKLOG,
+    )[0];
+
+    filters.push({
+      key: 'stateId',
+      filterType: FilterTypeEnum.IS,
+      value: [filteredWorkflow.id],
+    });
+  }
+
   return filters;
 }
 
 export function useFilterIssues(issues: IssueType[]): IssueType[] {
   const { applicationStore, workflowsStore } = useContextStore();
+  const pathname = usePathname();
 
   return React.useMemo(() => {
-    const filters = getFilters(applicationStore, workflowsStore.workflows);
+    const filters = getFilters(
+      applicationStore,
+      workflowsStore.workflows,
+      pathname,
+    );
     const filteredIssues = filterIssues(issues, filters);
 
     return sort(filteredIssues).by(

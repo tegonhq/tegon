@@ -26,7 +26,7 @@ export function MemberItem({ name, className, email }: MemberItemProps) {
       <div className="flex gap-4">
         <Avatar className="w-[40px] ">
           <AvatarImage />
-          <AvatarFallback className="bg-cyan-500 dark:bg-cyan-900 text-[0.6rem] rounded-sm">
+          <AvatarFallback className="bg-cyan-500 dark:bg-cyan-900 text-[0.55rem] rounded-sm">
             {getInitials(name)}
           </AvatarFallback>
         </Avatar>

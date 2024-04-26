@@ -1,19 +1,24 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { useParams, usePathname } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { Key } from 'ts-key-enum';
 import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 
 import { useGithubAccounts } from 'modules/settings/integrations/github/github-utils';
 
 import { cn } from 'common/lib/utils';
+import { SCOPES } from 'common/scopes';
 import { IntegrationName } from 'common/types/integration-definition';
 import type { IssueType } from 'common/types/issue';
 
-import { Button } from 'components/ui/button';
+import { Button, buttonVariants } from 'components/ui/button';
+import { Editor } from 'components/ui/editor';
 import {
   Form,
   FormControl,
@@ -23,8 +28,9 @@ import {
 } from 'components/ui/form';
 import { Switch } from 'components/ui/switch';
 import { useToast } from 'components/ui/use-toast';
+import { useScope } from 'hooks';
 import { useTeam } from 'hooks/teams';
-import { useAllTeamWorkflows } from 'hooks/workflows';
+import { useTeamWorkflows } from 'hooks/workflows';
 
 import {
   type CreateIssueParams,
@@ -41,7 +47,6 @@ import {
   isBidirectionalEnabled,
 } from './new-issue-utils';
 import { draftKey, NewIssueSchema } from './new-issues-type';
-import { IssueDescription } from '../single-issue/left-side/issue-description';
 
 interface NewIssueProps {
   onClose: () => void;
@@ -50,19 +55,39 @@ interface NewIssueProps {
 }
 
 export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
+  useScope(SCOPES.NewIssue);
+  const { workspaceSlug } = useParams();
+  const team = useTeam(teamIdentfier);
+
   const { mutate: createIssue, isLoading } = useCreateIssueMutation({
     onSuccess: (data: IssueType) => {
       toast({
         title: 'Issue Created',
-        description: `${data.number} - ${data.title}`,
+        description: (
+          <div className="flex flex-col gap-1">
+            <div>
+              {data.number} - {data.title}
+            </div>
+            <div>
+              <Link
+                className={cn(
+                  buttonVariants({ variant: 'ghost', size: 'sm' }),
+                  'px-0 text-primary',
+                )}
+                href={`/${workspaceSlug}/issue/${team.identifier}-${data.number}`}
+              >
+                view issue
+              </Link>
+            </div>
+          </div>
+        ),
       });
     },
   });
-  const team = useTeam(teamIdentfier);
-  const workflows = useAllTeamWorkflows(teamIdentfier);
+
+  const workflows = useTeamWorkflows(teamIdentfier);
 
   const pathname = usePathname();
-  const [description, setDescription] = React.useState('');
   const [, rerenderHack] = React.useState<string[]>([]);
   const { toast } = useToast();
 
@@ -72,10 +97,13 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
     team.id,
   );
   const isBidirectional = isBidirectionalEnabled(githubAccounts, team.id);
+  const defaultValues = getDefaultValues(workflows, pathname, isBidirectional);
+
+  const [description, setDescription] = React.useState('');
 
   const form = useForm<z.infer<typeof NewIssueSchema>>({
     resolver: zodResolver(NewIssueSchema),
-    defaultValues: getDefaultValues(workflows, pathname, isBidirectional),
+    defaultValues,
   });
 
   // This is to change the default value for the workflow
@@ -85,6 +113,8 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
   }, [teamIdentfier]);
 
   const onSubmit = (values: CreateIssueParams) => {
+    delete values['descriptionString'];
+
     createIssue({ ...values, teamId: team.id, parentId });
     onClose();
   };
@@ -104,6 +134,11 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
     setDescription(value);
   }, 500);
 
+  // Shortcuts
+  useHotkeys(`${Key.Meta}+${Key.Enter}`, () => form.handleSubmit(onSubmit)(), [
+    SCOPES.NewIssue,
+  ]);
+
   return (
     <div
       className={cn(
@@ -122,13 +157,19 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
                 return (
                   <FormItem>
                     <FormControl>
-                      <IssueDescription
+                      <Editor
                         {...field}
-                        onChange={(value) => {
+                        onChange={(value, valueString) => {
                           field.onChange(value);
-                          setDescriptionValue(value);
+                          form.setValue('descriptionString', valueString);
+                          setDescriptionValue(valueString);
                         }}
+                        className="text-slate-600 dark:text-slate-400 min-h-[50px] mb-8"
                         autoFocus
+                        // This is when meta+Enter is triggered on description
+                        onSubmit={() => {
+                          form.handleSubmit(onSubmit)();
+                        }}
                       />
                     </FormControl>
                   </FormItem>

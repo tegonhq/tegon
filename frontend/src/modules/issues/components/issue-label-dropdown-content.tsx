@@ -76,7 +76,7 @@ export function IssueLabelDropdownContent({
           {filter().map((label: LabelType) => {
             return (
               <CommandItem key={label.name} className="my-1" value={label.name}>
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center w-full">
                   <Checkbox
                     id={label.id}
                     checked={value.includes(label.id)}
