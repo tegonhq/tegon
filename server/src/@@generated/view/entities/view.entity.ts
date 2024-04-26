@@ -16,6 +16,6 @@ team?: Team  | null;
 name: string ;
 description: string ;
 filters: Prisma.JsonValue ;
-isFavorite: boolean ;
+isBookmarked: boolean ;
 createdById: string ;
 }

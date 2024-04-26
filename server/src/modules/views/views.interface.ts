@@ -3,6 +3,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsDefined,
   IsEnum,
   IsNotEmptyObject,
@@ -49,6 +50,17 @@ export class CreateViewsRequestBody {
 
   @IsString()
   workspaceId: string;
+
+  @IsString()
+  @IsOptional()
+  teamId?: string;
+
+  @IsString()
+  name: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
 }
 
 export class UpdateViewsRequestBody {
@@ -67,8 +79,9 @@ export class UpdateViewsRequestBody {
   @Type(() => FiltersModelType)
   filters?: FiltersModelType;
 
-  @IsString()
-  viewId: string;
+  @IsBoolean()
+  @IsOptional()
+  isBookmarked?: boolean;
 }
 
 export class ViewRequestIdBody {

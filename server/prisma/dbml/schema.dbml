@@ -388,7 +388,7 @@ Table View {
   name String [not null]
   description String [not null]
   filters Json [not null]
-  isFavorite Boolean [not null, default: false]
+  isBookmarked Boolean [not null, default: false]
   createdById String [not null]
 }
 

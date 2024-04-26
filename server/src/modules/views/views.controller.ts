@@ -94,10 +94,10 @@ export class ViewsController {
     @Body()
     updateViewBody: UpdateViewsRequestBody,
   ): Promise<View> {
-    return await this.viewsService.updateView({
-      ...updateViewBody,
-      viewId: viewRequestIdBody.viewId,
-    });
+    return await this.viewsService.updateView(
+      viewRequestIdBody.viewId,
+      updateViewBody,
+    );
   }
 
   /**

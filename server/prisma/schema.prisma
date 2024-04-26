@@ -446,8 +446,8 @@ model View {
   name        String
   description String
 
-  filters    Json
-  isFavorite Boolean @default(false)
+  filters      Json
+  isBookmarked Boolean @default(false)
 
   createdById String
 }

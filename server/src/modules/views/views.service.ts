@@ -2,17 +2,11 @@
 
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import OpenAI from 'openai';
 
 import {
   CreateViewsRequestBody,
   UpdateViewsRequestBody,
 } from './views.interface';
-import { getViewNameDescription } from './views.utils';
-
-const openaiClient = new OpenAI({
-  apiKey: process.env['OPENAI_API_KEY'],
-});
 
 @Injectable()
 export class ViewsService {
@@ -27,12 +21,9 @@ export class ViewsService {
   }
 
   async createView(
-    { workspaceId, filters }: CreateViewsRequestBody,
+    { workspaceId, filters, teamId, name, description }: CreateViewsRequestBody,
     createdById: string,
   ) {
-    const { name, description } = await getViewNameDescription(openaiClient, {
-      filters,
-    } as CreateViewsRequestBody);
     return await this.prismaService.view.create({
       data: {
         name,
@@ -40,21 +31,24 @@ export class ViewsService {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         filters: filters as any,
         workspace: { connect: { id: workspaceId } },
-        isFavorite: false,
+        team: { connect: { id: teamId } },
+        isBookmarked: false,
         createdById,
         description: description ?? '',
       },
     });
   }
 
-  async updateView({ viewId, filters, ...data }: UpdateViewsRequestBody) {
+  async updateView(
+    viewId: string,
+    { filters, ...data }: UpdateViewsRequestBody,
+  ) {
     return await this.prismaService.view.update({
       data: {
         ...data,
         // TODO should take normally without the any
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         filters: filters as any,
-        isFavorite: false,
       },
       where: {
         id: viewId,

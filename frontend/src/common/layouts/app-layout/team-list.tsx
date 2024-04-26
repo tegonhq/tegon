@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiArrowRightSFill, RiStackLine } from '@remixicon/react';
+import { RiArrowRightSFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 

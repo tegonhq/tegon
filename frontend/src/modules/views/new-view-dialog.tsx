@@ -26,11 +26,11 @@ import {
 import { Input } from 'components/ui/input';
 import { useToast } from 'components/ui/use-toast';
 import { useCurrentTeam } from 'hooks/teams';
+import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { useCreateViewMutation } from 'services/views';
 
 import { useContextStore } from 'store/global-context-provider';
-import { useCurrentWorkspace } from 'hooks/workspace';
 
 export const NewViewSchema = z.object({
   name: z.string().min(6),
