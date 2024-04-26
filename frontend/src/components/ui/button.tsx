@@ -79,6 +79,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             'bg-active text-slate-800 dark:hover:bg-slate-800 dark:text-slate-100',
         )}
         ref={ref}
+        type="button"
         {...props}
         disabled={isLoading ?? disabled}
       >

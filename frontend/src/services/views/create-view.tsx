@@ -8,11 +8,11 @@ import type { ViewType } from 'common/types/view';
 import type { FiltersModelType } from 'store/application';
 
 export interface CreateViewParams {
-  name: string;
-  description?: string;
-
   workspaceId: string;
   filters: FiltersModelType;
+  teamId?: string;
+  name: string;
+  description?: string;
 }
 
 export function createView({ workspaceId, ...otherParams }: CreateViewParams) {
@@ -25,7 +25,7 @@ export function createView({ workspaceId, ...otherParams }: CreateViewParams) {
   });
 }
 
-export interface MutationParams {
+interface MutationParams {
   onMutate?: () => void;
   onSuccess?: (data: ViewType) => void;
   onError?: (error: string) => void;

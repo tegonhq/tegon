@@ -23,26 +23,30 @@ import {
 
 function DefaultPopoverContent({
   onSelect,
+  showStatus,
 }: {
   onSelect: (value: string) => void;
+  showStatus: boolean;
 }) {
   return (
     <Command>
       <CommandInput placeholder="Filter..." />
 
       <CommandGroup>
-        <CommandItem
-          key="Status"
-          value="Status"
-          className="flex items-center text-muted-foreground"
-          onSelect={onSelect}
-        >
-          <BacklogLine size={14} className="mr-2" /> Status
-        </CommandItem>
+        {showStatus && (
+          <CommandItem
+            key="Status"
+            value="Status"
+            className="flex items-center"
+            onSelect={onSelect}
+          >
+            <BacklogLine size={14} className="mr-2" /> Status
+          </CommandItem>
+        )}
         <CommandItem
           key="Assignee"
           value="Assignee"
-          className="flex items-center text-muted-foreground"
+          className="flex items-center"
           onSelect={onSelect}
         >
           <AssigneeLine size={14} className="mr-2" />
@@ -51,7 +55,7 @@ function DefaultPopoverContent({
         <CommandItem
           key="Label"
           value="Label"
-          className="flex items-center text-muted-foreground"
+          className="flex items-center"
           onSelect={onSelect}
         >
           <LabelFill size={14} className="mr-2" />
@@ -70,7 +74,11 @@ const ContentMap = {
 
 type KeyType = keyof typeof ContentMap;
 
-export function FilterDropdown() {
+interface FilterDropdownProps {
+  showStatus: boolean;
+}
+
+export function FilterDropdown({ showStatus }: FilterDropdownProps) {
   const [open, setOpen] = React.useState(false);
   const { applicationStore } = useContextStore();
   const [filter, setFilter] = React.useState<KeyType>(undefined);
@@ -98,7 +106,7 @@ export function FilterDropdown() {
     >
       <PopoverTrigger asChild>
         <Button variant="outline" size="xs" className="border-1 text-xs">
-          <RiFilter3Line size={16} className="mr-2 text-muted-foreground" />
+          <RiFilter3Line size={16} className="mr-2" />
           Filter
         </Button>
       </PopoverTrigger>
@@ -113,6 +121,7 @@ export function FilterDropdown() {
           />
         ) : (
           <DefaultPopoverContent
+            showStatus={showStatus}
             onSelect={(value: string) => setFilter(value as KeyType)}
           />
         )}

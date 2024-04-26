@@ -37,10 +37,11 @@ export function GithubCommentActivity({
   const { linkedIssuesStore } = useContextStore();
   const linkedIssue = linkedIssuesStore.linkedIssues.find(
     (linkedIssue: LinkedIssueType) => {
+      const source = JSON.parse(linkedIssue.source);
+
       return (
-        JSON.parse(linkedIssue.source).syncedCommentId === comment.id &&
-        JSON.parse(linkedIssue.source).subType ===
-          LinkedIssueSubType.GithubIssue
+        source.syncedCommentId === comment.id &&
+        source.subType === LinkedIssueSubType.GithubIssue
       );
     },
   );

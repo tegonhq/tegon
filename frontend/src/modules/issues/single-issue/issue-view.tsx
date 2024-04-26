@@ -7,7 +7,7 @@ import { WorkflowCategoryEnum } from 'common/types/team';
 
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
-import { useAllTeamWorkflows } from 'hooks/workflows';
+import { useTeamWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 import { IssueStoreInit } from 'store/issue-store-provider';
@@ -18,7 +18,7 @@ import { TriageView } from './triage-view';
 
 export const IssueView = () => {
   const currentTeam = useCurrentTeam();
-  const workflows = useAllTeamWorkflows(currentTeam.identifier);
+  const workflows = useTeamWorkflows(currentTeam.identifier);
   const { applicationStore } = useContextStore();
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>

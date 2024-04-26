@@ -2,6 +2,8 @@
 
 import { observer } from 'mobx-react-lite';
 
+import type { LabelType } from 'common/types/label';
+
 import { useTeamLabels } from 'hooks/labels';
 import { useCurrentTeam } from 'hooks/teams';
 
@@ -15,10 +17,14 @@ export const LabelView = observer(() => {
   const team = useCurrentTeam();
   const {
     applicationStore: {
+      filters: { label: labelFilters },
       displaySettings: { view },
     },
   } = useContextStore();
-  const labels = useTeamLabels(team.identifier);
+  let labels = useTeamLabels(team.identifier);
+  labels = labelFilters
+    ? labels.filter((label: LabelType) => labelFilters.value.includes(label.id))
+    : labels;
 
   return view === ViewEnum.list ? (
     <LabelListView labels={labels} />

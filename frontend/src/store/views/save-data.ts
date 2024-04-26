@@ -6,7 +6,7 @@ import type { SyncActionRecord } from 'common/types/data-loader';
 
 import { tegonDatabase } from 'store/database';
 
-export async function saveTeamData(
+export async function saveViewData(
   data: SyncActionRecord[],
   viewsStore: ViewsStoreType,
 ) {
@@ -20,7 +20,9 @@ export async function saveTeamData(
         workspaceId: record.data.workspaceId,
         filters: record.data.filters,
         description: record.data.description,
-        isFavorite: record.data.isFavorite,
+        isBookmarked: record.data.isBookmarked,
+        teamId: record.data.teamId,
+        createdById: record.data.createdById,
       };
 
       switch (record.action) {

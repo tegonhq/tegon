@@ -30,7 +30,7 @@ import { Switch } from 'components/ui/switch';
 import { useToast } from 'components/ui/use-toast';
 import { useScope } from 'hooks';
 import { useTeam } from 'hooks/teams';
-import { useAllTeamWorkflows } from 'hooks/workflows';
+import { useTeamWorkflows } from 'hooks/workflows';
 
 import {
   type CreateIssueParams,
@@ -85,7 +85,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
     },
   });
 
-  const workflows = useAllTeamWorkflows(teamIdentfier);
+  const workflows = useTeamWorkflows(teamIdentfier);
 
   const pathname = usePathname();
   const [, rerenderHack] = React.useState<string[]>([]);

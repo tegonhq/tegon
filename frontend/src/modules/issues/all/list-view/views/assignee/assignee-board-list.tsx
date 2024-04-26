@@ -63,7 +63,7 @@ export const AssigneeBoardList = observer(
     return (
       <BoardColumn key={userOnWorkspace.userId} id={userOnWorkspace.userId}>
         <div className="flex flex-col max-h-[100%]">
-          <div className="flex items-center w-full px-4">
+          <div className="flex items-center w-full p-4 pb-0">
             <Avatar className="h-[15px] w-[20px] flex items-center">
               <AvatarImage />
               <AvatarFallback

@@ -11,7 +11,6 @@ import {
   StarterKit,
   Placeholder,
   TiptapImage,
-  UpdatedImage,
 } from 'novel/extensions';
 import { UploadImagesPlugin } from 'novel/plugins';
 
@@ -63,14 +62,14 @@ const tiptapImage = TiptapImage.extend({
   addProseMirrorPlugins() {
     return [
       UploadImagesPlugin({
-        imageClass: cx('opacity-40 rounded-lg border border-slate-200'),
+        imageClass: cx('opacity-40 rounded-lg border'),
       }),
     ];
   },
 }).configure({
   allowBase64: false,
   HTMLAttributes: {
-    class: cx('rounded-lg border border-muted'),
+    class: cx('rounded-lg border'),
   },
 });
 
@@ -127,7 +126,7 @@ const defaultPlaceholder = Placeholder.configure({
       return 'Type in your code here...';
     }
 
-    return 'Add description...';
+    return 'Describe your issue...';
   },
   includeChildren: true,
 });
@@ -156,6 +155,5 @@ export const defaultExtensions = [
   taskItem,
   horizontalRule,
   heading,
-  UpdatedImage,
   tiptapImage,
 ];

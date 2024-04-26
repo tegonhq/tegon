@@ -45,10 +45,7 @@ export function IssuePriorityDropdown({
         >
           <PriorityIcon.icon
             size={14}
-            className={cn(
-              'text-muted-foreground',
-              value === 1 && 'text-[#F9703E]',
-            )}
+            className={cn('text-muted-foreground')}
           />
         </Button>
       );
@@ -86,10 +83,7 @@ export function IssuePriorityDropdown({
       >
         <PriorityIcon.icon
           size={14}
-          className={cn(
-            'mr-2 text-muted-foreground',
-            value === 1 && 'text-[#F9703E]',
-          )}
+          className={cn('mr-2 text-muted-foreground')}
         />
 
         {Priorities[value]}

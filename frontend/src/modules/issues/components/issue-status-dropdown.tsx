@@ -7,7 +7,7 @@ import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow
 
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
-import { useAllTeamWorkflows } from 'hooks/workflows/use-team-workflows';
+import { useTeamWorkflows } from 'hooks/workflows/use-team-workflows';
 
 export enum IssueStatusDropdownVariant {
   NO_BACKGROUND = 'NO_BACKGROUND',
@@ -29,7 +29,7 @@ export function IssueStatusDropdown({
   teamIdentfier,
 }: IssueStatusProps) {
   const [open, setOpen] = React.useState(false);
-  const workflows = useAllTeamWorkflows(teamIdentfier);
+  const workflows = useTeamWorkflows(teamIdentfier);
 
   const workflow = value
     ? workflows.find((workflow) => workflow.id === value)
@@ -51,6 +51,7 @@ export function IssueStatusDropdown({
           role="combobox"
           size="xs"
           aria-expanded={open}
+          onClick={() => setOpen(true)}
           className="flex items-center !bg-transparent hover:bg-transparent shadow-none p-0 border-0 justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
         >
           <CategoryIcon

@@ -1,4 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { sort } from 'fast-sort';
 import {
   type IAnyStateTreeNode,
   type Instance,
@@ -10,11 +11,11 @@ import type { NotificationType } from 'common/types/notification';
 
 import { tegonDatabase } from 'store/database';
 
-import { Notification } from './models';
+import { Notifications } from './models';
 
 export const NotificationsStore: IAnyStateTreeNode = types
   .model({
-    notifications: types.array(Notification),
+    notifications: Notifications,
   })
   .actions((self) => {
     const update = (notification: NotificationType, id: string) => {
@@ -47,7 +48,11 @@ export const NotificationsStore: IAnyStateTreeNode = types
     const load = flow(function* () {
       const notifications = yield tegonDatabase.notifications.toArray();
 
-      self.notifications = notifications;
+      self.notifications = Notifications.create(
+        sort(notifications).desc(
+          (notification: NotificationType) => new Date(notification.updatedAt),
+        ),
+      );
     });
 
     return { update, deleteById, load };

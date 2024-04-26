@@ -7,7 +7,7 @@ import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow
 import { type IssueType } from 'common/types/issue';
 
 import { useTeamWithId } from 'hooks/teams';
-import { useAllTeamWorkflows } from 'hooks/workflows';
+import { useTeamWorkflows } from 'hooks/workflows';
 
 interface ModalIssueItemProps {
   issue: IssueType;
@@ -15,7 +15,7 @@ interface ModalIssueItemProps {
 
 export const ModalIssueItem = observer(({ issue }: ModalIssueItemProps) => {
   const team = useTeamWithId(issue.teamId);
-  const workflows = useAllTeamWorkflows(team.identifier);
+  const workflows = useTeamWorkflows(team.identifier);
   const workflow = workflows.find((workflow) => workflow.id === issue.stateId);
 
   const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];

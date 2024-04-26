@@ -15,7 +15,11 @@ import {
   useEditor,
   EditorCommandList,
 } from 'novel';
-import { ImageResizer, handleCommandNavigation } from 'novel/extensions';
+import {
+  ImageResizer,
+  UpdatedImage,
+  handleCommandNavigation,
+} from 'novel/extensions';
 import { handleImagePaste } from 'novel/plugins';
 import * as React from 'react';
 import { useState } from 'react';
@@ -52,8 +56,6 @@ interface EditorProps {
   onBlur?: () => void;
   onSubmit?: () => void;
 }
-
-const extensions = [...defaultExtensions, slashCommand];
 
 export const EditorChild = ({
   autoFocus,
@@ -163,13 +165,28 @@ export const Editor = ({
     500,
   );
 
+  const getExtensions = () => {
+    const extensions = [
+      ...defaultExtensions,
+      slashCommand,
+      UpdatedImage,
+      getPlaceholder(placeholder),
+    ];
+
+    if (editable) {
+      extensions.push(UpdatedImage);
+    }
+
+    return extensions;
+  };
+
   return (
     // TODO: Change this to the editor input
     <div onFocus={onFocus} onBlur={onBlur}>
       <EditorRoot>
         <EditorContent
           initialContent={getInitialValue()}
-          extensions={[...extensions, getPlaceholder(placeholder)]}
+          extensions={getExtensions()}
           className={cn(
             'relative w-full max-w-screen-lg text-base sm:rounded-lg',
             className,

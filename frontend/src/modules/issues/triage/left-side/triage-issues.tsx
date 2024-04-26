@@ -21,7 +21,7 @@ import {
 import { ScrollArea } from 'components/ui/scroll-area';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
-import { useAllTeamWorkflows } from 'hooks/workflows';
+import { useTeamWorkflows } from 'hooks/workflows';
 import { SlackIcon } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -73,7 +73,7 @@ export function getCreatedBy(issue: IssueType, user: User) {
 export const TriageIssues = () => {
   const currentTeam = useCurrentTeam();
   const { issuesStore } = useContextStore();
-  const workflows = useAllTeamWorkflows(currentTeam.identifier);
+  const workflows = useTeamWorkflows(currentTeam.identifier);
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,

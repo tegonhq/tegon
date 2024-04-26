@@ -64,6 +64,7 @@ export function ReplyComment({
           onFocus={() => {
             setShowReplyButton(true);
           }}
+          onSubmit={onSubmit}
           onBlur={() => {
             !commentValue && setShowReplyButton(false);
           }}

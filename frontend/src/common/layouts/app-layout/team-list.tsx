@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiArrowRightSFill } from '@remixicon/react';
+import { RiArrowRightSFill, RiStackLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -13,7 +13,7 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 import { TeamIcon } from 'components/ui/team-icon';
-import { IssuesLine, ProjectsLine, TriageLine } from 'icons';
+import { IssuesLine, StackLine, TriageLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
@@ -81,10 +81,10 @@ export const TeamList = observer(() => {
                 </div>
               </div>
               <TeamListItem
-                name="Projects"
+                name="Views"
                 team={team}
-                href="projects"
-                Icon={ProjectsLine}
+                href="views"
+                Icon={StackLine}
               />
             </AccordionContent>
           </AccordionItem>

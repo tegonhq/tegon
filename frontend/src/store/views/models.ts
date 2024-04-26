@@ -11,8 +11,10 @@ export const View = types.model({
   name: types.string,
   description: types.string,
   filters: FiltersModel,
-  isFavorite: types.boolean,
+  isBookmarked: types.boolean,
   workspaceId: types.string,
+  teamId: types.union(types.null, types.string),
+  createdById: types.string,
 });
 
 export const Views = types.array(View);

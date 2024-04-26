@@ -10,5 +10,7 @@ export interface ViewType {
   workspaceId: string;
   name: string;
   description: string;
-  isFavorite: boolean;
+  isBookmarked: boolean;
+  createdById: string;
+  teamId?: string;
 }

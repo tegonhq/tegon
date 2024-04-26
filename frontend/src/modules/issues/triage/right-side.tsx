@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { useCurrentTeam } from 'hooks/teams';
-import { useAllTeamWorkflows } from 'hooks/workflows';
+import { useTeamWorkflows } from 'hooks/workflows';
 import { TriageFill } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -13,7 +13,7 @@ import { useContextStore } from 'store/global-context-provider';
 export const RightSide = observer(() => {
   const currentTeam = useCurrentTeam();
   const { issuesStore } = useContextStore();
-  const workflows = useAllTeamWorkflows(currentTeam.identifier);
+  const workflows = useTeamWorkflows(currentTeam.identifier);
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,

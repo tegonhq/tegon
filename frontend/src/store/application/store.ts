@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import cloneDeep from 'lodash/cloneDeep';
 import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 
 import { DisplaySettingsModel, FiltersModel } from './models';
@@ -25,7 +26,7 @@ export const defaultApplicationStoreValue: {
     grouping: GroupingEnum.status,
     ordering: OrderingEnum.updated_at,
     showSubIssues: true,
-    showEmptyGroups: false,
+    showEmptyGroups: true,
     showCompletedIssues: true,
     showTriageIssues: false,
   },
@@ -44,7 +45,9 @@ export const ApplicationStore: IAnyStateTreeNode = types
   })
   .actions((self) => ({
     updateFilters(updateBody: UpdateBody) {
-      self.filters = FiltersModel.create({ ...self.filters, ...updateBody });
+      self.filters = FiltersModel.create(
+        cloneDeep({ ...self.filters, ...updateBody }),
+      );
 
       localStorage.setItem(
         `filters/${self.identifier}`,

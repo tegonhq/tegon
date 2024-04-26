@@ -46,7 +46,7 @@ export const ViewsStore: IAnyStateTreeNode = types
       const views = yield tegonDatabase.views.toArray();
 
       self.views = Views.create(
-        sort(views).asc((view: ViewType) => view.createdAt),
+        sort(views).asc((view: ViewType) => new Date(view.createdAt)),
       );
     });
 
@@ -59,6 +59,11 @@ export const ViewsStore: IAnyStateTreeNode = types
       });
 
       return view;
+    },
+    getViewsForTeam(teamId: string) {
+      return self.views.filter((view) => {
+        return view.teamId === teamId;
+      });
     },
   }));
 

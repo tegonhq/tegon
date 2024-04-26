@@ -13,7 +13,7 @@ import { ScrollArea } from 'components/ui/scroll-area';
 import { Separator } from 'components/ui/separator';
 import { useIssueData } from 'hooks/issues';
 import { useTeamWithId } from 'hooks/teams';
-import { useAllTeamWorkflows } from 'hooks/workflows';
+import { useTeamWorkflows } from 'hooks/workflows';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
@@ -29,7 +29,7 @@ import { SubIssueView } from './sub-issue-view';
 export const LeftSide = observer(() => {
   const issue = useIssueData();
   const team = useTeamWithId(issue.teamId);
-  const workflows = useAllTeamWorkflows(team.identifier);
+  const workflows = useTeamWorkflows(team.identifier);
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,

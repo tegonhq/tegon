@@ -56,6 +56,7 @@ export function IssueComment() {
             value={commentValue}
             onChange={(e) => setCommentValue(e)}
             placeholder="Leave your comment..."
+            onSubmit={onSubmit}
             className="w-full min-h-[60px] bg-white backdrop-blur-md dark:bg-slate-700/20 shadow-sm mb-0 p-2 border text-foreground"
           />
           <Button
