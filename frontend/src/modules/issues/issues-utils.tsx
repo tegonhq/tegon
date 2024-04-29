@@ -12,6 +12,7 @@ import {
   OrderingEnum,
   type ApplicationStoreType,
   type DisplaySettingsModelType,
+  type FilterModelBooleanType,
   type FilterModelType,
 } from 'store/application';
 import {
@@ -19,13 +20,19 @@ import {
   type StoreContextInstanceType,
 } from 'store/global-context-provider';
 
-interface FilterType extends FilterModelType {
+interface FilterNormalType extends FilterModelType {
   key: string;
 }
 
+interface FilterBooleanType extends FilterModelBooleanType {
+  key: string;
+}
+
+type FilterType = FilterNormalType | FilterBooleanType;
+
 export function filterIssue(issue: IssueType, filter: FilterType) {
   // TODO: Fix the type later
-  const { key, value, filterType } = filter;
+  const { key, value, filterType } = filter as FilterNormalType;
   const castedValue = value as string[];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -217,7 +224,6 @@ export function getFilters(
       filters.push({
         key: filterKey,
         filterType: FilterTypeEnum.IS,
-        value: true,
       });
     }
   }
