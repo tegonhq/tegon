@@ -114,7 +114,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
             variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
           />
         </div>
-        <div className="pr-3 text-muted-foreground min-w-[68px]">{`${team.identifier}-${issue.number}`}</div>
+        <div className="pr-3 text-muted-foreground min-w-[70px]">{`${team.identifier}-${issue.number}`}</div>
         <div className="pr-3">
           <IssueStatusDropdown
             value={issue.stateId}

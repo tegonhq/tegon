@@ -54,11 +54,7 @@ export function filterIssue(issue: IssueType, filter: FilterType) {
 export function filterIssues(
   issues: IssueType[],
   filters: FilterType[],
-  {
-    linkedIssuesStore,
-    issuesStore,
-    issueRelationsStore,
-  }: Partial<StoreContextInstanceType>,
+  { issuesStore, issueRelationsStore }: Partial<StoreContextInstanceType>,
 ) {
   return issues.filter((issue: IssueType) => {
     return filters.every((filter) => {

@@ -4,6 +4,7 @@ import { RiCheckLine } from '@remixicon/react';
 
 import { Checkbox } from 'components/ui/checkbox';
 import { Command, CommandGroup, CommandInput } from 'components/ui/command';
+import { useScope } from 'hooks';
 import {
   NoPriorityLine,
   PriorityHigh,
@@ -13,7 +14,6 @@ import {
 } from 'icons';
 
 import { DropdownItem } from './dropdown-item';
-import { useScope } from 'hooks';
 
 interface IssuePriorityDropdownContentProps {
   onChange?: (priority: number | number[]) => void;
