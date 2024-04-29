@@ -27,6 +27,7 @@ import { VectorService } from 'modules/vector/vector.service';
 import {
   ApiResponse,
   CreateIssueInput,
+  FilterInput,
   IssueAction,
   IssueRequestParams,
   IssueWithRelations,
@@ -41,6 +42,7 @@ import { IssuesQueue } from './issues.queue';
 import {
   findExistingLink,
   getEquivalentStateIds,
+  getAiFilter,
   getIssueDiff,
   getIssueTitle,
   getLastIssueNumber,
@@ -1048,5 +1050,40 @@ export default class IssuesService {
 
     // Return the extracted bullet points
     return bulletPoints;
+  }
+
+  async aiFilters(
+    teamRequestParams: TeamRequestParams,
+    filterInput: FilterInput,
+  ) {
+    const labels = await this.prisma.label.findMany({
+      where: {
+        OR: [
+          { workspaceId: filterInput.workspaceId },
+          { teamId: teamRequestParams.teamId },
+        ],
+      },
+    });
+
+    const labelNames = labels.map((label) => label.name);
+
+    const assignee = await this.prisma.usersOnWorkspaces.findMany({
+      where: { teamIds: { has: teamRequestParams.teamId } },
+      include: { user: true },
+    });
+
+    const assigneeNames = assignee.map((assignee) => assignee.user.fullname);
+
+    const workflow = await this.prisma.workflow.findMany({
+      where: { teamId: teamRequestParams.teamId },
+    });
+
+    const workflowNames = workflow.map((workflow) => workflow.name);
+
+    return await getAiFilter(openaiClient, filterInput.text, {
+      labelNames,
+      assigneeNames,
+      workflowNames,
+    });
   }
 }

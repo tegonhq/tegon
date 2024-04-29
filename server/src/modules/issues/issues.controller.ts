@@ -25,6 +25,7 @@ import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import {
   ApiResponse,
   CreateIssueInput,
+  FilterInput,
   IssueRequestParams,
   LinkIssueInput,
   MoveIssueInput,
@@ -68,6 +69,15 @@ export class IssuesController {
       teamRequestParams,
       suggestionsInput,
     );
+  }
+
+  @Post('ai_filters')
+  @UseGuards(new AuthGuard())
+  async aiFilters(
+    @Query() teamRequestParams: TeamRequestParams,
+    @Body() filterInput: FilterInput,
+  ) {
+    return await this.issuesService.aiFilters(teamRequestParams, filterInput);
   }
 
   @Post(':issueId')

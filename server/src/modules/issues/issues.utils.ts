@@ -24,6 +24,7 @@ import {
   LinkIssueInput,
   SubscribeType,
   UpdateIssueInput,
+  aiFilterPrompt,
   labelPrompt,
   summarizePrompt,
   titlePrompt,
@@ -117,6 +118,30 @@ export async function getIssueTitle(
     return chatCompletion.choices[0].message.content;
   }
   return '';
+}
+
+export async function getAiFilter(
+  openaiClient: OpenAI,
+  filterText: string,
+  filterData: Record<string, string[]>,
+) {
+  const filterPrompt = aiFilterPrompt
+    .replace('{{status}}', filterData.workflowNames.join(', '))
+    .replace('{{assignee}}', filterData.assigneeNames.join(', '))
+    .replace('{{labels}}', filterData.labelNames.join(', '));
+
+  try {
+    const chatCompletion = await openaiClient.chat.completions.create({
+      messages: [
+        { role: 'system', content: filterPrompt },
+        { role: 'user', content: filterText },
+      ],
+      model: 'gpt-3.5-turbo-0125',
+    });
+    return JSON.parse(chatCompletion.choices[0].message.content);
+  } catch (error) {
+    return {};
+  }
 }
 
 export async function getSuggestedLabels(

@@ -220,6 +220,14 @@ export class MoveIssueInput {
   teamId: string;
 }
 
+export class FilterInput {
+  @IsString()
+  text: string;
+
+  @IsString()
+  workspaceId: string;
+}
+
 export const titlePrompt = ` You have deep expertise in project management and task management for software teams. Whenever a text is provided to you, you have to create an issue title for software development tasks based on the description text.
 
 Step 1: If description is null then result null output.
@@ -338,3 +346,59 @@ Reply - Maya: Yeah, let's discuss it in the meeting today.
 summary: ["Lucas wants to discuss the project timeline.","The discussion will take place in the meeting today."]
 ---
 `;
+
+export const aiFilterPrompt = `Generate a filter json based on the text:
+
+Filters:
+- status: Issues with these status, [{{status}}], 
+- priority: Issues with these priority, ["Urgent", High", "Medium", "Low"]
+- assignee: Issues assigned to those users, [{{assignee}}]
+- labels: Issues with these Labels, [{{labels}}]
+- isBlocked: Issue is blocked another by another issue
+- isBlocking: an issue is blocking another issue
+- isParent: Issue is a parent of sub issue
+
+Filter Type:
+- IS
+- IS_NOT
+- INCLUDES
+- INCLUDES_ANY
+- EXCLUDES
+- EXCLUDES_ANY
+- UNDEFINED
+
+Guidelines:
+- User inputs a plain text of the filtered view
+- Filters data is an array value. 
+- Incorporate the relevant filter id to the final json.
+- Don't use the word Task instead use Issue
+- Give empty JSON when there is nothing matches with the filters data
+- for labels user filterType INCLUDES
+- Don't respond with anything other than the JSON output
+
+Examples:
+- status: Issues with these status, ["Done", Triage", "Todo", "Backlog"], 
+- priority: Issues with these priority, ["Urgent", High", "Medium", "Low"]
+- assignee: Issues assigned to those users, ["Manik", "Manoj", "Harshith", "Rob"]
+- labels: Issues with these Labels, ["Backend", "Bug", "Feture", "Frontend"]
+- isBlocked: Issue is blocked another by another issue
+- isBlocking: an issue is blocking another issue
+- isParent: Issue is a parent of sub issue
+
+User: Show Harshith and Manik's issue
+Filters: {"assignee": {"filterType": "IS", "value": ["Harshith", "Manik"] }}
+
+User: issues with bug and backend
+Filters: {"label": {"filterType": "INCLUDES", "value": ["Bug", "Backend"] }}
+
+User: Manoj's bugs
+Filters: {"label": {"filterType": "INCLUDES", "value": ["Bug"},  "assignee" : {"filterType": "IS", "value": ["Manoj"]}}
+
+User: Parent Issues
+Filters: {"isParent": {"filterType": "IS"}}
+
+User: high priority blocked issues
+Filters: {"isBlocked": {"filterType": "IS"}, "priority":  {"filterType": "IS", "value": ["High"]}}
+
+User: Manoj blocked issues
+Filters: {"isBlocking": {"filterType": "IS"}, "assignee":  {"filterType": "IS", "value": ["Manoj"]}}`;
