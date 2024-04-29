@@ -3,7 +3,18 @@
 import { types } from 'mobx-state-tree';
 
 export const FilterModel = types.model({
-  value: types.array(types.string),
+  value: types.union(types.array(types.string), types.array(types.number)),
+  filterType: types.enumeration([
+    'IS',
+    'IS_NOT',
+    'INCLUDES',
+    'INCLUDES_ANY',
+    'EXCLUDES',
+    'EXCLUDES_ANY',
+  ]),
+});
+
+export const FilterBooleanModel = types.model({
   filterType: types.enumeration([
     'IS',
     'IS_NOT',
@@ -19,6 +30,14 @@ export const FiltersModel = types.model({
   status: types.union(types.undefined, FilterModel),
   label: types.union(types.undefined, FilterModel),
   priority: types.union(types.undefined, FilterModel),
+
+  // For issues coming from Slack, Github
+  source: types.union(types.undefined, FilterModel),
+
+  isParent: types.union(types.undefined, FilterBooleanModel),
+  isSubIssue: types.union(types.undefined, FilterBooleanModel),
+  isBlocked: types.union(types.undefined, FilterBooleanModel),
+  isBlocking: types.union(types.undefined, FilterBooleanModel),
 });
 
 export const DisplaySettingsModel = types.model({

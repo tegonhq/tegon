@@ -28,7 +28,11 @@ export enum FilterTypeEnum {
 }
 
 export interface FilterModelType {
-  value: string[];
+  value: string[] | boolean;
+  filterType: FilterTypeEnum;
+}
+
+export interface FilterModelBooleanType {
   filterType: FilterTypeEnum;
 }
 
@@ -37,6 +41,14 @@ export interface FiltersModelType {
   status?: FilterModelType;
   label?: FilterModelType;
   priority?: FilterModelType;
+
+  // For issues coming from Slack, Github
+  source?: FilterModelType;
+
+  isParent?: FilterModelBooleanType;
+  isSubIssue?: FilterModelBooleanType;
+  isBlocked?: FilterModelBooleanType;
+  isBlocking?: FilterModelBooleanType;
 }
 
 export enum GroupingEnum {

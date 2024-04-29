@@ -28,8 +28,8 @@ import { useUsersData } from 'hooks/users';
 import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
 
+import { useFilterIssues } from '../../../../issues-utils';
 import { BoardIssueItem } from '../../issue-board-item';
-import { useFilterIssues } from '../../list-view-utils';
 
 interface AssigneeBoardListProps {
   userOnWorkspace: UsersOnWorkspaceType;

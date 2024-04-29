@@ -3,9 +3,9 @@
 import { AppLayout } from 'common/layouts/app-layout';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
-import { FiltersView } from './all/filters-view';
 import { Header } from './all/header';
 import { ListView } from './all/list-view';
+import { FiltersView } from './filters-view/filters-view';
 
 export const BacklogIssues = withApplicationStore(() => {
   return (

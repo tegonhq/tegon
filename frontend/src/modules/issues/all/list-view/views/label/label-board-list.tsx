@@ -17,8 +17,8 @@ import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { useFilterIssues } from '../../../../issues-utils';
 import { BoardIssueItem } from '../../issue-board-item';
-import { useFilterIssues } from '../../list-view-utils';
 
 interface LabelBoardItemProps {
   label: LabelType;

@@ -44,7 +44,7 @@ export const ModalIssues = observer(
                 .includes(value.toLowerCase()) &&
               issue.number !== parseInt(issueNumber),
           )
-          .slice(0, 5);
+          .slice(0, 10);
       }
 
       return issues
@@ -101,7 +101,7 @@ export const ModalIssues = observer(
           <CommandItem
             key={issue.id}
             value={issue.id}
-            className="m-2"
+            className="mx-2 my-2 !py-2"
             onSelect={onSelect}
           >
             <ModalIssueItem issue={issue} />

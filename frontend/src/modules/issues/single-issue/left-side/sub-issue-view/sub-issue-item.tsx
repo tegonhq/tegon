@@ -55,7 +55,7 @@ export function SubIssueItem({ issue }: SubIssueItemProps) {
           variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
         />
         <div
-          className="ml-2 pr-3 text-muted-foreground min-w-[68px]"
+          className="ml-2 pr-3 text-muted-foreground min-w-[70px]"
           onClick={openIssue}
         >{`${team.identifier}-${issue.number}`}</div>
         <div className="pr-3">

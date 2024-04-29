@@ -21,8 +21,8 @@ import { useUsersData } from 'hooks/users';
 import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
 
+import { useFilterIssues } from '../../../../issues-utils';
 import { IssueItem } from '../../issue-item';
-import { useFilterIssues } from '../../list-view-utils';
 
 interface AssigneeListItemProps {
   userOnWorkspace: UsersOnWorkspaceType;

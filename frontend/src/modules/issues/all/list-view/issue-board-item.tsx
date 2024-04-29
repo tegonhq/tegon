@@ -79,7 +79,7 @@ export const BoardIssueItem = observer(
         data-is-dragging={isDragging}
       >
         <div className="flex justify-between">
-          <div className="text-muted-foreground min-w-[68px]">{`${team.identifier}-${issue.number}`}</div>
+          <div className="text-muted-foreground min-w-[70px]">{`${team.identifier}-${issue.number}`}</div>
           <IssueAssigneeDropdown
             value={issue.assigneeId}
             onChange={assigneeChange}

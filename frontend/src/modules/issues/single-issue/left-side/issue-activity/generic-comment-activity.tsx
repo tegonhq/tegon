@@ -31,7 +31,7 @@ import {
 } from 'components/ui/dropdown-menu';
 import { Editor } from 'components/ui/editor';
 
-import type { User } from 'store/user-context';
+import { UserContext, type User } from 'store/user-context';
 
 import { EditComment } from './edit-comment';
 import { ReplyComment } from './reply-comment';
@@ -66,9 +66,9 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
     comment,
     childComments,
     allowReply = false,
-    html = false,
     getUserData,
   } = props;
+  const currentUser = React.useContext(UserContext);
   const sourceMetadata = comment.sourceMetadata
     ? JSON.parse(comment.sourceMetadata)
     : undefined;
@@ -126,7 +126,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
             </span>
           </div>
 
-          {!sourceMetadata && (
+          {!sourceMetadata && user.id === currentUser.id && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="xs" className="px-2 -mt-1">
@@ -146,41 +146,24 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           )}
         </div>
 
-        {html ? (
+        {edit ? (
+          <div className={cn('text-base', !comment.parentId && 'px-3')}>
+            <EditComment
+              value={comment.body}
+              comment={comment}
+              onCancel={() => setEdit(false)}
+            />
+          </div>
+        ) : (
           <div
             className={cn(
-              'text-base mt-2 [&_a]:text-primary',
+              'text-base mt-2',
               !comment.parentId && 'p-3 pt-0',
               comment.parentId && 'pb-3',
             )}
-            dangerouslySetInnerHTML={{ __html: comment.body }}
-          />
-        ) : (
-          <>
-            {edit ? (
-              <div className={cn('text-base', !comment.parentId && 'px-3')}>
-                <EditComment
-                  value={comment.body}
-                  comment={comment}
-                  onCancel={() => setEdit(false)}
-                />
-              </div>
-            ) : (
-              <div
-                className={cn(
-                  'text-base mt-2',
-                  !comment.parentId && 'p-3 pt-0',
-                  comment.parentId && 'pb-3',
-                )}
-              >
-                <Editor
-                  value={comment.body}
-                  editable={false}
-                  className="mb-0"
-                />
-              </div>
-            )}
-          </>
+          >
+            <Editor value={comment.body} editable={false} className="mb-0" />
+          </div>
         )}
 
         {childComments.length > 0 && (

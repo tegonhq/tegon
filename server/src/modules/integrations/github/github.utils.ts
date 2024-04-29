@@ -466,7 +466,9 @@ export async function upsertGithubIssue(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const issueBody: any = {
     title: issue.title,
-    ...(issue.description ? { body: issue.description } : {}),
+    ...(issue.description
+      ? { body: convertTiptapJsonToMarkdown(issue.description) }
+      : {}),
     labels: await getGithubLabels(prisma, issue.labelIds),
     state:
       stateCategory === WorkflowCategory.COMPLETED

@@ -10,7 +10,7 @@ import { Separator } from 'components/ui/separator';
 
 import { useContextStore } from 'store/global-context-provider';
 
-import { isEmpty } from './filter-utils';
+import { isEmpty } from '../filters-view/filter-utils';
 
 export const SaveViewActions = observer(() => {
   const { applicationStore } = useContextStore();

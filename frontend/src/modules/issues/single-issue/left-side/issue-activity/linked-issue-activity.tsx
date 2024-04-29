@@ -51,6 +51,10 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
       return <RiGithubFill size={18} className="text-foreground" />;
     }
 
+    if (sourceMetaData.type === Integration.Sentry) {
+      return <RiGithubFill size={18} className="text-foreground" />;
+    }
+
     return <RiLink size={18} className="text-foreground" />;
   }
 

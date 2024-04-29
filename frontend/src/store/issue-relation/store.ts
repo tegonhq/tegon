@@ -6,9 +6,9 @@ import {
   flow,
 } from 'mobx-state-tree';
 
-import type {
+import {
   IssueRelationEnum,
-  IssueRelationType,
+  type IssueRelationType,
 } from 'common/types/issue-relation';
 
 import { tegonDatabase } from 'store/database';
@@ -73,6 +73,24 @@ export const IssueRelationsStore: IAnyStateTreeNode = types
         (relationAct: IssueRelationType) =>
           relationAct.type === relationType && relationAct.issueId === issueId,
       );
+    },
+
+    // Used in filters
+    isBlocked(issueId: string) {
+      const issueRelations = self.issueRelations.filter(
+        (issue: IssueRelationType) =>
+          issue.issueId === issueId && issue.type === IssueRelationEnum.BLOCKED,
+      );
+
+      return issueRelations.length > 0;
+    },
+    isBlocking(issueId: string) {
+      const issueRelations = self.issueRelations.filter(
+        (issue: IssueRelationType) =>
+          issue.issueId === issueId && issue.type === IssueRelationEnum.BLOCKS,
+      );
+
+      return issueRelations.length > 0;
     },
   }));
 
