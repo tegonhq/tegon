@@ -14,7 +14,10 @@ import {
   type DisplaySettingsModelType,
   type FilterModelType,
 } from 'store/application';
-import { useContextStore } from 'store/global-context-provider';
+import {
+  useContextStore,
+  type StoreContextInstanceType,
+} from 'store/global-context-provider';
 
 interface FilterType extends FilterModelType {
   key: string;
@@ -23,23 +26,24 @@ interface FilterType extends FilterModelType {
 export function filterIssue(issue: IssueType, filter: FilterType) {
   // TODO: Fix the type later
   const { key, value, filterType } = filter;
+  const castedValue = value as string[];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fieldValue = (issue as any)[key];
 
   switch (filterType) {
     case FilterTypeEnum.IS:
-      return value.includes(fieldValue);
+      return castedValue.includes(fieldValue);
     case FilterTypeEnum.IS_NOT:
-      return !value.includes(fieldValue);
+      return !castedValue.includes(fieldValue);
     case FilterTypeEnum.INCLUDES:
-      return fieldValue.includes(value);
+      return fieldValue.includes(castedValue);
     case FilterTypeEnum.INCLUDES_ANY:
-      return value.some((value) => fieldValue.includes(value));
+      return castedValue.some((value) => fieldValue.includes(value));
     case FilterTypeEnum.EXCLUDES:
-      return !fieldValue.includes(value);
+      return !fieldValue.includes(castedValue);
     case FilterTypeEnum.EXCLUDES_ANY:
-      return !value.some((value) => fieldValue.includes(value));
+      return !castedValue.some((value) => fieldValue.includes(value));
     case FilterTypeEnum.UNDEFINED:
       return fieldValue === null || fieldValue === undefined;
     default:
@@ -47,9 +51,40 @@ export function filterIssue(issue: IssueType, filter: FilterType) {
   }
 }
 
-export function filterIssues(issues: IssueType[], filters: FilterType[]) {
+export function filterIssues(
+  issues: IssueType[],
+  filters: FilterType[],
+  {
+    linkedIssuesStore,
+    issuesStore,
+    issueRelationsStore,
+  }: Partial<StoreContextInstanceType>,
+) {
   return issues.filter((issue: IssueType) => {
-    return filters.every((filter) => filterIssue(issue, filter));
+    return filters.every((filter) => {
+      switch (filter.key) {
+        case 'isParent': {
+          return issuesStore.isSubIssue(issue.id);
+        }
+
+        case 'isSubIssue': {
+          return filter.filterType === FilterTypeEnum.IS
+            ? !!issue.parentId
+            : !issue.parentId;
+        }
+
+        case 'isBlocked': {
+          return issueRelationsStore.isBlocked(issue.id);
+        }
+
+        case 'isBlocking': {
+          return issueRelationsStore.isBlocking(issue.id);
+        }
+
+        default:
+          return filterIssue(issue, filter);
+      }
+    });
   });
 }
 
@@ -175,11 +210,33 @@ export function getFilters(
     });
   }
 
+  for (const filterKey of [
+    'isParent',
+    'isSubIssue',
+    'isBlocked',
+    'isBlocking',
+    'source',
+  ]) {
+    if (applicationStore.filters[filterKey]) {
+      filters.push({
+        key: filterKey,
+        filterType: FilterTypeEnum.IS,
+        value: true,
+      });
+    }
+  }
+
   return filters;
 }
 
 export function useFilterIssues(issues: IssueType[]): IssueType[] {
-  const { applicationStore, workflowsStore } = useContextStore();
+  const {
+    applicationStore,
+    workflowsStore,
+    linkedIssuesStore,
+    issuesStore,
+    issueRelationsStore,
+  } = useContextStore();
   const pathname = usePathname();
 
   return React.useMemo(() => {
@@ -188,22 +245,15 @@ export function useFilterIssues(issues: IssueType[]): IssueType[] {
       workflowsStore.workflows,
       pathname,
     );
-    const filteredIssues = filterIssues(issues, filters);
+    const filteredIssues = filterIssues(issues, filters, {
+      linkedIssuesStore,
+      issuesStore,
+      issueRelationsStore,
+    });
 
     return sort(filteredIssues).by(
       getSortArray(applicationStore.displaySettings),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    applicationStore.filters.status,
-    applicationStore.filters.assignee,
-    applicationStore.filters.label,
-    applicationStore.filters.priority,
-    applicationStore.displaySettings.ordering,
-    applicationStore.displaySettings.showSubIssues,
-    applicationStore.displaySettings.showEmptyGroups,
-    applicationStore.displaySettings.showCompletedIssues,
-    applicationStore.displaySettings.showTriageIssues,
-    issues,
-  ]);
+  }, [applicationStore.filters, applicationStore.displaySettings, issues]);
 }

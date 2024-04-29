@@ -97,7 +97,7 @@ export function IssueAssigneeDropdownContent({
                 id={user.id}
                 value={user.fullname}
                 index={index + 1}
-                onSelect={(currentValue) => {
+                onSelect={(currentValue: string) => {
                   if (!multiple) {
                     onChange && onChange(currentValue);
                     onClose();

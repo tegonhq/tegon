@@ -10,8 +10,8 @@ import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { useFilterIssues } from '../../../../issues-utils';
 import { IssueItem } from '../../issue-item';
-import { useFilterIssues } from '../../list-view-utils';
 
 interface LabelListItemProps {
   label: LabelType;

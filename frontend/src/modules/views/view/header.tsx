@@ -3,11 +3,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import {
+  RiBookmarkFill,
+  RiBookmarkLine,
   RiDeleteBin7Line,
   RiMoreFill,
   RiPencilFill,
-  RiStarFill,
-  RiStarLine,
 } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
@@ -127,12 +127,12 @@ export const Header = observer(({ title, view }: HeaderProps) => {
           }}
         >
           {view.isBookmarked ? (
-            <RiStarFill
+            <RiBookmarkFill
               size={16}
               className="text-yellow-500 hover:text-foreground group-hover:text-foreground"
             />
           ) : (
-            <RiStarLine size={16} />
+            <RiBookmarkLine size={16} />
           )}
         </Button>
       </div>

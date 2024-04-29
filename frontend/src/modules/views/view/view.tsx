@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
-import { FiltersView } from 'modules/issues/all/filters-view';
+import { FiltersView } from 'modules/issues/filters-view/filters-view';
 
 import { AppLayout } from 'common/layouts/app-layout';
 import { withApplicationStore } from 'common/wrappers/with-application-store';

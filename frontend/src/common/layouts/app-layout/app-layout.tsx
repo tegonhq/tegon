@@ -17,7 +17,7 @@ import {
   ResizablePanelGroup,
 } from 'components/ui/resizable';
 import { useCurrentTeam } from 'hooks/teams';
-import { FocusLine, Inbox, SettingsLine } from 'icons';
+import { Inbox, SettingsLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -83,11 +83,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
                       href: `/${workspaceSlug}/inbox`,
                       count: notificationsStore.unReadCount,
                     },
-                    {
-                      title: 'My issues',
-                      icon: FocusLine,
-                      href: `/${workspaceSlug}/my-issues`,
-                    },
+
                     {
                       title: 'Settings',
                       icon: SettingsLine,

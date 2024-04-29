@@ -9,7 +9,7 @@ import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
 
 import { IssueItem } from '../all/list-view/issue-item';
-import { useFilterIssues } from '../all/list-view/list-view-utils';
+import { useFilterIssues } from '../issues-utils';
 
 export const MyIssuesView = observer(() => {
   const user = React.useContext(UserContext);

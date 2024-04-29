@@ -15,6 +15,7 @@ export enum LinkedSlackMessageType {
 export enum Integration {
   Slack = 'Slack',
   Github = 'Github',
+  Sentry = 'Sentry',
 }
 
 export interface LinkedIssueType {

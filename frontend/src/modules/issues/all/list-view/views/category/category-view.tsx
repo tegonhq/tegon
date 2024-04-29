@@ -46,11 +46,11 @@ export const CategoryView = observer(() => {
     const categoryAIndex = categorySequence.indexOf(a.category);
     const categoryBIndex = categorySequence.indexOf(b.category);
     if (categoryAIndex !== categoryBIndex) {
-      return categoryBIndex - categoryAIndex;
+      return categoryAIndex - categoryBIndex;
     }
 
     // If categories are the same, compare by position
-    return a.position - b.position;
+    return b.position - a.position;
   }
 
   const workflows = useTeamWorkflows(currentTeam.identifier)

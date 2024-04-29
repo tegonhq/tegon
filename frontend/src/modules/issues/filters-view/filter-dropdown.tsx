@@ -10,15 +10,26 @@ import {
   CommandItem,
 } from 'components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
-import { AssigneeLine, BacklogLine, LabelFill } from 'icons';
+import { Separator } from 'components/ui/separator';
+import {
+  AssigneeLine,
+  BacklogLine,
+  BlockedFill,
+  BlockingToLine,
+  LabelFill,
+  ParentIssueLine,
+  PriorityHigh,
+  SubIssueLine,
+} from 'icons';
 
-import type { FilterTypeEnum } from 'store/application';
+import { FilterTypeEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
 import {
   IssueAssigneeFilter,
   IssueStatusFilter,
   IssueLabelFilter,
+  IssuePriorityFilter,
 } from './filter-dropdowns';
 
 function DefaultPopoverContent({
@@ -61,6 +72,52 @@ function DefaultPopoverContent({
           <LabelFill size={14} className="mr-2" />
           Label
         </CommandItem>
+        <CommandItem
+          key="Priority"
+          value="Priority"
+          className="flex items-center"
+          onSelect={onSelect}
+        >
+          <PriorityHigh size={14} className="mr-2" />
+          Priority
+        </CommandItem>
+        <Separator className="my-1" />
+        <CommandItem
+          key="parentIssues"
+          value="isParent"
+          className="flex items-center"
+          onSelect={() => onSelect('isParent')}
+        >
+          <ParentIssueLine size={14} className="mr-2" />
+          Parent issues
+        </CommandItem>
+        <CommandItem
+          key="subIssues"
+          value="isSubIssue"
+          className="flex items-center"
+          onSelect={() => onSelect('isSubIssue')}
+        >
+          <SubIssueLine size={14} className="mr-2" />
+          Sub issues
+        </CommandItem>
+        <CommandItem
+          key="blockedIssues"
+          value="isBlocked"
+          className="flex items-center"
+          onSelect={() => onSelect('isBlocked')}
+        >
+          <BlockedFill size={14} className="mr-2" />
+          Blocked issues
+        </CommandItem>
+        <CommandItem
+          key="blockingIssues"
+          value="isBlocking"
+          className="flex items-center"
+          onSelect={() => onSelect('isBlocking')}
+        >
+          <BlockingToLine size={14} className="mr-2" />
+          Blocking issues
+        </CommandItem>
       </CommandGroup>
     </Command>
   );
@@ -70,6 +127,7 @@ const ContentMap = {
   status: IssueStatusFilter,
   assignee: IssueAssigneeFilter,
   label: IssueLabelFilter,
+  priority: IssuePriorityFilter,
 };
 
 type KeyType = keyof typeof ContentMap;
@@ -85,12 +143,30 @@ export function FilterDropdown({ showStatus }: FilterDropdownProps) {
 
   const ContentComponent = filter ? ContentMap[filter] : ContentMap.status;
 
-  const onChange = (value: string[], filterType: FilterTypeEnum) => {
+  const onChange = (value: string[] | number[], filterType: FilterTypeEnum) => {
     if (value.length === 0) {
       return applicationStore.deleteFilter(filter);
     }
 
     applicationStore.updateFilters({ [filter]: { filterType, value } });
+  };
+
+  const onSelect = (value: string) => {
+    const isBooleanFilters = [
+      'isBlocked',
+      'isBlocking',
+      'isParent',
+      'isSubIssue',
+    ];
+
+    if (isBooleanFilters.includes(value)) {
+      applicationStore.updateFilters({
+        [value]: { filterType: FilterTypeEnum.IS },
+      });
+      setOpen(false);
+    } else {
+      setFilter(value as KeyType);
+    }
   };
 
   return (
@@ -120,10 +196,7 @@ export function FilterDropdown({ showStatus }: FilterDropdownProps) {
             onChange={onChange}
           />
         ) : (
-          <DefaultPopoverContent
-            showStatus={showStatus}
-            onSelect={(value: string) => setFilter(value as KeyType)}
-          />
+          <DefaultPopoverContent showStatus={showStatus} onSelect={onSelect} />
         )}
       </PopoverContent>
     </Popover>

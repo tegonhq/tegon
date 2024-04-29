@@ -161,6 +161,15 @@ export const IssuesStore: IAnyStateTreeNode = types
         ),
       };
     },
+
+    // Used by filters
+    isSubIssue(issueId: string): boolean {
+      const issues = Array.from(self.issuesMap.values()).filter(
+        (issue: IssueType) => issue.parentId === issueId,
+      );
+
+      return issues.length > 0;
+    },
   }));
 
 export type IssuesStoreType = Instance<typeof IssuesStore>;

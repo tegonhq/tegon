@@ -8,10 +8,11 @@ import { withApplicationStore } from 'common/wrappers/with-application-store';
 
 import { useScope } from 'hooks';
 
-import { FiltersView } from './filters-view';
+import { DisplayPopover } from './display-popover';
 import { Header } from './header';
 import { ListView } from './list-view';
 import { SaveViewActions } from './save-view-actions';
+import { FiltersView } from '../filters-view/filters-view';
 
 export const AllIssues = withApplicationStore(() => {
   useScope(SCOPES.AllIssues);
@@ -19,7 +20,14 @@ export const AllIssues = withApplicationStore(() => {
   return (
     <main className="flex flex-col h-[100vh] overflow-hidden">
       <Header title="All issues" />
-      <FiltersView Actions={<SaveViewActions />} />
+      <FiltersView
+        Actions={
+          <>
+            <DisplayPopover />
+            <SaveViewActions />
+          </>
+        }
+      />
       <div className="grow overflow-hidden">
         <ListView />
       </div>

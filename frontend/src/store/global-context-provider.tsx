@@ -92,12 +92,11 @@ export const storeContextStore = StoreContextModel.create({
   },
 });
 
-export type StoreContextInstance = Instance<typeof StoreContextModel>;
-export const StoreContext = React.createContext<null | StoreContextInstance>(
-  null,
-);
+export type StoreContextInstanceType = Instance<typeof StoreContextModel>;
+export const StoreContext =
+  React.createContext<null | StoreContextInstanceType>(null);
 
-export function useContextStore(): StoreContextInstance {
+export function useContextStore(): StoreContextInstanceType {
   const store = React.useContext(StoreContext);
   if (store === null) {
     throw new Error('Store cannot be null, please add a context provider');

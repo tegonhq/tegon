@@ -3,3 +3,5 @@
 export * from './issue-assignee-filter';
 export * from './issue-status-filter';
 export * from './issue-label-filter';
+export * from './issue-priority-dropdown';
+export * from './issue-priority-filter';

@@ -3,9 +3,9 @@
 import { CommandItem } from 'components/ui/command';
 
 interface DropdownItemProps {
-  id: string;
+  id: string | number;
   value: string;
-  onSelect: (value: string) => void;
+  onSelect: (value: string | number) => void;
   index: number;
   children: React.ReactElement;
 }

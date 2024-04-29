@@ -2,12 +2,8 @@
 
 import { RiCheckLine } from '@remixicon/react';
 
-import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from 'components/ui/command';
+import { Checkbox } from 'components/ui/checkbox';
+import { Command, CommandGroup, CommandInput } from 'components/ui/command';
 import {
   NoPriorityLine,
   PriorityHigh,
@@ -16,11 +12,15 @@ import {
   UrgentFill,
 } from 'icons';
 
+import { DropdownItem } from './dropdown-item';
+import { useScope } from 'hooks';
+
 interface IssuePriorityDropdownContentProps {
-  onChange?: (priority: number) => void;
+  onChange?: (priority: number | number[]) => void;
   onClose: () => void;
   Priorities: string[];
-  value: number;
+  multiple?: boolean;
+  value: number | number[];
 }
 
 export const PriorityIcons = [
@@ -35,8 +35,28 @@ export function IssuePriorityDropdownContent({
   onChange,
   onClose,
   Priorities,
+  multiple = false,
+
   value,
 }: IssuePriorityDropdownContentProps) {
+  useScope('command');
+
+  const onValueChange = (checked: boolean, id: number) => {
+    const castedValue = value as number[];
+
+    if (checked && !castedValue.includes(id)) {
+      onChange && onChange([...castedValue, id]);
+    }
+
+    if (!checked && castedValue.includes(id)) {
+      const newIds = [...castedValue];
+      const indexToDelete = newIds.indexOf(id);
+
+      newIds.splice(indexToDelete, 1);
+      onChange && onChange(newIds);
+    }
+  };
+
   return (
     <Command>
       <CommandInput placeholder="Set priority..." />
@@ -45,21 +65,36 @@ export function IssuePriorityDropdownContent({
           const PriorityIcon = PriorityIcons[index];
 
           return (
-            <CommandItem
+            <DropdownItem
               key={priority}
+              id={index}
               value={priority}
-              onSelect={() => {
-                onChange && onChange(index);
-                onClose();
+              index={index}
+              onSelect={(currentValue: number) => {
+                if (!multiple) {
+                  onChange && onChange(currentValue);
+                  onClose();
+                }
               }}
             >
               <div className="flex justify-between w-full items-center">
-                <div className="flex items-center">
-                  <PriorityIcon.icon
-                    size={PriorityIcon.size}
-                    className="text-muted-foreground mr-2"
-                  />
-                  {priority}
+                <div className="flex gap-2 items-center">
+                  {multiple && (
+                    <Checkbox
+                      id={priority}
+                      checked={(value as number[]).includes(index)}
+                      onCheckedChange={(value: boolean) => {
+                        onValueChange(value, index);
+                      }}
+                    />
+                  )}
+                  <label htmlFor={priority} className="flex grow">
+                    <PriorityIcon.icon
+                      size={PriorityIcon.size}
+                      className="text-muted-foreground mr-2"
+                    />
+                    {priority}
+                  </label>
                 </div>
 
                 {index === value && (
@@ -68,7 +103,7 @@ export function IssuePriorityDropdownContent({
                   </div>
                 )}
               </div>
-            </CommandItem>
+            </DropdownItem>
           );
         })}
       </CommandGroup>
