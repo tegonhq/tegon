@@ -54,7 +54,15 @@ export function filterIssue(issue: IssueType, filter: FilterType) {
 export function filterIssues(
   issues: IssueType[],
   filters: FilterType[],
+<<<<<<< HEAD
   { issuesStore, issueRelationsStore }: Partial<StoreContextInstanceType>,
+=======
+  {
+    linkedIssuesStore,
+    issuesStore,
+    issueRelationsStore,
+  }: Partial<StoreContextInstanceType>,
+>>>>>>> d60c4a4 (Feat: added views)
 ) {
   return issues.filter((issue: IssueType) => {
     return filters.every((filter) => {
@@ -217,7 +225,6 @@ export function getFilters(
       filters.push({
         key: filterKey,
         filterType: FilterTypeEnum.IS,
-        value: true,
       });
     }
   }
