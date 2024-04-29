@@ -28,7 +28,11 @@ export enum FilterTypeEnum {
 }
 
 export interface FilterModelType {
-  value: string[];
+  value: string[] | boolean;
+  filterType: FilterTypeEnum;
+}
+
+export interface FilterModelBooleanType {
   filterType: FilterTypeEnum;
 }
 
