@@ -16,11 +16,11 @@
 ![Screenshot 2024-04-18 at 3 27 52 PM](https://github.com/tegonhq/tegon/assets/17528887/dd7b8a18-d58c-4200-88cc-8faf7b1e06ad)
 
 <p align="center">
-    <em> Tegon is AI-First Issue Tracking platform for engineering and product teams
+    <em> Tegon is AI-First Issue Tracking tool for engineering teams
 </em>
 </p>
 
-[Tegon](https://tegon.ai) is an open-source product management tool that simplifies issue tracking for product and engineering teams. It is designed to be simple to use and super functional, addressing the complexities and slow nature of current project management tools.
+[Tegon](https://tegon.ai) is an open-source issue tracking tool for engineering teams. It is designed to be simple to use and super functional, addressing the complexities and slow nature of existing tools.
 
 Existing tools like Jira, Asana etc often act as a blocker in engineers' productivity by adding more processes and manual tasks, and they do not help engineers in resolving the bug faster or get full context about a specific tasks. Tegon is using AI and integrations smartly to automate task creation and updation and help engineers in task prioritisation and better bug resolution
 
