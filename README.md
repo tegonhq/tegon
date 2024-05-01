@@ -20,9 +20,9 @@
 </em>
 </p>
 
-[Tegon](https://tegon.ai) is an open-source project management tool that simplifies issue tracking for product and engineering teams. It is designed to be simple to use and super functional, addressing the complexities and slow nature of current project management tools.
+[Tegon](https://tegon.ai) is an open-source product management tool that simplifies issue tracking for product and engineering teams. It is designed to be simple to use and super functional, addressing the complexities and slow nature of current project management tools.
 
-Project management tools often act as a blocker in engineers' productivity by adding more processes and manual tasks, and they do not help engineers in resolving the bug faster or get full context about a specific tasks. Tegon is using AI and integrations smartly to automate task creation and updation and help engineers in task prioritisation and better bug resolution
+Existing tools like Jira, Asana etc often act as a blocker in engineers' productivity by adding more processes and manual tasks, and they do not help engineers in resolving the bug faster or get full context about a specific tasks. Tegon is using AI and integrations smartly to automate task creation and updation and help engineers in task prioritisation and better bug resolution
 
 ## Tegon Cloud
 
@@ -43,6 +43,13 @@ If you're interested in using Skyvern Cloud, please book a [demo call](https://c
 - Github: Automatically update issues status based based on commits and pull requests and link mentions of issues back to Tegon
 - Slack: Get information about mentioned work items in Slack and link Slack conversations to Tegon issues
 - Sentry: Get information about Sentry errors in Tegon issues
+
+## Agents (Coming Soon)
+
+Large Language Models (LLMs) are significantly transforming technology development. In anticipation of AI Agents driving product management and issue tracking, we are proactively developing the following agents:
+
+- PR Agent: This agent reviews linked pull requests (PRs) for new tasks, ensuring code quality by preventing the incorporation of suboptimal code.
+- Bug Agent: Upon bug assignment, this agent will attempt to reproduce the bug, propose solutions, and in some cases, even implement these solutions in a new PR.
 
 ## Contributing
 
