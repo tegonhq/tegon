@@ -6,11 +6,12 @@ import {
   flow,
 } from 'mobx-state-tree';
 
-import type { WorkflowType } from 'common/types/team';
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { tegonDatabase } from 'store/database';
 
 import { Workflow } from './models';
+import { tablesToSendMessagesFor } from '../../../../server/src/modules/replication/replication.interface';
 
 export const WorkflowsStore: IAnyStateTreeNode = types
   .model({
@@ -59,12 +60,14 @@ export const WorkflowsStore: IAnyStateTreeNode = types
     },
     getCancelledWorkflow(teamId: string) {
       return self.workflows.find((workflow: WorkflowType) => {
-        workflow.teamId === teamId && workflow.name === 'Canceled';
+        workflow.teamId === teamId &&
+          workflow.category === WorkflowCategoryEnum.CANCELED;
       });
     },
     getTriageWorkflow(teamId: string) {
       return self.workflows.find((workflow: WorkflowType) => {
-        workflow.teamId === teamId && workflow.name === 'Triage';
+        workflow.teamId === teamId &&
+          workflow.category === WorkflowCategoryEnum.TRIAGE;
       });
     },
   }));

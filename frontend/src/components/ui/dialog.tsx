@@ -49,8 +49,8 @@ const DialogContent = React.forwardRef<
   DialogContentProps
 >(({ className, children, closeIcon = true, ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay />
-    <div className="fixed top-0 left-0 w-[100vw] h-[100vh] z-50">
+    <div className="fixed top-0 left-0 w-[100vw] h-[100vh]">
+      <DialogOverlay />
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
@@ -62,7 +62,7 @@ const DialogContent = React.forwardRef<
       >
         <div
           className={cn(
-            '!max-w-[750px] min-w-[600px] border-1 bg-white dark:bg-background shadow-2xl grid gap-4 sm:rounded-lg',
+            '!max-w-[750px] min-w-[600px] z-50 border-1 bg-white dark:bg-background shadow-2xl grid gap-4 sm:rounded-lg',
             className,
           )}
         >
