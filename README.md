@@ -13,7 +13,8 @@
 
 </div>
 
-![Screenshot 2024-04-18 at 3 27 52 PM](https://github.com/tegonhq/tegon/assets/17528887/dd7b8a18-d58c-4200-88cc-8faf7b1e06ad)
+![app_tegon_ai_tegon_team_ENG_all](https://github.com/tegonhq/tegon/assets/17528887/d426650d-b0e3-4d9f-92d7-bf182af16202)
+
 
 <p align="center">
     <em> Tegon is AI-First Issue Tracking tool for engineering teams
