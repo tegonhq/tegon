@@ -25,6 +25,10 @@
 
 Existing tools like Jira, Asana etc often act as a blocker in engineers' productivity by adding more processes and manual tasks, and they do not help engineers in resolving the bug faster or get full context about a specific tasks. Tegon is using AI and integrations smartly to automate task creation and updation and help engineers in task prioritisation and better bug resolution
 
+## Demo
+
+[Demo video](https://www.loom.com/share/1a4ba45cb1254fdba3ea98af23a1e6f1?sid=5e18abb1-a1fa-414e-ae22-15db2bbd18a6)
+
 ## Tegon Cloud
 
 We offer a managed cloud version of Tegon that allows you to run Tegon without having to manage the infrastructure. It is currently in private beta. 
