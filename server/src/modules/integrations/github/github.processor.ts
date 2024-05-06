@@ -4,12 +4,8 @@ import { Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
 
-import {
-  WebhookEventBody,
-  WebhookEventHeaders,
-} from 'modules/webhooks/webhooks.interface';
-
 import GithubService from './github.service';
+import { EventBody, EventHeaders } from '../integrations.interface';
 
 @Processor('github')
 export class GithubProcessor {
@@ -19,8 +15,8 @@ export class GithubProcessor {
   @Process('handleGithubEvents')
   async handleTwoWaySync(
     job: Job<{
-      eventHeaders: WebhookEventHeaders;
-      eventBody: WebhookEventBody;
+      eventHeaders: EventHeaders;
+      eventBody: EventBody;
     }>,
   ) {
     const { eventHeaders, eventBody } = job.data;
