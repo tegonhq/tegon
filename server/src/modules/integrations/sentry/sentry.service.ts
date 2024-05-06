@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { IntegrationName } from '@prisma/client';
 import axios from 'axios';
 import { PrismaService } from 'nestjs-prisma';
@@ -32,12 +32,9 @@ export default class SentryService {
     return { status: 200, redirectURL: template.authorization_url };
   }
 
-  //   `${process.env.PUBLIC_FRONTEND_HOST}/auth/callback/sentry`
   async verifyInstallation(
     userId: string,
     installationData: VerifyInstallationBody,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    res: any,
   ) {
     const integrationDefinition =
       await this.prisma.integrationDefinition.findFirst({
@@ -50,9 +47,7 @@ export default class SentryService {
     if (integrationDefinition === null) {
       const errorMessage = 'No matching integration definition found';
 
-      res.redirect(
-        `${installationData.redirectURL}?success=false&error=${errorMessage}`,
-      );
+      throw new BadRequestException(errorMessage);
     }
 
     const template = await getTemplate(integrationDefinition);
@@ -102,18 +97,11 @@ export default class SentryService {
           },
         } as CreateIntegrationAccountBody);
 
-        res.redirect(
-          `${installationData.redirectURL}?success=true&integrationName=${integrationDefinition.name}`,
-        );
-      } else {
-        res.redirect(
-          `${installationData.redirectURL}?success=false&integrationName=${integrationDefinition.name}`,
-        );
+        return { status: true };
       }
+      throw new BadRequestException('Sentry integration connect failed');
     } catch (e) {
-      res.redirect(
-        `${installationData.redirectURL}?success=false&integrationName=${integrationDefinition.name}&error=${e.message}`,
-      );
+      throw new BadRequestException(e.message);
     }
   }
 

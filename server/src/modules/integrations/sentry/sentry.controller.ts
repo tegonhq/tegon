@@ -1,13 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import {
-  Body,
-  Controller,
-  Post,
-  Res,
-  UseGuards,
-  Headers,
-} from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Headers } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
@@ -48,14 +41,11 @@ export class SentryController {
   async verifyInstallation(
     @SessionDecorator() session: SessionContainer,
     @Body() installationData: VerifyInstallationBody,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @Res() res: any,
   ) {
     const userId = session.getUserId();
     return await this.sentryService.verifyInstallation(
       userId,
       installationData,
-      res,
     );
   }
 }

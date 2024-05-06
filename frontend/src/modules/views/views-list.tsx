@@ -1,20 +1,21 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { RiBookmarkFill, RiBookmarkLine } from '@remixicon/react';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
+import { cn } from 'common/lib/utils';
 import type { ViewType } from 'common/types/view';
 
+import { Button } from 'components/ui/button';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUserData } from 'hooks/users';
 
-import { useContextStore } from 'store/global-context-provider';
-import { Button } from 'components/ui/button';
-import { RiBookmarkFill, RiBookmarkLine } from '@remixicon/react';
 import { useUpdateViewMutation } from 'services/views';
-import { cn } from 'common/lib/utils';
+
+import { useContextStore } from 'store/global-context-provider';
 
 interface ViewItemProps {
   view: ViewType;

@@ -116,8 +116,8 @@ export const integrationDefinitionSeedData = [
         },
       },
     },
-    clientId: process.env.SLACK_CLIENT_ID,
-    clientSecret: process.env.SLACK_CLIENT_SECRET,
+    clientId: process.env.SENTRY_CLIENT_ID,
+    clientSecret: process.env.SENTRY_CLIENT_SECRET,
     scopes:
       'event:read,event:write,issue:read,issue:write,org:read,org:write,member:read,member:write',
   },

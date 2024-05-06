@@ -5,5 +5,4 @@ export interface VerifyInstallationBody {
   workspaceId: string;
   code: string;
   orgSlug: string;
-  redirectURL: string;
 }

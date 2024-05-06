@@ -9,6 +9,8 @@ import { Button } from 'components/ui/button';
 import { ScrollArea } from 'components/ui/scroll-area';
 import { SentryIcon } from 'icons';
 
+import { SentryConnect } from './sentry-connect';
+
 export function Sentry() {
   const pathname = usePathname();
   const { push } = useRouter();
@@ -34,12 +36,14 @@ export function Sentry() {
                 <SentryIcon size={40} />
               </div>
               <div className="flex flex-col items-start">
-                <div className="font-medium text-lg"> Slack </div>
+                <div className="font-medium text-lg"> Sentry </div>
                 <div className="text-muted-foreground text-base">
                   Connect sentry issues with tegon issues
                 </div>
               </div>
             </div>
+
+            <SentryConnect />
           </div>
         </div>
       </ScrollArea>
