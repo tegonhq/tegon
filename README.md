@@ -32,7 +32,7 @@ Existing tools like Jira, Asana etc often act as a blocker in engineers' product
 ## Tegon Cloud
 
 We offer a managed cloud version of Tegon that allows you to run Tegon without having to manage the infrastructure. It is currently in private beta. 
-If you're interested in using Skyvern Cloud, please book a [demo call](https://calendly.com/manik-sync/talk-to-us)
+If you're interested in using Tegon Cloud, please book a [demo call](https://calendly.com/manik-sync/talk-to-us)
 
 ## Features
 
