@@ -38,8 +38,6 @@ export function NewIssueDialog({ open, setOpen }: NewIssueDialogProps) {
   const [team, setTeam] = React.useState(undefined);
   const [discardDraft, setDiscardDraft] = React.useState(false);
 
-  useHotkeys('c', () => setOpen(true), { scopes: [SCOPES.Global] });
-
   const onClose = () => {
     const draftData = localStorage.getItem(draftKey);
     if (draftData) {

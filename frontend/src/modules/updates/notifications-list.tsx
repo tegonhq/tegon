@@ -5,6 +5,8 @@ import { observer } from 'mobx-react-lite';
 
 import type { NotificationType } from 'common/types/notification';
 
+import { ScrollArea } from 'components/ui/scroll-area';
+
 import { useContextStore } from 'store/global-context-provider';
 
 import { NotificationItem } from './notification-item';
@@ -16,14 +18,16 @@ export const NotificationsList = observer(() => {
   ) as NotificationType[];
 
   return (
-    <div className="flex flex-col p-2 overflow-y-auto gap-2">
-      {notifications.map((notification: NotificationType, index: number) => (
-        <NotificationItem
-          notification={notification}
-          key={notification.id}
-          nextNotification={notifications[index + 1]}
-        />
-      ))}
-    </div>
+    <ScrollArea>
+      <div className="flex flex-col p-2 gap-2">
+        {notifications.map((notification: NotificationType, index: number) => (
+          <NotificationItem
+            notification={notification}
+            key={notification.id}
+            nextNotification={notifications[index + 1]}
+          />
+        ))}
+      </div>
+    </ScrollArea>
   );
 });

@@ -11,7 +11,6 @@ import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 import { tegonDatabase } from 'store/database';
 
 import { Workflow } from './models';
-import { tablesToSendMessagesFor } from '../../../../server/src/modules/replication/replication.interface';
 
 export const WorkflowsStore: IAnyStateTreeNode = types
   .model({
@@ -53,6 +52,11 @@ export const WorkflowsStore: IAnyStateTreeNode = types
     return { update, deleteById, load };
   })
   .views((self) => ({
+    getWorkflowWithId(workflowId: string) {
+      return self.workflows.find(
+        (workflow: WorkflowType) => workflow.id === workflowId,
+      );
+    },
     getWorkflowsForTeam(teamId: string) {
       return self.workflows.filter(
         (workflow: WorkflowType) => workflow.teamId === teamId,

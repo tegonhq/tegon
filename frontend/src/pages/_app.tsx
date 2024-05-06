@@ -12,6 +12,8 @@ import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Hydrate, QueryClientProvider } from 'react-query';
 import { SuperTokensWrapper } from 'supertokens-auth-react';
 
+import { CommandDialog } from 'modules/shortcuts';
+
 import { initSuperTokens } from 'common/init-config';
 import { useGetQueryClient } from 'common/lib/react-query-client';
 import { cn } from 'common/lib/utils';
@@ -65,6 +67,7 @@ export const MyApp: NextComponentType<
                   >
                     {getLayout(<Component {...pageProps} />)}
                   </div>
+
                   <Toaster />
                 </Hydrate>
               </QueryClientProvider>

@@ -43,7 +43,7 @@ export function IssueStatusDropdownContent({
 
   return (
     <Command>
-      <CommandInput placeholder="Set status..." />
+      <CommandInput placeholder="Set status..." autoFocus />
 
       <CommandGroup>
         {workflows.map((workflow) => {

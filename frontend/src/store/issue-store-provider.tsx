@@ -48,7 +48,7 @@ export const IssueStoreInit = ({ children }: { children: React.ReactNode }) => {
   }, [issueId]);
 
   if (loading) {
-    return <Loader text="Loading issue data" className="h-full" />;
+    return null;
   }
 
   return (

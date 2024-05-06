@@ -131,7 +131,7 @@ export const BoardIssueItem = observer(
             </Badge>
           )}
 
-          <IssueLabels labelIds={issue.labelIds} boardView />
+          <IssueLabels labelIds={issue.labelIds} />
         </div>
       </a>
     );

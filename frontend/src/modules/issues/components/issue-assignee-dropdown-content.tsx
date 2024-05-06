@@ -55,7 +55,7 @@ export function IssueAssigneeDropdownContent({
 
   return (
     <Command>
-      <CommandInput placeholder="Set assignee..." />
+      <CommandInput placeholder="Set assignee..." autoFocus />
       <CommandGroup>
         <DropdownItem
           id="no-user"
