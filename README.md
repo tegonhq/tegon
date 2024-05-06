@@ -21,9 +21,14 @@
 </em>
 </p>
 
-[Tegon](https://tegon.ai) is an open-source issue tracking tool for engineering teams. It is designed to be simple to use and super functional, addressing the complexities and slow nature of existing tools.
+[Tegon](https://tegon.ai) is an AI-first, open-source issue tracking software that uses AI to smartly automate manual task, workflows or provide more context to engineers for a given task.
 
-Existing tools like Jira, Asana etc often act as a blocker in engineers' productivity by adding more processes and manual tasks, and they do not help engineers in resolving the bug faster or get full context about a specific tasks. Tegon is using AI and integrations smartly to automate task creation and updation and help engineers in task prioritisation and better bug resolution
+Issue Tracking is important for fast-paced teams, enabling them to organize list of tasks, collaborate, and track progress effectively. However, existing tools often introduce the following challenges:
+
+- Manual efforts in task management, such as task triaging and backlog maintenance, can be time-consuming.
+- Engineers often waste time navigating multiple platforms to gather task context, rather than accessing details within the task itself.
+- Issue tracking tools serve as a task database, directing engineers on what to work on but not aiding in faster task completion.
+- Existing tools don't effectively assist Engineering Managers in real-time task, feature, or bug prioritisation.
 
 ## Demo
 
@@ -37,24 +42,29 @@ If you're interested in using Tegon Cloud, please book a [demo call](https://cal
 ## Features
 
 - Issues Tracking (List and Kanban View)
-- Automatic Title generation from the description
-- AI generated labels and assignees
+- Automatically create a title from the description, eliminating the need to spend time crafting the perfect title.
+- Suggest labels and assignee from the description
 - Custom Views
+- Identify duplicate issues
 - Sprints (coming soon)
 - Task Prioritisation (coming soon)
+- Suggest Stack Overflow references for Sentry-linked bug issues (coming soon)
 
 ## Integrations
 
 - Github: Automatically update issues status based based on commits and pull requests and link mentions of issues back to Tegon
-- Slack: Get information about mentioned work items in Slack and link Slack conversations to Tegon issues
+- Slack:
+  - Mention the Tegon bot in a Slack channel to automatically create a bug or feature request.
+  - Link a Slack thread to an issue to provide full context about the discussions happening on a specific task or a feature request.
 - Sentry: Get information about Sentry errors in Tegon issues
 
-## Agents (Coming Soon)
+## Command Centre for Agents (Coming Soon)
 
-Large Language Models (LLMs) are significantly transforming technology development. In anticipation of AI Agents driving product management and issue tracking, we are proactively developing the following agents:
+We're building a command centre for agents that will run multiple agents:
 
-- PR Agent: This agent reviews linked pull requests (PRs) for new tasks, ensuring code quality by preventing the incorporation of suboptimal code.
-- Bug Agent: Upon bug assignment, this agent will attempt to reproduce the bug, propose solutions, and in some cases, even implement these solutions in a new PR.
+- Code Review Agent: Reviews linked pull requests for new tasks, ensuring code quality by preventing the incorporation of suboptimal code.
+- Bug Agent: Upon bug assignment, will attempt to reproduce the bug, propose solutions, and in some cases, even implement these solutions in a new PR.
+- Task Prioritisation Agent: Assists team leaders in managing the sprint by doing real-time assessment of the tasks, priority, and bandwidth and suggesting changes to be made.
 
 ## Contributing
 
