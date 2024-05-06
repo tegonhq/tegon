@@ -65,6 +65,11 @@ export default class LinkedIssueService {
 
       linkedIssue = await this.createLinkIssueAPI(linkInput);
 
+      await this.prisma.issue.update({
+        where: { id: issueParams.issueId },
+        data: { isBidirectional: true },
+      });
+
       //   send a first comment function
       await sendFirstComment(
         this.prisma,
@@ -148,13 +153,9 @@ export default class LinkedIssueService {
   }
 
   async deleteLinkIssue(linkedIssueIdParams: LinkedIssueIdParams) {
-    this.prisma.linkedIssue.update({
+    return this.prisma.linkedIssue.update({
       where: { id: linkedIssueIdParams.linkedIssueId },
       data: { deleted: new Date().toISOString() },
-    });
-
-    return this.prisma.linkedIssue.delete({
-      where: { id: linkedIssueIdParams.linkedIssueId },
     });
   }
 }

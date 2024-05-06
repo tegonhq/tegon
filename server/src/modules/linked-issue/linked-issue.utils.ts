@@ -103,6 +103,7 @@ export async function getLinkedIssueDataWithUrl(
             path: [IntegrationName.Github, 'repositories'],
             array_contains: [{ fullName: repository }],
           } as Prisma.JsonFilter,
+          isActive: true,
         },
         include: {
           integrationDefinition: true,
