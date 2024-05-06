@@ -15,7 +15,7 @@ export function PriorityInsights({ issues }: PriorityInsightsProps) {
   return (
     <div className="flex flex-col gap-3 p-3">
       {Array.from(groupedByIssues.keys()).map((key: number) => {
-        const PriorityIcon = PriorityIcons[key];
+        const PriorityIcon = PriorityIcons[key ?? 0];
 
         return (
           <div key={key} className="flex justify-between py-1">

@@ -121,7 +121,7 @@ export function useCommandNavigator({
       push(`/${workspaceSlug}/settings/labels`);
     }
 
-    if (id === ID_MAP.CREATE_LABEL) {
+    if (id === ID_MAP.CREATE_VIEW) {
       push(`/${workspaceSlug}/team/${team.identifier}/all`);
     }
 

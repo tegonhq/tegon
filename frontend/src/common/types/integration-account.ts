@@ -30,6 +30,8 @@ export interface Settings {
   [IntegrationName.GithubPersonal]?: GithubPersonalSettings;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [IntegrationName.Slack]?: Record<string, any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [IntegrationName.Sentry]?: Record<string, any>;
 }
 
 export interface IntegrationAccountType {

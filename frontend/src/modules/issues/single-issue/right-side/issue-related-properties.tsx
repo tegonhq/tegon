@@ -19,6 +19,7 @@ const TITLE_MAP = {
   [IssueRelationEnum.BLOCKS]: 'Blocking',
   [IssueRelationEnum.BLOCKED]: 'Blocked by',
   [IssueRelationEnum.DUPLICATE_OF]: 'Duplicate of',
+  [IssueRelationEnum.DUPLICATE]: 'Duplicated by',
   [IssueRelationEnum.RELATED]: 'Related',
 };
 
@@ -113,6 +114,64 @@ export const IssueRelatedProperties = observer(() => {
 
     if (issueRelationType === IssueRelationEnum.RELATED) {
       const relatedIssues = getRelatedIssues(IssueRelationEnum.RELATED);
+
+      if (relatedIssues.length === 0) {
+        return null;
+      }
+
+      return (
+        <div
+          className="flex flex-col justify-start text-sm items-start gap-2 mb-6"
+          key={index}
+        >
+          <div className="text-muted-foreground text-left">
+            {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
+          </div>
+
+          <div className="flex flex-col items-start gap-2 flex-wrap -ml-2">
+            {relatedIssues.map((relatedIssue: RelatedIssue, index: number) => (
+              <RelatedIssueItem
+                key={index}
+                issue={relatedIssue.issue}
+                relation={relatedIssue.relation}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (issueRelationType === IssueRelationEnum.DUPLICATE) {
+      const relatedIssues = getRelatedIssues(IssueRelationEnum.DUPLICATE);
+
+      if (relatedIssues.length === 0) {
+        return null;
+      }
+
+      return (
+        <div
+          className="flex flex-col justify-start text-sm items-start gap-2 mb-6"
+          key={index}
+        >
+          <div className="text-muted-foreground text-left">
+            {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
+          </div>
+
+          <div className="flex flex-col items-start gap-2 flex-wrap -ml-2">
+            {relatedIssues.map((relatedIssue: RelatedIssue, index: number) => (
+              <RelatedIssueItem
+                key={index}
+                issue={relatedIssue.issue}
+                relation={relatedIssue.relation}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (issueRelationType === IssueRelationEnum.DUPLICATE_OF) {
+      const relatedIssues = getRelatedIssues(IssueRelationEnum.DUPLICATE_OF);
 
       if (relatedIssues.length === 0) {
         return null;

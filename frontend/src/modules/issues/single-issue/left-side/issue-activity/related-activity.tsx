@@ -15,6 +15,7 @@ import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { TimelineItem } from 'components/ui/timeline';
 import { useTeamWithId } from 'hooks/teams';
+import { DuplicateLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -38,6 +39,14 @@ const ICON_MAP: Record<
   },
   [IssueRelationEnum.RELATED]: {
     icon: RiFileTransferLine,
+    color: 'text-muted-foreground',
+  },
+  [IssueRelationEnum.DUPLICATE]: {
+    icon: DuplicateLine,
+    color: 'text-muted-foreground',
+  },
+  [IssueRelationEnum.DUPLICATE_OF]: {
+    icon: DuplicateLine,
     color: 'text-muted-foreground',
   },
 };
@@ -99,6 +108,42 @@ export function RelatedActivity({
           <span>
             {relatedChanges.isDeleted ? 'removed' : 'marked'} this issue as
             blocking
+          </span>
+          <a
+            className="text-foreground mx-1"
+            href={`/${workspaceSlug}/issue/${team.identifier}-${relatedIssue.number}`}
+          >
+            {team.identifier}-{relatedIssue.number}
+          </a>
+        </div>
+      );
+    }
+
+    if (relatedChanges.type === IssueRelationEnum.DUPLICATE_OF) {
+      return (
+        <div className="flex items-center">
+          <span className="text-foreground mr-2 font-medium">{username}</span>
+          <span>
+            {relatedChanges.isDeleted ? 'removed' : 'marked'} this issue as
+            duplicate of
+          </span>
+          <a
+            className="text-foreground mx-1"
+            href={`/${workspaceSlug}/issue/${team.identifier}-${relatedIssue.number}`}
+          >
+            {team.identifier}-{relatedIssue.number}
+          </a>
+        </div>
+      );
+    }
+
+    if (relatedChanges.type === IssueRelationEnum.DUPLICATE) {
+      return (
+        <div className="flex items-center">
+          <span className="text-foreground mr-2 font-medium">{username}</span>
+          <span>
+            {relatedChanges.isDeleted ? 'removed' : 'marked'} this issue as
+            duplicated by
           </span>
           <a
             className="text-foreground mx-1"
