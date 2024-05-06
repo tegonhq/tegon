@@ -8,10 +8,9 @@ import { PrismaService } from 'nestjs-prisma';
 import { CreateIntegrationAccountBody } from 'modules/integration-account/integration-account.interface';
 import { IntegrationAccountService } from 'modules/integration-account/integration-account.service';
 import { getTemplate } from 'modules/oauth-callback/oauth-callback.utils';
-import { WebhookEventBody } from 'modules/webhooks/webhooks.interface';
 
 import { VerifyInstallationBody } from './sentry.interface';
-import { EventHeaders } from '../integrations.interface';
+import { EventBody, EventHeaders } from '../integrations.interface';
 
 @Injectable()
 export default class SentryService {
@@ -118,7 +117,7 @@ export default class SentryService {
     }
   }
 
-  async handleEvents(eventHeaders: EventHeaders, eventBody: WebhookEventBody) {
+  async handleEvents(eventHeaders: EventHeaders, eventBody: EventBody) {
     const hookType = eventHeaders['sentry-hook-resource'];
     this.logger.debug(
       `Received Sentry webhook event with hook type: ${hookType}`,

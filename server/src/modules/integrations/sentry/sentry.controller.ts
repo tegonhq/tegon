@@ -14,13 +14,10 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 import { BodyInterface } from 'modules/oauth-callback/oauth-callback.interface';
-import {
-  WebhookEventBody,
-  WebhookEventHeaders,
-} from 'modules/webhooks/webhooks.interface';
 
 import { VerifyInstallationBody } from './sentry.interface';
 import SentryService from './sentry.service';
+import { EventBody, EventHeaders } from '../integrations.interface';
 
 @Controller({
   version: '1',
@@ -32,8 +29,8 @@ export class SentryController {
 
   @Post()
   async slackEvents(
-    @Headers() eventHeaders: WebhookEventHeaders,
-    @Body() eventBody: WebhookEventBody,
+    @Headers() eventHeaders: EventHeaders,
+    @Body() eventBody: EventBody,
   ) {
     return this.sentryService.handleEvents(eventHeaders, eventBody);
   }
