@@ -35,3 +35,4 @@ export * from './sidebar-line';
 export * from './slack-icon';
 export * from './stack-line';
 export * from './bar-fill';
+export * from './sentry-icon';
