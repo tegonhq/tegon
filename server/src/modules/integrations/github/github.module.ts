@@ -13,6 +13,7 @@ import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 import { NotificationsModule } from 'modules/notifications/notifications.module';
 import { VectorModule } from 'modules/vector/vector.module';
 
+import { GithubController } from './github.controller';
 import { GithubProcessor } from './github.processor';
 import { GithubQueue } from './github.queue';
 import GithubService from './github.service';
@@ -27,7 +28,7 @@ import GithubService from './github.service';
     VectorModule,
     BullModule.registerQueue({ name: 'github' }),
   ],
-  controllers: [],
+  controllers: [GithubController],
   providers: [
     PrismaService,
     GithubService,

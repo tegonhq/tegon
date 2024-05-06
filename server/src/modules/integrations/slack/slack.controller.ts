@@ -13,10 +13,6 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
-import {
-  WebhookEventBody,
-  WebhookEventHeaders,
-} from 'modules/webhooks/webhooks.interface';
 
 import { ChannelBody, IntegrationAccountQueryParams } from './slack.interface';
 import SlackService from './slack.service';
@@ -32,8 +28,8 @@ export class SlackController {
 
   @Post()
   async slackEvents(
-    @Headers() _eventHeaders: WebhookEventHeaders,
-    @Body() eventBody: WebhookEventBody,
+    @Headers() _eventHeaders: EventHeaders,
+    @Body() eventBody: EventBody,
   ) {
     return await this.slackService.handleEvents(eventBody);
   }

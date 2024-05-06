@@ -3,9 +3,6 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { RiArrowDropRightLine } from '@remixicon/react';
 import React from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
-
-import { SCOPES } from 'common/scopes';
 
 import {
   AlertDialog,

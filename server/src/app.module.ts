@@ -12,6 +12,7 @@ import { AuthModule } from 'modules/auth/auth.module';
 import { BullConfigModule } from 'modules/bull/bull.module';
 import { IntegrationAccountModule } from 'modules/integration-account/integration-account.module';
 import { IntegrationDefinitionModule } from 'modules/integration-definition/integration-definition.module';
+import { GithubModule } from 'modules/integrations/github/github.module';
 import { SlackModule } from 'modules/integrations/slack/slack.module';
 import { IssueCommentsModule } from 'modules/issue-comments/issue-comments.module';
 import { IssueHistoryModule } from 'modules/issue-history/issue-history.module';
@@ -29,7 +30,6 @@ import { TeamsModule } from 'modules/teams/teams.module';
 import { TemplatesModule } from 'modules/templates/templates.module';
 import { UsersModule } from 'modules/users/users.module';
 import { ViewsModule } from 'modules/views/views.module';
-import { WebhooksModule } from 'modules/webhooks/webhooks.module';
 import { WorkflowsModule } from 'modules/workflows/workflows.module';
 import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
@@ -63,12 +63,12 @@ import { AppService } from './app.service';
     AttachmentModule,
     ViewsModule,
 
+    GithubModule,
     SlackModule,
 
     ReplicationModule,
     SyncActionsModule,
     SyncModule,
-    WebhooksModule,
 
     IntegrationDefinitionModule,
     OAuthCallbackModule,

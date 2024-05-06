@@ -36,6 +36,10 @@ export interface FilterModelBooleanType {
   filterType: FilterTypeEnum;
 }
 
+export interface FilterModelBooleanType {
+  filterType: FilterTypeEnum;
+}
+
 export interface FiltersModelType {
   assignee?: FilterModelType;
   status?: FilterModelType;

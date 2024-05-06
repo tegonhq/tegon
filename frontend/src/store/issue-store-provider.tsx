@@ -4,8 +4,6 @@
 import { useParams } from 'next/navigation';
 import React from 'react';
 
-import { Loader } from 'components/ui/loader';
-
 import { tegonDatabase } from './database';
 import { useContextStore } from './global-context-provider';
 

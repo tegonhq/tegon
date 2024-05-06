@@ -184,7 +184,7 @@ export async function handleTwoWaySync(
   userId: string,
 ) {
   const linkedIssues = await prisma.linkedIssue.findMany({
-    where: { issueId: issue.id },
+    where: { issueId: issue.id, deleted: null },
   });
 
   if (linkedIssues.length > 0) {

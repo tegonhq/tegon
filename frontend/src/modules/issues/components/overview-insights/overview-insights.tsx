@@ -8,8 +8,8 @@ import { useContextStore } from 'store/global-context-provider';
 
 import { AssigneeInsights } from './assignee-insights';
 import { LabelInsights } from './label-insights';
-import { StatusInsights } from './status-insights';
 import { PriorityInsights } from './priority-insights';
+import { StatusInsights } from './status-insights';
 
 interface OverviewInsightsProps {
   title: string;
