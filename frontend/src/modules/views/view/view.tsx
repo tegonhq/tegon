@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
+import { DisplayPopover } from 'modules/issues/all/display-popover';
 import { OverviewInsights } from 'modules/issues/components/overview-insights';
 import { FiltersView } from 'modules/issues/filters-view/filters-view';
 
@@ -25,7 +26,6 @@ import { useContextStore } from 'store/global-context-provider';
 import { Header } from './header';
 import { SaveViewAction } from './save-view-action';
 import { ViewList } from './view-list';
-import { DisplayPopover } from 'modules/issues/all/display-popover';
 
 export const View = withApplicationStore(
   observer(() => {

@@ -104,8 +104,13 @@ export function useCommandNavigator({
       },
     ];
 
+    if (issues.length > 0) {
+      // Add options related to the issues selected
+    }
+
     return options;
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [issues]);
 
   const onSelect = (id: string) => {
     if (id === ID_MAP.CREATE_ISSUE) {
@@ -132,7 +137,7 @@ export function useCommandNavigator({
       push(`/${workspaceSlug}/team/${team.identifier}/all`);
     }
 
-    if (id === ID_MAP.GO_ALL_ISSUES) {
+    if (id === ID_MAP.GO_VIEWS) {
       push(`/${workspaceSlug}/team/${team.identifier}/views`);
     }
 

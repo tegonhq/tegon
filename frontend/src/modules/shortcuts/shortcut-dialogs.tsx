@@ -1,6 +1,10 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import React from 'react';
+import { Key } from 'ts-key-enum';
+
+import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
+import { SearchDialog } from 'modules/search';
 
 import { SCOPES } from 'common/scopes';
 
@@ -9,9 +13,6 @@ import { useShortcutHotKeys } from 'hooks';
 import { CommandDialog } from './command';
 import { AssigneeDialog, LabelDialog, StatusDialog } from './dialogs';
 import { PriorityDialog } from './dialogs/priority-dialog';
-import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
-import { Key } from 'ts-key-enum';
-import { SearchDialog } from 'modules/search';
 
 interface State {
   status: boolean;
