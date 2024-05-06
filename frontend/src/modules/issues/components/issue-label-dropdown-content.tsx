@@ -70,6 +70,7 @@ export function IssueLabelDropdownContent({
       <CommandInput
         placeholder="Set label..."
         onValueChange={(value: string) => setLabelSearch(value)}
+        autoFocus
       />
       <CommandList>
         <CommandGroup>

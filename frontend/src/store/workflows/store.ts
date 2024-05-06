@@ -6,7 +6,7 @@ import {
   flow,
 } from 'mobx-state-tree';
 
-import type { WorkflowType } from 'common/types/team';
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { tegonDatabase } from 'store/database';
 
@@ -52,6 +52,11 @@ export const WorkflowsStore: IAnyStateTreeNode = types
     return { update, deleteById, load };
   })
   .views((self) => ({
+    getWorkflowWithId(workflowId: string) {
+      return self.workflows.find(
+        (workflow: WorkflowType) => workflow.id === workflowId,
+      );
+    },
     getWorkflowsForTeam(teamId: string) {
       return self.workflows.filter(
         (workflow: WorkflowType) => workflow.teamId === teamId,
@@ -59,12 +64,14 @@ export const WorkflowsStore: IAnyStateTreeNode = types
     },
     getCancelledWorkflow(teamId: string) {
       return self.workflows.find((workflow: WorkflowType) => {
-        workflow.teamId === teamId && workflow.name === 'Canceled';
+        workflow.teamId === teamId &&
+          workflow.category === WorkflowCategoryEnum.CANCELED;
       });
     },
     getTriageWorkflow(teamId: string) {
       return self.workflows.find((workflow: WorkflowType) => {
-        workflow.teamId === teamId && workflow.name === 'Triage';
+        workflow.teamId === teamId &&
+          workflow.category === WorkflowCategoryEnum.TRIAGE;
       });
     },
   }));

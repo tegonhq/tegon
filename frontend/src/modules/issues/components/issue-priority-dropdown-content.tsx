@@ -59,7 +59,7 @@ export function IssuePriorityDropdownContent({
 
   return (
     <Command>
-      <CommandInput placeholder="Set priority..." />
+      <CommandInput placeholder="Set priority..." autoFocus />
       <CommandGroup>
         {Priorities.map((priority, index) => {
           const PriorityIcon = PriorityIcons[index];

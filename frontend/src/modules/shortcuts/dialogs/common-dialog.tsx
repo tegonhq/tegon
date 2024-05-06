@@ -10,15 +10,17 @@ import {
   CommandItem,
   CommandList,
   CommandDialog as CommandDialogC,
+  CommandGroup,
 } from 'components/ui/command';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
-interface Option {
+export interface Option {
   Icon: React.ReactElement;
-  text: string;
+  text: string | React.ReactElement;
   value: string;
+  group?: string;
 }
 
 interface CommonDialogProps {
@@ -30,6 +32,7 @@ interface CommonDialogProps {
   currentValue?: string[];
   multiple?: boolean;
   onSelect: (value: string) => void;
+  groupOrder?: string[];
 }
 
 export function CommonDialog({
@@ -41,6 +44,7 @@ export function CommonDialog({
   currentValue,
   multiple = false,
   onSelect,
+  groupOrder,
 }: CommonDialogProps) {
   const { issuesStore, applicationStore } = useContextStore();
   const issues = issuesStore.getIssuesFromArray(issueIds);
@@ -55,40 +59,78 @@ export function CommonDialog({
   }, []);
 
   function getIssuesTitle() {
+    if (issues.length === 0) {
+      return null;
+    }
+
     if (issues.length === 1) {
       const issue = issues[0];
       return (
-        <div className="bg-active rounded-md p-2 py-1 flex gap-2">
-          <div>
-            {team.identifier}-{issue.number}
-          </div>
-          <div className="max-w-[300px]">
-            <div className="truncate">{issue.title}</div>
+        <div className="p-2 flex justify-start w-full">
+          <div className="text-xs">
+            <div className="bg-active rounded-md p-2 py-1 flex gap-2">
+              <div>
+                {team.identifier}-{issue.number}
+              </div>
+              <div className="max-w-[300px]">
+                <div className="truncate">{issue.title}</div>
+              </div>
+            </div>
           </div>
         </div>
       );
     }
 
     return (
-      <div className="bg-active rounded-md p-2 py-1 flex gap-2">
-        <div>{issues.length} issues</div>
+      <div className="p-2 flex justify-start w-full">
+        <div className="text-xs">
+          <div className="bg-active rounded-md p-2 py-1 flex gap-2">
+            <div>{issues.length} issues</div>
+          </div>
+        </div>
       </div>
     );
   }
 
-  return (
-    <CommandDialogC open={open} onOpenChange={setOpen}>
-      <div className="p-2 flex justify-start w-full">
-        <div className="text-xs">{getIssuesTitle()}</div>
-      </div>
-      <CommandInput
-        placeholder={placeholder}
-        value={value}
-        onValueChange={(value: string) => setValue(value)}
-      />
-      <CommandList className="p-2">
-        <CommandEmpty>No results found.</CommandEmpty>
+  const getOptions = () => {
+    if (groupOrder && groupOrder.length > 0) {
+      return (
+        <>
+          {groupOrder.map((group) => (
+            <CommandGroup heading={group} key="group" className="p-0">
+              {options
+                .filter((op) => op.group === group)
+                .map((option, index: number) => (
+                  <CommandItem
+                    key={option.value}
+                    onSelect={() => {
+                      onSelect(option.value);
+                      !multiple && setOpen(false);
+                    }}
+                    className={cn(
+                      '!py-2 !px-3 justify-between',
+                      index === options.length - 1 ? 'mb-0' : 'mb-2',
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div>{option.Icon}</div>
+                      <div>{option.text}</div>
+                    </div>
+                    <div>
+                      {currentValue && currentValue.includes(option.value) && (
+                        <RiCheckLine className="!h-4 !w-4" />
+                      )}
+                    </div>
+                  </CommandItem>
+                ))}
+            </CommandGroup>
+          ))}
+        </>
+      );
+    }
 
+    return (
+      <>
         {options.map((option, index: number) => (
           <CommandItem
             key={option.value}
@@ -101,7 +143,7 @@ export function CommonDialog({
               index === options.length - 1 ? 'mb-0' : 'mb-2',
             )}
           >
-            <div className="flex gap-3">
+            <div className="flex items-center gap-3">
               <div>{option.Icon}</div>
               <div>{option.text}</div>
             </div>
@@ -112,6 +154,21 @@ export function CommonDialog({
             </div>
           </CommandItem>
         ))}
+      </>
+    );
+  };
+
+  return (
+    <CommandDialogC open={open} onOpenChange={setOpen}>
+      {getIssuesTitle()}
+      <CommandInput
+        placeholder={placeholder}
+        value={value}
+        onValueChange={(value: string) => setValue(value)}
+      />
+      <CommandList className="p-2">
+        <CommandEmpty>No results found.</CommandEmpty>
+        {getOptions()}
       </CommandList>
     </CommandDialogC>
   );

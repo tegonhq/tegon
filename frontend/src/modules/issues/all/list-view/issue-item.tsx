@@ -67,7 +67,7 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
   return (
     <a
       className={cn(
-        'p-2.5 pl-3 pr-4 flex justify-between group cursor-default text-sm hover:bg-active/50 border-b-[0.5px]',
+        'p-2.5 pl-3 pr-4 flex justify-between group cursor-default text-sm hover:bg-active/50 border-b-[0.5px] gap-2',
         issueSelected && 'bg-primary/10',
       )}
       onClick={() => {
@@ -80,120 +80,123 @@ export const IssueItem = observer(({ issueId }: IssueItemProps) => {
         }
       }}
     >
-      <div
-        className={cn(
-          'flex items-center pl-5 group-hover:pl-0',
-          issueSelected && 'pl-0',
-        )}
-      >
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          <Checkbox
-            className={cn(
-              'hidden group-hover:block border-slate-300 shadow-none mr-1',
-              issueSelected && 'block',
-            )}
-            checked={issueSelected}
-            onCheckedChange={(checked) => {
-              if (checked) {
-                applicationStore.addToSelectedIssues(issue.id);
-              } else {
-                applicationStore.removeSelectedIssue(issue.id);
-              }
-            }}
-          />
-        </div>
-
-        <div className="mr-2.5">
-          <IssuePriorityDropdown
-            value={issue.priority ?? 0}
-            onChange={priorityChange}
-            variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
-          />
-        </div>
-        <div className="pr-3 text-muted-foreground min-w-[70px]">{`${team.identifier}-${issue.number}`}</div>
-        <div className="pr-3">
-          <IssueStatusDropdown
-            value={issue.stateId}
-            onChange={statusChange}
-            variant={IssueStatusDropdownVariant.NO_BACKGROUND}
-            teamIdentfier={team.identifier}
-          />
-        </div>
+      <div className="w-full flex items-center">
         <div
           className={cn(
-            'font-medium mr-1',
-            issue.parentId ||
-              blockedIssues.length > 0 ||
-              blocksIssues.length > 0
-              ? 'max-w-[500px]'
-              : 'w-full',
+            'flex items-center pl-5 group-hover:pl-0',
+            issueSelected && 'pl-0',
           )}
         >
-          <div className="truncate">{issue.title}</div>
-        </div>
-
-        {issue.parentId && (
-          <div className="font-medium max-w-[300px] text-muted-foreground flex items-center mr-1">
-            <RiArrowRightSLine size={14} className="mx-1" />
-            <div className="truncate">{issue.parent?.title}</div>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <Checkbox
+              className={cn(
+                'hidden group-hover:block border-slate-300 shadow-none mr-1',
+                issueSelected && 'block',
+              )}
+              checked={issueSelected}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  applicationStore.addToSelectedIssues(issue.id);
+                } else {
+                  applicationStore.removeSelectedIssue(issue.id);
+                }
+              }}
+            />
           </div>
-        )}
 
-        {blockedIssues.length > 0 && (
-          <Tooltip>
-            <TooltipTrigger>
-              <Badge
-                variant="outline"
-                className="mx-1 px-2 flex gap-2 text-muted-foreground"
-              >
-                <BlockedFill
-                  size={14}
-                  className="text-red-700 dark:text-red-400"
-                />
-                {blockedIssues.length}
-              </Badge>
-            </TooltipTrigger>
-            <TooltipContent>
-              Blocked by {blockedIssues.length} issues
-            </TooltipContent>
-          </Tooltip>
-        )}
-        {blocksIssues.length > 0 && (
-          <Tooltip>
-            <TooltipTrigger>
-              <Badge
-                variant="outline"
-                className="mx-1 px-2 flex gap-2 text-muted-foreground"
-              >
-                <BlockingToLine
-                  size={14}
-                  className="text-red-700 dark:text-red-400"
-                />
-                {blocksIssues.length}
-              </Badge>
-            </TooltipTrigger>
-            <TooltipContent>
-              Blocking {blocksIssues.length} issues
-            </TooltipContent>
-          </Tooltip>
-        )}
-      </div>
-      <div className="flex gap-2 items-center">
-        <div>
-          <IssueLabels labelIds={issue.labelIds} />
+          <div className="mr-2.5">
+            <IssuePriorityDropdown
+              value={issue.priority ?? 0}
+              onChange={priorityChange}
+              variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
+            />
+          </div>
+          <div className="pr-3 text-muted-foreground min-w-[70px]">{`${team.identifier}-${issue.number}`}</div>
+          <div className="pr-3">
+            <IssueStatusDropdown
+              value={issue.stateId}
+              onChange={statusChange}
+              variant={IssueStatusDropdownVariant.NO_BACKGROUND}
+              teamIdentfier={team.identifier}
+            />
+          </div>
         </div>
-        <div className="text-muted-foreground text-sm">
-          {dayjs(issue.createdAt).format('DD MMM')}
+        <span className="flex items-center justify-start shrink min-w-[0px]">
+          <span className="truncate text-left">{issue.title}</span>
+
+          {issue.parentId && (
+            <>
+              <RiArrowRightSLine
+                size={14}
+                className="mx-1 text-muted-foreground"
+              />
+              <span className="truncate text-muted-foreground">
+                {issue.parent?.title}
+              </span>
+            </>
+          )}
+        </span>
+
+        <div className="flex gap-2 items-center grow shrink min-w-max mx-2 overflow-hidden">
+          <div className="flex items-center gap-2">
+            {blockedIssues.length > 0 && (
+              <Tooltip>
+                <TooltipTrigger>
+                  <Badge
+                    variant="outline"
+                    className="mx-1 px-2 flex gap-2 text-muted-foreground"
+                  >
+                    <BlockedFill
+                      size={14}
+                      className="text-red-700 dark:text-red-400"
+                    />
+                    {blockedIssues.length}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Blocked by {blockedIssues.length} issues
+                </TooltipContent>
+              </Tooltip>
+            )}
+            {blocksIssues.length > 0 && (
+              <Tooltip>
+                <TooltipTrigger>
+                  <Badge
+                    variant="outline"
+                    className="mx-1 px-2 flex gap-2 text-muted-foreground"
+                  >
+                    <BlockingToLine
+                      size={14}
+                      className="text-red-700 dark:text-red-400"
+                    />
+                    {blocksIssues.length}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Blocking {blocksIssues.length} issues
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
+          <div className="grow"></div>
+          <div className="flex items-center gap-2">
+            <IssueLabels labelIds={issue.labelIds} />
+          </div>
         </div>
-        <IssueAssigneeDropdown
-          value={issue.assigneeId}
-          onChange={assigneeChange}
-          variant={IssueAssigneeDropdownVariant.NO_BACKGROUND}
-        />
+        <div className="flex gap-2 shrink-0 items-center">
+          <div className="text-muted-foreground text-sm">
+            {dayjs(issue.createdAt).format('DD MMM')}
+          </div>
+          <IssueAssigneeDropdown
+            value={issue.assigneeId}
+            onChange={assigneeChange}
+            variant={IssueAssigneeDropdownVariant.NO_BACKGROUND}
+          />
+        </div>
       </div>
     </a>
   );

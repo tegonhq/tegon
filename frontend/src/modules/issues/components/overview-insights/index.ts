@@ -1,3 +1,3 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-export * from './command-dialog';
+export * from './overview-insights';

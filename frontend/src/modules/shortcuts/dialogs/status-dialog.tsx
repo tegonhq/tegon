@@ -4,10 +4,8 @@ import React from 'react';
 
 import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
 
-import { SCOPES } from 'common/scopes';
 import type { WorkflowType } from 'common/types/team';
 
-import { useShortcutHotKeys } from 'hooks';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useUpdateIssueMutation } from 'services/issues';
@@ -16,13 +14,15 @@ import { useContextStore } from 'store/global-context-provider';
 
 import { CommonDialog } from './common-dialog';
 
-export const StatusDialog = observer(() => {
-  const [open, setOpen] = React.useState(false);
+interface StatusDialogProps {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+}
+
+export const StatusDialog = observer(({ open, setOpen }: StatusDialogProps) => {
   const { applicationStore, workflowsStore, issuesStore } = useContextStore();
   const { mutate: updateIssue } = useUpdateIssueMutation({});
   const team = useCurrentTeam();
-
-  useShortcutHotKeys('s', setOpen, [SCOPES.AllIssues]);
 
   if (
     applicationStore.selectedIssues.length === 0 &&

@@ -2,11 +2,9 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { SCOPES } from 'common/scopes';
 import type { LabelType } from 'common/types/label';
 
 import { BadgeColor } from 'components/ui/badge';
-import { useShortcutHotKeys } from 'hooks';
 import { useTeamLabels } from 'hooks/labels';
 import { useCurrentTeam } from 'hooks/teams';
 
@@ -16,14 +14,16 @@ import { useContextStore } from 'store/global-context-provider';
 
 import { CommonDialog } from './common-dialog';
 
-export const LabelDialog = observer(() => {
-  const [open, setOpen] = React.useState(false);
+interface LabelDialogProps {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+}
+
+export const LabelDialog = observer(({ setOpen, open }: LabelDialogProps) => {
   const { applicationStore, issuesStore } = useContextStore();
   const { mutate: updateIssue } = useUpdateIssueMutation({});
   const team = useCurrentTeam();
   const labels = useTeamLabels(team.identifier);
-
-  useShortcutHotKeys('l', setOpen, [SCOPES.AllIssues]);
 
   if (
     applicationStore.selectedIssues.length === 0 &&

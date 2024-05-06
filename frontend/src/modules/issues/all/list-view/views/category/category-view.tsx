@@ -50,7 +50,9 @@ export const CategoryView = observer(() => {
     }
 
     // If categories are the same, compare by position
-    return b.position - a.position;
+    return view === ViewEnum.list
+      ? b.position - a.position
+      : a.position - b.position;
   }
 
   const workflows = useTeamWorkflows(currentTeam.identifier)

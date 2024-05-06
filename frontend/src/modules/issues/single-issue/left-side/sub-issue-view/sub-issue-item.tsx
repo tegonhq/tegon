@@ -66,7 +66,7 @@ export function SubIssueItem({ issue }: SubIssueItemProps) {
             teamIdentfier={team.identifier}
           />
         </div>
-        <div className="font-medium max-w-[400px]" onClick={openIssue}>
+        <div className="font-medium" onClick={openIssue}>
           <div className="truncate">{issue.title}</div>
         </div>
       </div>
