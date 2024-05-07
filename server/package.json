@@ -53,6 +53,7 @@
   "dependencies": {
     "@devoxa/prisma-relay-cursor-connection": "3.1.1",
     "@google-cloud/storage": "^7.10.0",
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/axios": "^3.0.1",
     "@nestjs/bull": "^10.1.0",
     "@nestjs/common": "10.3.1",
@@ -77,6 +78,7 @@
     "cookie": "^0.6.0",
     "jwks-rsa": "^3.1.0",
     "nestjs-prisma": "0.22.0",
+    "nodemailer": "^6.9.13",
     "openai": "^4.28.4",
     "passport": "0.7.0",
     "passport-jwt": "4.0.1",
