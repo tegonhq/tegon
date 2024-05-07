@@ -62,6 +62,17 @@ export function AddLinkedIssueDialog({
             askTitleInForm={false}
           />
         )}
+        {open === LinkedIssueSubType.Sentry && (
+          <AddLinkedIssue
+            issueId={issueId}
+            onClose={() => setOpen(undefined)}
+            title="Enter Sentry issue link"
+            description="Copy the URL from the browser"
+            placeholder="https://tegon.sentry.io/issues/5310267420"
+            type={LinkedIssueSubType.Sentry}
+            askTitleInForm={false}
+          />
+        )}
         {open === LinkedIssueSubType.ExternalLink && (
           <AddLinkedIssue
             issueId={issueId}

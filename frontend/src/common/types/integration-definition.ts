@@ -5,6 +5,7 @@ export enum IntegrationName {
   GithubPersonal = 'GithubPersonal',
   Slack = 'Slack',
   SlackPersonal = 'SlackPersonal',
+  Sentry = 'Sentry',
 }
 
 export interface GenericInputSpecification {

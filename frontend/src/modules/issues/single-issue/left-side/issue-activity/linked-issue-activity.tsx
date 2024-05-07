@@ -18,7 +18,7 @@ import {
   getInitials,
 } from 'components/ui/avatar';
 import { useUsersData } from 'hooks/users';
-import { SlackIcon } from 'icons';
+import { SentryIcon, SlackIcon } from 'icons';
 
 import type { User } from 'store/user-context';
 
@@ -43,16 +43,18 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
   const sourceMetaData = JSON.parse(linkedIssue.source);
 
   function getIcon() {
-    if (sourceMetaData.type === Integration.Slack) {
-      return <SlackIcon size={16} className="text-foreground" />;
-    }
+    if (sourceMetaData) {
+      if (sourceMetaData.type === Integration.Slack) {
+        return <SlackIcon size={16} className="text-foreground" />;
+      }
 
-    if (sourceMetaData.type === Integration.Github) {
-      return <RiGithubFill size={18} className="text-foreground" />;
-    }
+      if (sourceMetaData.type === Integration.Github) {
+        return <RiGithubFill size={18} className="text-foreground" />;
+      }
 
-    if (sourceMetaData.type === Integration.Sentry) {
-      return <RiGithubFill size={18} className="text-foreground" />;
+      if (sourceMetaData.type === Integration.Sentry) {
+        return <SentryIcon size={18} className="text-foreground" />;
+      }
     }
 
     return <RiLink size={18} className="text-foreground" />;
@@ -118,6 +120,7 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
           target="_blank"
           className="flex items-center gap-1 ml-2 mr-1 text-foreground"
         >
+          {getIcon()}
           {getTitle()}
         </a>
       </div>

@@ -76,6 +76,7 @@ export async function getOrCreateLabelIds(
   const existingLabels = await prisma.label.findMany({
     where: {
       name: { in: labelNames, mode: 'insensitive' },
+      workspaceId,
     },
   });
 

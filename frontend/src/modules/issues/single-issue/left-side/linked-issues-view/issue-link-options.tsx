@@ -12,6 +12,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from 'components/ui/dropdown-menu';
+import { SentryIcon } from 'icons';
 
 interface IssueLinkOptionsProps {
   setDialogOpen: (type: LinkedIssueSubType) => void;
@@ -24,6 +25,9 @@ export function IssueLinkOptions({ setDialogOpen }: IssueLinkOptionsProps) {
   const { integrationAccountsForName: slackAccounts } = useIntegrationAccounts(
     IntegrationName.Slack,
   );
+  const { integrationAccountsForName: sentryAccounts } = useIntegrationAccounts(
+    IntegrationName.Sentry,
+  );
 
   const {
     push,
@@ -33,11 +37,13 @@ export function IssueLinkOptions({ setDialogOpen }: IssueLinkOptionsProps) {
   const onSelect = (type: LinkedIssueSubType, integrationName?: string) => {
     const githubIsIntegrated = githubAccounts.length > 0;
     const slackIsIntegrated = slackAccounts.length > 0;
+    const sentryIsIntegrated = sentryAccounts.length > 0;
 
     if (
       !integrationName ||
       (integrationName === 'github' && githubIsIntegrated) ||
-      (integrationName === 'slack' && slackIsIntegrated)
+      (integrationName === 'slack' && slackIsIntegrated) ||
+      (integrationName === 'sentry' && sentryIsIntegrated)
     ) {
       setDialogOpen(type);
     } else {
@@ -66,6 +72,13 @@ export function IssueLinkOptions({ setDialogOpen }: IssueLinkOptionsProps) {
       >
         <div className="flex items-center gap-2">
           <RiSlackFill size={16} /> Link Slack message
+        </div>
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        onClick={() => onSelect(LinkedIssueSubType.Sentry, 'sentry')}
+      >
+        <div className="flex items-center gap-2">
+          <SentryIcon size={16} /> Link Sentry issue
         </div>
       </DropdownMenuItem>
       <DropdownMenuItem

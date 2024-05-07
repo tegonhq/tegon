@@ -33,11 +33,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
-import { SlackIcon } from 'icons';
+import { SentryIcon, SlackIcon } from 'icons';
 
 import { useDeleteLinkedIssueMutation } from 'services/linked-issues';
 
 import { EditLink } from './edit-link';
+import { SentryItem } from './sentry-item';
 
 interface LinkedIssueItemProps {
   linkedIssue: LinkedIssueType;
@@ -61,6 +62,10 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
 
       if (sourceMetaData.type === Integration.Github) {
         return <RiGithubFill size={18} className="text-foreground" />;
+      }
+
+      if (sourceMetaData.type === Integration.Sentry) {
+        return <SentryIcon size={18} className="text-foreground" />;
       }
     }
 
@@ -87,6 +92,12 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
 
       if (sourceMetaData.type === Integration.Github) {
         return ` #${number} ${sourceData.title}`;
+      }
+
+      if (sourceMetaData.type === Integration.Sentry) {
+        return (
+          <SentryItem title={sourceData.title} linkedIssueId={linkedIssue.id} />
+        );
       }
     }
 

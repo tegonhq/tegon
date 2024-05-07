@@ -23,6 +23,7 @@ import {
   UpdateLinkedIssueData,
 } from './linked-issue.interface';
 import {
+  getLinkDetails,
   getLinkedIssueDataWithUrl,
   isValidLinkUrl,
   sendFirstComment,
@@ -157,5 +158,13 @@ export default class LinkedIssueService {
       where: { id: linkedIssueIdParams.linkedIssueId },
       data: { deleted: new Date().toISOString() },
     });
+  }
+
+  async linkedIssueDetails(linkedIssueIdParams: LinkedIssueIdParams) {
+    const linkedIssue = await this.prisma.linkedIssue.findUnique({
+      where: { id: linkedIssueIdParams.linkedIssueId },
+    });
+
+    return await getLinkDetails(this.prisma, linkedIssue);
   }
 }

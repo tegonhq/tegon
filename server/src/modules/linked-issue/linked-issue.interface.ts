@@ -10,6 +10,7 @@ export enum LinkedIssueSubType {
   GithubPullRequest = 'GithubPullRequest',
   ExternalLink = 'ExternalLink',
   Slack = 'Slack',
+  Sentry = 'Sentry',
 }
 
 export enum LinkedSlackMessageType {
@@ -59,6 +60,10 @@ export const githubPRRegex =
 
 export const slackRegex =
   /^https:\/\/(\w+)\.slack\.com\/archives\/([A-Z0-9]+)\/p(\d{10})(\d{6})(?:\?thread_ts=(\d{10}\.\d{6}))?/;
+
+export const sentryRegex =
+  /^https:\/\/(?<orgSlug>.+)\.sentry\.io\/issues\/(?<sentryIssueId>\d+)\//;
+
 export class LinkIssueData {
   @IsString()
   url: string;

@@ -5,6 +5,7 @@ export enum LinkedIssueSubType {
   GithubPullRequest = 'GithubPullRequest',
   ExternalLink = 'ExternalLink',
   Slack = 'Slack',
+  Sentry = 'Sentry',
 }
 
 export enum LinkedSlackMessageType {

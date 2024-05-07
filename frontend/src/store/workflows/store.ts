@@ -63,16 +63,18 @@ export const WorkflowsStore: IAnyStateTreeNode = types
       );
     },
     getCancelledWorkflow(teamId: string) {
-      return self.workflows.find((workflow: WorkflowType) => {
-        workflow.teamId === teamId &&
-          workflow.category === WorkflowCategoryEnum.CANCELED;
-      });
+      return self.workflows.find(
+        (workflow: WorkflowType) =>
+          workflow.teamId === teamId &&
+          workflow.category === WorkflowCategoryEnum.CANCELED,
+      );
     },
     getTriageWorkflow(teamId: string) {
-      return self.workflows.find((workflow: WorkflowType) => {
-        workflow.teamId === teamId &&
-          workflow.category === WorkflowCategoryEnum.TRIAGE;
-      });
+      return self.workflows.find(
+        (workflow: WorkflowType) =>
+          workflow.teamId === teamId &&
+          workflow.category === WorkflowCategoryEnum.TRIAGE,
+      );
     },
   }));
 

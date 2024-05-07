@@ -14,7 +14,7 @@ interface NavProps {
     title: string;
     label?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    icon: any;
+    icon?: any;
     href: string;
     count?: number;
   }>;
@@ -41,7 +41,9 @@ export function Nav({ links }: NavProps) {
               )}
             >
               <div className="flex items-center">
-                <link.icon className="mr-3 h-4 w-4 text-muted-foreground" />
+                {link.icon && (
+                  <link.icon className="mr-3 h-4 w-4 text-muted-foreground" />
+                )}
                 {link.title}
                 {link.label && (
                   <span className={cn('ml-auto')}>{link.label}</span>

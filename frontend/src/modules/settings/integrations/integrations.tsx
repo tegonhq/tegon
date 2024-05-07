@@ -7,7 +7,7 @@ import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { Separator } from 'components/ui/separator';
 import { useCurrentWorkspace } from 'hooks/workspace';
-import { SlackIcon } from 'icons';
+import { SentryIcon, SlackIcon } from 'icons';
 
 interface IntegrationCardProps {
   name: string;
@@ -73,6 +73,12 @@ export function Integrations() {
               description="Create issues from Slack messages and sync threads"
               href="slack"
               Icon={SlackIcon}
+            />
+            <IntegrationCard
+              name="Sentry"
+              description="Connect sentry issues with the tegon issues"
+              href="sentry"
+              Icon={SentryIcon}
             />
           </div>
         </div>
