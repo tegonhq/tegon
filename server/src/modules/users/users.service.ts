@@ -188,13 +188,17 @@ export class UsersService {
       token,
       newPassword,
     );
+    console.log(response);
     if (response.status === 'PASSWORD_POLICY_VIOLATED_ERROR') {
-      // TODO: handle incorrect password error
       throw new BadRequestException(
         `Your new password didn't match with the policy`,
       );
+    } else if (response.status === 'RESET_PASSWORD_INVALID_TOKEN_ERROR') {
+      throw new BadRequestException(`Invalid reset password token`);
+    } else if (response.status === 'OK') {
+      return { message: 'Successful' };
     }
 
-    return { message: 'Successful' };
+    throw new BadRequestException(response.status);
   }
 }
