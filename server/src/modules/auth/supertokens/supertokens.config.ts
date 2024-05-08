@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import jwt from 'supertokens-node/lib/build/recipe/jwt';
+import EmailPassword from 'supertokens-node/recipe/emailpassword';
 import Session from 'supertokens-node/recipe/session';
 import ThirdPartyEmailPassword from 'supertokens-node/recipe/thirdpartyemailpassword';
 import UserRoles from 'supertokens-node/recipe/userroles';
@@ -86,5 +87,6 @@ export const recipeList = (usersService: UsersService) => {
         },
       ],
     }),
+    EmailPassword.init(),
   ];
 };

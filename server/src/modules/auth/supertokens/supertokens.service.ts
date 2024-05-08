@@ -2,6 +2,7 @@
 
 import { Injectable } from '@nestjs/common';
 import supertokens from 'supertokens-node';
+import EmailPassword from 'supertokens-node/recipe/emailpassword';
 
 import { UsersService } from 'modules/users/users.service';
 
@@ -23,5 +24,9 @@ export class SupertokensService {
       },
       recipeList: recipeList(this.usersService),
     });
+  }
+
+  getEmailPasswordRecipe() {
+    return EmailPassword;
   }
 }
