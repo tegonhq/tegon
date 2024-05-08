@@ -44,6 +44,13 @@ export function ResetPassword() {
         });
         push('/auth/signin');
       },
+      onError: (message: string) => {
+        toast({
+          title: 'Reset Password',
+          description: message,
+          variant: 'destructive',
+        });
+      },
     },
   );
 
@@ -69,7 +76,7 @@ export function ResetPassword() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>New password</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="XÆA-12Musk"
