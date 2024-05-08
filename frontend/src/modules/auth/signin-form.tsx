@@ -1,11 +1,14 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button } from 'components/ui/button';
+import { cn } from 'common/lib/utils';
+
+import { Button, buttonVariants } from 'components/ui/button';
 import {
   Form,
   FormControl,
@@ -53,12 +56,12 @@ export function SignForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="my-3">
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input placeholder="elon@tesla.com" {...field} />
@@ -83,6 +86,16 @@ export function SignForm() {
             </FormItem>
           )}
         />
+
+        <Link
+          href="/auth/forgot-password"
+          className={cn(
+            buttonVariants({ variant: 'ghost', size: 'xs' }),
+            'mb-3 mt-1',
+          )}
+        >
+          Forgot password?
+        </Link>
 
         <Button type="submit" full isLoading={isLoading}>
           Continue
