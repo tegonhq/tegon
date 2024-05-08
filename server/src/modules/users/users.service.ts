@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { MailerService } from '@nestjs-modules/mailer';
 import { User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import supertokens from 'supertokens-node';
@@ -12,7 +13,11 @@ import { PublicUser, UpdateUserBody, userSerializer } from './user.interface';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  private readonly logger: Logger = new Logger('UserService');
+  constructor(
+    private prisma: PrismaService,
+    private mailerService: MailerService,
+  ) {}
 
   async upsertUser(id: string, email: string, fullname: string) {
     return await this.prisma.user.upsert({
@@ -125,6 +130,64 @@ export class UsersService {
       tenantIdForPasswordPolicy: session.getTenantId(),
     });
 
+    if (response.status === 'PASSWORD_POLICY_VIOLATED_ERROR') {
+      // TODO: handle incorrect password error
+      throw new BadRequestException(
+        `Your new password didn't match with the policy`,
+      );
+    }
+
+    return { message: 'Successful' };
+  }
+
+  async sendPasswordResetEmail(
+    supertokensService: SupertokensService,
+    email: string,
+  ) {
+    const EmailPassword = supertokensService.getEmailPasswordRecipe();
+
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const response = await EmailPassword.createResetPasswordLink(
+      undefined,
+      user.id,
+      email,
+    );
+
+    if (response.status === 'OK') {
+      await this.mailerService.sendMail({
+        to: user.email,
+        subject: 'Password Reset',
+        template: 'reset_password',
+        context: {
+          username: user.fullname,
+          resetUrl: response.link,
+        },
+      });
+      this.logger.log('Reset Email sent to user');
+    }
+
+    return response;
+  }
+
+  async resetPassword(
+    supertokensService: SupertokensService,
+    token: string,
+    newPassword: string,
+  ) {
+    const EmailPassword = supertokensService.getEmailPasswordRecipe();
+
+    const response = await EmailPassword.resetPasswordUsingToken(
+      undefined,
+      token,
+      newPassword,
+    );
     if (response.status === 'PASSWORD_POLICY_VIOLATED_ERROR') {
       // TODO: handle incorrect password error
       throw new BadRequestException(

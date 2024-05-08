@@ -58,6 +58,26 @@ export class UsersController {
     );
   }
 
+  @Post('forgot_password')
+  async sendPasswordResetEmail(@Body() forgotBody: Record<string, string>) {
+    return await this.usersService.sendPasswordResetEmail(
+      this.supertokensService,
+      forgotBody.email,
+    );
+  }
+
+  @Post('forgot_password/:token')
+  async resetPassword(
+    @Param('token') token: string,
+    @Body('newPassword') newPassword: string,
+  ) {
+    return this.usersService.resetPassword(
+      this.supertokensService,
+      token,
+      newPassword,
+    );
+  }
+
   @Post(':userId')
   @UseGuards(new AuthGuard())
   async updateUser(
