@@ -33,9 +33,18 @@ export async function getIssueDiff(
   currentIssueData: Issue,
 ): Promise<IssueHistoryData> {
   let issueHistoryData: IssueHistoryData = {} as IssueHistoryData;
-  const keys = ['assigneeId', 'priority', 'parentId', 'stateId', 'estimate'];
+  // Define the keys to compare between newIssueData and currentIssueData
+  const keys = [
+    'assigneeId',
+    'priority',
+    'parentId',
+    'stateId',
+    'estimate',
+    'teamId',
+  ];
 
   if (currentIssueData) {
+    // If currentIssueData exists, compare the values for each key
     keys.forEach((key) => {
       const newIssueValue = getProperty(newIssueData, key as keyof Issue);
       const currentIssueValue = getProperty(
@@ -43,6 +52,7 @@ export async function getIssueDiff(
         key as keyof Issue,
       );
       if (newIssueValue !== currentIssueValue) {
+        // If the values are different, add the changes to issueHistoryData
         const fromKey = `from${capitalize(key)}` as keyof IssueHistoryData;
         const toKey = `to${capitalize(key)}` as keyof IssueHistoryData;
         issueHistoryData = {
@@ -53,6 +63,7 @@ export async function getIssueDiff(
       }
     });
 
+    // Compare the labelIds arrays and find added and removed labels
     const currentLabelsSet = new Set(currentIssueData.labelIds || []);
     const newLabelsSet = new Set(newIssueData.labelIds || []);
     const addedLabels =
@@ -60,9 +71,11 @@ export async function getIssueDiff(
     const removedLabels =
       [...currentLabelsSet].filter((x) => !newLabelsSet.has(x)) || [];
 
+    // Add the added and removed labels to issueHistoryData
     issueHistoryData.addedLabelIds = addedLabels;
     issueHistoryData.removedLabelIds = removedLabels;
   } else {
+    // If currentIssueData doesn't exist, add all values from newIssueData to issueHistoryData
     keys.forEach((key) => {
       const toKey = `to${capitalize(key)}` as keyof IssueHistoryData;
       issueHistoryData = {
@@ -70,6 +83,7 @@ export async function getIssueDiff(
         [toKey]: getProperty(newIssueData, key as keyof Issue),
       };
     });
+    // Add all labelIds from newIssueData as addedLabelIds
     issueHistoryData.addedLabelIds = newIssueData.labelIds;
   }
 
@@ -350,4 +364,36 @@ export function getSubscriberIds(
   }
 
   return Array.from(subscribers);
+}
+
+export async function getEquivalentStateIds(
+  prisma: PrismaService,
+  sourceTeamId: string,
+  destinationTeamId: string,
+) {
+  const sourceStates = await prisma.workflow.findMany({
+    where: { teamId: sourceTeamId, deleted: null },
+  });
+  const destinationStates = await prisma.workflow.findMany({
+    where: { teamId: destinationTeamId, deleted: null },
+  });
+
+  const equivalentStateIds = sourceStates.reduce(
+    (acc: Record<string, string>, sourceState) => {
+      const destinationState = destinationStates.find(
+        (state) =>
+          state.name === sourceState.name &&
+          state.category === sourceState.category,
+      );
+
+      if (destinationState) {
+        acc[sourceState.id] = destinationState.id;
+      }
+
+      return acc;
+    },
+    {},
+  );
+
+  return equivalentStateIds;
 }

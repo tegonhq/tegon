@@ -60,7 +60,7 @@ import { AppService } from './app.service';
         },
       },
       defaults: {
-        from: process.env.SMTP_DEFAULT_FROM,
+        from: `${process.env.SMTP_DEFAULT_FROM}`,
       },
       template: {
         dir: `${process.cwd()}/templates`,
