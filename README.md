@@ -1,3 +1,5 @@
+(In progress: We are redesigning our product and will be back to our normal feature implementation in a few weeks.)
+
 <p align="center">
   <a href="https://tegon.ai"><img src="https://github.com/tegonhq/tegon/assets/17528887/07036ee1-774d-4dff-a56b-8050041f36ce" width="200" height="100" /></a>
 </p>
@@ -39,7 +41,7 @@ If you're interested in using Tegon Cloud, please book a [demo call](https://cal
 
 - Issues Tracking (List and Kanban View)
 - Automatically create a title from the description, eliminating the need to spend time crafting the perfect title.
-- Suggest labels and assignee from the description
+- Suggest labels and assignees from the description
 - Custom Views
 - Identify duplicate issues
 - Sprints (coming soon)
@@ -48,7 +50,7 @@ If you're interested in using Tegon Cloud, please book a [demo call](https://cal
 
 ## Integrations
 
-- Github: Automatically update issues status based based on commits and pull requests and link mentions of issues back to Tegon
+- Github: Automatically update issues status based on commits and pull requests and link mentions of issues back to Tegon
 - Slack:
   - Mention the Tegon bot in a Slack channel to automatically create a bug or feature request.
   - Link a Slack thread to an issue to provide full context about the discussions happening on a specific task or a feature request.
@@ -60,7 +62,7 @@ We're building a command centre for agents that will run multiple agents:
 
 - Code Review Agent: Reviews linked pull requests for new tasks, ensuring code quality by preventing the incorporation of suboptimal code.
 - Bug Agent: Upon bug assignment, will attempt to reproduce the bug, propose solutions, and in some cases, even implement these solutions in a new PR.
-- Task Prioritisation Agent: Assists team leaders in managing the sprint by doing real-time assessment of the tasks, priority, and bandwidth and suggesting changes to be made.
+- Task Prioritisation Agent: Assists team leaders in managing the sprint by doing a real-time assessment of the tasks, priority, and bandwidth and suggesting changes to be made.
 
 ## Contributing
 
