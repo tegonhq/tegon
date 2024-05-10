@@ -30,10 +30,6 @@ Issue Tracking is important for fast-paced teams, enabling them to organize list
 - Issue tracking tools serve as a task database, directing engineers on what to work on but not aiding in faster task completion.
 - Existing tools don't effectively assist Engineering Managers in real-time task, feature, or bug prioritisation.
 
-## Demo
-
-[Demo video](https://www.loom.com/share/1a4ba45cb1254fdba3ea98af23a1e6f1?sid=5e18abb1-a1fa-414e-ae22-15db2bbd18a6)
-
 ## Tegon Cloud
 
 We offer a managed cloud version of Tegon that allows you to run Tegon without having to manage the infrastructure. It is currently in private beta. 
