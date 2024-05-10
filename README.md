@@ -1,4 +1,6 @@
-(In progress: We are redesigning our product and will be back to our normal feature implementation in a few weeks.)
+<p align="center">
+  (In progress: We are redesigning our product and will be back to our normal feature implementation in a few weeks.)
+</p>
 
 <p align="center">
   <a href="https://tegon.ai"><img src="https://github.com/tegonhq/tegon/assets/17528887/07036ee1-774d-4dff-a56b-8050041f36ce" width="200" height="100" /></a>
@@ -14,8 +16,6 @@
 [Love Tegon? Give us a ⭐ on GitHub!](https://github.com/tegonhq/tegon)
 
 </div>
-
-![app_tegon_ai_tegon_team_ENG_all](https://github.com/tegonhq/tegon/assets/17528887/d426650d-b0e3-4d9f-92d7-bf182af16202)
 
 
 <p align="center">
