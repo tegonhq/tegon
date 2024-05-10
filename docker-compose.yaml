@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   db:
-    image: "postgres-tegon:latest"
+    image: "tegonhq/tegon-postgres:${VERSION}"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
