@@ -15,7 +15,12 @@ export const FileComponent = (props: any) => {
         <div
           className="flex w-full items-center p-4 border bg-active rounded-md gap-2 hover:bg-active/50"
           onClick={() => {
-            window.open(props.node.attrs.url, '_blank');
+            window.open(
+              props.node.attrs.src
+                ? props.node.attrs.src
+                : props.node.attrs.url,
+              '_blank',
+            );
           }}
         >
           <RiFileLine size={16} />
@@ -33,7 +38,12 @@ export const FileComponent = (props: any) => {
             <RiDownloadLine
               size={16}
               onClick={() => {
-                window.open(props.node.attrs.url, '_blank');
+                window.open(
+                  props.node.attrs.src
+                    ? props.node.attrs.src
+                    : props.node.attrs.url,
+                  '_blank',
+                );
               }}
             />
           </Button>

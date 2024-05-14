@@ -77,7 +77,7 @@ export const createFileUpload =
         .insertContentAt(pos, {
           type: 'fileExtension',
           attrs: {
-            url: response.publicURL,
+            src: response.publicURL,
             alt: response.originalName,
             size: response.size,
           },
