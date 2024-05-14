@@ -44,6 +44,7 @@
     "dexie": "^3.2.4",
     "dexie-observable": "^4.0.1-beta.13",
     "fast-sort": "^3.4.0",
+    "filesize": "^10.1.2",
     "http-proxy": "^1.18.1",
     "javascript-time-ago": "^2.5.9",
     "lodash.clonedeep": "^4.5.0",

@@ -188,7 +188,7 @@ export class UsersService {
       token,
       newPassword,
     );
-    console.log(response);
+
     if (response.status === 'PASSWORD_POLICY_VIOLATED_ERROR') {
       throw new BadRequestException(
         `Your new password didn't match with the policy`,

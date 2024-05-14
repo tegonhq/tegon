@@ -71,6 +71,7 @@ export class AttachmentService {
         publicURL: `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/${workspaceId}/${attachment.id}`,
         fileType: attachment.fileType,
         originalName: attachment.originalName,
+        size: attachment.size,
       } as AttachmentResponse;
     });
 

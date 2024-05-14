@@ -39,7 +39,6 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-console.log(`${process.cwd()}/templates/`);
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
