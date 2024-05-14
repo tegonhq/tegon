@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 'use client';
-import type { Extension } from '@tiptap/core';
+import type { Editor as EditorT, Extension } from '@tiptap/core';
 
 import { Inter } from 'next/font/google';
 import {
@@ -55,6 +55,7 @@ interface EditorProps {
   onFocus?: () => void;
   onBlur?: () => void;
   onSubmit?: () => void;
+  onCreate?: (editor: EditorT) => void;
 }
 
 export const EditorChild = ({
@@ -144,6 +145,7 @@ export const Editor = ({
   placeholder,
   onFocus,
   onBlur,
+  onCreate,
   onSubmit,
   editable = true,
 }: EditorProps) => {
@@ -173,10 +175,6 @@ export const Editor = ({
       getPlaceholder(placeholder),
     ];
 
-    if (editable) {
-      extensions.push(UpdatedImage);
-    }
-
     return extensions;
   };
 
@@ -192,7 +190,13 @@ export const Editor = ({
             className,
           )}
           autofocus="end"
-          onCreate={({ editor }) => editor.commands.focus()}
+          onCreate={({ editor }) => {
+            if (onCreate) {
+              onCreate(editor);
+            }
+
+            editor.commands.focus();
+          }}
           editorProps={{
             handlePaste: (view, event) =>
               handleImagePaste(view, event, uploadFn),
@@ -223,3 +227,5 @@ export const Editor = ({
     </div>
   );
 };
+
+export type { EditorT };

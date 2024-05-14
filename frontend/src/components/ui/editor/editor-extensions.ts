@@ -14,6 +14,8 @@ import {
 } from 'novel/extensions';
 import { UploadImagesPlugin } from 'novel/plugins';
 
+import { fileExtension } from './file-extension';
+
 const tiptapLink = TiptapLink.configure({
   HTMLAttributes: {
     class: cx(
@@ -156,4 +158,5 @@ export const defaultExtensions = [
   horizontalRule,
   heading,
   tiptapImage,
+  fileExtension,
 ];

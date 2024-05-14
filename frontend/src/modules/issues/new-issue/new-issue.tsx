@@ -18,7 +18,7 @@ import { IntegrationName } from 'common/types/integration-definition';
 import type { IssueType } from 'common/types/issue';
 
 import { Button, buttonVariants } from 'components/ui/button';
-import { Editor } from 'components/ui/editor';
+import { Editor, type EditorT } from 'components/ui/editor';
 import {
   Form,
   FormControl,
@@ -47,6 +47,7 @@ import {
   isBidirectionalEnabled,
 } from './new-issue-utils';
 import { draftKey, NewIssueSchema } from './new-issues-type';
+import { FileUpload } from '../single-issue/left-side/file-upload/file-upload';
 
 interface NewIssueProps {
   onClose: () => void;
@@ -89,6 +90,8 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
 
   const pathname = usePathname();
   const [, rerenderHack] = React.useState<string[]>([]);
+  const [editor, setEditor] = React.useState<EditorT>(undefined);
+
   const { toast } = useToast();
 
   const { githubAccounts } = useGithubAccounts(IntegrationName.Github);
@@ -159,6 +162,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
                     <FormControl>
                       <Editor
                         {...field}
+                        onCreate={(editor) => setEditor(editor)}
                         onChange={(value, valueString) => {
                           field.onChange(value);
                           form.setValue('descriptionString', valueString);
@@ -176,6 +180,9 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
                 );
               }}
             />
+            <div className="flex justify-end w-full py-1">
+              <FileUpload editor={editor} />
+            </div>
 
             {description.trim() && (
               <IssueSuggestions

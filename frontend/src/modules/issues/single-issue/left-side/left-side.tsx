@@ -8,7 +8,7 @@ import { NewIssue } from 'modules/issues/new-issue/new-issue';
 
 import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
-import { Editor } from 'components/ui/editor';
+import { Editor, type EditorT } from 'components/ui/editor';
 import { ScrollArea } from 'components/ui/scroll-area';
 import { Separator } from 'components/ui/separator';
 import { useIssueData } from 'hooks/issues';
@@ -17,6 +17,7 @@ import { useTeamWorkflows } from 'hooks/workflows';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
+import { FileUpload } from './file-upload/file-upload';
 import { FilterSmall } from './filters-small';
 import { Header } from './header';
 import { IssueActivity } from './issue-activity';
@@ -27,6 +28,7 @@ import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
 
 export const LeftSide = observer(() => {
+  const [editor, setEditor] = React.useState<EditorT>(undefined);
   const issue = useIssueData();
   const team = useTeamWithId(issue.teamId);
   const workflows = useTeamWorkflows(team.identifier);
@@ -72,9 +74,14 @@ export const LeftSide = observer(() => {
             <IssueTitle value={issue.title} onChange={onIssueChange} />
             <Editor
               value={issue.description}
+              onCreate={(editor) => setEditor(editor)}
               onChange={onDescriptionChange}
               className="text-slate-700 dark:text-slate-300 min-h-[50px] mb-8"
             />
+
+            <div className="flex justify-end w-full py-1">
+              <FileUpload editor={editor} />
+            </div>
 
             <SubIssueView
               childIssues={issue.children}
