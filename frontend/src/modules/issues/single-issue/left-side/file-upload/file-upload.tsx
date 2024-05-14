@@ -2,7 +2,7 @@
 
 import type { Editor } from '@tiptap/core';
 
-import { RiAttachmentLine, RiFileUploadLine } from '@remixicon/react';
+import { RiAttachmentLine } from '@remixicon/react';
 
 import { Button } from 'components/ui/button';
 import { uploadFileFn } from 'components/ui/editor/utils';

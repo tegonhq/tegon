@@ -38,7 +38,6 @@ import {
 } from './selectors';
 import { slashCommand, suggestionItems } from './slash-command';
 import { uploadFn } from './utils';
-import { Button } from '../button';
 
 // Inter as default font
 export const fontSans = Inter({

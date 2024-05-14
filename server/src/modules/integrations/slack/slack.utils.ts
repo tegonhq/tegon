@@ -767,167 +767,178 @@ export function convertSlackMessageToTiptapJson(
   blocks: any,
   attachmentUrls: AttachmentResponse[],
 ): string {
-  const content: TiptapNode[] = blocks.flatMap((block: SlackBlock) => {
-    if (block.type === 'rich_text') {
-      return block.elements.flatMap((element: SlackElement) => {
-        switch (element.type) {
-          case 'rich_text_section':
-            // Create a paragraph node for rich text sections
-            const paragraph: TiptapNode = {
-              type: 'paragraph',
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              content: element.elements.flatMap((sectionElement: any) => {
-                if (sectionElement.type === 'text') {
-                  // Split the text by newline characters
-                  const textParts = sectionElement.text.split('\n');
-                  return textParts.flatMap((text: string, index: number) => {
-                    if (text === '') {
-                      return [];
-                    }
-                    // Create marks based on the text style
-                    const marks: TiptapMarks[] = Object.entries(
-                      sectionElement.style || {},
-                    )
-                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                      .filter(([_, value]) => value)
-                      .map(([type]) => ({ type }));
-                    return [
-                      { type: 'text', text, marks },
-                      // Add a hardBreak if it's not the last line
-                      ...(index < textParts.length - 1
-                        ? [{ type: 'hardBreak' }]
-                        : []),
-                    ];
-                  });
-                } else if (sectionElement.type === 'link') {
-                  // Create a text node with a link mark for links
-                  return [
-                    {
-                      type: 'text',
-                      text: sectionElement.text,
-                      marks: [
-                        {
-                          type: 'link',
-                          attrs: {
-                            href: sectionElement.url,
-                            target: '_blank',
-                            rel: 'noopener noreferrer',
-                            class: 'c-link',
-                          },
-                        },
-                      ],
-                    },
-                  ];
-                }
-                return [];
-              }),
-            };
-            return [paragraph];
-
-          case 'rich_text_list':
-            // Determine the list type based on the style
-            const listType =
-              element.style === 'ordered' ? 'orderedList' : 'bulletList';
-            // Create list items with paragraphs for each list element
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const listItems = element.elements.map((item: any) => ({
-              type: 'listItem',
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              content: item.elements.flatMap((listElement: any) =>
-                listElement.text.split('\n').map((part: string) => ({
+  const content: TiptapNode[] = blocks
+    ? blocks.flatMap((block: SlackBlock) => {
+        if (block.type === 'rich_text') {
+          return block.elements.flatMap((element: SlackElement) => {
+            switch (element.type) {
+              case 'rich_text_section':
+                // Create a paragraph node for rich text sections
+                const paragraph: TiptapNode = {
                   type: 'paragraph',
-                  content: [{ type: 'text', text: part.trim() }],
-                })),
-              ),
-            }));
-            // Add the list to the content
-            return [
-              {
-                type: listType,
-                attrs: { tight: true, start: 1 },
-                content: listItems,
-              },
-            ];
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  content: element.elements.flatMap((sectionElement: any) => {
+                    if (sectionElement.type === 'text') {
+                      // Split the text by newline characters
+                      const textParts = sectionElement.text.split('\n');
+                      return textParts.flatMap(
+                        (text: string, index: number) => {
+                          if (text === '') {
+                            return [];
+                          }
+                          // Create marks based on the text style
+                          const marks: TiptapMarks[] = Object.entries(
+                            sectionElement.style || {},
+                          )
+                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                            .filter(([_, value]) => value)
+                            .map(([type]) => ({ type }));
+                          return [
+                            { type: 'text', text, marks },
+                            // Add a hardBreak if it's not the last line
+                            ...(index < textParts.length - 1
+                              ? [{ type: 'hardBreak' }]
+                              : []),
+                          ];
+                        },
+                      );
+                    } else if (sectionElement.type === 'link') {
+                      // Create a text node with a link mark for links
+                      return [
+                        {
+                          type: 'text',
+                          text: sectionElement.text,
+                          marks: [
+                            {
+                              type: 'link',
+                              attrs: {
+                                href: sectionElement.url,
+                                target: '_blank',
+                                rel: 'noopener noreferrer',
+                                class: 'c-link',
+                              },
+                            },
+                          ],
+                        },
+                      ];
+                    }
+                    return [];
+                  }),
+                };
+                return [paragraph];
 
-          case 'rich_text_quote':
-            // Create blockquote nodes for each line of the quote
-            const blockquoteContent = element.elements[0].text
-              .split('\n')
-              .map((line: string) => ({
-                type: 'paragraph',
-                content: [{ type: 'text', text: line.trim() }],
-              }));
+              case 'rich_text_list':
+                // Determine the list type based on the style
+                const listType =
+                  element.style === 'ordered' ? 'orderedList' : 'bulletList';
+                // Create list items with paragraphs for each list element
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const listItems = element.elements.map((item: any) => ({
+                  type: 'listItem',
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  content: item.elements.flatMap((listElement: any) =>
+                    listElement.text.split('\n').map((part: string) => ({
+                      type: 'paragraph',
+                      content: [{ type: 'text', text: part.trim() }],
+                    })),
+                  ),
+                }));
+                // Add the list to the content
+                return [
+                  {
+                    type: listType,
+                    attrs: { tight: true, start: 1 },
+                    content: listItems,
+                  },
+                ];
 
-            return [
-              {
-                type: 'blockquote',
-                content: blockquoteContent,
-              },
-            ];
+              case 'rich_text_quote':
+                // Create blockquote nodes for each line of the quote
+                const blockquoteContent = element.elements[0].text
+                  .split('\n')
+                  .map((line: string) => ({
+                    type: 'paragraph',
+                    content: [{ type: 'text', text: line.trim() }],
+                  }));
 
-          case 'rich_text_preformatted':
-            // Create a codeBlock node for preformatted text
-            return [
-              {
-                type: 'codeBlock',
-                attrs: { language: null },
-                content: [{ type: 'text', text: element.elements[0].text }],
-              },
-            ];
+                return [
+                  {
+                    type: 'blockquote',
+                    content: blockquoteContent,
+                  },
+                ];
 
-          default:
-            return undefined;
+              case 'rich_text_preformatted':
+                // Create a codeBlock node for preformatted text
+                return [
+                  {
+                    type: 'codeBlock',
+                    attrs: { language: null },
+                    content: [{ type: 'text', text: element.elements[0].text }],
+                  },
+                ];
+
+              default:
+                return undefined;
+            }
+          });
+        } else if (block.type === 'header') {
+          const headingText = block.text.text;
+          return [
+            {
+              type: 'heading',
+              attrs: { level: 1 },
+              content: [{ type: 'text', text: headingText }],
+            },
+          ];
+        } else if (block.type === 'section' && block.text.type === 'mrkdwn') {
+          const taskListItems = block.text.text
+            .toString()
+            .split('\n')
+            .map((item: string) => {
+              const checked = item.startsWith(':white_check_mark:');
+              const itemText = item.slice(item.indexOf(' ') + 1);
+              return {
+                type: 'taskItem',
+                attrs: { checked },
+                content: [
+                  {
+                    type: 'paragraph',
+                    content: [{ type: 'text', text: itemText }],
+                  },
+                ],
+              };
+            });
+          return [
+            {
+              type: 'taskList',
+              content: taskListItems,
+            },
+          ];
         }
-      });
-    } else if (block.type === 'header') {
-      const headingText = block.text.text;
-      return [
-        {
-          type: 'heading',
-          attrs: { level: 1 },
-          content: [{ type: 'text', text: headingText }],
-        },
-      ];
-    } else if (block.type === 'section' && block.text.type === 'mrkdwn') {
-      const taskListItems = block.text.text
-        .toString()
-        .split('\n')
-        .map((item: string) => {
-          const checked = item.startsWith(':white_check_mark:');
-          const itemText = item.slice(item.indexOf(' ') + 1);
-          return {
-            type: 'taskItem',
-            attrs: { checked },
-            content: [
-              {
-                type: 'paragraph',
-                content: [{ type: 'text', text: itemText }],
-              },
-            ],
-          };
-        });
-      return [
-        {
-          type: 'taskList',
-          content: taskListItems,
-        },
-      ];
-    }
-    return [];
-  });
+        return [];
+      })
+    : [];
 
   // Add image nodes for attachments with image file types
   if (attachmentUrls && attachmentUrls.length > 0) {
     content.push(
-      ...attachmentUrls
-        .filter((attachment) => attachment.fileType.startsWith('image/'))
-        .map((attachment) => ({
-          type: 'image',
-          attrs: {
-            src: attachment.publicURL,
-            alt: attachment.originalName,
-          },
-        })),
+      ...attachmentUrls.map((attachment) => ({
+        type: attachment.fileType.startsWith('image/')
+          ? 'image'
+          : 'fileExtension',
+        attrs: attachment.fileType.startsWith('image/')
+          ? {
+              src: attachment.publicURL,
+              alt: attachment.originalName,
+              size: attachment.size,
+            }
+          : {
+              url: attachment.publicURL,
+              name: attachment.originalName,
+              size: attachment.size,
+            },
+      })),
     );
   }
 
