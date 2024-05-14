@@ -12,13 +12,16 @@ export const fileExtension = Node.create({
 
   addAttributes() {
     return {
-      url: {
+      src: {
         default: undefined,
       },
       alt: {
         default: undefined,
       },
       size: {
+        default: 0,
+      },
+      url: {
         default: 0,
       },
     };
