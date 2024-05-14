@@ -15,7 +15,7 @@ export const fileExtension = Node.create({
       url: {
         default: undefined,
       },
-      name: {
+      alt: {
         default: undefined,
       },
       size: {

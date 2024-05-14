@@ -21,7 +21,7 @@ export const FileComponent = (props: any) => {
           <RiFileLine size={16} />
 
           <div className="grow text-sm flex flex-col justify-center">
-            <div>{props.node.attrs.name}</div>
+            <div>{props.node.attrs.alt}</div>
             {props.node.attrs.size > 0 && (
               <div>
                 {filesize(props.node.attrs.size, { standard: 'jedec' })}

@@ -78,7 +78,7 @@ export const createFileUpload =
           type: 'fileExtension',
           attrs: {
             url: response.publicURL,
-            name: response.originalName,
+            alt: response.originalName,
             size: response.size,
           },
         })
