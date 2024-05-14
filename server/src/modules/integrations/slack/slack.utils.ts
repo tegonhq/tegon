@@ -807,7 +807,7 @@ export function convertSlackMessageToTiptapJson(
                       return [
                         {
                           type: 'text',
-                          text: sectionElement.text,
+                          text: sectionElement.url,
                           marks: [
                             {
                               type: 'link',
@@ -927,17 +927,11 @@ export function convertSlackMessageToTiptapJson(
         type: attachment.fileType.startsWith('image/')
           ? 'image'
           : 'fileExtension',
-        attrs: attachment.fileType.startsWith('image/')
-          ? {
-              src: attachment.publicURL,
-              alt: attachment.originalName,
-              size: attachment.size,
-            }
-          : {
-              url: attachment.publicURL,
-              name: attachment.originalName,
-              size: attachment.size,
-            },
+        attrs: {
+          src: attachment.publicURL,
+          alt: attachment.originalName,
+          size: attachment.size,
+        },
       })),
     );
   }
