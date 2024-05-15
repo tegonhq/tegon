@@ -30,6 +30,11 @@ export class WorkspaceIdRequestBody {
   workspaceId: string;
 }
 
+export class UserBody {
+  @IsString()
+  userId: string;
+}
+
 export const labelSeedData = [
   { name: 'Bug', color: '#EF4E4E' },
   { name: 'Feature', color: '#FADB5F' },

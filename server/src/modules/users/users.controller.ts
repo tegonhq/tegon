@@ -1,7 +1,15 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { User } from '@@generated/user/entities';
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
@@ -41,6 +49,13 @@ export class UsersController {
   @UseGuards(new AuthGuard())
   async getUsersById(@Body() userIdsBody: UserIdsBody): Promise<PublicUser[]> {
     return await this.usersService.getUsersbyId(userIdsBody.userIds);
+  }
+
+  @Get('email')
+  @UseGuards(new AuthGuard())
+  async getUserByEmail(@Query('email') email: string): Promise<User> {
+    const user = await this.usersService.getUserByEmail(email);
+    return user;
   }
 
   @Post('change_password')

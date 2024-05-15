@@ -64,6 +64,22 @@ export class UsersService {
     });
   }
 
+  async getUserByEmail(email: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+      include: {
+        usersOnWorkspaces: {
+          include: {
+            workspace: true,
+          },
+        },
+      },
+    });
+
+    return userSerializer(user);
+  }
   async updateUser(id: string, updateData: UpdateUserBody) {
     const user = await this.prisma.user.update({
       where: {

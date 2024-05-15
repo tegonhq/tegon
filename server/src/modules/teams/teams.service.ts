@@ -26,6 +26,18 @@ export default class TeamsService {
     });
   }
 
+  async getTeamByName(workspaceId: string, name: string): Promise<Team | null> {
+    return await this.prisma.team.findFirst({
+      where: {
+        workspaceId,
+        name: {
+          equals: name,
+          mode: 'insensitive',
+        },
+      },
+    });
+  }
+
   async createTeam(
     workspaceRequestParams: WorkspaceRequestParams,
     userId: string,
@@ -100,6 +112,22 @@ export default class TeamsService {
     workspaceId: string,
     userId: string,
   ): Promise<UsersOnWorkspaces> {
+    const existingTeamIds = await this.prisma.usersOnWorkspaces.findUnique({
+      where: {
+        userId_workspaceId: {
+          userId,
+          workspaceId,
+        },
+      },
+      select: {
+        teamIds: true,
+      },
+    });
+
+    const updatedTeamIds = existingTeamIds?.teamIds.includes(teamId)
+      ? existingTeamIds.teamIds
+      : [...(existingTeamIds?.teamIds || []), teamId];
+
     return await this.prisma.usersOnWorkspaces.update({
       where: {
         userId_workspaceId: {
@@ -107,7 +135,7 @@ export default class TeamsService {
           workspaceId,
         },
       },
-      data: { teamIds: { push: teamId } },
+      data: { teamIds: updatedTeamIds },
       include: { user: true },
     });
   }
