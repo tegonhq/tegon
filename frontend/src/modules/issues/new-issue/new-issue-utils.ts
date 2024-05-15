@@ -8,7 +8,6 @@ import type {
 } from 'common/types/integration-account';
 import type { WorkflowType } from 'common/types/team';
 
-import { draftKey } from './new-issues-type';
 import { getDefaultStatus } from '../components/status-dropdown-utils';
 
 export function enableBidirectionalSwitch(
@@ -66,21 +65,11 @@ export function getDefaultValues(
   pathname: string,
   isBidirectional: boolean,
 ): DefaultValues {
-  const draftData = localStorage.getItem(draftKey);
-  let defaultValues = {};
-
-  if (draftData) {
-    defaultValues = JSON.parse(draftData);
-    localStorage.removeItem(draftKey);
-  }
-
   return {
     labelIds: [],
     stateId: getDefaultStatus(workflows, pathname),
     priority: 0,
     isBidirectional,
-
-    ...defaultValues,
   };
 }
 

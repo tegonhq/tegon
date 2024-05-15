@@ -7,6 +7,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from 'components/ui/resizable';
+import { ScrollArea } from 'components/ui/scroll-area';
 
 import { SideDrawer } from './side-sheet';
 import { SidebarNav } from './sidebar-nav';
@@ -38,12 +39,18 @@ export function SettingsLayout({ children }: SettingsProps) {
               <SidebarNav />
             </ResizablePanel>
             <ResizableHandle withHandle />
-            <ResizablePanel minSize={30}>{children}</ResizablePanel>
+            <ResizablePanel minSize={30}>
+              <div className="h-[100vh] flex flex-col w-full">
+                <ScrollArea>{children}</ScrollArea>
+              </div>
+            </ResizablePanel>
           </ResizablePanelGroup>
         </div>
 
         <SideDrawer />
-        <div className="px-4 flex md:hidden pt-4"> {children} </div>
+        <div className="px-4 flex md:hidden pt-4 h-[100vh] flex-col w-full">
+          <ScrollArea> {children} </ScrollArea>
+        </div>
       </div>
     </AllProviders>
   );

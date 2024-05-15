@@ -46,7 +46,7 @@ import {
   setDefaultValuesAgain,
   isBidirectionalEnabled,
 } from './new-issue-utils';
-import { draftKey, NewIssueSchema } from './new-issues-type';
+import { NewIssueSchema } from './new-issues-type';
 import { FileUpload } from '../single-issue/left-side/file-upload/file-upload';
 
 interface NewIssueProps {
@@ -121,17 +121,6 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
     createIssue({ ...values, teamId: team.id, parentId });
     onClose();
   };
-
-  React.useEffect(() => {
-    return () => {
-      if (
-        !form.formState.isSubmitted &&
-        Object.keys(form.formState.dirtyFields).length > 0
-      ) {
-        localStorage.setItem(draftKey, JSON.stringify(form.getValues()));
-      }
-    };
-  }, [form]);
 
   const setDescriptionValue = useDebouncedCallback((value) => {
     setDescription(value);

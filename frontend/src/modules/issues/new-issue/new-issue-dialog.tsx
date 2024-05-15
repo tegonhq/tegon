@@ -4,16 +4,6 @@ import { Cross2Icon } from '@radix-ui/react-icons';
 import { RiArrowDropRightLine } from '@remixicon/react';
 import React from 'react';
 
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
-  AlertDialogAction,
-  AlertDialogHeader,
-  AlertDialogFooter,
-} from 'components/ui/alert-dialog';
 import { Button } from 'components/ui/button';
 import {
   Dialog,
@@ -23,7 +13,6 @@ import {
 } from 'components/ui/dialog';
 
 import { NewIssue } from './new-issue';
-import { draftKey } from './new-issues-type';
 import { TeamDropdown } from './team-dropdown';
 
 interface NewIssueDialogProps {
@@ -33,19 +22,8 @@ interface NewIssueDialogProps {
 
 export function NewIssueDialog({ open, setOpen }: NewIssueDialogProps) {
   const [team, setTeam] = React.useState(undefined);
-  const [discardDraft, setDiscardDraft] = React.useState(false);
 
   const onClose = () => {
-    const draftData = localStorage.getItem(draftKey);
-    if (draftData) {
-      setDiscardDraft(true);
-    } else {
-      setOpen(false);
-    }
-  };
-
-  const onDiscard = () => {
-    localStorage.removeItem(draftKey);
     setOpen(false);
   };
 
@@ -78,22 +56,6 @@ export function NewIssueDialog({ open, setOpen }: NewIssueDialogProps) {
           )}
         </DialogContent>
       </Dialog>
-
-      <AlertDialog open={discardDraft} onOpenChange={setDiscardDraft}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently remove this
-              the draft issue.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={onDiscard}>Continue</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 }

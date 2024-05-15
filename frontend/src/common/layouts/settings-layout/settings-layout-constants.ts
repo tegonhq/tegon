@@ -30,6 +30,10 @@ export const ACCOUNT_LINKS: LinkItem[] = [
     href: 'profile',
   },
   {
+    title: 'Security',
+    href: 'security',
+  },
+  {
     title: 'Preferences',
     href: 'preferences',
   },

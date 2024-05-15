@@ -2,10 +2,12 @@
 
 import { Preferences } from './preferences';
 import { Profile } from './profile';
+import { Security } from './security';
 
 export const SECTION_COMPONENTS = {
   profile: Profile,
   preferences: Preferences,
+  security: Security,
 };
 
 type StringKeys<T> = {
