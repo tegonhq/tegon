@@ -12,6 +12,7 @@ import { PrismaService } from 'nestjs-prisma';
 import {
   AttachmentRequestParams,
   AttachmentResponse,
+  ExternalFile,
 } from './attachments.interface';
 
 @Injectable()
@@ -25,7 +26,7 @@ export class AttachmentService {
     });
   }
 
-  async uploadToGCP(
+  async uploadAttachment(
     files: Express.Multer.File[],
     userId: string,
     workspaceId: string,
@@ -62,13 +63,50 @@ export class AttachmentService {
         },
       });
 
+      const publicURL = `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/${workspaceId}/${attachment.id}`;
       await this.prisma.attachment.update({
         where: { id: attachment.id },
-        data: { status: AttachmentStatus.Uploaded },
+        data: { status: AttachmentStatus.Uploaded, url: publicURL },
       });
 
       return {
-        publicURL: `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/${workspaceId}/${attachment.id}`,
+        publicURL,
+        fileType: attachment.fileType,
+        originalName: attachment.originalName,
+        size: attachment.size,
+      } as AttachmentResponse;
+    });
+
+    return await Promise.all(attachmentPromises);
+  }
+
+  async createExternalAttachment(
+    files: ExternalFile[],
+    userId: string,
+    workspaceId: string,
+    sourceMetadata?: Record<string, string>,
+  ) {
+    const attachmentPromises = files.map(async (file) => {
+      const attachment = await this.prisma.attachment.create({
+        data: {
+          fileName: file.filename,
+          originalName: file.originalname,
+          fileType: file.mimetype,
+          size: file.size,
+          status: AttachmentStatus.External,
+          fileExt: file.originalname.split('.').pop(),
+          uploadedById: userId,
+          workspaceId,
+          url: file.url,
+          sourceMetadata,
+        },
+        include: {
+          workspace: true,
+        },
+      });
+
+      return {
+        publicURL: file.url,
         fileType: attachment.fileType,
         originalName: attachment.originalName,
         size: attachment.size,

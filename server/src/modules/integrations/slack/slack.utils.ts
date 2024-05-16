@@ -556,17 +556,16 @@ export async function sendEphemeralMessage(
   channelId: string,
   text: string,
   threadTs: string,
+  userId: string,
 ) {
-  const slackSettings = integrationAccount.settings as Settings;
-
   const response = await postRequest(
     'https://slack.com/api/chat.postEphemeral',
     getSlackHeaders(integrationAccount),
     {
       channel: channelId,
-      text,
+      blocks: [{ type: 'section', text: { type: 'plain_text', text } }],
       thread_ts: threadTs,
-      user: slackSettings.Slack.botUserId,
+      user: userId,
       parse: 'full',
     },
   );

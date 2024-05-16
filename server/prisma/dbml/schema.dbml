@@ -368,6 +368,7 @@ Table Attachment {
   fileType String [not null]
   fileExt String [not null]
   size Int [not null]
+  url String
   status AttachmentStatus [not null]
   sourceMetadata Json
   uploadedBy User
@@ -477,6 +478,7 @@ Enum AttachmentStatus {
   Failed
   Uploaded
   Deleted
+  External
 }
 
 Ref: UsersOnWorkspaces.userId > User.id
