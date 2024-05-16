@@ -874,7 +874,15 @@ export function convertSlackMessageToTiptapJson(
                   {
                     type: 'codeBlock',
                     attrs: { language: null },
-                    content: [{ type: 'text', text: element.elements[0].text }],
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    content: element.elements.flatMap((sectionElement: any) => {
+                      if (sectionElement.type === 'text') {
+                        return [{ type: 'text', text: sectionElement.text }];
+                      } else if (sectionElement.type === 'link') {
+                        return [{ type: 'text', text: sectionElement.url }];
+                      }
+                      return [];
+                    }),
                   },
                 ];
 
