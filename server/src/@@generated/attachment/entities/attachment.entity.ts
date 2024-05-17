@@ -14,6 +14,7 @@ originalName: string ;
 fileType: string ;
 fileExt: string ;
 size: number ;
+url: string  | null;
 status: AttachmentStatus ;
 sourceMetadata: Prisma.JsonValue  | null;
 uploadedBy?: User  | null;

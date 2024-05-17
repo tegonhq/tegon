@@ -12,6 +12,7 @@ originalName: string;
 fileType: string;
 fileExt: string;
 size: number;
+url?: string;
 @ApiProperty({ enum: AttachmentStatus})
 status: AttachmentStatus;
 sourceMetadata?: Prisma.InputJsonValue;

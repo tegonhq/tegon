@@ -13,6 +13,8 @@ import { OAuthCallbackModule } from 'modules/oauth-callback/oauth-callback.modul
 import { VectorModule } from 'modules/vector/vector.module';
 
 import { SlackController } from './slack.controller';
+import { SlackProcessor } from './slack.processor';
+import { SlackQueue } from './slack.queue';
 import SlackService from './slack.service';
 
 @Module({
@@ -27,7 +29,13 @@ import SlackService from './slack.service';
     BullModule.registerQueue({ name: 'slack' }),
   ],
   controllers: [SlackController],
-  providers: [PrismaService, SlackService, AttachmentService],
+  providers: [
+    PrismaService,
+    SlackService,
+    AttachmentService,
+    SlackQueue,
+    SlackProcessor,
+  ],
   exports: [SlackService],
 })
 export class SlackModule {}

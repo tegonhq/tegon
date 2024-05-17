@@ -28,6 +28,7 @@ import {
   SlashCommandSessionRecord,
   slackIssueData,
 } from './slack.interface';
+import { SlackQueue } from './slack.queue';
 import {
   convertSlackMessageToTiptapJson,
   createIssueCommentAndLinkIssue,
@@ -57,6 +58,7 @@ export default class SlackService {
     private issuesService: IssuesService,
     private linkedIssueService: LinkedIssueService,
     private attachmentService: AttachmentService,
+    private slackQueue: SlackQueue,
   ) {}
 
   private readonly logger: Logger = new Logger('SlackService', {
@@ -99,14 +101,18 @@ export default class SlackService {
     switch (event.type) {
       case 'message':
         // Handle thread messages
-        return await this.handleThread(event, integrationAccount);
+        this.slackQueue.handleThreadJob(event, integrationAccount);
+        break;
       case 'reaction_added':
-        // Handle message reactions
-        return await this.handleMessageReaction(eventBody, integrationAccount);
+        // Handle message reactions)
+        this.slackQueue.handleMessageReactionJob(eventBody, integrationAccount);
+        break;
       default:
         this.logger.debug('Unhandled Slack event type:', event.type);
         return undefined;
     }
+
+    return { status: 200 };
   }
 
   async getChannelRedirectURL(
@@ -400,11 +406,14 @@ export default class SlackService {
 
     let attachmentUrls;
     if (message.files) {
+      // Get the files buffer from Slack using the integration account and message files
       const multerFiles = await getFilesBuffer(
         integrationAccount,
         message.files,
       );
-      attachmentUrls = await this.attachmentService.uploadToGCP(
+
+      // Upload the files to GCP and get the attachment URLs
+      attachmentUrls = await this.attachmentService.uploadAttachment(
         multerFiles,
         userId,
         integrationAccount.workspaceId,
@@ -508,6 +517,15 @@ export default class SlackService {
       sessionData,
     );
 
+    // Send an ephemeral message to the user indicating that a new issue is being created
+    await sendEphemeralMessage(
+      integrationAccount,
+      channelId,
+      `Creating a New Issue`,
+      slackMessageResponse.messages[0].thread_ts || threadTs,
+      slackUserId,
+    );
+
     // Check if the thread is already linked to an existing issue
     const [linkedIssue, [stateId, userId]] = await Promise.all([
       this.prisma.linkedIssue.findFirst({
@@ -528,6 +546,7 @@ export default class SlackService {
         channelId,
         `This thread is already linked with an existing Issue. so we can't create a new Issue`,
         slackMessageResponse.messages[0].thread_ts || threadTs,
+        slackUserId,
       );
 
       this.logger.debug(
@@ -561,7 +580,7 @@ export default class SlackService {
         slackMessageResponse.messages[0].files,
       );
       // Upload the files to GCP and get the attachment URLs
-      attachmentUrls = await this.attachmentService.uploadToGCP(
+      attachmentUrls = await this.attachmentService.uploadAttachment(
         multerFiles,
         userId,
         integrationAccount.workspaceId,

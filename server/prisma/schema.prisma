@@ -422,6 +422,7 @@ model Attachment {
   fileType       String
   fileExt        String
   size           Int
+  url            String?
   status         AttachmentStatus
   sourceMetadata Json?
 
@@ -537,4 +538,5 @@ enum AttachmentStatus {
   Failed
   Uploaded
   Deleted
+  External
 }

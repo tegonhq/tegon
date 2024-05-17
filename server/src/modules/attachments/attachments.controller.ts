@@ -44,7 +44,7 @@ export class AttachmentController {
   ) {
     const userId = session.getUserId();
 
-    return this.attachementService.uploadToGCP(
+    return this.attachementService.uploadAttachment(
       files,
       userId,
       workspaceRequestParams.workspaceId,

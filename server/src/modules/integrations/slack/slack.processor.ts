@@ -4,21 +4,41 @@ import { Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
 
-@Processor('github')
-export class GithubProcessor {
-  constructor() {}
+import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
+
+import SlackService from './slack.service';
+import { EventBody } from '../integrations.interface';
+
+@Processor('slack')
+export class SlackProcessor {
+  constructor(private slackService: SlackService) {}
   private readonly logger: Logger = new Logger('SlackProcessor');
 
-  @Process('handleGithubEvents')
-  async handleTwoWaySync(
+  @Process('handleThread')
+  async handleThread(
     job: Job<{
-      integrationAccountId: string;
-      channelId: string;
+      event: EventBody;
+      integrationAccount: IntegrationAccountWithRelations;
     }>,
   ) {
-    const { integrationAccountId, channelId } = job.data;
+    const { event, integrationAccount } = job.data;
     this.logger.debug(
-      `Adding Tegon slack Bot to this channel ${channelId} for this Integration Account ${integrationAccountId}`,
+      `Handling Slack thread for this Integration Account ${integrationAccount.id}`,
     );
+    this.slackService.handleThread(event, integrationAccount);
+  }
+
+  @Process('handleMessageReaction')
+  async handleMessageReaction(
+    job: Job<{
+      event: EventBody;
+      integrationAccount: IntegrationAccountWithRelations;
+    }>,
+  ) {
+    const { event, integrationAccount } = job.data;
+    this.logger.debug(
+      `Handling Slack message reaction for this Integration Account ${integrationAccount.id}`,
+    );
+    this.slackService.handleMessageReaction(event, integrationAccount);
   }
 }

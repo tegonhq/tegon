@@ -4,6 +4,10 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
 
+import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
+
+import { EventBody } from '../integrations.interface';
+
 @Injectable()
 export class SlackQueue {
   constructor(@InjectQueue('slack') private readonly slackQueue: Queue) {}
@@ -12,6 +16,26 @@ export class SlackQueue {
     await this.slackQueue.add('addBotToChannel', {
       integrationAccountId,
       channelId,
+    });
+  }
+
+  async handleThreadJob(
+    event: EventBody,
+    integrationAccount: IntegrationAccountWithRelations,
+  ) {
+    await this.slackQueue.add('handleThread', {
+      event,
+      integrationAccount,
+    });
+  }
+
+  async handleMessageReactionJob(
+    event: EventBody,
+    integrationAccount: IntegrationAccountWithRelations,
+  ) {
+    await this.slackQueue.add('handleMessageReaction', {
+      event,
+      integrationAccount,
     });
   }
 }
