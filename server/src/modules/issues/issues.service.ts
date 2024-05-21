@@ -311,6 +311,15 @@ export default class IssuesService {
       },
     });
 
+    await this.prisma.issue.updateMany({
+      where: {
+        parentId: deleteIssue.id,
+      },
+      data: {
+        parentId: null,
+      },
+    });
+
     this.logger.log(`Issue ${deleteIssue.id} marked as deleted`);
 
     await this.deleteIssueHistory(deleteIssue.id);
