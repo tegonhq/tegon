@@ -38,6 +38,9 @@ services:
     restart: unless-stopped
 
   server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
     image: "tegonhq/tegon-server:${VERSION}"
     container_name: tegon-server
     depends_on:
@@ -107,6 +110,9 @@ services:
       - 8000:3000
 
   prisma:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.prisma
     image: "tegonhq/tegon-prisma:${VERSION}"
     container_name: tegon-prisma
     restart: unless-stopped
