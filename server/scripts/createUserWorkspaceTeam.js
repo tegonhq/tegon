@@ -44,7 +44,7 @@ function generateRandomPassword(length = 10) {
 
 async function createUser(email, password = null) {
   try {
-    const finalPassword = password ? password : generateRandomPassword(10)
+    const finalPassword = password ? password : generateRandomPassword(10);
     const userResponse = await axios.post(`${host}/auth/signup`, {
       formFields: [
         {
@@ -315,7 +315,6 @@ async function main() {
         const team = await getOrCreateTeam(teamName, null, workspace.id);
         await addUserWorkspaceTeam(userEmails, workspace, team);
         console.log('Users added to workspace and team successfully.');
-
       } else if (option === '5') {
         // Exit the script
         break;
