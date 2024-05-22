@@ -1,0 +1,71 @@
+name: Build Docker Images
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+
+      - name: Read version from .env file
+        run: |
+          echo "VERSION=$(grep '^VERSION=' .env | cut -d '=' -f 2)" >> $GITHUB_ENV
+
+      - name: Create certs folder
+        run: |
+          mkdir -p server/certs
+          echo "${{ secrets.GH_APP_PEM }}" > server/certs/804579.pem
+          echo "${{ secrets.TEGON_GCS_SA }}" > server/certs/tegon-gcs.json
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker Registry
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Server Docker Image
+        run: |
+          cd server
+          docker buildx build --platform linux/amd64,linux/arm64 -t tegonhq/tegon-server:${{ env.VERSION }} --push .
+
+      - name: Build Prisma Docker Image
+        run: |
+          cd server
+          docker buildx build -f Dockerfile.prisma --platform linux/amd64,linux/arm64 -t tegonhq/tegon-prisma:${{ env.VERSION }} --push .
+
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+
+      - name: Read version from .env file
+        run: |
+          echo "VERSION=$(grep '^VERSION=' .env | cut -d '=' -f 2)" >> $GITHUB_ENV
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker Registry
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build and Push Frontend Docker Image
+        run: |
+          cd frontend
+          docker buildx build --platform linux/amd64,linux/arm64 -t tegonhq/tegon-webapp:${{ env.VERSION }} --push .
