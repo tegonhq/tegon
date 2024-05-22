@@ -9,6 +9,7 @@ import {
   getBotAccessToken,
   getGithubHeaders,
   sendGithubFirstComment,
+  sendGithubPRFirstComment,
 } from 'modules/integrations/github/github.utils';
 import { getRequest } from 'modules/integrations/integrations.utils';
 import { getSentryIssue } from 'modules/integrations/sentry/sentry.utils';
@@ -355,6 +356,25 @@ export async function sendFirstComment(
       linkedIssue.issue,
       linkedIssue.sourceId,
     );
+  } else if (type === LinkedIssueSubType.GithubPullRequest) {
+    const matches = linkedIssue.url.match(
+      /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)$/,
+    );
+
+    let url: string;
+    if (matches) {
+      const [, owner, repo, number] = matches;
+      url = `https://api.github.com/repos/${owner}/${repo}/issues/${number}/comments`;
+    }
+    if (url) {
+      await sendGithubPRFirstComment(
+        prisma,
+        integrationAccount,
+        linkedIssue.issue.team,
+        linkedIssue.issue,
+        url,
+      );
+    }
   } else if (
     type === LinkedIssueSubType.Slack &&
     subType === LinkedSlackMessageType.Thread
