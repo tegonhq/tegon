@@ -10,7 +10,7 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-const host = 'http://localhost:3000/api';
+const host = 'http://localhost:3001';
 
 function generateRandomPassword(length = 10) {
   const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
