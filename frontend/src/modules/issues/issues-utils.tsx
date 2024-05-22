@@ -202,14 +202,14 @@ export function getFilters(
   }
 
   if (pathname.includes('/backlog')) {
-    const filteredWorkflow = workflows.filter(
+    const filteredWorkflows = workflows.filter(
       (workflow) => workflow.category === WorkflowCategoryEnum.BACKLOG,
-    )[0];
+    );
 
     filters.push({
       key: 'stateId',
       filterType: FilterTypeEnum.IS,
-      value: [filteredWorkflow.id],
+      value: filteredWorkflows.map((workflow) => workflow.id),
     });
   }
 
@@ -231,7 +231,10 @@ export function getFilters(
   return filters;
 }
 
-export function useFilterIssues(issues: IssueType[]): IssueType[] {
+export function useFilterIssues(
+  issues: IssueType[],
+  teamId?: string,
+): IssueType[] {
   const {
     applicationStore,
     workflowsStore,
@@ -240,13 +243,12 @@ export function useFilterIssues(issues: IssueType[]): IssueType[] {
     issueRelationsStore,
   } = useContextStore();
   const pathname = usePathname();
+  const workflows = teamId
+    ? workflowsStore.getWorkflowsForTeam(teamId)
+    : workflowsStore.workflows;
 
   return React.useMemo(() => {
-    const filters = getFilters(
-      applicationStore,
-      workflowsStore.workflows,
-      pathname,
-    );
+    const filters = getFilters(applicationStore, workflows, pathname);
     const filteredIssues = filterIssues(issues, filters, {
       linkedIssuesStore,
       issuesStore,

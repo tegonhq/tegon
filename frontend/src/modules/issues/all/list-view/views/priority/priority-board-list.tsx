@@ -34,7 +34,7 @@ export const PriorityBoardList = observer(
       team.id,
       applicationStore.displaySettings.showSubIssues,
     );
-    const computedIssues = useFilterIssues(issues);
+    const computedIssues = useFilterIssues(issues, team.id);
 
     if (
       computedIssues.length === 0 &&

@@ -38,7 +38,7 @@ export const CategoryBoardList = observer(
       currentTeam.id,
       applicationStore.displaySettings.showSubIssues,
     );
-    const computedIssues = useFilterIssues(issues);
+    const computedIssues = useFilterIssues(issues, currentTeam.id);
 
     if (
       computedIssues.length === 0 &&

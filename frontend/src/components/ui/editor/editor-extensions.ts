@@ -29,6 +29,7 @@ const taskList = TaskList.configure({
     class: cx('not-prose'),
   },
 });
+
 const taskItem = TaskItem.configure({
   HTMLAttributes: {
     class: cx('flex items-start gap-1 my-2'),
