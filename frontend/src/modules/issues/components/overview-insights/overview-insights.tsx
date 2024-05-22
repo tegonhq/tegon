@@ -3,6 +3,7 @@
 import { useFilterIssues } from 'modules/issues/issues-utils';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'components/ui/tabs';
+import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -17,7 +18,11 @@ interface OverviewInsightsProps {
 
 export function OverviewInsights({ title }: OverviewInsightsProps) {
   const { issuesStore } = useContextStore();
-  const computedIssues = useFilterIssues(issuesStore.getIssues());
+  const team = useCurrentTeam();
+  const computedIssues = useFilterIssues(
+    issuesStore.getIssuesForTeam(team.id),
+    team.id,
+  );
 
   return (
     <div className="flex flex-col">

@@ -30,7 +30,8 @@ export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
     label.id,
     applicationStore.displaySettings.showSubIssues,
   );
-  const computedIssues = useFilterIssues(issues);
+  const team = useCurrentTeam();
+  const computedIssues = useFilterIssues(issues, team.id);
 
   if (
     computedIssues.length === 0 &&
@@ -87,7 +88,7 @@ export const NoLabelBoardList = observer(() => {
     applicationStore.displaySettings.showSubIssues,
     team.id,
   );
-  const computedIssues = useFilterIssues(issues);
+  const computedIssues = useFilterIssues(issues, team.id);
 
   if (
     computedIssues.length === 0 &&

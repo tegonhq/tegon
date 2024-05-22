@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
-import { Workspace } from '@prisma/client';
+import { UsersOnWorkspaces, Workspace } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -35,6 +35,24 @@ export default class WorkspacesService {
     });
 
     return workspace;
+  }
+
+  async getWorkspaceByName(name: string): Promise<Workspace> {
+    return await this.prisma.workspace.findFirst({
+      where: {
+        name: {
+          equals: name,
+          mode: 'insensitive',
+        },
+      },
+      include: {
+        usersOnWorkspaces: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
   }
 
   async getAllWorkspaces(userId: string): Promise<Workspace[]> {
@@ -99,6 +117,19 @@ export default class WorkspacesService {
           },
         },
       });
+    });
+  }
+
+  async addUserToWorkspace(
+    workspaceId: string,
+    userId: string,
+  ): Promise<UsersOnWorkspaces> {
+    return await this.prisma.usersOnWorkspaces.upsert({
+      where: {
+        userId_workspaceId: { workspaceId, userId },
+      },
+      update: {},
+      create: { workspaceId, userId },
     });
   }
 }

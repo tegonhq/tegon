@@ -50,8 +50,8 @@ const AcceptIssueSchema = z.object({
   stateId: z.string(),
 
   labelIds: z.array(z.string()),
-  priority: z.number(),
-  assigneeId: z.optional(z.string()),
+  priority: z.number().nullable(),
+  assigneeId: z.string().optional().nullable(),
 });
 
 interface AcceptIssueParams {
@@ -79,6 +79,8 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
       stateId: issue.stateId,
     },
   });
+
+  console.log(form.formState);
 
   const onSubmit = async (values: AcceptIssueParams) => {
     updateIssue({

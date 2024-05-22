@@ -10,6 +10,7 @@ COPY package.json ./
 COPY yarn.lock ./
 
 COPY prisma ./prisma/
+COPY scripts ./scripts/
 
 # Install app dependencies
 RUN yarn
@@ -27,6 +28,7 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/certs ./certs
 COPY --from=builder /app/templates ./templates
+COPY --from=builder /app/scripts ./scripts
 
 EXPOSE 3000
 CMD [ "npm", "run", "start:migrate:prod" ]

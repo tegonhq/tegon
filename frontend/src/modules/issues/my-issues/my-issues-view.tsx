@@ -16,6 +16,7 @@ export const MyIssuesView = observer(() => {
   const { issuesStore } = useContextStore();
   const issues = useFilterIssues(
     issuesStore.getIssuesForUser(true, { userId: user.id }),
+    undefined,
   );
 
   return (

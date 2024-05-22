@@ -1,0 +1,60 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Docs",
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#5484ef",
+    "light": "#5484ef",
+    "dark": "#5484ef",
+    "anchors": {
+      "from": "#5484ef",
+      "to": "#5484ef"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:harshith@tegon.ai"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Dashboard",
+    "url": "https://app.tegon.ai/auth/signin"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Community",
+      "icon": "slack",
+      "url": "https://join.slack.com/t/tegoncommunity/shared_invite/zt-2i1e781ip-zwauijRV9TRtRKoJi3tqng"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "introduction",
+        "quickstart"
+      ]
+    },
+    {
+      "group": "Tegon Open Source (OSS)",
+      "pages": [
+        "oss/deploy-tegon"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/tegonhq/tegon",
+    "linkedin": "https://www.linkedin.com/company/tegon-ai"
+  }
+}

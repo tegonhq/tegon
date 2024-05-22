@@ -44,7 +44,7 @@ export const AssigneeBoardList = observer(
       { userId: userOnWorkspace.userId, teamId: team.id },
     );
     const { usersData, isLoading } = useUsersData();
-    const computedIssues = useFilterIssues(issues);
+    const computedIssues = useFilterIssues(issues, team.id);
 
     if (isLoading) {
       return null;
@@ -122,7 +122,7 @@ export const NoAssigneeView = observer(() => {
     applicationStore.displaySettings.showSubIssues,
     { userId: undefined, teamId: team.id },
   );
-  const computedIssues = useFilterIssues(issues);
+  const computedIssues = useFilterIssues(issues, team.id);
 
   if (computedIssues.length === 0) {
     return null;
