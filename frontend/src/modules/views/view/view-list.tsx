@@ -27,9 +27,5 @@ export const ViewList = observer(({ view }: ViewListProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicationStore.identifier]);
 
-  return (
-    <div className="grow overflow-hidden">
-      <ListView />
-    </div>
-  );
+  return <ListView />;
 });

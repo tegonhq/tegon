@@ -42,7 +42,8 @@ export const BoardIssueItem = observer(
       query: { workspaceSlug },
     } = useRouter();
     const { mutate: updateIssue } = useUpdateIssueMutation({});
-    const { issuesStore, issueRelationsStore } = useContextStore();
+    const { issuesStore, issueRelationsStore, applicationStore } =
+      useContextStore();
     const issue = issuesStore.getIssueById(issueId);
     const team = useTeamWithId(issue.teamId);
     const blockedIssues = issueRelationsStore.getIssueRelationForType(
@@ -77,6 +78,12 @@ export const BoardIssueItem = observer(
         {...provided.dragHandleProps}
         style={getStyle(provided)}
         data-is-dragging={isDragging}
+        onMouseOver={() => {
+          const { selectedIssues } = applicationStore;
+          if (selectedIssues.length === 0) {
+            applicationStore.setHoverIssue(issue.id);
+          }
+        }}
       >
         <div className="flex justify-between">
           <div className="text-muted-foreground min-w-[70px]">{`${team.identifier}-${issue.number}`}</div>

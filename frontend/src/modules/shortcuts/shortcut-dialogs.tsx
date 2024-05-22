@@ -47,9 +47,7 @@ export function ShortcutDialogs() {
   useShortcutHotKeys('p', () => stateChange(true, 'priority'), [
     SCOPES.AllIssues,
   ]);
-  useShortcutHotKeys('c', () => stateChange(true, 'newIssue'), [
-    SCOPES.AllIssues,
-  ]);
+  useShortcutHotKeys('c', () => stateChange(true, 'newIssue'), [SCOPES.Global]);
   useShortcutHotKeys(`${Key.Meta}+/`, () => stateChange(true, 'search'), [
     SCOPES.AllIssues,
   ]);
