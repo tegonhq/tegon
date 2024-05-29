@@ -390,7 +390,7 @@ export default class IssuesService {
     teamRequestParams: TeamRequestParams,
     suggestionsInput: SuggestionsInput,
   ) {
-    if (!suggestionsInput.description) {
+    if (!suggestionsInput.description || suggestionsInput.description) {
       return { labels: [], assignees: [] };
     }
 
@@ -413,7 +413,7 @@ export default class IssuesService {
         suggestionsInput.workspaceId,
         suggestionsInput.description,
         5,
-        0.5,
+        // 0.5,
       ),
     ]);
 

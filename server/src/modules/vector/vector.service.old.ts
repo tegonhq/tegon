@@ -9,21 +9,13 @@ import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
 import { IssueWithRelations } from 'modules/issues/issues.interface';
 
 import { issueSchema } from './vector.interface';
-import { CohereClient } from 'cohere-ai';
-import { float } from '@elastic/elasticsearch/lib/api/types';
 
 @Injectable()
 export class VectorService implements OnModuleInit {
-  private readonly cohereClient: CohereClient;
-
   constructor(
     private prisma: PrismaService,
     private typesenseClient: TypesenseClient,
-  ) {
-    this.cohereClient = new CohereClient({
-      token: process.env.COHERE_API_KEY,
-    });
-  }
+  ) {}
 
   private readonly logger: Logger = new Logger('VectorService');
 
@@ -58,7 +50,7 @@ export class VectorService implements OnModuleInit {
     const issueNumber = `${issue.team.identifier}-${issue.number}`;
 
     // // Prepare the input text for embedding
-    const inputText = `${issueNumber}_${issue.title}_${convertTiptapJsonToText(issue.description)}`;
+    // const inputText = `${issueNumber} ${issue.title} ${convertTiptapJsonToText(issue.description)}`;
 
     // // Make a request to OpenAI's embedding API
     // const embeddingResponse = await fetch(
@@ -79,15 +71,6 @@ export class VectorService implements OnModuleInit {
     // const embeddingData = await embeddingResponse.json();
     // const embedding = embeddingData.data[0].embedding;
 
-    const cohereEmbed = await this.cohereClient.embed({
-      texts: [inputText],
-      model: 'embed-english-v3.0',
-      inputType: 'search_query',
-      embeddingTypes: ['float'],
-    });
-
-    const embedding = cohereEmbed.embeddings as Record<string, float[]>;
-
     await this.typesenseClient
       .collections('issues')
       .documents()
@@ -103,7 +86,7 @@ export class VectorService implements OnModuleInit {
         stateId: issue.stateId,
         workspaceId: issue.team.workspaceId,
         assigneeId: issue.assigneeId ?? '',
-        embeddings: embedding.float[0],
+        // embeddings: embedding,
       });
   }
 
@@ -135,21 +118,12 @@ export class VectorService implements OnModuleInit {
     // const embeddingData = await embeddingResponse.json();
     // const embedding = embeddingData.data[0].embedding;
 
-    const cohereEmbed = await this.cohereClient.embed({
-      texts: [searchQuery],
-      model: 'embed-english-v3.0',
-      inputType: 'search_query',
-      embeddingTypes: ['float'],
-    });
-
-    const embedding = cohereEmbed.embeddings as Record<string, float[]>;
-
     const searchParameters = {
       q: searchQuery || '*',
       query_by: 'numberString,issueNumber,title,descriptionString,embeddings',
       filter_by: `workspaceId:=${workspaceId}`,
       sort_by: searchQuery ? '_text_match:desc' : 'number:desc',
-      vector_query: `embeddings:([${embedding.float[0]}], distance_threshold:${vectorDistance})`,
+      vector_query: `embeddings:([], distance_threshold:${vectorDistance})`,
       page: 1,
       per_page: limit,
     };
@@ -284,12 +258,7 @@ export class VectorService implements OnModuleInit {
     });
 
     for (const issue of issues) {
-      console.log(issue.number);
       await this.createIssueEmbedding(issue);
-
-      // Add a random timeout between 500ms to 1000ms
-      const randomTimeout = Math.floor(Math.random() * 501) + 500;
-      await new Promise((resolve) => setTimeout(resolve, randomTimeout));
     }
 
     this.logger.log(

@@ -12,20 +12,20 @@ export default class SearchService {
     workspaceId: string,
     query: string,
     limit: number = 10,
-    vectorDistance: number,
+    // vectorDistance: number,
   ) {
     const searchData = await this.vectorService.searchEmbeddings(
       workspaceId,
       query,
       limit,
-      vectorDistance,
+      // vectorDistance,
     );
 
     return searchData;
   }
 
   async similarData(workspaceId: string, issueId: string, limit: number = 3) {
-    const similarIssues = await this.vectorService.similarIssues(
+    const similarIssues = await this.vectorService.searchEmbeddings(
       workspaceId,
       issueId,
       limit,

@@ -17,14 +17,17 @@ export const issueSchema: CollectionCreateSchema = {
     { name: 'workspaceId', type: 'string' },
     { name: 'assigneeId', type: 'string' },
     {
-      name: 'embedding',
+      name: 'embeddings',
       type: 'float[]',
-      embed: {
-        from: ['issueNumber', 'title', 'description'],
-        model_config: {
-          model_name: 'ts/all-MiniLM-L12-v2',
-        },
-      },
+      // num_dim: 1536, //GPT
+      num_dim: 1024, //cohere
+      // embed: {
+      //   from: ['issueNumber', 'title', 'description'],
+      //   model_config: {
+      //     // model_name: 'ts/all-MiniLM-L12-v2',
+      //     model_name: 'ts/e5-small-v2',
+      //   },
+      // },
     },
   ],
   default_sorting_field: 'number',

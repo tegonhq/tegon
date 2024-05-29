@@ -23,7 +23,7 @@ export class SearchController {
       searchData.workspaceId,
       searchData.query,
       parseInt(searchData.limit),
-      Number(searchData.threshold),
+      // Number(searchData.threshold),
     );
   }
 
