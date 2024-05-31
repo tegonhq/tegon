@@ -10,7 +10,7 @@
 
 [![Star us on GitHub](https://img.shields.io/github/stars/tegonhq/tegon?color=FFD700&label=Stars&logo=Github)](https://github.com/tegonhq/tegon)
 
-[![Join our Slack Server](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA)
+[![Join our Slack Server](https://img.shields.io/badge/Slack-Join%20our%20community-1da1f2?style=flat&logo=slack&logoColor=%23fff)](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA)
 [![Tweet at us on Twitter](https://img.shields.io/badge/Twitter-tweet%20at%20us-1da1f2?style=flat&logo=twitter&logoColor=%23fff)](https://twitter.com/tegonhq)
 
 [Love Tegon? Give us a ⭐ on GitHub!](https://github.com/tegonhq/tegon)
