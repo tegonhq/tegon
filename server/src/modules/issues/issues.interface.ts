@@ -43,6 +43,11 @@ export class LinkIssueInput {
   title?: string;
 }
 
+export class WorkspaceQueryParams {
+  @IsString()
+  workspaceId: string;
+}
+
 export class RelationInput {
   @IsOptional()
   @IsEnum(IssueRelationType)

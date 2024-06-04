@@ -1,16 +1,21 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { Readable } from 'stream';
+
 import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Issue } from '@prisma/client';
+import { Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -26,6 +31,7 @@ import {
   SuggestionsInput,
   TeamRequestParams,
   UpdateIssueInput,
+  WorkspaceQueryParams,
 } from './issues.interface';
 import IssuesService from './issues.service';
 
@@ -119,5 +125,29 @@ export class IssuesController {
       issueParams.issueId,
       subscriberData.type,
     );
+  }
+
+  @Get('export')
+  @UseGuards(new AuthGuard())
+  async exportIssues(
+    @Query() workspaceParams: WorkspaceQueryParams,
+    @Res() res: Response,
+  ): Promise<void> {
+    const csvString = await this.issuesService.exportIssues(workspaceParams);
+
+    const csvBuffer = Buffer.from(csvString, 'utf-8');
+    const csvStream = new Readable();
+
+    csvStream._read = () => {
+      csvStream.push(csvBuffer);
+      csvStream.push(null);
+    };
+
+    res.set({
+      'Content-Type': 'text/csv',
+      'Content-Disposition': 'attachment; filename="issues.csv"',
+    });
+
+    csvStream.pipe(res);
   }
 }
