@@ -2,8 +2,11 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import { Issue } from '@prisma/client';
+import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
+
+import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
 
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
@@ -29,6 +32,7 @@ import {
   SuggestionsInput,
   TeamRequestParams,
   UpdateIssueInput,
+  WorkspaceQueryParams,
 } from './issues.interface';
 import { IssuesQueue } from './issues.queue';
 import {
@@ -437,5 +441,102 @@ export default class IssuesService {
         },
       },
     });
+  }
+
+  async exportIssues(workspaceParams: WorkspaceQueryParams): Promise<string> {
+    const issues = await this.prisma.issue.findMany({
+      where: { team: { workspaceId: workspaceParams.workspaceId } },
+      include: {
+        createdBy: true,
+        parent: true,
+        team: true,
+      },
+    });
+
+    const labelIds = [...new Set(issues.flatMap((issue) => issue.labelIds))];
+    const labelMap =
+      labelIds.length > 0
+        ? new Map(
+            await this.prisma.label
+              .findMany({ where: { id: { in: labelIds } } })
+              .then((labels) => labels.map((label) => [label.id, label])),
+          )
+        : new Map();
+
+    const assigneeIds = issues
+      .map((issue) => issue.assigneeId)
+      .filter((id): id is string => id !== null && id !== undefined);
+    const assigneeMap =
+      assigneeIds.length > 0
+        ? new Map(
+            await this.prisma.user
+              .findMany({
+                where: { id: { in: assigneeIds } },
+                select: { id: true, fullname: true, email: true },
+              })
+              .then((users) => users.map((user) => [user.id, user])),
+          )
+        : new Map();
+
+    const stateIds = issues
+      .map((issue) => issue.stateId)
+      .filter((id): id is string => id !== null && id !== undefined);
+    const stateMap =
+      stateIds.length > 0
+        ? new Map(
+            await this.prisma.workflow
+              .findMany({
+                where: { id: { in: stateIds } },
+                select: { id: true, name: true },
+              })
+              .then((workflows) =>
+                workflows.map((workflow) => [workflow.id, workflow]),
+              ),
+          )
+        : new Map();
+
+    const csvStringifier = createObjectCsvStringifier({
+      header: [
+        { id: 'number', title: 'Number' },
+        { id: 'title', title: 'Title' },
+        { id: 'description', title: 'Description' },
+        { id: 'stateId', title: 'State' },
+        { id: 'labels', title: 'Labels' },
+        { id: 'priority', title: 'Priority' },
+        { id: 'parentIssue', title: 'Parent Issue' },
+        { id: 'createdAt', title: 'Created At' },
+        { id: 'updatedAt', title: 'Updated At' },
+        { id: 'createdBy', title: 'Created By' },
+        { id: 'team', title: 'Team' },
+        { id: 'assignee', title: 'Assignee' },
+      ],
+    });
+
+    const csvData = issues.map((issue) => ({
+      number: `${issue.team.identifier} - ${issue.number}`,
+      title: issue.title,
+      description: convertTiptapJsonToText(issue.description),
+      stateId: stateMap.get(issue.stateId).name,
+      priority: issue.priority,
+      createdAt: issue.createdAt,
+      updatedAt: issue.updatedAt,
+      createdBy: issue.createdBy ? `${issue.createdBy.fullname}` : '',
+      labels: issue.labelIds
+        .map((labelId) => labelMap.get(labelId)?.name || '')
+        .filter(Boolean)
+        .join(', '),
+      parentIssue: issue.parent
+        ? `${issue.team.identifier}-${issue.parent.number}`
+        : null,
+      team: issue.team.name,
+      assignee: issue.assigneeId
+        ? assigneeMap.get(issue.assigneeId)?.fullname || null
+        : null,
+    }));
+
+    return (
+      csvStringifier.getHeaderString() +
+      csvStringifier.stringifyRecords(csvData)
+    );
   }
 }
