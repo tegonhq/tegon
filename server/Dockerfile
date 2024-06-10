@@ -26,7 +26,7 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/dist ./dist
-RUN mkdir -p certs && cp -r /app/certs/* ./certs/ || true
+RUN if [ -d "/app/certs" ]; then cp -r /app/certs ./certs; else mkdir -p ./certs; fi
 COPY --from=builder /app/templates ./templates
 COPY --from=builder /app/scripts ./scripts
 

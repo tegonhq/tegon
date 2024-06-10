@@ -109,27 +109,6 @@ services:
     ports:
       - 8000:3000
 
-  prisma:
-    build:
-      context: ./server
-      dockerfile: Dockerfile.prisma
-    image: "tegonhq/tegon-prisma:${VERSION}"
-    container_name: tegon-prisma
-    restart: unless-stopped
-    networks:
-      - tegon
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - REPLICATION_DATABASE_URL=${REPLICATION_DATABASE_URL}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_SCHEMA=${DB_SCHEMA}
-    ports:
-      - 5555:5555
-
   typesense:
     image: typesense/typesense:0.26.0.rc61
     container_name: typesense
