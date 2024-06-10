@@ -32,15 +32,18 @@ Issue Tracking is important for fast-paced teams, enabling them to organize list
 - Issue tracking tools serve as a task database, directing engineers on what to work on but not aiding in faster task completion.
 - Existing tools don't effectively assist Engineering Managers in real-time task, feature, or bug prioritisation.
 
+## Self Hosted
+To self-host Tegon on your own machine, you can do so using Docker. However note that you will need to add configurations for email, AI and storage services. Please refer to the documentation [here](https://docs.tegon.ai/oss/deploy-tegon).
+
 ## Tegon Cloud
 
 We offer a managed cloud version of Tegon that allows you to run Tegon without having to manage the infrastructure. It is currently in private beta. 
-If you're interested in using Tegon Cloud, please book a [demo call](https://calendly.com/manik-sync/talk-to-us)
+If you're interested in using Tegon Cloud, please book a [demo call](https://calendly.com/manik-sync/talk-to-us).
 
 ## Features
 
 - Issues Tracking (List and Kanban View)
-- Automatically create a title from the description, eliminating the need to spend time crafting the perfect title.
+- Automatically create a title from the description, eliminating the need to spend time crafting the perfect title
 - Suggest labels and assignees from the description
 - Custom Views
 - Identify duplicate issues
