@@ -53,16 +53,24 @@ export default class IssuesHistoryService {
         },
       });
     }
-    return this.prisma.issueHistory.create({
-      data: {
-        ...otherData,
-        addedLabelIds,
-        removedLabelIds,
-        userId,
-        sourceMetaData: sourceData,
-        issue: { connect: { id: issueId } },
-      },
-    });
+
+    if (
+      (removedLabelIds && removedLabelIds.length > 0) ||
+      (addedLabelIds && addedLabelIds.length > 0) ||
+      Object.values(otherData).some((val) => val !== null && val !== undefined)
+    ) {
+      return this.prisma.issueHistory.create({
+        data: {
+          ...otherData,
+          addedLabelIds,
+          removedLabelIds,
+          userId,
+          sourceMetaData: sourceData,
+          issue: { connect: { id: issueId } },
+        },
+      });
+    }
+    return undefined;
   }
 
   async deleteIssueHistory(issueId: string) {
