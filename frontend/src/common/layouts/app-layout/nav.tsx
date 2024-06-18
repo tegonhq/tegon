@@ -24,40 +24,35 @@ export function Nav({ links }: NavProps) {
   const pathname = usePathname();
 
   return (
-    <div className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2">
-      <nav className="grid gap-1 px-3">
-        {links.map((link, index) => {
-          const isActive = pathname.includes(link.href);
+    <nav className="grid gap-1">
+      {links.map((link, index) => {
+        const isActive = pathname.includes(link.href);
 
-          return (
-            <Link
-              key={index}
-              href={link.href}
-              className={cn(
-                buttonVariants({ variant: 'ghost', size: 'sm' }),
-                'text-sm text-slate-700 dark:text-slate-300 flex items-center justify-between pr-0',
-                isActive &&
-                  'bg-active text-slate-800 hover:bg-active dark:text-slate-100',
+        return (
+          <Link
+            key={index}
+            href={link.href}
+            className={cn(
+              buttonVariants({ variant: 'ghost', size: 'sm' }),
+              'flex items-center justify-between text-foreground bg-grayAlpha-100 w-fit',
+              isActive && 'bg-active hover:bg-active',
+            )}
+          >
+            <div className="flex items-center gap-1">
+              {link.icon && <link.icon className="h-4 w-4" />}
+              {link.title}
+              {link.label && (
+                <span className={cn('ml-auto')}>{link.label}</span>
               )}
-            >
-              <div className="flex items-center">
-                {link.icon && (
-                  <link.icon className="mr-3 h-4 w-4 text-muted-foreground" />
-                )}
-                {link.title}
-                {link.label && (
-                  <span className={cn('ml-auto')}>{link.label}</span>
-                )}
+            </div>
+            {link.count > 0 && (
+              <div className="px-2 py-[2px] rounded-md text-xs bg-active">
+                {link.count}
               </div>
-              {link.count > 0 && (
-                <div className="px-2 py-[2px] rounded-md text-xs bg-active text-foreground">
-                  {link.count}
-                </div>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
-    </div>
+            )}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }

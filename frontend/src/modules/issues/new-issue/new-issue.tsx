@@ -10,7 +10,7 @@ import { Key } from 'ts-key-enum';
 import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 
-import { useGithubAccounts } from 'modules/settings/integrations/github/github-utils';
+import { useGithubAccounts } from 'modules/settings/workspace-settings/integrations/github/github-utils';
 
 import { cn } from 'common/lib/utils';
 import { SCOPES } from 'common/scopes';
@@ -51,14 +51,14 @@ import { FileUpload } from '../single-issue/left-side/file-upload/file-upload';
 
 interface NewIssueProps {
   onClose: () => void;
-  teamIdentfier: string;
+  teamIdentifier: string;
   parentId?: string;
 }
 
-export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
+export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
   useScope(SCOPES.NewIssue);
   const { workspaceSlug } = useParams();
-  const team = useTeam(teamIdentfier);
+  const team = useTeam(teamIdentifier);
 
   const { mutate: createIssue, isLoading } = useCreateIssueMutation({
     onSuccess: (data: IssueType) => {
@@ -86,7 +86,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
     },
   });
 
-  const workflows = useTeamWorkflows(teamIdentfier);
+  const workflows = useTeamWorkflows(teamIdentifier);
 
   const pathname = usePathname();
   const [, rerenderHack] = React.useState<string[]>([]);
@@ -113,7 +113,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
   React.useEffect(() => {
     setDefaultValuesAgain(form, workflows, pathname, isBidirectional);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teamIdentfier]);
+  }, [teamIdentifier]);
 
   const onSubmit = (values: CreateIssueParams) => {
     delete values['descriptionString'];
@@ -190,7 +190,7 @@ export function NewIssue({ onClose, teamIdentfier, parentId }: NewIssueProps) {
               />
             )}
 
-            <NewIssueDropdowns form={form} teamIdentfier={teamIdentfier} />
+            <NewIssueDropdowns form={form} teamIdentifier={teamIdentifier} />
           </div>
 
           <div

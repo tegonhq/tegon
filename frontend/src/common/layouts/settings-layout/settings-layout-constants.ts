@@ -33,10 +33,10 @@ export const ACCOUNT_LINKS: LinkItem[] = [
     title: 'Security',
     href: 'security',
   },
-  {
-    title: 'Preferences',
-    href: 'preferences',
-  },
+  // {
+  //   title: 'Preferences',
+  //   href: 'preferences',
+  // },
 ];
 
 export const TEAM_LINKS: LinkItem[] = [

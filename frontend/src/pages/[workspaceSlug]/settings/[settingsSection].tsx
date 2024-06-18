@@ -1,5 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Settings } from 'modules/settings';
+import { WorkspaceSettings } from 'modules/settings';
 
-export default Settings;
+export default WorkspaceSettings;

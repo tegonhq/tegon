@@ -6,7 +6,7 @@ import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
-import { TriageFill } from 'icons';
+import { TriageLineCircle } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -26,7 +26,7 @@ export const RightSide = observer(() => {
 
   return (
     <div className="p-6 flex flex-col items-center justify-center gap-2">
-      <TriageFill className="text-muted-foreground" size={32} />
+      <TriageLineCircle className="text-muted-foreground" size={32} />
       <div className="text-muted-foreground text-sm">
         {issues.length} issues to triage
       </div>

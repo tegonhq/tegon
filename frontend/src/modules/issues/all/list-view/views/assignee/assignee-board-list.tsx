@@ -29,7 +29,7 @@ import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { BoardIssueItem } from '../../issue-board-item';
+import { BoardIssueItem } from '../../../../components/issue-board-item/issue-board-item';
 
 interface AssigneeBoardListProps {
   userOnWorkspace: UsersOnWorkspaceType;
@@ -67,12 +67,12 @@ export const AssigneeBoardList = observer(
             <Avatar className="h-[15px] w-[20px] flex items-center">
               <AvatarImage />
               <AvatarFallback
-                className={cn(
-                  'text-[0.55rem] rounded-sm mr-1',
-                  getTailwindColor(
+                className="text-[0.55rem] rounded-sm mr-1"
+                style={{
+                  background: getTailwindColor(
                     getUserData(userOnWorkspace.userId).username,
                   ),
-                )}
+                }}
               >
                 {getInitials(getUserData(userOnWorkspace.userId).fullname)}
               </AvatarFallback>

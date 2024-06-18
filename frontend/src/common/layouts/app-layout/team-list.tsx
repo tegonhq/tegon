@@ -1,6 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiArrowRightSFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -13,12 +12,13 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 import { TeamIcon } from 'components/ui/team-icon';
-import { IssuesLine, StackLine, TriageLine } from 'icons';
+import { useCurrentWorkspace } from 'hooks/workspace';
+import { ChevronRight, IssuesLine, StackLine, TriageLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
 
-import { TeamListItem } from './team-list-item';
+import { Nav } from './nav';
 
 export const TeamList = observer(() => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
@@ -28,63 +28,52 @@ export const TeamList = observer(() => {
   const teams = teamsStore.teams.filter((team: TeamType) =>
     teamAccessList.includes(team.id),
   );
+  const workspace = useCurrentWorkspace();
 
   return (
-    <div
-      ref={containerRef}
-      className="h-full space-y-1 overflow-y-auto mt-4 m-3"
-    >
-      <div className="px-2 mb-2 text-xs text-muted-foreground font-medium">
-        Your teams
-      </div>
+    <div ref={containerRef} className="h-full overflow-y-auto mt-4">
+      <div className="mb-2">Your teams</div>
 
       <Accordion
         type="single"
         collapsible
         defaultValue={teams[0].id}
-        className="w-full text-slate-700 dark:text-slate-300 mt-0"
+        className="w-full flex flex-col gap-2"
       >
         {teams.map((team: TeamType) => (
           <AccordionItem value={team.id} key={team.identifier} className="mb-1">
-            <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>div>svg]:rotate-90 hover:bg-active hover:text-slate-800 dark:hover:text-slate-50 rounded-md">
-              <div className="w-full justify-start px-2 flex items-center">
-                <TeamIcon name={team.name} />
+            <AccordionTrigger className="flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 w-fit rounded-md">
+              <div className="w-full justify-start flex items-center gap-1">
+                <div>
+                  <TeamIcon name={team.name} />
+                </div>
 
-                <div className="flex justify-start items-center text-foreground text-sm ml-3">
+                <div className="flex justify-center items-center gap-1">
                   {team?.name}
-                  <RiArrowRightSFill className="arrow-right-icon ml-1 h-4 w-4 shrink-0 text-muted-foreground/50 transition-transform duration-200" />
+                  <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200" />
                 </div>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="flex flex-col justify-center items-start w-full mt-1">
-              <TeamListItem
-                name="Triage"
-                team={team}
-                Icon={TriageLine}
-                href="triage"
-              />
-              <TeamListItem
-                name="Issues"
-                team={team}
-                Icon={IssuesLine}
-                href="all"
-              />
+            <AccordionContent className="flex flex-col justify-center items-start w-full my-2">
+              <Nav
+                links={[
+                  {
+                    title: 'Triage',
+                    icon: TriageLine,
+                    href: `/${workspace.slug}/team/${team.identifier}/triage`,
+                  },
 
-              <div className="pl-[2rem] w-full">
-                <div className="border-l-1 pl-3 w-full">
-                  <TeamListItem
-                    subList
-                    name="Backlog"
-                    team={team}
-                    href="backlog"
-                  />
-                </div>
-              </div>
-              <TeamListItem
-                name="Views"
-                team={team}
-                href="views"
-                Icon={StackLine}
+                  {
+                    title: 'Issues',
+                    icon: IssuesLine,
+                    href: `/${workspace.slug}/team/${team.identifier}/all`,
+                  },
+                  {
+                    title: 'Views',
+                    icon: StackLine,
+                    href: `/${workspace.slug}/team/${team.identifier}/views`,
+                  },
+                ]}
               />
             </AccordionContent>
           </AccordionItem>

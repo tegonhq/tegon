@@ -2,17 +2,10 @@
 
 'use client';
 
-import { Inter } from 'next/font/google';
 import * as React from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
 
 import { cn } from 'common/lib/utils';
-
-// Inter as default font
-export const fontSans = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
 
 const Drawer = ({
   shouldScaleBackground = true,
@@ -54,7 +47,6 @@ const DrawerContent = React.forwardRef<
       className={cn(
         'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background font-sans',
         className,
-        fontSans.variable,
       )}
       {...props}
     >

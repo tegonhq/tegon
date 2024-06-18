@@ -12,6 +12,7 @@ import { useTeamWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 import { IssueStoreInit } from 'store/issue-store-provider';
 
+import { Header } from './header';
 import { LeftSide } from './left-side/left-side';
 import { RightSide } from './right-side/right-side';
 import { TriageView } from './triage-view';
@@ -47,14 +48,17 @@ export const IssueView = () => {
 
   return (
     <IssueStoreInit>
-      <main className="grid grid-cols-5 h-full">
-        <div className="col-span-5 xl:col-span-4 flex flex-col h-[100vh]">
-          <LeftSide />
-        </div>
-        <div className="bg-background border-l dark:bg-slate-800/50 hidden flex-col xl:flex">
-          <RightSide />
-        </div>
-      </main>
+      <div className="flex flex-col h-[100vh]">
+        <Header />
+        <main className="grid grid-cols-5 h-[calc(100vh_-_53px)] bg-gray-200 rounded-tl-2xl">
+          <div className="col-span-5 xl:col-span-4 flex flex-col h-[calc(100vh_-_55px)]">
+            <LeftSide />
+          </div>
+          <div className="border-l hidden flex-col xl:flex">
+            <RightSide />
+          </div>
+        </main>
+      </div>
     </IssueStoreInit>
   );
 };

@@ -119,7 +119,7 @@ export const BreadcrumbLink = React.forwardRef<
 
   return (
     <Comp
-      className={cn('text-sm aria-[current]:opacity-60', className)}
+      className={cn('aria-[current]:opacity-60', className)}
       aria-current={isCurrentPage ? 'page' : undefined}
       {...props}
       ref={forwardedRef}

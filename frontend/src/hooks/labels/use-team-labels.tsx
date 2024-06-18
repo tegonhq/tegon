@@ -10,10 +10,10 @@ import { useContextStore } from 'store/global-context-provider';
 import { useTeam } from '../teams/use-current-team';
 import { useCurrentWorkspace } from '../workspace/use-current-workspace';
 
-export function useTeamLabels(teamIdentfier: string) {
+export function useTeamLabels(teamIdentifier: string) {
   const { labelsStore } = useContextStore();
   const currentWorkspace = useCurrentWorkspace();
-  const team = useTeam(teamIdentfier);
+  const team = useTeam(teamIdentifier);
 
   const getLabels = () => {
     const labelsForTeam = labelsStore.getLabelsForTeam(team.id);

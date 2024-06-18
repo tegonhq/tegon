@@ -31,7 +31,7 @@ export function IssuePriorityDropdown({
             size="xs"
             aria-expanded={open}
             className={cn(
-              'flex items-center justify-between shadow-none !bg-transparent hover:bg-transparent p-0 border-0 text-xs font-normal focus-visible:ring-1 focus-visible:border-primary text-muted-foreground',
+              'flex items-center justify-between shadow-none !bg-transparent hover:bg-transparent p-0 border-0 focus-visible:ring-1 focus-visible:border-primary',
               value && 'text-foreground',
             )}
           >

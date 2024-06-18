@@ -41,7 +41,7 @@ export function IssueComment() {
 
   return (
     <TimelineItem hasMore className="w-full">
-      <div className="flex items-start text-sm text-muted-foreground w-full">
+      <div className="flex items-start w-full">
         <Avatar className="h-[15px] w-[20px] mr-4 text-foreground">
           <AvatarImage />
           <AvatarFallback
@@ -61,7 +61,7 @@ export function IssueComment() {
             onCreate={(editor) => setEditor(editor)}
             placeholder="Leave your comment..."
             onSubmit={onSubmit}
-            className="w-full min-h-[60px] bg-white backdrop-blur-md dark:bg-slate-700/20 shadow-sm mb-0 p-2 border text-foreground"
+            className="w-full min-h-[60px] bg-white backdrop-blur-md dark:bg-slate-700/20 shadow-sm mb-0 p-2 border"
           />
           <div className="absolute right-3 bottom-3 flex items-center gap-2">
             <FileUpload editor={editor} />

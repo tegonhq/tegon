@@ -57,13 +57,15 @@ export const AssigneeListSection = observer(
     return (
       <div className="flex flex-col">
         <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
-          <Avatar className="h-[15px] w-[20px] flex items-center">
+          <Avatar>
             <AvatarImage />
             <AvatarFallback
-              className={cn(
-                'text-[0.55rem] rounded-sm mr-1',
-                getTailwindColor(getUserData(userOnWorkspace.userId).username),
-              )}
+              className="rounded-sm mr-1"
+              style={{
+                background: getTailwindColor(
+                  getUserData(userOnWorkspace.userId).username,
+                ),
+              }}
             >
               {getInitials(getUserData(userOnWorkspace.userId).fullname)}
             </AvatarFallback>

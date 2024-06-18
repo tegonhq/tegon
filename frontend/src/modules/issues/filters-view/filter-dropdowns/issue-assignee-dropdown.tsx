@@ -11,6 +11,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  AvatarText,
   getInitials,
 } from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
@@ -62,17 +63,7 @@ export function IssueAssigneeDropdown({
               <>{value.length} Assignee</>
             ) : (
               <>
-                <Avatar className="h-[15px] w-[20px] mr-2">
-                  <AvatarImage />
-                  <AvatarFallback
-                    className={cn(
-                      'text-[0.55rem] rounded-sm',
-                      getTailwindColor(getUserData(value[0]).username),
-                    )}
-                  >
-                    {getInitials(getUserData(value[0]).fullname)}
-                  </AvatarFallback>
-                </Avatar>
+                <AvatarText text={getUserData(value[0]).fullname} />
                 {getUserData(value[0]).fullname}
               </>
             )}

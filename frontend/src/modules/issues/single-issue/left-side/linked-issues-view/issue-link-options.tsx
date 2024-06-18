@@ -3,7 +3,7 @@
 import { RiGithubFill, RiLink, RiSlackFill } from '@remixicon/react';
 import { useRouter } from 'next/router';
 
-import { useIntegrationAccounts } from 'modules/settings/integrations/integration-util';
+import { useIntegrationAccounts } from 'modules/settings/workspace-settings/integrations/integration-util';
 
 import { IntegrationName } from 'common/types/integration-definition';
 import { LinkedIssueSubType } from 'common/types/linked-issue';

@@ -16,10 +16,11 @@ import {
   BacklogLine,
   BlockedFill,
   BlockingToLine,
+  Filter,
   LabelFill,
   ParentIssueLine,
   PriorityHigh,
-  SubIssueLine,
+  SubIssue,
 } from 'icons';
 
 import { FilterTypeEnum } from 'store/application';
@@ -97,7 +98,7 @@ function DefaultPopoverContent({
           className="flex items-center"
           onSelect={() => onSelect('isSubIssue')}
         >
-          <SubIssueLine size={14} className="mr-2" />
+          <SubIssue size={14} className="mr-2" />
           Sub issues
         </CommandItem>
         <CommandItem
@@ -181,8 +182,8 @@ export function FilterDropdown({ showStatus }: FilterDropdownProps) {
       }}
     >
       <PopoverTrigger asChild>
-        <Button variant="outline" size="xs" className="border-1 text-xs">
-          <RiFilter3Line size={16} className="mr-2" />
+        <Button variant="secondary" size="sm">
+          <Filter size={16} className="mr-1" />
           Filter
         </Button>
       </PopoverTrigger>

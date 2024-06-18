@@ -8,22 +8,17 @@ import * as React from 'react';
 
 import { ShortcutDialogs } from 'modules/shortcuts';
 
-import { cn } from 'common/lib/utils';
 import { AllProviders } from 'common/wrappers/all-providers';
 
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from 'components/ui/resizable';
+import { Button } from 'components/ui/button';
 import { useCurrentTeam } from 'hooks/teams';
-import { Inbox, SettingsLine } from 'icons';
+import { Inbox, SettingsLine, SidebarLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
-import { Header } from './header';
 import { Nav } from './nav';
 import { TeamList } from './team-list';
+import { WorkspaceDropdown } from './workspace-dropdown';
 
 interface LayoutProps {
   defaultCollapsed?: boolean;
@@ -32,7 +27,7 @@ interface LayoutProps {
 
 export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   const { applicationStore, notificationsStore } = useContextStore();
-  const isCollapsed = applicationStore.sidebarCollapsed;
+
   const {
     query: { workspaceSlug },
   } = useRouter();
@@ -49,61 +44,47 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   }, [applicationStore.sidebarCollapsed]);
 
   return (
-    <div className="md:flex flex-col flex-grow">
-      <div className="hidden md:block h-full">
-        <ResizablePanelGroup
-          direction="horizontal"
-          className="h-full max-h-[100vh] items-stretch max-w-[100vw]"
-        >
-          <ResizablePanel
-            defaultSize={14}
-            collapsible
-            ref={ref}
-            collapsedSize={0}
-            minSize={14}
-            maxSize={14}
-            onExpand={() => {
-              applicationStore.updateSideBar(false);
-            }}
-            onCollapse={() => {
-              applicationStore.updateSideBar(true);
-            }}
-            className={cn(
-              isCollapsed && 'transition-all duration-300 ease-in-out',
-            )}
-          >
-            {!isCollapsed && (
-              <>
-                <Header />
-                <Nav
-                  links={[
-                    {
-                      title: 'Inbox',
-                      icon: Inbox,
-                      href: `/${workspaceSlug}/inbox`,
-                      count: notificationsStore.unReadCount,
-                    },
+    <>
+      <div className="h-[100vh] w-[100vw] flex">
+        <div className="min-w-[234px]">
+          <div className="flex flex-col py-4 px-6">
+            <div className="flex justify-between items-center">
+              <WorkspaceDropdown />
+              <Button
+                variant="ghost"
+                size="xs"
+                onClick={() => applicationStore.updateSideBar(true)}
+              >
+                <SidebarLine size={20} />
+              </Button>
+            </div>
+          </div>
+          <div className="px-6 mt-4">
+            <Nav
+              links={[
+                {
+                  title: 'Inbox',
+                  icon: Inbox,
+                  href: `/${workspaceSlug}/inbox`,
+                  count: notificationsStore.unReadCount,
+                },
 
-                    {
-                      title: 'Settings',
-                      icon: SettingsLine,
-                      href: `/${workspaceSlug}/settings/overview`,
-                    },
-                  ]}
-                />
+                {
+                  title: 'Settings',
+                  icon: SettingsLine,
+                  href: `/${workspaceSlug}/settings/overview`,
+                },
+              ]}
+            />
+            <TeamList />
+          </div>
+        </div>
 
-                <TeamList />
-              </>
-            )}
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel minSize={30}>{children}</ResizablePanel>
-        </ResizablePanelGroup>
+        <div className="max-w-[calc(100vw_-_234px)] w-full">{children}</div>
       </div>
 
-      <div className="px-4 flex md:hidden pt-4"> {children} </div>
       {team && <ShortcutDialogs />}
-    </div>
+    </>
   );
 });
 

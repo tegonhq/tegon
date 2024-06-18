@@ -10,11 +10,10 @@ export interface TeamIconProps {
 
 export function TeamIcon({ name }: TeamIconProps) {
   return (
-    <div className={`p-[2px] w-5 h-5 ${getTeamColor(name, true)} rounded-sm`}>
-      <TeamLine
-        size={14}
-        className={`shrink-0 h-4 w-4 ${getTeamColor(name)}`}
-      />
+    <div
+      className={`w-5 h-5 ${getTeamColor(name)} rounded-sm flex items-center justify-center`}
+    >
+      <TeamLine size={14} className={`shrink-0 h-4 w-4`} />
     </div>
   );
 }

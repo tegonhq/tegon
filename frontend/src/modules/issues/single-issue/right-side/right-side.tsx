@@ -50,18 +50,17 @@ export const RightSide = observer(() => {
 
   return (
     <>
-      <Header />
       <div className="grow pl-8 p-4 mt-2 flex flex-col">
-        <div className="flex justify-start items-center text-sm mb-3 -ml-3">
+        <div className="flex justify-start items-center mb-3 -ml-3">
           <IssueStatusDropdown
             value={issue.stateId}
             onChange={statusChange}
             variant={IssueStatusDropdownVariant.LINK}
-            teamIdentfier={currentTeam.identifier}
+            teamIdentifier={currentTeam.identifier}
           />
         </div>
 
-        <div className="flex justify-start items-center text-sm mb-3 -ml-3">
+        <div className="flex justify-start items-center mb-3 -ml-3">
           <IssuePriorityDropdown
             value={issue.priority ?? 0}
             onChange={priorityChange}
@@ -69,7 +68,7 @@ export const RightSide = observer(() => {
           />
         </div>
 
-        <div className="flex justify-start items-center text-sm mb-6 -ml-3">
+        <div className="flex justify-start items-center mb-6 -ml-3">
           <IssueAssigneeDropdown
             value={issue.assigneeId}
             onChange={assigneeChange}
@@ -90,7 +89,7 @@ export const RightSide = observer(() => {
             value={issue.labelIds}
             onChange={labelsChange}
             variant={IssueLabelDropdownVariant.LINK}
-            teamIdentfier={currentTeam.identifier}
+            teamIdentifier={currentTeam.identifier}
           />
         </div>
       </div>

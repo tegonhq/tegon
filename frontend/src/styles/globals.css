@@ -4,38 +4,38 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 215, 28%, 17%;
+    --background: 84.21% 0 0;
+    --foreground: 0% 0 0;
     --card: 0 0% 100%;
-    --card-foreground: 215, 28%, 17%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 215, 28%, 17%;
-    --primary: 221.2 83.2% 63.3%;
-    --primary-foreground: 210 40% 98%;
+    --card-foreground: 0% 0 0;
+    --popover: 93.05% 0 0;
+    --popover-foreground: 0% 0 0;
+    --primary: 65.03% 0.175 256.69;
+    --primary-foreground: 0% 0 0;
     --secondary: 210 40% 96.1%;
-    --secondary-foreground: 229 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 50.9%;
-    --accent: 214 32% 92%;
-    --accent-foreground: 229 47.4% 11.2%;
+    --secondary-foreground: 0% 0 0;
+    --muted: 81.69% 0 0;
+    --muted-foreground: 49.26% 0 0;
+    --accent: 100% 0 0;
+    --accent-foreground: 0% 0 0;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 87%;
-    --input: 214.3 31.8% 87%;
+    --border: 0% 0 0 / 12.16%;
+    --input: 84.21% 0 0;
     --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
-    --active: 214 32% 92%;
+    --radius: 8px;
+    --active: 100% 0 0;
   }
 
   .dark {
-    --background: 221 39% 11%;
+    --background: 84.52% 0 0;
     --foreground: 210 40% 98%;
     --card: 221 39% 11%;
     --card-foreground: 210 40% 98%;
     --popover: 221 39% 11%;
     --popover-foreground: 210 40% 98%;
     --primary: 221.2 83.2% 60%;
-    --primary-foreground: 229 47.4% 11.2%;
+    --primary-foreground: 0% 0 0;
     --secondary: 215 28% 17%;
     --secondary-foreground: 210 40% 98%;
     --muted: 215 28% 17%;
@@ -56,7 +56,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground text-base;
     @apply antialiased;
     overflow: hidden;
     overflow-anchor: none;
@@ -103,11 +103,11 @@ ul[data-type='taskList'] li > label input[type='checkbox'] {
   place-content: center;
 }
 ul[data-type='taskList'] li > label input[type='checkbox']:hover {
-  @apply bg-background/80;
+  @apply bg-background;
 }
 
 ul[data-type='taskList'] li > label input[type='checkbox']:active {
-  @apply bg-background/90;
+  @apply bg-background;
 }
 
 ul[data-type='taskList'] li > label input[type='checkbox']::before {

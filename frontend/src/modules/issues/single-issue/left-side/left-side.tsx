@@ -19,7 +19,7 @@ import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
 import { FileUpload } from './file-upload/file-upload';
 import { FilterSmall } from './filters-small';
-import { Header } from './header';
+import { Header } from '../header';
 import { IssueActivity } from './issue-activity';
 import { IssueTitle } from './issue-title';
 import { LinkedIssuesView } from './linked-issues-view';
@@ -60,7 +60,6 @@ export const LeftSide = observer(() => {
 
   return (
     <>
-      <Header isTriageView={isTriageView} />
       <div className="flex xl:hidden px-8 py-2 border-b">
         <FilterSmall />
       </div>
@@ -69,14 +68,13 @@ export const LeftSide = observer(() => {
           <div>
             {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
-            {issue.parentId && <ParentIssueView issue={issue} />}
-
             <IssueTitle value={issue.title} onChange={onIssueChange} />
+            {issue.parentId && <ParentIssueView issue={issue} />}
             <Editor
               value={issue.description}
               onCreate={(editor) => setEditor(editor)}
               onChange={onDescriptionChange}
-              className="text-slate-700 dark:text-slate-300 min-h-[50px] mb-8"
+              className="min-h-[50px] mb-8"
             />
 
             <div className="flex justify-end w-full py-1">
@@ -95,7 +93,7 @@ export const LeftSide = observer(() => {
               <div className="my-1">
                 <NewIssue
                   onClose={() => setNewIssueState(false)}
-                  teamIdentfier={team.identifier}
+                  teamIdentifier={team.identifier}
                   parentId={issue.id}
                 />
               </div>

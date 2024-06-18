@@ -1,10 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import {
-  RiDashboardLine,
-  RiEqualizerFill,
-  RiListCheck,
-} from '@remixicon/react';
+import { RiDashboardLine, RiListCheck } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 
 import { cn } from 'common/lib/utils';
@@ -21,6 +17,7 @@ import {
 } from 'components/ui/select';
 import { Separator } from 'components/ui/separator';
 import { Switch } from 'components/ui/switch';
+import { SettingsLine } from 'icons';
 
 import { ViewEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
@@ -33,183 +30,164 @@ export const DisplayPopover = observer(() => {
   };
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button size="xs" variant="outline" className="text-xs">
-          <RiEqualizerFill size={14} className="mr-2 text-muted-foreground" />
-          Display
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-72 p-0" align="end">
-        <div className="w-full">
-          <div className="flex gap-2 items-center w-full p-3 justify-center">
-            <Button
-              variant="ghost"
-              className={cn(
-                'flex flex-col gap-1 items-center h-auto w-full bg-transparent border',
-                applicationStore.displaySettings.view === ViewEnum.list &&
-                  'bg-active text-foreground',
-              )}
-              onClick={() => updateView(ViewEnum.list)}
-            >
-              <RiListCheck size={16} />
-              List
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => updateView(ViewEnum.board)}
-              className={cn(
-                'flex flex-col gap-1 items-center h-auto w-full bg-transparent border',
-                applicationStore.displaySettings.view === ViewEnum.board &&
-                  'bg-active text-foreground',
-              )}
-            >
-              <RiDashboardLine size={16} />
-              Board
-            </Button>
-          </div>
-          <Separator />
+    <>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="ghost">
+            <SettingsLine size={20} />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-72 p-0" align="end">
+          <div className="w-full">
+            <div className="flex gap-2 items-center w-full p-3 justify-center"></div>
+            <Separator />
 
-          <div className="flex items-center gap-2 flex-col w-full p-3">
-            <div className="flex justify-between text-xs items-center w-full">
-              <div className="text-muted-foreground min-w-[150px]">
-                Grouping
-              </div>
-              <div>
-                <Select
-                  value={applicationStore.displaySettings.grouping}
-                  onValueChange={(value: string) => {
-                    applicationStore.updateDisplaySettings({ grouping: value });
-                  }}
-                >
-                  <SelectTrigger className="w-[100px] h-[25px]">
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent className="text-xs">
-                    <SelectGroup>
-                      <SelectItem value="status">Status</SelectItem>
-                      <SelectItem value="assignee">Assignee</SelectItem>
-                      <SelectItem value="priority">Priority</SelectItem>
-                      <SelectItem value="label">Label</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="flex justify-between text-xs items-center w-full">
-              <div className="text-muted-foreground min-w-[150px]">
-                {' '}
-                Ordering
-              </div>
-              <div>
-                <Select
-                  value={applicationStore.displaySettings.ordering}
-                  onValueChange={(value: string) => {
-                    applicationStore.updateDisplaySettings({ ordering: value });
-                  }}
-                >
-                  <SelectTrigger className="w-[100px] h-[25px]">
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent className="text-xs">
-                    <SelectGroup>
-                      <SelectItem value="status">Status</SelectItem>
-                      <SelectItem value="assignee">Assignee</SelectItem>
-                      <SelectItem value="priority">Priority</SelectItem>
-                      <SelectItem value="updated_at">Last updated</SelectItem>
-                      <SelectItem value="created_at">Last created</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-          <Separator />
-          <div className="flex flex-col gap-2 p-3">
-            <div className="flex justify-between text-xs items-center">
-              <div className="text-muted-foreground min-w-[150px]">
-                Show sub-issues
-              </div>
-
-              <div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="showSubIssues"
-                    checked={applicationStore.displaySettings.showSubIssues}
-                    onCheckedChange={(value: boolean) =>
+            <div className="flex items-center gap-2 flex-col w-full p-3">
+              <div className="flex justify-between text-xs items-center w-full">
+                <div className="text-muted-foreground min-w-[150px]">
+                  Grouping
+                </div>
+                <div>
+                  <Select
+                    value={applicationStore.displaySettings.grouping}
+                    onValueChange={(value: string) => {
                       applicationStore.updateDisplaySettings({
-                        showSubIssues: value,
-                      })
-                    }
-                  />
+                        grouping: value,
+                      });
+                    }}
+                  >
+                    <SelectTrigger className="w-[100px] h-[25px]">
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent className="text-xs">
+                      <SelectGroup>
+                        <SelectItem value="status">Status</SelectItem>
+                        <SelectItem value="assignee">Assignee</SelectItem>
+                        <SelectItem value="priority">Priority</SelectItem>
+                        <SelectItem value="label">Label</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="flex justify-between text-xs items-center w-full">
+                <div className="text-muted-foreground min-w-[150px]">
+                  Ordering
+                </div>
+                <div>
+                  <Select
+                    value={applicationStore.displaySettings.ordering}
+                    onValueChange={(value: string) => {
+                      applicationStore.updateDisplaySettings({
+                        ordering: value,
+                      });
+                    }}
+                  >
+                    <SelectTrigger className="w-[100px] h-[25px]">
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent className="text-xs">
+                      <SelectGroup>
+                        <SelectItem value="status">Status</SelectItem>
+                        <SelectItem value="assignee">Assignee</SelectItem>
+                        <SelectItem value="priority">Priority</SelectItem>
+                        <SelectItem value="updated_at">Last updated</SelectItem>
+                        <SelectItem value="created_at">Last created</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </div>
+            <Separator />
+            <div className="flex flex-col gap-2 p-3">
+              <div className="flex justify-between text-xs items-center">
+                <div className="text-muted-foreground min-w-[150px]">
+                  Show sub-issues
+                </div>
 
-            <div className="flex justify-between text-xs items-center">
-              <div className="text-muted-foreground min-w-[150px]">
-                Show triage issues
-              </div>
-
-              <div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="showTriageIssues"
-                    checked={applicationStore.displaySettings.showTriageIssues}
-                    onCheckedChange={(value: boolean) =>
-                      applicationStore.updateDisplaySettings({
-                        showTriageIssues: value,
-                      })
-                    }
-                  />
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="showSubIssues"
+                      checked={applicationStore.displaySettings.showSubIssues}
+                      onCheckedChange={(value: boolean) =>
+                        applicationStore.updateDisplaySettings({
+                          showSubIssues: value,
+                        })
+                      }
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex justify-between text-xs items-center">
-              <div className="text-muted-foreground min-w-[150px]">
-                Show completed issues
-              </div>
+              <div className="flex justify-between text-xs items-center">
+                <div className="text-muted-foreground min-w-[150px]">
+                  Show triage issues
+                </div>
 
-              <div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="showCompletedIssues"
-                    checked={
-                      applicationStore.displaySettings.showCompletedIssues
-                    }
-                    onCheckedChange={(value: boolean) =>
-                      applicationStore.updateDisplaySettings({
-                        showCompletedIssues: value,
-                      })
-                    }
-                  />
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="showTriageIssues"
+                      checked={
+                        applicationStore.displaySettings.showTriageIssues
+                      }
+                      onCheckedChange={(value: boolean) =>
+                        applicationStore.updateDisplaySettings({
+                          showTriageIssues: value,
+                        })
+                      }
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex justify-between text-xs items-center">
-              <div className="text-muted-foreground min-w-[150px]">
-                Show empty groups
+              <div className="flex justify-between text-xs items-center">
+                <div className="text-muted-foreground min-w-[150px]">
+                  Show completed issues
+                </div>
+
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="showCompletedIssues"
+                      checked={
+                        applicationStore.displaySettings.showCompletedIssues
+                      }
+                      onCheckedChange={(value: boolean) =>
+                        applicationStore.updateDisplaySettings({
+                          showCompletedIssues: value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="showEmptyGroups"
-                    checked={applicationStore.displaySettings.showEmptyGroups}
-                    onCheckedChange={(value: boolean) =>
-                      applicationStore.updateDisplaySettings({
-                        showEmptyGroups: value,
-                      })
-                    }
-                  />
+              <div className="flex justify-between text-xs items-center">
+                <div className="text-muted-foreground min-w-[150px]">
+                  Show empty groups
+                </div>
+
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="showEmptyGroups"
+                      checked={applicationStore.displaySettings.showEmptyGroups}
+                      onCheckedChange={(value: boolean) =>
+                        applicationStore.updateDisplaySettings({
+                          showEmptyGroups: value,
+                        })
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+        </PopoverContent>
+      </Popover>
+    </>
   );
 });

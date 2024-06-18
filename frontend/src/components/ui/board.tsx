@@ -5,13 +5,23 @@ import type { DroppableProvided, DropResult } from '@hello-pangea/dnd';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import React from 'react';
 
+import { cn } from 'common/lib/utils';
+
+import { ScrollArea } from './scroll-area';
+
 interface BoardProps {
   children: React.ReactElement;
   isCombineEnabled?: boolean;
   onDragEnd: (result: DropResult) => void;
+  className?: string;
 }
 
-export function Board({ children, isCombineEnabled, onDragEnd }: BoardProps) {
+export function Board({
+  children,
+  isCombineEnabled,
+  onDragEnd,
+  className,
+}: BoardProps) {
   const board = (
     <Droppable
       droppableId="board"
@@ -24,7 +34,7 @@ export function Board({ children, isCombineEnabled, onDragEnd }: BoardProps) {
         <div
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className="h-full w-full p-1 inline-flex"
+          className="h-full w-full inline-flex"
         >
           {children}
           {provided.placeholder}
@@ -34,11 +44,19 @@ export function Board({ children, isCombineEnabled, onDragEnd }: BoardProps) {
   );
 
   return (
-    <div className="flex flex-col justify-start items-start h-full overflow-hidden">
+    <div
+      className={cn(
+        'flex flex-col justify-start items-start h-full overflow-hidden',
+        className,
+      )}
+    >
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="overflow-auto overflow-y-hidden h-full w-full">
+        <ScrollArea
+          orientation="horizontal"
+          className="overflow-auto overflow-y-hidden h-full w-full"
+        >
           {board}
-        </div>
+        </ScrollArea>
       </DragDropContext>
     </div>
   );
@@ -53,7 +71,7 @@ export function BoardColumn({ children, id }: BoardColumnProps) {
   return (
     <Droppable droppableId={id} type="BoardColumn" ignoreContainerClipping>
       {(dropProvided: DroppableProvided) => (
-        <div className="p-2" ref={dropProvided.innerRef}>
+        <div ref={dropProvided.innerRef}>
           <div className="bg-active/50 rounded-md w-[350px] flex flex-col h-full">
             {children}
           </div>

@@ -4,7 +4,7 @@ import { RiCloseLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { cn } from 'common/lib/utils';
 import type { IssueType } from 'common/types/issue';

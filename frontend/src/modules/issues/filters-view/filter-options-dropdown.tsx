@@ -44,7 +44,7 @@ export function FilterOptionsDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <div className="px-2 p-1 rounded-md rounded-l-none rounded-r-none hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 text-muted-foreground">
+        <div className="px-2 p-1 rounded-md rounded-l-none rounded-r-none font-mono">
           {FilterToName[filterType]}
         </div>
       </DropdownMenuTrigger>

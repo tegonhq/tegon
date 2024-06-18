@@ -9,16 +9,10 @@ import {
   ChevronUpIcon,
 } from '@radix-ui/react-icons';
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { Inter } from 'next/font/google';
+
 import * as React from 'react';
 
 import { cn } from 'common/lib/utils';
-
-// Inter as default font
-export const fontSans = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
 
 const Select = SelectPrimitive.Root;
 
@@ -93,7 +87,6 @@ const SelectContent = React.forwardRef<
         position === 'popper' &&
           'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
         className,
-        fontSans.variable,
       )}
       position={position}
       {...props}

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { type IssueHistoryType } from 'common/types/issue';
 

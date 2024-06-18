@@ -52,7 +52,7 @@ export function NewIssueDialog({ open, setOpen }: NewIssueDialogProps) {
           </DialogHeader>
 
           {team && (
-            <NewIssue onClose={() => setOpen(false)} teamIdentfier={team} />
+            <NewIssue onClose={() => setOpen(false)} teamIdentifier={team} />
           )}
         </DialogContent>
       </Dialog>

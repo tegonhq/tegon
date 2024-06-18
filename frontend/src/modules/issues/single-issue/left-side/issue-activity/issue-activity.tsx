@@ -3,7 +3,7 @@
 import { observer } from 'mobx-react-lite';
 import ReactTimeAgo from 'react-time-ago';
 
-import type { IssueCommentType, IssueHistoryType } from 'common/types/issue';
+import type { IssueHistoryType } from 'common/types/issue';
 import type { LinkedIssueType } from 'common/types/linked-issue';
 
 import { Timeline, TimelineItem } from 'components/ui/timeline';
@@ -14,8 +14,6 @@ import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
 
 import { ActivityItem } from './activity-item';
-import { CommentActivity } from './comment-activity';
-import { IssueComment } from './issue-comment';
 import { LinkedIssueActivity } from './linked-issue-activity';
 import { SubscribeView } from './subscribe-view';
 import { getUserDetails, getUserIcon } from './user-activity-utils';
@@ -37,16 +35,11 @@ export const IssueActivity = observer(() => {
   const { usersData, isLoading } = useUsersData(issue.teamId);
 
   const {
-    commentsStore,
     issuesHistoryStore,
     linkedIssuesStore: { linkedIssues },
   } = useContextStore();
 
   const activities = [
-    ...commentsStore.getComments(issue.id).map((comment: IssueCommentType) => ({
-      ...comment,
-      type: ActivityType.Comment,
-    })),
     ...issuesHistoryStore
       .getIssueHistories(issue.id)
       .map((issueHistory: IssueHistoryType) => ({
@@ -118,22 +111,6 @@ export const IssueActivity = observer(() => {
           {activities.length > 0 &&
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             activities.map((activity: any) => {
-              if (
-                activity.type === ActivityType.Comment &&
-                !activity.parentId
-              ) {
-                return (
-                  <CommentActivity
-                    comment={activity}
-                    key={activity.id}
-                    user={getUserData(activity.userId)}
-                    childComments={getChildComments(activity.id)}
-                    allowReply
-                    getUserData={getUserData}
-                  />
-                );
-              }
-
               if (activity.type === ActivityType.LinkedIssue) {
                 return (
                   <TimelineItem
@@ -165,8 +142,6 @@ export const IssueActivity = observer(() => {
 
               return null;
             })}
-
-          <IssueComment />
         </Timeline>
       </div>
     </div>

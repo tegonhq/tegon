@@ -2,7 +2,7 @@
 
 import { observer } from 'mobx-react-lite';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { type IssueType } from 'common/types/issue';
 

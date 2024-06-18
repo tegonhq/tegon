@@ -3,17 +3,24 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
+import { IssueListItem } from 'modules/issues/components';
 
 import type { IssueType } from 'common/types/issue';
 import type { WorkflowType } from 'common/types/team';
 
+import { Button } from 'components/ui/button';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from 'components/ui/collapsible';
 import { useCurrentTeam } from 'hooks/teams';
+import { ChevronDown, ChevronRight } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { IssueItem } from '../../issue-item';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 interface CategoryViewListProps {
   workflow: WorkflowType;
@@ -25,6 +32,7 @@ export const CategoryViewList = observer(
       WORKFLOW_CATEGORY_ICONS[workflow.name] ??
       WORKFLOW_CATEGORY_ICONS['Backlog'];
     const currentTeam = useCurrentTeam();
+    const [isOpen, setIsOpen] = React.useState(true);
     const { issuesStore, applicationStore } = useContextStore();
     const issues = issuesStore.getIssuesForState(
       workflow.id,
@@ -41,27 +49,41 @@ export const CategoryViewList = observer(
     }
 
     return (
-      <div className="flex flex-col">
-        <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
-          <CategoryIcon
-            size={16}
-            className="text-muted-foreground"
-            color={workflow.color}
-          />
-          <h3 className="pl-2 text-sm font-medium">
-            {workflow.name}
-            <span className="text-muted-foreground ml-2">
-              {computedIssues.length}
-            </span>
-          </h3>
+      <Collapsible
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        className="flex flex-col gap-2 h-full group/collapse"
+      >
+        <div className="flex gap-1 items-center">
+          <CollapsibleTrigger asChild>
+            <Button
+              className="flex items-center ml-4 w-fit rounded-2xl"
+              style={{ backgroundColor: workflow.color }}
+              variant="ghost"
+            >
+              <CategoryIcon size={20} className="group-hover/collapse:hidden" />
+              <div className="hidden group-hover/collapse:block">
+                {isOpen ? (
+                  <ChevronDown size={20} />
+                ) : (
+                  <ChevronRight size={20} />
+                )}
+              </div>
+              <h3 className="pl-2">{workflow.name}</h3>
+            </Button>
+          </CollapsibleTrigger>
+
+          <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+            {computedIssues.length}
+          </div>
         </div>
 
-        <div>
+        <CollapsibleContent>
           {computedIssues.map((issue: IssueType) => (
-            <IssueItem key={issue.id} issueId={issue.id} />
+            <IssueListItem key={issue.id} issueId={issue.id} />
           ))}
-        </div>
-      </div>
+        </CollapsibleContent>
+      </Collapsible>
     );
   },
 );

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { cn } from 'common/lib/utils';
 import type { IssueType } from 'common/types/issue';
@@ -31,11 +31,12 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
   return (
     <Link
       className={cn(
-        'cursor-pointer max-w-[600px] mb-1 border-1 bg-white backdrop-blur-md dark:bg-slate-700/20  p-2 rounded-md flex gap-2 items-center text-sm',
+        'cursor-pointer max-w-[600px] mb-2 border-1 backdrop-blur-md p-2 rounded-md flex gap-2 items-center text-sm bg-grayAlpha-200',
         buttonVariants({ variant: 'outline' }),
       )}
       href={`/${workspaceSlug}/issue/${team.identifier}-${issue.parent.number}`}
     >
+      Sub-issue of
       <CategoryIcon
         size={16}
         className="text-muted-foreground"
@@ -44,8 +45,7 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
       <div className="text-muted-foreground">
         {team.identifier}-{issue.parent.number}
       </div>
-
-      <div className="font-medium max-w-[300px]">
+      <div className="max-w-[300px]">
         <div className="truncate">{issue.parent.title}</div>
       </div>
     </Link>

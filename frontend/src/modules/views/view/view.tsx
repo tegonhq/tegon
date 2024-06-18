@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation';
 import React from 'react';
 
 import { DisplayPopover } from 'modules/issues/all/display-popover';
-import { OverviewInsights } from 'modules/issues/components/overview-insights';
+import { OverviewInsights } from 'modules/issues/overview-insights';
 import { FiltersView } from 'modules/issues/filters-view/filters-view';
 
 import { AppLayout } from 'common/layouts/app-layout';

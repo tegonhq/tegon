@@ -19,7 +19,7 @@ import { useCurrentTeam } from 'hooks/teams';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { BoardIssueItem } from '../../issue-board-item';
+import { BoardIssueItem } from '../../../../components/issue-board-item/issue-board-item';
 
 interface PriorityBoardListProps {
   priority: number;

@@ -2,7 +2,7 @@
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 
-import { IssueLabels } from 'modules/issues/all/list-view/issue-labels';
+import { IssueLabels } from 'modules/issues/components/issue-list-item/issue-labels';
 import {
   IssueAssigneeDropdown,
   IssueAssigneeDropdownVariant,
@@ -64,7 +64,7 @@ export function SubIssueItem({ issue }: SubIssueItemProps) {
               value={issue.stateId}
               onChange={statusChange}
               variant={IssueStatusDropdownVariant.NO_BACKGROUND}
-              teamIdentfier={team.identifier}
+              teamIdentifier={team.identifier}
             />
           </div>
         </div>

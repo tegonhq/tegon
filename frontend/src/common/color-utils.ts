@@ -12,15 +12,19 @@ export function generateHexColor(): string {
 }
 
 export function getTailwindColor(name: string): string {
-  // Define Tailwind CSS colors at shade 400
   const colors = [
-    'bg-blue-400 dark:bg-blue-900',
-    'bg-green-600 dark:bg-green-900',
-    'bg-yellow-400 dark:bg-yellow-900',
-    'bg-indigo-400 dark:bg-indigo-900',
-    'bg-purple-400 dark:bg-purple-900',
-    'bg-pink-400 dark:bg-pink-900',
-    'bg-teal-400 dark:bg-teal-900',
+    '#B56455',
+    '#7B8A34',
+    '#1C91A8',
+    '#886DBC',
+    '#AD6E30',
+    '#54935B',
+    '#4187C0',
+    '#A165A1',
+    '#997D1D',
+    '#2B9684',
+    '#2B9684',
+    '#B0617C',
   ];
 
   // Generate a hash value for the input name
@@ -35,22 +39,13 @@ export function getTailwindColor(name: string): string {
   return colors[index];
 }
 
-export function getTeamColor(name: string, background = false): string {
-  // Define Tailwind CSS colors at shade 400
-  const colors = [
-    'text-blue-500',
-    'text-purple-500',
-    'text-green-500',
-    'text-indigo-500',
-    'text-teal-500',
-  ];
-
+export function getTeamColor(name: string): string {
   const bgColors = [
-    'bg-blue-500/10',
-    'bg-purple-500/10',
-    'bg-green-500/10',
-    'bg-indigo-500/10',
-    'bg-teal-500/10',
+    'bg-[#89C794]',
+    'bg-[#89C794]',
+    'bg-[#D2A1BB]',
+    'bg-[#89C794]',
+    'bg-[#89C794]',
   ];
 
   // Generate a hash value for the input name
@@ -60,7 +55,7 @@ export function getTeamColor(name: string, background = false): string {
   }
 
   // Ensure hash value is within the range of colors array
-  const index = Math.abs(hash) % colors.length;
+  const index = Math.abs(hash) % bgColors.length;
 
-  return background ? bgColors[index] : colors[index];
+  return bgColors[index];
 }

@@ -5,18 +5,11 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Inter } from 'next/font/google';
 import * as React from 'react';
 
 import { cn } from 'common/lib/utils';
 
 const ToastProvider = ToastPrimitives.Provider;
-
-// Inter as default font
-export const fontSans = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
 
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
@@ -60,7 +53,6 @@ const Toast = React.forwardRef<
       className={cn(
         toastVariants({ variant }),
         className,
-        fontSans.variable,
         'font-sans bg-background backdrop-blur-md dark:bg-slate-700/20 shadow-md border rounded-md',
       )}
       {...props}
