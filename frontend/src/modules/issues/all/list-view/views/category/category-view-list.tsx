@@ -6,6 +6,7 @@ import React from 'react';
 import { IssueListItem } from 'modules/issues/components';
 
 import type { IssueType } from 'common/types/issue';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 import type { WorkflowType } from 'common/types/team';
 
 import { Button } from 'components/ui/button';
@@ -20,7 +21,6 @@ import { ChevronDown, ChevronRight } from 'icons';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 interface CategoryViewListProps {
   workflow: WorkflowType;
@@ -57,8 +57,8 @@ export const CategoryViewList = observer(
         <div className="flex gap-1 items-center">
           <CollapsibleTrigger asChild>
             <Button
-              className="flex items-center ml-4 w-fit rounded-2xl"
-              style={{ backgroundColor: workflow.color }}
+              className="flex items-center ml-6 w-fit rounded-2xl"
+              style={{ backgroundColor: `${workflow.color}99` }}
               variant="ghost"
             >
               <CategoryIcon size={20} className="group-hover/collapse:hidden" />

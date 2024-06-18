@@ -28,7 +28,7 @@ export function Label({ label, setEditLabelState }: LabelProps) {
   const { mutate: deleteLabelAPI } = useDeleteLabelMutation({});
 
   return (
-    <div className="border border-slate-200 dark:border-slate-800 group flex justify-between mb-2 text-sm rounded-md bg-slate-100 dark:bg-slate-800/50 p-2 px-4">
+    <div className="group flex justify-between mb-2 bg-gray-50 rounded p-2 px-4">
       <div className="flex items-center justify-center gap-3">
         <div
           className="h-3 w-3 rounded-full"

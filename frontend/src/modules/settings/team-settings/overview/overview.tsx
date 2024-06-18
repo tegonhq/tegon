@@ -74,7 +74,11 @@ export const Overview = observer(() => {
                 )}
               />
 
-              <Button type="submit" isLoading={form.formState.isSubmitting}>
+              <Button
+                type="submit"
+                variant="secondary"
+                isLoading={form.formState.isSubmitting}
+              >
                 Update
               </Button>
             </form>

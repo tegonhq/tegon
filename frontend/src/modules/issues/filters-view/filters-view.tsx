@@ -22,7 +22,7 @@ export const FiltersView = observer(
     const filters = applicationStore.filters;
 
     return (
-      <div className="py-4 pl-6 px-4 flex flex-col gap-2">
+      <div className="py-3 pt-6 pl-6 px-4 flex flex-col gap-2">
         <div className="flex justify-between">
           <div className="flex gap-2 flex-wrap">
             <FilterDropdown showStatus={showStatus} />

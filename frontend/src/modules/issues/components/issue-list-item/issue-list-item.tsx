@@ -48,7 +48,7 @@ export function IssueRelationIssues({ view, issue }: IssueRelationIssuesProps) {
   });
 
   return (
-    <div className="pl-12 pr-4">
+    <div className="pl-14 pr-4">
       {issues.map((issueRelation: IssueRelationType | IssueType) => {
         const id =
           view === View.SUB_ISSUES
@@ -93,7 +93,7 @@ export const IssueListItem = observer(
       <>
         <a
           className={cn(
-            'pl-1 pr-4 flex group cursor-default hover:bg-active/50 gap-2',
+            'pl-3 pr-4 flex group cursor-default hover:bg-active/50 gap-2',
             subIssueView && 'pl-0 pr-0',
           )}
           onClick={() => {
@@ -181,13 +181,15 @@ export const IssueListItem = observer(
                   </div>
                 </div>
 
-                <div>
-                  <IssueRelations
-                    issue={issue}
-                    setCurrentView={setCurrentView}
-                    currentView={currentView}
-                  />
-                </div>
+                {!subIssueView && (
+                  <div>
+                    <IssueRelations
+                      issue={issue}
+                      setCurrentView={setCurrentView}
+                      currentView={currentView}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
