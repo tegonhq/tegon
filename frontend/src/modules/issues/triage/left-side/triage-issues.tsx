@@ -94,7 +94,7 @@ export const TriageIssues = () => {
               className={cn(
                 'p-4 py-2 flex flex-col gap-1',
                 issueId === `${currentTeam.identifier}-${issue.number}` &&
-                  'bg-active rounded-md',
+                  'bg-grayAlpha-200 rounded-md',
                 !noBorder && 'border-b',
               )}
               onClick={() => {
