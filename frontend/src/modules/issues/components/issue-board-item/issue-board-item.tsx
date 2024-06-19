@@ -13,18 +13,14 @@ import {
   IssueStatusDropdownVariant,
 } from 'modules/issues/components';
 
-import { IssueRelationEnum } from 'common/types/issue-relation';
-
-import { Badge } from 'components/ui/badge';
 import { useTeamWithId } from 'hooks/teams/use-current-team';
-import { BlockedFill, BlockingToLine } from 'icons';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
 import { useContextStore } from 'store/global-context-provider';
 
-import { IssueLabels } from '../issue-list-item/issue-labels';
 import { IssueRelations } from './issue-relations';
+import { IssueLabels } from '../issue-list-item/issue-labels';
 
 interface BoardIssueItemProps {
   issueId: string;
@@ -43,18 +39,9 @@ export const BoardIssueItem = observer(
       query: { workspaceSlug },
     } = useRouter();
     const { mutate: updateIssue } = useUpdateIssueMutation({});
-    const { issuesStore, issueRelationsStore, applicationStore } =
-      useContextStore();
+    const { issuesStore, applicationStore } = useContextStore();
     const issue = issuesStore.getIssueById(issueId);
     const team = useTeamWithId(issue.teamId);
-    const blockedIssues = issueRelationsStore.getIssueRelationForType(
-      issue.id,
-      IssueRelationEnum.BLOCKED,
-    );
-    const blocksIssues = issueRelationsStore.getIssueRelationForType(
-      issue.id,
-      IssueRelationEnum.BLOCKS,
-    );
 
     const statusChange = (stateId: string) => {
       updateIssue({ id: issue.id, stateId, teamId: issue.teamId });

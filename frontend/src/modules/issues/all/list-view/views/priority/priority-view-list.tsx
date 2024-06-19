@@ -3,16 +3,23 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
+import { IssueListItem } from 'modules/issues/components';
 import { PriorityIcons } from 'modules/issues/components';
 
 import { Priorities, type IssueType } from 'common/types/issue';
 
+import { Button } from 'components/ui/button';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from 'components/ui/collapsible';
 import { useCurrentTeam } from 'hooks/teams';
+import { ChevronDown, ChevronRight } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { IssueItem } from '../../issue-item';
 
 interface PriorityViewListProps {
   priority: number;
@@ -21,6 +28,7 @@ interface PriorityViewListProps {
 export const PriorityViewList = observer(
   ({ priority }: PriorityViewListProps) => {
     const { issuesStore, applicationStore } = useContextStore();
+    const [isOpen, setIsOpen] = React.useState(true);
     const team = useCurrentTeam();
     const issues = issuesStore.getIssuesForPriority(
       priority,
@@ -39,23 +47,43 @@ export const PriorityViewList = observer(
     const PriorityIcon = PriorityIcons[priority];
 
     return (
-      <div className="flex flex-col">
-        <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
-          <PriorityIcon.icon size={16} className="text-muted-foreground mr-2" />
-          <h3 className="pl-2 text-sm font-medium">
-            {Priorities[priority]}
-            <span className="text-muted-foreground ml-2">
-              {computedIssues.length}
-            </span>
-          </h3>
+      <Collapsible
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        className="flex flex-col gap-2 h-full group/collapse"
+      >
+        <div className="flex gap-1 items-center">
+          <CollapsibleTrigger asChild>
+            <Button
+              className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-200"
+              variant="ghost"
+            >
+              <PriorityIcon.icon
+                size={20}
+                className="group-hover/collapse:hidden"
+              />
+              <div className="hidden group-hover/collapse:block">
+                {isOpen ? (
+                  <ChevronDown size={20} />
+                ) : (
+                  <ChevronRight size={20} />
+                )}
+              </div>
+              <h3 className="pl-2">{Priorities[priority]}</h3>
+            </Button>
+          </CollapsibleTrigger>
+
+          <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+            {computedIssues.length}
+          </div>
         </div>
 
-        <div>
+        <CollapsibleContent>
           {computedIssues.map((issue: IssueType) => (
-            <IssueItem key={issue.id} issueId={issue.id} />
+            <IssueListItem key={issue.id} issueId={issue.id} />
           ))}
-        </div>
-      </div>
+        </CollapsibleContent>
+      </Collapsible>
     );
   },
 );

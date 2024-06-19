@@ -2,13 +2,7 @@
 
 import { cn } from 'common/lib/utils';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  AvatarText,
-  getInitials,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 
 interface MemberItemProps {
   className: string;

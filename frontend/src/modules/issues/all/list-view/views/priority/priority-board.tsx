@@ -34,7 +34,7 @@ export const PriorityBoard = observer(() => {
   };
 
   return (
-    <Board onDragEnd={onDragEnd}>
+    <Board onDragEnd={onDragEnd} className="pl-6">
       <>
         {Priorities.map((priority: string) => {
           return (

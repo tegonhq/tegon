@@ -13,7 +13,7 @@ export function SettingSection({
 }: SettingSectionProps) {
   return (
     <div className="flex gap-6">
-      <div className="w-[500px] flex flex-col">
+      <div className="w-[400px] shrink-0 flex flex-col">
         <h3 className="text-lg"> {title} </h3>
         <p className="text-muted-foreground">{description}</p>
       </div>

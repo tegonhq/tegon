@@ -3,6 +3,8 @@
 import * as React from 'react';
 
 import { IssueStatusDropdownContent } from 'modules/issues/components';
+
+import { getWorkflowColor } from 'common/status-color';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { Button } from 'components/ui/button';
@@ -54,7 +56,7 @@ export function IssueStatusDropdown({
           onClick={() => setOpen(true)}
           className="flex items-center !bg-transparent hover:bg-transparent shadow-none p-0 border-0 justify-between focus-visible:ring-1 focus-visible:border-primary "
         >
-          <CategoryIcon size={20} color={workflow.color} />
+          <CategoryIcon size={20} color={getWorkflowColor(workflow).color} />
         </Button>
       );
     }
@@ -71,7 +73,7 @@ export function IssueStatusDropdown({
           <CategoryIcon
             size={18}
             className="text-muted-foreground mr-2"
-            color={workflow.color}
+            color={getWorkflowColor(workflow).color}
           />
           {workflow.name}
         </Button>
@@ -89,7 +91,7 @@ export function IssueStatusDropdown({
         <CategoryIcon
           size={14}
           className="text-muted-foreground mr-2"
-          color={workflow.color}
+          color={getWorkflowColor(workflow).color}
         />
         {workflow.name}
       </Button>

@@ -7,8 +7,6 @@ import React from 'react';
 
 import { cn } from 'common/lib/utils';
 
-import { ScrollArea } from './scroll-area';
-
 interface BoardProps {
   children: React.ReactElement;
   isCombineEnabled?: boolean;
@@ -51,12 +49,9 @@ export function Board({
       )}
     >
       <DragDropContext onDragEnd={onDragEnd}>
-        <ScrollArea
-          orientation="horizontal"
-          className="overflow-auto overflow-y-hidden h-full w-full"
-        >
+        <div className="overflow-auto overflow-y-hidden h-full w-full">
           {board}
-        </ScrollArea>
+        </div>
       </DragDropContext>
     </div>
   );

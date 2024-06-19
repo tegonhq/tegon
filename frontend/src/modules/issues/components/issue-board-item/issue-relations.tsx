@@ -2,11 +2,11 @@
 
 import React from 'react';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
-
 import { cn } from 'common/lib/utils';
+import { getWorkflowColor } from 'common/status-color';
 import type { IssueType } from 'common/types/issue';
 import { IssueRelationEnum } from 'common/types/issue-relation';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { buttonVariants } from 'components/ui/button';
 import { useTeamWithId } from 'hooks/teams';
@@ -14,12 +14,13 @@ import { useTeamWorkflows } from 'hooks/workflows';
 import { BlockedFill, BlocksFill, SubIssue } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
+import { observer } from 'mobx-react-lite';
 
 interface IssueRelationsProps {
   issue: IssueType;
 }
 
-export function IssueRelations({ issue }: IssueRelationsProps) {
+export const IssueRelations = observer(({ issue }: IssueRelationsProps) => {
   const { issueRelationsStore, issuesStore } = useContextStore();
   const team = useTeamWithId(issue.teamId);
   const workflows = useTeamWorkflows(team.identifier);
@@ -52,7 +53,11 @@ export function IssueRelations({ issue }: IssueRelationsProps) {
           'text-xs flex gap-1',
         )}
       >
-        Parent task <CategoryIcon size={12} color={parentWorkflow.color} />{' '}
+        Parent task{' '}
+        <CategoryIcon
+          size={12}
+          color={getWorkflowColor(parentWorkflow).color}
+        />{' '}
         <span>
           {team.identifier}-{parentIssue.number}
         </span>
@@ -103,4 +108,4 @@ export function IssueRelations({ issue }: IssueRelationsProps) {
       {subIssues.length > 0 && getSubIssuesComponent()}
     </div>
   );
-}
+});

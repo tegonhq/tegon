@@ -34,22 +34,22 @@ export const Labels = observer(() => {
       <div className="flex flex-col">
         <div className="my-4">
           <div className="flex justify-between">
-            <div className="flex">
-              <Input
-                placeholder="Filter by name"
-                onChange={(e) => setSearchValue(e.currentTarget.value)}
-              />
-            </div>
-
             <div className="flex gap-3">
               <Button
                 disabled={showNewLabelCreation}
+                variant="secondary"
                 onClick={() => {
                   setNewLabelCreation(true);
                 }}
               >
                 New label
               </Button>
+            </div>
+            <div className="flex">
+              <Input
+                placeholder="Filter by name"
+                onChange={(e) => setSearchValue(e.currentTarget.value)}
+              />
             </div>
           </div>
 

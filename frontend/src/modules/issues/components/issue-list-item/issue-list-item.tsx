@@ -37,29 +37,31 @@ interface IssueRelationIssuesProps {
   issue: IssueType;
 }
 
-export function IssueRelationIssues({ view, issue }: IssueRelationIssuesProps) {
-  const { issuesStore, issueRelationsStore } = useContextStore();
+export const IssueRelationIssues = observer(
+  ({ view, issue }: IssueRelationIssuesProps) => {
+    const { issuesStore, issueRelationsStore } = useContextStore();
 
-  const issues = getRelationIssues({
-    issueRelationsStore,
-    issuesStore,
-    issue,
-    view,
-  });
+    const issues = getRelationIssues({
+      issueRelationsStore,
+      issuesStore,
+      issue,
+      view,
+    });
 
-  return (
-    <div className="pl-14 pr-4">
-      {issues.map((issueRelation: IssueRelationType | IssueType) => {
-        const id =
-          view === View.SUB_ISSUES
-            ? (issueRelation as IssueType).id
-            : (issueRelation as IssueRelationType).relatedIssueId;
+    return (
+      <div className="pl-14 pr-4">
+        {issues.map((issueRelation: IssueRelationType | IssueType) => {
+          const id =
+            view === View.SUB_ISSUES
+              ? (issueRelation as IssueType).id
+              : (issueRelation as IssueRelationType).relatedIssueId;
 
-        return <IssueListItem key={id} subIssueView issueId={id} />;
-      })}
-    </div>
-  );
-}
+          return <IssueListItem key={id} subIssueView issueId={id} />;
+        })}
+      </div>
+    );
+  },
+);
 
 export const IssueListItem = observer(
   ({ issueId, subIssueView = false }: IssueListItemProps) => {

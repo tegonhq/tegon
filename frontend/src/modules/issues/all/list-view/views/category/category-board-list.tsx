@@ -10,6 +10,7 @@ import React from 'react';
 
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
+import { getWorkflowColor } from 'common/status-color';
 import type { IssueType } from 'common/types/issue';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 import type { WorkflowType } from 'common/types/team';
@@ -53,7 +54,9 @@ export const CategoryBoardList = observer(
           <div className="flex gap-1 items-center mb-2">
             <div
               className="flex items-center w-fit h-8 rounded-2xl px-4 py-2"
-              style={{ backgroundColor: workflow.color }}
+              style={{
+                backgroundColor: getWorkflowColor(workflow).background,
+              }}
             >
               <CategoryIcon size={20} />
               <h3 className="pl-2">{workflow.name}</h3>
@@ -65,7 +68,7 @@ export const CategoryBoardList = observer(
           </div>
 
           <ScrollArea>
-            <div className="flex flex-col gap-1 grow pb-10">
+            <div className="flex flex-col gap-2 grow pb-10 pt-2">
               {computedIssues.map((issue: IssueType, index: number) => (
                 <BoardItem key={issue.id} id={issue.id}>
                   <Draggable

@@ -19,11 +19,15 @@ export * from './building-line';
 export * from './user-line';
 export * from './chevron-left';
 export * from './blocks-fill';
-
-export * from './team-line';
 export * from './priority-low';
 export * from './priority-medium';
 export * from './priority-high';
+export * from './canceled-line';
+export * from './unscoped-line';
+export * from './board-line';
+export * from './list-line';
+
+export * from './team-line';
 export * from './issues-fill';
 export * from './assignee-line';
 export * from './new-issue-line';

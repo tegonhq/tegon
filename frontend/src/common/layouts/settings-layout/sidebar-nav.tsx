@@ -1,7 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 'use client';
 
-import { RiArrowLeftSLine, RiBuilding4Fill } from '@remixicon/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
@@ -11,7 +10,7 @@ import { cn } from 'common/lib/utils';
 
 import { Button, buttonVariants } from 'components/ui/button';
 import { ScrollArea } from 'components/ui/scroll-area';
-import { AssigneeLine, BuildingLine, ChevronLeft, UserLine } from 'icons';
+import { BuildingLine, ChevronLeft, UserLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 

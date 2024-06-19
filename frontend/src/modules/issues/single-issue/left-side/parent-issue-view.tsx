@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
-
 import { cn } from 'common/lib/utils';
+import { getWorkflowColor } from 'common/status-color';
 import type { IssueType } from 'common/types/issue';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 import type { WorkflowType } from 'common/types/team';
 
 import { buttonVariants } from 'components/ui/button';
@@ -40,7 +40,7 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
       <CategoryIcon
         size={16}
         className="text-muted-foreground"
-        color={workflow.color}
+        color={getWorkflowColor(workflow).color}
       />
       <div className="text-muted-foreground">
         {team.identifier}-{issue.parent.number}

@@ -2,7 +2,6 @@
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 
-import { IssueLabels } from 'modules/issues/components/issue-list-item/issue-labels';
 import {
   IssueAssigneeDropdown,
   IssueAssigneeDropdownVariant,
@@ -11,6 +10,7 @@ import {
   IssueStatusDropdown,
   IssueStatusDropdownVariant,
 } from 'modules/issues/components';
+import { IssueLabels } from 'modules/issues/components/issue-list-item/issue-labels';
 
 import type { IssueType } from 'common/types/issue';
 

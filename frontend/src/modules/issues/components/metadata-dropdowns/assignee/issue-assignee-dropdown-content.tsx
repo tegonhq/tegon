@@ -1,15 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { getTailwindColor } from 'common/color-utils';
-import { cn } from 'common/lib/utils';
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  AvatarText,
-  getInitials,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 import { Checkbox } from 'components/ui/checkbox';
 import { Command, CommandGroup, CommandInput } from 'components/ui/command';
 import { useScope } from 'hooks';

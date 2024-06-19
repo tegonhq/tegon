@@ -4,9 +4,9 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
-
+import { getWorkflowColor } from 'common/status-color';
 import { type IssueHistoryType } from 'common/types/issue';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { TimelineItem } from 'components/ui/timeline';
 import { useCurrentTeam } from 'hooks/teams';
@@ -39,7 +39,7 @@ export const StatusActivity = observer(
             <CategoryIcon
               size={16}
               className="text-muted-foreground"
-              color={toWorkflow.color}
+              color={getWorkflowColor(toWorkflow).color}
             />
           </div>
 

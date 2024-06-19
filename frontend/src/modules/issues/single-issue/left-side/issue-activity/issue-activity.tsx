@@ -73,14 +73,6 @@ export const IssueActivity = observer(() => {
     usersData && getUserData(issue.createdById),
   );
 
-  function getChildComments(issueCommentId: string) {
-    return activities.filter(
-      (activity) =>
-        activity.type === ActivityType.Comment &&
-        activity.parentId === issueCommentId,
-    );
-  }
-
   return (
     <div className="px-4">
       <div className="my-4 flex justify-between">

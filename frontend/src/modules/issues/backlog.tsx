@@ -6,10 +6,10 @@ import { withApplicationStore } from 'common/wrappers/with-application-store';
 
 import { useScope } from 'hooks';
 
-import { DisplayPopover } from './all/display-popover';
 import { Header } from './all/header';
 import { ListView } from './all/list-view';
 import { SaveViewActions } from './all/save-view-actions';
+import { DisplayPopover } from './components/view-options/view-options';
 import { FiltersView } from './filters-view/filters-view';
 
 export const BacklogIssues = withApplicationStore(() => {

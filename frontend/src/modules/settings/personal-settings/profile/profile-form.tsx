@@ -53,49 +53,47 @@ export function ProfileForm() {
   };
 
   return (
-    <div className="py-4">
-      <div className="max-w-[250px]">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="fullname"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Tesla" {...field} />
-                  </FormControl>
+    <div className="max-w-[250px]">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="fullname"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Full name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Tesla" {...field} />
+                </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="elonmusk" {...field} />
-                  </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="elonmusk" {...field} />
+                </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <Button
-              type="submit"
-              variant="secondary"
-              isLoading={form.formState.isSubmitting}
-            >
-              Update
-            </Button>
-          </form>
-        </Form>
-      </div>
+          <Button
+            type="submit"
+            variant="secondary"
+            isLoading={form.formState.isSubmitting}
+          >
+            Update
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 }

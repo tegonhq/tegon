@@ -19,7 +19,6 @@ import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
 import { FileUpload } from './file-upload/file-upload';
 import { FilterSmall } from './filters-small';
-import { Header } from '../header';
 import { IssueActivity } from './issue-activity';
 import { IssueTitle } from './issue-title';
 import { LinkedIssuesView } from './linked-issues-view';

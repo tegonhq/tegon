@@ -11,10 +11,10 @@ import type { LabelType } from 'common/types/label';
 
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
-import { Separator } from 'components/ui/separator';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
+
 import { SettingSection } from '../setting-section';
 
 export const Labels = observer(() => {
@@ -39,22 +39,22 @@ export const Labels = observer(() => {
             customized to your team’s needs.
           </p>
           <div className="flex justify-between">
-            <div className="flex">
-              <Input
-                placeholder="Filter by name"
-                onChange={(e) => setSearchValue(e.currentTarget.value)}
-              />
-            </div>
-
             <div className="flex gap-3">
               <Button
                 disabled={showNewLabelCreation}
+                variant="secondary"
                 onClick={() => {
                   setNewLabelCreation(true);
                 }}
               >
                 New label
               </Button>
+            </div>
+            <div className="flex">
+              <Input
+                placeholder="Filter by name"
+                onChange={(e) => setSearchValue(e.currentTarget.value)}
+              />
             </div>
           </div>
 

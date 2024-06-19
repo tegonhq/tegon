@@ -55,49 +55,47 @@ export function SecurityForm() {
   };
 
   return (
-    <div className="py-4">
-      <div className="max-w-[250px]">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="oldPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Old password</FormLabel>
-                  <FormControl>
-                    <Input placeholder="old password" {...field} />
-                  </FormControl>
+    <div className="max-w-[250px]">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="oldPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Old password</FormLabel>
+                <FormControl>
+                  <Input placeholder="old password" {...field} />
+                </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="newPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>New password</FormLabel>
-                  <FormControl>
-                    <Input placeholder="new password" {...field} />
-                  </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>New password</FormLabel>
+                <FormControl>
+                  <Input placeholder="new password" {...field} />
+                </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <Button
-              type="submit"
-              variant="secondary"
-              isLoading={form.formState.isSubmitting}
-            >
-              Update
-            </Button>
-          </form>
-        </Form>
-      </div>
+          <Button
+            type="submit"
+            variant="secondary"
+            isLoading={form.formState.isSubmitting}
+          >
+            Update
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 }

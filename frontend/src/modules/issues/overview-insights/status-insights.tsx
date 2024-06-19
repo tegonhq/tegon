@@ -1,9 +1,9 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
-
 import { groupBy } from 'common/lib/common';
+import { getWorkflowColor } from 'common/status-color';
 import type { IssueType } from 'common/types/issue';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 import type { WorkflowType } from 'common/types/team';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -28,7 +28,7 @@ export function StatusInsights({ issues }: StatusInsightsProps) {
               <CategoryIcon
                 size={16}
                 className="text-muted-foreground"
-                color={workflow.color}
+                color={getWorkflowColor(workflow).color}
               />
               {workflow.name}
             </div>

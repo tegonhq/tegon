@@ -3,7 +3,7 @@
 import { RiAddLine } from '@remixicon/react';
 import React from 'react';
 
-import { generateHexColor } from 'common/color-utils';
+import { generateOklchColor } from 'common/color-utils';
 import type { LabelType } from 'common/types/label';
 
 import { Checkbox } from 'components/ui/checkbox';
@@ -105,7 +105,7 @@ export function IssueLabelDropdownContent({
                   createLabel({
                     name: labelSearch,
                     workspaceId: workspace.id,
-                    color: generateHexColor(),
+                    color: generateOklchColor(),
                   });
                 }}
               >

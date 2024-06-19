@@ -7,8 +7,8 @@ import { useParams } from 'next/navigation';
 import React from 'react';
 
 import { DisplayPopover } from 'modules/issues/all/display-popover';
-import { OverviewInsights } from 'modules/issues/overview-insights';
 import { FiltersView } from 'modules/issues/filters-view/filters-view';
+import { OverviewInsights } from 'modules/issues/overview-insights';
 
 import { AppLayout } from 'common/layouts/app-layout';
 import { withApplicationStore } from 'common/wrappers/with-application-store';

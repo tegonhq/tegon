@@ -4,11 +4,11 @@ import { RiCloseLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
-
 import { cn } from 'common/lib/utils';
+import { getWorkflowColor } from 'common/status-color';
 import type { IssueType } from 'common/types/issue';
 import type { IssueRelationType } from 'common/types/issue-relation';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { Button } from 'components/ui/button';
 import { useTeamWithId } from 'hooks/teams';
@@ -59,7 +59,7 @@ export const RelatedIssueItem = observer(
         <CategoryIcon
           size={18}
           className="text-muted-foreground"
-          color={workflow.color}
+          color={getWorkflowColor(workflow).color}
         />
         {`${team.identifier}-${issue.number}`}
 

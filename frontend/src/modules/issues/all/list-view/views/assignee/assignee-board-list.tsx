@@ -5,31 +5,25 @@ import {
   type DraggableProvided,
   type DraggableStateSnapshot,
 } from '@hello-pangea/dnd';
-import { RiAccountCircleFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { getTailwindColor } from 'common/color-utils';
-import { cn } from 'common/lib/utils';
+import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
+
 import type { IssueType } from 'common/types/issue';
 import type { UsersOnWorkspaceType } from 'common/types/workspace';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  getInitials,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 import { BoardColumn, BoardItem } from 'components/ui/board';
 import { ScrollArea } from 'components/ui/scroll-area';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
+import { AssigneeLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { BoardIssueItem } from '../../../../components/issue-board-item/issue-board-item';
 
 interface AssigneeBoardListProps {
   userOnWorkspace: UsersOnWorkspaceType;
@@ -62,31 +56,25 @@ export const AssigneeBoardList = observer(
     }
     return (
       <BoardColumn key={userOnWorkspace.userId} id={userOnWorkspace.userId}>
-        <div className="flex flex-col max-h-[100%]">
-          <div className="flex items-center w-full p-4 pb-0">
-            <Avatar className="h-[15px] w-[20px] flex items-center">
-              <AvatarImage />
-              <AvatarFallback
-                className="text-[0.55rem] rounded-sm mr-1"
-                style={{
-                  background: getTailwindColor(
-                    getUserData(userOnWorkspace.userId).username,
-                  ),
-                }}
-              >
-                {getInitials(getUserData(userOnWorkspace.userId).fullname)}
-              </AvatarFallback>
-            </Avatar>
-            <h3 className="pl-2 text-sm font-medium">
-              {getUserData(userOnWorkspace.userId).fullname}
-              <span className="text-muted-foreground ml-2">
-                {computedIssues.length}
-              </span>
-            </h3>
+        <div className="flex flex-col max-h-[100%] pr-4">
+          <div className="flex gap-1 items-center mb-2">
+            <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-200">
+              <AvatarText
+                text={getUserData(userOnWorkspace.userId).fullname}
+                className="h-5 w-5 text-[9px]"
+              />
+              <h3 className="pl-2">
+                {getUserData(userOnWorkspace.userId).fullname}
+              </h3>
+            </div>
+
+            <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+              {computedIssues.length}
+            </div>
           </div>
 
-          <ScrollArea className="p-3 pb-10">
-            <div className="flex flex-col gap-3 grow">
+          <ScrollArea>
+            <div className="flex flex-col gap-3 grow pb-10 pt-2">
               {computedIssues.map((issue: IssueType, index: number) => (
                 <BoardItem key={issue.id} id={issue.id}>
                   <Draggable
@@ -131,22 +119,19 @@ export const NoAssigneeView = observer(() => {
   return (
     <BoardColumn key="no-user" id="no-user">
       <div className="flex flex-col max-h-[100%]">
-        <div className="flex items-center w-full p-4 pb-1">
-          <RiAccountCircleFill
-            size={18}
-            className="text-muted-foreground mr-1"
-          />
+        <div className="flex gap-1 items-center mb-2">
+          <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-200">
+            <AssigneeLine size={20} />
+            <h3 className="pl-2">No Assignee</h3>
+          </div>
 
-          <h3 className="pl-2 text-sm font-medium">
-            No Assignee
-            <span className="text-muted-foreground ml-2">
-              {computedIssues.length}
-            </span>
-          </h3>
+          <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+            {computedIssues.length}
+          </div>
         </div>
 
-        <ScrollArea className="p-3 pb-10">
-          <div className="flex flex-col gap-3 grow">
+        <ScrollArea>
+          <div className="flex flex-col gap-3 grow pb-10 pt-2">
             {computedIssues.map((issue: IssueType, index: number) => (
               <BoardItem key={issue.id} id={issue.id}>
                 <Draggable key={issue.id} draggableId={issue.id} index={index}>

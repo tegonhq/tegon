@@ -1,22 +1,23 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { RiCloseCircleFill } from '@remixicon/react';
 
 import {
-  BacklogLine,
+  CanceledLine,
   DoneFill,
   InProgressLine,
   InReviewLine,
   TodoLine,
   TriageFill,
+  UnscopedLine,
 } from 'icons';
 
 export const WORKFLOW_CATEGORY_ICONS = {
-  Backlog: BacklogLine,
+  Backlog: UnscopedLine,
   Todo: TodoLine,
   'In Progress': InProgressLine,
   'In Review': InReviewLine,
+  Unscoped: UnscopedLine,
   Done: DoneFill,
-  Duplicate: RiCloseCircleFill,
-  Canceled: RiCloseCircleFill,
+  Duplicate: CanceledLine,
+  Canceled: CanceledLine,
   Triage: TriageFill,
 };

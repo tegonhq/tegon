@@ -26,9 +26,9 @@ export const Members = observer(() => {
 
         {!isLoading && (
           <div className="flex flex-col">
-            <h3 className="text-sm mb-2"> {usersData.length} Members </h3>
+            <h3 className="text-sm"> {usersData.length} Members </h3>
 
-            <div className="mt-4 flex flex-col gap-4">
+            <div className="mt-4 flex flex-col gap-2">
               {usersData.map((userData: User, index) => (
                 <MemberItem
                   key={userData.id}

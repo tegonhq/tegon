@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { getWorkflowColor } from 'common/status-color';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 import type { WorkflowType } from 'common/types/team';
 
@@ -19,9 +20,9 @@ export function WorkflowItem({ workflow }: WorkflowItemProps) {
     >
       <div className="flex items-center">
         <CategoryIcon
-          size={18}
+          size={20}
           className="text-muted-foreground"
-          color={workflow.color}
+          color={getWorkflowColor(workflow).color}
         />
         <h3 className="pl-2"> {workflow.name} </h3>
       </div>

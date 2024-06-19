@@ -1,13 +1,13 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 'use client';
-import { GeistSans } from 'geist/font/sans';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import {
   CheckIcon,
   ChevronRightIcon,
   DotFilledIcon,
 } from '@radix-ui/react-icons';
+import { GeistSans } from 'geist/font/sans';
 import * as React from 'react';
 
 import { cn } from 'common/lib/utils';

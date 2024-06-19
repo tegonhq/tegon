@@ -20,7 +20,6 @@ import { useCurrentTeam } from 'hooks/teams';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
-import { Header } from './header';
 import { IssueRelatedProperties } from './issue-related-properties';
 
 export const RightSide = observer(() => {

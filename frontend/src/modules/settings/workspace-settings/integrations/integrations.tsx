@@ -3,15 +3,15 @@
 import { RiGithubFill } from '@remixicon/react';
 import { useRouter } from 'next/router';
 
+import { Header } from 'modules/settings/header';
 import { SettingSection } from 'modules/settings/setting-section';
 
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
+import { Button } from 'components/ui/button';
+import { ScrollArea } from 'components/ui/scroll-area';
 import { useCurrentWorkspace } from 'hooks/workspace';
 import { SentryIcon, SlackIcon } from 'icons';
-import { Header } from 'modules/settings/header';
-import { ScrollArea } from 'components/ui/scroll-area';
-import { Button } from 'components/ui/button';
 
 interface IntegrationCardProps {
   name: string;

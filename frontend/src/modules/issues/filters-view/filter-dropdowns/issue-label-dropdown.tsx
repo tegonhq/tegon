@@ -34,12 +34,12 @@ export function IssueLabelDropdown({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            variant="outline"
+            variant="ghost"
             role="combobox"
             size="xs"
             aria-expanded={open}
             className={cn(
-              'flex items-center justify-between !bg-transparent hover:bg-transparent p-0 border-0 text-xs font-normal focus-visible:ring-1 focus-visible:border-primary text-muted-foreground',
+              'flex items-center justify-between p-0 border-0 focus-visible:ring-1 focus-visible:border-primary',
               value && 'text-foreground',
             )}
           >

@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { getWorkflowColor } from 'common/status-color';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
-
 import type { WorkflowType } from 'common/types/team';
 
 import { Checkbox } from 'components/ui/checkbox';
@@ -84,7 +84,7 @@ export function IssueStatusDropdownContent({
                   <CategoryIcon
                     size={18}
                     className="text-muted-foreground mr-2"
-                    color={workflow.color}
+                    color={getWorkflowColor(workflow).color}
                   />
                   {workflow.name}
                 </label>

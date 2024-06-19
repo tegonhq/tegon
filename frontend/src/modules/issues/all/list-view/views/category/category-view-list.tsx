@@ -5,6 +5,7 @@ import React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
 
+import { getWorkflowColor } from 'common/status-color';
 import type { IssueType } from 'common/types/issue';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 import type { WorkflowType } from 'common/types/team';
@@ -58,7 +59,7 @@ export const CategoryViewList = observer(
           <CollapsibleTrigger asChild>
             <Button
               className="flex items-center ml-6 w-fit rounded-2xl"
-              style={{ backgroundColor: `${workflow.color}99` }}
+              style={{ backgroundColor: getWorkflowColor(workflow).background }}
               variant="ghost"
             >
               <CategoryIcon size={20} className="group-hover/collapse:hidden" />

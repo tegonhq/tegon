@@ -1,28 +1,28 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiAccountCircleFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { getTailwindColor } from 'common/color-utils';
-import { cn } from 'common/lib/utils';
+import { IssueListItem } from 'modules/issues/components';
+
 import type { IssueType } from 'common/types/issue';
 import type { UsersOnWorkspaceType } from 'common/types/workspace';
 
+import { AvatarText } from 'components/ui/avatar';
+import { Button } from 'components/ui/button';
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  getInitials,
-} from 'components/ui/avatar';
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from 'components/ui/collapsible';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
+import { AssigneeLine, ChevronDown, ChevronRight } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { IssueItem } from '../../issue-item';
 
 interface AssigneeListItemProps {
   userOnWorkspace: UsersOnWorkspaceType;
@@ -31,6 +31,7 @@ interface AssigneeListItemProps {
 export const AssigneeListSection = observer(
   ({ userOnWorkspace }: AssigneeListItemProps) => {
     const { issuesStore, applicationStore } = useContextStore();
+    const [isOpen, setIsOpen] = React.useState(true);
     const team = useCurrentTeam();
     const issues = issuesStore.getIssuesForUser(
       applicationStore.displaySettings.showSubIssues,
@@ -55,41 +56,52 @@ export const AssigneeListSection = observer(
     }
 
     return (
-      <div className="flex flex-col">
-        <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
-          <Avatar>
-            <AvatarImage />
-            <AvatarFallback
-              className="rounded-sm mr-1"
-              style={{
-                background: getTailwindColor(
-                  getUserData(userOnWorkspace.userId).username,
-                ),
-              }}
+      <Collapsible
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        className="flex flex-col gap-2 h-full group/collapse"
+      >
+        <div className="flex gap-1 items-center">
+          <CollapsibleTrigger asChild>
+            <Button
+              className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-200"
+              variant="ghost"
             >
-              {getInitials(getUserData(userOnWorkspace.userId).fullname)}
-            </AvatarFallback>
-          </Avatar>
-          <h3 className="pl-2 text-sm font-medium">
-            {getUserData(userOnWorkspace.userId).fullname}
-            <span className="text-muted-foreground ml-2">
-              {computedIssues.length}
-            </span>
-          </h3>
+              <AvatarText
+                text={getUserData(userOnWorkspace.userId).fullname}
+                className="h-5 w-5 group-hover/collapse:hidden text-[9px]"
+              />
+              <div className="hidden group-hover/collapse:block">
+                {isOpen ? (
+                  <ChevronDown size={20} />
+                ) : (
+                  <ChevronRight size={20} />
+                )}
+              </div>
+              <h3 className="pl-2">
+                {getUserData(userOnWorkspace.userId).fullname}
+              </h3>
+            </Button>
+          </CollapsibleTrigger>
+
+          <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+            {computedIssues.length}
+          </div>
         </div>
 
-        <div>
+        <CollapsibleContent>
           {computedIssues.map((issue: IssueType) => (
-            <IssueItem key={issue.id} issueId={issue.id} />
+            <IssueListItem key={issue.id} issueId={issue.id} />
           ))}
-        </div>
-      </div>
+        </CollapsibleContent>
+      </Collapsible>
     );
   },
 );
 
 export const NoAssigneeView = observer(() => {
   const { issuesStore, applicationStore } = useContextStore();
+  const [isOpen, setIsOpen] = React.useState(true);
   const team = useCurrentTeam();
 
   const issues = issuesStore.getIssuesForUser(
@@ -102,21 +114,31 @@ export const NoAssigneeView = observer(() => {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
-        <RiAccountCircleFill size={18} className="text-muted-foreground mr-1" />
-
-        <h3 className="pl-2 text-sm font-medium">
-          No Assignee
-          <span className="text-muted-foreground ml-2">{issues.length}</span>
-        </h3>
+    <Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      className="flex flex-col gap-2 h-full group/collapse"
+    >
+      <div className="flex gap-1 items-center">
+        <CollapsibleTrigger asChild>
+          <Button
+            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-200"
+            variant="ghost"
+          >
+            <AssigneeLine size={20} className="group-hover/collapse:hidden" />
+            <div className="hidden group-hover/collapse:block">
+              {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+            </div>
+            <h3 className="pl-2">No Assignee</h3>
+          </Button>
+        </CollapsibleTrigger>
       </div>
 
-      <div>
+      <CollapsibleContent>
         {issues.map((issue: IssueType) => (
-          <IssueItem key={issue.id} issueId={issue.id} />
+          <IssueListItem key={issue.id} issueId={issue.id} />
         ))}
-      </div>
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 });

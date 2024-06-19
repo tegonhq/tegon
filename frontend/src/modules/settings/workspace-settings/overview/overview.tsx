@@ -5,6 +5,8 @@ import { observer } from 'mobx-react-lite';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { SettingSection } from 'modules/settings/setting-section';
+
 import { Button } from 'components/ui/button';
 import {
   Form,
@@ -23,7 +25,6 @@ import { useUpdateWorkspaceMutation } from 'services/workspace/update-workspace'
 import { useContextStore } from 'store/global-context-provider';
 
 import { OverviewSchema } from './overview.interface';
-import { SettingSection } from 'modules/settings/setting-section';
 
 export const Overview = observer(() => {
   const { workspaceStore } = useContextStore();

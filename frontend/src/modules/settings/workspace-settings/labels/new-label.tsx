@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { generateHexColor } from 'common/color-utils';
+import { generateOklchColor } from 'common/color-utils';
 
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
@@ -18,7 +18,7 @@ interface NewLabelProps {
 export function NewLabel({ onCancel, teamId }: NewLabelProps) {
   const [labelName, setLabelName] = React.useState('');
   const workspace = useCurrentWorkspace();
-  const color = React.useMemo(() => generateHexColor(), []);
+  const color = React.useMemo(() => generateOklchColor(), []);
   const { mutate: createLabel, isLoading } = useCreateLabelMutation({
     onSuccess: () => {
       onCancel();
@@ -35,7 +35,7 @@ export function NewLabel({ onCancel, teamId }: NewLabelProps) {
   };
 
   return (
-    <div className="border border-slate-100 dark:border-slate-800 group flex justify-between mb-2 text-sm rounded-md bg-slate-100/80 dark:bg-slate-800 p-2 px-4">
+    <div className="group flex justify-between mb-2 bg-gray-50 rounded p-2 px-4">
       <div className="flex items-center justify-center gap-3 w-full">
         <div
           className="h-3 w-3 rounded-full"
@@ -51,10 +51,10 @@ export function NewLabel({ onCancel, teamId }: NewLabelProps) {
         </div>
 
         <div className="flex gap-4">
-          <Button variant="outline" disabled={isLoading} onClick={onCancel}>
+          <Button variant="ghost" disabled={isLoading} onClick={onCancel}>
             Cancel
           </Button>
-          <Button isLoading={isLoading} onClick={onSubmit}>
+          <Button isLoading={isLoading} variant="secondary" onClick={onSubmit}>
             Save
           </Button>
         </div>

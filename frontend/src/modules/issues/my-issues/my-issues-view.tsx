@@ -8,8 +8,8 @@ import type { IssueType } from 'common/types/issue';
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
 
-import { IssueItem } from '../all/list-view/issue-item';
 import { useFilterIssues } from '../issues-utils';
+import { IssueListItem } from '../components';
 
 export const MyIssuesView = observer(() => {
   const user = React.useContext(UserContext);
@@ -22,7 +22,7 @@ export const MyIssuesView = observer(() => {
   return (
     <div className="flex flex-col h-full">
       {issues.map((issue: IssueType) => (
-        <IssueItem key={issue.id} issueId={issue.id} />
+        <IssueListItem key={issue.id} issueId={issue.id} />
       ))}
     </div>
   );

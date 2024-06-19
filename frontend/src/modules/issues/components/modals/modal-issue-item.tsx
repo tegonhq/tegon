@@ -2,9 +2,9 @@
 
 import { observer } from 'mobx-react-lite';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
-
+import { getWorkflowColor } from 'common/status-color';
 import { type IssueType } from 'common/types/issue';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { useTeamWithId } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
@@ -25,7 +25,7 @@ export const ModalIssueItem = observer(({ issue }: ModalIssueItemProps) => {
       <CategoryIcon
         size={16}
         className="text-muted-foreground mr-3"
-        color={workflow.color}
+        color={getWorkflowColor(workflow).color}
       />
       <div className="text-sm text-foreground mr-3 min-w-[50px]">{`${team.identifier}-${issue.number}`}</div>
       <div className="text-sm text-muted-foreground max-w-[300px]">

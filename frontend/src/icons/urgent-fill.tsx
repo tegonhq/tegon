@@ -2,7 +2,7 @@
 
 import type { IconProps } from './types';
 
-export function UrgentFill({ size = 18, className, color }: IconProps) {
+export function UrgentFill({ size = 18, className }: IconProps) {
   return (
     <svg
       width={size}
