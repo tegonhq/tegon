@@ -60,7 +60,7 @@ export function IssuePriorityDropdown({
           size="sm"
           aria-expanded={open}
           className={cn(
-            'flex items-center px-2 justify-between focus-visible:ring-1 focus-visible:border-primary',
+            'flex items-center px-0 justify-between focus-visible:ring-1 focus-visible:border-primary',
             value === 0 && 'text-muted-foreground',
           )}
         >
@@ -76,11 +76,11 @@ export function IssuePriorityDropdown({
 
     return (
       <Button
-        variant="outline"
+        variant="secondary"
         role="combobox"
-        size="xs"
+        size="sm"
         aria-expanded={open}
-        className="flex items-center justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary"
+        className="flex items-center justify-between text-xs focus-visible:ring-1 focus-visible:border-primary"
       >
         <PriorityIcon.icon
           size={14}

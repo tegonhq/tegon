@@ -46,7 +46,7 @@ export const IssueLabelDropdown = observer(
           <div className="flex flex-wrap gap-2">
             {labelsStore.getLabelsWithIds(value).map((label: LabelType) => (
               <Badge
-                variant="outline"
+                variant="secondary"
                 key={label.name}
                 className="text-foreground flex items-center"
               >
@@ -62,12 +62,11 @@ export const IssueLabelDropdown = observer(
                 size="xs"
                 aria-expanded={open}
                 className={cn(
-                  'flex items-center justify-between text-xs font-normal border-0 shadow-none',
+                  'flex items-center justify-between font-normal border-0 shadow-none',
                 )}
               >
                 <div className="flex items-center">
                   <RiAddLine size={14} className="mr-1" />
-                  Add Label
                 </div>
               </Button>
             ) : (
@@ -89,9 +88,9 @@ export const IssueLabelDropdown = observer(
 
       return (
         <Button
-          variant="outline"
+          variant="secondary"
           role="combobox"
-          size="xs"
+          size="sm"
           aria-expanded={open}
           className={cn(
             'flex items-center justify-between text-xs font-normal',
@@ -125,7 +124,7 @@ export const IssueLabelDropdown = observer(
       }
 
       return (
-        <div className="flex items-center text-muted-foreground">
+        <div className="flex items-center">
           <RiAddLine size={14} className="mr-1" />
           Add Label
         </div>

@@ -25,16 +25,14 @@ export function PriorityActivity({
 
   return (
     <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
-      <div className="flex items-center text-xs text-muted-foreground">
-        <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
-          <PriorityIcon.icon
-            size={16}
-            className={cn(
-              'text-muted-foreground',
-              issueHistory.toPriority === 1 && 'text-[#F9703E]',
-            )}
-          />
-        </div>
+      <div className="flex items-center text-muted-foreground">
+        <PriorityIcon.icon
+          size={20}
+          className={cn(
+            'mr-4',
+            issueHistory.toPriority === 1 && 'text-[#F9703E]',
+          )}
+        />
 
         <div className="flex items-center">
           <span className="text-foreground mr-2 font-medium">{username}</span>

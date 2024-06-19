@@ -3,20 +3,13 @@
 import { RiGithubFill, RiLink } from '@remixicon/react';
 import ReactTimeAgo from 'react-time-ago';
 
-import { getTailwindColor } from 'common/color-utils';
-import { cn } from 'common/lib/utils';
 import {
   Integration,
   LinkedSlackMessageType,
   type LinkedIssueType,
 } from 'common/types/linked-issue';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  getInitials,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 import { useUsersData } from 'hooks/users';
 import { SentryIcon, SlackIcon } from 'icons';
 
@@ -45,19 +38,19 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
   function getIcon() {
     if (sourceMetaData) {
       if (sourceMetaData.type === Integration.Slack) {
-        return <SlackIcon size={16} className="text-foreground" />;
+        return <SlackIcon size={16} />;
       }
 
       if (sourceMetaData.type === Integration.Github) {
-        return <RiGithubFill size={18} className="text-foreground" />;
+        return <RiGithubFill size={18} />;
       }
 
       if (sourceMetaData.type === Integration.Sentry) {
-        return <SentryIcon size={18} className="text-foreground" />;
+        return <SentryIcon size={18} />;
       }
     }
 
-    return <RiLink size={18} className="text-foreground" />;
+    return <RiLink size={18} />;
   }
 
   function getTitle() {
@@ -88,21 +81,14 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
   }
 
   return (
-    <div className="flex items-center text-xs text-muted-foreground">
+    <div className="flex items-center">
       {linkedIssue.createdById ? (
-        <Avatar className="h-[15px] w-[20px] mr-4 text-foreground">
-          <AvatarImage />
-          <AvatarFallback
-            className={cn(
-              'text-[0.55rem] rounded-sm',
-              getTailwindColor(getUserData(linkedIssue.createdById).username),
-            )}
-          >
-            {getInitials(getUserData(linkedIssue.createdById).fullname)}
-          </AvatarFallback>
-        </Avatar>
+        <AvatarText
+          text={getUserData(linkedIssue.createdById).fullname}
+          className="h-5 w-5 text-[9px]"
+        />
       ) : (
-        <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
+        <div className="h-5 w-5 flex items-center justify-center mr-4">
           {getIcon()}
         </div>
       )}
@@ -118,7 +104,7 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
         <a
           href={linkedIssue.url}
           target="_blank"
-          className="flex items-center gap-1 ml-2 mr-1 text-foreground"
+          className="flex items-center gap-1 ml-2 mr-1"
         >
           {getIcon()}
           {getTitle()}

@@ -10,6 +10,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  AvatarText,
   getInitials,
 } from 'components/ui/avatar';
 import { SlackIcon } from 'icons';
@@ -53,17 +54,5 @@ export function getUserIcon(
     );
   }
 
-  return (
-    <Avatar className="h-[15px] w-[20px] mr-4 text-foreground">
-      <AvatarImage />
-      <AvatarFallback
-        className={cn(
-          'text-[0.55rem] rounded-sm',
-          getTailwindColor(user.username),
-        )}
-      >
-        {getInitials(user.fullname)}
-      </AvatarFallback>
-    </Avatar>
-  );
+  return <AvatarText text={user.fullname} className="mr-4 text-[9px]" />;
 }

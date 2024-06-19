@@ -54,7 +54,7 @@ export function SlackCommentActivity({
 
   return (
     <TimelineItem className="w-full" key={`${comment.id}-comment`} hasMore>
-      <div className="flex items-start text-xs text-muted-foreground ">
+      <div className="flex items-start text-muted-foreground ">
         <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
           <SlackIcon size={16} className="text-foreground" />
         </div>
@@ -81,7 +81,7 @@ export function SlackCommentActivity({
           </div>
 
           {childComments.length > 0 && (
-            <div className="text-xs text-muted-foreground w-full border-t p-3 pb-0">
+            <div className="text-muted-foreground w-full border-t p-3 pb-0">
               {childComments.map(
                 (subComment: IssueCommentType, index: number) => (
                   <div
@@ -108,7 +108,7 @@ export function SlackCommentActivity({
             <ReplyComment
               issueCommentId={comment.id}
               badgeContent={
-                <div className="text-xs border rounded-full flex items-center gap-1 p-1 px-2 bg-slate-100 dark:bg-slate-800">
+                <div className="border rounded-full flex items-center gap-1 p-1 px-2 bg-slate-100 dark:bg-slate-800">
                   <RiSlackFill size={16} /> Comments are also posted on slack
                   thread
                 </div>

@@ -31,8 +31,8 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
   return (
     <Link
       className={cn(
-        'cursor-pointer max-w-[600px] mb-2 border-1 backdrop-blur-md p-2 rounded-md flex gap-2 items-center text-sm bg-grayAlpha-200',
-        buttonVariants({ variant: 'outline' }),
+        'cursor-pointer max-w-[600px] mb-2 p-2 rounded-md flex gap-2 items-center bg-grayAlpha-200',
+        buttonVariants({ variant: 'secondary' }),
       )}
       href={`/${workspaceSlug}/issue/${team.identifier}-${issue.parent.number}`}
     >

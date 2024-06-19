@@ -15,7 +15,7 @@ import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { TimelineItem } from 'components/ui/timeline';
 import { useTeamWithId } from 'hooks/teams';
-import { DuplicateLine } from 'icons';
+import { BlockedFill, BlocksFill, DuplicateLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -25,17 +25,15 @@ interface StatusActivityProps {
   showTime?: boolean;
 }
 
-const ICON_MAP: Record<
-  string,
-  { icon: RemixiconComponentType; color: string }
-> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ICON_MAP: Record<string, { icon: any; color: string }> = {
   [IssueRelationEnum.BLOCKS]: {
-    icon: RiFileForbidLine,
-    color: 'text-red-700 dark:text-red-400',
+    icon: BlocksFill,
+    color: 'text-red-500',
   },
   [IssueRelationEnum.BLOCKED]: {
-    icon: RiFileWarningLine,
-    color: 'text-red-700 dark:text-red-400',
+    icon: BlockedFill,
+    color: 'text-red-500',
   },
   [IssueRelationEnum.RELATED]: {
     icon: RiFileTransferLine,
@@ -160,10 +158,10 @@ export function RelatedActivity({
 
   return (
     <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
-      <div className="flex items-center text-xs text-muted-foreground">
+      <div className="flex items-center text-muted-foreground">
         <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
           <Icon.icon
-            size={16}
+            size={20}
             className={cn(
               'text-muted-foreground',
               !relatedChanges.isDeleted && Icon.color,

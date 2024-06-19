@@ -83,7 +83,7 @@ export const IssueActivity = observer(() => {
       <div className="my-2">
         <Timeline>
           <TimelineItem hasMore={false}>
-            <div className="flex items-center text-xs text-muted-foreground">
+            <div className="flex items-center text-muted-foreground">
               {getUserIcon(issueCreatedUser, issueSourceMetadata?.type)}
 
               <div className="flex items-center">

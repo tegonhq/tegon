@@ -62,15 +62,12 @@ export const IssueRelatedProperties = observer(() => {
       }
 
       return (
-        <div
-          className="flex flex-col justify-start text-sm items-start gap-2 mb-6"
-          key={index}
-        >
-          <div className="text-muted-foreground text-left">
+        <div className="flex flex-col justify-start items-start" key={index}>
+          <div className="text-left text-xs">
             {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
           </div>
 
-          <div className="flex flex-col items-center gap-2 flex-wrap -ml-2">
+          <div className="flex flex-col items-center flex-wrap">
             {relatedIssues.map((relatedIssue: RelatedIssue, index: number) => (
               <RelatedIssueItem
                 key={index}
@@ -91,15 +88,12 @@ export const IssueRelatedProperties = observer(() => {
       }
 
       return (
-        <div
-          className="flex flex-col justify-start text-sm items-start gap-2 mb-6"
-          key={index}
-        >
-          <div className="text-muted-foreground text-left">
+        <div className="flex flex-col justify-start items-start" key={index}>
+          <div className="text-xs text-left">
             {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
           </div>
 
-          <div className="flex flex-col items-start gap-2 flex-wrap -ml-2">
+          <div className="flex flex-col items-start flex-wrap">
             {relatedIssues.map((relatedIssue: RelatedIssue, index: number) => (
               <RelatedIssueItem
                 key={index}
@@ -120,15 +114,12 @@ export const IssueRelatedProperties = observer(() => {
       }
 
       return (
-        <div
-          className="flex flex-col justify-start text-sm items-start gap-2 mb-6"
-          key={index}
-        >
-          <div className="text-muted-foreground text-left">
+        <div className="flex flex-col justify-start items-start" key={index}>
+          <div className="text-xs text-left">
             {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
           </div>
 
-          <div className="flex flex-col items-start gap-2 flex-wrap -ml-2">
+          <div className="flex flex-col items-start flex-wrap">
             {relatedIssues.map((relatedIssue: RelatedIssue, index: number) => (
               <RelatedIssueItem
                 key={index}
@@ -149,15 +140,12 @@ export const IssueRelatedProperties = observer(() => {
       }
 
       return (
-        <div
-          className="flex flex-col justify-start text-sm items-start gap-2 mb-6"
-          key={index}
-        >
-          <div className="text-muted-foreground text-left">
+        <div className="flex flex-col justify-start items-start" key={index}>
+          <div className="text-xs text-left">
             {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
           </div>
 
-          <div className="flex flex-col items-start gap-2 flex-wrap -ml-2">
+          <div className="flex flex-col items-start flex-wrap">
             {relatedIssues.map((relatedIssue: RelatedIssue, index: number) => (
               <RelatedIssueItem
                 key={index}
@@ -178,15 +166,12 @@ export const IssueRelatedProperties = observer(() => {
       }
 
       return (
-        <div
-          className="flex flex-col justify-start text-sm items-start gap-2 mb-6"
-          key={index}
-        >
-          <div className="text-muted-foreground text-left">
+        <div className="flex flex-col justify-start items-start" key={index}>
+          <div className="text-xs text-left">
             {TITLE_MAP[issueRelationType as keyof typeof TITLE_MAP]}
           </div>
 
-          <div className="flex flex-col items-start gap-2 flex-wrap -ml-2">
+          <div className="flex flex-col items-start flex-wrap">
             {relatedIssues.map((relatedIssue: RelatedIssue, index: number) => (
               <RelatedIssueItem
                 key={index}

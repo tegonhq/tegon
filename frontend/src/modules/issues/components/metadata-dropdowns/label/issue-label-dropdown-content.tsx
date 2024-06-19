@@ -87,7 +87,7 @@ export function IssueLabelDropdownContent({
                   />
                   <label
                     htmlFor={label.id}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     {label.name}
                   </label>
@@ -110,7 +110,7 @@ export function IssueLabelDropdownContent({
                 }}
               >
                 <div className="flex gap-2 items-center">
-                  <label className="text-sm flex items-center font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  <label className="flex items-center font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                     <RiAddLine size={16} className="mr-2" /> Create
                     <span className="text-muted-foreground ml-1">
                       {labelSearch}

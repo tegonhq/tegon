@@ -34,19 +34,17 @@ export function LabelActivity({
   if (added) {
     return (
       <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
-        <div className="flex items-center text-xs text-muted-foreground">
-          <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
-            <LabelFill size={16} className="text-muted-foreground" />
-          </div>
+        <div className="flex items-center text-muted-foreground">
+          <LabelFill size={20} className="mr-4" />
 
           <div className="flex items-center">
-            <span className="text-foreground mr-2 font-medium">{username}</span>
+            <span className="mr-2 font-medium">{username}</span>
             added label
           </div>
 
           <div>
             {issueHistory.addedLabelIds.map((labelId: string) => (
-              <Badge variant="outline" key={labelId} className="text-xs ml-2">
+              <Badge variant="secondary" key={labelId} className="ml-2">
                 <BadgeColor
                   style={{ backgroundColor: getLabel(labelId).color }}
                 />
@@ -70,19 +68,17 @@ export function LabelActivity({
 
   return (
     <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
-      <div className="flex items-center text-xs text-muted-foreground">
-        <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
-          <LabelFill size={16} className="text-muted-foreground" />
-        </div>
+      <div className="flex items-center text-muted-foreground">
+        <LabelFill size={20} className="mr-4" />
 
         <div className="flex items-center">
-          <span className="text-foreground mr-2 font-medium">{username}</span>
+          <span className="mr-2 font-medium">{username}</span>
           removed label
         </div>
 
         <div>
           {issueHistory.removedLabelIds.map((labelId: string) => (
-            <Badge variant="outline" key={labelId} className="text-xs ml-2">
+            <Badge variant="outline" key={labelId} className="ml-2">
               <BadgeColor
                 style={{ backgroundColor: getLabel(labelId).color }}
               />

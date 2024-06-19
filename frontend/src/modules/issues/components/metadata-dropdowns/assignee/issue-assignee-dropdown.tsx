@@ -85,7 +85,7 @@ export function IssueAssigneeDropdown({
           size="sm"
           aria-expanded={open}
           className={cn(
-            'flex items-center bg-transparent px-2 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary',
+            'flex items-center bg-transparent px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary',
           )}
         >
           {value ? (
@@ -108,27 +108,20 @@ export function IssueAssigneeDropdown({
 
     return (
       <Button
-        variant="outline"
+        variant="secondary"
         role="combobox"
-        size="xs"
+        size="sm"
         aria-expanded={open}
         className={cn(
-          'flex items-center justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary text-foreground',
+          'flex items-center justify-between text-xs focus-visible:ring-1 focus-visible:border-primary gap-1',
         )}
       >
         {value ? (
           <>
-            <Avatar className="h-[15px] w-[20px] flex items-center">
-              <AvatarImage />
-              <AvatarFallback
-                className={cn(
-                  'text-[0.55rem] rounded-sm mr-2',
-                  getTailwindColor(getUserData(value).username),
-                )}
-              >
-                {getInitials(getUserData(value).fullname)}
-              </AvatarFallback>
-            </Avatar>
+            <AvatarText
+              text={getUserData(value).fullname}
+              className="w-5 h-5 text-[9px]"
+            />
 
             {getUserData(value).fullname}
           </>

@@ -66,9 +66,8 @@ export function IssueStatusDropdown({
         <Button
           variant="ghost"
           role="combobox"
-          size="sm"
           aria-expanded={open}
-          className="flex items-center px-2 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary"
+          className="flex items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary"
         >
           <CategoryIcon
             size={18}
@@ -82,14 +81,14 @@ export function IssueStatusDropdown({
 
     return (
       <Button
-        variant="outline"
+        variant="secondary"
+        size="sm"
         role="combobox"
-        size="xs"
         aria-expanded={open}
         className="flex items-center justify-between shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
       >
         <CategoryIcon
-          size={14}
+          size={16}
           className="text-muted-foreground mr-2"
           color={getWorkflowColor(workflow).color}
         />

@@ -135,8 +135,7 @@ export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
     <div
       className={cn(
         'flex flex-col',
-        parentId &&
-          'bg-background backdrop-blur-md border dark:bg-slate-700/20 shadow-md rounded-md py-1 pt-3 px-2',
+        parentId && 'shadow-md rounded-md py-1 pt-3 px-2 border',
       )}
     >
       <Form {...form}>
@@ -202,7 +201,7 @@ export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
             )}
           >
             {enableBidirectionalOption && (
-              <div className="flex justify-between text-xs items-center">
+              <div className="flex justify-between items-center">
                 <div>
                   <div className="flex items-center">
                     <FormField
@@ -230,14 +229,19 @@ export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
 
             <div className="flex gap-2">
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 isLoading={isLoading}
                 onClick={onClose}
               >
                 Cancel
               </Button>
-              <Button type="submit" size="sm" isLoading={isLoading}>
+              <Button
+                type="submit"
+                variant="secondary"
+                size="sm"
+                isLoading={isLoading}
+              >
                 Create issue
               </Button>
             </div>

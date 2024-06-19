@@ -89,7 +89,7 @@ ul[data-type='taskList'] li > label {
 }
 
 ul[data-type='taskList'] li > label input[type='checkbox'] {
-  @apply bg-background border border-slate-300 dark:border-slate-600 rounded-sm;
+  @apply border rounded-sm;
 
   -webkit-appearance: none;
   appearance: none;
@@ -101,13 +101,6 @@ ul[data-type='taskList'] li > label input[type='checkbox'] {
   margin-top: 0.3rem;
   display: grid;
   place-content: center;
-}
-ul[data-type='taskList'] li > label input[type='checkbox']:hover {
-  @apply bg-background;
-}
-
-ul[data-type='taskList'] li > label input[type='checkbox']:active {
-  @apply bg-background;
 }
 
 ul[data-type='taskList'] li > label input[type='checkbox']::before {
@@ -132,7 +125,7 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
 }
 
 .tiptap p.is-editor-empty:first-child::before {
-  @apply text-slate-500 dark:text-slate-600 text-base;
+  @apply text-gray-500 dark:text-gray-600 text-base;
 
   content: attr(data-placeholder);
   float: left;
@@ -142,4 +135,8 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
 
 .scroll-area > div {
   display: block !important;
+}
+
+#slash-command {
+  @apply bg-gray-200;
 }

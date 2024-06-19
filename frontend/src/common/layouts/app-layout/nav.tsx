@@ -34,7 +34,7 @@ export function Nav({ links }: NavProps) {
             href={link.href}
             className={cn(
               buttonVariants({ variant: 'ghost', size: 'sm' }),
-              'flex items-center justify-between text-foreground bg-grayAlpha-100 w-fit',
+              'flex items-center gap-1 justify-between text-foreground bg-grayAlpha-100 w-fit',
               isActive && 'bg-active hover:bg-active',
             )}
           >
@@ -46,7 +46,7 @@ export function Nav({ links }: NavProps) {
               )}
             </div>
             {link.count > 0 && (
-              <div className="px-2 py-[2px] rounded-md text-xs bg-active">
+              <div className="px-2 py-[2px] rounded text-xs bg-active">
                 {link.count}
               </div>
             )}

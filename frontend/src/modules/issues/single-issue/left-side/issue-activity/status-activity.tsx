@@ -34,14 +34,12 @@ export const StatusActivity = observer(
 
     return (
       <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
-        <div className="flex items-center text-xs text-muted-foreground">
-          <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
-            <CategoryIcon
-              size={16}
-              className="text-muted-foreground"
-              color={getWorkflowColor(toWorkflow).color}
-            />
-          </div>
+        <div className="flex items-cente text-muted-foreground">
+          <CategoryIcon
+            size={20}
+            className="mr-4"
+            color={getWorkflowColor(toWorkflow).color}
+          />
 
           <div className="flex items-center">
             {fromWorkflow ? (
