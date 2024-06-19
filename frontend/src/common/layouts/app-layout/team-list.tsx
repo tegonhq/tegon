@@ -12,6 +12,7 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 import { TeamIcon } from 'components/ui/team-icon';
+import { useCurrentTeam } from 'hooks/teams';
 import { useCurrentWorkspace } from 'hooks/workspace';
 import { ChevronRight, IssuesLine, StackLine, TriageLine } from 'icons';
 
@@ -24,6 +25,8 @@ export const TeamList = observer(() => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const currentUser = React.useContext(UserContext);
   const { teamsStore, workspaceStore } = useContextStore();
+  // If the team exists in the route path
+  const team = useCurrentTeam();
   const teamAccessList = workspaceStore.getUserData(currentUser.id).teamIds;
   const teams = teamsStore.teams.filter((team: TeamType) =>
     teamAccessList.includes(team.id),
@@ -37,7 +40,7 @@ export const TeamList = observer(() => {
       <Accordion
         type="single"
         collapsible
-        defaultValue={teams[0].id}
+        defaultValue={team?.id ?? teams[0].id}
         className="w-full flex flex-col gap-2"
       >
         {teams.map((team: TeamType) => (

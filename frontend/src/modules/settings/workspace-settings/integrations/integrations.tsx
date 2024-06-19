@@ -87,7 +87,7 @@ Integrations.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <SettingsLayout>
       <div className="h-[100vh] flex flex-col w-full">
-        <Header title="Overview" />
+        <Header title="Integrations" />
         <ScrollArea className="flex grow bg-gray-200 rounded-tl-2xl">
           <div className="w-full p-6">{page} </div>
         </ScrollArea>

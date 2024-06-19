@@ -32,7 +32,7 @@ export const SentryConnect = observer(() => {
     useDeleteIntegrationAccount({});
 
   return (
-    <div className="mt-8 p-3 border text-sm rounded-md flex items-center justify-between">
+    <div className="p-3 border text-sm rounded-md flex items-center justify-between">
       <div className="flex flex-col items-start justify-center">
         {sentryAccount ? (
           <>

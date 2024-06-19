@@ -12,49 +12,34 @@ import { SlackIcon } from 'icons';
 import { SlackChannelConnext } from './slack-channel-connect';
 import { SlackOrganizationConnect } from './slack-organization-connect';
 import { SlackPersonalConnect } from './slack-personal-connect';
+import { Header } from 'modules/settings/header';
+import { SettingSection } from 'modules/settings/setting-section';
 
 export function Slack() {
   const pathname = usePathname();
   const { push } = useRouter();
 
   return (
-    <div className="h-[100vh] flex flex-col w-full">
-      <ScrollArea>
-        <div className="hidden md:flex flex-shrink-0 h-[65px]"></div>
-        <div className="flex items-start justify-center pb-8">
-          <div className="max-w-[100%] md:max-w-[650px] w-full">
-            <Button
-              className="flex items-center text-sm px-0 !bg-transparent"
-              variant="ghost"
-              onClick={() => {
-                push(pathname.replace('/slack', ''));
-              }}
-            >
-              <RiArrowLeftSLine size={14} className="mr-2" /> Integrations
-            </Button>
-
-            <div className="flex items-start gap-4 mt-6">
-              <div className="border p-1 rounded-md bg-background">
-                <SlackIcon size={40} />
-              </div>
-              <div className="flex flex-col items-start">
-                <div className="font-medium text-lg"> Slack </div>
-                <div className="text-muted-foreground text-base">
-                  Create issues from Slack messages and sync threads
-                </div>
-              </div>
-            </div>
-
-            <SlackPersonalConnect />
-            <SlackOrganizationConnect />
-            <SlackChannelConnext />
-          </div>
-        </div>
-      </ScrollArea>
-    </div>
+    <SettingSection
+      title="Slack"
+      description="  Create issues from Slack messages and sync threads"
+    >
+      <SlackPersonalConnect />
+      <SlackOrganizationConnect />
+      <SlackChannelConnext />
+    </SettingSection>
   );
 }
 
 Slack.getLayout = function getLayout(page: React.ReactElement) {
-  return <SettingsLayout>{page}</SettingsLayout>;
+  return (
+    <SettingsLayout>
+      <div className="h-[100vh] flex flex-col w-full">
+        <Header title="Slack" />
+        <ScrollArea className="flex grow bg-gray-200 rounded-tl-2xl">
+          <div className="w-full p-6">{page} </div>
+        </ScrollArea>
+      </div>
+    </SettingsLayout>
+  );
 };

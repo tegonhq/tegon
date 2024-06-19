@@ -31,7 +31,7 @@ export const SlackOrganizationConnect = observer(() => {
   } = useIntegrationAccount(IntegrationName.Slack);
 
   return (
-    <div className="mt-8 p-3 border text-sm rounded-md flex items-center justify-between">
+    <div className="mt-4 p-3 border text-sm rounded-md flex items-center justify-between">
       <div className="flex flex-col items-start justify-center">
         {slackAccount ? (
           <>

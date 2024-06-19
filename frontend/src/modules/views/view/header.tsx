@@ -54,7 +54,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
   const { mutate: updateView } = useUpdateViewMutation({});
 
   return (
-    <header className="flex justify-between pl-8 px-4 py-2 w-full border-b items-center gap-2">
+    <header className="flex px-6 py-4 w-full items-center gap-2">
       <div className="flex items-center">
         {applicationStore.sidebarCollapsed && (
           <Button

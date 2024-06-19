@@ -10,6 +10,12 @@ export const SECTION_COMPONENTS = {
   security: Security,
 };
 
+export const SECTION_TITLES = {
+  profile: 'Profile',
+  preferences: 'Preferences',
+  security: 'Security',
+};
+
 type StringKeys<T> = {
   [K in keyof T]: T[K] extends string ? K : never;
 }[keyof T];

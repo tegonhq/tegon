@@ -12,6 +12,13 @@ export const SECTION_COMPONENTS = {
   members: Members,
 };
 
+export const SECTION_TITLES = {
+  overview: 'Overview',
+  workflow: 'Workflow',
+  labels: 'Labels',
+  members: 'Members',
+};
+
 type StringKeys<T> = {
   [K in keyof T]: T[K] extends string ? K : never;
 }[keyof T];

@@ -149,24 +149,23 @@ export function RepoTeamLinkDialog({
   const formValues = form.getValues();
 
   return (
-    <DialogContent className="sm:max-w-[600px]">
-      <DialogHeader className="p-4 border-b">
-        <DialogTitle className="text-sm font-normal">
-          <div className="flex gap-1 items-center text-md">
+    <DialogContent>
+      <DialogHeader className="p-4">
+        <DialogTitle className="font-normal flex flex-col gap-2">
+          <div className="flex gap-1 items-center">
             Link GitHub repo to Team
+          </div>
+          <div className="text-muted-foreground text-base leading-5 max-w-[300px]">
+            Choose a GitHub repository to link to team. Issues will be synced
+            between the two
           </div>
         </DialogTitle>
       </DialogHeader>
 
-      <div className="p-4 text-sm pt-0">
-        <div className="text-muted-foreground">
-          Choose a GitHub repository to link to team. Issues will be synced
-          between the two
-        </div>
-
+      <div className="p-4 pt-0">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="mt-4">
+            <div>
               <FormField
                 control={form.control}
                 name="integrationAccountId"
@@ -340,7 +339,7 @@ export function RepoTeamLinkDialog({
                 control={form.control}
                 name="bidirectional"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg mt-4">
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg mt-4 p-2">
                     <div className="space-y-0.5">
                       <FormLabel>Enable bidirectional sync</FormLabel>
                       <FormDescription className="max-w-[calc(100%_-_100px)]">
@@ -361,7 +360,7 @@ export function RepoTeamLinkDialog({
               />
 
               <div className="flex items-end justify-end mt-4">
-                <Button variant="outline" size="sm" isLoading={isLoading}>
+                <Button variant="secondary" isLoading={isLoading}>
                   Save
                 </Button>
               </div>

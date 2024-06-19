@@ -12,6 +12,13 @@ export const SECTION_COMPONENTS = {
   new_team: CreateNewTeam,
 };
 
+export const SECTION_TITLES = {
+  overview: 'Overview',
+  labels: 'Labels',
+  members: 'Members',
+  new_team: 'CreateNewTeam',
+};
+
 type StringKeys<T> = {
   [K in keyof T]: T[K] extends string ? K : never;
 }[keyof T];

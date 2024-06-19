@@ -9,6 +9,7 @@ import { ScrollArea } from 'components/ui/scroll-area';
 import {
   type SECTION_COMPONENTS_KEYS,
   SECTION_COMPONENTS,
+  SECTION_TITLES,
 } from './workspace-settings-constants';
 import { Header } from '../header';
 
@@ -22,7 +23,7 @@ export function WorkspaceSettings() {
 
   return (
     <div className="h-[100vh] flex flex-col w-full">
-      <Header title="Overview" />
+      <Header title={SECTION_TITLES[settingsSection]} />
       <ScrollArea className="flex grow bg-gray-200 rounded-tl-2xl">
         <div className="w-full p-6">
           <SectionComponent />
