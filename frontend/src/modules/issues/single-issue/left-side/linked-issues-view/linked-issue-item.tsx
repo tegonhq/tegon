@@ -109,7 +109,7 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
       <a
         href={linkedIssue.url}
         target="_blank"
-        className="cursor-pointer w-full mb-1 border-1 hover:bg-active/50 shadow-sm bg-white dark:bg-slate-700/20  p-3 py-2 rounded-md flex gap-2 items-center justify-between text-sm"
+        className="cursor-pointer w-full mb-1 bg-grayAlpha-200 p-3 py-2 rounded-md flex gap-2 items-center justify-between text-sm"
       >
         <div className="flex items-center gap-2">
           {getIcon()}

@@ -20,7 +20,7 @@
     --accent-foreground: 0% 0 0;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 0% 0 0 / 12.16%;
+    --border: 0% 0 0 / 19.22%;
     --input: 84.21% 0 0;
     --ring: 221.2 83.2% 53.3%;
     --radius: 8px;
@@ -125,7 +125,7 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
 }
 
 .tiptap p.is-editor-empty:first-child::before {
-  @apply text-gray-500 dark:text-gray-600 text-base;
+  @apply text-base;
 
   content: attr(data-placeholder);
   float: left;

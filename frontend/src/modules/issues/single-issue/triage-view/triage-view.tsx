@@ -8,29 +8,21 @@ import { IssueStoreInit } from 'store/issue-store-provider';
 
 import { Header } from '../../triage/left-side/header';
 import { LeftSide } from '../left-side/left-side';
-import { RightSide } from '../right-side/right-side';
 
 export function TriageView() {
   return (
-    <main className="grid grid-cols-4 h-full">
-      <div className="border-l flex flex-col col-span-1">
-        <Header title="Triage" />
-        <TriageIssues />
-      </div>
-      <IssueStoreInit>
-        <div className="border-l flex col-span-3">
-          <div className="flex flex-col h-full w-full">
-            <main className="grid grid-cols-4 h-full">
-              <div className="col-span-4 xl:col-span-3 flex flex-col h-[calc(100vh)]">
-                <LeftSide />
-              </div>
-              <div className="bg-background border-l dark:bg-slate-800/50 hidden flex-col xl:col-span-1 xl:flex">
-                <RightSide />
-              </div>
-            </main>
-          </div>
+    <main className="flex flex-col h-[100vh]">
+      <Header title="Triage" />
+      <div className="bg-gray-200 rounded-tl-2xl flex h-[calc(100vh_-_53px)]">
+        <div className="border-l flex flex-col">
+          <TriageIssues />
         </div>
-      </IssueStoreInit>
+        <IssueStoreInit>
+          <div className="border-l flex grow">
+            <LeftSide />
+          </div>
+        </IssueStoreInit>
+      </div>
     </main>
   );
 }

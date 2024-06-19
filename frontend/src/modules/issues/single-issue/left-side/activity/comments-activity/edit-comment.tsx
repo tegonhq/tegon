@@ -35,11 +35,11 @@ export function EditComment({ value, onCancel, comment }: EditCommentProps) {
         placeholder="Leave a reply..."
         value={commentValue}
         onChange={(e) => setCommentValue(e)}
-        className="w-full text-foreground bg-transparent p-3 pt-0 pl-0"
+        className="w-full bg-transparent p-3 pt-0 pl-0"
       />
       <div className="flex justify-end items-center gap-2">
         <Button
-          variant="outline"
+          variant="ghost"
           className="my-2 transition-all duration-500 ease-in-out"
           size="sm"
           onClick={onCancel}
@@ -47,7 +47,7 @@ export function EditComment({ value, onCancel, comment }: EditCommentProps) {
           Cancel
         </Button>
         <Button
-          variant="outline"
+          variant="secondary"
           className="my-2 transition-all duration-500 ease-in-out"
           size="sm"
           onClick={onSubmit}

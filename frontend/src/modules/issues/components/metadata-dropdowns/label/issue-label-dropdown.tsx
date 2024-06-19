@@ -43,7 +43,7 @@ export const IssueLabelDropdown = observer(
     function getTrigger() {
       if (variant === IssueLabelDropdownVariant.LINK) {
         return (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1">
             {labelsStore.getLabelsWithIds(value).map((label: LabelType) => (
               <Badge
                 variant="secondary"

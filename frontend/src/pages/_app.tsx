@@ -41,8 +41,8 @@ export const MyApp: NextComponentType<
     <SuperTokensWrapper>
       <ThemeProvider
         attribute="class"
-        defaultTheme="dark"
-        enableSystem
+        defaultTheme="light"
+        enableSystem={false}
         disableTransitionOnChange
       >
         <HotkeysProvider initiallyActiveScopes={[SCOPES.Global]}>

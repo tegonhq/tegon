@@ -14,7 +14,7 @@ import { GithubCommentActivity } from './github-comment-activity';
 import { SlackCommentActivity } from './slack-comment-activity';
 
 export function CommentActivity(props: GenericCommentActivityProps) {
-  const { comment } = props;
+  const { comment, hasMore } = props;
   const sourceMetadata = comment.sourceMetadata
     ? JSON.parse(comment.sourceMetadata)
     : undefined;
@@ -28,7 +28,11 @@ export function CommentActivity(props: GenericCommentActivityProps) {
   }
 
   return (
-    <TimelineItem className="w-full" key={`${comment.id}-comment`} hasMore>
+    <TimelineItem
+      className="w-full"
+      key={`${comment.id}-comment`}
+      hasMore={hasMore}
+    >
       <GenericCommentActivity {...props} />
     </TimelineItem>
   );

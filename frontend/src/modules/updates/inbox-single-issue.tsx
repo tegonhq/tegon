@@ -12,21 +12,23 @@ import { NotificationsList } from './notifications-list';
 
 export function InboxSingleIssue() {
   return (
-    <main className="grid grid-cols-4 h-full">
-      <div className="border-l flex flex-col col-span-1">
-        <Header />
-        <NotificationsList />
-      </div>
-      <div className="border-l flex col-span-3">
-        <div className="flex flex-col h-full w-full">
-          <main className="grid grid-cols-4 h-full">
-            <div className="col-span-4 xl:col-span-3 flex flex-col h-[calc(100vh_-_52px)]">
-              <LeftSide />
-            </div>
-            <div className="bg-background border-l dark:bg-slate-800/50 hidden flex-col xl:col-span-1 xl:flex">
-              <RightSide />
-            </div>
-          </main>
+    <main className="flex flex-col h-[100vh]">
+      <Header />
+      <div className="bg-gray-200 rounded-tl-2xl flex h-[calc(100vh_-_53px)]">
+        <div className="flex flex-col">
+          <NotificationsList />
+        </div>
+        <div className="border-l flex">
+          <div className="flex flex-col h-full w-full">
+            <main className="grid grid-cols-4 h-full">
+              <div className="col-span-4 xl:col-span-3 flex flex-col h-[calc(100vh_-_52px)]">
+                <LeftSide />
+              </div>
+              <div className="border-l hidden flex-col xl:col-span-1 xl:flex">
+                <RightSide />
+              </div>
+            </main>
+          </div>
         </div>
       </div>
     </main>

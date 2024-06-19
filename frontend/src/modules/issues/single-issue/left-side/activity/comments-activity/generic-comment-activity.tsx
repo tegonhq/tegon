@@ -10,17 +10,11 @@ import {
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
-import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 import { type IssueCommentType } from 'common/types/issue';
 import { Integration } from 'common/types/linked-issue';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  getInitials,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
 import {
   DropdownMenu,
@@ -43,6 +37,7 @@ export interface GenericCommentActivityProps {
   allowReply?: boolean;
   html?: boolean;
   getUserData: (userId: string) => User;
+  hasMore?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -76,29 +71,18 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
   const [edit, setEdit] = React.useState(false);
 
   return (
-    <div className="flex items-start text-sm text-muted-foreground ">
+    <div className="flex items-start">
       {user ? (
-        <Avatar className="h-[15px] w-[20px] mr-3 mt-[2px] text-foreground">
-          <AvatarImage />
-          <AvatarFallback
-            className={cn(
-              'text-[0.55rem] rounded-sm',
-              getTailwindColor(user?.username),
-            )}
-          >
-            {getInitials(user?.fullname)}
-          </AvatarFallback>
-        </Avatar>
+        <AvatarText text={user?.fullname} className="text-[9px] mr-4" />
       ) : (
-        <div className="h-[15px] w-[20px] flex items-center justify-center mr-4 rounded-sm">
+        <div className="h-5 w-5 flex items-center justify-center mr-4 rounded-sm">
           {getIcon(sourceMetadata)}
         </div>
       )}
       <div
         className={cn(
           'group relative w-full flex flex-col text-foreground rounded-md',
-          comment.parentId && 'border-0',
-          !comment.parentId && 'border bg-white dark:bg-slate-700/20 shadow-sm',
+          !comment.parentId && 'bg-grayAlpha-200',
         )}
       >
         <div
@@ -109,11 +93,9 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         >
           <div className="flex gap-2">
             {user ? (
-              <span className="text-foreground font-medium">
-                {user?.username}
-              </span>
+              <span className="font-medium">{user?.username}</span>
             ) : (
-              <span className="text-foreground font-medium">
+              <span className="font-medium">
                 {sourceMetadata.userDisplayName} via {sourceMetadata.type}
               </span>
             )}
@@ -121,7 +103,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
             <span>
               <ReactTimeAgo
                 date={new Date(comment.updatedAt)}
-                className="text-muted-foreground"
+                className="text-muted-foreground font-mono text-sm"
               />
             </span>
           </div>
@@ -136,7 +118,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
               <DropdownMenuContent align="end">
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={() => setEdit(true)}>
-                    <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="flex items-center gap-2">
                       <RiPencilFill size={16} /> Edit
                     </div>
                   </DropdownMenuItem>
@@ -167,7 +149,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         )}
 
         {childComments.length > 0 && (
-          <div className="text-sm text-muted-foreground w-full border-t p-3 pb-0">
+          <div className="w-full border-t p-3 pb-0">
             {childComments.map(
               (subComment: IssueCommentType, index: number) => (
                 <div

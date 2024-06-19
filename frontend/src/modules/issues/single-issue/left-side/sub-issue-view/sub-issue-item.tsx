@@ -1,5 +1,4 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 
 import {
@@ -50,15 +49,6 @@ export function SubIssueItem({ issue }: SubIssueItemProps) {
     <div className="p-2 flex justify-between cursor-default text-sm hover:bg-active/50 rounded-md">
       <div className="w-full flex items-center">
         <div className="flex items-center">
-          <IssuePriorityDropdown
-            value={issue.priority}
-            onChange={priorityChange}
-            variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
-          />
-          <div
-            className="ml-2 pr-3 text-muted-foreground min-w-[70px]"
-            onClick={openIssue}
-          >{`${team.identifier}-${issue.number}`}</div>
           <div className="pr-3">
             <IssueStatusDropdown
               value={issue.stateId}
@@ -76,9 +66,18 @@ export function SubIssueItem({ issue }: SubIssueItemProps) {
             <IssueLabels labelIds={issue.labelIds} />
           </div>
           <div className="flex gap-2 shrink-0 items-center">
-            <div className="text-muted-foreground text-sm">
-              {dayjs(issue.createdAt).format('DD MMM')}
+            <div className="w-[80px]">
+              <IssuePriorityDropdown
+                value={issue.priority}
+                onChange={priorityChange}
+                variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
+              />
             </div>
+            <div
+              className="ml-2 pr-3 text-muted-foreground min-w-[70px]"
+              onClick={openIssue}
+            >{`${team.identifier}-${issue.number}`}</div>
+
             <IssueAssigneeDropdown
               value={issue.assigneeId}
               onChange={assigneeChange}

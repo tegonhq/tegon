@@ -2,7 +2,6 @@
 
 import { RiFileTransferLine } from '@remixicon/react';
 import { useRouter } from 'next/router';
-import ReactTimeAgo from 'react-time-ago';
 
 import { cn } from 'common/lib/utils';
 import { type IssueHistoryType } from 'common/types/issue';
@@ -152,7 +151,11 @@ export function RelatedActivity({
   };
 
   return (
-    <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
+    <TimelineItem
+      key={`${issueHistory.id}-removedLabels`}
+      hasMore
+      date={showTime && issueHistory.updatedAt}
+    >
       <div className="flex items-center text-muted-foreground">
         <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
           <Icon.icon
@@ -165,14 +168,6 @@ export function RelatedActivity({
         </div>
 
         {getText()}
-        {showTime && (
-          <>
-            <div className="mx-1">-</div>
-            <div>
-              <ReactTimeAgo date={new Date(issueHistory.updatedAt)} />
-            </div>
-          </>
-        )}
       </div>
     </TimelineItem>
   );

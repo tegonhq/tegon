@@ -26,6 +26,8 @@ export * from './canceled-line';
 export * from './unscoped-line';
 export * from './board-line';
 export * from './list-line';
+export * from './notification-line';
+export * from './send-line';
 
 export * from './team-line';
 export * from './issues-fill';

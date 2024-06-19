@@ -2,7 +2,6 @@
 
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-import ReactTimeAgo from 'react-time-ago';
 
 import { getWorkflowColor } from 'common/status-color';
 import { type IssueHistoryType } from 'common/types/issue';
@@ -33,7 +32,11 @@ export const StatusActivity = observer(
     const CategoryIcon = WORKFLOW_CATEGORY_ICONS[toWorkflow.name];
 
     return (
-      <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
+      <TimelineItem
+        key={`${issueHistory.id}-removedLabels`}
+        hasMore
+        date={showTime && issueHistory.updatedAt}
+      >
         <div className="flex items-cente text-muted-foreground">
           <CategoryIcon
             size={20}
@@ -67,15 +70,6 @@ export const StatusActivity = observer(
               {toWorkflow.name}
             </span>
           </div>
-
-          {showTime && (
-            <>
-              <div className="mx-1">-</div>
-              <div>
-                <ReactTimeAgo date={new Date(issueHistory.updatedAt)} />
-              </div>
-            </>
-          )}
         </div>
       </TimelineItem>
     );

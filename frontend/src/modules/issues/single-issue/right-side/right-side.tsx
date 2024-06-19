@@ -82,7 +82,7 @@ export const RightSide = observer(() => {
 
         <IssueRelatedProperties />
 
-        <div className={cn('flex flex-col justify-start items-start')}>
+        <div className={cn('flex flex-col justify-start items-start gap-1')}>
           <div className="text-xs text-left">Labels</div>
 
           <IssueLabelDropdown

@@ -1,7 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import * as React from 'react';
-import ReactTimeAgo from 'react-time-ago';
 
 import { PriorityIcons } from 'modules/issues/components';
 
@@ -24,7 +23,11 @@ export function PriorityActivity({
   const PriorityIcon = PriorityIcons[issueHistory.toPriority];
 
   return (
-    <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
+    <TimelineItem
+      key={`${issueHistory.id}-removedLabels`}
+      hasMore
+      date={showTime && issueHistory.updatedAt}
+    >
       <div className="flex items-center text-muted-foreground">
         <PriorityIcon.icon
           size={20}
@@ -41,15 +44,6 @@ export function PriorityActivity({
             {priorityText}
           </span>
         </div>
-
-        {showTime && (
-          <>
-            <div className="mx-1">-</div>
-            <div>
-              <ReactTimeAgo date={new Date(issueHistory.updatedAt)} />
-            </div>
-          </>
-        )}
       </div>
     </TimelineItem>
   );

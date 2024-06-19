@@ -5,19 +5,13 @@ import { sort } from 'fast-sort';
 import { useRouter } from 'next/router';
 import ReactTimeAgo from 'react-time-ago';
 
-import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 import type { IssueSourceMetadataType, IssueType } from 'common/types/issue';
 import { Integration } from 'common/types/linked-issue';
 import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 import { getUserData } from 'common/user-util';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  getInitials,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 import { ScrollArea } from 'components/ui/scroll-area';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
@@ -54,17 +48,7 @@ export function getCreatedBy(issue: IssueType, user: User) {
 
   return (
     <div className="flex gap-2 text-muted-foreground items-center">
-      <Avatar className="h-[15px] w-[20px] flex items-center">
-        <AvatarImage />
-        <AvatarFallback
-          className={cn(
-            'text-[0.55rem] rounded-sm',
-            getTailwindColor(user.username),
-          )}
-        >
-          {getInitials(user.fullname)}
-        </AvatarFallback>
-      </Avatar>
+      <AvatarText text={user.fullname} className="text-[9px]" />
       {user.username}
     </div>
   );
@@ -94,7 +78,7 @@ export const TriageIssues = () => {
   }
 
   return (
-    <ScrollArea className="overflow-y-auto h-[calc(100vh_-_50px)]">
+    <ScrollArea>
       <div className="flex flex-col p-2">
         {issues.map((issue: IssueType, index: number) => {
           const nextIssue = issues[index + 1] as IssueType;

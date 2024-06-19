@@ -1,17 +1,18 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiGithubFill } from '@remixicon/react';
+import { RiSlackFill } from '@remixicon/react';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
 import { cn } from 'common/lib/utils';
 import { type IssueCommentType } from 'common/types/issue';
 import {
-  LinkedIssueSubType,
+  LinkedSlackMessageType,
   type LinkedIssueType,
 } from 'common/types/linked-issue';
 
 import { TimelineItem } from 'components/ui/timeline';
+import { SlackIcon } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
@@ -26,11 +27,13 @@ interface CommentActivityProps {
   allowReply?: boolean;
   html?: boolean;
   getUserData: (userId: string) => User;
+  hasMore?: boolean;
 }
 
-export function GithubCommentActivity({
+export function SlackCommentActivity({
   comment,
   childComments,
+  hasMore,
   allowReply = false,
   getUserData,
 }: CommentActivityProps) {
@@ -40,42 +43,42 @@ export function GithubCommentActivity({
       const source = JSON.parse(linkedIssue.source);
 
       return (
-        source.syncedCommentId === comment.id &&
-        source.subType === LinkedIssueSubType.GithubIssue
+        linkedIssue.issueId === comment.issueId &&
+        source &&
+        source.subType === LinkedSlackMessageType.Thread
       );
     },
   );
 
-  const linkedSourceData = JSON.parse(linkedIssue.sourceData);
-  const issueNumber =
-    linkedIssue.url.split('/')[linkedIssue.url.split('/').length - 1];
+  if (!linkedIssue) {
+    return null;
+  }
 
   return (
-    <TimelineItem className="w-full" key={`${comment.id}-comment`} hasMore>
+    <TimelineItem
+      className="w-full"
+      key={`${comment.id}-comment`}
+      hasMore={hasMore}
+    >
       <div className="flex items-start text-muted-foreground ">
-        <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
-          <RiGithubFill size={18} className="text-foreground" />
-        </div>
+        <SlackIcon size={20} className="text-foreground mr-4" />
 
         <div
           className={cn(
-            'group relative w-full flex flex-col text-foreground rounded-md bg-white dark:bg-slate-700/20 shadow-sm ',
-            comment.parentId && 'border-0',
-            !comment.parentId && 'border',
+            'group relative w-full flex flex-col rounded-md',
+            !comment.parentId && 'bg-grayAlpha-200',
           )}
         >
           <div className={cn('flex gap-2', !comment.parentId && 'p-3')}>
             <span className="text-foreground font-medium flex items-center gap-1">
-              <RiGithubFill size={16} className="mr-2" /> Github
+              <SlackIcon size={16} className="mr-2" /> Slack
             </span>
-            <span className="text-muted-foreground"> thread connected in </span>
-            <a href={linkedIssue.url}>
-              #{issueNumber} {linkedSourceData.title}
-            </a>
+            <span className="text-muted-foreground"> thread connected </span>
+
             <span>
               <ReactTimeAgo
                 date={new Date(comment.updatedAt)}
-                className="text-muted-foreground"
+                className="text-muted-foreground text-xs"
               />
             </span>
           </div>
@@ -108,8 +111,9 @@ export function GithubCommentActivity({
             <ReplyComment
               issueCommentId={comment.id}
               badgeContent={
-                <div className="border rounded-full flex items-center gap-1 p-1 px-2 bg-slate-100 dark:bg-slate-800">
-                  <RiGithubFill size={16} /> Comments are also posted on github
+                <div className="rounded flex items-center gap-1 p-1 px-2 bg-grayAlpha-200">
+                  <RiSlackFill size={16} /> Comments are also posted on slack
+                  thread
                 </div>
               }
             />

@@ -1,7 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiGithubFill, RiLink } from '@remixicon/react';
-import ReactTimeAgo from 'react-time-ago';
 
 import {
   Integration,
@@ -109,11 +108,6 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
           {getIcon()}
           {getTitle()}
         </a>
-      </div>
-      <div className="mx-1">-</div>
-
-      <div>
-        <ReactTimeAgo date={new Date(linkedIssue.updatedAt)} />
       </div>
     </div>
   );

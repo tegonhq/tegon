@@ -2,18 +2,11 @@
 
 import * as React from 'react';
 
-import { getTailwindColor } from 'common/color-utils';
-import { cn } from 'common/lib/utils';
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  getInitials,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
 import { Editor } from 'components/ui/editor';
 import { useIssueData } from 'hooks/issues';
+import { SendLine } from 'icons';
 
 import { useCreateIssueCommentMutation } from 'services/issues/create-issue-comment';
 
@@ -44,18 +37,8 @@ export function ReplyComment({
   };
 
   return (
-    <div className="flex items-start text-muted-foreground w-full border-t p-3 pb-0">
-      <Avatar className="h-[15px] w-[20px] text-foreground">
-        <AvatarImage />
-        <AvatarFallback
-          className={cn(
-            'text-[0.55rem] rounded-sm',
-            getTailwindColor(currentUser.username),
-          )}
-        >
-          {getInitials(currentUser.fullname)}
-        </AvatarFallback>
-      </Avatar>
+    <div className="flex items-start w-full border-t p-3 pb-0">
+      <AvatarText text={currentUser.fullname} className="text-[9px]" />
 
       <div className="w-full relative">
         <Editor
@@ -69,20 +52,20 @@ export function ReplyComment({
             !commentValue && setShowReplyButton(false);
           }}
           onChange={(e) => setCommentValue(e)}
-          className="w-full text-foreground bg-transparent p-3 pt-0"
+          className="w-full bg-transparent p-3 pt-0"
         />
         <div className="flex justify-between items-center">
           {showReplyButton && (
             <>
               <div>{badgeContent}</div>
               <Button
-                variant="outline"
+                variant="ghost"
                 className="my-2 transition-all duration-500 ease-in-out"
                 type="submit"
                 size="sm"
                 onClick={onSubmit}
               >
-                Reply
+                <SendLine size={20} />
               </Button>
             </>
           )}

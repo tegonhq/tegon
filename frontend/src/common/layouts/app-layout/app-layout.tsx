@@ -10,9 +10,8 @@ import { ShortcutDialogs } from 'modules/shortcuts';
 
 import { AllProviders } from 'common/wrappers/all-providers';
 
-import { Button } from 'components/ui/button';
 import { useCurrentTeam } from 'hooks/teams';
-import { Inbox, SettingsLine, SidebarLine } from 'icons';
+import { Inbox, SettingsLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -50,13 +49,13 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
           <div className="flex flex-col py-4 px-6">
             <div className="flex justify-between items-center">
               <WorkspaceDropdown />
-              <Button
+              {/* <Button
                 variant="ghost"
                 size="xs"
                 onClick={() => applicationStore.updateSideBar(true)}
               >
                 <SidebarLine size={20} />
-              </Button>
+              </Button> */}
             </div>
           </div>
           <div className="px-6 mt-4">

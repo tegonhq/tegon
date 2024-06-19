@@ -49,10 +49,5 @@ export const IssueStoreInit = ({ children }: { children: React.ReactNode }) => {
     return null;
   }
 
-  return (
-    <>
-      {children}
-      {issueId}
-    </>
-  );
+  return <>{children}</>;
 };

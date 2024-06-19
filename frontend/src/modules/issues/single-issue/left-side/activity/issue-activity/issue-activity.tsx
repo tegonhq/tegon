@@ -1,7 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { observer } from 'mobx-react-lite';
-import ReactTimeAgo from 'react-time-ago';
 
 import type { IssueHistoryType } from 'common/types/issue';
 import type { LinkedIssueType } from 'common/types/linked-issue';
@@ -15,7 +14,6 @@ import type { User } from 'store/user-context';
 
 import { ActivityItem } from './activity-item';
 import { LinkedIssueActivity } from './linked-issue-activity';
-import { SubscribeView } from './subscribe-view';
 import { getUserDetails, getUserIcon } from './user-activity-utils';
 
 enum ActivityType {
@@ -74,68 +72,57 @@ export const IssueActivity = observer(() => {
   );
 
   return (
-    <div className="px-4">
-      <div className="my-4 flex justify-between">
-        <div>Activity</div>
-        <SubscribeView />
-      </div>
+    <div className="my-2">
+      <Timeline>
+        <TimelineItem hasMore={false} date={issue.createdAt}>
+          <div className="flex items-center text-muted-foreground">
+            {getUserIcon(issueCreatedUser, issueSourceMetadata?.type)}
 
-      <div className="my-2">
-        <Timeline>
-          <TimelineItem hasMore={false}>
-            <div className="flex items-center text-muted-foreground">
-              {getUserIcon(issueCreatedUser, issueSourceMetadata?.type)}
-
-              <div className="flex items-center">
-                <span className="text-foreground mr-2 font-medium">
-                  {issueCreatedUser.username}
-                </span>
-                created the issue
-              </div>
-              <div className="mx-1">-</div>
-
-              <div>
-                <ReactTimeAgo date={new Date(issue.createdAt)} />
-              </div>
+            <div className="flex items-center">
+              <span className="text-foreground mr-2 font-medium">
+                {issueCreatedUser.username}
+              </span>
+              created the issue
             </div>
-          </TimelineItem>
+          </div>
+        </TimelineItem>
 
-          {activities.length > 0 &&
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            activities.map((activity: any) => {
-              if (activity.type === ActivityType.LinkedIssue) {
-                return (
-                  <TimelineItem
-                    className="w-full"
-                    key={`${activity.id}-comment`}
-                    hasMore
-                  >
-                    <LinkedIssueActivity linkedIssue={activity} />
-                  </TimelineItem>
-                );
-              }
+        {activities.length > 0 &&
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          activities.map((activity: any) => {
+            if (activity.type === ActivityType.LinkedIssue) {
+              return (
+                <TimelineItem
+                  className="w-full"
+                  key={`${activity.id}-comment`}
+                  hasMore
+                  date={activity.updatedAt}
+                >
+                  <LinkedIssueActivity linkedIssue={activity} />
+                </TimelineItem>
+              );
+            }
 
-              if (activity.type === ActivityType.Default) {
-                const sourceMetadata = activity.userId
-                  ? undefined
-                  : JSON.parse(activity.sourceMetadata);
+            if (activity.type === ActivityType.Default) {
+              const sourceMetadata = activity.userId
+                ? undefined
+                : JSON.parse(activity.sourceMetadata);
 
-                return (
-                  <ActivityItem
-                    issueHistory={activity}
-                    key={activity.id}
-                    user={getUserDetails(
-                      sourceMetadata,
-                      getUserData(activity.userId),
-                    )}
-                  />
-                );
-              }
+              return (
+                <ActivityItem
+                  issueHistory={activity}
+                  key={activity.id}
+                  user={getUserDetails(
+                    sourceMetadata,
+                    getUserData(activity.userId),
+                  )}
+                />
+              );
+            }
 
-              return null;
-            })}
-        </Timeline>
-      </div>
+            return null;
+          })}
+      </Timeline>
     </div>
   );
 });

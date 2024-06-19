@@ -1,7 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import * as React from 'react';
-import ReactTimeAgo from 'react-time-ago';
 
 import type { IssueHistoryType } from 'common/types/issue';
 import type { LabelType } from 'common/types/label';
@@ -33,7 +32,11 @@ export function LabelActivity({
 
   if (added) {
     return (
-      <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
+      <TimelineItem
+        key={`${issueHistory.id}-removedLabels`}
+        hasMore
+        date={showTime && issueHistory.updatedAt}
+      >
         <div className="flex items-center text-muted-foreground">
           <LabelFill size={20} className="mr-4" />
 
@@ -52,22 +55,17 @@ export function LabelActivity({
               </Badge>
             ))}
           </div>
-
-          {showTime && (
-            <>
-              <div className="mx-1">-</div>
-              <div>
-                <ReactTimeAgo date={new Date(issueHistory.updatedAt)} />
-              </div>
-            </>
-          )}
         </div>
       </TimelineItem>
     );
   }
 
   return (
-    <TimelineItem key={`${issueHistory.id}-removedLabels`} hasMore>
+    <TimelineItem
+      key={`${issueHistory.id}-removedLabels`}
+      hasMore
+      date={showTime && issueHistory.updatedAt}
+    >
       <div className="flex items-center text-muted-foreground">
         <LabelFill size={20} className="mr-4" />
 
@@ -86,15 +84,6 @@ export function LabelActivity({
             </Badge>
           ))}
         </div>
-
-        {showTime && (
-          <>
-            <div className="mx-1">-</div>
-            <div>
-              <ReactTimeAgo date={new Date(issueHistory.updatedAt)} />
-            </div>
-          </>
-        )}
       </div>
     </TimelineItem>
   );

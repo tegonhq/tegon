@@ -1,10 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import {
-  RiAddLine,
-  RiArrowDownSFill,
-  RiArrowRightSFill,
-} from '@remixicon/react';
+import { RiAddLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
@@ -24,6 +20,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
+import { ChevronDown, ChevronRight } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -47,77 +44,51 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
 
   return (
     <>
-      {linkedIssues.length === 0 && (
-        <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="px-1 mt-2">
-                <RiAddLine size={14} className="mr-1" /> Add link
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <IssueLinkOptions setDialogOpen={setDialogOpen} />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      )}
-      {linkedIssues.length > 0 && (
-        <Collapsible
-          open={isOpen}
-          onOpenChange={setIsOpen}
-          className="w-full space-y-1 mt-2"
-        >
-          <div className="flex justify-between">
-            <div>
-              <CollapsibleTrigger asChild>
-                <div className="flex items-center">
-                  <Button
-                    variant="ghost"
-                    size="xs"
-                    className="text-muted-foreground px-1 pr-2"
-                  >
-                    {isOpen ? (
-                      <RiArrowDownSFill size={16} className="mr-1" />
-                    ) : (
-                      <RiArrowRightSFill size={16} className="mr-1" />
-                    )}
-                    Links
-                  </Button>
-                  {!isOpen && (
-                    <div className="px-2 ml-1 rounded-md text-xs bg-active text-foreground">
-                      {linkedIssues.length}
-                    </div>
+      <Collapsible
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        className="w-full border-t py-3"
+      >
+        <div className="flex justify-between">
+          <div>
+            <CollapsibleTrigger asChild>
+              <div className="flex items-center">
+                <Button variant="ghost" size="sm" className="px-1 text-md">
+                  Links
+                  {isOpen ? (
+                    <ChevronDown size={16} className="ml-1" />
+                  ) : (
+                    <ChevronRight size={16} className="ml-1" />
                   )}
-                </div>
-              </CollapsibleTrigger>
-            </div>
+                </Button>
 
-            {isOpen && (
-              <div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-muted-foreground px-2"
-                    >
-                      <RiAddLine size={14} />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <IssueLinkOptions setDialogOpen={setDialogOpen} />
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <div className="px-2 ml-1 rounded-sm bg-grayAlpha-200 text-foreground">
+                  {linkedIssues.length}
+                </div>
               </div>
-            )}
+            </CollapsibleTrigger>
           </div>
-          <CollapsibleContent className="space-y-2">
-            {linkedIssues.map((linkedIssue: LinkedIssueType) => (
-              <LinkedIssueItem linkedIssue={linkedIssue} key={linkedIssue.id} />
-            ))}
-          </CollapsibleContent>
-        </Collapsible>
-      )}
+
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <RiAddLine size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <IssueLinkOptions setDialogOpen={setDialogOpen} />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+        <CollapsibleContent className="flex gap-1 flex-col py-2">
+          {linkedIssues.map((linkedIssue: LinkedIssueType) => (
+            <LinkedIssueItem linkedIssue={linkedIssue} key={linkedIssue.id} />
+          ))}
+        </CollapsibleContent>
+      </Collapsible>
+
       <AddLinkedIssueDialog
         open={dialogOpen}
         setOpen={setDialogOpen}

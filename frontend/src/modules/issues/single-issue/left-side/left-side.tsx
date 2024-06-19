@@ -4,8 +4,6 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-import { NewIssue } from 'modules/issues/new-issue/new-issue';
-
 import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { Editor, type EditorT } from 'components/ui/editor';
@@ -17,9 +15,9 @@ import { useTeamWorkflows } from 'hooks/workflows';
 
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
+import { Activity } from './activity';
 import { FileUpload } from './file-upload/file-upload';
 import { FilterSmall } from './filters-small';
-import { IssueActivity } from './issue-activity';
 import { IssueTitle } from './issue-title';
 import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
@@ -63,46 +61,30 @@ export const LeftSide = observer(() => {
         <FilterSmall />
       </div>
       <ScrollArea className="grow flex flex-col gap-2">
-        <div className="px-8 py-6 flex flex-col gap-2">
-          <div>
-            {isTriageView && <SimilarIssuesView issueId={issue.id} />}
+        <div className="px-8 py-6 flex flex-col">
+          {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
-            <IssueTitle value={issue.title} onChange={onIssueChange} />
-            {issue.parentId && <ParentIssueView issue={issue} />}
-            <Editor
-              value={issue.description}
-              onCreate={(editor) => setEditor(editor)}
-              onChange={onDescriptionChange}
-              className="min-h-[50px] mb-8"
-            />
+          <IssueTitle value={issue.title} onChange={onIssueChange} />
+          {issue.parentId && <ParentIssueView issue={issue} />}
+          <Editor
+            value={issue.description}
+            onCreate={(editor) => setEditor(editor)}
+            onChange={onDescriptionChange}
+            className="min-h-[50px] mb-8"
+          />
 
-            <div className="flex justify-end w-full py-1">
-              <FileUpload editor={editor} />
-            </div>
-
-            <SubIssueView
-              childIssues={issue.children}
-              setNewIssueState={() => setNewIssueState(true)}
-              newIssueState={newIssueState}
-            />
+          <div className="flex justify-end w-full py-1">
+            <FileUpload editor={editor} />
           </div>
 
-          {newIssueState && (
-            <>
-              <div className="my-1">
-                <NewIssue
-                  onClose={() => setNewIssueState(false)}
-                  teamIdentifier={team.identifier}
-                  parentId={issue.id}
-                />
-              </div>
-              <Separator className="my-1" />
-            </>
-          )}
-
+          <SubIssueView
+            childIssues={issue.children}
+            setNewIssueState={() => setNewIssueState(true)}
+            newIssueState={newIssueState}
+          />
           <LinkedIssuesView issueId={issue.id} />
-          <Separator className="my-1 mt-3" />
-          <IssueActivity />
+          <Separator />
+          <Activity />
         </div>
       </ScrollArea>
     </>
