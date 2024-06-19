@@ -1,11 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import {
-  RiFileForbidLine,
-  RiFileTransferLine,
-  RiFileWarningLine,
-  type RemixiconComponentType,
-} from '@remixicon/react';
+import { RiFileTransferLine } from '@remixicon/react';
 import { useRouter } from 'next/router';
 import ReactTimeAgo from 'react-time-ago';
 

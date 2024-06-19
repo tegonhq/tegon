@@ -8,8 +8,8 @@ import type { IssueType } from 'common/types/issue';
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
 
-import { useFilterIssues } from '../issues-utils';
 import { IssueListItem } from '../components';
+import { useFilterIssues } from '../issues-utils';
 
 export const MyIssuesView = observer(() => {
   const user = React.useContext(UserContext);

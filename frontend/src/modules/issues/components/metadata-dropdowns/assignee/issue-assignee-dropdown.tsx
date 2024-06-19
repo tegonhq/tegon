@@ -2,16 +2,9 @@
 
 import * as React from 'react';
 
-import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  getInitials,
-  AvatarText,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useUsersData } from 'hooks/users/use-users-data';

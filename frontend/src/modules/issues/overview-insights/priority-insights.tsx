@@ -3,7 +3,7 @@
 import { groupBy } from 'common/lib/common';
 import { Priorities, type IssueType } from 'common/types/issue';
 
-import { PriorityIcons } from '../issue-priority-dropdown-content';
+import { PriorityIcons } from '../components';
 
 interface PriorityInsightsProps {
   issues: IssueType[];

@@ -1,18 +1,10 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import { RiGithubFill } from '@remixicon/react';
 
-import { getTailwindColor } from 'common/color-utils';
-import { cn } from 'common/lib/utils';
 import type { IssueSourceMetadataType } from 'common/types/issue';
 import { Integration } from 'common/types/linked-issue';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  AvatarText,
-  getInitials,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 import { SlackIcon } from 'icons';
 
 import type { User } from 'store/user-context';
