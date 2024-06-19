@@ -29,11 +29,7 @@ export function SubIssueView({
   const [isOpen, setOpen] = React.useState(true);
 
   return (
-    <Collapsible
-      open={isOpen}
-      onOpenChange={setOpen}
-      className="w-full border-t py-3"
-    >
+    <Collapsible open={isOpen} onOpenChange={setOpen} className="w-full py-3">
       <div className="flex justify-between">
         <div>
           <CollapsibleTrigger asChild>
@@ -47,9 +43,11 @@ export function SubIssueView({
                 )}
               </Button>
 
-              <div className="px-2 ml-1 rounded-sm bg-grayAlpha-200 text-foreground">
-                {childIssues.length}
-              </div>
+              {!isOpen && (
+                <div className="px-2 ml-1 rounded-sm bg-grayAlpha-200 text-foreground">
+                  {childIssues.length}
+                </div>
+              )}
             </div>
           </CollapsibleTrigger>
         </div>

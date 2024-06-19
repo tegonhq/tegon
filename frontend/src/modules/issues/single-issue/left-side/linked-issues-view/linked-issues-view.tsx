@@ -1,6 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiAddLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
@@ -15,17 +14,11 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from 'components/ui/collapsible';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from 'components/ui/dropdown-menu';
 import { ChevronDown, ChevronRight } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { AddLinkedIssueDialog } from './add-linked-issue-dialog';
-import { IssueLinkOptions } from './issue-link-options';
 import { LinkedIssueItem } from './linked-issue-item';
 
 interface LinkedIssuesView {
@@ -47,7 +40,7 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
-        className="w-full border-t py-3"
+        className="w-full py-3"
       >
         <div className="flex justify-between">
           <div>
@@ -62,25 +55,16 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
                   )}
                 </Button>
 
-                <div className="px-2 ml-1 rounded-sm bg-grayAlpha-200 text-foreground">
-                  {linkedIssues.length}
-                </div>
+                {!isOpen && (
+                  <div className="px-2 ml-1 rounded-sm bg-grayAlpha-200 text-foreground">
+                    {linkedIssues.length}
+                  </div>
+                )}
               </div>
             </CollapsibleTrigger>
           </div>
 
-          <div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <RiAddLine size={16} />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <IssueLinkOptions setDialogOpen={setDialogOpen} />
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          <div></div>
         </div>
         <CollapsibleContent className="flex gap-1 flex-col py-2">
           {linkedIssues.map((linkedIssue: LinkedIssueType) => (

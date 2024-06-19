@@ -163,7 +163,7 @@ export const IssueListItem = observer(
               >
                 <div className="flex w-full">
                   <div className="flex flex-wrap shrink w-full gap-2">
-                    <span className="flex items-center justify-start shrink min-w-[0px] max-w-7500px]">
+                    <span className="flex items-center justify-start shrink min-w-[0px] max-w-[500px]">
                       <span className="truncate text-left">{issue.title}</span>
                     </span>
 
