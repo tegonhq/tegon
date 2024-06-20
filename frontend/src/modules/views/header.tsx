@@ -45,7 +45,7 @@ export const Header = observer(({ title }: HeaderProps) => {
             <SidebarLine size={16} />
           </Button>
         )}
-        <Breadcrumb className="text-xs">
+        <Breadcrumb>
           <BreadcrumbItem>
             <BreadcrumbLink
               as={Link}

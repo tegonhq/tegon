@@ -20,6 +20,7 @@ import {
 import { useContextStore } from 'store/global-context-provider';
 
 import { Header } from './header';
+import { ViewDisplayOptions } from './view-display-options';
 import { ViewList } from './view-list';
 
 export const View = withApplicationStore(
@@ -37,7 +38,7 @@ export const View = withApplicationStore(
       <main className="flex flex-col h-[100vh]">
         <Header title={view.name} view={view} />
         <div className="bg-gray-200 rounded-tl-2xl flex flex-col h-[calc(100vh_-_53px)]">
-          <FiltersView />
+          <FiltersView Actions={<ViewDisplayOptions />} />
 
           <ResizablePanelGroup
             direction="horizontal"

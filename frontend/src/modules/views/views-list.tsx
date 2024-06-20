@@ -55,7 +55,7 @@ export function ViewItem({ view }: ViewItemProps) {
             }}
           >
             {view.isBookmarked ? (
-              <RiBookmarkFill size={14} className="text-yellow-500" />
+              <RiBookmarkFill size={14} className="text-yellow-600" />
             ) : (
               <RiBookmarkLine size={14} />
             )}

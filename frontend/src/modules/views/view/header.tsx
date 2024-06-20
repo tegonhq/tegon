@@ -67,7 +67,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
             <SidebarLine size={16} />
           </Button>
         )}
-        <Breadcrumb className="text-xs">
+        <Breadcrumb>
           <BreadcrumbItem>
             <BreadcrumbLink
               as={Link}
@@ -81,9 +81,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <BreadcrumbLink className="text-muted-foreground">
-              {title}
-            </BreadcrumbLink>
+            <BreadcrumbLink>{title}</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
 
@@ -94,10 +92,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
               size="xs"
               className="flex items-center ml-1"
             >
-              <RiMoreFill
-                className="text-slate-500 hover:text-black dark:hover:text-white"
-                size={16}
-              />
+              <RiMoreFill size={16} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -129,7 +124,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
           {view.isBookmarked ? (
             <RiBookmarkFill
               size={16}
-              className="text-yellow-500 hover:text-foreground group-hover:text-foreground"
+              className="text-yellow-600 hover:text-foreground group-hover:text-foreground"
             />
           ) : (
             <RiBookmarkLine size={16} />
