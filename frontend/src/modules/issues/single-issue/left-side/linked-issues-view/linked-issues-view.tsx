@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { RiAddLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
@@ -14,11 +15,17 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from 'components/ui/collapsible';
-import { ChevronDown, ChevronRight } from 'icons';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from 'components/ui/dropdown-menu';
+import { AddLine, ChevronDown, ChevronRight } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { AddLinkedIssueDialog } from './add-linked-issue-dialog';
+import { IssueLinkOptions } from './issue-link-options';
 import { LinkedIssueItem } from './linked-issue-item';
 
 interface LinkedIssuesView {
@@ -27,12 +34,14 @@ interface LinkedIssuesView {
 
 export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
   const { linkedIssuesStore } = useContextStore();
-  const [isOpen, setIsOpen] = React.useState(true);
   const [dialogOpen, setDialogOpen] =
     React.useState<LinkedIssueSubType>(undefined);
 
   const linkedIssues = linkedIssuesStore.linkedIssues.filter(
     (linkedIssue: LinkedIssueType) => linkedIssue.issueId === issueId,
+  );
+  const [isOpen, setIsOpen] = React.useState(
+    linkedIssues.length > 0 ? true : false,
   );
 
   return (
@@ -64,7 +73,18 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
             </CollapsibleTrigger>
           </div>
 
-          <div></div>
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="pr-0">
+                  <AddLine size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <IssueLinkOptions setDialogOpen={setDialogOpen} />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
         <CollapsibleContent className="flex gap-1 flex-col py-2">
           {linkedIssues.map((linkedIssue: LinkedIssueType) => (

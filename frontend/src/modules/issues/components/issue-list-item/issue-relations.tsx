@@ -15,6 +15,8 @@ import { useTeamWorkflows } from 'hooks/workflows';
 import { BlockedFill, BlocksFill, ChevronRight, SubIssue } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 export enum View {
   BLOCKED = 'BLOCKED',
@@ -31,6 +33,11 @@ interface IssueRelationsProps {
 export const IssueRelations = observer(
   ({ issue, currentView, setCurrentView }: IssueRelationsProps) => {
     const { issueRelationsStore, issuesStore } = useContextStore();
+
+    const {
+      push,
+      query: { workspaceSlug },
+    } = useRouter();
     const team = useTeamWithId(issue.teamId);
     const workflows = useTeamWorkflows(team.identifier);
 
@@ -65,6 +72,11 @@ export const IssueRelations = observer(
             buttonVariants({ size: 'xs', variant: 'secondary' }),
             'text-xs flex gap-1',
           )}
+          onClick={() => {
+            push(
+              `/${workspaceSlug}/issue/${team.identifier}-${parentIssue.number}`,
+            );
+          }}
         >
           Parent task
           <CategoryIcon
@@ -156,7 +168,7 @@ export const IssueRelations = observer(
     }
 
     return (
-      <div className="flex flex-col">
+      <div className="flex flex-col w-fit">
         <div
           className="flex gap-2 pt-1"
           onClick={(e) => {

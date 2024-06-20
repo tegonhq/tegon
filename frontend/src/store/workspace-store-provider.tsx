@@ -52,7 +52,6 @@ export const WorkspaceStoreInit = observer(
       await notificationsStore.load();
       await viewsStore.load();
 
-      console.log(workspaceStore.workspace);
       setLoading(false);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentWorkspace.id]);

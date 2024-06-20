@@ -125,7 +125,7 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
 }
 
 .tiptap p.is-editor-empty:first-child::before {
-  @apply text-base;
+  @apply text-base text-muted-foreground;
 
   content: attr(data-placeholder);
   float: left;

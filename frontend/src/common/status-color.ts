@@ -28,8 +28,8 @@ export const Colors = {
     color: '#3F8EF7',
   },
   Done: {
-    background: '#3CAF20',
-    color: '#79CC68',
+    background: '#79CC68',
+    color: '#3CAF20',
   },
   Canceled: {
     background: '#D8D8D8',

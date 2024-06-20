@@ -52,9 +52,7 @@ export const GroupingOrderingOptions = observer(() => {
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel className="text-xs font-normal">
-              Ordering by
-            </SelectLabel>
+            <SelectLabel className="text-xs font-normal">Order by</SelectLabel>
 
             <SelectItem value="status">Status</SelectItem>
             <SelectItem value="assignee">Assignee</SelectItem>

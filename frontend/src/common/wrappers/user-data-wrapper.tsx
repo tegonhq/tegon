@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import { useGetUserQuery } from 'services/users/get-user';
@@ -15,8 +16,11 @@ interface Props {
 export function UserDataWrapper(props: Props): React.ReactElement {
   const { children } = props;
   const { data, error: isError, isLoading } = useGetUserQuery();
+  const {
+    query: { workspaceSlug },
+  } = useRouter();
 
-  if (!isLoading && !isError) {
+  if (!isLoading && !isError && workspaceSlug) {
     return <UserContext.Provider value={data}>{children}</UserContext.Provider>;
   }
 

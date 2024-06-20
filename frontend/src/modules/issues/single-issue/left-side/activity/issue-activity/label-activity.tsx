@@ -33,7 +33,7 @@ export function LabelActivity({
   if (added) {
     return (
       <TimelineItem
-        key={`${issueHistory.id}-removedLabels`}
+        key={`${issueHistory.id}-addedLabels`}
         hasMore
         date={showTime && issueHistory.updatedAt}
       >
@@ -41,7 +41,7 @@ export function LabelActivity({
           <LabelFill size={20} className="mr-4" />
 
           <div className="flex items-center">
-            <span className="mr-2 font-medium">{username}</span>
+            <span className="mr-2 font-medium text-foreground">{username}</span>
             added label
           </div>
 
@@ -70,13 +70,13 @@ export function LabelActivity({
         <LabelFill size={20} className="mr-4" />
 
         <div className="flex items-center">
-          <span className="mr-2 font-medium">{username}</span>
+          <span className="mr-2 font-medium text-foreground">{username}</span>
           removed label
         </div>
 
         <div>
           {issueHistory.removedLabelIds.map((labelId: string) => (
-            <Badge variant="outline" key={labelId} className="ml-2">
+            <Badge variant="secondary" key={labelId} className="ml-2">
               <BadgeColor
                 style={{ backgroundColor: getLabel(labelId).color }}
               />

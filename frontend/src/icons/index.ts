@@ -28,6 +28,7 @@ export * from './board-line';
 export * from './list-line';
 export * from './notification-line';
 export * from './send-line';
+export * from './add-line';
 
 export * from './team-line';
 export * from './issues-fill';

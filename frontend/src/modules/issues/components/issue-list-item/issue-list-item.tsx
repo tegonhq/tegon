@@ -26,6 +26,7 @@ import { useContextStore } from 'store/global-context-provider';
 import { IssueLabels } from './issue-labels';
 import { IssueRelations, View } from './issue-relations';
 import { getRelationIssues } from './utils';
+import Link from 'next/link';
 
 interface IssueListItemProps {
   issueId: string;
@@ -50,7 +51,7 @@ export const IssueRelationIssues = observer(
     });
 
     return (
-      <div className="pl-16 pr-8">
+      <div className="pl-14 pr-6">
         {issues.map((issueRelation: IssueRelationType | IssueType) => {
           const id =
             view === View.SUB_ISSUES
@@ -94,14 +95,12 @@ export const IssueListItem = observer(
 
     return (
       <>
-        <a
+        <Link
+          href={`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`}
           className={cn(
             'pl-3 pr-4 flex group cursor-default hover:bg-active/50 gap-2',
             subIssueView && 'pl-0 pr-0',
           )}
-          onClick={() => {
-            push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
-          }}
           onMouseOver={() => {
             const { selectedIssues } = applicationStore;
             if (selectedIssues.length === 0) {
@@ -143,7 +142,7 @@ export const IssueListItem = observer(
               className={cn(
                 'flex w-full items-start gap-2 pl-2 ml-1 pr-4 group-hover:bg-grayAlpha-100 rounded-xl',
                 issueSelected && !subIssueView && 'bg-primary/10',
-                subIssueView && 'pl-0 pr-0',
+                subIssueView && 'pl-2 pr-2',
               )}
             >
               <div className="pt-2.5">
@@ -162,12 +161,12 @@ export const IssueListItem = observer(
                 )}
               >
                 <div className="flex w-full">
-                  <div className="flex flex-wrap shrink w-full gap-2">
+                  <div className="flex flex-wrap shrink w-full gap-2 justify-between pr-4">
                     <span className="flex items-center justify-start shrink min-w-[0px] max-w-[500px]">
                       <span className="truncate text-left">{issue.title}</span>
                     </span>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <IssueLabels labelIds={issue.labelIds} />
                     </div>
                   </div>
@@ -201,7 +200,7 @@ export const IssueListItem = observer(
               </div>
             </div>
           </div>
-        </a>
+        </Link>
 
         {currentView && (
           <IssueRelationIssues view={currentView} issue={issue} />

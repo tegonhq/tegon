@@ -13,7 +13,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from 'components/ui/collapsible';
-import { ChevronDown, ChevronRight } from 'icons';
+import { AddLine, ChevronDown, ChevronRight } from 'icons';
 
 interface SubIssueViewProps {
   childIssues: IssueType[];
@@ -26,7 +26,9 @@ export function SubIssueView({
   setNewIssueState,
   newIssueState,
 }: SubIssueViewProps) {
-  const [isOpen, setOpen] = React.useState(true);
+  const [isOpen, setOpen] = React.useState(
+    childIssues.length === 0 ? false : true,
+  );
 
   return (
     <Collapsible open={isOpen} onOpenChange={setOpen} className="w-full py-3">
@@ -56,10 +58,11 @@ export function SubIssueView({
           <Button
             variant="ghost"
             size="sm"
+            className="pr-0"
             onClick={setNewIssueState}
             disabled={newIssueState}
           >
-            <RiAddLine size={16} />
+            <AddLine size={16} />
           </Button>
         </div>
       </div>

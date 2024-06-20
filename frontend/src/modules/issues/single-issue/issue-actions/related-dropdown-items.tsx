@@ -16,8 +16,8 @@ import {
   ParentIssueLine,
   SubIssue,
   BlockedFill,
-  BlockingToLine,
   DuplicateLine,
+  BlocksFill,
 } from 'icons';
 
 import { DropdownItem } from './dropdown-item';
@@ -36,7 +36,7 @@ export function RelatedDropdownItems({
           <DropdownItem Icon={RelatedIssueLine} title="Add related" />
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
-          <DropdownMenuSubContent className="text-muted-foreground">
+          <DropdownMenuSubContent>
             <DropdownMenuItem
               onClick={() => {
                 setRelatedModal(IssueRelationEnum.PARENT);
@@ -74,7 +74,7 @@ export function RelatedDropdownItems({
                 setRelatedModal(IssueRelationEnum.BLOCKS);
               }}
             >
-              <DropdownItem Icon={BlockingToLine} title="Blocked to..." />
+              <DropdownItem Icon={BlocksFill} title="Blocked to..." />
             </DropdownMenuItem>
 
             <DropdownMenuItem

@@ -178,7 +178,7 @@ export const Editor = ({
           initialContent={getInitialValue()}
           extensions={getExtensions()}
           className={cn(
-            'relative w-full max-w-screen-lg text-base sm:rounded-lg',
+            'relative w-full min-w-full text-base sm:rounded-lg',
             className,
           )}
           onCreate={({ editor }) => {

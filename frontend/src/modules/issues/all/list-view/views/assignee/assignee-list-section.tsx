@@ -132,6 +132,9 @@ export const NoAssigneeView = observer(() => {
             <h3 className="pl-2">No Assignee</h3>
           </Button>
         </CollapsibleTrigger>
+        <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+          {issues.length}
+        </div>
       </div>
 
       <CollapsibleContent>
