@@ -56,37 +56,35 @@ export const LeftSide = observer(() => {
   }, 1000);
 
   return (
-    <>
+    <ScrollArea className="grow flex flex-col gap-2 h-full">
       <div className="flex xl:hidden px-8 py-2 border-b">
         <FilterSmall />
       </div>
-      <ScrollArea className="grow flex flex-col gap-2">
-        <div className="px-8 py-6 flex flex-col">
-          {isTriageView && <SimilarIssuesView issueId={issue.id} />}
+      <div className="px-8 py-6 flex flex-col">
+        {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
-          <IssueTitle value={issue.title} onChange={onIssueChange} />
-          {issue.parentId && <ParentIssueView issue={issue} />}
-          <Editor
-            value={issue.description}
-            onCreate={(editor) => setEditor(editor)}
-            onChange={onDescriptionChange}
-            className="min-h-[50px] mb-8"
-          />
+        <IssueTitle value={issue.title} onChange={onIssueChange} />
+        {issue.parentId && <ParentIssueView issue={issue} />}
+        <Editor
+          value={issue.description}
+          onCreate={(editor) => setEditor(editor)}
+          onChange={onDescriptionChange}
+          className="min-h-[50px] mb-8"
+        />
 
-          <div className="flex justify-end w-full py-1">
-            <FileUpload editor={editor} />
-          </div>
-
-          <SubIssueView
-            childIssues={issue.children}
-            setNewIssueState={() => setNewIssueState(true)}
-            newIssueState={newIssueState}
-          />
-          <LinkedIssuesView issueId={issue.id} />
-          <Separator />
-          <Activity />
+        <div className="flex justify-end w-full py-1">
+          <FileUpload editor={editor} />
         </div>
-      </ScrollArea>
-    </>
+
+        <SubIssueView
+          childIssues={issue.children}
+          setNewIssueState={() => setNewIssueState(true)}
+          newIssueState={newIssueState}
+        />
+        <LinkedIssuesView issueId={issue.id} />
+        <Separator />
+        <Activity />
+      </div>
+    </ScrollArea>
   );
 });
