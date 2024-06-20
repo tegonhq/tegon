@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import { observer } from 'mobx-react-lite';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -26,7 +27,6 @@ import { useContextStore } from 'store/global-context-provider';
 import { IssueLabels } from './issue-labels';
 import { IssueRelations, View } from './issue-relations';
 import { getRelationIssues } from './utils';
-import Link from 'next/link';
 
 interface IssueListItemProps {
   issueId: string;
@@ -68,7 +68,6 @@ export const IssueRelationIssues = observer(
 export const IssueListItem = observer(
   ({ issueId, subIssueView = false, noBorder = false }: IssueListItemProps) => {
     const {
-      push,
       query: { workspaceSlug },
     } = useRouter();
     const [currentView, setCurrentView] = React.useState<View | undefined>();

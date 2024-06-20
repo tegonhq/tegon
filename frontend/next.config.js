@@ -2,8 +2,9 @@
 
 module.exports = {
   output: 'standalone',
-  scrollRestoration: true,
-
+  experimental: {
+    scrollRestoration: true,
+  },
   transpilePackages: ['geist'],
   async redirects() {
     return [

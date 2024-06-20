@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 import { cn } from 'common/lib/utils';
@@ -15,8 +16,6 @@ import { useTeamWorkflows } from 'hooks/workflows';
 import { BlockedFill, BlocksFill, ChevronRight, SubIssue } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
-import { useParams } from 'next/navigation';
-import { useRouter } from 'next/router';
 
 export enum View {
   BLOCKED = 'BLOCKED',
