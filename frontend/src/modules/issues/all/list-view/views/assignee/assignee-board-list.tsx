@@ -58,7 +58,7 @@ export const AssigneeBoardList = observer(
       <BoardColumn key={userOnWorkspace.userId} id={userOnWorkspace.userId}>
         <div className="flex flex-col max-h-[100%] pr-4">
           <div className="flex gap-1 items-center mb-2">
-            <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-200">
+            <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
               <AvatarText
                 text={getUserData(userOnWorkspace.userId).fullname}
                 className="h-5 w-5 text-[9px]"
@@ -120,7 +120,7 @@ export const NoAssigneeView = observer(() => {
     <BoardColumn key="no-user" id="no-user">
       <div className="flex flex-col max-h-[100%]">
         <div className="flex gap-1 items-center mb-2">
-          <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-200">
+          <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
             <AssigneeLine size={20} />
             <h3 className="pl-2">No Assignee</h3>
           </div>

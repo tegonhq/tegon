@@ -59,9 +59,17 @@ export function BootstrapWrapper({ children }: Props) {
     [MODELS.View]: viewsStore,
   };
 
+  React.useEffect(() => {
+    if (workspace) {
+      initStore();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const { refetch: bootstrapIssuesRecords } = useBootstrapRecords({
     modelNames: Object.values(MODELS),
-    workspaceId: workspace.id,
+    workspaceId: workspace?.id,
     userId: user.id,
     onSuccess: (data: BootstrapResponse) => {
       saveSocketData(data.syncActions, MODEL_STORE_MAP);
@@ -71,7 +79,7 @@ export function BootstrapWrapper({ children }: Props) {
 
   const { refetch: syncIssuesRecords } = useDeltaRecords({
     modelNames: Object.values(MODELS),
-    workspaceId: workspace.id,
+    workspaceId: workspace?.id,
     lastSequenceId,
     userId: user.id,
     onSuccess: (data: BootstrapResponse) => {
@@ -79,12 +87,6 @@ export function BootstrapWrapper({ children }: Props) {
       localStorage.setItem('lastSequenceId', `${data.lastSequenceId}`);
     },
   });
-
-  React.useEffect(() => {
-    initStore();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const initStore = async () => {
     if (lastSequenceId) {

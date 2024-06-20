@@ -49,7 +49,7 @@ export const PriorityBoardList = observer(
       <BoardColumn key={priority} id={`${priority}`}>
         <div className="flex flex-col max-h-[100%] pr-4">
           <div className="flex gap-1 items-center mb-2">
-            <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-200">
+            <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
               <PriorityIcon.icon size={20} />
               <h3 className="pl-2">{Priorities[priority]}</h3>
             </div>

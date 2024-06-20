@@ -7,9 +7,11 @@ import { ViewsList } from './views-list';
 
 export function Views() {
   return (
-    <main className="flex flex-col h-[100vh] overflow-hidden">
+    <main className="flex flex-col h-[100vh]">
       <Header title="Views" />
-      <ViewsList />
+      <div className="bg-gray-200 rounded-tl-2xl flex flex-col h-[calc(100vh_-_53px)]">
+        <ViewsList />
+      </div>
     </main>
   );
 }

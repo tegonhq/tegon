@@ -51,7 +51,7 @@ export const LabelListItem = observer(({ label }: LabelListItemProps) => {
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>
           <Button
-            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-200"
+            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
           >
             <BadgeColor
@@ -106,7 +106,7 @@ export const NoLabelList = observer(() => {
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>
           <Button
-            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-200"
+            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
           >
             <BadgeColor

@@ -45,7 +45,7 @@ export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
     <BoardColumn key={label.id} id={label.id}>
       <div className="flex flex-col max-h-[100%] pr-4">
         <div className="flex gap-1 items-center mb-2">
-          <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-200">
+          <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
             <BadgeColor style={{ backgroundColor: label.color }} />
             <h3 className="pl-2">{label.name}</h3>
           </div>
@@ -104,7 +104,7 @@ export const NoLabelBoardList = observer(() => {
     <BoardColumn key="no-label" id="no-label">
       <div className="flex flex-col max-h-[100%] pr-4">
         <div className="flex gap-1 items-center mb-2">
-          <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-200">
+          <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
             <BadgeColor style={{ backgroundColor: '#838383' }} />
             <h3 className="pl-2">No Label</h3>
           </div>

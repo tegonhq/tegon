@@ -31,7 +31,7 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
   return (
     <Link
       className={cn(
-        'cursor-pointer max-w-[600px] mb-2 p-2 rounded-md flex gap-2 items-center bg-grayAlpha-200',
+        'cursor-pointer max-w-[600px] mb-2 p-2 rounded-md flex gap-2 items-center bg-grayAlpha-100',
         buttonVariants({ variant: 'secondary' }),
         'w-fit',
       )}

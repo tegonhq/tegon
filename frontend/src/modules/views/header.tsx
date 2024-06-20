@@ -32,7 +32,7 @@ export const Header = observer(({ title }: HeaderProps) => {
   } = useRouter();
 
   return (
-    <header className="flex justify-between pl-8 px-4 py-2 w-full border-b items-center gap-2">
+    <header className="flex px-6 py-4 w-full items-center gap-2 justify-between">
       <div>
         {applicationStore.sidebarCollapsed && (
           <Button
@@ -68,7 +68,7 @@ export const Header = observer(({ title }: HeaderProps) => {
       <div>
         <Link
           href={`/${workspaceSlug}/team/${team.identifier}/all`}
-          className={cn(buttonVariants({ variant: 'outline', size: 'xs' }))}
+          className={cn(buttonVariants({ variant: 'secondary', size: 'sm' }))}
         >
           New view
         </Link>

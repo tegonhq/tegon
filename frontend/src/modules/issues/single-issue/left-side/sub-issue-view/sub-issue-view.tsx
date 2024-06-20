@@ -45,7 +45,7 @@ export function SubIssueView({
               </Button>
 
               {!isOpen && (
-                <div className="px-2 ml-1 rounded-sm bg-grayAlpha-200 text-foreground">
+                <div className="px-2 ml-1 rounded-sm bg-grayAlpha-100 text-foreground">
                   {childIssues.length}
                 </div>
               )}

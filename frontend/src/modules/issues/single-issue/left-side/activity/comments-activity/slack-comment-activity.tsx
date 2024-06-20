@@ -66,7 +66,7 @@ export function SlackCommentActivity({
         <div
           className={cn(
             'group relative w-full flex flex-col rounded-md',
-            !comment.parentId && 'bg-grayAlpha-200',
+            !comment.parentId && 'bg-grayAlpha-100',
           )}
         >
           <div className={cn('flex gap-2', !comment.parentId && 'p-3')}>
@@ -111,7 +111,7 @@ export function SlackCommentActivity({
             <ReplyComment
               issueCommentId={comment.id}
               badgeContent={
-                <div className="rounded flex items-center gap-1 p-1 px-2 bg-grayAlpha-200">
+                <div className="rounded flex items-center gap-1 p-1 px-2 bg-grayAlpha-100">
                   <RiSlackFill size={16} /> Comments are also posted on slack
                   thread
                 </div>

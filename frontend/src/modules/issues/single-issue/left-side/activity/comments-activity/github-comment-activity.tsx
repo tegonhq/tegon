@@ -64,7 +64,7 @@ export function GithubCommentActivity({
         <div
           className={cn(
             'group relative w-full flex flex-col rounded-md',
-            !comment.parentId && 'bg-grayAlpha-200',
+            !comment.parentId && 'bg-grayAlpha-100',
           )}
         >
           <div className={cn('flex gap-2', !comment.parentId && 'p-3')}>
@@ -111,7 +111,7 @@ export function GithubCommentActivity({
             <ReplyComment
               issueCommentId={comment.id}
               badgeContent={
-                <div className="border rounded-full flex items-center gap-1 p-1 px-2 bg-grayAlpha-200">
+                <div className="border rounded-full flex items-center gap-1 p-1 px-2 bg-grayAlpha-100">
                   <RiGithubFill size={16} /> Comments are also posted on github
                 </div>
               }

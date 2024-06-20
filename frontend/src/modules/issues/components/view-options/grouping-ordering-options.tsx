@@ -26,7 +26,7 @@ export const GroupingOrderingOptions = observer(() => {
           });
         }}
       >
-        <SelectTrigger className="w-[100px] h-[25px]">
+        <SelectTrigger className="h-7 py-1">
           <SelectValue placeholder="Select a category" />
         </SelectTrigger>
         <SelectContent>
@@ -47,7 +47,7 @@ export const GroupingOrderingOptions = observer(() => {
           });
         }}
       >
-        <SelectTrigger className="w-[100px] h-[25px]">
+        <SelectTrigger className="h-7 py-1">
           <SelectValue placeholder="Select a category" />
         </SelectTrigger>
         <SelectContent>

@@ -2,7 +2,7 @@
 
 import type { WorkflowType } from './types/team';
 
-export const Colors = {
+export const WorkflowColors = {
   Triage: {
     background: '#FD865C',
     color: '#D94B0E',
@@ -42,7 +42,7 @@ export const Colors = {
 };
 
 export function getWorkflowColor(workflow: WorkflowType) {
-  return Colors[workflow.name]
-    ? Colors[workflow.name]
+  return WorkflowColors[workflow.name]
+    ? WorkflowColors[workflow.name]
     : { background: `${workflow.color}99`, color: workflow.color };
 }

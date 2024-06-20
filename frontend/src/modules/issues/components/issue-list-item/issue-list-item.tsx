@@ -1,6 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import { observer } from 'mobx-react-lite';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -70,6 +69,7 @@ export const IssueListItem = observer(
     const {
       query: { workspaceSlug },
     } = useRouter();
+    const { push } = useRouter();
     const [currentView, setCurrentView] = React.useState<View | undefined>();
 
     const { mutate: updateIssue } = useUpdateIssueMutation({});
@@ -94,8 +94,10 @@ export const IssueListItem = observer(
 
     return (
       <>
-        <Link
-          href={`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`}
+        <a
+          onClick={() => {
+            push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
+          }}
           className={cn(
             'pl-3 pr-4 flex group cursor-default hover:bg-active/50 gap-2',
             subIssueView && 'pl-0 pr-0',
@@ -165,7 +167,7 @@ export const IssueListItem = observer(
                       <span className="truncate text-left">{issue.title}</span>
                     </span>
 
-                    <div className="flex items-center gap-2 flex-wrap">
+                    <div className="flex items-center gap-1 flex-wrap">
                       <IssueLabels labelIds={issue.labelIds} />
                     </div>
                   </div>
@@ -199,7 +201,7 @@ export const IssueListItem = observer(
               </div>
             </div>
           </div>
-        </Link>
+        </a>
 
         {currentView && (
           <IssueRelationIssues view={currentView} issue={issue} />

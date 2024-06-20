@@ -64,7 +64,7 @@ export const AssigneeListSection = observer(
         <div className="flex gap-1 items-center">
           <CollapsibleTrigger asChild>
             <Button
-              className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-200"
+              className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
               variant="ghost"
             >
               <AvatarText
@@ -122,7 +122,7 @@ export const NoAssigneeView = observer(() => {
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>
           <Button
-            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-200"
+            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
           >
             <AssigneeLine size={20} className="group-hover/collapse:hidden" />

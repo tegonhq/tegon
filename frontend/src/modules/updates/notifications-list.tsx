@@ -19,7 +19,7 @@ export const NotificationsList = observer(() => {
 
   return (
     <ScrollArea>
-      <div className="flex flex-col p-2 gap-2">
+      <div className="flex flex-col pt-2">
         {notifications.map((notification: NotificationType, index: number) => (
           <NotificationItem
             notification={notification}

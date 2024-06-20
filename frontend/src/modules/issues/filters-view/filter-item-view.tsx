@@ -59,7 +59,7 @@ export const FilterItemView = observer(
     };
 
     return (
-      <div className="flex bg-grayAlpha-200 rounded-md items-center">
+      <div className="flex bg-grayAlpha-100 rounded-md items-center">
         <div className="px-2 p-1 rounded-md rounded-r-none transparent">
           {name}
         </div>

@@ -13,10 +13,10 @@ export function Activity() {
         <div className="flex justify-between items-start">
           <div>
             <TabsList className="grid w-full grid-cols-2 bg-transparent gap-2">
-              <TabsTrigger value="comments" className="bg-grayAlpha-200">
+              <TabsTrigger value="comments" className="bg-grayAlpha-100">
                 Comments
               </TabsTrigger>
-              <TabsTrigger value="activity" className="bg-grayAlpha-200">
+              <TabsTrigger value="activity" className="bg-grayAlpha-100">
                 Activity
               </TabsTrigger>
             </TabsList>

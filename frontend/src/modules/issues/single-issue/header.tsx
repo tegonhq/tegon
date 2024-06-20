@@ -1,6 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiCheckLine, RiCloseLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -14,7 +13,7 @@ import {
 import { Button } from 'components/ui/button';
 import { TeamIcon } from 'components/ui/team-icon';
 import { useCurrentTeam } from 'hooks/teams';
-import { SidebarLine } from 'icons';
+import { CanceledLine, CheckLine, SidebarLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -79,25 +78,23 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
             </BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
-        <IssueOptionsDropdown />
+        {!isTriageView && <IssueOptionsDropdown />}
       </div>
       {isTriageView && (
         <div className="flex justify-end gap-3">
           <Button
-            variant="outline"
-            size="xs"
+            variant="secondary"
             onClick={() => chooseTriageAction('Accept')}
           >
-            <RiCheckLine size={14} className="mr-2" />
+            <CheckLine size={14} className="mr-2" />
             Accept
           </Button>
 
           <Button
-            variant="outline"
-            size="xs"
+            variant="secondary"
             onClick={() => chooseTriageAction('Decline')}
           >
-            <RiCloseLine size={14} className="mr-2" />
+            <CanceledLine size={16} className="mr-1" />
             Decline
           </Button>
         </div>
