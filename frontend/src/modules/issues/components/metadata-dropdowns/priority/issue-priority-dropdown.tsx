@@ -43,10 +43,7 @@ export function IssuePriorityDropdown({
           aria-expanded={open}
           className="flex gap-2 items-center px-0 shadow-none text-xs !bg-transparent hover:bg-transparent border-none justify-between focus-visible:ring-1 focus-visible:border-primary"
         >
-          <PriorityIcon.icon
-            size={16}
-            className={cn('text-muted-foreground')}
-          />
+          <PriorityIcon.icon size={16} />
           {Priorities[value]}
         </Button>
       );

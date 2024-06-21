@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import {
+  BacklogLine,
   CanceledLine,
   DoneFill,
   InProgressLine,
@@ -11,7 +12,7 @@ import {
 } from 'icons';
 
 export const WORKFLOW_CATEGORY_ICONS = {
-  Backlog: UnscopedLine,
+  Backlog: BacklogLine,
   Todo: TodoLine,
   'In Progress': InProgressLine,
   'In Review': InReviewLine,

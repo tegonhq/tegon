@@ -16,7 +16,7 @@ export function Triage() {
     <main className="flex flex-col h-[100vh]">
       <Header title="Triage" />
       <div className="bg-gray-200 rounded-tl-3xl flex h-[calc(100vh_-_53px)]">
-        <div className="flex flex-col max-w-[400px]">
+        <div className="flex flex-col w-[400px]">
           <h2 className="text-lg pl-6 pt-6 font-medium"> Triage </h2>
           <TriageIssues />
         </div>

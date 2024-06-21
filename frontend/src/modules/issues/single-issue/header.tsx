@@ -13,7 +13,7 @@ import {
 import { Button } from 'components/ui/button';
 import { TeamIcon } from 'components/ui/team-icon';
 import { useCurrentTeam } from 'hooks/teams';
-import { CanceledLine, CheckLine, SidebarLine } from 'icons';
+import { CheckLine, CrossLine, SidebarLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -84,6 +84,7 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
         <div className="flex justify-end gap-3">
           <Button
             variant="secondary"
+            size="sm"
             onClick={() => chooseTriageAction('Accept')}
           >
             <CheckLine size={14} className="mr-2" />
@@ -92,9 +93,10 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
 
           <Button
             variant="secondary"
+            size="sm"
             onClick={() => chooseTriageAction('Decline')}
           >
-            <CanceledLine size={16} className="mr-1" />
+            <CrossLine size={16} className="mr-1" />
             Decline
           </Button>
         </div>

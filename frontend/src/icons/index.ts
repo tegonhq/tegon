@@ -31,6 +31,7 @@ export * from './send-line';
 export * from './add-line';
 export * from './delete-line';
 export * from './edit-line';
+export * from './cross-line';
 
 export * from './team-line';
 export * from './issues-fill';

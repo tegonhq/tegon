@@ -78,8 +78,8 @@ export const TriageIssues = () => {
   }
 
   return (
-    <ScrollArea>
-      <div className="flex flex-col pt-2">
+    <ScrollArea className="h-full">
+      <div className="flex flex-col pt-2 pb-14 gap-1">
         {issues.map((issue: IssueType, index: number) => {
           const nextIssue = issues[index + 1] as IssueType;
           const noBorder =

@@ -84,7 +84,7 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
       {linkedIssue.createdById ? (
         <AvatarText
           text={getUserData(linkedIssue.createdById).fullname}
-          className="h-5 w-5 text-[9px]"
+          className="h-5 w-5 text-[9px] mr-4"
         />
       ) : (
         <div className="h-5 w-5 flex items-center justify-center mr-4">
@@ -105,7 +105,6 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
           target="_blank"
           className="flex items-center gap-1 ml-2 mr-1"
         >
-          {getIcon()}
           {getTitle()}
         </a>
       </div>

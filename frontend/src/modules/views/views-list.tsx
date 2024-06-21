@@ -29,7 +29,7 @@ export function ViewItem({ view }: ViewItemProps) {
   return (
     <Link
       href={`/${workspaceSlug}/team/${teamIdentifier}/views/${view.id}`}
-      className="flex gap-2 text-xs text-foreground items-center pl-8 pr-4 py-2 border-b hover:bg-active/50"
+      className="flex gap-2 text-foreground items-center pl-8 pr-4 py-2 border-b hover:bg-active/50"
     >
       <div className="min-w-[200px] grow flex flex-col gap-1">
         <div className="font-medium flex items-center group gap-2 min-h-[25px]">

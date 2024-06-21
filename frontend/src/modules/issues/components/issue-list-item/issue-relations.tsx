@@ -54,7 +54,8 @@ export const IssueRelations = observer(
     if (
       !parentIssue &&
       blocksIssues.length === 0 &&
-      blockedIssues.length === 0
+      blockedIssues.length === 0 &&
+      subIssues.length === 0
     ) {
       return null;
     }
@@ -79,7 +80,7 @@ export const IssueRelations = observer(
         >
           Parent task
           <CategoryIcon
-            size={12}
+            size={16}
             color={getWorkflowColor(parentWorkflow).color}
           />
           <span className="font-mono">
@@ -105,7 +106,7 @@ export const IssueRelations = observer(
           size="xs"
           onClick={() => setView(View.BLOCKED)}
         >
-          <BlockedFill className="h-3 w-3 text-red-500" />
+          <BlockedFill className="h-4 w-4 text-red-500" />
           <div>Blocked by</div>
           <div className="text-muted-foreground">{blockedIssues.length}</div>
           <div>
@@ -128,7 +129,7 @@ export const IssueRelations = observer(
           size="xs"
           onClick={() => setView(View.BLOCKS)}
         >
-          <BlocksFill className="h-3 w-3 text-orange-500" />
+          <BlocksFill className="h-4 w-4 text-orange-500" />
           <div>Blocks</div>
           <div className="text-muted-foreground">{blocksIssues.length}</div>
           <div>
@@ -151,7 +152,7 @@ export const IssueRelations = observer(
           size="xs"
           onClick={() => setView(View.SUB_ISSUES)}
         >
-          <SubIssue className="h-3 w-3" />
+          <SubIssue className="h-4 w-4" />
           <div>Sub-issue</div>
           <div className="text-muted-foreground">{subIssues.length}</div>
           <div>
