@@ -24,11 +24,10 @@ export default class SearchService {
     return searchData;
   }
 
-  async similarData(workspaceId: string, issueId: string, limit: number = 3) {
-    const similarIssues = await this.vectorService.searchEmbeddings(
+  async similarData(workspaceId: string, issueId: string) {
+    const similarIssues = await this.vectorService.similarIssues(
       workspaceId,
       issueId,
-      limit,
     );
 
     return similarIssues;
