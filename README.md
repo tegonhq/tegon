@@ -17,6 +17,9 @@
 
 </div>
 
+<p align="center">
+<a> <img src= "https://github.com/tegonhq/tegon/assets/36505468/888ebcaa-29fb-4f33-833f-9652bdd37711" /></a>
+</p>
 
 <p align="center">
     <em> Tegon is AI-First Issue Tracking tool for engineering teams
