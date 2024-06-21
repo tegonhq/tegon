@@ -37,7 +37,7 @@ export const View = withApplicationStore(
     return (
       <main className="flex flex-col h-[100vh]">
         <Header title={view.name} view={view} />
-        <div className="bg-gray-200 rounded-tl-2xl flex flex-col h-[calc(100vh_-_53px)]">
+        <div className="bg-gray-200 rounded-tl-3xl flex flex-col h-[calc(100vh_-_53px)]">
           <FiltersView Actions={<ViewDisplayOptions />} />
 
           <ResizablePanelGroup

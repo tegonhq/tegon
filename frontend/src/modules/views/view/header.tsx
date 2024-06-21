@@ -2,13 +2,7 @@
 
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import {
-  RiBookmarkFill,
-  RiBookmarkLine,
-  RiDeleteBin7Line,
-  RiMoreFill,
-  RiPencilFill,
-} from '@remixicon/react';
+import { RiBookmarkFill, RiBookmarkLine, RiMoreFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -29,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
 import { useCurrentTeam } from 'hooks/teams';
-import { SidebarLine, StackLine } from 'icons';
+import { DeleteLine, EditLine, SidebarLine, StackLine } from 'icons';
 
 import { useUpdateViewMutation } from 'services/views';
 
@@ -97,13 +91,13 @@ export const Header = observer(({ title, view }: HeaderProps) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => setEditOpen(true)}>
-              <div className="flex items-center gap-2 text-xs">
-                <RiPencilFill size={14} /> Edit
+              <div className="flex items-center gap-1">
+                <EditLine size={16} /> Edit
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setDeleteAlert(true)}>
-              <div className="flex items-center gap-2 text-xs">
-                <RiDeleteBin7Line size={14} /> Delete
+              <div className="flex items-center gap-1">
+                <DeleteLine size={16} /> Delete
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>

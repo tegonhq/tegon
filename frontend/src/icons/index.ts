@@ -29,6 +29,8 @@ export * from './list-line';
 export * from './notification-line';
 export * from './send-line';
 export * from './add-line';
+export * from './delete-line';
+export * from './edit-line';
 
 export * from './team-line';
 export * from './issues-fill';

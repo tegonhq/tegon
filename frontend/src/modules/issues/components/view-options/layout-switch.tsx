@@ -16,13 +16,13 @@ export const LayoutSwitch = observer(() => {
   };
 
   return (
-    <div className="flex gap-1 bg-grayAlpha-200 rounded-md p-0.5 h-7 items-center">
+    <div className="flex bg-grayAlpha-200 rounded p-0.5 h-7 items-center">
       <Button
         variant="ghost"
         size="sm"
         isActive={applicationStore.displaySettings.view === ViewEnum.list}
         onClick={() => updateView(ViewEnum.list)}
-        className="rounded py-1 px-3 h-6"
+        className="rounded-sm py-1 px-2 h-6"
       >
         <ListLine size={20} />
       </Button>
@@ -31,7 +31,7 @@ export const LayoutSwitch = observer(() => {
         variant="ghost"
         isActive={applicationStore.displaySettings.view === ViewEnum.board}
         size="sm"
-        className="rounded py-1 px-3 h-6"
+        className="rounded-sm py-1 px-2 h-6"
       >
         <BoardLine size={20} />
       </Button>

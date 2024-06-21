@@ -70,7 +70,7 @@ export function IssueStatusDropdown({
           className="flex items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary"
         >
           <CategoryIcon
-            size={18}
+            size={20}
             className="text-muted-foreground mr-2"
             color={getWorkflowColor(workflow).color}
           />

@@ -26,7 +26,7 @@ export function IssueTitle({ value, onChange }: IssueTitleProps) {
 
   return (
     <Textarea
-      className="border-0 pl-0 font-medium resize-none bg-transparent no-scrollbar overflow-hidden outline-none focus-visible:ring-0 text-xl"
+      className="border-0 px-6 py-0 font-medium resize-none bg-transparent no-scrollbar overflow-hidden outline-none focus-visible:ring-0 text-xl"
       rows={1}
       cols={1}
       value={inputValue}

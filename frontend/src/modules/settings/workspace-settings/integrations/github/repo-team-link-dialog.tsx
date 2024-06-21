@@ -150,7 +150,7 @@ export function RepoTeamLinkDialog({
 
   return (
     <DialogContent>
-      <DialogHeader className="p-4">
+      <DialogHeader className="p-6 pb-4">
         <DialogTitle className="font-normal flex flex-col gap-2">
           <div className="flex gap-1 items-center">
             Link GitHub repo to Team
@@ -162,7 +162,7 @@ export function RepoTeamLinkDialog({
         </DialogTitle>
       </DialogHeader>
 
-      <div className="p-4 pt-0">
+      <div className="p-6 pt-0">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div>
@@ -359,7 +359,10 @@ export function RepoTeamLinkDialog({
                 )}
               />
 
-              <div className="flex items-end justify-end mt-4">
+              <div className="flex items-end gap-2 justify-end mt-4">
+                <Button variant="ghost" type="button" onClick={onClose}>
+                  Cancel
+                </Button>
                 <Button variant="secondary" isLoading={isLoading}>
                   Save
                 </Button>

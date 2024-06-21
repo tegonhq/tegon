@@ -50,11 +50,11 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
         onOpenChange={setIsOpen}
         className="w-full py-3"
       >
-        <div className="flex justify-between">
+        <div className="flex justify-between px-6">
           <div>
             <CollapsibleTrigger asChild>
               <div className="flex items-center">
-                <Button variant="ghost" size="sm" className="px-1 text-md">
+                <Button variant="ghost" size="sm" className="px-0 text-md">
                   Links
                   {isOpen ? (
                     <ChevronDown size={16} className="ml-1" />
@@ -85,7 +85,7 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
             </DropdownMenu>
           </div>
         </div>
-        <CollapsibleContent className="flex gap-1 flex-col py-2">
+        <CollapsibleContent className="flex gap-1 flex-col px-4">
           {linkedIssues.map((linkedIssue: LinkedIssueType) => (
             <LinkedIssueItem linkedIssue={linkedIssue} key={linkedIssue.id} />
           ))}

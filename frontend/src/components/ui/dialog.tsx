@@ -52,7 +52,7 @@ const DialogContent = React.forwardRef<
       >
         <div
           className={cn(
-            '!max-w-[500px] min-w-[500px] z-50 border-1 bg-gray-200 shadow-2xl grid gap-4 sm:rounded-lg',
+            '!max-w-[500px] min-w-[500px] z-50 bg-gray-200 shadow-2xl grid gap-4 sm:rounded-lg',
             className,
           )}
         >

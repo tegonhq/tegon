@@ -4,7 +4,6 @@ import {
   RiAccountBoxFill,
   RiGithubFill,
   RiMoreFill,
-  RiPencilFill,
   RiSlackFill,
 } from '@remixicon/react';
 import * as React from 'react';
@@ -24,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
 import { Editor } from 'components/ui/editor';
+import { EditLine } from 'icons';
 
 import { UserContext, type User } from 'store/user-context';
 
@@ -118,8 +118,8 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
               <DropdownMenuContent align="end">
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={() => setEdit(true)}>
-                    <div className="flex items-center gap-2">
-                      <RiPencilFill size={16} /> Edit
+                    <div className="flex items-center gap-1">
+                      <EditLine size={16} /> Edit
                     </div>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>

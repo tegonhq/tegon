@@ -41,7 +41,7 @@ export const TeamList = observer(() => {
         type="single"
         collapsible
         defaultValue={team?.id ?? teams[0].id}
-        className="w-full flex flex-col gap-2"
+        className="w-full flex flex-col gap-4"
       >
         {teams.map((team: TeamType) => (
           <AccordionItem value={team.id} key={team.identifier} className="mb-1">

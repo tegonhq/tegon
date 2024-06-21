@@ -63,13 +63,13 @@ export const FilterItemView = observer(
         <div className="px-2 p-1 rounded-md rounded-r-none transparent">
           {name}
         </div>
-        <Separator className="bg-white w-[1px]" orientation="vertical" />
+        <Separator className="bg-gray-200 w-[1px]" orientation="vertical" />
         <FilterOptionsDropdown
           onChange={onChangeFilterType}
           isArray={isArray}
           filterType={filterType}
         />
-        <Separator className="bg-white w-[1px]" orientation="vertical" />
+        <Separator className="bg-gray-200 w-[1px]" orientation="vertical" />
         <div className="flex items-center px-2 rounded-md rounded-l-none rounded-r-none">
           <Component
             value={value}
@@ -77,10 +77,10 @@ export const FilterItemView = observer(
             teamIdentifier={team.identifier}
           />
         </div>
-        <Separator className="bg-white w-[1px]" orientation="vertical" />
+        <Separator className="bg-gray-200 w-[1px]" orientation="vertical" />
 
         <Button
-          className="flex items-center p-1 rounded-md rounded-l-none"
+          className="flex items-center px-1.5 py-1 rounded-md rounded-l-none"
           onClick={removeFilter}
           variant="ghost"
           size="sm"

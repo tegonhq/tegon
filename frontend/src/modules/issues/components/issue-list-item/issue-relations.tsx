@@ -82,7 +82,7 @@ export const IssueRelations = observer(
             size={12}
             color={getWorkflowColor(parentWorkflow).color}
           />
-          <span>
+          <span className="font-mono">
             {team.identifier}-{parentIssue.number}
           </span>
         </a>

@@ -8,12 +8,13 @@ import { SubscribeView } from './issue-activity/subscribe-view';
 
 export function Activity() {
   return (
-    <Tabs defaultValue="comments" className="mt-3 p-0">
+    <Tabs defaultValue="comments" className="mt-3 p-0 px-6">
       <div className="flex flex-col">
         <div className="flex justify-between items-start">
-          <div>
-            <TabsList className="grid w-full grid-cols-2 bg-transparent gap-2">
-              <TabsTrigger value="comments" className="bg-grayAlpha-100">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-md">Activity</h2>
+            <TabsList className="grid w-full grid-cols-2 bg-transparent gap-2 p-0">
+              <TabsTrigger value="comments" className="bg-grayAlpha-100 px-2">
                 Comments
               </TabsTrigger>
               <TabsTrigger value="activity" className="bg-grayAlpha-100">

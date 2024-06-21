@@ -50,7 +50,7 @@ export const IssueView = () => {
     <IssueStoreInit>
       <div className="flex flex-col h-[100vh]">
         <Header />
-        <main className="grid grid-cols-5 h-[calc(100vh_-_53px)] bg-gray-200 rounded-tl-2xl">
+        <main className="grid grid-cols-5 h-[calc(100vh_-_53px)] bg-gray-200 rounded-tl-3xl">
           <div className="col-span-5 xl:col-span-4 flex flex-col h-[calc(100vh_-_55px)]">
             <LeftSide />
           </div>

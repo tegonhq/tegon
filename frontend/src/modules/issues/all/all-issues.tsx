@@ -27,7 +27,7 @@ export const AllIssues = withApplicationStore(() => {
   return (
     <main className="flex flex-col h-[100vh]">
       <Header title="All issues" />
-      <div className="bg-gray-200 rounded-tl-2xl flex flex-col h-[calc(100vh_-_53px)]">
+      <div className="bg-gray-200 rounded-tl-3xl flex flex-col h-[calc(100vh_-_53px)]">
         <FiltersView Actions={<IssuesViewOptions />} />
         <ResizablePanelGroup direction="horizontal" className="">
           <ResizablePanel collapsible collapsedSize={16}>

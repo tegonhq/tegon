@@ -63,10 +63,10 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
           <div className="flex flex-col items-start justify-start w-full">
             <div className="flex items-center mb-1">
               <BuildingLine size={20} />
-              <div className="ml-2">Workspace</div>
+              <div className="ml-1">Workspace</div>
             </div>
 
-            <div className="flex flex-col w-full gap-1">
+            <div className="flex flex-col w-full gap-0.5">
               {WORKSPACE_LINKS.map((item) => (
                 <Link
                   key={item.href}
@@ -88,10 +88,10 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
           <div className="flex flex-col items-start justify-start w-full">
             <div className="flex items-center mb-1">
               <UserLine size={20} />
-              <div className="ml-2">My Account</div>
+              <div className="ml-1">My Account</div>
             </div>
 
-            <div className="flex flex-col w-full gap-1">
+            <div className="flex flex-col w-full gap-0.5">
               {ACCOUNT_LINKS.map((item) => (
                 <Link
                   key={item.href}

@@ -6,7 +6,7 @@ import * as React from 'react';
 import { cn } from 'common/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center h-5 gap-2 rounded-sm border px-2.5 py-0.5 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  'inline-flex items-center h-5 gap-2 rounded-sm border px-1.5 py-0.5 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
   {
     variants: {
       variant: {
@@ -41,7 +41,7 @@ interface BadgeColorProps extends React.HTMLAttributes<HTMLDivElement> {
 function BadgeColor({ className, ...otherProps }: BadgeColorProps) {
   return (
     <span
-      className={cn('rounded-full', `w-[8px] h-[8px]`, className)}
+      className={cn('rounded-full', `w-1.5 h-1.5`, className)}
       {...otherProps}
     ></span>
   );

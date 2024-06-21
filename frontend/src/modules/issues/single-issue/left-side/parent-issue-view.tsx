@@ -31,19 +31,19 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
   return (
     <Link
       className={cn(
-        'cursor-pointer max-w-[600px] mb-2 p-2 rounded-md flex gap-2 items-center bg-grayAlpha-100',
-        buttonVariants({ variant: 'secondary' }),
-        'w-fit',
+        'cursor-pointer max-w-[600px] rounded-md flex gap-2 items-center bg-grayAlpha-100',
+        buttonVariants({ variant: 'secondary', size: 'sm' }),
+        'w-fit p-2',
       )}
       href={`/${workspaceSlug}/issue/${team.identifier}-${issue.parent.number}`}
     >
       Sub-issue of
       <CategoryIcon
-        size={16}
+        size={20}
         className="text-muted-foreground"
         color={getWorkflowColor(workflow).color}
       />
-      <div className="text-muted-foreground">
+      <div className="text-muted-foreground font-mono">
         {team.identifier}-{issue.parent.number}
       </div>
       <div className="max-w-[300px]">

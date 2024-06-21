@@ -4,6 +4,8 @@ import 'styles/globals.css';
 import type { NextComponentType } from 'next';
 import type { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 
+import { GeistMono } from 'geist/font/mono';
+import { GeistSans } from 'geist/font/sans';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import React from 'react';
@@ -51,7 +53,11 @@ export const MyApp: NextComponentType<
               <QueryClientProvider client={queryClientRef.current}>
                 <Hydrate state={dehydratedState}>
                   <div
-                    className={cn('min-h-screen font-sans antialiased flex')}
+                    className={cn(
+                      'min-h-screen font-sans antialiased flex',
+                      GeistSans.variable,
+                      GeistMono.variable,
+                    )}
                   >
                     {getLayout(<Component {...pageProps} />)}
                   </div>

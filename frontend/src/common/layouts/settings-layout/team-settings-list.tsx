@@ -40,7 +40,7 @@ export const TeamSettingsList = observer(() => {
       <div className="flex flex-col items-start justify-start w-full">
         <div className="flex items-center mb-2">
           <TeamLine size={18} />
-          <div className="ml-2">Teams</div>
+          <div className="ml-1">Teams</div>
         </div>
 
         <div className="flex flex-col w-full">
@@ -64,7 +64,7 @@ export const TeamSettingsList = observer(() => {
                     </div>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="flex flex-col justify-center items-start w-full my-2 gap-1">
+                <AccordionContent className="flex flex-col justify-center items-start w-full my-2 gap-0.5">
                   {TEAM_LINKS.map((item) => (
                     <Link
                       key={item.href}

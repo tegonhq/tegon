@@ -32,12 +32,7 @@ export const Labels = observer(() => {
       description={`Manage team ${currentTeam.name} specific labels`}
     >
       <div className="flex flex-col">
-        <div className="my-4">
-          <p className="my-4 text-sm text-muted-foreground">
-            Use labels to help organize and filter issues in your team. Labels
-            created in this section are specific to this team, so they can be
-            customized to your team’s needs.
-          </p>
+        <div className="mb-4">
           <div className="flex justify-between">
             <div className="flex gap-3">
               <Button

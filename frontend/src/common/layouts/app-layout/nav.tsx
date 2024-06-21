@@ -24,7 +24,7 @@ export function Nav({ links }: NavProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="grid gap-1">
+    <nav className="grid gap-0.5">
       {links.map((link, index) => {
         const isActive = pathname.includes(link.href);
 

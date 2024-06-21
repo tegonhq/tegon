@@ -31,11 +31,11 @@ export function SubIssueView({
 
   return (
     <Collapsible open={isOpen} onOpenChange={setOpen} className="w-full py-3">
-      <div className="flex justify-between">
+      <div className="flex justify-between px-6">
         <div>
           <CollapsibleTrigger asChild>
             <div className="flex items-center">
-              <Button variant="ghost" size="sm" className="px-1 text-md">
+              <Button variant="ghost" size="sm" className="px-0 text-md">
                 Sub-issues
                 {isOpen ? (
                   <ChevronDown size={16} className="ml-1" />
@@ -65,8 +65,8 @@ export function SubIssueView({
           </Button>
         </div>
       </div>
-      <CollapsibleContent className="space-y-2">
-        <div className="pt-1">
+      <CollapsibleContent>
+        <div className="pt-1 px-3">
           {childIssues.map((issue: IssueType, index: number) => (
             <IssueListItem
               issueId={issue.id}

@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiGithubFill, RiPencilFill } from '@remixicon/react';
+import { RiGithubFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
@@ -18,6 +18,7 @@ import { Button } from 'components/ui/button';
 import { Dialog } from 'components/ui/dialog';
 import { TeamIcon } from 'components/ui/team-icon';
 import { useToast } from 'components/ui/use-toast';
+import { EditLine } from 'icons';
 
 import { useUpdateIntegrationAccountMutation } from 'services/oauth';
 
@@ -141,7 +142,7 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
                     setOpen(true);
                   }}
                 >
-                  <RiPencilFill size={14} className="text-muted-foreground" />
+                  <EditLine size={16} />
                 </Button>
                 <DeleteRepoTeamLink
                   account={account}

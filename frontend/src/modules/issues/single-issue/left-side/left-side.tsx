@@ -57,23 +57,31 @@ export const LeftSide = observer(() => {
 
   return (
     <ScrollArea className="grow flex flex-col gap-2 h-full">
-      <div className="flex xl:hidden px-8 py-2 border-b">
+      <div className="flex xl:hidden px-6 py-2 border-b">
         <FilterSmall />
       </div>
-      <div className="px-8 py-6 flex flex-col">
+      <div className="py-6 flex flex-col">
         {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
         <IssueTitle value={issue.title} onChange={onIssueChange} />
-        {issue.parentId && <ParentIssueView issue={issue} />}
+        {issue.parentId && (
+          <div className="px-6">
+            <ParentIssueView issue={issue} />
+          </div>
+        )}
         <Editor
           value={issue.description}
           onCreate={(editor) => setEditor(editor)}
           onChange={onDescriptionChange}
-          className="min-h-[50px] mb-8"
+          className="min-h-[50px] mb-8 px-6 mt-3"
         />
 
-        <div className="flex justify-end w-full py-1">
+        <div className="flex justify-end w-full py-1 px-4">
           <FileUpload editor={editor} />
+        </div>
+
+        <div className="mx-6">
+          <Separator />
         </div>
 
         <SubIssueView
@@ -81,8 +89,16 @@ export const LeftSide = observer(() => {
           setNewIssueState={() => setNewIssueState(true)}
           newIssueState={newIssueState}
         />
+
+        <div className="mx-6">
+          <Separator />
+        </div>
+
         <LinkedIssuesView issueId={issue.id} />
-        <Separator />
+
+        <div className="mx-6">
+          <Separator />
+        </div>
         <Activity />
       </div>
     </ScrollArea>

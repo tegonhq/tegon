@@ -25,7 +25,7 @@ export const IssueLabels = observer(({ labelIds }: IssueLabelsProps) => {
           <Badge
             variant="secondary"
             key={label.name}
-            className="flex items-center"
+            className="flex items-center gap-1"
           >
             <BadgeColor style={{ backgroundColor: label.color }} />
             {label.name}

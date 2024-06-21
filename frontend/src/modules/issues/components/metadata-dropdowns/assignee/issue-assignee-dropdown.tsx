@@ -85,13 +85,13 @@ export function IssueAssigneeDropdown({
             <>
               <AvatarText
                 text={getUserData(value).fullname}
-                className="h-5 w-5 text-[9px] mr-3"
+                className="h-5 w-5 text-[9px] mr-2"
               />
               {getUserData(value).fullname}
             </>
           ) : (
             <div className="text-muted-foreground flex">
-              <AssigneeLine size={20} className="mr-3" />
+              <AssigneeLine size={20} className="mr-2" />
               No Assignee
             </div>
           )}

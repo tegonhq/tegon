@@ -15,11 +15,11 @@ export function MemberItem({ name, className, email }: MemberItemProps) {
     <div
       className={cn(
         className,
-        'flex items-center justify-between bg-gray-50 py-3 px-4 rounded',
+        'flex items-center justify-between bg-gray-50 p-3 rounded-lg',
       )}
     >
-      <div className="flex gap-4 items-center">
-        <AvatarText text={name} className="text-base w-8 h-8" />
+      <div className="flex gap-2 items-center">
+        <AvatarText text={name} className="text-base w-8 h-8 rounded-md" />
 
         <div className="flex flex-col">
           <div>{name}</div>

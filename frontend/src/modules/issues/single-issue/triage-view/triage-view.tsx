@@ -24,7 +24,7 @@ export function TriageView() {
     <main className="flex flex-col h-[100vh]">
       <Header isTriageView />
 
-      <div className="bg-gray-200 rounded-tl-2xl flex h-[calc(100vh_-_53px)]">
+      <div className="bg-gray-200 rounded-tl-3xl flex h-[calc(100vh_-_53px)]">
         <ResizablePanelGroup direction="horizontal" className="">
           <ResizablePanel
             maxSize={50}

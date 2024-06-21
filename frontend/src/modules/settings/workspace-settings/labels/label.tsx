@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiDeleteBin7Line, RiMoreFill, RiPencilFill } from '@remixicon/react';
+import { RiMoreFill } from '@remixicon/react';
 import * as React from 'react';
 
 import type { LabelType } from 'common/types/label';
@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
+import { DeleteLine, EditLine } from 'icons';
 
 import { useDeleteLabelMutation } from 'services/labels/delete-label';
 
@@ -28,7 +29,7 @@ export function Label({ label, setEditLabelState }: LabelProps) {
   const { mutate: deleteLabelAPI } = useDeleteLabelMutation({});
 
   return (
-    <div className="group flex justify-between mb-2 bg-gray-50 rounded p-2 px-4">
+    <div className="group flex justify-between mb-2 bg-gray-50 rounded-lg p-2 px-4">
       <div className="flex items-center justify-center gap-3">
         <div
           className="h-3 w-3 rounded-full"
@@ -41,21 +42,18 @@ export function Label({ label, setEditLabelState }: LabelProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="flex items-center">
             <Button variant="ghost" size="xs" className="flex items-center">
-              <RiMoreFill
-                className="text-slate-500 hover:text-black dark:hover:text-white"
-                size={16}
-              />
+              <RiMoreFill size={16} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => setEditLabelState(label.id)}>
-              <div className="flex items-center gap-2 text-xs">
-                <RiPencilFill size={14} /> Edit
+              <div className="flex items-center gap-1">
+                <EditLine size={16} /> Edit
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setDeleteAlert(true)}>
-              <div className="flex items-center gap-2 text-xs">
-                <RiDeleteBin7Line size={14} /> Delete
+              <div className="flex items-center gap-1">
+                <DeleteLine size={16} /> Delete
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>

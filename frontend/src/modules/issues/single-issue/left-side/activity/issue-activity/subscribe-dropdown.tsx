@@ -31,7 +31,7 @@ export const SubscribeDropdown = observer(
             <AvatarText
               key={index}
               text={user.fullname}
-              className="h-5 w-5 flex items-center rounded-sm text-[9px] border border-white -ml-2"
+              className="h-5 w-5 flex items-center rounded-sm text-[9px] border border-gray-200 -ml-2"
             />
           );
         })}

@@ -32,7 +32,7 @@ export const Labels = observer(() => {
           teams, add them in the team-specific label settings."
     >
       <div className="flex flex-col">
-        <div className="my-4">
+        <div className="mb-4">
           <div className="flex justify-between">
             <div className="flex gap-3">
               <Button
