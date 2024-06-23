@@ -4,16 +4,9 @@
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { Inter } from 'next/font/google';
 import * as React from 'react';
 
 import { cn } from 'common/lib/utils';
-
-// Inter as default font
-export const fontSans = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
 
 const Dialog = DialogPrimitive.Root;
 
@@ -30,9 +23,8 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'fixed inset-0 z-50 font-sans bg-slate-100/80 dark:bg-slate-800/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      'fixed inset-0 z-50 font-sans bg-grayAlpha-700 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className,
-      fontSans.variable,
     )}
     {...props}
   />
@@ -55,14 +47,12 @@ const DialogContent = React.forwardRef<
         ref={ref}
         className={cn(
           'font-sans flex justify-center p-[calc(0.07px_+_13vh)_12px_13vh] items-start !max-w-[100%] !w-[100vw] h-full duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
-
-          fontSans.variable,
         )}
         {...props}
       >
         <div
           className={cn(
-            '!max-w-[750px] min-w-[600px] z-50 border-1 bg-white dark:bg-background shadow-2xl grid gap-4 sm:rounded-lg',
+            '!max-w-[500px] min-w-[500px] z-50 bg-gray-200 shadow-2xl grid gap-4 sm:rounded-lg',
             className,
           )}
         >
@@ -88,7 +78,6 @@ const DialogHeader = ({
     className={cn(
       'flex flex-col font-sans space-y-1.5 text-center sm:text-left',
       className,
-      fontSans.variable,
     )}
     {...props}
   />
@@ -103,7 +92,6 @@ const DialogFooter = ({
     className={cn(
       'flex flex-col-reverse font-sans sm:flex-row sm:justify-end sm:space-x-2',
       className,
-      fontSans.variable,
     )}
     {...props}
   />
@@ -116,11 +104,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn(
-      'text-lg font-sans font-semibold leading-none tracking-tight',
-      className,
-      fontSans.variable,
-    )}
+    className={cn('text-lg font-sans leading-none tracking-tight', className)}
     {...props}
   />
 ));
@@ -132,11 +116,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn(
-      'text-sm font-sans text-muted-foreground',
-      className,
-      fontSans.variable,
-    )}
+    className={cn('text-sm font-sans text-muted-foreground', className)}
     {...props}
   />
 ));

@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiAddLine, RiArrowRightSFill } from '@remixicon/react';
+import { RiAddLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -16,7 +16,8 @@ import {
   AccordionTrigger,
 } from 'components/ui/accordion';
 import { buttonVariants } from 'components/ui/button';
-import { TeamLine } from 'icons';
+import { TeamIcon } from 'components/ui/team-icon';
+import { ChevronRight, TeamLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
@@ -35,11 +36,11 @@ export const TeamSettingsList = observer(() => {
   );
 
   return (
-    <div className="px-4 py-3">
+    <div className="px-6 py-3">
       <div className="flex flex-col items-start justify-start w-full">
         <div className="flex items-center mb-2">
-          <TeamLine size={18} className="text-muted-foreground" />
-          <div className="text-muted-foreground text-sm ml-4">Teams</div>
+          <TeamLine size={18} />
+          <div className="ml-1">Teams</div>
         </div>
 
         <div className="flex flex-col w-full">
@@ -47,27 +48,31 @@ export const TeamSettingsList = observer(() => {
             type="single"
             collapsible
             defaultValue={teams[0].identifier}
-            className="w-full text-slate-700 dark:text-slate-300 mt-0 mb-2"
+            className="w-full flex flex-col gap-3"
           >
             {teams.map((team: TeamType) => (
               <AccordionItem key={team.identifier} value={team.identifier}>
-                <AccordionTrigger className="text-sm py-1 flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 hover:bg-active hover:text-slate-800 dark:hover:text-slate-50 rounded-md">
-                  <div className="w-full justify-start flex items-center">
-                    <div className="flex justify-start items-center text-sm">
-                      <RiArrowRightSFill className="arrow-right-icon mx-2 h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200" />
-                      {team.name}
+                <AccordionTrigger className="flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 w-fit rounded">
+                  <div className="w-full justify-start flex items-center gap-1">
+                    <div>
+                      <TeamIcon name={team.name} />
+                    </div>
+
+                    <div className="flex justify-center items-center gap-1">
+                      {team?.name}
+                      <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200" />
                     </div>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="pl-9 flex flex-col justify-center items-start w-full">
+                <AccordionContent className="flex flex-col justify-center items-start w-full my-2 gap-0.5">
                   {TEAM_LINKS.map((item) => (
                     <Link
                       key={item.href}
                       href={`/${workspaceSlug}/settings/teams/${team.identifier}/${item.href}`}
                       className={cn(
                         buttonVariants({ variant: 'ghost', size: 'sm' }),
+                        'flex items-center justify-start bg-grayAlpha-100 w-fit',
 
-                        'justify-start text-sm w-full px-2 !text-muted-foreground mt-1',
                         team.identifier === teamIdentifier &&
                           settingsSection === item.href &&
                           'bg-active',
@@ -85,13 +90,13 @@ export const TeamSettingsList = observer(() => {
         <Link
           className={cn(
             buttonVariants({ variant: 'ghost', size: 'sm' }),
-            'flex items-center justify-start mb-2 w-full text',
+            'flex items-center justify-start my-2 w-full gap-2 px-0',
             settingsSection === 'new_team' && 'bg-active',
           )}
           href={`/${workspaceSlug}/settings/new_team`}
         >
-          <RiAddLine size={18} className="text-muted-foreground" />
-          <div className="text-muted-foreground text-sm ml-3">Add Team</div>
+          <RiAddLine size={18} />
+          <div>Add Team</div>
         </Link>
       </div>
     </div>

@@ -34,7 +34,7 @@ export const CategoryBoard = observer(({ workflows }: CategoryBoardProps) => {
   };
 
   return (
-    <Board onDragEnd={onDragEnd}>
+    <Board onDragEnd={onDragEnd} className="pl-6">
       <>
         {workflows.map((workflow: WorkflowType) => {
           return <CategoryBoardList key={workflow.id} workflow={workflow} />;

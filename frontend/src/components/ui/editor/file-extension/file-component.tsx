@@ -13,7 +13,7 @@ export const FileComponent = (props: any) => {
     <NodeViewWrapper className="react-component-with-content">
       <div className="content">
         <div
-          className="flex w-full items-center p-4 border bg-active rounded-md gap-2 hover:bg-active/50 my-1"
+          className="flex w-full items-center p-4 bg-grayAlpha-100 rounded-md gap-2 hover:bg-active/50 my-1"
           onClick={() => {
             window.open(
               props.node.attrs.src

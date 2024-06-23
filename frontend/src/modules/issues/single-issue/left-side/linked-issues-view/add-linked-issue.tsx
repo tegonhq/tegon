@@ -121,10 +121,10 @@ export function AddLinkedIssue({
             )}
 
             <div className="flex justify-end gap-2">
-              <Button variant="outline" disabled={isLoading} onClick={onClose}>
+              <Button variant="ghost" disabled={isLoading} onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" isLoading={isLoading}>
+              <Button type="submit" variant="secondary" isLoading={isLoading}>
                 Add
               </Button>
             </div>

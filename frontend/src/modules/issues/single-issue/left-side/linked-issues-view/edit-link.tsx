@@ -112,10 +112,12 @@ export function EditLink({
                 />
 
                 <div className="flex justify-end gap-2">
-                  <Button variant="outline" onClick={onClose}>
+                  <Button variant="ghost" onClick={onClose}>
                     Cancel
                   </Button>
-                  <Button type="submit">Update</Button>
+                  <Button type="submit" variant="secondary">
+                    Update
+                  </Button>
                 </div>
               </form>
             </Form>

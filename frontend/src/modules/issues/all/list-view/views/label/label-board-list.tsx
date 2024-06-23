@@ -11,14 +11,15 @@ import React from 'react';
 import type { IssueType } from 'common/types/issue';
 import type { LabelType } from 'common/types/label';
 
+import { BadgeColor } from 'components/ui/badge';
 import { BoardColumn, BoardItem } from 'components/ui/board';
 import { ScrollArea } from 'components/ui/scroll-area';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { BoardIssueItem } from '../../../../components/issue-board-item/issue-board-item';
 import { useFilterIssues } from '../../../../issues-utils';
-import { BoardIssueItem } from '../../issue-board-item';
 
 interface LabelBoardItemProps {
   label: LabelType;
@@ -42,18 +43,20 @@ export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
 
   return (
     <BoardColumn key={label.id} id={label.id}>
-      <div className="flex flex-col max-h-[100%]">
-        <div className="flex items-center w-full p-4 pb-1">
-          <h3 className="pl-2 text-sm font-medium">
-            {label.name}
-            <span className="text-muted-foreground ml-2">
-              {computedIssues.length}
-            </span>
-          </h3>
+      <div className="flex flex-col max-h-[100%] pr-4">
+        <div className="flex gap-1 items-center mb-2">
+          <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
+            <BadgeColor style={{ backgroundColor: label.color }} />
+            <h3 className="pl-2">{label.name}</h3>
+          </div>
+
+          <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+            {computedIssues.length}
+          </div>
         </div>
 
-        <ScrollArea className="p-3 pb-10">
-          <div className="flex flex-col gap-3 grow">
+        <ScrollArea>
+          <div className="flex flex-col gap-3 grow pb-10 pt-2">
             {computedIssues.map((issue: IssueType, index: number) => {
               const id = `${label.name}__${issue.id}`;
 
@@ -99,18 +102,20 @@ export const NoLabelBoardList = observer(() => {
 
   return (
     <BoardColumn key="no-label" id="no-label">
-      <div className="flex flex-col max-h-[100%]">
-        <div className="flex items-center w-full p-4 pb-1">
-          <h3 className="pl-2 text-sm font-medium">
-            No Label
-            <span className="text-muted-foreground ml-2">
-              {computedIssues.length}
-            </span>
-          </h3>
+      <div className="flex flex-col max-h-[100%] pr-4">
+        <div className="flex gap-1 items-center mb-2">
+          <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
+            <BadgeColor style={{ backgroundColor: '#838383' }} />
+            <h3 className="pl-2">No Label</h3>
+          </div>
+
+          <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+            {computedIssues.length}
+          </div>
         </div>
 
-        <ScrollArea className="p-3 pb-10">
-          <div className="flex flex-col gap-3 grow">
+        <ScrollArea>
+          <div className="flex flex-col gap-3 grow pb-10 pt-2">
             {computedIssues.map((issue: IssueType, index: number) => {
               return (
                 <BoardItem key={issue.id} id={issue.id}>

@@ -1,6 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 import { zodResolver } from '@hookform/resolvers/zod';
-import { RiArrowDropRightLine } from '@remixicon/react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -12,15 +11,9 @@ import {
   IssueStatusDropdown,
 } from 'modules/issues/components';
 
-import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  getInitials,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
 import {
   DialogContent,
@@ -32,6 +25,7 @@ import { Form, FormControl, FormField, FormItem } from 'components/ui/form';
 import { Textarea } from 'components/ui/textarea';
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
+import { ChevronRight } from 'icons';
 
 import {
   useCreateIssueCommentMutation,
@@ -106,10 +100,10 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
     <Dialog open onOpenChange={setDialogOpen}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader className="p-3 pb-0">
-          <DialogTitle className="text-sm text-muted-foreground/80 font-normal">
+          <DialogTitle className="text-base font-normal">
             <div className="flex gap-1 items-center">
               Accept
-              <RiArrowDropRightLine size={18} />
+              <ChevronRight size={18} />
               <div>
                 {currentTeam.identifier} - {issue.number}
               </div>
@@ -128,20 +122,13 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
                     <FormItem>
                       <FormControl>
                         <div className="flex items-start gap-4">
-                          <Avatar className="h-[15px] w-[20px] text-foreground">
-                            <AvatarImage />
-                            <AvatarFallback
-                              className={cn(
-                                'text-[0.55rem] rounded-sm',
-                                getTailwindColor(currentUser.username),
-                              )}
-                            >
-                              {getInitials(currentUser.fullname)}
-                            </AvatarFallback>
-                          </Avatar>
+                          <AvatarText
+                            text={currentUser.fullname}
+                            className="text-[9px]"
+                          />
                           <Textarea
                             {...field}
-                            className="focus-visible:ring-0 border-0 mb-4 w-full min-h-[60px] text-foreground p-0"
+                            className="focus-visible:ring-0 bg-grayAlpha-100 border-0 mb-4 w-full min-h-[60px] text-foreground p-2"
                             placeholder="Add a comment"
                           />
                         </div>
@@ -160,7 +147,7 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
                           <IssueStatusDropdown
                             onChange={field.onChange}
                             value={field.value}
-                            teamIdentfier={currentTeam.identifier}
+                            teamIdentifier={currentTeam.identifier}
                           />
                         </FormControl>
                       </FormItem>
@@ -175,7 +162,7 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
                           <IssueLabelDropdown
                             value={field.value}
                             onChange={field.onChange}
-                            teamIdentfier={currentTeam.identifier}
+                            teamIdentifier={currentTeam.identifier}
                           />
                         </FormControl>
                       </FormItem>
@@ -219,7 +206,7 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
                   'flex items-center justify-end p-2 border-t gap-2',
                 )}
               >
-                <Button type="submit" size="sm">
+                <Button type="submit" variant="secondary">
                   Accept
                 </Button>
               </div>

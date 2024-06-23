@@ -1,10 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiCloseLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 
+import { Button } from 'components/ui/button';
 import { Separator } from 'components/ui/separator';
 import { useCurrentTeam } from 'hooks/teams';
+import { Close } from 'icons';
 
 import type { FilterTypeEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
@@ -58,32 +59,34 @@ export const FilterItemView = observer(
     };
 
     return (
-      <div className="flex border rounded-md">
-        <div className="px-2 p-1 rounded-md rounded-r-none transparent hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 dark:text-slate-50 dark:hover:text-slate-100">
+      <div className="flex bg-grayAlpha-100 rounded-md items-center">
+        <div className="px-2 p-1 rounded-md rounded-r-none transparent">
           {name}
         </div>
-        <Separator className="bg-background w-[2px]" orientation="vertical" />
+        <Separator className="bg-gray-200 w-[1px]" orientation="vertical" />
         <FilterOptionsDropdown
           onChange={onChangeFilterType}
           isArray={isArray}
           filterType={filterType}
         />
-        <Separator className="bg-background w-[2px]" orientation="vertical" />
-        <div className="flex items-center px-2 rounded-md rounded-l-none rounded-r-none hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 dark:text-slate-50 dark:hover:text-slate-100">
+        <Separator className="bg-gray-200 w-[1px]" orientation="vertical" />
+        <div className="flex items-center px-2 rounded-md rounded-l-none rounded-r-none">
           <Component
             value={value}
             onChange={onChange}
             teamIdentifier={team.identifier}
           />
         </div>
-        <Separator className="bg-background w-[2px]" orientation="vertical" />
-        <div className="px-1 flex items-center p-1 rounded-md rounded-l-none hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700/50 text-muted-foreground">
-          <RiCloseLine
-            size={16}
-            className="hover:text-foreground"
-            onClick={removeFilter}
-          />
-        </div>
+        <Separator className="bg-gray-200 w-[1px]" orientation="vertical" />
+
+        <Button
+          className="flex items-center px-1.5 py-1 rounded-md rounded-l-none"
+          onClick={removeFilter}
+          variant="ghost"
+          size="sm"
+        >
+          <Close size={16} className="hover:text-foreground" />
+        </Button>
       </div>
     );
   },

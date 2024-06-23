@@ -4,9 +4,10 @@ import 'styles/globals.css';
 import type { NextComponentType } from 'next';
 import type { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 
+import { GeistMono } from 'geist/font/mono';
+import { GeistSans } from 'geist/font/sans';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
-import { Inter } from 'next/font/google';
 import React from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Hydrate, QueryClientProvider } from 'react-query';
@@ -22,12 +23,6 @@ import { Toaster } from 'components/ui/toaster';
 import { TooltipProvider } from 'components/ui/tooltip';
 
 import { StoreContext, storeContextStore } from 'store/global-context-provider';
-
-// Inter as default font
-export const fontSans = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
 
 initSuperTokens();
 
@@ -48,8 +43,8 @@ export const MyApp: NextComponentType<
     <SuperTokensWrapper>
       <ThemeProvider
         attribute="class"
-        defaultTheme="dark"
-        enableSystem
+        defaultTheme="light"
+        enableSystem={false}
         disableTransitionOnChange
       >
         <HotkeysProvider initiallyActiveScopes={[SCOPES.Global]}>
@@ -59,8 +54,9 @@ export const MyApp: NextComponentType<
                 <Hydrate state={dehydratedState}>
                   <div
                     className={cn(
-                      'min-h-screen dark:bg-background font-sans antialiased flex',
-                      fontSans.variable,
+                      'min-h-screen font-sans antialiased flex',
+                      GeistSans.variable,
+                      GeistMono.variable,
                     )}
                   >
                     {getLayout(<Component {...pageProps} />)}

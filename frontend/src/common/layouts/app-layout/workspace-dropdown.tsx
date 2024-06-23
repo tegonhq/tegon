@@ -5,15 +5,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { signOut } from 'supertokens-auth-react/recipe/session';
 
-import { getTailwindColor } from 'common/color-utils';
-import { cn } from 'common/lib/utils';
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  getInitials,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
 import {
   DropdownMenu,
@@ -23,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
+import { ChevronDown } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -33,24 +26,18 @@ export const WorkspaceDropdown = observer(() => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="px-2 text-foreground">
-          <div className="flex justify-between">
-            <Avatar className="h-[15px] w-[20px] ">
-              <AvatarImage />
-              <AvatarFallback
-                className={cn(
-                  'text-[0.55rem] rounded-sm',
-                  getTailwindColor(workspaceStore.workspace.name),
-                )}
-              >
-                {getInitials(workspaceStore.workspace.name)}
-              </AvatarFallback>
-            </Avatar>
+        <Button variant="ghost" size="xs" className="p-0">
+          <div className="flex justify-between gap-2 items-center">
+            <AvatarText text={workspaceStore.workspace.name} />
 
-            <div className="ml-2"> {workspaceStore.workspace.name}</div>
+            <div> {workspaceStore.workspace.name}</div>
+            <div>
+              <ChevronDown size={16} />
+            </div>
           </div>
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent className="min-w-60" align="start">
         <DropdownMenuGroup>
           <DropdownMenuItem

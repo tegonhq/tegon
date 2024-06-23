@@ -16,11 +16,11 @@ export function Header({ title }: HeaderProps) {
   const team = useCurrentTeam();
 
   return (
-    <header className="flex px-4 py-3.5 w-full border-b justify-between items-center">
-      <div className="flex gap-4 items-center text-sm">
-        <Breadcrumb className="text-xs">
+    <header className="flex px-6 py-4 w-full items-center gap-2">
+      <div className="flex gap-4 items-center">
+        <Breadcrumb>
           <BreadcrumbItem>
-            <BreadcrumbLink className="flex items-center gap-2 font-medium">
+            <BreadcrumbLink className="flex items-center gap-2">
               <TeamIcon name={team.name} />
 
               <span className="inline-block"> {title}</span>

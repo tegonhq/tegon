@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 import { IssueStatusDropdownContent } from 'modules/issues/components';
-// import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
+// import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 // import type { WorkflowType } from 'common/types/team';
 
@@ -44,11 +44,11 @@ export function IssueStatusDropdown({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            variant="outline"
+            variant="ghost"
             role="combobox"
             size="xs"
             aria-expanded={open}
-            className="flex items-center !bg-transparent hover:bg-transparent shadow-none p-0 border-0 justify-between text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
+            className="flex items-center p-0 justify-between focus-visible:ring-1 focus-visible:border-primary "
           >
             {value.length > 1
               ? `${value.length} statues`

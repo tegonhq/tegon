@@ -3,7 +3,6 @@
 'use client';
 import type { Editor as EditorT, Extension } from '@tiptap/core';
 
-import { Inter } from 'next/font/google';
 import {
   EditorInstance,
   EditorRoot,
@@ -38,12 +37,6 @@ import {
 } from './selectors';
 import { slashCommand, suggestionItems } from './slash-command';
 import { uploadFn } from './utils';
-
-// Inter as default font
-export const fontSans = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
 
 interface EditorProps {
   value?: string;
@@ -90,7 +83,6 @@ export const EditorChild = ({
       <EditorCommand
         className={cn(
           'z-50 h-auto font-sans max-h-[330px] overflow-y-auto w-72 rounded-md border border-muted bg-background dark:bg-slate-800 backdrop-blur-md px-1 shadow-lg transition-all',
-          fontSans.variable,
         )}
       >
         <EditorCommandEmpty className="px-2 text-muted-foreground">
@@ -186,16 +178,15 @@ export const Editor = ({
           initialContent={getInitialValue()}
           extensions={getExtensions()}
           className={cn(
-            'relative w-full max-w-screen-lg text-base sm:rounded-lg',
+            'relative w-full min-w-full text-base sm:rounded-lg',
             className,
           )}
-          autofocus="end"
           onCreate={({ editor }) => {
             if (onCreate) {
               onCreate(editor);
             }
 
-            editor.commands.focus();
+            autoFocus && editor.commands.focus();
           }}
           editorProps={{
             handlePaste: (view, event) =>

@@ -5,6 +5,7 @@
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import * as React from 'react';
 
+import { getTailwindColor } from 'common/color-utils';
 import { cn } from 'common/lib/utils';
 
 const Avatar = React.forwardRef<
@@ -13,7 +14,10 @@ const Avatar = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
-    className={cn('relative flex shrink-0 overflow-hidden', className)}
+    className={cn(
+      'relative flex shrink-0 overflow-hidden w-[20px] h-[20px]',
+      className,
+    )}
     {...props}
   />
 ));
@@ -60,4 +64,26 @@ export const getInitials = (name: string) => {
     .toUpperCase();
 };
 
-export { Avatar, AvatarImage, AvatarFallback };
+const AvatarText = ({
+  text,
+  className,
+}: {
+  text: string;
+  className?: string;
+}) => {
+  return (
+    <Avatar className={cn('flex items-center', className)}>
+      <AvatarImage />
+      <AvatarFallback
+        className="rounded-sm"
+        style={{
+          background: getTailwindColor(text),
+        }}
+      >
+        {getInitials(text)}
+      </AvatarFallback>
+    </Avatar>
+  );
+};
+
+export { Avatar, AvatarImage, AvatarFallback, AvatarText };

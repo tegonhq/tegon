@@ -15,20 +15,20 @@ export function BarFill({ size = 18, className, color }: IconProps) {
       <path
         d="M3 13L3 17"
         stroke={color ? color : 'currentColor'}
-        stroke-width="4"
-        stroke-linecap="round"
+        strokeWidth="4"
+        strokeLinecap="round"
       />
       <path
         d="M10 3L10 17"
         stroke={color ? color : 'currentColor'}
-        stroke-width="4"
-        stroke-linecap="round"
+        strokeWidth="4"
+        strokeLinecap="round"
       />
       <path
         d="M17 9V17"
         stroke={color ? color : 'currentColor'}
-        stroke-width="4"
-        stroke-linecap="round"
+        strokeWidth="4"
+        strokeLinecap="round"
       />
     </svg>
   );

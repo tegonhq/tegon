@@ -44,7 +44,7 @@ export const FilterSmall = observer(() => {
       <IssueStatusDropdown
         value={issue.stateId}
         onChange={statusChange}
-        teamIdentfier={currentTeam.identifier}
+        teamIdentifier={currentTeam.identifier}
       />
 
       <IssuePriorityDropdown
@@ -60,7 +60,7 @@ export const FilterSmall = observer(() => {
       <IssueLabelDropdown
         value={issue.labelIds}
         onChange={labelsChange}
-        teamIdentfier={currentTeam.identifier}
+        teamIdentifier={currentTeam.identifier}
       />
     </div>
   );

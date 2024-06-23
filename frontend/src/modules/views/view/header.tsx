@@ -2,13 +2,7 @@
 
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import {
-  RiBookmarkFill,
-  RiBookmarkLine,
-  RiDeleteBin7Line,
-  RiMoreFill,
-  RiPencilFill,
-} from '@remixicon/react';
+import { RiBookmarkFill, RiBookmarkLine, RiMoreFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -29,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
 import { useCurrentTeam } from 'hooks/teams';
-import { SidebarLine, StackLine } from 'icons';
+import { DeleteLine, EditLine, SidebarLine, StackLine } from 'icons';
 
 import { useUpdateViewMutation } from 'services/views';
 
@@ -54,7 +48,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
   const { mutate: updateView } = useUpdateViewMutation({});
 
   return (
-    <header className="flex justify-between pl-8 px-4 py-2 w-full border-b items-center gap-2">
+    <header className="flex px-6 py-4 w-full items-center gap-2">
       <div className="flex items-center">
         {applicationStore.sidebarCollapsed && (
           <Button
@@ -67,7 +61,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
             <SidebarLine size={16} />
           </Button>
         )}
-        <Breadcrumb className="text-xs">
+        <Breadcrumb>
           <BreadcrumbItem>
             <BreadcrumbLink
               as={Link}
@@ -81,9 +75,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <BreadcrumbLink className="text-muted-foreground">
-              {title}
-            </BreadcrumbLink>
+            <BreadcrumbLink>{title}</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
 
@@ -94,21 +86,18 @@ export const Header = observer(({ title, view }: HeaderProps) => {
               size="xs"
               className="flex items-center ml-1"
             >
-              <RiMoreFill
-                className="text-slate-500 hover:text-black dark:hover:text-white"
-                size={16}
-              />
+              <RiMoreFill size={16} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => setEditOpen(true)}>
-              <div className="flex items-center gap-2 text-xs">
-                <RiPencilFill size={14} /> Edit
+              <div className="flex items-center gap-1">
+                <EditLine size={16} /> Edit
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setDeleteAlert(true)}>
-              <div className="flex items-center gap-2 text-xs">
-                <RiDeleteBin7Line size={14} /> Delete
+              <div className="flex items-center gap-1">
+                <DeleteLine size={16} /> Delete
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -129,7 +118,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
           {view.isBookmarked ? (
             <RiBookmarkFill
               size={16}
-              className="text-yellow-500 hover:text-foreground group-hover:text-foreground"
+              className="text-yellow-600 hover:text-foreground group-hover:text-foreground"
             />
           ) : (
             <RiBookmarkLine size={16} />

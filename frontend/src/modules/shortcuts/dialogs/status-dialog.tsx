@@ -2,8 +2,8 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
-
+import { getWorkflowColor } from 'common/status-color';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 import type { WorkflowType } from 'common/types/team';
 
 import { useCurrentTeam } from 'hooks/teams';
@@ -46,7 +46,9 @@ export const StatusDialog = observer(({ open, setOpen }: StatusDialogProps) => {
       const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];
 
       return {
-        Icon: <CategoryIcon size={14} color={workflow.color} />,
+        Icon: (
+          <CategoryIcon size={14} color={getWorkflowColor(workflow).color} />
+        ),
         text: workflow.name,
         value: workflow.id,
       };

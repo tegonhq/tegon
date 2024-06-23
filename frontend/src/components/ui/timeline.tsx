@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import React, { type ReactNode } from 'react';
+import ReactTimeAgo from 'react-time-ago';
 
 import { cn } from 'common/lib/utils';
 
@@ -17,25 +18,32 @@ interface TimelineItemProps {
   children: React.ReactNode;
   className?: string;
   hasMore: boolean;
+  date?: string;
 }
 
 const TimelineItem: React.FC<TimelineItemProps> = ({
   children,
   className,
   hasMore,
+  date,
 }) => (
   <>
     {hasMore && (
       <React.Fragment>
-        <div
-          className={cn(
-            'h-3 w-[1px] dark:bg-slate-700 bg-slate-300 self-stretch ml-2.5',
-          )}
-        ></div>
+        <div className={cn('h-3 w-[1px] bg-border self-stretch ml-2.5')}></div>
       </React.Fragment>
     )}
-    <div className={cn('flex items-center', className)}>
-      <TimelineContent>{children}</TimelineContent>
+    <div className={cn('flex items-center w-full', className)}>
+      <TimelineContent>
+        <div className="flex justify-between items-start">
+          <div className="w-full">{children}</div>
+          {date && (
+            <div className="font-mono text-muted-foreground text-sm shrink-0">
+              <ReactTimeAgo date={new Date(date)} />
+            </div>
+          )}
+        </div>
+      </TimelineContent>
     </div>
   </>
 );

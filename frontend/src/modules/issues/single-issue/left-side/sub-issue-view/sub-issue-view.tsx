@@ -1,11 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import {
-  RiAddLine,
-  RiArrowDownSFill,
-  RiArrowRightSFill,
-} from '@remixicon/react';
 import * as React from 'react';
+
+import { IssueListItem } from 'modules/issues/components';
 
 import type { IssueType } from 'common/types/issue';
 
@@ -15,8 +12,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from 'components/ui/collapsible';
-
-import { SubIssueItem } from './sub-issue-item';
+import { AddLine, ChevronDown, ChevronRight } from 'icons';
 
 interface SubIssueViewProps {
   childIssues: IssueType[];
@@ -29,73 +25,58 @@ export function SubIssueView({
   setNewIssueState,
   newIssueState,
 }: SubIssueViewProps) {
-  const [isOpen, setOpen] = React.useState(true);
+  const [isOpen, setOpen] = React.useState(
+    childIssues.length === 0 ? false : true,
+  );
 
   return (
-    <div>
-      {childIssues.length === 0 && (
+    <Collapsible open={isOpen} onOpenChange={setOpen} className="w-full py-3">
+      <div className="flex justify-between px-6">
+        <div>
+          <CollapsibleTrigger asChild>
+            <div className="flex items-center">
+              <Button variant="ghost" size="sm" className="px-0 text-md">
+                Sub-issues
+                {isOpen ? (
+                  <ChevronDown size={16} className="ml-1" />
+                ) : (
+                  <ChevronRight size={16} className="ml-1" />
+                )}
+              </Button>
+
+              {!isOpen && (
+                <div className="px-2 ml-1 rounded-sm bg-grayAlpha-100 text-foreground">
+                  {childIssues.length}
+                </div>
+              )}
+            </div>
+          </CollapsibleTrigger>
+        </div>
+
         <div>
           <Button
             variant="ghost"
             size="sm"
-            className="px-1"
+            className="pr-0"
             onClick={setNewIssueState}
             disabled={newIssueState}
           >
-            <RiAddLine size={14} className="mr-1" /> Add sub-issues
+            <AddLine size={16} />
           </Button>
         </div>
-      )}
-      {childIssues.length > 0 && (
-        <Collapsible
-          open={isOpen}
-          onOpenChange={setOpen}
-          className="w-full space-y-1 mb-2"
-        >
-          <div className="flex justify-between">
-            <div>
-              <CollapsibleTrigger asChild>
-                <div className="flex items-center">
-                  <Button variant="ghost" size="sm" className="px-1">
-                    {isOpen ? (
-                      <RiArrowDownSFill size={16} className="mr-1" />
-                    ) : (
-                      <RiArrowRightSFill size={16} className="mr-1" />
-                    )}
-                    Sub-issues
-                  </Button>
-                  {!isOpen && (
-                    <div className="px-2 ml-1 rounded-md text-xs bg-active text-foreground">
-                      {childIssues.length}
-                    </div>
-                  )}
-                </div>
-              </CollapsibleTrigger>
-            </div>
-
-            {isOpen && (
-              <div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="px-1"
-                  onClick={setNewIssueState}
-                  disabled={newIssueState}
-                >
-                  <RiAddLine size={14} className="mr-2" /> Add sub-issues
-                </Button>
-              </div>
-            )}
-          </div>
-          <CollapsibleContent className="space-y-2">
-            <div className="pt-1 border-t">
-              {childIssues.map((issue: IssueType) => (
-                <SubIssueItem issue={issue} key={issue.id} />
-              ))}
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
-      )}
-    </div>
+      </div>
+      <CollapsibleContent>
+        <div className="pt-1 px-3">
+          {childIssues.map((issue: IssueType, index: number) => (
+            <IssueListItem
+              issueId={issue.id}
+              subIssueView
+              key={issue.id}
+              noBorder={index === childIssues.length - 1}
+            />
+          ))}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }

@@ -13,10 +13,12 @@ interface LabelListViewProps {
 export function LabelListView({ labels }: LabelListViewProps) {
   return (
     <ScrollArea className="w-full h-full">
-      {labels.map((label: LabelType) => (
-        <LabelListItem key={label.id} label={label} />
-      ))}
-      <NoLabelList />
+      <div className="flex flex-col gap-4 h-full pb-[100px]">
+        {labels.map((label: LabelType) => (
+          <LabelListItem key={label.id} label={label} />
+        ))}
+        <NoLabelList />
+      </div>
     </ScrollArea>
   );
 }

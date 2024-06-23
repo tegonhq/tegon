@@ -161,6 +161,11 @@ export const IssuesStore: IAnyStateTreeNode = types
         ),
       };
     },
+    getSubIssues(issueId: string): IssueType[] {
+      return Array.from(self.issuesMap.values()).filter(
+        (issue: IssueType) => issue.parentId === issueId,
+      );
+    },
 
     // Used by filters
     isSubIssue(issueId: string): boolean {

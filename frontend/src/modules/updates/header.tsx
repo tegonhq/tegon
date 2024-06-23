@@ -9,13 +9,13 @@ import { Inbox } from 'icons';
 
 export function Header() {
   return (
-    <header className="flex px-4 py-3.5 w-full border-b justify-between items-center">
-      <div className="flex gap-4 items-center text-sm">
-        <Breadcrumb className="text-xs">
+    <header className="flex px-6 py-4 w-full items-center gap-2">
+      <div className="flex gap-4 items-center">
+        <Breadcrumb>
           <BreadcrumbItem>
-            <BreadcrumbLink className="flex items-center gap-2 font-medium">
-              <div className="p-[2px] w-5 h-5 bg-primary/10 rounded-sm flex items-center justify-center">
-                <Inbox size={14} className="text-foreground" />
+            <BreadcrumbLink className="flex items-center gap-2">
+              <div className="p-[2px] w-5 h-5 bg-[#89C794] rounded-sm flex items-center justify-center">
+                <Inbox size={14} />
               </div>
 
               <span className="inline-block"> Inbox</span>

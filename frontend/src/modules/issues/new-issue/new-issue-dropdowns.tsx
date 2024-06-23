@@ -15,12 +15,12 @@ import {
 
 interface NewIssueDropdownsProps {
   form: UseFormReturn;
-  teamIdentfier: string;
+  teamIdentifier: string;
 }
 
 export function NewIssueDropdowns({
   form,
-  teamIdentfier,
+  teamIdentifier,
 }: NewIssueDropdownsProps) {
   return (
     <div className="flex gap-2 items-center">
@@ -33,7 +33,7 @@ export function NewIssueDropdowns({
               <IssueStatusDropdown
                 onChange={field.onChange}
                 value={field.value}
-                teamIdentfier={teamIdentfier}
+                teamIdentifier={teamIdentifier}
               />
             </FormControl>
           </FormItem>
@@ -49,7 +49,7 @@ export function NewIssueDropdowns({
               <IssueLabelDropdown
                 value={field.value}
                 onChange={field.onChange}
-                teamIdentfier={teamIdentfier}
+                teamIdentifier={teamIdentifier}
               />
             </FormControl>
           </FormItem>

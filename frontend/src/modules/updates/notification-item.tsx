@@ -88,9 +88,9 @@ export const NotificationItem = observer(
       <div
         key={issue.id}
         className={cn(
-          'p-4 py-2 flex gap-1 items-center',
+          'ml-4 p-3 py-0 mr-4 flex gap-1 items-center hover:bg-grayAlpha-200 rounded',
           issueId === `${team.identifier}-${issue.number}` &&
-            'bg-active rounded-md',
+            'bg-grayAlpha-100',
           !noBorder && 'border-b',
         )}
         onClick={() => {
@@ -103,7 +103,12 @@ export const NotificationItem = observer(
           }
         }}
       >
-        <div className="flex flex-col gap-1 w-full">
+        <div
+          className={cn(
+            'flex flex-col gap-1 py-2 w-full',
+            !noBorder && 'border-b',
+          )}
+        >
           <div className="flex justify-between text-sm">
             <div
               className={cn(

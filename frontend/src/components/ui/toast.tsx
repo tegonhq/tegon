@@ -5,18 +5,11 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Inter } from 'next/font/google';
 import * as React from 'react';
 
 import { cn } from 'common/lib/utils';
 
 const ToastProvider = ToastPrimitives.Provider;
-
-// Inter as default font
-export const fontSans = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
 
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
@@ -60,8 +53,7 @@ const Toast = React.forwardRef<
       className={cn(
         toastVariants({ variant }),
         className,
-        fontSans.variable,
-        'font-sans bg-background backdrop-blur-md dark:bg-slate-700/20 shadow-md border rounded-md',
+        'font-sans bg-grayAlpha-100 backdrop-blur-md shadow-md border rounded-md',
       )}
       {...props}
     />
@@ -108,7 +100,7 @@ const ToastTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Title
     ref={ref}
-    className={cn('text-sm font-medium [&+div]:text-xs', className)}
+    className={cn('font-medium [&+div]:text-xs', className)}
     {...props}
   />
 ));
@@ -120,7 +112,7 @@ const ToastDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Description
     ref={ref}
-    className={cn('text-sm opacity-90 text-muted-foreground', className)}
+    className={cn('opacity-90', className)}
     {...props}
   />
 ));

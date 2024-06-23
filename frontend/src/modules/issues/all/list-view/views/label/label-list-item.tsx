@@ -3,15 +3,24 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
+import { IssueListItem } from 'modules/issues/components';
+
 import type { IssueType } from 'common/types/issue';
 import type { LabelType } from 'common/types/label';
 
+import { BadgeColor } from 'components/ui/badge';
+import { Button } from 'components/ui/button';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from 'components/ui/collapsible';
 import { useCurrentTeam } from 'hooks/teams';
+import { ChevronDown, ChevronRight } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { IssueItem } from '../../issue-item';
 
 interface LabelListItemProps {
   label: LabelType;
@@ -19,6 +28,7 @@ interface LabelListItemProps {
 
 export const LabelListItem = observer(({ label }: LabelListItemProps) => {
   const { issuesStore, applicationStore } = useContextStore();
+  const [isOpen, setIsOpen] = React.useState(true);
   const issues = issuesStore.getIssuesForLabel(
     label.id,
     applicationStore.displaySettings.showSubIssues,
@@ -33,29 +43,47 @@ export const LabelListItem = observer(({ label }: LabelListItemProps) => {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
-        <h3 className="text-sm font-medium">
-          {label.name}
+    <Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      className="flex flex-col gap-2 h-full group/collapse"
+    >
+      <div className="flex gap-1 items-center">
+        <CollapsibleTrigger asChild>
+          <Button
+            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+            variant="ghost"
+          >
+            <BadgeColor
+              style={{ backgroundColor: label.color }}
+              className=" group-hover/collapse:hidden"
+            />
+            <div className="hidden group-hover/collapse:block">
+              {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+            </div>
+            <h3 className="pl-2">{label.name}</h3>
+          </Button>
+        </CollapsibleTrigger>
 
-          <span className="text-muted-foreground ml-2">
-            {computedIssues.length}
-          </span>
-        </h3>
+        <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+          {computedIssues.length}
+        </div>
       </div>
 
-      <div>
+      <CollapsibleContent>
         {computedIssues.map((issue: IssueType) => (
-          <IssueItem key={issue.id} issueId={issue.id} />
+          <IssueListItem key={issue.id} issueId={issue.id} />
         ))}
-      </div>
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 });
 
 export const NoLabelList = observer(() => {
   const { issuesStore, applicationStore } = useContextStore();
   const team = useCurrentTeam();
+  const [isOpen, setIsOpen] = React.useState(true);
+
   const issues = issuesStore.getIssuesForNoLabel(
     applicationStore.displaySettings.showSubIssues,
     team.id,
@@ -70,21 +98,38 @@ export const NoLabelList = observer(() => {
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="flex items-center w-full pl-8 p-2 bg-active dark:bg-slate-800/60">
-        <h3 className="text-sm font-medium">
-          No Label
-          <span className="text-muted-foreground ml-2">
-            {computedIssues.length}
-          </span>
-        </h3>
+    <Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      className="flex flex-col gap-2 h-full group/collapse"
+    >
+      <div className="flex gap-1 items-center">
+        <CollapsibleTrigger asChild>
+          <Button
+            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+            variant="ghost"
+          >
+            <BadgeColor
+              style={{ backgroundColor: '#838383' }}
+              className=" group-hover/collapse:hidden"
+            />
+            <div className="hidden group-hover/collapse:block">
+              {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+            </div>
+            <h3 className="pl-2">No Label</h3>
+          </Button>
+        </CollapsibleTrigger>
+
+        <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+          {computedIssues.length}
+        </div>
       </div>
 
-      <div>
+      <CollapsibleContent>
         {computedIssues.map((issue: IssueType) => (
-          <IssueItem key={issue.id} issueId={issue.id} />
+          <IssueListItem key={issue.id} issueId={issue.id} />
         ))}
-      </div>
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 });

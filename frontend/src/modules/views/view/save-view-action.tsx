@@ -46,10 +46,10 @@ export const SaveViewAction = observer(({ view }: SaveViewActionProps) => {
       {!isEqual(view.filters, filters) && (
         <>
           <Separator orientation="vertical" />
-          <Button variant="ghost" size="xs" onClick={clearFilters}>
+          <Button variant="ghost" onClick={clearFilters}>
             Clear
           </Button>
-          <Button variant="outline" size="xs" onClick={onSave}>
+          <Button variant="secondary" onClick={onSave}>
             Save
           </Button>
         </>

@@ -8,9 +8,11 @@ import {
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
+import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
+import { getWorkflowColor } from 'common/status-color';
 import type { IssueType } from 'common/types/issue';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 import type { WorkflowType } from 'common/types/team';
 
 import { BoardColumn, BoardItem } from 'components/ui/board';
@@ -20,7 +22,6 @@ import { useCurrentTeam } from 'hooks/teams';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { BoardIssueItem } from '../../issue-board-item';
 
 interface CategoryBoardItemProps {
   workflow: WorkflowType;
@@ -49,23 +50,25 @@ export const CategoryBoardList = observer(
 
     return (
       <BoardColumn key={workflow.id} id={workflow.id}>
-        <div className="flex flex-col max-h-[100%]">
-          <div className="flex items-center w-full p-4 pb-1">
-            <CategoryIcon
-              size={16}
-              className="text-muted-foreground"
-              color={workflow.color}
-            />
-            <h3 className="pl-2 text-sm font-medium">
-              {workflow.name}
-              <span className="text-muted-foreground ml-2">
-                {computedIssues.length}
-              </span>
-            </h3>
+        <div className="flex flex-col max-h-[100%] pr-4">
+          <div className="flex gap-1 items-center mb-2">
+            <div
+              className="flex items-center w-fit h-8 rounded-2xl px-4 py-2"
+              style={{
+                backgroundColor: getWorkflowColor(workflow).background,
+              }}
+            >
+              <CategoryIcon size={20} />
+              <h3 className="pl-2">{workflow.name}</h3>
+            </div>
+
+            <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+              {computedIssues.length}
+            </div>
           </div>
 
-          <ScrollArea className="p-3 pb-10">
-            <div className="flex flex-col gap-3 grow">
+          <ScrollArea>
+            <div className="flex flex-col gap-2 grow pb-10 pt-2">
               {computedIssues.map((issue: IssueType, index: number) => (
                 <BoardItem key={issue.id} id={issue.id}>
                   <Draggable

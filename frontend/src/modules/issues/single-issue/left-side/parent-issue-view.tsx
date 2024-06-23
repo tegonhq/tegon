@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-import { WORKFLOW_CATEGORY_ICONS } from 'modules/team-settings/workflow/workflow-item';
-
 import { cn } from 'common/lib/utils';
+import { getWorkflowColor } from 'common/status-color';
 import type { IssueType } from 'common/types/issue';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 import type { WorkflowType } from 'common/types/team';
 
 import { buttonVariants } from 'components/ui/button';
@@ -31,21 +31,22 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
   return (
     <Link
       className={cn(
-        'cursor-pointer max-w-[600px] mb-1 border-1 bg-white backdrop-blur-md dark:bg-slate-700/20  p-2 rounded-md flex gap-2 items-center text-sm',
-        buttonVariants({ variant: 'outline' }),
+        'cursor-pointer max-w-[600px] rounded-md flex gap-2 items-center bg-grayAlpha-100',
+        buttonVariants({ variant: 'secondary', size: 'sm' }),
+        'w-fit p-2',
       )}
       href={`/${workspaceSlug}/issue/${team.identifier}-${issue.parent.number}`}
     >
+      Sub-issue of
       <CategoryIcon
-        size={16}
+        size={20}
         className="text-muted-foreground"
-        color={workflow.color}
+        color={getWorkflowColor(workflow).color}
       />
-      <div className="text-muted-foreground">
+      <div className="text-muted-foreground font-mono">
         {team.identifier}-{issue.parent.number}
       </div>
-
-      <div className="font-medium max-w-[300px]">
+      <div className="max-w-[300px]">
         <div className="truncate">{issue.parent.title}</div>
       </div>
     </Link>

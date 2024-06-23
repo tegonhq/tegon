@@ -13,10 +13,12 @@ interface AssigneeListViewProps {
 export function AssigneeListView({ usersOnWorkspaces }: AssigneeListViewProps) {
   return (
     <ScrollArea className="h-full w-full">
-      {usersOnWorkspaces.map((uOW: UsersOnWorkspaceType) => (
-        <AssigneeListSection key={uOW.id} userOnWorkspace={uOW} />
-      ))}
-      <NoAssigneeView />
+      <div className="flex flex-col gap-4 h-full pb-[100px]">
+        {usersOnWorkspaces.map((uOW: UsersOnWorkspaceType) => (
+          <AssigneeListSection key={uOW.id} userOnWorkspace={uOW} />
+        ))}
+        <NoAssigneeView />
+      </div>
     </ScrollArea>
   );
 }

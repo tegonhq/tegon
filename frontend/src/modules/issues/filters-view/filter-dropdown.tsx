@@ -1,5 +1,4 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-import { RiFilter3Line } from '@remixicon/react';
 import * as React from 'react';
 
 import { Button } from 'components/ui/button';
@@ -13,13 +12,14 @@ import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { Separator } from 'components/ui/separator';
 import {
   AssigneeLine,
-  BacklogLine,
   BlockedFill,
-  BlockingToLine,
+  BlocksFill,
+  Filter,
   LabelFill,
   ParentIssueLine,
   PriorityHigh,
-  SubIssueLine,
+  SubIssue,
+  UnscopedLine,
 } from 'icons';
 
 import { FilterTypeEnum } from 'store/application';
@@ -51,7 +51,7 @@ function DefaultPopoverContent({
             className="flex items-center"
             onSelect={onSelect}
           >
-            <BacklogLine size={14} className="mr-2" /> Status
+            <UnscopedLine size={16} className="mr-2" /> Status
           </CommandItem>
         )}
         <CommandItem
@@ -60,7 +60,7 @@ function DefaultPopoverContent({
           className="flex items-center"
           onSelect={onSelect}
         >
-          <AssigneeLine size={14} className="mr-2" />
+          <AssigneeLine size={16} className="mr-2" />
           Assignee
         </CommandItem>
         <CommandItem
@@ -69,7 +69,7 @@ function DefaultPopoverContent({
           className="flex items-center"
           onSelect={onSelect}
         >
-          <LabelFill size={14} className="mr-2" />
+          <LabelFill size={16} className="mr-2" />
           Label
         </CommandItem>
         <CommandItem
@@ -78,7 +78,7 @@ function DefaultPopoverContent({
           className="flex items-center"
           onSelect={onSelect}
         >
-          <PriorityHigh size={14} className="mr-2" />
+          <PriorityHigh size={16} className="mr-2" />
           Priority
         </CommandItem>
         <Separator className="my-1" />
@@ -88,7 +88,7 @@ function DefaultPopoverContent({
           className="flex items-center"
           onSelect={() => onSelect('isParent')}
         >
-          <ParentIssueLine size={14} className="mr-2" />
+          <ParentIssueLine size={16} className="mr-2" />
           Parent issues
         </CommandItem>
         <CommandItem
@@ -97,7 +97,7 @@ function DefaultPopoverContent({
           className="flex items-center"
           onSelect={() => onSelect('isSubIssue')}
         >
-          <SubIssueLine size={14} className="mr-2" />
+          <SubIssue size={14} className="mr-2" />
           Sub issues
         </CommandItem>
         <CommandItem
@@ -106,7 +106,7 @@ function DefaultPopoverContent({
           className="flex items-center"
           onSelect={() => onSelect('isBlocked')}
         >
-          <BlockedFill size={14} className="mr-2" />
+          <BlockedFill size={16} className="mr-2" />
           Blocked issues
         </CommandItem>
         <CommandItem
@@ -115,7 +115,7 @@ function DefaultPopoverContent({
           className="flex items-center"
           onSelect={() => onSelect('isBlocking')}
         >
-          <BlockingToLine size={14} className="mr-2" />
+          <BlocksFill size={16} className="mr-2" />
           Blocking issues
         </CommandItem>
       </CommandGroup>
@@ -181,8 +181,8 @@ export function FilterDropdown({ showStatus }: FilterDropdownProps) {
       }}
     >
       <PopoverTrigger asChild>
-        <Button variant="outline" size="xs" className="border-1 text-xs">
-          <RiFilter3Line size={16} className="mr-2" />
+        <Button variant="secondary" size="sm">
+          <Filter size={16} className="mr-1" />
           Filter
         </Button>
       </PopoverTrigger>

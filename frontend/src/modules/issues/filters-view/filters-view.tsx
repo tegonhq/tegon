@@ -22,8 +22,16 @@ export const FiltersView = observer(
     const filters = applicationStore.filters;
 
     return (
-      <div className="py-2 pl-8 px-4 text-xs flex justify-between gap-4 border-b">
-        <div className="flex gap-2 items-center flex-wrap">
+      <div className="py-3 pt-6 pl-6 px-4 flex flex-col gap-2">
+        <div className="flex justify-between">
+          <div className="flex gap-2 flex-wrap">
+            <FilterDropdown showStatus={showStatus} />
+          </div>
+
+          <div>{Actions}</div>
+        </div>
+
+        <div className="flex justify-start gap-2 flex-wrap">
           {/* Status  */}
           {showStatus && filters.status && (
             <FilterItemView
@@ -108,10 +116,7 @@ export const FiltersView = observer(
               Component={() => <>blocking</>}
             />
           )}
-
-          <FilterDropdown showStatus={showStatus} />
         </div>
-        <div className="flex gap-2">{Actions}</div>
       </div>
     );
   },

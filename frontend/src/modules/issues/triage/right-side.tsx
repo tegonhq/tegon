@@ -2,6 +2,7 @@
 
 import { observer } from 'mobx-react-lite';
 
+import { WorkflowColors } from 'common/status-color';
 import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { useCurrentTeam } from 'hooks/teams';
@@ -26,7 +27,7 @@ export const RightSide = observer(() => {
 
   return (
     <div className="p-6 flex flex-col items-center justify-center gap-2">
-      <TriageFill className="text-muted-foreground" size={32} />
+      <TriageFill size={32} color={WorkflowColors.Triage.color} />
       <div className="text-muted-foreground text-sm">
         {issues.length} issues to triage
       </div>

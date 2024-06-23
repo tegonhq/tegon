@@ -35,7 +35,7 @@ export const AssigneeBoard = observer(
     };
 
     return (
-      <Board onDragEnd={onDragEnd}>
+      <Board onDragEnd={onDragEnd} className="pl-6">
         <>
           {usersOnWorkspaces.map((uOW: UsersOnWorkspaceType) => {
             return <AssigneeBoardList key={uOW.id} userOnWorkspace={uOW} />;

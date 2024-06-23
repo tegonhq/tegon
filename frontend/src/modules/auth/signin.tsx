@@ -10,8 +10,8 @@ export function SignIn() {
   return (
     <AuthLayout>
       <div className="flex flex-col w-[360px]">
-        <h1 className="text-2xl font-semibold text-center">Sign in</h1>
-        <div className="text-sm text-center text-muted-foreground mt-1 mb-8">
+        <h1 className="text-lg text-center">Sign in</h1>
+        <div className="text-center text-muted-foreground mt-1 mb-8">
           to continue to Tegon
         </div>
 

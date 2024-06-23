@@ -32,9 +32,9 @@ function workflowSort(a: WorkflowType, b: WorkflowType): number {
 }
 
 export function useTeamWorkflows(
-  teamIdentfier: string,
+  teamIdentifier: string,
 ): WorkflowType[] | undefined {
-  const team = useTeam(teamIdentfier);
+  const team = useTeam(teamIdentifier);
   const { workflowsStore } = useContextStore();
 
   function getWorkflowCategories() {
@@ -65,7 +65,7 @@ export function useTeamWorkflows(
 
   const workflows = React.useMemo(
     () => computed(() => getWorkflows()),
-    [team, workflowsStore, teamIdentfier],
+    [team, workflowsStore, teamIdentifier],
   ).get();
 
   return workflows;

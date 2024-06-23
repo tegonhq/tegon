@@ -9,6 +9,7 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { PriorityIcons } from 'modules/issues/components';
+import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
 import { Priorities, type IssueType } from 'common/types/issue';
 
@@ -19,7 +20,6 @@ import { useCurrentTeam } from 'hooks/teams';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { BoardIssueItem } from '../../issue-board-item';
 
 interface PriorityBoardListProps {
   priority: number;
@@ -47,22 +47,20 @@ export const PriorityBoardList = observer(
 
     return (
       <BoardColumn key={priority} id={`${priority}`}>
-        <div className="flex flex-col max-h-[100%]">
-          <div className="flex items-center w-full p-4 pb-1">
-            <PriorityIcon.icon
-              size={18}
-              className="text-muted-foreground mr-2"
-            />
-            <h3 className="pl-2 text-sm font-medium">
-              {Priorities[priority]}
-              <span className="text-muted-foreground ml-2">
-                {computedIssues.length}
-              </span>
-            </h3>
+        <div className="flex flex-col max-h-[100%] pr-4">
+          <div className="flex gap-1 items-center mb-2">
+            <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
+              <PriorityIcon.icon size={20} />
+              <h3 className="pl-2">{Priorities[priority]}</h3>
+            </div>
+
+            <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+              {computedIssues.length}
+            </div>
           </div>
 
-          <ScrollArea className="p-3 pb-10">
-            <div className="flex flex-col gap-3 grow">
+          <ScrollArea>
+            <div className="flex flex-col gap-3 grow pb-10 pt-2">
               {computedIssues.map((issue: IssueType, index: number) => (
                 <BoardItem key={issue.id} id={issue.id}>
                   <Draggable

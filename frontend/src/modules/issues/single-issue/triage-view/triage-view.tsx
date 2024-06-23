@@ -1,36 +1,52 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import type { ImperativePanelHandle } from 'react-resizable-panels';
+
 import * as React from 'react';
 
 import { TriageIssues } from 'modules/issues/triage/left-side/triage-issues';
 
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from 'components/ui/resizable';
+
 import { IssueStoreInit } from 'store/issue-store-provider';
 
-import { Header } from '../../triage/left-side/header';
+import { Header } from '../header';
 import { LeftSide } from '../left-side/left-side';
-import { RightSide } from '../right-side/right-side';
 
 export function TriageView() {
+  const ref = React.useRef<ImperativePanelHandle>(null);
+
   return (
-    <main className="grid grid-cols-4 h-full">
-      <div className="border-l flex flex-col col-span-1">
-        <Header title="Triage" />
-        <TriageIssues />
+    <main className="flex flex-col h-[100vh]">
+      <Header isTriageView />
+
+      <div className="bg-gray-200 rounded-tl-3xl flex h-[calc(100vh_-_53px)]">
+        <ResizablePanelGroup direction="horizontal" className="">
+          <ResizablePanel
+            maxSize={50}
+            ref={ref}
+            defaultSize={24}
+            minSize={16}
+            collapsible
+            collapsedSize={16}
+          >
+            <div className="flex flex-col h-full">
+              <h2 className="text-lg pl-6 pt-6 font-medium"> Triage </h2>
+              <TriageIssues />
+            </div>
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel collapsible collapsedSize={0}>
+            <IssueStoreInit>
+              <LeftSide />
+            </IssueStoreInit>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
-      <IssueStoreInit>
-        <div className="border-l flex col-span-3">
-          <div className="flex flex-col h-full w-full">
-            <main className="grid grid-cols-4 h-full">
-              <div className="col-span-4 xl:col-span-3 flex flex-col h-[calc(100vh)]">
-                <LeftSide />
-              </div>
-              <div className="bg-background border-l dark:bg-slate-800/50 hidden flex-col xl:col-span-1 xl:flex">
-                <RightSide />
-              </div>
-            </main>
-          </div>
-        </div>
-      </IssueStoreInit>
     </main>
   );
 }

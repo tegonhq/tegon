@@ -1,12 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import {
-  RiDeleteBin7Fill,
-  RiGithubFill,
-  RiLink,
-  RiMoreFill,
-  RiPencilFill,
-} from '@remixicon/react';
+import { RiGithubFill, RiLink, RiMoreFill } from '@remixicon/react';
 import React from 'react';
 
 import {
@@ -33,7 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
-import { SentryIcon, SlackIcon } from 'icons';
+import { DeleteLine, EditLine, SentryIcon, SlackIcon } from 'icons';
 
 import { useDeleteLinkedIssueMutation } from 'services/linked-issues';
 
@@ -57,19 +51,19 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
   function getIcon() {
     if (sourceMetaData) {
       if (sourceMetaData.type === Integration.Slack) {
-        return <SlackIcon size={16} className="text-foreground" />;
+        return <SlackIcon size={16} />;
       }
 
       if (sourceMetaData.type === Integration.Github) {
-        return <RiGithubFill size={18} className="text-foreground" />;
+        return <RiGithubFill size={20} />;
       }
 
       if (sourceMetaData.type === Integration.Sentry) {
-        return <SentryIcon size={18} className="text-foreground" />;
+        return <SentryIcon size={20} />;
       }
     }
 
-    return <RiLink size={18} className="text-foreground" />;
+    return <RiLink size={20} />;
   }
 
   function getTitle() {
@@ -109,7 +103,7 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
       <a
         href={linkedIssue.url}
         target="_blank"
-        className="cursor-pointer w-full mb-1 border-1 hover:bg-active/50 shadow-sm bg-white dark:bg-slate-700/20  p-3 py-2 rounded-md flex gap-2 items-center justify-between text-sm"
+        className="cursor-pointer w-full hover:bg-grayAlpha-100 p-3 pr-0 py-2 rounded-md flex gap-2 items-center justify-between"
       >
         <div className="flex items-center gap-2">
           {getIcon()}
@@ -126,19 +120,19 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
                   e.preventDefault();
                 }}
               >
-                <RiMoreFill size={16} className="text-muted-foreground" />
+                <RiMoreFill size={16} />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuGroup>
                 <DropdownMenuItem onClick={() => setEditOpen(true)}>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <RiPencilFill size={14} /> Edit
+                  <div className="flex items-center gap-1">
+                    <EditLine size={16} /> Edit
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <RiDeleteBin7Fill size={14} /> Remove
+                  <div className="flex items-center gap-1">
+                    <DeleteLine size={16} /> Remove
                   </div>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
