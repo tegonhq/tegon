@@ -17,15 +17,17 @@ export function useTeamLabels(teamIdentifier: string) {
 
   const getLabels = () => {
     const labelsForTeam = labelsStore.getLabelsForTeam(team.id);
+
     let labels = labelsStore.labels.filter(
-      (label: LabelType) => label.workspaceId === currentWorkspace.id,
+      (label: LabelType) =>
+        label.workspaceId === currentWorkspace.id && label.teamId === null,
     );
 
     if (team) {
       labels = [
         ...labels,
-        ...labelsForTeam.filter((label: LabelType) =>
-          labels.includes(label.id),
+        ...labelsForTeam.filter(
+          (label: LabelType) => !labels.includes(label.id),
         ),
       ];
     }

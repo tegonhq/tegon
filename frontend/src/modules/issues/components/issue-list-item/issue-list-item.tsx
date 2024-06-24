@@ -167,9 +167,7 @@ export const IssueListItem = observer(
                       <span className="text-left">{issue.title}</span>
                     </span>
 
-                    <div className="flex items-center gap-1 flex-wrap">
-                      <IssueLabels labelIds={issue.labelIds} />
-                    </div>
+                    <IssueLabels labelIds={issue.labelIds} />
                   </div>
 
                   <div className="flex shrink-0 items-center gap-8">
@@ -178,6 +176,7 @@ export const IssueListItem = observer(
                         value={issue.priority ?? 0}
                         onChange={priorityChange}
                         variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
+                        className="text-xs"
                       />
                     </div>
                     <div className="min-w-[70px] text-muted-foreground text-xs font-mono">{`${team.identifier}-${issue.number}`}</div>

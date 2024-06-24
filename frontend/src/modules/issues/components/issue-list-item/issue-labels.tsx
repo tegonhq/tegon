@@ -20,7 +20,7 @@ export const IssueLabels = observer(({ labelIds }: IssueLabelsProps) => {
 
   const getLabels = () => {
     return (
-      <>
+      <div className="flex items-center gap-1 flex-wrap">
         {labels.map((label: LabelType) => (
           <Badge
             variant="secondary"
@@ -31,7 +31,7 @@ export const IssueLabels = observer(({ labelIds }: IssueLabelsProps) => {
             {label.name}
           </Badge>
         ))}
-      </>
+      </div>
     );
   };
 

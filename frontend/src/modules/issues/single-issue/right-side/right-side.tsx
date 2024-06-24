@@ -49,7 +49,7 @@ export const RightSide = observer(() => {
 
   return (
     <>
-      <div className="grow p-6 mt-2 flex flex-col gap-4">
+      <div className="grow p-6 flex flex-col gap-4">
         <div className="flex flex-col items-start">
           <label className="text-xs">Status</label>
           <IssueStatusDropdown

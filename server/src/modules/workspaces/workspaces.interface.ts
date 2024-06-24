@@ -36,12 +36,12 @@ export class UserBody {
 }
 
 export const labelSeedData = [
-  { name: 'Bug', color: '#EF4E4E' },
-  { name: 'Feature', color: '#FADB5F' },
-  { name: 'Design', color: '#A368FC' },
-  { name: 'Documentation', color: '#62F4EB' },
-  { name: 'Frontend', color: '#7BC47F' },
-  { name: 'Backend', color: '#5ED0FA' },
+  { name: 'Bug', color: '#ed5b4a' },
+  { name: 'Feature', color: '#00aa91' },
+  { name: 'Design', color: '#00a5b5' },
+  { name: 'Documentation', color: '#009dde' },
+  { name: 'Frontend', color: '#a074f3' },
+  { name: 'Backend', color: '#d55eba' },
 ];
 
 export const integrationDefinitionSeedData = [

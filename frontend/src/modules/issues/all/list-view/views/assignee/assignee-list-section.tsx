@@ -59,19 +59,19 @@ export const AssigneeListSection = observer(
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
-        className="flex flex-col gap-2 h-full group/collapse"
+        className="flex flex-col gap-2 h-full"
       >
         <div className="flex gap-1 items-center">
           <CollapsibleTrigger asChild>
             <Button
-              className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+              className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
               variant="ghost"
             >
               <AvatarText
                 text={getUserData(userOnWorkspace.userId).fullname}
-                className="h-5 w-5 group-hover/collapse:hidden text-[9px]"
+                className="h-5 w-5 group-hover:hidden text-[9px]"
               />
-              <div className="hidden group-hover/collapse:block">
+              <div className="hidden group-hover:block">
                 {isOpen ? (
                   <ChevronDown size={20} />
                 ) : (
@@ -117,16 +117,16 @@ export const NoAssigneeView = observer(() => {
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="flex flex-col gap-2 h-full group/collapse"
+      className="flex flex-col gap-2 h-full"
     >
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>
           <Button
-            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+            className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
           >
-            <AssigneeLine size={20} className="group-hover/collapse:hidden" />
-            <div className="hidden group-hover/collapse:block">
+            <AssigneeLine size={20} className="group-hover:hidden" />
+            <div className="hidden group-hover:block">
               {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
             </div>
             <h3 className="pl-2">No Assignee</h3>

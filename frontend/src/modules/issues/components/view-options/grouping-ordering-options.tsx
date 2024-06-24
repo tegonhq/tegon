@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'components/ui/select';
+import { BulletListLine, StackLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -26,7 +27,8 @@ export const GroupingOrderingOptions = observer(() => {
           });
         }}
       >
-        <SelectTrigger className="h-7 py-1">
+        <SelectTrigger className="h-7 py-1 flex gap-1 items-center">
+          <StackLine size={16} />
           <SelectValue placeholder="Select a category" />
         </SelectTrigger>
         <SelectContent>
@@ -47,7 +49,8 @@ export const GroupingOrderingOptions = observer(() => {
           });
         }}
       >
-        <SelectTrigger className="h-7 py-1">
+        <SelectTrigger className="h-7 py-1 flex gap-1 items-center">
+          <BulletListLine size={16} />
           <SelectValue placeholder="Select a category" />
         </SelectTrigger>
         <SelectContent>

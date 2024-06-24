@@ -32,7 +32,7 @@ export function LinkedIssueItems({ setDialogOpen }: LinkedIssueItemsProps) {
           <DropdownItem Icon={RiExternalLinkLine} title="Add link" />
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
-          <DropdownMenuSubContent className="text-muted-foreground">
+          <DropdownMenuSubContent>
             <DropdownMenuItem
               onClick={() => setDialogOpen(LinkedIssueSubType.GithubIssue)}
             >

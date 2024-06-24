@@ -4,21 +4,25 @@ import { RiMoreFill } from '@remixicon/react';
 import React from 'react';
 
 import { AddIssueRelationModal } from 'modules/issues/components/modals';
+import { MoveIssueToTeamDialog } from 'modules/shortcuts/dialogs';
 
 import type { IssueRelationEnum } from 'common/types/issue-relation';
-import type { LinkedIssueSubType } from 'common/types/linked-issue';
+import { LinkedIssueSubType } from 'common/types/linked-issue';
 
 import { Button } from 'components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
 import { useIssueData } from 'hooks/issues';
+import { TeamLine } from 'icons';
 
 import { DeleteIssueDialog } from './delete-issue-dialog';
 import { DeleteIssueItem } from './delete-issue-item';
+import { DropdownItem } from './dropdown-item';
 import { LinkedIssueItems } from './linked-issue-items';
 import { RelatedDropdownItems } from './related-dropdown-items';
 import { RemoveParentIssue } from './remove-parent-issue';
@@ -31,6 +35,7 @@ export function IssueOptionsDropdown() {
   const [deleteIssueDialog, setDeleteIssueDialog] = React.useState(false);
   const [dialogOpen, setDialogOpen] =
     React.useState<LinkedIssueSubType>(undefined);
+  const [moveIssueDialog, setMoveIssueDialog] = React.useState(false);
 
   return (
     <>
@@ -43,10 +48,13 @@ export function IssueOptionsDropdown() {
               e.preventDefault();
             }}
           >
-            <RiMoreFill size={16} className="text-muted-foreground" />
+            <RiMoreFill size={16} />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="text-muted-foreground">
+        <DropdownMenuContent align="start">
+          <DropdownMenuItem onClick={() => setMoveIssueDialog(true)}>
+            <DropdownItem Icon={TeamLine} title="Move to team" />
+          </DropdownMenuItem>
           <LinkedIssueItems setDialogOpen={setDialogOpen} />
           <RelatedDropdownItems setRelatedModal={setRelatedModal} />
           <DropdownMenuSeparator />
@@ -69,6 +77,11 @@ export function IssueOptionsDropdown() {
         open={dialogOpen}
         setOpen={setDialogOpen}
         issueId={currentIssue.id}
+      />
+
+      <MoveIssueToTeamDialog
+        open={moveIssueDialog}
+        setOpen={setMoveIssueDialog}
       />
     </>
   );

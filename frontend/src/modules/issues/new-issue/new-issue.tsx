@@ -156,7 +156,7 @@ export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
                           form.setValue('descriptionString', valueString);
                           setDescriptionValue(valueString);
                         }}
-                        className="text-slate-600 dark:text-slate-400 min-h-[50px] mb-8"
+                        className="min-h-[50px] mb-8"
                         autoFocus
                         // This is when meta+Enter is triggered on description
                         onSubmit={() => {

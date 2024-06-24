@@ -87,9 +87,8 @@ export const BoardIssueItem = observer(
         <div className="flex">
           <div className="line-clamp-2">{issue.title}</div>
         </div>
-        <div className="flex flex-wrap gap-1">
-          <IssueLabels labelIds={issue.labelIds} />
-        </div>
+
+        <IssueLabels labelIds={issue.labelIds} />
 
         <IssueRelations issue={issue} />
 

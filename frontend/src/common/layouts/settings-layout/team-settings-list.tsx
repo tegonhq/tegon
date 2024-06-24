@@ -39,7 +39,7 @@ export const TeamSettingsList = observer(() => {
     <div className="px-6 py-3">
       <div className="flex flex-col items-start justify-start w-full">
         <div className="flex items-center mb-2">
-          <TeamLine size={18} />
+          <TeamLine size={20} />
           <div className="ml-1">Teams</div>
         </div>
 

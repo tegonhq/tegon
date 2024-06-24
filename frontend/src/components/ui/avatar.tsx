@@ -51,7 +51,7 @@ const AvatarFallback = React.forwardRef<
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
 // Function to get the first two letters
-export const getInitials = (name: string) => {
+export const getInitials = (name: string, noOfChar?: number | undefined) => {
   if (!name) {
     return '';
   }
@@ -59,7 +59,7 @@ export const getInitials = (name: string) => {
   return words
     .map((word) => word.charAt(0))
     .filter((char) => char !== '')
-    .slice(0, 2)
+    .slice(0, noOfChar ? noOfChar : 2)
     .join('')
     .toUpperCase();
 };
@@ -67,9 +67,11 @@ export const getInitials = (name: string) => {
 const AvatarText = ({
   text,
   className,
+  noOfChar,
 }: {
   text: string;
   className?: string;
+  noOfChar?: number;
 }) => {
   return (
     <Avatar className={cn('flex items-center', className)}>
@@ -80,7 +82,7 @@ const AvatarText = ({
           background: getTailwindColor(text),
         }}
       >
-        {getInitials(text)}
+        {getInitials(text, noOfChar)}
       </AvatarFallback>
     </Avatar>
   );
