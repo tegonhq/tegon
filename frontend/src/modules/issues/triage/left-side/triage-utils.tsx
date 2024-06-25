@@ -1,10 +1,13 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { RiGithubFill } from '@remixicon/react';
+
 import type { IssueSourceMetadataType, IssueType } from 'common/types/issue';
 import { Integration } from 'common/types/linked-issue';
+
 import { AvatarText } from 'components/ui/avatar';
 import { Gmail, SlackIcon } from 'icons';
+
 import type { User } from 'store/user-context';
 
 export function getCreatedBy(issue: IssueType, user: User) {

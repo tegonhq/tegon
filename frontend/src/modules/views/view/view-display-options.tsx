@@ -2,15 +2,17 @@
 
 import { observer } from 'mobx-react-lite';
 
-import { SaveViewActions } from 'modules/issues/all/save-view-actions';
 import {
   GroupingOrderingOptions,
   LayoutSwitch,
   ViewOptions,
 } from 'modules/issues/components';
-import { SaveViewAction } from './save-view-action';
-import { Separator } from 'components/ui/separator';
+
 import type { ViewType } from 'common/types/view';
+
+import { Separator } from 'components/ui/separator';
+
+import { SaveViewAction } from './save-view-action';
 
 interface ViewDisplayOptionsProps {
   view: ViewType;

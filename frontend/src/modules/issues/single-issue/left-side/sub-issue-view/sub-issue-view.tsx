@@ -3,6 +3,7 @@
 import * as React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
+import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
 
 import type { IssueType } from 'common/types/issue';
 
@@ -13,7 +14,6 @@ import {
   CollapsibleTrigger,
 } from 'components/ui/collapsible';
 import { AddLine, ChevronDown, ChevronRight } from 'icons';
-import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
 
 interface SubIssueViewProps {
   childIssues: IssueType[];

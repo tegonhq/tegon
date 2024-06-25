@@ -37,6 +37,8 @@ import {
   useCreateIssueMutation,
 } from 'services/issues/create-issue';
 
+import { useContextStore } from 'store/global-context-provider';
+
 import { DuplicateIssuesView } from './duplicates-view';
 import { IssueSuggestions } from './issue-suggestions';
 import { NewIssueDropdowns } from './new-issue-dropdowns';
@@ -48,7 +50,6 @@ import {
 } from './new-issue-utils';
 import { NewIssueSchema } from './new-issues-type';
 import { FileUpload } from '../single-issue/left-side/file-upload/file-upload';
-import { useContextStore } from 'store/global-context-provider';
 
 interface NewIssueProps {
   onClose: () => void;

@@ -1,17 +1,14 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiGithubFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
 import { cn } from 'common/lib/utils';
-import type { IssueSourceMetadataType, IssueType } from 'common/types/issue';
-import { Integration } from 'common/types/linked-issue';
+import type { IssueType } from 'common/types/issue';
 import { getUserData } from 'common/user-util';
 
-import { AvatarText } from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
 import {
   Collapsible,
@@ -20,10 +17,10 @@ import {
 } from 'components/ui/collapsible';
 import { useCurrentTeam } from 'hooks/teams';
 import { ChevronDown, ChevronRight } from 'icons';
-import { Gmail, SlackIcon } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
+
 import { getCreatedBy } from './triage-utils';
 
 interface TriageCategoryProps {
