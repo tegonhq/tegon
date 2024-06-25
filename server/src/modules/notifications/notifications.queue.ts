@@ -38,4 +38,10 @@ export class NotificationsQueue {
       notificationData,
     });
   }
+
+  async deleteNotificationsByIssue(issueId: string) {
+    return this.notificationsQueue.add('deleteNotificationsByIssue', {
+      issueId,
+    });
+  }
 }

@@ -85,13 +85,9 @@ export function IssueStatusDropdown({
         size="sm"
         role="combobox"
         aria-expanded={open}
-        className="flex items-center justify-between shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
+        className="flex items-center gap-1 justify-between shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
       >
-        <CategoryIcon
-          size={16}
-          className="text-muted-foreground mr-2"
-          color={getWorkflowColor(workflow).color}
-        />
+        <CategoryIcon size={18} color={getWorkflowColor(workflow).color} />
         {workflow.name}
       </Button>
     );

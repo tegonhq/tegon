@@ -1,16 +1,11 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import React from 'react';
-import { Key } from 'ts-key-enum';
-
-import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
-import { SearchDialog } from 'modules/search';
 
 import { SCOPES } from 'common/scopes';
 
 import { useShortcutHotKeys } from 'hooks';
 
-import { CommandDialog } from './command';
 import { AssigneeDialog, LabelDialog, StatusDialog } from './dialogs';
 import { PriorityDialog } from './dialogs/priority-dialog';
 
@@ -20,8 +15,6 @@ interface State {
   label: boolean;
   priority: boolean;
   filter: boolean;
-  newIssue: boolean;
-  search: boolean;
 }
 
 export const defaultState: State = {
@@ -30,11 +23,9 @@ export const defaultState: State = {
   label: false,
   priority: false,
   filter: false,
-  newIssue: false,
-  search: false,
 };
 
-export function ShortcutDialogs() {
+export function IssueShortcutDialogs() {
   const [state, setState] = React.useState<State>(defaultState);
 
   useShortcutHotKeys('s', () => stateChange(true, 'status'), [
@@ -45,10 +36,6 @@ export function ShortcutDialogs() {
   ]);
   useShortcutHotKeys('l', () => stateChange(true, 'label'), [SCOPES.AllIssues]);
   useShortcutHotKeys('p', () => stateChange(true, 'priority'), [
-    SCOPES.AllIssues,
-  ]);
-  useShortcutHotKeys('c', () => stateChange(true, 'newIssue'), [SCOPES.Global]);
-  useShortcutHotKeys(`${Key.Meta}+/`, () => stateChange(true, 'search'), [
     SCOPES.AllIssues,
   ]);
 
@@ -73,18 +60,6 @@ export function ShortcutDialogs() {
       <PriorityDialog
         open={state.priority}
         setOpen={(value) => stateChange(value, 'priority')}
-      />
-      <NewIssueDialog
-        open={state.newIssue}
-        setOpen={(value) => stateChange(value, 'newIssue')}
-      />
-      <SearchDialog
-        open={state.search}
-        setOpen={(value) => stateChange(value, 'search')}
-      />
-
-      <CommandDialog
-        setDialogState={(value: string) => stateChange(true, value)}
       />
     </>
   );

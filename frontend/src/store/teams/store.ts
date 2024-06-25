@@ -60,6 +60,9 @@ export const TeamsStore: IAnyStateTreeNode = types
 
       return team;
     },
+    get getTeams() {
+      return self.teams;
+    },
   }));
 
 export type TeamsStoreType = Instance<typeof TeamsStore>;

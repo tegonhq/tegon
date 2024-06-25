@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { ShortcutDialogs } from 'modules/shortcuts';
+import { GlobalShortcuts, IssueShortcutDialogs } from 'modules/shortcuts';
 
 import { AllProviders } from 'common/wrappers/all-providers';
 
@@ -45,7 +45,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   return (
     <>
       <div className="h-[100vh] w-[100vw] flex">
-        <div className="min-w-[234px]">
+        <div className="min-w-[234px] flex flex-col">
           <div className="flex flex-col py-4 px-6">
             <div className="flex justify-between items-center">
               <WorkspaceDropdown />
@@ -58,7 +58,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
               </Button> */}
             </div>
           </div>
-          <div className="px-6 mt-4">
+          <div className="px-6 mt-4 grow">
             <Nav
               links={[
                 {
@@ -77,12 +77,14 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
             />
             <TeamList />
           </div>
+          <div className="w-full flex justify-between px-6"></div>
         </div>
 
         <div className="max-w-[calc(100vw_-_234px)] w-full">{children}</div>
       </div>
 
-      {team && <ShortcutDialogs />}
+      <GlobalShortcuts />
+      {team && <IssueShortcutDialogs />}
     </>
   );
 });

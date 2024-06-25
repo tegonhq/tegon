@@ -50,6 +50,7 @@ export class WorkspacesController {
     const userId = session.getUserId();
     return await this.workspacesService.getAllWorkspaces(userId);
   }
+
   @Get('name/:workspaceName')
   @UseGuards(new AuthGuard())
   async getWorkspaceByName(
@@ -57,6 +58,7 @@ export class WorkspacesController {
   ): Promise<Workspace> {
     return await this.workspacesService.getWorkspaceByName(workspaceName);
   }
+
   @Post('seed_workspaces')
   async seedWorkspaces() {
     await this.workspacesService.seedWorkspaces();

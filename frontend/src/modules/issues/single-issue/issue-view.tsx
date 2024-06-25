@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import type { WorkflowType } from 'common/types/team';
@@ -17,7 +18,7 @@ import { LeftSide } from './left-side/left-side';
 import { RightSide } from './right-side/right-side';
 import { TriageView } from './triage-view';
 
-export const IssueView = () => {
+export const IssueView = observer(() => {
   const currentTeam = useCurrentTeam();
   const workflows = useTeamWorkflows(currentTeam.identifier);
   const { applicationStore } = useContextStore();
@@ -33,7 +34,7 @@ export const IssueView = () => {
     }
 
     return () => {
-      applicationStore.removeSelectedIssue(issue.id);
+      applicationStore.removeSelectedIssue(issue?.id);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -61,4 +62,4 @@ export const IssueView = () => {
       </div>
     </IssueStoreInit>
   );
-};
+});

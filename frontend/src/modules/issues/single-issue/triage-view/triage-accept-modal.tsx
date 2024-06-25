@@ -74,8 +74,6 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
     },
   });
 
-  console.log(form.formState);
-
   const onSubmit = async (values: AcceptIssueParams) => {
     updateIssue({
       id: issue.id,

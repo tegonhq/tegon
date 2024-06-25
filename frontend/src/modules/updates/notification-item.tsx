@@ -91,7 +91,6 @@ export const NotificationItem = observer(
           'ml-4 p-3 py-0 mr-4 flex gap-1 items-center hover:bg-grayAlpha-200 rounded',
           issueId === `${team.identifier}-${issue.number}` &&
             'bg-grayAlpha-100',
-          !noBorder && 'border-b',
         )}
         onClick={() => {
           push(`/${workspaceSlug}/inbox/${team.identifier}-${issue.number}`);

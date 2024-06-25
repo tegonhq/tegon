@@ -37,6 +37,7 @@ import {
 import { IssuesQueue } from './issues.queue';
 import {
   findExistingLink,
+  getEquivalentStateIds,
   getIssueDiff,
   getIssueTitle,
   getLastIssueNumber,
@@ -310,9 +311,19 @@ export default class IssuesService {
       },
     });
 
+    await this.prisma.issue.updateMany({
+      where: {
+        parentId: deleteIssue.id,
+      },
+      data: {
+        parentId: null,
+      },
+    });
+
     this.logger.log(`Issue ${deleteIssue.id} marked as deleted`);
 
     await this.deleteIssueHistory(deleteIssue.id);
+    await this.notificationsQueue.deleteNotificationsByIssue(deleteIssue.id);
 
     this.logger.log(`Issue history deleted for issue ${deleteIssue.id}`);
 
@@ -538,5 +549,106 @@ export default class IssuesService {
       csvStringifier.getHeaderString() +
       csvStringifier.stringifyRecords(csvData)
     );
+  }
+
+  async moveIssue(userId: string, issueId: string, teamId: string) {
+    const currentIssue = await this.prisma.issue.findUnique({
+      where: { id: issueId },
+      include: { subIssue: true, team: true },
+    });
+
+    const workflowIds = await getEquivalentStateIds(
+      this.prisma,
+      currentIssue.teamId,
+      teamId,
+    );
+
+    const workspaceLabelIds = await this.prisma.label
+      .findMany({
+        where: {
+          AND: [
+            { workspaceId: currentIssue.team.workspaceId },
+            { teamId: null },
+          ],
+        },
+        select: { id: true },
+      })
+      .then((labels) => labels.map((label) => label.id));
+
+    const updatedLabelIds = currentIssue.labelIds.filter((labelId) =>
+      workspaceLabelIds.includes(labelId),
+    );
+
+    const issueNumber = await getLastIssueNumber(this.prisma, teamId);
+
+    const userOnWorkspace = currentIssue.assigneeId
+      ? await this.prisma.usersOnWorkspaces.findUnique({
+          where: {
+            userId_workspaceId: {
+              userId: currentIssue.assigneeId,
+              workspaceId: currentIssue.team.workspaceId,
+            },
+          },
+        })
+      : null;
+
+    const assigneeId = userOnWorkspace?.teamIds.includes(teamId)
+      ? currentIssue.assigneeId
+      : null;
+
+    const updatedIssue = await this.prisma.issue.update({
+      where: { id: issueId },
+      data: {
+        labelIds: updatedLabelIds,
+        stateId: workflowIds[currentIssue.stateId],
+        number: issueNumber + 1,
+        teamId,
+        assigneeId,
+      },
+    });
+
+    this.issuesQueue.addIssueToVector(updatedIssue);
+
+    if (currentIssue.subIssue.length > 0) {
+      for (const subIssue of currentIssue.subIssue) {
+        await this.moveIssue(userId, subIssue.id, teamId);
+      }
+    }
+
+    const issueDiff = await getIssueDiff(updatedIssue, currentIssue);
+
+    const removedLabelIds = issueDiff.removedLabelIds;
+    issueDiff.removedLabelIds = [];
+
+    await this.upsertIssueHistory(updatedIssue, issueDiff, userId);
+
+    const issueHistories = await this.prisma.issueHistory.findMany({
+      where: { issueId: updatedIssue.id },
+      select: {
+        id: true,
+        addedLabelIds: true,
+        removedLabelIds: true,
+        fromStateId: true,
+        toStateId: true,
+      },
+    });
+
+    issueHistories.map(async (issueHistory) => {
+      await this.prisma.issueHistory.update({
+        where: { id: issueHistory.id },
+        data: {
+          addedLabelIds: issueHistory.addedLabelIds.filter(
+            (labelId) => !removedLabelIds.includes(labelId),
+          ),
+          removedLabelIds: issueHistory.removedLabelIds.filter(
+            (labelId) => !removedLabelIds.includes(labelId),
+          ),
+
+          fromStateId: workflowIds[issueHistory.fromStateId],
+          toStateId: workflowIds[issueHistory.toStateId],
+        },
+      });
+    });
+    return updatedIssue;
   }
 }

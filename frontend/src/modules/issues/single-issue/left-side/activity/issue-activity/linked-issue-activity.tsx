@@ -99,7 +99,7 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
               .username
           }
         </span>
-        linked
+        <span className="text-muted-foreground">linked</span>
         <a
           href={linkedIssue.url}
           target="_blank"

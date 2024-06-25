@@ -27,6 +27,7 @@ import {
   CreateIssueInput,
   IssueRequestParams,
   LinkIssueInput,
+  MoveIssueInput,
   SubscribeIssueInput,
   SuggestionsInput,
   TeamRequestParams,
@@ -149,5 +150,20 @@ export class IssuesController {
     });
 
     csvStream.pipe(res);
+  }
+
+  @Post(':issueId/move')
+  @UseGuards(new AuthGuard())
+  async moveIssue(
+    @SessionDecorator() session: SessionContainer,
+    @Param() issueParams: IssueRequestParams,
+    @Body() moveData: MoveIssueInput,
+  ) {
+    const userId = session.getUserId();
+    return await this.issuesService.moveIssue(
+      userId,
+      issueParams.issueId,
+      moveData.teamId,
+    );
   }
 }

@@ -83,7 +83,7 @@ export function IssueStatusDropdownContent({
                 >
                   <CategoryIcon
                     size={18}
-                    className="text-muted-foreground mr-2"
+                    className="mr-2"
                     color={getWorkflowColor(workflow).color}
                   />
                   {workflow.name}

@@ -46,19 +46,19 @@ export const LabelListItem = observer(({ label }: LabelListItemProps) => {
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="flex flex-col gap-2 h-full group/collapse"
+      className="flex flex-col gap-2 h-full"
     >
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>
           <Button
-            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+            className="flex items-center group ml-6 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
           >
             <BadgeColor
               style={{ backgroundColor: label.color }}
-              className=" group-hover/collapse:hidden"
+              className=" group-hover:hidden"
             />
-            <div className="hidden group-hover/collapse:block">
+            <div className="hidden group-hover:block">
               {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
             </div>
             <h3 className="pl-2">{label.name}</h3>
@@ -101,19 +101,19 @@ export const NoLabelList = observer(() => {
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="flex flex-col gap-2 h-full group/collapse"
+      className="flex flex-col gap-2 h-full"
     >
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>
           <Button
-            className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+            className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
           >
             <BadgeColor
               style={{ backgroundColor: '#838383' }}
-              className=" group-hover/collapse:hidden"
+              className=" group-hover:hidden"
             />
-            <div className="hidden group-hover/collapse:block">
+            <div className="hidden group-hover:block">
               {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
             </div>
             <h3 className="pl-2">No Label</h3>

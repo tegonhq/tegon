@@ -12,7 +12,6 @@ import {
   CommandDialog as CommandDialogC,
   CommandGroup,
 } from 'components/ui/command';
-import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -46,9 +45,8 @@ export function CommonDialog({
   onSelect,
   groupOrder,
 }: CommonDialogProps) {
-  const { issuesStore, applicationStore } = useContextStore();
+  const { issuesStore, applicationStore, teamsStore } = useContextStore();
   const issues = issuesStore.getIssuesFromArray(issueIds);
-  const team = useCurrentTeam();
   const [value, setValue] = React.useState('');
 
   React.useEffect(() => {
@@ -65,6 +63,7 @@ export function CommonDialog({
 
     if (issues.length === 1) {
       const issue = issues[0];
+      const team = teamsStore.getTeamWithId(issue.teamId);
       return (
         <div className="p-2 flex justify-start w-full">
           <div className="text-xs">

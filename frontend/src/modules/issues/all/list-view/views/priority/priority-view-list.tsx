@@ -50,19 +50,16 @@ export const PriorityViewList = observer(
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
-        className="flex flex-col gap-2 h-full group/collapse"
+        className="flex flex-col gap-2 h-full"
       >
         <div className="flex gap-1 items-center">
           <CollapsibleTrigger asChild>
             <Button
-              className="flex items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+              className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
               variant="ghost"
             >
-              <PriorityIcon.icon
-                size={20}
-                className="group-hover/collapse:hidden"
-              />
-              <div className="hidden group-hover/collapse:block">
+              <PriorityIcon.icon size={20} className="group-hover:hidden" />
+              <div className="hidden group-hover:block">
                 {isOpen ? (
                   <ChevronDown size={20} />
                 ) : (

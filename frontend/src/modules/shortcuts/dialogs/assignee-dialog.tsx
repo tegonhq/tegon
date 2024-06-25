@@ -2,15 +2,7 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { getTailwindColor } from 'common/color-utils';
-import { cn } from 'common/lib/utils';
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  getInitials,
-} from 'components/ui/avatar';
+import { AvatarText } from 'components/ui/avatar';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
 
@@ -52,19 +44,7 @@ export const AssigneeDialog = observer(
     function getOptions() {
       return usersData.map((user: User) => {
         return {
-          Icon: (
-            <Avatar className="h-[15px] w-[20px] flex items-center">
-              <AvatarImage />
-              <AvatarFallback
-                className={cn(
-                  'text-[0.55rem] rounded-sm',
-                  getTailwindColor(user.username),
-                )}
-              >
-                {getInitials(user.fullname)}
-              </AvatarFallback>
-            </Avatar>
-          ),
+          Icon: <AvatarText text={user.fullname} className="text-[9px]" />,
           text: user.username,
           value: user.id,
         };

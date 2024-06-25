@@ -285,6 +285,8 @@ Table IssueHistory {
   toAssigneeId String
   fromParentId String
   toParentId String
+  fromTeamId String
+  toTeamId String
   relationChanges Json
 }
 

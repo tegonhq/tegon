@@ -43,10 +43,21 @@ export class NotificationsProcessor {
     }>,
   ) {
     const { eventType, notificationData } = job.data;
-    this.logger.log(`Adding notification for event ${eventType}`);
+    this.logger.log(`Deleting notification for event ${eventType}`);
     await this.notificationsService.deleteNotificationByEventType(
       eventType,
       notificationData,
     );
+  }
+
+  @Process('deleteNotificationsByIssue')
+  async deleteNotificationsByIssue(
+    job: Job<{
+      issueId: string;
+    }>,
+  ) {
+    const { issueId } = job.data;
+    this.logger.log(`Deleting notifications for issue ${issueId}`);
+    await this.notificationsService.deleteNotificationByIssueId(issueId);
   }
 }

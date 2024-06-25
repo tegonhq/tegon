@@ -101,4 +101,11 @@ export default class NotificationsService {
       data: notificationData,
     });
   }
+
+  async deleteNotificationByIssueId(issueId: string) {
+    return await this.prisma.notification.updateMany({
+      where: { issueId },
+      data: { deleted: new Date().toISOString() },
+    });
+  }
 }

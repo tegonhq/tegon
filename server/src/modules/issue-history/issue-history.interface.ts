@@ -13,4 +13,6 @@ export interface IssueHistoryData {
   toAssigneeId: string;
   fromParentId: string;
   toParentId: string;
+  fromTeamId: string;
+  toTeamId: string;
 }

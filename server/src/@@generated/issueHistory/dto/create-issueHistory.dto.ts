@@ -20,5 +20,7 @@ fromAssigneeId?: string;
 toAssigneeId?: string;
 fromParentId?: string;
 toParentId?: string;
+fromTeamId?: string;
+toTeamId?: string;
 relationChanges?: Prisma.InputJsonValue;
 }

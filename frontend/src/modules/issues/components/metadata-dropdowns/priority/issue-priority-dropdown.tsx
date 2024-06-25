@@ -23,11 +23,13 @@ interface IssuePriorityProps {
   value?: number;
   onChange?: (priority: number) => void;
   variant?: IssuePriorityDropdownVariant;
+  className?: string;
 }
 
 export function IssuePriorityDropdown({
   value,
   onChange,
+  className,
   variant = IssuePriorityDropdownVariant.DEFAULT,
 }: IssuePriorityProps) {
   const [open, setOpen] = React.useState(false);
@@ -41,7 +43,10 @@ export function IssuePriorityDropdown({
           role="combobox"
           size="xs"
           aria-expanded={open}
-          className="flex gap-2 items-center px-0 shadow-none text-xs !bg-transparent hover:bg-transparent border-none justify-between focus-visible:ring-1 focus-visible:border-primary"
+          className={cn(
+            'flex gap-2 items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary',
+            className,
+          )}
         >
           <PriorityIcon.icon size={16} />
           {Priorities[value]}
@@ -61,10 +66,7 @@ export function IssuePriorityDropdown({
             value === 0 && 'text-muted-foreground',
           )}
         >
-          <PriorityIcon.icon
-            size={20}
-            className={cn('mr-2 text-muted-foreground')}
-          />
+          <PriorityIcon.icon size={20} className={cn('mr-2')} />
 
           <span>{Priorities[value]}</span>
         </Button>

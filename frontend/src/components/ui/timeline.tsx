@@ -38,7 +38,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
         <div className="flex justify-between items-start">
           <div className="w-full">{children}</div>
           {date && (
-            <div className="font-mono text-muted-foreground text-sm shrink-0">
+            <div className="font-mono text-muted-foreground text-xs shrink-0">
               <ReactTimeAgo date={new Date(date)} />
             </div>
           )}
