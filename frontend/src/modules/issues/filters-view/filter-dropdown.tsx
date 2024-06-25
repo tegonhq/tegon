@@ -106,7 +106,7 @@ function DefaultPopoverContent({
           className="flex items-center"
           onSelect={() => onSelect('isBlocked')}
         >
-          <BlockedFill size={16} className="mr-2" />
+          <BlockedFill size={16} className="mr-2 text-red-500" />
           Blocked issues
         </CommandItem>
         <CommandItem
@@ -115,7 +115,7 @@ function DefaultPopoverContent({
           className="flex items-center"
           onSelect={() => onSelect('isBlocking')}
         >
-          <BlocksFill size={16} className="mr-2" />
+          <BlocksFill size={16} className="mr-2 text-orange-500" />
           Blocking issues
         </CommandItem>
       </CommandGroup>

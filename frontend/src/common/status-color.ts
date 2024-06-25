@@ -4,40 +4,40 @@ import type { WorkflowType } from './types/team';
 
 export const WorkflowColors = {
   Triage: {
-    background: '#FD865C',
-    color: '#D94B0E',
+    background: 'var(--status-pill-0)',
+    color: 'var(--status-icon-0)',
   },
   Unscoped: {
-    background: '#D9BEFA',
-    color: '#9F3DEF',
+    background: 'var(--status-pill-1)',
+    color: 'var(--status-icon-1)',
   },
   Backlog: {
-    background: '#A9A67B',
-    color: '#8E862C',
+    background: 'var(--status-pill-2)',
+    color: 'var(--status-icon-2)',
   },
   Todo: {
-    background: '#D8D8D8',
-    color: '#5C5C5C',
+    background: 'var(--status-pill-3)',
+    color: 'var(--status-icon-3)',
   },
   'In Progress': {
-    background: '#F2C062',
-    color: '#C28C11',
+    background: 'var(--status-pill-4)',
+    color: 'var(--status-icon-4)',
   },
   'In Review': {
-    background: '#96C3FE',
-    color: '#3F8EF7',
+    background: 'var(--status-pill-5)',
+    color: 'var(--status-icon-5)',
   },
   Done: {
-    background: '#79CC68',
-    color: '#3CAF20',
+    background: 'var(--status-pill-6)',
+    color: 'var(--status-icon-6)',
   },
   Canceled: {
-    background: '#D8D8D8',
-    color: '#5C5C5C',
+    background: 'var(--status-pill-3)',
+    color: 'var(--status-icon-3)',
   },
   Duplicate: {
-    background: '#D8D8D8',
-    color: '#5C5C5C',
+    background: 'var(--status-pill-3)',
+    color: 'var(--status-icon-3)',
   },
 };
 

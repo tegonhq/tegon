@@ -179,7 +179,6 @@ export function RepoTeamLinkDialog({
                       >
                         <SelectTrigger
                           className={cn(
-                            'h-[30px]',
                             field.value
                               ? 'text-foreground'
                               : 'text-muted-foreground',
@@ -187,7 +186,7 @@ export function RepoTeamLinkDialog({
                         >
                           <SelectValue placeholder="Select a organization" />
                         </SelectTrigger>
-                        <SelectContent className="text-sm">
+                        <SelectContent>
                           <SelectGroup>
                             {githubAccounts.map(
                               (githubAccount: IntegrationAccountType) => {
@@ -252,7 +251,6 @@ export function RepoTeamLinkDialog({
                         >
                           <SelectTrigger
                             className={cn(
-                              'h-[30px]',
                               field.value
                                 ? 'text-foreground'
                                 : 'text-muted-foreground',
@@ -260,7 +258,7 @@ export function RepoTeamLinkDialog({
                           >
                             <SelectValue placeholder="Select a repository" />
                           </SelectTrigger>
-                          <SelectContent className="text-sm">
+                          <SelectContent>
                             <SelectGroup>
                               {repositories.map(
                                 (repository: GithubRepositories) => {
@@ -300,7 +298,6 @@ export function RepoTeamLinkDialog({
                         >
                           <SelectTrigger
                             className={cn(
-                              'h-[30px]',
                               field.value
                                 ? 'text-foreground'
                                 : 'text-muted-foreground',
@@ -308,7 +305,7 @@ export function RepoTeamLinkDialog({
                           >
                             <SelectValue placeholder="Select a team" />
                           </SelectTrigger>
-                          <SelectContent className="text-sm">
+                          <SelectContent>
                             <SelectGroup>
                               {teams.map((team: TeamType) => {
                                 return (

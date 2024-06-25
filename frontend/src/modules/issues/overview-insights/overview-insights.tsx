@@ -29,7 +29,7 @@ export function OverviewInsights({ title }: OverviewInsightsProps) {
       <div className="text-sm p-3 border-b">{title}</div>
 
       <Tabs className="p-2" defaultValue="status">
-        <TabsList className="flex w-full gap-2 justify-between bg-active">
+        <TabsList className="flex w-full gap-2 justify-between bg-accent">
           <TabsTrigger value="status" className="text-xs">
             Status
           </TabsTrigger>

@@ -82,7 +82,7 @@ export const EditorChild = ({
     <div className="relative w-full max-w-screen-lg">
       <EditorCommand
         className={cn(
-          'z-50 h-auto font-sans max-h-[330px] overflow-y-auto w-72 rounded-md border border-muted bg-background dark:bg-slate-800 backdrop-blur-md px-1 shadow-lg transition-all',
+          'z-50 h-auto font-sans max-h-[330px] overflow-y-auto w-72 rounded-md border border-muted bg-background backdrop-blur-md px-1 shadow-lg transition-all',
         )}
       >
         <EditorCommandEmpty className="px-2 text-muted-foreground">
@@ -93,7 +93,7 @@ export const EditorChild = ({
             <EditorCommandItem
               value={item.title}
               onCommand={(val) => item.command(val)}
-              className={`flex w-full items-center space-x-2 my-2 rounded-md px-2 py-1 text-left text-xs hover:bg-accent dark:hover:bg-slate-700 aria-selected:bg-accent dark:aria-selected:bg-slate-700`}
+              className={`flex w-full items-center space-x-2 my-2 rounded-md px-2 py-1 text-left text-xs hover:bg-accent aria-selected:bg-accent`}
               key={item.title}
             >
               <div className="flex h-5 w-5 items-center justify-center">

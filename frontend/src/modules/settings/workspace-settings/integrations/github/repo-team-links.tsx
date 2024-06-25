@@ -18,7 +18,7 @@ export const RepoTeamLinks = observer(() => {
   const teams = useTeams();
 
   return (
-    <div className="flex flex-col bg-gray-50 rounded-md mt-8 items-center">
+    <div className="flex flex-col bg-background-3 rounded-md mt-8 items-center">
       <div className="p-3 flex justify-between items-center gap-4 w-full border-b">
         <div>
           <h3 className="font-medium">GitHub Issues</h3>

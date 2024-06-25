@@ -71,12 +71,12 @@ export const IssueLabelDropdown = observer(
               </Button>
             ) : (
               <Button
-                variant="outline"
+                variant="ghost"
                 role="combobox"
                 size="sm"
                 aria-expanded={open}
                 className={cn(
-                  'flex items-center border px-1 -ml-2 dark:bg-transparent border-transparent hover:border-slate-200 dark:border-transparent dark:hover:border-slate-700 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+                  'flex items-center px-1 -ml-2 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
                 )}
               >
                 {labelTitle()}

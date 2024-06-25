@@ -4,9 +4,6 @@ import type { ImperativePanelHandle } from 'react-resizable-panels';
 
 import React from 'react';
 
-import { LeftSide } from 'modules/issues/single-issue/left-side/left-side';
-import { RightSide } from 'modules/issues/single-issue/right-side/right-side';
-
 import { AppLayout } from 'common/layouts/app-layout';
 
 import {
@@ -26,7 +23,7 @@ export function InboxSingleIssue() {
   return (
     <main className="flex flex-col h-[100vh]">
       <Header />
-      <div className="bg-gray-200 rounded-tl-3xl flex h-[calc(100vh_-_53px)]">
+      <div className="bg-background-2 rounded-tl-3xl flex h-[calc(100vh_-_53px)]">
         <ResizablePanelGroup direction="horizontal" className="">
           <ResizablePanel
             maxSize={50}

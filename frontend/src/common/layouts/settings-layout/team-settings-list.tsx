@@ -75,7 +75,7 @@ export const TeamSettingsList = observer(() => {
 
                         team.identifier === teamIdentifier &&
                           settingsSection === item.href &&
-                          'bg-active',
+                          'bg-accent text-accent-foreground',
                       )}
                     >
                       {item.title}
@@ -91,7 +91,8 @@ export const TeamSettingsList = observer(() => {
           className={cn(
             buttonVariants({ variant: 'ghost', size: 'sm' }),
             'flex items-center justify-start my-2 w-full gap-2 px-0',
-            settingsSection === 'new_team' && 'bg-active',
+            settingsSection === 'new_team' &&
+              'bg-accent text-accent-foreground',
           )}
           href={`/${workspaceSlug}/settings/new_team`}
         >

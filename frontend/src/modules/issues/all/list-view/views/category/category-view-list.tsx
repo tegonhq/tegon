@@ -58,7 +58,7 @@ export const CategoryViewList = observer(
         <div className="flex gap-1 items-center">
           <CollapsibleTrigger asChild>
             <Button
-              className="flex items-center group ml-6 w-fit rounded-2xl"
+              className="flex items-center group ml-6 w-fit rounded-2xl text-accent-foreground"
               style={{ backgroundColor: getWorkflowColor(workflow).background }}
               variant="ghost"
             >

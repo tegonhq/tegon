@@ -57,7 +57,7 @@ export const BoardIssueItem = observer(
 
     return (
       <a
-        className="p-3 flex flex-col justify-between group cursor-default rounded-md bg-gray-50 w-[100%] gap-2"
+        className="p-3 flex flex-col justify-between group cursor-default rounded-md bg-background-3 dark:bg-gray-300 w-[100%] gap-2"
         onClick={() => {
           push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
         }}
