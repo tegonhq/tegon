@@ -98,7 +98,7 @@ ul[data-type='taskList'] li > label input[type='checkbox'] {
   width: 1rem;
   height: 1rem;
   position: relative;
-  margin-top: 0.3rem;
+  margin-top: 0.2rem;
   display: grid;
   place-content: center;
 }

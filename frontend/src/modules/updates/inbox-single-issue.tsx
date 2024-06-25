@@ -31,7 +31,6 @@ export function InboxSingleIssue() {
           <ResizablePanel
             maxSize={50}
             ref={ref}
-            defaultSize={24}
             minSize={16}
             collapsible
             collapsedSize={16}
@@ -42,7 +41,20 @@ export function InboxSingleIssue() {
             </div>
           </ResizablePanel>
           <ResizableHandle />
-          <ResizablePanel collapsible collapsedSize={0}></ResizablePanel>
+          <ResizablePanel collapsible collapsedSize={0}>
+            <div className="flex">
+              <div className="flex flex-col h-full w-full">
+                <main className="grid grid-cols-4 h-full">
+                  <div className="col-span-4 xl:col-span-3 flex flex-col h-[calc(100vh_-_52px)]">
+                    <LeftSide />
+                  </div>
+                  <div className="border-l hidden flex-col xl:col-span-1 xl:flex">
+                    <RightSide />
+                  </div>
+                </main>
+              </div>
+            </div>
+          </ResizablePanel>
         </ResizablePanelGroup>
       </div>
     </main>

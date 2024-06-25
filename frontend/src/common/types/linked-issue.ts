@@ -6,6 +6,7 @@ export enum LinkedIssueSubType {
   ExternalLink = 'ExternalLink',
   Slack = 'Slack',
   Sentry = 'Sentry',
+  Gmail = 'Gmail',
 }
 
 export enum LinkedSlackMessageType {
@@ -17,6 +18,7 @@ export enum Integration {
   Slack = 'Slack',
   Github = 'Github',
   Sentry = 'Sentry',
+  Gmail = 'Gmail',
 }
 
 export interface LinkedIssueType {

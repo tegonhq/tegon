@@ -7,7 +7,7 @@ import type { LabelType } from 'common/types/label';
 
 import { Badge, BadgeColor } from 'components/ui/badge';
 import { TimelineItem } from 'components/ui/timeline';
-import { LabelFill } from 'icons';
+import { LabelLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -38,7 +38,7 @@ export function LabelActivity({
         date={showTime && issueHistory.updatedAt}
       >
         <div className="flex items-center text-muted-foreground">
-          <LabelFill size={20} className="mr-4" />
+          <LabelLine size={20} className="mr-4" />
 
           <div className="flex items-center">
             <span className="mr-2 font-medium text-foreground">{username}</span>
@@ -67,7 +67,7 @@ export function LabelActivity({
       date={showTime && issueHistory.updatedAt}
     >
       <div className="flex items-center text-muted-foreground">
-        <LabelFill size={20} className="mr-4" />
+        <LabelLine size={20} className="mr-4" />
 
         <div className="flex items-center">
           <span className="mr-2 font-medium text-foreground">{username}</span>

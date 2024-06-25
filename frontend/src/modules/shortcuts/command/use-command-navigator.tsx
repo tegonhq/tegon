@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import { useCurrentTeam } from 'hooks/teams';
-import { IssuesLine, LabelFill, StackLine, TeamLine, TriageLine } from 'icons';
+import { IssuesLine, LabelLine, StackLine, TeamLine, TriageLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -57,7 +57,7 @@ export function useCommandNavigator({
         group: 'Create',
       },
       {
-        Icon: <LabelFill className="text-muted-foreground !h-4 !w-4" />,
+        Icon: <LabelLine className="text-muted-foreground !h-4 !w-4" />,
         text: 'Create label',
         value: ID_MAP.CREATE_LABEL,
         group: 'Create',

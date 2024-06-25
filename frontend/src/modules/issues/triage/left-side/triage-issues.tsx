@@ -16,7 +16,7 @@ import { ScrollArea } from 'components/ui/scroll-area';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
 import { useTeamWorkflows } from 'hooks/workflows';
-import { SlackIcon } from 'icons';
+import { Gmail, SlackIcon } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
@@ -41,6 +41,15 @@ export function getCreatedBy(issue: IssueType, user: User) {
         <div className="flex gap-2 text-muted-foreground items-center">
           <RiGithubFill size={16} />
           Github
+        </div>
+      );
+    }
+
+    if (sourceMetadata.type === Integration.Gmail) {
+      return (
+        <div className="flex gap-2 text-muted-foreground items-center">
+          <Gmail size={16} />
+          Gmail
         </div>
       );
     }
