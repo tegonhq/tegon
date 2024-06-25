@@ -1,5 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { Separator } from 'components/ui/separator';
+
+import { SaveViewActions } from './save-view-actions';
 import {
   GroupingOrderingOptions,
   LayoutSwitch,
@@ -12,6 +15,8 @@ export function IssuesViewOptions() {
       <GroupingOrderingOptions />
       <LayoutSwitch />
       <ViewOptions />
+      <Separator orientation="vertical" />
+      <SaveViewActions />
     </div>
   );
 }

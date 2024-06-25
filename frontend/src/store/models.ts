@@ -17,4 +17,5 @@ export enum MODELS {
   LinkedIssue = 'LinkedIssue',
   IssueRelation = 'IssueRelation',
   Notification = 'Notification',
+  IssueSuggestion = 'IssueSuggestion',
 }

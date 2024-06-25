@@ -18,9 +18,14 @@ import { TeamDropdown } from './team-dropdown';
 interface NewIssueDialogProps {
   open: boolean;
   setOpen: (value: boolean) => void;
+  parentId?: string;
 }
 
-export function NewIssueDialog({ open, setOpen }: NewIssueDialogProps) {
+export function NewIssueDialog({
+  open,
+  setOpen,
+  parentId,
+}: NewIssueDialogProps) {
   const [team, setTeam] = React.useState(undefined);
 
   const onClose = () => {
@@ -52,7 +57,11 @@ export function NewIssueDialog({ open, setOpen }: NewIssueDialogProps) {
           </DialogHeader>
 
           {team && (
-            <NewIssue onClose={() => setOpen(false)} teamIdentifier={team} />
+            <NewIssue
+              onClose={() => setOpen(false)}
+              teamIdentifier={team}
+              parentId={parentId}
+            />
           )}
         </DialogContent>
       </Dialog>

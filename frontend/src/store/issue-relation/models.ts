@@ -13,8 +13,9 @@ export const IssueRelation = types.model({
     'RELATED',
     'DUPLICATE',
     'DUPLICATE_OF',
+    'SIMILAR',
   ]),
   issueId: types.string,
   relatedIssueId: types.string,
-  createdById: types.string,
+  createdById: types.union(types.string, types.null),
 });

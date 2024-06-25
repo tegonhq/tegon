@@ -29,7 +29,7 @@ export const View = withApplicationStore(
       <main className="flex flex-col h-[100vh]">
         <Header title={view.name} view={view} />
         <div className="bg-background-2 rounded-tl-3xl flex flex-col h-[calc(100vh_-_53px)]">
-          <FiltersView Actions={<ViewDisplayOptions />} />
+          <FiltersView Actions={<ViewDisplayOptions view={view} />} />
 
           <ViewList view={view} />
         </div>

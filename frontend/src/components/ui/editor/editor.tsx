@@ -93,7 +93,7 @@ export const EditorChild = ({
             <EditorCommandItem
               value={item.title}
               onCommand={(val) => item.command(val)}
-              className={`flex w-full items-center space-x-2 my-2 rounded-md px-2 py-1 text-left text-xs hover:bg-accent aria-selected:bg-accent`}
+              className={`flex w-full items-center space-x-2 my-2 rounded-md px-2 py-1 text-left hover:bg-accent aria-selected:bg-accent hover:text-accent-foreground aria-selected:text-accent-foreground`}
               key={item.title}
             >
               <div className="flex h-5 w-5 items-center justify-center">
@@ -101,9 +101,7 @@ export const EditorChild = ({
               </div>
               <div>
                 <p className="font-medium">{item.title}</p>
-                <p className="text-xs text-muted-foreground">
-                  {item.description}
-                </p>
+                <p className="text-xs">{item.description}</p>
               </div>
             </EditorCommandItem>
           ))}

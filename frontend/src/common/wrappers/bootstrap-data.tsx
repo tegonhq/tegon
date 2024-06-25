@@ -40,6 +40,7 @@ export function BootstrapWrapper({ children }: Props) {
     issueRelationsStore,
     notificationsStore,
     viewsStore,
+    issueSuggestionsStore,
   } = useContextStore();
 
   const MODEL_STORE_MAP = {
@@ -57,6 +58,7 @@ export function BootstrapWrapper({ children }: Props) {
     [MODELS.IssueRelation]: issueRelationsStore,
     [MODELS.Notification]: notificationsStore,
     [MODELS.View]: viewsStore,
+    [MODELS.IssueSuggestion]: issueSuggestionsStore,
   };
 
   React.useEffect(() => {

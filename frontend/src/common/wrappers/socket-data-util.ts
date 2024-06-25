@@ -6,6 +6,7 @@ import { saveIntegrationAccountData } from 'store/integration-accounts';
 import { saveIntegrationDefinitionData } from 'store/integration-definitions';
 import { saveIssueHistoryData } from 'store/issue-history';
 import { saveIssueRelationData } from 'store/issue-relation';
+import { saveIssueSuggestionData } from 'store/issue-suggestions';
 import { saveIssuesData } from 'store/issues';
 import { saveLabelData } from 'store/labels';
 import { saveLinkedIssueData } from 'store/linked-issues';
@@ -109,6 +110,13 @@ export async function saveSocketData(
 
         case MODELS.View: {
           return await saveViewData([record], MODEL_STORE_MAP[MODELS.View]);
+        }
+
+        case MODELS.IssueSuggestion: {
+          return await saveIssueSuggestionData(
+            [record],
+            MODEL_STORE_MAP[MODELS.IssueSuggestion],
+          );
         }
       }
     }),

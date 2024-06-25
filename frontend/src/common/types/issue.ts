@@ -79,3 +79,12 @@ export enum SubscribeType {
   SUBSCRIBE = 'SUBSCRIBE',
   UNSUBSCRIBE = 'UNSUBSCRIBE',
 }
+
+export interface IssueSuggestionType {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  issueId: string;
+  suggestedLabelIds: string[];
+  suggestedAssigneeId?: string;
+}

@@ -76,7 +76,7 @@ export function SearchDialog({ open, setOpen }: SearchDialogProps) {
       {isLoading && <Loader />}
       {!isLoading && issues && (
         <CommandList className="py-2">
-          {issues.map((issue: SearchIssueType) => (
+          {issues.filter(Boolean).map((issue: SearchIssueType) => (
             <CommandItem
               key={issue.id}
               value={issue.issueNumber}

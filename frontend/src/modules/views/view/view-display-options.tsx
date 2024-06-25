@@ -8,15 +8,25 @@ import {
   LayoutSwitch,
   ViewOptions,
 } from 'modules/issues/components';
+import { SaveViewAction } from './save-view-action';
+import { Separator } from 'components/ui/separator';
+import type { ViewType } from 'common/types/view';
 
-export const ViewDisplayOptions = observer(() => {
-  return (
-    <div className="flex gap-2">
-      <GroupingOrderingOptions />
-      <LayoutSwitch />
-      <ViewOptions />
+interface ViewDisplayOptionsProps {
+  view: ViewType;
+}
 
-      <SaveViewActions />
-    </div>
-  );
-});
+export const ViewDisplayOptions = observer(
+  ({ view }: ViewDisplayOptionsProps) => {
+    return (
+      <div className="flex gap-2">
+        <GroupingOrderingOptions />
+        <LayoutSwitch />
+        <ViewOptions />
+
+        <Separator orientation="vertical" />
+        <SaveViewAction view={view} />
+      </div>
+    );
+  },
+);

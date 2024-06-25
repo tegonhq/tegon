@@ -93,6 +93,7 @@ export default class ReplicationService {
   }
 
   async setupReplication() {
+    const dbSchema = this.configService.get('DB_SCHEMA');
     const clientConfig = {
       host: this.configService.get('DB_HOST'),
       database: this.configService.get('POSTGRES_DB'),
@@ -116,7 +117,7 @@ export default class ReplicationService {
       if (log.change) {
         log.change.forEach(async (change: logChangeType) => {
           if (
-            change.schema === 'tegon' &&
+            change.schema === dbSchema &&
             change.kind !== 'delete' &&
             tablesToSendMessagesFor.has(change.table as ModelName)
           ) {

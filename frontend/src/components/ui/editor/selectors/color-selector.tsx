@@ -126,11 +126,11 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
 
       <PopoverContent
         sideOffset={5}
-        className="my-1 flex max-h-80 w-48 flex-col overflow-hidden overflow-y-auto rounded border p-1 shadow-xl "
+        className="my-1 flex max-h-80 w-48 flex-col overflow-hidden overflow-y-auto rounded border p-1 shadow-xl"
         align="start"
       >
         <div className="flex flex-col">
-          <div className="my-1 px-2 text-sm font-semibold text-muted-foreground">
+          <div className="my-1 px-2 font-semibold text-muted-foreground">
             Color
           </div>
           {TEXT_COLORS.map(({ name, color }, index) => (
@@ -145,7 +145,7 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
                     .setColor(color || '')
                     .run();
               }}
-              className="flex cursor-pointer items-center justify-between px-2 py-1 text-sm hover:bg-accent"
+              className="flex cursor-pointer items-center justify-between px-2 py-1 hover:bg-accent hover:text-accent-foreground"
             >
               <div className="flex items-center gap-2">
                 <div
@@ -160,7 +160,7 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
           ))}
         </div>
         <div>
-          <div className="my-1 px-2 text-sm font-semibold text-muted-foreground">
+          <div className="my-1 px-2 font-semibold text-muted-foreground">
             Background
           </div>
           {HIGHLIGHT_COLORS.map(({ name, color }, index) => (
@@ -170,7 +170,7 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
                 editor.commands.unsetHighlight();
                 name !== 'Default' && editor.commands.setHighlight({ color });
               }}
-              className="flex cursor-pointer items-center justify-between px-2 py-1 text-sm hover:bg-accent"
+              className="flex cursor-pointer items-center justify-between px-2 py-1 hover:bg-accent hover:text-accent-foreground"
             >
               <div className="flex items-center gap-2">
                 <div

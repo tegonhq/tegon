@@ -23,7 +23,7 @@ export class SearchController {
       searchData.workspaceId,
       searchData.query,
       parseInt(searchData.limit),
-      // Number(searchData.threshold),
+      Number(searchData.threshold),
     );
   }
 
@@ -33,7 +33,6 @@ export class SearchController {
     return await this.searchService.similarData(
       similarIssueData.workspaceId,
       similarIssueData.issueId,
-      // parseInt(similarIssueData.limit),
     );
   }
 }

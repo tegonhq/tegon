@@ -69,7 +69,7 @@ export function IssueAssigneeDropdownContent({
               />
             )}
             <div className="flex grow">
-              <AssigneeLine size={20} className="text-muted-foreground mr-2" />
+              <AssigneeLine size={20} className="mr-2" />
               No Assignee
             </div>
           </div>

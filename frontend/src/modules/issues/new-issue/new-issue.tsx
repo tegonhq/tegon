@@ -48,6 +48,7 @@ import {
 } from './new-issue-utils';
 import { NewIssueSchema } from './new-issues-type';
 import { FileUpload } from '../single-issue/left-side/file-upload/file-upload';
+import { useContextStore } from 'store/global-context-provider';
 
 interface NewIssueProps {
   onClose: () => void;
@@ -59,6 +60,7 @@ export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
   useScope(SCOPES.NewIssue);
   const { workspaceSlug } = useParams();
   const team = useTeam(teamIdentifier);
+  const { issuesStore } = useContextStore();
 
   const { mutate: createIssue, isLoading } = useCreateIssueMutation({
     onSuccess: (data: IssueType) => {
@@ -131,13 +133,21 @@ export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
     SCOPES.NewIssue,
   ]);
 
+  const parentIssue = parentId ? issuesStore.getIssueById(parentId) : undefined;
+
   return (
-    <div
-      className={cn(
-        'flex flex-col',
-        parentId && 'shadow-md rounded-md py-1 pt-3 px-2 border',
+    <div className="flex flex-col gap-2">
+      {parentIssue && (
+        <div className="bg-accent text-accent-foreground rounded-md ml-2 p-2 py-1 flex gap-2 justify-start w-fit">
+          <div>Parent: </div>
+          <div>
+            {team.identifier}-{parentIssue.number}
+          </div>
+          <div className="max-w-[300px]">
+            <div className="truncate">{parentIssue.title}</div>
+          </div>
+        </div>
       )}
-    >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="p-3 pt-0 ">
@@ -195,8 +205,6 @@ export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
           <div
             className={cn(
               'flex items-center justify-between p-3',
-              !parentId && 'border-t gap-2',
-              parentId && 'gap-2',
               !enableBidirectionalOption && 'justify-end',
             )}
           >

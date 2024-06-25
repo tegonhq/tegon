@@ -9,6 +9,7 @@ import { IntegrationAccountsStore } from './integration-accounts';
 import { IntegrationDefinitionsStore } from './integration-definitions';
 import { IssueHistoryStore } from './issue-history';
 import { IssueRelationsStore } from './issue-relation';
+import { IssueSuggestionsStore } from './issue-suggestions';
 import { IssuesStore } from './issues';
 import { LabelsStore } from './labels';
 import { LinkedIssuesStore } from './linked-issues';
@@ -33,6 +34,7 @@ const StoreContextModel = types.model({
   issueRelationsStore: IssueRelationsStore,
   notificationsStore: NotificationsStore,
   viewsStore: ViewsStore,
+  issueSuggestionsStore: IssueSuggestionsStore,
 });
 
 export const storeContextStore = StoreContextModel.create({
@@ -43,7 +45,6 @@ export const storeContextStore = StoreContextModel.create({
     issueHistories: [],
   },
   issuesStore: {
-    issues: [],
     teamId: undefined,
   },
   workflowsStore: {
@@ -89,6 +90,9 @@ export const storeContextStore = StoreContextModel.create({
   },
   viewsStore: {
     views: [],
+  },
+  issueSuggestionsStore: {
+    teamId: undefined,
   },
 });
 
