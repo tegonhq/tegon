@@ -74,7 +74,9 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                   className={cn(
                     buttonVariants({ variant: 'ghost', size: 'sm' }),
                     'flex items-center justify-start text-foreground bg-grayAlpha-100 w-fit',
-                    !teamIdentifier && isActive(item) && 'bg-active ',
+                    !teamIdentifier &&
+                      isActive(item) &&
+                      'bg-accent text-accent-foreground',
                   )}
                 >
                   {item.title}
@@ -100,7 +102,8 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                     buttonVariants({ variant: 'ghost', size: 'sm' }),
                     'flex items-center justify-start text-foreground bg-grayAlpha-100 w-fit',
 
-                    settingsSection === item.href && 'bg-active',
+                    settingsSection === item.href &&
+                      'bg-accent text-accent-foreground',
                   )}
                 >
                   {item.title}

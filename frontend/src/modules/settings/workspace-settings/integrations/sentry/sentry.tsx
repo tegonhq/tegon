@@ -25,7 +25,7 @@ Sentry.getLayout = function getLayout(page: React.ReactElement) {
     <SettingsLayout>
       <div className="h-[100vh] flex flex-col w-full">
         <Header title="Sentry" />
-        <ScrollArea className="flex grow bg-gray-200 rounded-tl-3xl">
+        <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
           <div className="w-full p-6">{page} </div>
         </ScrollArea>
       </div>

@@ -15,7 +15,7 @@ export function MemberItem({ name, className, email }: MemberItemProps) {
     <div
       className={cn(
         className,
-        'flex items-center justify-between bg-gray-50 p-3 rounded-lg',
+        'flex items-center justify-between bg-background-3 p-3 rounded-lg',
       )}
     >
       <div className="flex gap-2 items-center">

@@ -19,21 +19,6 @@ export function generateOklchColor(): string {
 }
 
 export function getTailwindColor(name: string): string {
-  const colors = [
-    '#B56455',
-    '#7B8A34',
-    '#1C91A8',
-    '#886DBC',
-    '#AD6E30',
-    '#54935B',
-    '#4187C0',
-    '#A165A1',
-    '#997D1D',
-    '#2B9684',
-    '#2B9684',
-    '#B0617C',
-  ];
-
   // Generate a hash value for the input name
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
@@ -41,22 +26,20 @@ export function getTailwindColor(name: string): string {
   }
 
   // Ensure hash value is within the range of colors array
-  const index = Math.abs(hash) % colors.length;
+  const index = Math.abs(hash) % 12;
 
-  return colors[index];
+  return `var(--custom-color-${index + 1})`;
 }
 
 export function getTeamColor(name: string): string {
-  const bgColors = ['bg-[#89C794]', 'bg-[#90C5D6]', 'bg-[#D2A1BB]'];
-
   // Generate a hash value for the input name
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 3) - hash);
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
   }
 
   // Ensure hash value is within the range of colors array
-  const index = Math.abs(hash) % bgColors.length;
+  const index = Math.abs(hash) % 3;
 
-  return bgColors[index];
+  return `var(--team-color-${index + 1})`;
 }

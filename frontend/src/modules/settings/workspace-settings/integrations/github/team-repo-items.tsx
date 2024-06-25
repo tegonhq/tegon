@@ -93,7 +93,7 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
 
   return (
     <div className="w-full">
-      <div className="py-2 px-2 flex gap-2 bg-active/50 w-full rounded-md text-foreground items-center">
+      <div className="py-2 px-2 flex gap-2 bg-accent/50 w-full rounded-md text-foreground items-center">
         <TeamIcon name={team.name} />
         {team.name} ({team.identifier})
       </div>
@@ -108,7 +108,7 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
                 index + 1 < accounts.length && 'border-b',
               )}
             >
-              <div className="border p-1 rounded-md bg-slate-100 dark:bg-slate-800">
+              <div className="border p-1 rounded-md">
                 <RiGithubFill size={16} />
               </div>
               <div className="grow flex gap-2 items-center">

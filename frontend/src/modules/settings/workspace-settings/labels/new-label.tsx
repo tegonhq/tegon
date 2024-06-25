@@ -35,7 +35,7 @@ export function NewLabel({ onCancel, teamId }: NewLabelProps) {
   };
 
   return (
-    <div className="group flex justify-between mb-2 bg-gray-50 rounded p-2 px-4">
+    <div className="group flex justify-between mb-2 bg-background-3 rounded p-2 px-4">
       <div className="flex items-center justify-center gap-3 w-full">
         <div
           className="h-3 w-3 rounded-full"

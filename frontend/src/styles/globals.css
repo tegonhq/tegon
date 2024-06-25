@@ -1,10 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import './palette.css';
 
 @layer base {
   :root {
     --background: 84.21% 0 0;
+    --background-2: 93.1% 0 0;
+    --background-3: 98.21% 0 0;
     --foreground: 0% 0 0;
     --card: 0 0% 100%;
     --card-foreground: 0% 0 0;
@@ -14,40 +17,40 @@
     --primary-foreground: 0% 0 0;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 0% 0 0;
-    --muted: 81.69% 0 0;
+    --muted: 0% 0 0 / 19.22%;
     --muted-foreground: 49.26% 0 0;
     --accent: 100% 0 0;
     --accent-foreground: 0% 0 0;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 0% 0 0 / 19.22%;
-    --input: 84.21% 0 0;
+    --input: 0% 0 0 / 6.27%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 8px;
-    --active: 100% 0 0;
   }
 
   .dark {
-    --background: 84.52% 0 0;
-    --foreground: 210 40% 98%;
-    --card: 221 39% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 221 39% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 221.2 83.2% 60%;
-    --primary-foreground: 0% 0 0;
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 215 28% 17%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 215 28% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 60.6%;
+    --background: 21.34% 0 0;
+    --background-2: 25.2% 0 0;
+    --background-3: 28.5% 0 0;
+    --foreground: 92.8% 0 0;
+    --card: 0 0% 100%;
+    --card-foreground: 92.8% 0 0;
+    --popover: 28.5% 0 0;
+    --popover-foreground: 92.8% 0 0;
+    --primary: 65.03% 0.175 256.69;
+    --primary-foreground: 92.8% 0 0;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 92.8% 0 0;
+    --muted: 100% 0 0 / 13.33%;
+    --muted-foreground: 76.99% 0 0;
+    --accent: 95.81% 0 0;
+    --accent-foreground: 0% 0 0;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217 19% 17%;
-    --input: 217 19% 27%;
-    --ring: 224.3 76.3% 48%;
-    --active: 217 33% 17%;
+    --border: 100% 0 0 / 13.33%;
+    --input: 100% 0 0 / 10.59%;
+    --ring: 221.2 83.2% 53.3%;
   }
 }
 
@@ -89,7 +92,7 @@ ul[data-type='taskList'] li > label {
 }
 
 ul[data-type='taskList'] li > label input[type='checkbox'] {
-  @apply border rounded-sm;
+  @apply border border-border rounded-sm;
 
   -webkit-appearance: none;
   appearance: none;
@@ -138,5 +141,5 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
 }
 
 #slash-command {
-  @apply bg-gray-200;
+  @apply bg-background-2;
 }

@@ -32,7 +32,7 @@ export function PersonalSettings() {
     <div className="h-[100vh] flex flex-col w-full">
       <Header title={SECTION_TITLES[settingsSection]} />
 
-      <ScrollArea className="flex grow bg-gray-200 rounded-tl-3xl">
+      <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
         <div className="w-full p-6">
           {userData ? <SectionComponent /> : <Loader />}
         </div>

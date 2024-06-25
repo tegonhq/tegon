@@ -31,7 +31,7 @@ export function EditLabel({ onCancel, label }: NewLabelProps) {
   };
 
   return (
-    <div className="group flex justify-between mb-2 rounded bg-gray-50 p-2 px-4">
+    <div className="group flex justify-between mb-2 rounded bg-background-3 p-2 px-4">
       <div className="flex items-center justify-center gap-3 w-full">
         <div
           className="h-3 w-3 rounded-full"

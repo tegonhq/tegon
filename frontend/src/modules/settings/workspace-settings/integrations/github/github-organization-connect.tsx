@@ -48,7 +48,7 @@ export const GithubOrganizationConnect = observer(() => {
   }
 
   return (
-    <div className="mt-8 bg-gray-50 rounded-md flex flex-col items-center justify-between">
+    <div className="mt-8 bg-background-3 rounded-md flex flex-col items-center justify-between">
       <div className="flex justify-between items-center w-full p-3 ">
         <div> Connected organizations </div>
         <div>

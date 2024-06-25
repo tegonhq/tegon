@@ -74,7 +74,7 @@ export function RelatedDropdownItems({
                 setRelatedModal(IssueRelationEnum.BLOCKS);
               }}
             >
-              <DropdownItem Icon={BlocksFill} title="Blocked to..." />
+              <DropdownItem Icon={BlocksFill} title="Blocks..." />
             </DropdownMenuItem>
 
             <DropdownMenuItem

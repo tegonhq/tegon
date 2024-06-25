@@ -67,7 +67,7 @@ export function CommonDialog({
       return (
         <div className="p-2 flex justify-start w-full">
           <div className="text-xs">
-            <div className="bg-active rounded-md p-2 py-1 flex gap-2">
+            <div className="bg-accent rounded-md p-2 py-1 flex gap-2">
               <div>
                 {team.identifier}-{issue.number}
               </div>
@@ -83,7 +83,7 @@ export function CommonDialog({
     return (
       <div className="p-2 flex justify-start w-full">
         <div className="text-xs">
-          <div className="bg-active rounded-md p-2 py-1 flex gap-2">
+          <div className="bg-accent rounded-md p-2 py-1 flex gap-2">
             <div>{issues.length} issues</div>
           </div>
         </div>

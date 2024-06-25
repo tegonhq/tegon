@@ -19,7 +19,7 @@ export const AllIssues = withApplicationStore(() => {
   return (
     <main className="flex flex-col h-[100vh]">
       <Header title="All issues" />
-      <div className="bg-gray-200 rounded-tl-3xl flex flex-col h-[calc(100vh_-_53px)]">
+      <div className="bg-background-2 rounded-tl-3xl flex flex-col h-[calc(100vh_-_53px)]">
         <FiltersView Actions={<IssuesViewOptions />} />
         <ListView />
       </div>

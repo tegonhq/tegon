@@ -53,7 +53,7 @@ export const CategoryBoardList = observer(
         <div className="flex flex-col max-h-[100%] pr-4">
           <div className="flex gap-1 items-center mb-2">
             <div
-              className="flex items-center w-fit h-8 rounded-2xl px-4 py-2"
+              className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 text-accent-foreground"
               style={{
                 backgroundColor: getWorkflowColor(workflow).background,
               }}

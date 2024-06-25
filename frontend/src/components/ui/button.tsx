@@ -13,7 +13,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-primary text-slate-50 shadow hover:bg-primary/90 dark:bg-primary dark:text-slate-50 dark:hover:bg-primary/90',
+          'bg-primary shadow hover:bg-primary/90 dark:hover:bg-primary/90',
         destructive: 'text-red-500 bg-grayAlpha-100 border-none',
         outline: 'border shadow-sm hover:bg-gray-100 shadow-none',
         secondary: 'bg-grayAlpha-100 border-none',
@@ -71,7 +71,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(
           buttonVariants({ variant, size, full, className }),
-          isActive && 'bg-active  dark:hover:bg-slate-800',
+          isActive && 'bg-accent text-accent-foreground',
         )}
         ref={ref}
         type="button"

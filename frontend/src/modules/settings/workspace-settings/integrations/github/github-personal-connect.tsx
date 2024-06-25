@@ -35,7 +35,7 @@ export const GithubPersonalConnect = observer(() => {
   } = useIntegrationAccount(IntegrationName.GithubPersonal, user.id);
 
   return (
-    <div className="p-3 bg-gray-50 rounded-md flex items-center justify-between">
+    <div className="p-3 bg-background-3 rounded-md flex items-center justify-between">
       <div className="flex flex-col items-start justify-center">
         {githubAccount ? (
           <>

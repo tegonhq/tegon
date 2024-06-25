@@ -36,7 +36,7 @@ export function IssueComment() {
           onCreate={(editor) => setEditor(editor)}
           placeholder="Leave your comment..."
           onSubmit={onSubmit}
-          className="w-full min-h-[60px] mb-0 p-2 border"
+          className="w-full min-h-[60px] mb-0 p-2 border-border border"
         />
         <div className="absolute right-3 bottom-3 flex items-center gap-1">
           <FileUpload editor={editor} />

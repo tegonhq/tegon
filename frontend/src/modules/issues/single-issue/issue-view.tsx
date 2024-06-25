@@ -51,11 +51,11 @@ export const IssueView = observer(() => {
     <IssueStoreInit>
       <div className="flex flex-col h-[100vh]">
         <Header />
-        <main className="grid grid-cols-5 h-[calc(100vh_-_53px)] bg-gray-200 rounded-tl-3xl">
+        <main className="grid grid-cols-5 h-[calc(100vh_-_53px)] bg-background-2 rounded-tl-3xl">
           <div className="col-span-5 xl:col-span-4 flex flex-col h-[calc(100vh_-_55px)]">
             <LeftSide />
           </div>
-          <div className="border-l hidden flex-col xl:flex">
+          <div className="border-l border-border hidden flex-col xl:flex">
             <RightSide />
           </div>
         </main>
