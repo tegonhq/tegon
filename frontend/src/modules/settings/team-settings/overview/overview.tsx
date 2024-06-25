@@ -1,6 +1,8 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { RiClipboardLine } from '@remixicon/react';
+import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
@@ -19,12 +21,15 @@ import {
 } from 'components/ui/form';
 import { Input } from 'components/ui/input';
 import { Separator } from 'components/ui/separator';
+import { useToast } from 'components/ui/use-toast';
 import { useCurrentTeam } from 'hooks/teams/use-current-team';
 
 import { OverviewSchema } from './overview.interface';
 
 export const Overview = observer(() => {
   const currentTeam = useCurrentTeam();
+  const teamEmail = `triage+${currentTeam.id}@tegon.ai`;
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof OverviewSchema>>({
     resolver: zodResolver(OverviewSchema),
@@ -83,6 +88,37 @@ export const Overview = observer(() => {
               </Button>
             </form>
           </Form>
+        </div>
+      </SettingSection>
+
+      <Separator className="my-4" />
+
+      <SettingSection
+        title="Team preferences"
+        description="Manage your team preferences"
+      >
+        <div className="flex flex-col">
+          <h3 className="text-lg"> Create by email </h3>
+
+          <p className="text-muted-foreground">
+            With the unique email created for your team, you can send or forward
+            emails and we will automatically create issues in triage from them.
+          </p>
+
+          <div className="flex gap-1 max-w-[500px] mt-2">
+            <Input value={teamEmail} />
+            <Button
+              variant="ghost"
+              onClick={() => {
+                copy(teamEmail);
+                toast({
+                  description: 'Email is copied to clipboard',
+                });
+              }}
+            >
+              <RiClipboardLine size={16} className="text-muted-foreground" />
+            </Button>
+          </div>
         </div>
       </SettingSection>
 

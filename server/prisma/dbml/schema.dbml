@@ -456,6 +456,7 @@ Enum IntegrationName {
   Slack
   SlackPersonal
   Sentry
+  Gmail
 }
 
 Enum IssueRelationType {

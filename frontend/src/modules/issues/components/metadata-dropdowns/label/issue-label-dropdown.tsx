@@ -11,7 +11,7 @@ import { Badge, BadgeColor } from 'components/ui/badge';
 import { Button } from 'components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useTeamLabels } from 'hooks/labels/use-team-labels';
-import { LabelFill } from 'icons';
+import { LabelLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -108,7 +108,7 @@ export const IssueLabelDropdown = observer(
         const label = labels.find((label: LabelType) => label.id === value[0]);
         return (
           <>
-            <LabelFill size={14} className="text-muted-foreground mr-2" />
+            <LabelLine size={14} className="text-muted-foreground mr-2" />
             {label?.name}
           </>
         );
@@ -117,7 +117,7 @@ export const IssueLabelDropdown = observer(
       if (value.length > 1) {
         return (
           <>
-            <LabelFill size={14} className="text-muted-foreground mr-2" />
+            <LabelLine size={14} className="text-muted-foreground mr-2" />
             {value.length} Labels
           </>
         );

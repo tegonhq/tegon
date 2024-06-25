@@ -15,7 +15,7 @@ import {
   BlockedFill,
   BlocksFill,
   Filter,
-  LabelFill,
+  LabelLine,
   ParentIssueLine,
   PriorityHigh,
   SubIssue,
@@ -69,7 +69,7 @@ function DefaultPopoverContent({
           className="flex items-center"
           onSelect={onSelect}
         >
-          <LabelFill size={16} className="mr-2" />
+          <LabelLine size={16} className="mr-2" />
           Label
         </CommandItem>
         <CommandItem

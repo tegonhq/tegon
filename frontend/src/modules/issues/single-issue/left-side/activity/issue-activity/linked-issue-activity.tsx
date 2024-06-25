@@ -10,7 +10,7 @@ import {
 
 import { AvatarText } from 'components/ui/avatar';
 import { useUsersData } from 'hooks/users';
-import { SentryIcon, SlackIcon } from 'icons';
+import { Gmail, SentryIcon, SlackIcon } from 'icons';
 
 import type { User } from 'store/user-context';
 
@@ -47,6 +47,10 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
       if (sourceMetaData.type === Integration.Sentry) {
         return <SentryIcon size={18} />;
       }
+
+      if (sourceMetaData.type === Integration.Gmail) {
+        return <Gmail size={18} />;
+      }
     }
 
     return <RiLink size={18} />;
@@ -68,7 +72,11 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
         );
       }
 
-      if (sourceMetaData.type === Integration.Github) {
+      if (
+        sourceMetaData.type === Integration.Github ||
+        sourceMetaData.type === Integration.Gmail ||
+        sourceMetaData.type === Integration.Sentry
+      ) {
         return (
           <>
             {getIcon()} {sourceData.title}

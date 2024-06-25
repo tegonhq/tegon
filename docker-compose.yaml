@@ -75,6 +75,12 @@ services:
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
       - SMTP_DEFAULT_FROM=${SMTP_DEFAULT_FROM}
+      - GMAIL_CLIENT_ID=${GMAIL_CLIENT_ID}
+      - GMAIL_CLIENT_SECRET=${GMAIL_CLIENT_SECRET}
+      - GMAIL_REFRESH_TOKEN=${GMAIL_REFRESH_TOKEN}
+      - GMAIL_REDIRECT_URI=${GMAIL_REDIRECT_URI}
+      - GMAIL_AUTH_TOKEN=${GMAIL_AUTH_TOKEN}
+      - GMAIL_WEBHOOK_SECRET=${GMAIL_WEBHOOK_SECRET}
     ports:
       - 3001:3001
 
@@ -114,6 +120,4 @@ networks:
 
 volumes:
   postgres-data:
-  kafka-volume:
-  zookeeper-volume:
   typesense-data:

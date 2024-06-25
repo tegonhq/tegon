@@ -33,6 +33,9 @@ export * from './delete-line';
 export * from './edit-line';
 export * from './cross-line';
 export * from './bullet-list-line';
+export * from './arrow-forward-line';
+export * from './label-line';
+export * from './gmail';
 
 export * from './team-line';
 export * from './issues-fill';
@@ -46,7 +49,6 @@ export * from './urgent-fill';
 export * from './todo-line';
 export * from './no-priority-line';
 export * from './check-line';
-export * from './label-fill';
 export * from './sub-issue-fill';
 export * from './blocking-to-line';
 export * from './parent-issue-line';

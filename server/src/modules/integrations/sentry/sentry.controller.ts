@@ -21,7 +21,7 @@ export class SentryController {
   constructor(private sentryService: SentryService) {}
 
   @Post()
-  async slackEvents(
+  async sentryEvents(
     @Headers() eventHeaders: EventHeaders,
     @Body() eventBody: EventBody,
   ) {

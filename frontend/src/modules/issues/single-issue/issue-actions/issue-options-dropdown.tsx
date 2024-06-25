@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from 'components/ui/dropdown-menu';
 import { useIssueData } from 'hooks/issues';
-import { TeamLine } from 'icons';
+import { ArrowForwardLine } from 'icons';
 
 import { DeleteIssueDialog } from './delete-issue-dialog';
 import { DeleteIssueItem } from './delete-issue-item';
@@ -53,7 +53,7 @@ export function IssueOptionsDropdown() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => setMoveIssueDialog(true)}>
-            <DropdownItem Icon={TeamLine} title="Move to team" />
+            <DropdownItem Icon={ArrowForwardLine} title="Move to team" />
           </DropdownMenuItem>
           <LinkedIssueItems setDialogOpen={setDialogOpen} />
           <RelatedDropdownItems setRelatedModal={setRelatedModal} />

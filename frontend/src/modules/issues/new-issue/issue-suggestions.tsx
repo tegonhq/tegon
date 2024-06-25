@@ -65,7 +65,7 @@ export function IssueSuggestions({
   }
 
   return (
-    <div className="flex my-3 items-center gap-2 text-muted-foreground">
+    <div className="flex my-3 items-center gap-2 flex-wrap w-full">
       {(filteredLabels.length > 0 || filteredAssignees.length > 0) && (
         <span className="text-xs text-muted-foreground">Suggestions</span>
       )}
