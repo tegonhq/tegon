@@ -63,7 +63,9 @@ export default class IssueRelationService {
       },
     });
 
-    await this.createIssueHistory(userId, issueRelationData);
+    if (relationData.type !== IssueRelationType.SIMILAR) {
+      await this.createIssueHistory(userId, issueRelationData);
+    }
 
     if (
       relationData.type === IssueRelationType.BLOCKS ||
@@ -117,7 +119,9 @@ export default class IssueRelationService {
       data: { deleted, deletedById: userId },
     });
 
-    await this.createIssueHistory(userId, issueRelationData, true);
+    if (issueRelationData.type !== IssueRelationType.SIMILAR) {
+      await this.createIssueHistory(userId, issueRelationData, true);
+    }
 
     if (
       issueRelationData.type === IssueRelationType.BLOCKS ||

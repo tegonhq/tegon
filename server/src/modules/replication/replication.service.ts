@@ -98,6 +98,7 @@ export default class ReplicationService {
       database: this.configService.get('POSTGRES_DB'),
       user: this.configService.get('POSTGRES_USER'),
       password: this.configService.get('POSTGRES_PASSWORD'),
+      port: this.configService.get('DB_PORT'),
     };
     const service = new LogicalReplicationService(clientConfig);
     const plugin = new Wal2JsonPlugin();

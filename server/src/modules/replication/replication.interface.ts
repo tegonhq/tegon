@@ -33,4 +33,5 @@ export const tablesToSendMessagesFor = new Map([
   [ModelName.IssueRelation, true],
   [ModelName.Notification, true],
   [ModelName.View, true],
+  [ModelName.IssueSuggestion, true],
 ]);

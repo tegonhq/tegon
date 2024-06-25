@@ -33,7 +33,7 @@ export class VectorService implements OnModuleInit {
   private readonly logger: Logger = new Logger('VectorService');
 
   async onModuleInit() {
-    await this.typesenseClient.collections('issues').delete();
+    // await this.typesenseClient.collections('issues').delete();
     await this.createIssuesCollection();
   }
 
@@ -50,7 +50,7 @@ export class VectorService implements OnModuleInit {
         await this.typesenseClient.collections().create(issueSchema);
         this.logger.log('Created an issue collection');
         const workspaces = await this.prisma.workspace.findMany({
-          where: { deleted: null, id: '4275cfab-2e36-4c08-a7e5-73555a3aaf62' },
+          where: { deleted: null },
           select: { id: true },
         });
         await Promise.all(
@@ -64,13 +64,15 @@ export class VectorService implements OnModuleInit {
   }
 
   async createIssueEmbedding(issue: IssueWithRelations) {
+    // Generate the issue number by combining team identifier and issue number
     const issueNumber = `${issue.team.identifier}-${issue.number}`;
 
-    // // Prepare the input text for embedding
+    // Prepare the input text for embedding by concatenating issue number, title, and description
     const inputText = `${issueNumber}_${issue.title}_${convertTiptapJsonToText(issue.description)}`;
 
     let embedding: Record<string, Float32Array>;
     if (this.isCohere) {
+      // Generate embeddings using Cohere API
       const cohereEmbed = await this.cohereClient.embed({
         texts: [inputText],
         model: 'embed-english-v3.0',
@@ -78,9 +80,11 @@ export class VectorService implements OnModuleInit {
         embeddingTypes: ['float'],
       });
 
+      // Extract the float embeddings from the Cohere response
       embedding = cohereEmbed.embeddings as Record<string, Float32Array>;
     }
 
+    // Upsert the issue document in the Typesense 'issues' collection
     await this.typesenseClient
       .collections('issues')
       .documents()
@@ -96,6 +100,7 @@ export class VectorService implements OnModuleInit {
         stateId: issue.stateId,
         workspaceId: issue.team.workspaceId,
         assigneeId: issue.assigneeId ?? '',
+        // Include the float embeddings in the document if using Cohere
         ...(this.isCohere && { embeddings: embedding.float[0] }),
       });
   }
@@ -106,13 +111,16 @@ export class VectorService implements OnModuleInit {
     limit: number,
     vectorDistance: number = 0.8,
   ) {
+    // Set a default value of 0.8 for vectorDistance if it is NaN
     if (isNaN(vectorDistance)) {
-      vectorDistance = 0.8; // Set a default value if vectorDistance is NaN
+      vectorDistance = 0.8;
     }
 
     let queryBy = 'numberString,issueNumber,title,descriptionString,embeddings';
     let embedding: Record<string, Float32Array>;
     let vectorQuery = `embeddings:([], distance_threshold:${vectorDistance})`;
+
+    // If using Cohere, embed the search query and update queryBy and vectorQuery
     if (this.isCohere) {
       const cohereEmbed = await this.cohereClient.embed({
         texts: [searchQuery],
@@ -126,6 +134,7 @@ export class VectorService implements OnModuleInit {
       vectorQuery = `embeddings:([${embedding.float[0]}], distance_threshold:${vectorDistance})`;
     }
 
+    // Define search parameters for Typesense multiSearch
     const searchParameters = {
       searches: [
         {
@@ -142,9 +151,11 @@ export class VectorService implements OnModuleInit {
       ],
     };
 
+    // Perform multiSearch using Typesense client
     const searchResults =
       await this.typesenseClient.multiSearch.perform(searchParameters);
 
+    // Extract relevant fields from search results
     const hits = searchResults.results
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map(({ hits }: any) =>
@@ -177,11 +188,14 @@ export class VectorService implements OnModuleInit {
       )
       .flat();
 
+    // If using Cohere and there are multiple hits, rerank the results
     if (this.isCohere && hits.length > 1 && searchQuery) {
+      // Create an array of documents containing the issue number, title, and description
       const documents = hits.map((hit) => ({
         text: `${hit.issueNumber}_${hit.title}_${hit.descriptionString}`,
       }));
 
+      // Rerank the documents using Cohere's rerank API
       const rerankResult = await this.cohereClient.rerank({
         documents,
         query: searchQuery,
@@ -189,23 +203,24 @@ export class VectorService implements OnModuleInit {
         model: 'rerank-english-v3.0',
       });
 
+      // Set a relevance threshold to filter out low-relevance results
       const relevanceThreshold = 0.1;
-      const filteredResults = rerankResult.results.filter(
-        ({ relevanceScore }) => relevanceScore >= relevanceThreshold,
-      );
-
-      // Rearrange hits based on the filtered rerankResult
-      const rerankedHits = filteredResults.map(({ index, relevanceScore }) => ({
-        ...hits[index],
-        relevanceScore,
-      }));
+      // Filter and map the reranked results based on the relevance threshold
+      const rerankedHits = rerankResult.results
+        .filter(({ relevanceScore }) => relevanceScore >= relevanceThreshold)
+        .map(({ index, relevanceScore }) => ({
+          ...hits[index],
+          relevanceScore,
+        }));
 
       return rerankedHits;
     }
+
     return hits;
   }
 
   async similarIssues(workspaceId: string, issueId: string) {
+    // Prepare the search request for Typesense
     const searchRequests = {
       searches: [
         {
@@ -219,9 +234,11 @@ export class VectorService implements OnModuleInit {
       ],
     };
 
+    // Perform the multi-search request to Typesense
     const searchResults =
       await this.typesenseClient.multiSearch.perform(searchRequests);
 
+    // Extract the relevant fields from the search results
     const hits = searchResults.results
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map(({ hits }: any) =>
@@ -254,36 +271,41 @@ export class VectorService implements OnModuleInit {
       )
       .flat();
 
+    // If using Cohere and there are search hits, perform reranking
     if (this.isCohere && hits.length > 0) {
+      // Retrieve the issue document from Typesense
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const issueDoc: any = await this.typesenseClient
         .collections('issues')
         .documents(issueId)
         .retrieve();
 
+      // Construct the query for reranking
       const similarQuery = `${issueDoc.issueNumber}_${issueDoc.title}_${issueDoc.descriptionString}`;
 
-      const documents = hits.map((hit) => ({
-        text: `${hit.issueNumber}_${hit.title}_${hit.descriptionString}`,
-      }));
+      // Prepare the documents for reranking
+      const documents = hits.map(
+        ({ issueNumber, title, descriptionString }) => ({
+          text: `${issueNumber}_${title}_${descriptionString}`,
+        }),
+      );
 
-      const rerankResult = await this.cohereClient.rerank({
+      // Perform reranking using Cohere
+      const { results: rerankResults } = await this.cohereClient.rerank({
         documents,
         query: similarQuery,
         topN: hits.length,
         model: 'rerank-english-v3.0',
       });
 
+      // Filter and map the reranked results based on relevance score
       const relevanceThreshold = 0.9;
-      const filteredResults = rerankResult.results.filter(
-        ({ relevanceScore }) => relevanceScore >= relevanceThreshold,
-      );
-
-      // Rearrange hits based on the filtered rerankResult
-      const rerankedHits = filteredResults.map(({ index, relevanceScore }) => ({
-        ...hits[index],
-        relevanceScore,
-      }));
+      const rerankedHits = rerankResults
+        .filter(({ relevanceScore }) => relevanceScore >= relevanceThreshold)
+        .map(({ index, relevanceScore }) => ({
+          ...hits[index],
+          relevanceScore,
+        }));
 
       return rerankedHits;
     }
@@ -299,10 +321,6 @@ export class VectorService implements OnModuleInit {
 
     for (const issue of issues) {
       await this.createIssueEmbedding(issue);
-
-      // Add a random timeout between 500ms to 1000ms
-      const randomTimeout = Math.floor(Math.random() * 501) + 500;
-      await new Promise((resolve) => setTimeout(resolve, randomTimeout));
     }
 
     this.logger.log(

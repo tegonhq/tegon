@@ -17,6 +17,7 @@ import {
   LinkIssueInput,
   TeamRequestParams,
 } from './issues.interface';
+import IssuesService from './issues.service';
 import { handleTwoWaySync } from './issues.utils';
 
 @Processor('issues')
@@ -25,6 +26,7 @@ export class IssuesProcessor {
     private prisma: PrismaService,
     private linkedIssueService: LinkedIssueService,
     private vectorService: VectorService,
+    private issuesService: IssuesService,
   ) {}
   private readonly logger: Logger = new Logger('IssueProcessor');
 
@@ -80,5 +82,31 @@ export class IssuesProcessor {
     const { issue } = job.data;
     this.logger.log(`Adding issue to Vector ${issue.id}`);
     await this.vectorService.createIssueEmbedding(issue);
+  }
+
+  @Process('handleTriageIssue')
+  async handleTriageIssue(
+    job: Job<{ issue: IssueWithRelations; isDeleted: boolean }>,
+  ) {
+    const { issue, isDeleted } = job.data;
+    this.logger.log(`Handling triage for issue ${issue.id}`);
+
+    if (isDeleted) {
+      this.logger.log(
+        `Issue ${issue.id} moved out of Triage, removing suggestions`,
+      );
+      return await this.issuesService.deleteIssueSuggestion(issue.id);
+    }
+
+    await this.vectorService.createIssueEmbedding(issue);
+
+    this.logger.log(`Finding similar issues for issue ${issue.id}`);
+    await this.issuesService.similarIssueSuggestion(
+      issue.team.workspaceId,
+      issue.id,
+    );
+
+    this.logger.log(`Generating issue suggestions for issue ${issue.id}`);
+    return await this.issuesService.issueSuggestions(issue);
   }
 }

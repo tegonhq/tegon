@@ -8,6 +8,7 @@ export enum IssueRelationType {
   RELATED = 'RELATED',
   DUPLICATE = 'DUPLICATE',
   DUPLICATE_OF = 'DUPLICATE_OF',
+  SIMILAR = 'SIMILAR',
 }
 
 export enum ReverseIssueRelationType {
@@ -16,6 +17,7 @@ export enum ReverseIssueRelationType {
   RELATED = 'RELATED',
   DUPLICATE = 'DUPLICATE_OF',
   DUPLICATE_OF = 'DUPLICATE',
+  SIMILAR = 'SIMILAR',
 }
 
 export interface IssueRelationInput {
