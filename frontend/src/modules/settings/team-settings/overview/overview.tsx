@@ -28,7 +28,7 @@ import { OverviewSchema } from './overview.interface';
 
 export const Overview = observer(() => {
   const currentTeam = useCurrentTeam();
-  const teamEmail = `triage-${currentTeam.id}@tegon.ai`;
+  const teamEmail = `triage+${currentTeam.id}@tegon.ai`;
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof OverviewSchema>>({

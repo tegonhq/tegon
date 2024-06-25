@@ -19,7 +19,7 @@ export class GmailAuthGuard implements CanActivate {
         { headers: {} },
       );
 
-      if (tokenResponse.data.email === process.env.GMAIL_AUTH_TOKEN) {
+      if (tokenResponse.data.email === process.env.GMAIL_WEBHOOK_SECRET) {
         return true;
       }
     }

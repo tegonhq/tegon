@@ -97,6 +97,10 @@ export default class GmailService implements OnModuleInit {
     );
 
     const { payload, threadId } = messageData.data;
+
+    if (!payload) {
+      return undefined;
+    }
     const subject = payload.headers.find(
       (header: PartHeader) => header.name === 'Subject',
     ).value;
@@ -241,32 +245,40 @@ export default class GmailService implements OnModuleInit {
     }
     this.logger.log(`Issue Id of the Gmail message: ${issue.id}`);
 
-    await postRequest(
+    const modifyResponse = await postRequest(
       `https://gmail.googleapis.com/gmail/v1/users/me/threads/${threadId}/modify`,
       headers,
       { removeLabelIds: ['UNREAD', 'INBOX'] },
     );
-    this.logger.log(`Removed UNREAD label from Gmail thread: ${threadId}`);
+
+    if (modifyResponse.status === 200) {
+      this.logger.log(`Removed UNREAD label from Gmail thread: ${threadId}`);
+    }
 
     return issue;
   }
 
+  private async sendGmailWatchRequest() {
+    try {
+      await postRequest(
+        'https://gmail.googleapis.com/gmail/v1/users/me/watch',
+        await getHeaders(),
+        {
+          labelIds: ['INBOX'],
+          topicName: 'projects/tensile-ace-418314/topics/gmail',
+          labelFilterBehavior: 'INCLUDE',
+        },
+      );
+      this.logger.log('Gmail watch request successful');
+    } catch (error) {
+      this.logger.error('Error scheduling Gmail watch:', error);
+    }
+  }
+
   private async scheduleGmailWatch() {
+    await this.sendGmailWatchRequest();
     const cronJob = new CronJob('0 0 * * *', async () => {
-      try {
-        await postRequest(
-          'https://gmail.googleapis.com/gmail/v1/users/me/watch',
-          await getHeaders(),
-          {
-            labelIds: ['INBOX'],
-            topicName: 'projects/tensile-ace-418314/topics/gmail',
-            labelFilterBehavior: 'INCLUDE',
-          },
-        );
-        this.logger.log('Gmail watch request successful');
-      } catch (error) {
-        this.logger.error('Error scheduling Gmail watch:', error);
-      }
+      await this.sendGmailWatchRequest();
     });
 
     cronJob.start();

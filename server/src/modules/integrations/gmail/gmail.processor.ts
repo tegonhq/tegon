@@ -20,6 +20,8 @@ export class GmailProcessor {
   ) {
     const { eventBody } = job.data;
     this.logger.debug(`Handling Gmail thread`);
-    this.gmailService.handleEvents(eventBody);
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    await this.gmailService.handleEvents(eventBody);
   }
 }
