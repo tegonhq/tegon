@@ -75,6 +75,7 @@
     "bull": "^4.12.2",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.1",
+    "cohere-ai": "^7.10.6",
     "cookie": "^0.6.0",
     "cron": "^3.1.7",
     "csv-writer": "^1.6.0",

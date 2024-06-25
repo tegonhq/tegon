@@ -40,4 +40,9 @@ export class IssuesQueue {
     this.logger.log(`Adding issue to vector queue ${issue.id}`);
     await this.issuesQueue.add('addIssueToVector', { issue });
   }
+
+  async handleTriageIssue(issue: IssueWithRelations, isDeleted: boolean) {
+    this.logger.log(`Handling Triage issue ${issue.id}`);
+    await this.issuesQueue.add('handleTriageIssue', { issue, isDeleted });
+  }
 }

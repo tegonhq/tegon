@@ -1,5 +1,6 @@
 
   export class ConnectIssueDto {
-    id: string;
+    id?: string;
+issueSuggestionId?: string;
   }
   

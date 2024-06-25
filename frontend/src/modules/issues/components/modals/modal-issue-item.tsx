@@ -24,11 +24,11 @@ export const ModalIssueItem = observer(({ issue }: ModalIssueItemProps) => {
     <div className="cursor-pointer flex items-center rounded-md">
       <CategoryIcon
         size={16}
-        className="text-muted-foreground mr-3"
+        className="mr-3"
         color={getWorkflowColor(workflow).color}
       />
-      <div className="text-sm text-foreground mr-3 min-w-[50px]">{`${team.identifier}-${issue.number}`}</div>
-      <div className="text-sm text-muted-foreground max-w-[300px]">
+      <div className="mr-3 font-mono min-w-[50px]">{`${team.identifier}-${issue.number}`}</div>
+      <div className="max-w-[300px]">
         <div className="truncate"> {issue.title}</div>
       </div>
     </div>

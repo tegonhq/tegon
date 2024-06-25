@@ -33,7 +33,6 @@ export class SearchController {
     return await this.searchService.similarData(
       similarIssueData.workspaceId,
       similarIssueData.issueId,
-      parseInt(similarIssueData.limit),
     );
   }
 }

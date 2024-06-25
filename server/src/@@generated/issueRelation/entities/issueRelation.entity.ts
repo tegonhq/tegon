@@ -1,5 +1,5 @@
 
-import {IssueRelationType} from '@prisma/client'
+import {Prisma,IssueRelationType} from '@prisma/client'
 import {Issue} from '../../issue/entities/issue.entity'
 
 
@@ -11,7 +11,8 @@ issue?: Issue ;
 issueId: string ;
 relatedIssueId: string ;
 type: IssueRelationType ;
-createdById: string ;
+metadata: Prisma.JsonValue  | null;
+createdById: string  | null;
 deletedById: string  | null;
 deleted: Date  | null;
 }

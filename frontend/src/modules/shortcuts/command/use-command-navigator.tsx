@@ -51,25 +51,25 @@ export function useCommandNavigator({
   const options = React.useMemo(() => {
     const options: Option[] = [
       {
-        Icon: <RiAddLine className="text-muted-foreground !h-4 !w-4" />,
+        Icon: <RiAddLine className="!h-4 !w-4" />,
         text: 'Create issue',
         value: ID_MAP.CREATE_ISSUE,
         group: 'Create',
       },
       {
-        Icon: <LabelLine className="text-muted-foreground !h-4 !w-4" />,
+        Icon: <LabelLine className="!h-4 !w-4" />,
         text: 'Create label',
         value: ID_MAP.CREATE_LABEL,
         group: 'Create',
       },
       {
-        Icon: <StackLine className="text-muted-foreground !h-4 !w-4" />,
+        Icon: <StackLine className="!h-4 !w-4" />,
         text: 'Create view',
         value: ID_MAP.CREATE_VIEW,
         group: 'Create',
       },
       {
-        Icon: <TeamLine className="text-muted-foreground !h-4 !w-4" />,
+        Icon: <TeamLine className="!h-4 !w-4" />,
         text: 'Create new team',
         value: ID_MAP.CREATE_NEW_TEAM,
         group: 'Create',
@@ -77,19 +77,19 @@ export function useCommandNavigator({
 
       // Navigation
       {
-        Icon: <TriageLine className="text-muted-foreground !h-4 !w-4" />,
+        Icon: <TriageLine className="!h-4 !w-4" />,
         text: 'Go to triage issues',
         value: ID_MAP.GO_TRIAGE,
         group: 'Navigation',
       },
       {
-        Icon: <IssuesLine className="text-muted-foreground !h-4 !w-4" />,
+        Icon: <IssuesLine className="!h-4 !w-4" />,
         text: 'Go to all issues',
         value: ID_MAP.GO_ALL_ISSUES,
         group: 'Navigation',
       },
       {
-        Icon: <StackLine className="text-muted-foreground !h-4 !w-4" />,
+        Icon: <StackLine className="!h-4 !w-4" />,
         text: 'Go to views',
         value: ID_MAP.GO_VIEWS,
         group: 'Navigation',
@@ -97,7 +97,7 @@ export function useCommandNavigator({
 
       // Search
       {
-        Icon: <RiSearch2Line className="text-muted-foreground !h-4 !w-4" />,
+        Icon: <RiSearch2Line className="!h-4 !w-4" />,
         text: 'Search',
         value: ID_MAP.SEARCH,
         group: 'Search',

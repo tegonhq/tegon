@@ -224,6 +224,9 @@ model Issue {
   linkedIssue    LinkedIssue[]
   issueRelations IssueRelation[]
 
+  IssueSuggestion   IssueSuggestion? @relation(fields: [issueSuggestionId], references: [id])
+  issueSuggestionId String?          @unique
+
   @@unique([teamId, number])
 }
 
@@ -345,8 +348,9 @@ model IssueRelation {
   issueId        String
   relatedIssueId String
   type           IssueRelationType
+  metadata       Json?
 
-  createdById String
+  createdById String?
 
   deletedById String?
   deleted     DateTime?
@@ -455,6 +459,19 @@ model View {
   createdById String
 }
 
+model IssueSuggestion {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  issueId             String   @unique
+  suggestedLabelIds   String[]
+  suggestedAssigneeId String?
+  metadata            Json?
+  issue               Issue?
+}
+
 enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
@@ -487,6 +504,7 @@ enum ModelName {
   IssueRelation
   Notification
   View
+  IssueSuggestion
 }
 
 enum ActionType {
@@ -525,6 +543,7 @@ enum IssueRelationType {
   RELATED
   DUPLICATE
   DUPLICATE_OF
+  SIMILAR
 }
 
 enum NotificationActionType {

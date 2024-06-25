@@ -129,6 +129,13 @@ export async function getWorkspaceId(
       });
       return view.workspaceId;
 
+    case ModelName.IssueSuggestion:
+      const issueSuggested = await prisma.issue.findUnique({
+        where: { issueSuggestionId: modelId },
+        include: { team: true },
+      });
+      return issueSuggested.team.workspaceId;
+
     default:
       return undefined;
   }
@@ -187,7 +194,23 @@ export async function getModelData(
         }),
     },
     LinkedIssue: prisma.linkedIssue,
-    IssueRelation: prisma.issueRelation,
+    IssueRelation: {
+      findUnique: (args: { where: { id: string } }) =>
+        prisma.issueRelation.findUnique({
+          ...args,
+          select: {
+            id: true,
+            issueId: true,
+            relatedIssueId: true,
+            type: true,
+            createdById: true,
+            deletedById: true,
+            createdAt: true,
+            updatedAt: true,
+            deleted: true,
+          },
+        }),
+    },
     Notification: {
       findUnique: () => {
         if (userId) {
@@ -202,6 +225,7 @@ export async function getModelData(
       },
     },
     View: prisma.view,
+    IssueSuggestion: prisma.issueSuggestion,
   };
 
   const model = modelMap[modelName];

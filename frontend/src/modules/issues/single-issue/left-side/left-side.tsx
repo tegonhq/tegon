@@ -35,8 +35,6 @@ export const LeftSide = observer(() => {
   );
   const isTriageView = issue.stateId === triageWorkflow.id;
 
-  const [newIssueState, setNewIssueState] = React.useState(false);
-
   const { mutate: updateIssue } = useUpdateIssueMutation({});
 
   const onDescriptionChange = useDebouncedCallback((content: string) => {
@@ -84,11 +82,7 @@ export const LeftSide = observer(() => {
           <Separator />
         </div>
 
-        <SubIssueView
-          childIssues={issue.children}
-          setNewIssueState={() => setNewIssueState(true)}
-          newIssueState={newIssueState}
-        />
+        <SubIssueView childIssues={issue.children} issueId={issue.id} />
 
         <div className="mx-6">
           <Separator />

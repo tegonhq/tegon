@@ -6,6 +6,7 @@ import {IssueComment} from '../../issueComment/entities/issueComment.entity'
 import {IssueHistory} from '../../issueHistory/entities/issueHistory.entity'
 import {LinkedIssue} from '../../linkedIssue/entities/linkedIssue.entity'
 import {IssueRelation} from '../../issueRelation/entities/issueRelation.entity'
+import {IssueSuggestion} from '../../issueSuggestion/entities/issueSuggestion.entity'
 
 
 export class Issue {
@@ -39,4 +40,6 @@ comments?: IssueComment[] ;
 history?: IssueHistory[] ;
 linkedIssue?: LinkedIssue[] ;
 issueRelations?: IssueRelation[] ;
+IssueSuggestion?: IssueSuggestion  | null;
+issueSuggestionId: string  | null;
 }
