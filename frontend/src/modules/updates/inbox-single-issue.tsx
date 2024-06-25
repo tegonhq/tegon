@@ -4,6 +4,9 @@ import type { ImperativePanelHandle } from 'react-resizable-panels';
 
 import React from 'react';
 
+import { LeftSide } from 'modules/issues/single-issue/left-side/left-side';
+import { RightSide } from 'modules/issues/single-issue/right-side/right-side';
+
 import { AppLayout } from 'common/layouts/app-layout';
 
 import {
