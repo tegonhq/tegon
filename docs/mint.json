@@ -25,12 +25,7 @@
     "name": "Dashboard",
     "url": "https://app.tegon.ai/auth/signin"
   },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
+
   "anchors": [
     {
       "name": "Github",
@@ -66,7 +61,7 @@
         "integrations/github",
         "integrations/slack"
       ]
-    },    
+    },
     {
       "group": "Tegon Open Source (OSS)",
       "pages": [
