@@ -47,6 +47,15 @@
       ]
     },
     {
+      "group": "User Guide",
+      "pages": [
+        "user-guide/issues",
+        "user-guide/triage",
+        "user-guide/views",
+        "user-guide/integrations"
+      ]
+    },
+    {
       "group": "Tegon Open Source (OSS)",
       "pages": [
         "oss/deploy-tegon"
