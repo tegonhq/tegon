@@ -87,7 +87,7 @@ export function IssueLabelDropdownContent({
                   />
                   <label
                     htmlFor={label.id}
-                    className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     {label.name}
                   </label>

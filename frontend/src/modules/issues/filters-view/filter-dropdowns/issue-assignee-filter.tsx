@@ -24,6 +24,7 @@ export const IssueAssigneeFilter = observer(
       : [];
 
     const change = (value: string[]) => {
+      console.log(value);
       onChange(value, FilterTypeEnum.IS);
     };
 

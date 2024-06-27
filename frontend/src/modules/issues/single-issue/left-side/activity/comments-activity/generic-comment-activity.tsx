@@ -73,9 +73,9 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
   return (
     <div className="flex items-start">
       {user ? (
-        <AvatarText text={user?.fullname} className="text-[9px] mr-4" />
+        <AvatarText text={user?.fullname} className="text-[9px] mr-2" />
       ) : (
-        <div className="h-5 w-5 flex items-center justify-center mr-4 rounded-sm">
+        <div className="h-5 w-5 flex items-center justify-center mr-2 rounded-sm">
           {getIcon(sourceMetadata)}
         </div>
       )}
