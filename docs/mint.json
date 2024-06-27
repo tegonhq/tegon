@@ -25,17 +25,17 @@
     "name": "Dashboard",
     "url": "https://app.tegon.ai/auth/signin"
   },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
+
   "anchors": [
     {
-      "name": "Community",
+      "name": "Github",
+      "icon": "github",
+      "url": "https://github.com/tegonhq/tegon"
+    },
+    {
+      "name": "Slack",
       "icon": "slack",
-      "url": "https://join.slack.com/t/tegoncommunity/shared_invite/zt-2i1e781ip-zwauijRV9TRtRKoJi3tqng"
+      "url": "https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA"
     }
   ],
   "navigation": [
@@ -47,14 +47,31 @@
       ]
     },
     {
+      "group": "User Guide",
+      "pages": [
+        "user-guide/issues",
+        "user-guide/triage",
+        "user-guide/views"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "integrations/overview",
+        "integrations/github",
+        "integrations/slack"
+      ]
+    },
+    {
       "group": "Tegon Open Source (OSS)",
       "pages": [
+        "oss/local-setup",
         "oss/deploy-tegon"
       ]
     }
   ],
   "footerSocials": {
-    "github": "https://github.com/tegonhq/tegon",
+    "twitter": "https://x.com/tegonhq",
     "linkedin": "https://www.linkedin.com/company/tegon-ai"
   }
 }
