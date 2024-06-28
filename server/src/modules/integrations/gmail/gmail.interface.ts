@@ -1,18 +1,12 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-export interface HistoryMessage {
+export interface Message {
   id: string;
   threadId: string;
 }
 
-export interface History {
-  id: string;
-  messages: HistoryMessage[];
-}
-
-export interface HistoryBody {
-  history?: History[];
-  historyId: string;
+export interface MessagesBody {
+  messages: Message[];
+  resultSizeEstimate: number;
 }
 
 export interface GmailHeaders {

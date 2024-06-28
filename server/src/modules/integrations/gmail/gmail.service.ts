@@ -19,9 +19,8 @@ import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 import {
   GmailAttachment,
   GmailHeaders,
-  History,
-  HistoryBody,
-  HistoryMessage,
+  Message,
+  MessagesBody,
   Part,
   PartHeader,
 } from './gmail.interface';
@@ -60,26 +59,15 @@ export default class GmailService implements OnModuleInit {
 
     const headers = await getHeaders();
 
-    // Fetch the history data from the Gmail API
-    const historyResponse = await getRequest(
-      `https://gmail.googleapis.com/gmail/v1/users/me/history?startHistoryId=${historyId}`,
+    const messageResponse = await getRequest(
+      'https://gmail.googleapis.com/gmail/v1/users/me/messages?q=in:inbox+label:UNREAD',
       headers,
     );
 
-    const historyData = historyResponse.data as HistoryBody;
-    if (historyData.history) {
-      // Iterate over each history item
-      historyData.history.forEach((history: History) => {
-        this.logger.log(
-          `Fetched ${history.messages.length} Messages for this history id ${historyId}`,
-        );
-        if (history.messages) {
-          // Process each message in the history
-          history.messages.forEach(async (message: HistoryMessage) => {
-            // Handle each message by calling the handleMessage method
-            await this.handleMessage(message.id, headers);
-          });
-        }
+    const messageResponseData = messageResponse.data as MessagesBody;
+    if (messageResponseData.messages) {
+      messageResponseData.messages.forEach(async (message: Message) => {
+        await this.handleMessage(message.id, headers);
       });
     }
   }
@@ -112,6 +100,14 @@ export default class GmailService implements OnModuleInit {
     const team = await getTeam(this.prisma, deliveredTo);
     if (!team) {
       this.logger.log(`No team found for email address: ${deliveredTo}`);
+      await postRequest(
+        `https://gmail.googleapis.com/gmail/v1/users/me/threads/${threadId}/modify`,
+        headers,
+        {
+          removeLabelIds: ['INBOX'],
+          addLabelIds: [process.env.GMAIL_OTHER_LABEL], // This id is for Label Other
+        },
+      );
       return undefined;
     }
 
@@ -265,7 +261,7 @@ export default class GmailService implements OnModuleInit {
         await getHeaders(),
         {
           labelIds: ['INBOX'],
-          topicName: 'projects/tensile-ace-418314/topics/gmail',
+          topicName: process.env.GMAIL_PUBSUB_TOPIC,
           labelFilterBehavior: 'INCLUDE',
         },
       );
