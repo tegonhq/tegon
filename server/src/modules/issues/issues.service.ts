@@ -536,7 +536,7 @@ export default class IssuesService {
     suggestionsInput: SuggestionsInput,
   ) {
     // Check if the description is empty or falsy
-    if (!suggestionsInput.description || suggestionsInput.description) {
+    if (!suggestionsInput.description) {
       return { labels: [], assignees: [] };
     }
 
@@ -557,9 +557,11 @@ export default class IssuesService {
         labels.map((label) => label.name),
         suggestionsInput.description,
       ),
-      this.vectorService.similarIssues(
+      this.vectorService.searchEmbeddings(
         suggestionsInput.workspaceId,
         suggestionsInput.description,
+        10,
+        0.2,
       ),
     ]);
 
