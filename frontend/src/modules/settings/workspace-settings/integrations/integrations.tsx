@@ -38,8 +38,8 @@ function IntegrationCard({
       }
     >
       <div className="flex items-center gap-2">
-        <div className="border p-1 rounded-md">
-          <Icon size={24} />
+        <div className="border p-1 rounded-md dark:bg-foreground">
+          <Icon size={24} className="dark:text-background" />
         </div>
         <div className="grow">
           <div className="font-medium"> {name} </div>

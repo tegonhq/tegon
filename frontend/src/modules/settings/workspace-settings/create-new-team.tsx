@@ -17,11 +17,12 @@ import {
   FormDescription,
 } from 'components/ui/form';
 import { Input } from 'components/ui/input';
-import { Separator } from 'components/ui/separator';
 import { useToast } from 'components/ui/use-toast';
 import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { useCreateTeamMutation } from 'services/team';
+
+import { SettingSection } from '../setting-section';
 
 export const CreateNewTeamSchema = z.object({
   name: z
@@ -59,59 +60,59 @@ export function CreateNewTeam() {
   };
 
   return (
-    <div>
-      <div className="flex flex-col">
-        <h2 className="text-2xl"> Create a new team </h2>
-        <p className="text-sm text-muted-foreground">
-          Create a new team to manage seperate workflows
-        </p>
+    <SettingSection
+      title="Create a new team"
+      description=" Create a new team to manage seperate workflows"
+    >
+      <div className="max-w-[400px]">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Team name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. Engineering" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="identifier"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Team identifier</FormLabel>
+                  <FormDescription>
+                    This is used as the identifier (e.g ENG-123) for all issues
+                    of the team.
+                  </FormDescription>
+
+                  <FormControl>
+                    <Input placeholder="e.g. ENG" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex justify-end items-center">
+              <Button
+                type="submit"
+                variant="secondary"
+                isLoading={form.formState.isSubmitting}
+              >
+                Create
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
-
-      <Separator className="my-4" />
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Team name</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g. Engineering" {...field} />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="identifier"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Team identifier</FormLabel>
-                <FormDescription>
-                  This is used as the identifier (e.g ENG-123) for all issues of
-                  the team.
-                </FormDescription>
-
-                <FormControl>
-                  <Input placeholder="e.g. ENG" {...field} />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex justify-end items-center">
-            <Button type="submit" isLoading={form.formState.isSubmitting}>
-              Create
-            </Button>
-          </div>
-        </form>
-      </Form>
-    </div>
+    </SettingSection>
   );
 }

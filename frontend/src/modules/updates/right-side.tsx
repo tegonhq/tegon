@@ -15,12 +15,12 @@ export const NotificationRightSide = observer(() => {
   );
 
   return (
-    <div className="border-l flex col-span-3 gap-2 flex-col flex-[76_1_0px] items-center justify-center">
+    <>
       <Inbox className="text-muted-foreground" size={32} />
       <div className="text-muted-foreground">Inbox</div>
       <div className="text-muted-foreground text-sm">
         {notifications.length} unread notifications
       </div>
-    </div>
+    </>
   );
 });

@@ -84,7 +84,7 @@ export const AssigneeListSection = observer(
             </Button>
           </CollapsibleTrigger>
 
-          <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+          <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
             {computedIssues.length}
           </div>
         </div>
@@ -132,7 +132,7 @@ export const NoAssigneeView = observer(() => {
             <h3 className="pl-2">No Assignee</h3>
           </Button>
         </CollapsibleTrigger>
-        <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+        <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
           {issues.length}
         </div>
       </div>

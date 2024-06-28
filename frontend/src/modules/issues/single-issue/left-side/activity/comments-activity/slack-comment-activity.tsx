@@ -69,16 +69,23 @@ export function SlackCommentActivity({
             !comment.parentId && 'bg-grayAlpha-100',
           )}
         >
-          <div className={cn('flex gap-2', !comment.parentId && 'p-3')}>
-            <span className="text-foreground font-medium flex items-center gap-1">
-              <SlackIcon size={16} className="mr-2" /> Slack
-            </span>
-            <span className="text-muted-foreground"> thread connected </span>
+          <div
+            className={cn(
+              'flex gap-2 justify-between',
+              !comment.parentId && 'p-3',
+            )}
+          >
+            <div>
+              <span className="text-foreground font-medium flex items-center gap-1">
+                <SlackIcon size={16} className="mr-2" /> Slack
+              </span>
+              <span className="text-muted-foreground"> thread connected </span>
+            </div>
 
             <span>
               <ReactTimeAgo
                 date={new Date(comment.updatedAt)}
-                className="text-muted-foreground text-xs"
+                className="text-muted-foreground font-mono text-xs"
               />
             </span>
           </div>

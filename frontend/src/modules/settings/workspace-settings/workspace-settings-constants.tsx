@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { CreateNewTeam } from './create-new-team';
+import { Export } from './export';
 import { Labels } from './labels';
 import { Members } from './members';
 import { Overview } from './overview';
@@ -10,13 +11,15 @@ export const SECTION_COMPONENTS = {
   labels: Labels,
   members: Members,
   new_team: CreateNewTeam,
+  export: Export,
 };
 
 export const SECTION_TITLES = {
   overview: 'Overview',
   labels: 'Labels',
   members: 'Members',
-  new_team: 'CreateNewTeam',
+  new_team: 'Add team',
+  export: 'Export',
 };
 
 type StringKeys<T> = {

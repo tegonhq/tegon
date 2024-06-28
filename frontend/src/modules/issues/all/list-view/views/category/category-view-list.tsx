@@ -74,7 +74,7 @@ export const CategoryViewList = observer(
             </Button>
           </CollapsibleTrigger>
 
-          <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+          <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
             {computedIssues.length}
           </div>
         </div>

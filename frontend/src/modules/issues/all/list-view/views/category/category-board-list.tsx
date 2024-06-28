@@ -50,7 +50,7 @@ export const CategoryBoardList = observer(
 
     return (
       <BoardColumn key={workflow.id} id={workflow.id}>
-        <div className="flex flex-col max-h-[100%] pr-4">
+        <div className="flex flex-col max-h-[100%]">
           <div className="flex gap-1 items-center mb-2">
             <div
               className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 text-accent-foreground"
@@ -62,13 +62,13 @@ export const CategoryBoardList = observer(
               <h3 className="pl-2">{workflow.name}</h3>
             </div>
 
-            <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+            <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
               {computedIssues.length}
             </div>
           </div>
 
-          <ScrollArea>
-            <div className="flex flex-col gap-2 grow pb-10 pt-2">
+          <ScrollArea className="pr-3 mr-2">
+            <div className="flex flex-col gap-2 grow pb-10">
               {computedIssues.map((issue: IssueType, index: number) => (
                 <BoardItem key={issue.id} id={issue.id}>
                   <Draggable

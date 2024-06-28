@@ -127,7 +127,7 @@ export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
 
   const setDescriptionValue = useDebouncedCallback((value) => {
     setDescription(value);
-  }, 500);
+  }, 2000);
 
   // Shortcuts
   useHotkeys(`${Key.Meta}+${Key.Enter}`, () => form.handleSubmit(onSubmit)(), [
