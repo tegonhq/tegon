@@ -25,7 +25,7 @@ export function TriageView() {
       <Header isTriageView />
 
       <div className="bg-background-2 rounded-tl-3xl flex h-[calc(100vh_-_53px)]">
-        <ResizablePanelGroup direction="horizontal" className="">
+        <ResizablePanelGroup direction="horizontal">
           <ResizablePanel
             maxSize={50}
             ref={ref}

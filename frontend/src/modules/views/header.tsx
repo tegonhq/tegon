@@ -32,8 +32,8 @@ export const Header = observer(({ title }: HeaderProps) => {
   } = useRouter();
 
   return (
-    <header className="flex px-6 py-4 w-full items-center gap-2 justify-between">
-      <div>
+    <header className="flex px-6 w-full items-center gap-2 justify-between">
+      <div className="py-4">
         {applicationStore.sidebarCollapsed && (
           <Button
             variant="ghost"
@@ -58,14 +58,12 @@ export const Header = observer(({ title }: HeaderProps) => {
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <BreadcrumbLink className="text-muted-foreground">
-              {title}
-            </BreadcrumbLink>
+            <BreadcrumbLink>{title}</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
       </div>
 
-      <div>
+      <div className="py-2">
         <Link
           href={`/${workspaceSlug}/team/${team.identifier}/all`}
           className={cn(buttonVariants({ variant: 'secondary', size: 'sm' }))}

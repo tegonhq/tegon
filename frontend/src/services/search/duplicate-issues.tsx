@@ -22,6 +22,7 @@ export function duplicateIssues(data: DuplicateIssuesParams) {
     url: `/api/v1/search`,
     query: {
       limit: 3,
+      threshold: 0.1,
       ...data,
     },
   });

@@ -17,7 +17,28 @@ interface NavProps {
     icon?: any;
     href: string;
     count?: number;
+    activePaths?: string[];
   }>;
+}
+
+export function checkIsActive(
+  pathname: string,
+  href: string,
+  activePaths: string[],
+): boolean {
+  if (pathname.includes(href)) {
+    return true;
+  }
+
+  if (activePaths && activePaths.length > 0) {
+    return (
+      activePaths.filter((path: string) => {
+        return pathname.includes(path);
+      }).length > 0
+    );
+  }
+
+  return false;
 }
 
 export function Nav({ links }: NavProps) {
@@ -26,7 +47,7 @@ export function Nav({ links }: NavProps) {
   return (
     <nav className="grid gap-0.5">
       {links.map((link, index) => {
-        const isActive = pathname.includes(link.href);
+        const isActive = checkIsActive(pathname, link.href, link.activePaths);
 
         return (
           <div className="flex gap-1 items-center " key={index}>

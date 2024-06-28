@@ -119,6 +119,8 @@ export class VectorService implements OnModuleInit {
     let queryBy = 'numberString,issueNumber,title,descriptionString,embeddings';
     let embedding: Record<string, Float32Array>;
     let vectorQuery = `embeddings:([], distance_threshold:${vectorDistance})`;
+    // Set a relevance threshold to filter out low-relevance results
+    const relevanceThreshold = 1 - vectorDistance;
 
     // If using Cohere, embed the search query and update queryBy and vectorQuery
     if (this.isCohere) {
@@ -131,7 +133,7 @@ export class VectorService implements OnModuleInit {
 
       embedding = cohereEmbed.embeddings as Record<string, Float32Array>;
       queryBy = 'numberString,issueNumber,title,descriptionString,';
-      vectorQuery = `embeddings:([${embedding.float[0]}], distance_threshold:${vectorDistance})`;
+      vectorQuery = `embeddings:([${embedding.float[0]}])`;
     }
 
     // Define search parameters for Typesense multiSearch
@@ -207,8 +209,6 @@ export class VectorService implements OnModuleInit {
         model: 'rerank-english-v3.0',
       });
 
-      // Set a relevance threshold to filter out low-relevance results
-      const relevanceThreshold = 0.1;
       // Filter and map the reranked results based on the relevance threshold
       const rerankedHits = rerankResult.results
         .filter(({ relevanceScore }) => relevanceScore >= relevanceThreshold)

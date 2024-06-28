@@ -48,7 +48,7 @@ export function useTriageGroups() {
 
     // Sort labels by their count in ascending order
     const sortedLabels = Object.keys(labelCounts).sort(
-      (a, b) => labelCounts[a] - labelCounts[b],
+      (a, b) => labelCounts[b] - labelCounts[a],
     );
 
     const issueCategories: Record<string, IssueType[]> = {};

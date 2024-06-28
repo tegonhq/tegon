@@ -91,13 +91,11 @@ export const TeamSettingsList = observer(() => {
           className={cn(
             buttonVariants({ variant: 'ghost', size: 'sm' }),
             'flex items-center justify-start my-2 w-full gap-2 px-0',
-            settingsSection === 'new_team' &&
-              'bg-accent text-accent-foreground',
           )}
           href={`/${workspaceSlug}/settings/new_team`}
         >
           <RiAddLine size={18} />
-          <div>Add Team</div>
+          <div>Add team</div>
         </Link>
       </div>
     </div>

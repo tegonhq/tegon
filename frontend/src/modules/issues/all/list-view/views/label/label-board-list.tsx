@@ -43,19 +43,19 @@ export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
 
   return (
     <BoardColumn key={label.id} id={label.id}>
-      <div className="flex flex-col max-h-[100%] pr-4">
+      <div className="flex flex-col max-h-[100%]">
         <div className="flex gap-1 items-center mb-2">
           <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
             <BadgeColor style={{ backgroundColor: label.color }} />
             <h3 className="pl-2">{label.name}</h3>
           </div>
 
-          <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+          <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
             {computedIssues.length}
           </div>
         </div>
 
-        <ScrollArea>
+        <ScrollArea className="pr-3 mr-2">
           <div className="flex flex-col gap-3 grow pb-10 pt-2">
             {computedIssues.map((issue: IssueType, index: number) => {
               const id = `${label.name}__${issue.id}`;
@@ -102,19 +102,19 @@ export const NoLabelBoardList = observer(() => {
 
   return (
     <BoardColumn key="no-label" id="no-label">
-      <div className="flex flex-col max-h-[100%] pr-4">
+      <div className="flex flex-col max-h-[100%]">
         <div className="flex gap-1 items-center mb-2">
           <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
             <BadgeColor style={{ backgroundColor: '#838383' }} />
             <h3 className="pl-2">No Label</h3>
           </div>
 
-          <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2">
+          <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
             {computedIssues.length}
           </div>
         </div>
 
-        <ScrollArea>
+        <ScrollArea className="pr-3 mr-2">
           <div className="flex flex-col gap-3 grow pb-10 pt-2">
             {computedIssues.map((issue: IssueType, index: number) => {
               return (

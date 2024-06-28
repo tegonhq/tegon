@@ -6,6 +6,7 @@ import React from 'react';
 import { generateOklchColor } from 'common/color-utils';
 import type { LabelType } from 'common/types/label';
 
+import { BadgeColor } from 'components/ui/badge';
 import { Checkbox } from 'components/ui/checkbox';
 import {
   Command,
@@ -87,8 +88,12 @@ export function IssueLabelDropdownContent({
                   />
                   <label
                     htmlFor={label.id}
-                    className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
                   >
+                    <BadgeColor
+                      style={{ backgroundColor: label.color }}
+                      className="w-2 h-2"
+                    />
                     {label.name}
                   </label>
                 </div>

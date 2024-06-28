@@ -31,6 +31,7 @@ export function InboxSingleIssue() {
           <ResizablePanel
             maxSize={50}
             ref={ref}
+            defaultSize={24}
             minSize={16}
             collapsible
             collapsedSize={16}

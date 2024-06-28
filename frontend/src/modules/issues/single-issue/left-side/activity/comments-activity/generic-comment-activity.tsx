@@ -73,9 +73,9 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
   return (
     <div className="flex items-start">
       {user ? (
-        <AvatarText text={user?.fullname} className="text-[9px] mr-4" />
+        <AvatarText text={user?.fullname} className="text-[9px] mr-2" />
       ) : (
-        <div className="h-5 w-5 flex items-center justify-center mr-4 rounded-sm">
+        <div className="h-5 w-5 flex items-center justify-center mr-2 rounded-sm">
           {getIcon(sourceMetadata)}
         </div>
       )}
@@ -99,33 +99,34 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
                 {sourceMetadata.userDisplayName} via {sourceMetadata.type}
               </span>
             )}
+          </div>
 
+          <div className="flex gap-2">
             <span>
               <ReactTimeAgo
                 date={new Date(comment.updatedAt)}
-                className="text-muted-foreground font-mono text-sm"
+                className="text-muted-foreground font-mono text-xs"
               />
             </span>
+            {!sourceMetadata && user.id === currentUser.id && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="xs" className="px-2 -mt-1">
+                    <RiMoreFill size={16} className="text-muted-foreground" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={() => setEdit(true)}>
+                      <div className="flex items-center gap-1">
+                        <EditLine size={16} /> Edit
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
-
-          {!sourceMetadata && user.id === currentUser.id && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="xs" className="px-2 -mt-1">
-                  <RiMoreFill size={16} className="text-muted-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuGroup>
-                  <DropdownMenuItem onClick={() => setEdit(true)}>
-                    <div className="flex items-center gap-1">
-                      <EditLine size={16} /> Edit
-                    </div>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
         </div>
 
         {edit ? (

@@ -54,8 +54,10 @@ export function IssueAssigneeDropdownContent({
           value="No Assignee"
           index={0}
           onSelect={() => {
-            onChange && onChange(null);
-            onClose();
+            if (!multiple) {
+              onChange && onChange(null);
+              onClose();
+            }
           }}
         >
           <div className="flex gap-2 items-center">

@@ -1,0 +1,72 @@
+/* Custom TODO list checkboxes – shoutout to this awesome tutorial: https://moderncss.dev/pure-css-custom-checkbox-style/ */
+ul[data-type='taskList'] li > label {
+  margin-right: 0.2rem;
+  user-select: none;
+  width: 1rem;
+  height: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  ul[data-type='taskList'] li > label {
+    margin-right: 0.5rem;
+  }
+}
+
+ul[data-type='taskList'] li > label input[type='checkbox'] {
+  @apply border border-border rounded-sm;
+
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  cursor: pointer;
+  width: 1rem;
+  height: 1rem;
+  position: relative;
+  margin-top: 0.2rem;
+  display: grid;
+  place-content: center;
+}
+
+ul[data-type='taskList'] li > label input[type='checkbox']::before {
+  content: '';
+  width: 0.5em;
+  height: 0.5em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em;
+  transform-origin: center;
+  clippath: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+ul[data-type='taskList'] li > label input[type='checkbox']:checked::before {
+  transform: scale(1);
+}
+
+ul[data-type='taskList'] li[data-checked='true'] > div > p {
+  color: rgb(var(--color-text-200));
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  @apply text-base text-muted-foreground;
+
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.scroll-area > div {
+  display: block !important;
+}
+
+#slash-command {
+  @apply bg-background-2;
+}
+
+/* CommandItem > Checkbox */
+
+.command-item[data-selected='true'] .checkbox {
+  border-color: oklch(0% 0 0 / 19.22%);
+}

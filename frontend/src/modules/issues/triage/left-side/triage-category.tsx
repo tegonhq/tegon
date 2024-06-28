@@ -66,7 +66,7 @@ export const TriageCategory = observer(
               <h3 className="pl-1">{label.name}</h3>
             </Button>
           </CollapsibleTrigger>
-          <div className="rounded-lg bg-grayAlpha-100 p-1.5 px-2 font-mono">
+          <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
             {issues.length}
           </div>
         </div>
