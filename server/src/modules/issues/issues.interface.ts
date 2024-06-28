@@ -286,3 +286,55 @@ Things to keep in mind while assigning labels:
 3. If you didn’t find any label relevant to the text from the above list, you can also create a new label but don’t suggest new labels if you have found from the above list.
 4. Prioritise company specific labels over generic list of labels if both mean similar things else return both.
 5. Output only the labels in comma seperated format and not the description`;
+
+export const summarizePrompt = `[TASK]
+For this task, you will analyze text conversations between team members which revolve around various professional tasks and issues. Your goal is to distill each conversation into a clear, precise, and easy-to-understand summary that highlights the key points and main ideas discussed, focusing on actions, responsibilities, and outcomes. You should:
+
+1. Identify and summarize the central request or issue discussed in the conversation.
+2. Note any agreements, decisions, or responses from team members related to the main issue.
+3. Outline any stated next steps or specific tasks that need to be completed, including deadlines if mentioned.
+4. Present the summary in concise bullet points.
+
+Please remember to include the essence of the conversation without irrelevant details or redundant information. This will help in creating effective documentation such as meeting minutes or chat summaries which are essential in a corporate environment. Here's how you might handle a typical input:
+
+[Input]:
+"Message - Alex: Need help troubleshooting the server issue. \nReply - Jordan: I solved that yesterday. You just need to restart it in admin mode."
+
+[Output]:
+- Alex requested help with troubleshooting a server issue.
+- Jordan had already resolved the issue and suggested restarting it in admin mode.
+
+This structured approach ensures that summaries are immediately useful for understanding the flow of conversation and its actionable outcomes.
+
+---
+
+[FORMAT]
+Follow the following format:
+
+conversations: text conversation between team members discussing a specific task with potential mentions using '@name'. Conversations may include multiple replies.
+summary: a comprehensive, concise, and easy-to-understand summary of the key points and main ideas from the conversation in bullet points, including relevant details and examples, while avoiding unnecessary information or repetition. Each bulletin words should not have more than 10 words.
+
+---
+
+[EXAMPLES]
+conversations: Message - Harrison: I'm having trouble with the new tool. Has anyone used it before? 
+Reply - Ava: Yeah, I've used it. I can help you troubleshoot.
+summary: ["Harrison is having trouble with the new tool.","Ava has experience using the tool.","Ava offers to help Harrison troubleshoot."]
+---
+conversations: Message - Gabriel: I need help with debugging my code. Anyone available? 
+Reply - Amelia: I'm available. Let's debug it together.
+summary: ["Gabriel needs help debugging his code.","Amelia is available to help.","Gabriel and Amelia will debug the code together."]
+---
+conversations: Message - Charlotte: Who is responsible for task XYZ? 
+Reply - Alexander: I am. It's due next Friday.
+summary: ["Charlotte is asking about the responsible person for task XYZ.","Alexander is responsible for the task.","The task is due next Friday."]
+---
+conversations: Message - Abigail: Can someone help me with the data analysis? 
+Reply - Logan: Yeah, I can help. What specific areas do you need help with?
+summary: ["Abigail needs help with data analysis.","Logan offers to help.","Logan asks Abigail to specify the areas she needs help with."]
+---
+conversations: Message - Lucas: Can we discuss the project timeline? 
+Reply - Maya: Yeah, let's discuss it in the meeting today.
+summary: ["Lucas wants to discuss the project timeline.","The discussion will take place in the meeting today."]
+---
+`;

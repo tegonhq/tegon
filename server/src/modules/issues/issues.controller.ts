@@ -166,4 +166,10 @@ export class IssuesController {
       moveData.teamId,
     );
   }
+
+  @Get(':issueId/summarize')
+  @UseGuards(new AuthGuard())
+  async summarizeIssue(@Param() issueParams: IssueRequestParams) {
+    return await this.issuesService.summarizeIssue(issueParams.issueId);
+  }
 }
