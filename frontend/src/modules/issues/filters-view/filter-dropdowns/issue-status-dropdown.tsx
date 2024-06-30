@@ -8,6 +8,7 @@ import { IssueStatusDropdownContent } from 'modules/issues/components';
 // import type { WorkflowType } from 'common/types/team';
 
 import { Button } from 'components/ui/button';
+import { Command, CommandInput } from 'components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useTeamWorkflows } from 'hooks/workflows/use-team-workflows';
 
@@ -51,18 +52,21 @@ export function IssueStatusDropdown({
             className="flex items-center p-0 justify-between focus-visible:ring-1 focus-visible:border-primary "
           >
             {value.length > 1
-              ? `${value.length} statues`
+              ? `${value.length} statuses`
               : getWorkflowData(value[0]).name}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-72 p-0" align="start">
-          <IssueStatusDropdownContent
-            onChange={onChange}
-            onClose={() => setOpen(false)}
-            workflows={workflows}
-            value={value}
-            multiple
-          />
+          <Command shouldFilter={false}>
+            <CommandInput placeholder="Set status..." autoFocus />
+            <IssueStatusDropdownContent
+              onChange={onChange}
+              onClose={() => setOpen(false)}
+              workflows={workflows}
+              value={value}
+              multiple
+            />
+          </Command>
         </PopoverContent>
       </Popover>
     </div>

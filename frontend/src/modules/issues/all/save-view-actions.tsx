@@ -18,21 +18,18 @@ export const SaveViewActions = observer(() => {
 
   const filters = applicationStore.filters;
 
-  const clearFilters = () => {
-    applicationStore.clearFilters();
-  };
-
   return (
     <>
       {!isEmpty(filters) && (
         <>
           <Separator orientation="vertical" />
 
-          <Button variant="ghost" onClick={clearFilters}>
-            Clear
-          </Button>
-          <Button variant="secondary" onClick={() => setDialogOpen(true)}>
-            Save
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setDialogOpen(true)}
+          >
+            Save as view
           </Button>
         </>
       )}

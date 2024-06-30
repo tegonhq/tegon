@@ -9,6 +9,7 @@ import type { LabelType } from 'common/types/label';
 
 import { Badge, BadgeColor } from 'components/ui/badge';
 import { Button } from 'components/ui/button';
+import { Command, CommandInput } from 'components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useTeamLabels } from 'hooks/labels/use-team-labels';
 import { LabelLine } from 'icons';
@@ -37,6 +38,8 @@ export const IssueLabelDropdown = observer(
     variant = IssueLabelDropdownVariant.DEFAULT,
   }: IssueLabelProps) => {
     const [open, setOpen] = React.useState(false);
+    const [labelSearch, setLabelSearch] = React.useState('');
+
     const labels = useTeamLabels(teamIdentifier);
     const { labelsStore } = useContextStore();
 
@@ -138,11 +141,20 @@ export const IssueLabelDropdown = observer(
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
           <PopoverContent className="w-72 p-0" align="end">
-            <IssueLabelDropdownContent
-              onChange={onChange}
-              value={value}
-              labels={labels}
-            />
+            <Command shouldFilter={false}>
+              <CommandInput
+                placeholder="Set label..."
+                onValueChange={(value: string) => setLabelSearch(value)}
+                autoFocus
+              />
+              <IssueLabelDropdownContent
+                onChange={onChange}
+                value={value}
+                setLabelSearch={setLabelSearch}
+                labelSearch={labelSearch}
+                labels={labels}
+              />
+            </Command>
           </PopoverContent>
         </Popover>
       </div>

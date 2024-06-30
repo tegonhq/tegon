@@ -30,10 +30,6 @@ export const SaveViewAction = observer(({ view }: SaveViewActionProps) => {
     },
   });
 
-  const clearFilters = () => {
-    applicationStore.clearFilters();
-  };
-
   const onSave = () => {
     updateView({
       viewId: view.id,
@@ -46,11 +42,8 @@ export const SaveViewAction = observer(({ view }: SaveViewActionProps) => {
       {!isEqual(view.filters, filters) && (
         <>
           <Separator orientation="vertical" />
-          <Button variant="ghost" onClick={clearFilters}>
-            Clear
-          </Button>
-          <Button variant="secondary" onClick={onSave}>
-            Save
+          <Button variant="secondary" size="sm" onClick={onSave}>
+            Save view
           </Button>
         </>
       )}

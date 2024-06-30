@@ -5,12 +5,7 @@ import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 import type { WorkflowType } from 'common/types/team';
 
 import { Checkbox } from 'components/ui/checkbox';
-import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from 'components/ui/command';
+import { CommandGroup, CommandItem } from 'components/ui/command';
 
 interface IssueStatusDropdownContentProps {
   workflows: WorkflowType[];
@@ -42,57 +37,50 @@ export function IssueStatusDropdownContent({
   };
 
   return (
-    <Command>
-      <CommandInput placeholder="Set status..." autoFocus />
+    <CommandGroup>
+      {workflows.map((workflow) => {
+        const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];
 
-      <CommandGroup>
-        {workflows.map((workflow) => {
-          const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];
+        return (
+          <CommandItem
+            key={workflow.name}
+            value={workflow.name}
+            onSelect={(currentValue) => {
+              const workflow = workflows.find(
+                (workflow: WorkflowType) =>
+                  workflow.name.toLowerCase() === currentValue,
+              );
 
-          return (
-            <CommandItem
-              key={workflow.name}
-              value={workflow.name}
-              onSelect={(currentValue) => {
-                const workflow = workflows.find(
-                  (workflow: WorkflowType) =>
-                    workflow.name.toLowerCase() === currentValue,
-                );
-
-                if (!multiple) {
-                  onClose();
-                  onChange && onChange(workflow.id);
-                } else {
-                  onValueChange(true, workflow.id);
-                }
-              }}
-            >
-              <div className="flex gap-2 items-center">
-                {multiple && (
-                  <Checkbox
-                    id={workflow.name}
-                    checked={value.includes(workflow.id)}
-                    onCheckedChange={(value: boolean) => {
-                      onValueChange(value, workflow.id);
-                    }}
-                  />
-                )}
-                <label
-                  className="flex grow items-center"
-                  htmlFor={workflow.name}
-                >
-                  <CategoryIcon
-                    size={18}
-                    className="mr-2"
-                    color={getWorkflowColor(workflow).color}
-                  />
-                  {workflow.name}
-                </label>
-              </div>
-            </CommandItem>
-          );
-        })}
-      </CommandGroup>
-    </Command>
+              if (!multiple) {
+                onClose();
+                onChange && onChange(workflow.id);
+              } else {
+                onValueChange(true, workflow.id);
+              }
+            }}
+          >
+            <div className="flex gap-2 items-center">
+              {multiple && (
+                <Checkbox
+                  id={workflow.name}
+                  checked={value.includes(workflow.id)}
+                  onCheckedChange={(value: boolean) => {
+                    onValueChange(value, workflow.id);
+                  }}
+                />
+              )}
+              <label className="flex grow items-center" htmlFor={workflow.name}>
+                <CategoryIcon
+                  size={18}
+                  className="mr-2"
+                  color={getWorkflowColor(workflow).color}
+                />
+                {workflow.name}
+              </label>
+            </div>
+          </CommandItem>
+        );
+      })}
+    </CommandGroup>
   );
 }

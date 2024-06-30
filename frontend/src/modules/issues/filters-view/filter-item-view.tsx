@@ -15,8 +15,10 @@ import { FilterOptionsDropdown } from './filter-options-dropdown';
 interface FilterItemViewProps {
   name: string;
   filterKey: string;
-  value: string[] | boolean;
-  filterType: FilterTypeEnum;
+  filter: {
+    value: string[] | boolean;
+    filterType: FilterTypeEnum;
+  };
   isArray?: boolean;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,11 +28,10 @@ interface FilterItemViewProps {
 export const FilterItemView = observer(
   ({
     name,
-    value,
     filterKey,
     isArray = false,
     Component,
-    filterType,
+    filter,
   }: FilterItemViewProps) => {
     const { applicationStore } = useContextStore();
     const filters = applicationStore.filters;
@@ -57,6 +58,12 @@ export const FilterItemView = observer(
     const removeFilter = () => {
       applicationStore.deleteFilter(filterKey);
     };
+
+    if (!filter) {
+      return null;
+    }
+
+    const { value, filterType } = filter;
 
     return (
       <div className="flex bg-grayAlpha-100 rounded-md items-center">

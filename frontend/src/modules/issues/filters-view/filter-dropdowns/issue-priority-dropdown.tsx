@@ -8,6 +8,7 @@ import { cn } from 'common/lib/utils';
 import { Priorities } from 'common/types/issue';
 
 import { Button } from 'components/ui/button';
+import { Command, CommandInput } from 'components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 
 interface IssuePriorityDropdownProps {
@@ -42,13 +43,16 @@ export function IssuePriorityDropdown({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-72 p-0" align="start">
-          <IssuePriorityDropdownContent
-            onChange={onChange}
-            onClose={() => setOpen(false)}
-            Priorities={Priorities}
-            multiple
-            value={value}
-          />
+          <Command shouldFilter={false}>
+            <CommandInput placeholder="Set priority..." autoFocus />
+            <IssuePriorityDropdownContent
+              onChange={onChange}
+              onClose={() => setOpen(false)}
+              Priorities={Priorities}
+              multiple
+              value={value}
+            />
+          </Command>
         </PopoverContent>
       </Popover>
     </div>
