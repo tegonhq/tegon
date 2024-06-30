@@ -32,7 +32,7 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
     <Link
       className={cn(
         'cursor-pointer max-w-[600px] rounded-md flex gap-2 items-center bg-grayAlpha-100',
-        buttonVariants({ variant: 'secondary', size: 'sm' }),
+        buttonVariants({ variant: 'secondary' }),
         'w-fit p-2',
       )}
       href={`/${workspaceSlug}/issue/${team.identifier}-${issue.parent.number}`}

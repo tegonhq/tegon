@@ -89,10 +89,7 @@ export function SignForm() {
 
         <Link
           href="/auth/forgot-password"
-          className={cn(
-            buttonVariants({ variant: 'ghost', size: 'xs' }),
-            'mb-3 mt-1',
-          )}
+          className={cn(buttonVariants({ variant: 'ghost' }), 'mb-3 mt-1')}
         >
           Forgot password?
         </Link>

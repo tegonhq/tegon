@@ -54,7 +54,7 @@ export function Nav({ links }: NavProps) {
             <Link
               href={link.href}
               className={cn(
-                buttonVariants({ variant: 'ghost', size: 'sm' }),
+                buttonVariants({ variant: 'ghost' }),
                 'flex items-center gap-1 justify-between text-foreground bg-grayAlpha-100 w-fit',
                 isActive && 'bg-accent text-accent-foreground',
               )}

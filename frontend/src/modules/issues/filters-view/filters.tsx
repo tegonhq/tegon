@@ -12,6 +12,7 @@ import {
   CommandItem,
 } from 'components/ui/command';
 import { useCurrentTeam } from 'hooks/teams';
+import { useFiltersFromAI } from 'hooks/use-filters-from-ai';
 import { useCurrentWorkspace } from 'hooks/workspace';
 import { AI, CrossLine } from 'icons';
 
@@ -56,11 +57,12 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
   const inputRef = React.useRef(null);
   const [isLoading, setLoading] = React.useState(false);
   const [showOption, setShowOptions] = React.useState(false);
+  const { setFilters } = useFiltersFromAI();
 
   const { mutate: aiFilterIssues } = useAIFilterIssuesMutation({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSuccess: (data: any) => {
-      console.log(data);
+      setFilters(data);
       setShowOptions(false);
       setLoading(false);
       setValue('');
@@ -120,7 +122,7 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
       <div className="flex gap-2 flex-wrap items-center h-full">
         <AppliedFiltersView />
         {isLoading && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <RiLoader4Line size={18} className="animate-spin" />
             <p> Fetching filter</p>
           </div>

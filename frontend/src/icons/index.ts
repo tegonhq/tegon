@@ -37,6 +37,9 @@ export * from './arrow-forward-line';
 export * from './label-line';
 export * from './gmail';
 export * from './ai';
+export * from './help-line';
+export * from './create-issue-line';
+export * from './search-line';
 
 export * from './team-line';
 export * from './issues-fill';

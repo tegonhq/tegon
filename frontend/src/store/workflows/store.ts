@@ -75,6 +75,18 @@ export const WorkflowsStore: IAnyStateTreeNode = types
           workflow.category === WorkflowCategoryEnum.TRIAGE,
       );
     },
+    getWorkflowByNames(value: string[]) {
+      return value
+        .map((name: string) => {
+          const workflow = self.workflows.find(
+            (workflow: WorkflowType) =>
+              workflow.name.toLocaleLowerCase() === name,
+          );
+
+          return workflow?.id;
+        })
+        .filter(Boolean);
+    },
   }));
 
 export type WorkflowsStoreType = Instance<typeof WorkflowsStore>;

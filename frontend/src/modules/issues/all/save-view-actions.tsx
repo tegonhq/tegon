@@ -24,11 +24,7 @@ export const SaveViewActions = observer(() => {
         <>
           <Separator orientation="vertical" />
 
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setDialogOpen(true)}
-          >
+          <Button variant="secondary" onClick={() => setDialogOpen(true)}>
             Save as view
           </Button>
         </>

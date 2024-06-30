@@ -39,7 +39,6 @@ export const FiltersView = observer(({ Actions }: FilterViewProps) => {
       <div className="flex justify-between">
         <Button
           variant="secondary"
-          size="sm"
           isActive={filtersShow}
           onClick={() => setFiltersShow(true)}
         >

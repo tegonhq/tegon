@@ -66,6 +66,7 @@ export const AssigneeListSection = observer(
             <Button
               className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
               variant="ghost"
+              size="lg"
             >
               <AvatarText
                 text={getUserData(userOnWorkspace.userId).fullname}
@@ -124,6 +125,7 @@ export const NoAssigneeView = observer(() => {
           <Button
             className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
+            size="lg"
           >
             <AssigneeLine size={20} className="group-hover:hidden" />
             <div className="hidden group-hover:block">

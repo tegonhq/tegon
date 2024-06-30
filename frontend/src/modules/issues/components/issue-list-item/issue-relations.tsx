@@ -69,7 +69,7 @@ export const IssueRelations = observer(
       return (
         <a
           className={cn(
-            buttonVariants({ size: 'xs', variant: 'secondary' }),
+            buttonVariants({ size: 'sm', variant: 'secondary' }),
             'text-xs flex gap-1',
           )}
           onClick={() => {
