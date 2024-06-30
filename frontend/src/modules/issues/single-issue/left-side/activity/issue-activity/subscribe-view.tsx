@@ -38,7 +38,7 @@ export function SubscribeView() {
   return (
     <div className="flex gap-2 items-center">
       <div>
-        <Button variant="ghost" size="sm" onClick={toggleSubscribe}>
+        <Button variant="ghost" onClick={toggleSubscribe}>
           {subscribed ? 'Unsubscribe' : 'Subscribe'}
         </Button>
       </div>

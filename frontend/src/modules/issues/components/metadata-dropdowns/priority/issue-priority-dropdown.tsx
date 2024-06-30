@@ -59,7 +59,6 @@ export function IssuePriorityDropdown({
         <Button
           variant="ghost"
           role="combobox"
-          size="sm"
           aria-expanded={open}
           className={cn(
             'flex items-center px-0 justify-between focus-visible:ring-1 focus-visible:border-primary',
@@ -77,7 +76,6 @@ export function IssuePriorityDropdown({
       <Button
         variant="secondary"
         role="combobox"
-        size="sm"
         aria-expanded={open}
         className="flex items-center justify-between text-xs focus-visible:ring-1 focus-visible:border-primary"
       >

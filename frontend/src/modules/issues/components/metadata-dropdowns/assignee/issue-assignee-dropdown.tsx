@@ -75,7 +75,6 @@ export function IssueAssigneeDropdown({
         <Button
           variant="ghost"
           role="combobox"
-          size="sm"
           aria-expanded={open}
           className={cn(
             'flex items-center bg-transparent px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary',
@@ -103,7 +102,6 @@ export function IssueAssigneeDropdown({
       <Button
         variant="secondary"
         role="combobox"
-        size="sm"
         aria-expanded={open}
         className={cn(
           'flex items-center justify-between text-xs focus-visible:ring-1 focus-visible:border-primary gap-1',

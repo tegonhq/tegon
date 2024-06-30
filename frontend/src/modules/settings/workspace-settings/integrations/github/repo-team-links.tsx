@@ -30,7 +30,7 @@ export const RepoTeamLinks = observer(() => {
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" onClick={() => {}}>
+            <Button variant="ghost" onClick={() => {}}>
               <RiAddLine size={16} />
             </Button>
           </DialogTrigger>

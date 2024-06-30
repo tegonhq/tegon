@@ -84,7 +84,6 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
         <div className="flex justify-end gap-3 py-2">
           <Button
             variant="secondary"
-            size="sm"
             onClick={() => chooseTriageAction('Accept')}
           >
             <CheckLine size={14} className="mr-2" />
@@ -93,7 +92,6 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
 
           <Button
             variant="secondary"
-            size="sm"
             onClick={() => chooseTriageAction('Decline')}
           >
             <CrossLine size={16} className="mr-1" />

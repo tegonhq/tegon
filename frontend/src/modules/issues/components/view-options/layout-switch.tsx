@@ -19,7 +19,6 @@ export const LayoutSwitch = observer(() => {
     <div className="flex bg-grayAlpha-200 rounded p-0.5 h-7 items-center">
       <Button
         variant="ghost"
-        size="sm"
         isActive={applicationStore.displaySettings.view === ViewEnum.list}
         onClick={() => updateView(ViewEnum.list)}
         className="rounded-sm py-1 px-2 h-6"
@@ -30,7 +29,6 @@ export const LayoutSwitch = observer(() => {
         onClick={() => updateView(ViewEnum.board)}
         variant="ghost"
         isActive={applicationStore.displaySettings.view === ViewEnum.board}
-        size="sm"
         className="rounded-sm py-1 px-2 h-6"
       >
         <BoardLine size={20} />

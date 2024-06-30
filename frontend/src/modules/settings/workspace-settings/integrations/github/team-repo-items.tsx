@@ -125,7 +125,6 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
               <div className="hidden group-hover:flex">
                 {!account.default && (
                   <Button
-                    size="sm"
                     variant="ghost"
                     onClick={() => {
                       onUpdate(account);
@@ -135,7 +134,6 @@ export const TeamRepoItems = observer(({ team }: { team: TeamType }) => {
                   </Button>
                 )}
                 <Button
-                  size="sm"
                   variant="ghost"
                   onClick={() => {
                     setAccountToView(account);

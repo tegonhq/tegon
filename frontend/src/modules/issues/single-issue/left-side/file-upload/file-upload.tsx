@@ -27,7 +27,7 @@ export function FileUpload({ editor }: FileUploadProps) {
   };
 
   return (
-    <Button variant="ghost" size="sm">
+    <Button variant="ghost">
       <RiAttachmentLine size={16} onClick={onClick} />
     </Button>
   );

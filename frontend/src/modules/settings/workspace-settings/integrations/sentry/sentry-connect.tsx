@@ -55,7 +55,6 @@ export const SentryConnect = observer(() => {
         {sentryAccount ? (
           <Button
             variant="destructive"
-            size="sm"
             onClick={() => {
               deleteIntegrationAccount({
                 integrationAccountId: sentryAccount.id,
@@ -68,7 +67,6 @@ export const SentryConnect = observer(() => {
         ) : (
           <Button
             variant="outline"
-            size="sm"
             onClick={() => {
               createRedirectURL({
                 redirectURL: window.location.href,

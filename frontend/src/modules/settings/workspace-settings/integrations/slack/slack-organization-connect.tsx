@@ -54,7 +54,6 @@ export const SlackOrganizationConnect = observer(() => {
         {slackAccount ? (
           <Button
             variant="destructive"
-            size="sm"
             onClick={() => {
               deleteIntegrationAccount({
                 integrationAccountId: slackAccount.id,
@@ -67,7 +66,6 @@ export const SlackOrganizationConnect = observer(() => {
         ) : (
           <Button
             variant="outline"
-            size="sm"
             onClick={() => {
               createRedirectURL({
                 redirectURL: window.location.href,

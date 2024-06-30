@@ -83,7 +83,6 @@ export const FilterItemView = observer(
           className="flex items-center px-1.5 py-1 rounded-md rounded-l-none"
           onClick={removeFilter}
           variant="ghost"
-          size="sm"
         >
           <Close size={16} className="hover:text-foreground" />
         </Button>

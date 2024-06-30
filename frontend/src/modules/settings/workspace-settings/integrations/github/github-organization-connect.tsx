@@ -54,7 +54,6 @@ export const GithubOrganizationConnect = observer(() => {
         <div>
           <Button
             variant="ghost"
-            size="sm"
             isLoading={redirectURLLoading}
             onClick={() => {
               createRedirectURL({
@@ -105,7 +104,6 @@ export const GithubOrganizationConnect = observer(() => {
                 <div>
                   <Button
                     variant="destructive"
-                    size="sm"
                     onClick={() => {
                       deleteIntegrationAccount({
                         integrationAccountId: githubAccount.id,

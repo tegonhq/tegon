@@ -41,7 +41,6 @@ export function EditComment({ value, onCancel, comment }: EditCommentProps) {
         <Button
           variant="ghost"
           className="my-2 transition-all duration-500 ease-in-out"
-          size="sm"
           onClick={onCancel}
         >
           Cancel
@@ -49,7 +48,6 @@ export function EditComment({ value, onCancel, comment }: EditCommentProps) {
         <Button
           variant="secondary"
           className="my-2 transition-all duration-500 ease-in-out"
-          size="sm"
           onClick={onSubmit}
         >
           Save

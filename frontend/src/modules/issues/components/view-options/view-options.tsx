@@ -17,7 +17,7 @@ export const ViewOptions = observer(() => {
     <>
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost">
             <SettingsLine size={20} />
           </Button>
         </PopoverTrigger>

@@ -36,6 +36,7 @@ export * from './bullet-list-line';
 export * from './arrow-forward-line';
 export * from './label-line';
 export * from './gmail';
+export * from './ai';
 
 export * from './team-line';
 export * from './issues-fill';
