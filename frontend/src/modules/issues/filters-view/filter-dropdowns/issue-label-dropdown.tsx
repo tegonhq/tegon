@@ -38,7 +38,7 @@ export function IssueLabelDropdown({
           <Button
             variant="ghost"
             role="combobox"
-            size="xs"
+            size="sm"
             aria-expanded={open}
             className={cn(
               'flex items-center justify-between p-0 border-0 focus-visible:ring-1 focus-visible:border-primary',

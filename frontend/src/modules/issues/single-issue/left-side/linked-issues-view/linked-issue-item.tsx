@@ -115,7 +115,7 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                size="xs"
+                size="sm"
                 onClick={(e) => {
                   e.preventDefault();
                 }}

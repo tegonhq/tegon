@@ -195,7 +195,7 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
       </div>
 
       <div className="border-l flex items-start h-full">
-        <Button variant="ghost" size="xs" onClick={onClose}>
+        <Button variant="ghost" size="sm" onClick={onClose}>
           <CrossLine />
         </Button>
       </div>

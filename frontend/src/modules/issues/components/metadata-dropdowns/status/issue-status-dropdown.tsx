@@ -52,7 +52,7 @@ export function IssueStatusDropdown({
         <Button
           variant="outline"
           role="combobox"
-          size="xs"
+          size="sm"
           aria-expanded={open}
           onClick={() => setOpen(true)}
           className="flex items-center !bg-transparent hover:bg-transparent shadow-none p-0 border-0 justify-between focus-visible:ring-1 focus-visible:border-primary "

@@ -66,7 +66,7 @@ export function DuplicateIssuesView({ description }: DuplicateIssuesViewProps) {
             <div className="flex justify-start w-full">
               <Button
                 variant="ghost"
-                size="xs"
+                size="sm"
                 className="text-muted-foreground px-2 pr-2 !bg-transparent"
               >
                 {isOpen ? (

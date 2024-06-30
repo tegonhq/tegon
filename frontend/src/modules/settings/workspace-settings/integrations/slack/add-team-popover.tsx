@@ -84,7 +84,7 @@ export const AddTeamPopover = observer(
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="xs">
+          <Button variant="ghost" size="sm">
             Add Team
           </Button>
         </PopoverTrigger>

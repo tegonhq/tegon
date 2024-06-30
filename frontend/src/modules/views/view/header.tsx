@@ -53,7 +53,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
         {applicationStore.sidebarCollapsed && (
           <Button
             variant="ghost"
-            size="xs"
+            size="sm"
             onClick={() => {
               applicationStore.updateSideBar(false);
             }}
@@ -83,7 +83,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
           <DropdownMenuTrigger asChild className="flex items-center">
             <Button
               variant="ghost"
-              size="xs"
+              size="sm"
               className="flex items-center ml-1"
             >
               <RiMoreFill size={16} />
@@ -105,7 +105,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
 
         <Button
           variant="ghost"
-          size="xs"
+          size="sm"
           className="flex items-center group"
           onClick={() => {
             updateView({

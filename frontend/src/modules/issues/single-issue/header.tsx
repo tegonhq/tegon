@@ -52,7 +52,7 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
         {applicationStore.sidebarCollapsed && (
           <Button
             variant="ghost"
-            size="xs"
+            size="sm"
             onClick={() => {
               applicationStore.updateSideBar(false);
             }}

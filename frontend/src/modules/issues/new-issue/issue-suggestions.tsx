@@ -76,7 +76,7 @@ export function IssueSuggestions({
             type="button"
             className="border-dashed"
             key={label.id}
-            size="xs"
+            size="sm"
             onClick={() => {
               setLabelValue([...labelIds, label.id]);
             }}

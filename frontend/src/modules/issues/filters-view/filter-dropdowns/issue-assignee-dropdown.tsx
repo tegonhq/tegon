@@ -46,7 +46,7 @@ export function IssueAssigneeDropdown({
           <Button
             variant="outline"
             role="combobox"
-            size="xs"
+            size="sm"
             aria-expanded={open}
             className={cn(
               'flex gap-1 items-center justify-between shadow-none !bg-transparent hover:bg-transparent p-0 border-0 focus-visible:ring-1 focus-visible:border-primary text-muted-foreground',
