@@ -1,5 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { Priorities } from 'common/types/issue';
+
 import { useContextStore } from 'store/global-context-provider';
 import type { User } from 'store/user-context';
 
@@ -43,7 +45,13 @@ export function useFiltersFromAI() {
       }
 
       case 'priority': {
-        return labelsStore.getLabelWithValues(value);
+        return value
+          .map((priority: string) => {
+            const index = Priorities.indexOf(priority);
+
+            return index < 0 ? undefined : index;
+          })
+          .filter(Boolean);
       }
 
       case 'status': {
