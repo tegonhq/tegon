@@ -103,7 +103,7 @@ export const IssueRelations = observer(
         <Button
           className="flex gap-1 text-xs items-center"
           variant="secondary"
-          size="xs"
+          size="sm"
           onClick={() => setView(View.BLOCKED)}
         >
           <BlockedFill className="h-4 w-4 text-red-500" />
@@ -124,9 +124,9 @@ export const IssueRelations = observer(
     function getBlocksByComponent() {
       return (
         <Button
-          className="flex gap-1 text-xs"
+          className="flex gap-1 text-xs items-center"
           variant="secondary"
-          size="xs"
+          size="sm"
           onClick={() => setView(View.BLOCKS)}
         >
           <BlocksFill className="h-4 w-4 text-orange-500" />
@@ -147,9 +147,9 @@ export const IssueRelations = observer(
     function getSubIssuesComponent() {
       return (
         <Button
-          className="flex gap-1 text-xs"
+          className="flex gap-1 text-xs items-center"
           variant="secondary"
-          size="xs"
+          size="sm"
           onClick={() => setView(View.SUB_ISSUES)}
         >
           <SubIssue className="h-4 w-4" />

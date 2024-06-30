@@ -34,7 +34,7 @@ export const FileComponent = (props: any) => {
             )}
           </div>
 
-          <Button variant="ghost" size="xs">
+          <Button variant="ghost" size="sm">
             <RiDownloadLine
               size={16}
               onClick={() => {

@@ -37,7 +37,7 @@ export function ViewItem({ view }: ViewItemProps) {
 
           <Button
             variant="ghost"
-            size="xs"
+            size="sm"
             className={cn(
               view.isBookmarked
                 ? 'flex items-center'

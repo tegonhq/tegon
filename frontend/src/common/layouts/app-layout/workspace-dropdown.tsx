@@ -26,7 +26,7 @@ export const WorkspaceDropdown = observer(() => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="xs" className="p-0">
+        <Button variant="ghost" size="sm" className="p-0">
           <div className="flex justify-between gap-2 items-center">
             <AvatarText text={workspaceStore.workspace.name} noOfChar={1} />
 

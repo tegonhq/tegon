@@ -49,7 +49,7 @@ export function NewIssueDialog({
                 <div>New issue</div>
               </div>
               <div className="flex">
-                <Button variant="ghost" size="xs" onClick={onClose}>
+                <Button variant="ghost" size="sm" onClick={onClose}>
                   <Cross2Icon />
                 </Button>
               </div>

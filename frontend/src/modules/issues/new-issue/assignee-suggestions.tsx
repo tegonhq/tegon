@@ -34,7 +34,7 @@ export function AssigneeSuggestions({
           type="button"
           className="border-dashed"
           key={user.id}
-          size="xs"
+          size="sm"
           onClick={() => {
             setAssigneeValue(user.id);
           }}

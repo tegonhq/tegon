@@ -29,7 +29,7 @@ export function Header() {
         </Button> */}
         <Button
           variant="ghost"
-          size="xs"
+          size="sm"
           onClick={() => {
             copy(issueId as string);
             toast({
@@ -42,7 +42,7 @@ export function Header() {
         </Button>
         <Button
           variant="ghost"
-          size="xs"
+          size="sm"
           onClick={() => {
             copy(`${userdata.username}/${issueId}`);
             toast({

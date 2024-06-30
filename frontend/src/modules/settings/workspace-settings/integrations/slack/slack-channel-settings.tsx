@@ -56,7 +56,7 @@ function TeamList({
             <div>
               <Button
                 variant="ghost"
-                size="xs"
+                size="sm"
                 className="hidden group-hover:block"
                 onClick={() => onDelete(index, channelId)}
               >

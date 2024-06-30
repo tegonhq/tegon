@@ -23,7 +23,7 @@ export const ModalIssueItem = observer(({ issue }: ModalIssueItemProps) => {
   return (
     <div className="cursor-pointer flex items-center rounded-md">
       <CategoryIcon
-        size={16}
+        size={20}
         className="mr-3"
         color={getWorkflowColor(workflow).color}
       />

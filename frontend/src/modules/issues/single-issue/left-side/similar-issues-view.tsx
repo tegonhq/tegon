@@ -33,7 +33,7 @@ export function SimilarIssuesView({ issueId }: SimilarIssuesViewProps) {
   const [isOpen, setIsOpen] = React.useState(true);
   const { push } = useRouter();
 
-  const { data: issues } = useGetSimilarIssuesQuery(
+  const { data: issues = [] } = useGetSimilarIssuesQuery(
     {
       workspaceId: workspace.id,
       issueId,
@@ -42,15 +42,9 @@ export function SimilarIssuesView({ issueId }: SimilarIssuesViewProps) {
     true,
   );
 
-  if (!issues || (issues && issues.length === 0)) {
-    return null;
-  }
-
-  return null;
-
   return (
     <div
-      className={cn('rounded-md border p-2 mb-2')}
+      className={cn('rounded-md border p-2 mb-2 mx-6 bg-grayAlpha-100')}
       onClick={(e) => {
         e.stopPropagation();
       }}
@@ -61,8 +55,8 @@ export function SimilarIssuesView({ issueId }: SimilarIssuesViewProps) {
             <div className="flex justify-start w-full">
               <Button
                 variant="ghost"
-                size="xs"
-                className="text-muted-foreground px-2 pr-2 !bg-transparent"
+                size="sm"
+                className="px-2 pr-2 !bg-transparent"
               >
                 {isOpen ? (
                   <RiArrowDownSFill size={16} className="mr-2" />

@@ -41,7 +41,7 @@ export function Label({ label, setEditLabelState }: LabelProps) {
       <div className="items-center justify-center gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="flex items-center">
-            <Button variant="ghost" size="xs" className="flex items-center">
+            <Button variant="ghost" size="sm" className="flex items-center">
               <RiMoreFill size={16} />
             </Button>
           </DropdownMenuTrigger>

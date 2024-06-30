@@ -34,7 +34,7 @@ export function useFiltersFromAI() {
         return value
           .map((name: string) => {
             const user = usersData.find((user: User) =>
-              user.fullname.toLowerCase().includes(name),
+              user.fullname.toLowerCase().includes(name.toLowerCase()),
             );
 
             return user?.id;
