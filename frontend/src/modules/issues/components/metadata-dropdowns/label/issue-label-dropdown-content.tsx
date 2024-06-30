@@ -8,13 +8,7 @@ import type { LabelType } from 'common/types/label';
 
 import { BadgeColor } from 'components/ui/badge';
 import { Checkbox } from 'components/ui/checkbox';
-import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from 'components/ui/command';
+import { CommandGroup, CommandItem, CommandList } from 'components/ui/command';
 import { Separator } from 'components/ui/separator';
 import { useCurrentWorkspace } from 'hooks/workspace';
 
@@ -24,14 +18,17 @@ interface IssueLabelDropdownContentProps {
   labels: LabelType[];
   value: string[];
   onChange?: (value: string[]) => void;
+  setLabelSearch: (value: string) => void;
+  labelSearch: string;
 }
 
 export function IssueLabelDropdownContent({
   labels,
   value,
   onChange,
+  setLabelSearch,
+  labelSearch,
 }: IssueLabelDropdownContentProps) {
-  const [labelSearch, setLabelSearch] = React.useState('');
   const workspace = useCurrentWorkspace();
   const { mutate: createLabel } = useCreateLabelMutation({
     onSuccess: (data: LabelType) => {
@@ -67,66 +64,59 @@ export function IssueLabelDropdownContent({
     );
   };
   return (
-    <Command shouldFilter={false}>
-      <CommandInput
-        placeholder="Set label..."
-        onValueChange={(value: string) => setLabelSearch(value)}
-        autoFocus
-      />
-      <CommandList>
-        <CommandGroup>
-          {filter().map((label: LabelType) => {
-            return (
-              <CommandItem key={label.name} className="my-1" value={label.name}>
-                <div className="flex gap-2 items-center w-full">
-                  <Checkbox
-                    id={label.id}
-                    checked={value.includes(label.id)}
-                    onCheckedChange={(value: boolean) =>
-                      onValueChange(value, label.id)
-                    }
+    <CommandList>
+      <CommandGroup>
+        {filter().map((label: LabelType) => {
+          return (
+            <CommandItem key={label.name} className="my-1" value={label.name}>
+              <div className="flex gap-2 items-center w-full">
+                <Checkbox
+                  id={label.id}
+                  checked={value.includes(label.id)}
+                  onCheckedChange={(value: boolean) =>
+                    onValueChange(value, label.id)
+                  }
+                />
+                <label
+                  htmlFor={label.id}
+                  className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
+                >
+                  <BadgeColor
+                    style={{ backgroundColor: label.color }}
+                    className="w-2 h-2"
                   />
-                  <label
-                    htmlFor={label.id}
-                    className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
-                  >
-                    <BadgeColor
-                      style={{ backgroundColor: label.color }}
-                      className="w-2 h-2"
-                    />
-                    {label.name}
-                  </label>
-                </div>
-              </CommandItem>
-            );
-          })}
-          {labelSearch && exactMatch().length === 0 && (
-            <>
-              {filter().length > 0 && <Separator />}
-              <CommandItem
-                className="my-1"
-                value={labelSearch}
-                onSelect={() => {
-                  createLabel({
-                    name: labelSearch,
-                    workspaceId: workspace.id,
-                    color: generateOklchColor(),
-                  });
-                }}
-              >
-                <div className="flex gap-2 items-center">
-                  <label className="flex items-center font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    <RiAddLine size={16} className="mr-2" /> Create
-                    <span className="text-muted-foreground ml-1">
-                      {labelSearch}
-                    </span>
-                  </label>
-                </div>
-              </CommandItem>
-            </>
-          )}
-        </CommandGroup>
-      </CommandList>
-    </Command>
+                  {label.name}
+                </label>
+              </div>
+            </CommandItem>
+          );
+        })}
+        {labelSearch && exactMatch().length === 0 && (
+          <>
+            {filter().length > 0 && <Separator />}
+            <CommandItem
+              className="my-1"
+              value={labelSearch}
+              onSelect={() => {
+                createLabel({
+                  name: labelSearch,
+                  workspaceId: workspace.id,
+                  color: generateOklchColor(),
+                });
+              }}
+            >
+              <div className="flex gap-2 items-center">
+                <label className="flex items-center font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  <RiAddLine size={16} className="mr-2" /> Create
+                  <span className="text-muted-foreground ml-1">
+                    {labelSearch}
+                  </span>
+                </label>
+              </div>
+            </CommandItem>
+          </>
+        )}
+      </CommandGroup>
+    </CommandList>
   );
 }

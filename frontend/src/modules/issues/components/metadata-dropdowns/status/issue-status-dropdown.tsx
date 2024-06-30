@@ -8,6 +8,7 @@ import { getWorkflowColor } from 'common/status-color';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { Button } from 'components/ui/button';
+import { Command, CommandInput } from 'components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useTeamWorkflows } from 'hooks/workflows/use-team-workflows';
 
@@ -101,12 +102,15 @@ export function IssueStatusDropdown({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
         <PopoverContent className="w-72 p-0" align="start">
-          <IssueStatusDropdownContent
-            onChange={onChange}
-            onClose={() => setOpen(false)}
-            workflows={workflows}
-            value={value}
-          />
+          <Command>
+            <CommandInput placeholder="Set status..." autoFocus />
+            <IssueStatusDropdownContent
+              onChange={onChange}
+              onClose={() => setOpen(false)}
+              workflows={workflows}
+              value={value}
+            />
+          </Command>
         </PopoverContent>
       </Popover>
     </div>

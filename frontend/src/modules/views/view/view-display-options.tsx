@@ -10,8 +10,6 @@ import {
 
 import type { ViewType } from 'common/types/view';
 
-import { Separator } from 'components/ui/separator';
-
 import { SaveViewAction } from './save-view-action';
 
 interface ViewDisplayOptionsProps {
@@ -21,12 +19,11 @@ interface ViewDisplayOptionsProps {
 export const ViewDisplayOptions = observer(
   ({ view }: ViewDisplayOptionsProps) => {
     return (
-      <div className="flex gap-2">
+      <div className="flex gap-2 h-full">
         <GroupingOrderingOptions />
         <LayoutSwitch />
         <ViewOptions />
 
-        <Separator orientation="vertical" />
         <SaveViewAction view={view} />
       </div>
     );

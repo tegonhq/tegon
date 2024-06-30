@@ -53,10 +53,11 @@ export const LabelListItem = observer(({ label }: LabelListItemProps) => {
           <Button
             className="flex items-center group ml-6 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
+            size="lg"
           >
             <BadgeColor
               style={{ backgroundColor: label.color }}
-              className=" group-hover:hidden"
+              className="w-2 h-2 group-hover:hidden"
             />
             <div className="hidden group-hover:block">
               {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
@@ -108,10 +109,11 @@ export const NoLabelList = observer(() => {
           <Button
             className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
+            size="lg"
           >
             <BadgeColor
               style={{ backgroundColor: '#838383' }}
-              className=" group-hover:hidden"
+              className="w-2 h-2 group-hover:hidden"
             />
             <div className="hidden group-hover:block">
               {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}

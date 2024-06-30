@@ -8,6 +8,7 @@ import { cn } from 'common/lib/utils';
 
 import { AvatarText } from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
+import { Command, CommandInput } from 'components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useUsersData } from 'hooks/users/use-users-data';
 
@@ -66,13 +67,16 @@ export function IssueAssigneeDropdown({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-72 p-0" align="start">
-          <IssueAssigneeDropdownContent
-            onClose={() => setOpen(false)}
-            usersData={usersData}
-            onChange={onChange}
-            value={value}
-            multiple
-          />
+          <Command>
+            <CommandInput placeholder="Set assignee..." autoFocus />
+            <IssueAssigneeDropdownContent
+              onClose={() => setOpen(false)}
+              usersData={usersData}
+              onChange={onChange}
+              value={value}
+              multiple
+            />
+          </Command>
         </PopoverContent>
       </Popover>
     </div>

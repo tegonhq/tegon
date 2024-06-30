@@ -1,6 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { observer } from 'mobx-react-lite';
+import React from 'react';
 
 import { IssueLabelDropdownContent } from 'modules/issues/components';
 
@@ -18,6 +19,8 @@ interface IssueLabelFilterProps {
 
 export const IssueLabelFilter = observer(
   ({ onChange }: IssueLabelFilterProps) => {
+    const [labelSearch, setLabelSearch] = React.useState('');
+
     const currentTeam = useCurrentTeam();
     const labels = useTeamLabels(currentTeam.identifier);
     const { applicationStore } = useContextStore();
@@ -35,6 +38,8 @@ export const IssueLabelFilter = observer(
         value={labelFilters}
         onChange={change}
         labels={labels}
+        labelSearch={labelSearch}
+        setLabelSearch={setLabelSearch}
       />
     );
   },

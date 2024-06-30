@@ -15,6 +15,7 @@ import { Inbox, SettingsLine } from 'icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { BottomBar } from './bottom-bar';
 import { Nav } from './nav';
 import { TeamList } from './team-list';
 import { WorkspaceDropdown } from './workspace-dropdown';
@@ -77,7 +78,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
             />
             <TeamList />
           </div>
-          <div className="w-full flex justify-between px-6"></div>
+          <BottomBar />
         </div>
 
         <div className="max-w-[calc(100vw_-_234px)] w-full">{children}</div>

@@ -75,7 +75,7 @@ export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
             <div>
               <Link
                 className={cn(
-                  buttonVariants({ variant: 'ghost', size: 'sm' }),
+                  buttonVariants({ variant: 'ghost' }),
                   'px-0 text-primary',
                 )}
                 href={`/${workspaceSlug}/issue/${team.identifier}-${data.number}`}

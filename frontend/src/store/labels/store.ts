@@ -59,6 +59,18 @@ export const LabelsStore: IAnyStateTreeNode = types
     getLabelWithId(id: string) {
       return self.labels.find((label: LabelType) => label.id === id);
     },
+    getLabelWithValues(names: string[]) {
+      return names
+        .map((key: string) => {
+          const label = self.labels.find(
+            (label: LabelType) =>
+              label.name.toLowerCase() === key.toLowerCase(),
+          );
+
+          return label?.id;
+        })
+        .filter(Boolean);
+    },
   }));
 
 export type LabelsStoreType = Instance<typeof LabelsStore>;

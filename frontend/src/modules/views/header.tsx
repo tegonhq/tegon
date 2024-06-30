@@ -66,7 +66,7 @@ export const Header = observer(({ title }: HeaderProps) => {
       <div className="py-2">
         <Link
           href={`/${workspaceSlug}/team/${team.identifier}/all`}
-          className={cn(buttonVariants({ variant: 'secondary', size: 'sm' }))}
+          className={cn(buttonVariants({ variant: 'secondary' }))}
         >
           New view
         </Link>

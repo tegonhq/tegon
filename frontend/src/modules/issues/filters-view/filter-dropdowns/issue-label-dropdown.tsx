@@ -8,6 +8,7 @@ import { cn } from 'common/lib/utils';
 import type { LabelType } from 'common/types/label';
 
 import { Button } from 'components/ui/button';
+import { Command, CommandInput } from 'components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
 import { useTeamLabels } from 'hooks/labels';
 
@@ -24,6 +25,7 @@ export function IssueLabelDropdown({
 }: IssueLabelDropdownProps) {
   const [open, setOpen] = React.useState(false);
   const labels = useTeamLabels(teamIdentifier);
+  const [labelSearch, setLabelSearch] = React.useState('');
 
   const getLabel = (labelId: string) => {
     return labels.find((label: LabelType) => label.id === labelId);
@@ -51,11 +53,20 @@ export function IssueLabelDropdown({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-72 p-0" align="start">
-          <IssueLabelDropdownContent
-            labels={labels}
-            onChange={onChange}
-            value={value}
-          />
+          <Command shouldFilter={false}>
+            <CommandInput
+              placeholder="Set label..."
+              onValueChange={(value: string) => setLabelSearch(value)}
+              autoFocus
+            />
+            <IssueLabelDropdownContent
+              labels={labels}
+              onChange={onChange}
+              value={value}
+              labelSearch={labelSearch}
+              setLabelSearch={setLabelSearch}
+            />
+          </Command>
         </PopoverContent>
       </Popover>
     </div>
