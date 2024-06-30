@@ -21,7 +21,6 @@ export function useSummarizeIssue(
   return useQuery([SummarizeIssue], () => getSummarizeIssue(issueId), {
     retry: 1,
     staleTime: 1,
-    enabled: false,
     refetchOnWindowFocus: false, // Frequency of Change would be Low
   });
 }

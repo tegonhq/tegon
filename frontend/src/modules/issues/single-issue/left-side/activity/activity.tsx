@@ -4,19 +4,15 @@ import React from 'react';
 
 import { Button } from 'components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'components/ui/tabs';
-import { useIssueData } from 'hooks/issues';
-import { AI, CrossLine } from 'icons';
-
-import { useSummarizeIssue } from 'services/issues';
+import { AI } from 'icons';
 
 import { CommentsActivity } from './comments-activity';
 import { IssueActivity } from './issue-activity';
 import { SubscribeView } from './issue-activity/subscribe-view';
+import { IssueSummary } from './summary';
 
 export function Activity() {
-  const issueData = useIssueData();
   const [showSummary, setShowSummary] = React.useState(false);
-  const { data, refetch } = useSummarizeIssue(issueData.id);
 
   return (
     <Tabs defaultValue="comments" className="mt-3 p-0 px-6">
@@ -39,7 +35,6 @@ export function Activity() {
               variant="secondary"
               className="flex gap-1"
               onClick={() => {
-                refetch();
                 setShowSummary(true);
               }}
             >
@@ -48,23 +43,7 @@ export function Activity() {
           </div>
         </div>
 
-        {showSummary && (
-          <div className="bg-grayAlpha-100 p-3 pt-1 mt-2 rounded relative">
-            <ul className="ml-6 list-disc [&>li]:mt-2">
-              {data.map((text: string, index: number) => (
-                <li key={index}>{text}</li>
-              ))}
-            </ul>
-
-            <Button
-              variant="ghost"
-              className="absolute right-1 top-1"
-              onClick={() => setShowSummary(false)}
-            >
-              <CrossLine size={16} />
-            </Button>
-          </div>
-        )}
+        {showSummary && <IssueSummary onClose={() => setShowSummary(false)} />}
 
         <TabsContent value="comments">
           <CommentsActivity />
