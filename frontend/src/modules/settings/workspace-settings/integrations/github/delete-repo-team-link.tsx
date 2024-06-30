@@ -78,7 +78,7 @@ export function DeleteRepoTeamLink({
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <Button size="sm" variant="ghost">
+        <Button variant="ghost">
           <RiDeleteBin7Fill size={14} className="text-muted-foreground" />
         </Button>
       </AlertDialogTrigger>

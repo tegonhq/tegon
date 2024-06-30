@@ -52,7 +52,7 @@ export const SlackChannelConnext = observer(() => {
           </p>
         </div>
 
-        <Button variant="outline" size="sm" onClick={getRedirectURL}>
+        <Button variant="outline" onClick={getRedirectURL}>
           Add channel
         </Button>
       </div>

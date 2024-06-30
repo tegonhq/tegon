@@ -237,20 +237,10 @@ export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
             )}
 
             <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                isLoading={isLoading}
-                onClick={onClose}
-              >
+              <Button variant="ghost" isLoading={isLoading} onClick={onClose}>
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                variant="secondary"
-                size="sm"
-                isLoading={isLoading}
-              >
+              <Button type="submit" variant="secondary" isLoading={isLoading}>
                 Create issue
               </Button>
             </div>

@@ -82,7 +82,6 @@ export function IssueStatusDropdown({
     return (
       <Button
         variant="secondary"
-        size="sm"
         role="combobox"
         aria-expanded={open}
         className="flex items-center gap-1 justify-between shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "

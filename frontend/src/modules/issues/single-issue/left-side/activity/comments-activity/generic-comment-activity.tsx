@@ -101,7 +101,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
             )}
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <span>
               <ReactTimeAgo
                 date={new Date(comment.updatedAt)}
@@ -111,7 +111,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
             {!sourceMetadata && user.id === currentUser.id && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="xs" className="px-2 -mt-1">
+                  <Button variant="ghost" className="px-2 -mt-1">
                     <RiMoreFill size={16} className="text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>

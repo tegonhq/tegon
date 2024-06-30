@@ -62,7 +62,6 @@ export function ReplyComment({
                 variant="ghost"
                 className="my-2 transition-all duration-500 ease-in-out"
                 type="submit"
-                size="sm"
                 onClick={onSubmit}
               >
                 <SendLine size={20} />

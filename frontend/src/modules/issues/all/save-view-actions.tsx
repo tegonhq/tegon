@@ -28,14 +28,10 @@ export const SaveViewActions = observer(() => {
         <>
           <Separator orientation="vertical" />
 
-          <Button size="sm" variant="ghost" onClick={clearFilters}>
+          <Button variant="ghost" onClick={clearFilters}>
             Clear
           </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setDialogOpen(true)}
-          >
+          <Button variant="secondary" onClick={() => setDialogOpen(true)}>
             Save
           </Button>
         </>

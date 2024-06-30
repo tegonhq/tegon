@@ -46,6 +46,7 @@ import {
   getLastIssueNumber,
   getSubscriberIds,
   getSuggestedLabels,
+  getSummary,
 } from './issues.utils';
 
 const openaiClient = new OpenAI({
@@ -962,5 +963,90 @@ export default class IssuesService {
     });
 
     return similarIssues;
+  }
+
+  /**
+   * Generates similar issue suggestions for a given issue in a workspace.
+   * @param workspaceId The ID of the workspace.
+   * @param issueId The ID of the issue to find similar issues for.
+   * @returns An array of similar issues.
+   */
+  async summarizeIssue(issueId: string) {
+    // Fetch issue comments and their replies for the given issueId
+    const issueComments = await this.prisma.issueComment.findMany({
+      where: { issueId, deleted: null, parentId: null },
+      orderBy: { createdAt: 'asc' },
+      include: {
+        replies: {
+          where: { deleted: null },
+          orderBy: { createdAt: 'asc' },
+        },
+        issue: { include: { team: true } },
+      },
+    });
+
+    // If no comments are found, return undefined
+    if (issueComments.length < 1) {
+      return undefined;
+    }
+
+    // Fetch team users for the workspace and team associated with the issue
+    const teamUsers = await this.prisma.usersOnWorkspaces.findMany({
+      where: {
+        workspaceId: issueComments[0].issue.team.workspaceId,
+        teamIds: {
+          hasSome: [issueComments[0].issue.teamId],
+        },
+      },
+      include: { user: true },
+    });
+
+    // Create a mapping of user IDs to their full names
+    const formattedTeamUsers: Record<string, string> = teamUsers.reduce(
+      (acc: Record<string, string>, member) => {
+        acc[member.user.id] = member.user.fullname;
+        return acc;
+      },
+      {},
+    );
+
+    // Format comments and replies with user names
+    const formattedComments = issueComments.map((comment) => {
+      const sourceMetadata = comment.sourceMetadata as Record<string, string>;
+      const userName =
+        formattedTeamUsers[comment.userId] ||
+        sourceMetadata?.userDisplayName ||
+        null;
+      const message = convertTiptapJsonToText(comment.body);
+      const formattedReplies = comment.replies.map((reply) => {
+        const replySourceMetadata = reply.sourceMetadata as Record<
+          string,
+          string
+        >;
+        const replyUserName =
+          formattedTeamUsers[comment.userId] ||
+          replySourceMetadata?.userDisplayName ||
+          null;
+        const replyMessage = convertTiptapJsonToText(reply.body);
+        return `  Reply - ${replyUserName}: ${replyMessage}`;
+      });
+      return `Message - ${userName}: ${message}\n${formattedReplies.join('\n')}`;
+    });
+
+    // Generate a summary of the formatted comments using OpenAI
+    const rawSummary = await getSummary(
+      openaiClient,
+      formattedComments.join('\n'),
+    );
+
+    // Extract bullet points from the raw summary using regex
+    const bulletPointRegex = /- (.*)/g;
+    const bulletPoints =
+      rawSummary
+        .match(bulletPointRegex)
+        ?.map((point) => point.replace(/^- /, '').trim()) || [];
+
+    // Return the extracted bullet points
+    return bulletPoints;
   }
 }

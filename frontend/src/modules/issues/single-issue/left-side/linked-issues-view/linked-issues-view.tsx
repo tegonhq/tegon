@@ -54,7 +54,7 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
           <div>
             <CollapsibleTrigger asChild>
               <div className="flex items-center">
-                <Button variant="ghost" size="sm" className="px-0 text-md">
+                <Button variant="ghost" className="px-0 text-md">
                   Links
                   {isOpen ? (
                     <ChevronDown size={16} className="ml-1" />
@@ -75,7 +75,7 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="pr-0">
+                <Button variant="ghost" className="pr-0">
                   <AddLine size={16} />
                 </Button>
               </DropdownMenuTrigger>

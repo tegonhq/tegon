@@ -58,7 +58,6 @@ export const GithubPersonalConnect = observer(() => {
         {githubAccount ? (
           <Button
             variant="destructive"
-            size="sm"
             onClick={() => {
               deleteIntegrationAccount({
                 integrationAccountId: githubAccount.id,
@@ -71,7 +70,6 @@ export const GithubPersonalConnect = observer(() => {
         ) : (
           <Button
             variant="outline"
-            size="sm"
             onClick={() => {
               createRedirectURL({
                 redirectURL: window.location.href,

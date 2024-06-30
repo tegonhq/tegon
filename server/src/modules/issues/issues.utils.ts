@@ -25,6 +25,7 @@ import {
   SubscribeType,
   UpdateIssueInput,
   labelPrompt,
+  summarizePrompt,
   titlePrompt,
 } from './issues.interface';
 
@@ -396,4 +397,19 @@ export async function getEquivalentStateIds(
   );
 
   return equivalentStateIds;
+}
+
+export async function getSummary(openaiClient: OpenAI, conversations: string) {
+  const chatCompletion: OpenAI.Chat.ChatCompletion =
+    await openaiClient.chat.completions.create({
+      messages: [
+        { role: 'system', content: summarizePrompt },
+        {
+          role: 'user',
+          content: `[INPUT] conversations: ${conversations}`,
+        },
+      ],
+      model: 'gpt-3.5-turbo',
+    });
+  return chatCompletion.choices[0].message.content;
 }

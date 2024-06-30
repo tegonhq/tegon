@@ -41,7 +41,7 @@ export function IssueComment() {
         <div className="absolute right-1 bottom-2 flex items-center gap-1">
           <FileUpload editor={editor} />
 
-          <Button variant="ghost" type="submit" size="sm" onClick={onSubmit}>
+          <Button variant="ghost" type="submit" onClick={onSubmit}>
             <SendLine size={20} />
           </Button>
         </div>

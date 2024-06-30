@@ -181,7 +181,7 @@ export function FilterDropdown({ showStatus }: FilterDropdownProps) {
       }}
     >
       <PopoverTrigger asChild>
-        <Button variant="secondary" size="sm">
+        <Button variant="secondary">
           <Filter size={16} className="mr-1" />
           Filter
         </Button>
