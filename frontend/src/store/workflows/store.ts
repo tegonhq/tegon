@@ -80,7 +80,7 @@ export const WorkflowsStore: IAnyStateTreeNode = types
         .map((name: string) => {
           const workflow = self.workflows.find(
             (workflow: WorkflowType) =>
-              workflow.name.toLocaleLowerCase() === name,
+              workflow.name.toLowerCase() === name.toLowerCase(),
           );
 
           return workflow?.id;
