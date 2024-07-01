@@ -1,0 +1,123 @@
+@tailwind base;
+
+@layer base {
+  :root {
+    --gray-50: #f9f9f9;
+    --gray-100: #efefef;
+    --gray-200: #e8e8e8;
+    --gray-300: #e0e0e0;
+    --gray-400: #cecece;
+    --gray-500: #d8d8d8;
+    --gray-600: #bbbbbb;
+    --gray-700: #8d8d8d;
+    --gray-800: #838383;
+    --gray-900: #646464;
+    --gray-950: #202020;
+
+    --grayAlpha-50: 0% 0 0 / 2.35%;
+    --grayAlpha-100: 0% 0 0 / 6.27%;
+    --grayAlpha-200: 0% 0 0 / 9.02%;
+    --grayAlpha-300: 0% 0 0 / 12.16%;
+    --grayAlpha-400: 0% 0 0 / 15.29%;
+    --grayAlpha-500: 0% 0 0 / 19.22%;
+    --grayAlpha-600: 0% 0 0 / 26.67%;
+    --grayAlpha-700: 0% 0 0 / 44.71%;
+    --grayAlpha-800: 0% 0 0 / 48.63%;
+    --grayAlpha-900: 0% 0 0 / 60.78%;
+    --grayAlpha-950: 0% 0 0 / 87.45%;
+
+    /* Colors for different status */
+    --status-pill-0: #fd865c;
+    --status-icon-0: #d94b0e;
+
+    --status-pill-1: #d9befa;
+    --status-icon-1: #9f3def;
+
+    --status-pill-2: #a9a67b;
+    --status-icon-2: #8e862c;
+
+    --status-pill-3: #d8d8d8;
+    --status-icon-3: #5c5c5c;
+
+    --status-pill-4: #f2c062;
+    --status-icon-4: #c28c11;
+
+    --status-pill-5: #96c3fe;
+    --status-icon-5: #3f8ef7;
+
+    --status-pill-6: #79cc68;
+    --status-icon-6: #3caf20;
+
+    /* Avatar colors */
+    --custom-color-1: #b56455;
+    --custom-color-2: #7b8a34;
+    --custom-color-3: #1c91a8;
+    --custom-color-4: #886dbc;
+    --custom-color-5: #ad6e30;
+    --custom-color-6: #54935b;
+    --custom-color-7: #4187c0;
+    --custom-color-8: #a165a1;
+    --custom-color-9: #997d1d;
+    --custom-color-10: #2b9684;
+    --custom-color-11: #2b9684;
+    --custom-color-12: #b0617c;
+
+    /* Team Colors */
+    --team-color-1: #89c794;
+    --team-color-2: #d2a1bb;
+    --team-color-3: #90c5d6;
+  }
+
+  .dark {
+    --gray-50: #191919;
+    --gray-100: #222222;
+    --gray-200: #2a2a2a;
+    --gray-300: #313131;
+    --gray-400: #3a3a3a;
+    --gray-500: #484848;
+    --gray-600: #606060;
+    --gray-700: #6e6e6e;
+    --gray-800: #7b7b7b;
+    --gray-900: #b4b4b4;
+    --gray-950: #eeeeee;
+
+    --grayAlpha-50: 100% 0 0 / 3.53%;
+    --grayAlpha-100: 100% 0 0 / 7.06%;
+    --grayAlpha-200: 100% 0 0 / 10.59%;
+    --grayAlpha-300: 100% 0 0 / 13.33%;
+    --grayAlpha-400: 100% 0 0 / 17.25%;
+    --grayAlpha-500: 100% 0 0 / 23.14%;
+    --grayAlpha-600: 100% 0 0 / 33.33%;
+    --grayAlpha-700: 100% 0 0 / 39.22%;
+    --grayAlpha-800: 100% 0 0 / 44.31%;
+    --grayAlpha-900: 100% 0 0 / 68.63%;
+    --grayAlpha-950: 100% 0 0 / 92.94%;
+
+    /* Colors for different status */
+    --status-pill-0: #c06142;
+    --status-icon-0: #c06142;
+
+    --status-pill-1: #886dbc;
+    --status-icon-1: #886dbc;
+
+    --status-pill-2: #83872c;
+    --status-icon-2: #83872c;
+
+    --status-pill-3: #b4b4b4;
+    --status-icon-3: #5c5c5c;
+
+    --status-pill-4: #c28c11;
+    --status-icon-4: #c28c11;
+
+    --status-pill-5: #4187c0;
+    --status-icon-5: #4187c0;
+
+    --status-pill-6: #5d9151;
+    --status-icon-6: #5d9151;
+
+    /* Team Colors */
+    --team-color-1: #54935b;
+    --team-color-2: #a165a1;
+    --team-color-3: #4187c0;
+  }
+}
