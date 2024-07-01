@@ -20,7 +20,7 @@ interface NavProps {
 }
 
 export function checkIsActive(pathname: string, href: string): boolean {
-  if (pathname.includes(href)) {
+  if (pathname.endsWith(href)) {
     return true;
   }
 
