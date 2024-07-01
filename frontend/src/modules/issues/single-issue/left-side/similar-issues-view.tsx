@@ -1,6 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { RiArrowDownSFill, RiArrowRightSFill } from '@remixicon/react';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -16,7 +15,7 @@ import {
   CollapsibleTrigger,
 } from 'components/ui/collapsible';
 import { useCurrentWorkspace } from 'hooks/workspace';
-import { DuplicateLine2 } from 'icons';
+import { ChevronDown, ChevronRight, DuplicateLine2 } from 'icons';
 
 import { useGetSimilarIssuesQuery } from 'services/search';
 
@@ -44,7 +43,7 @@ export function SimilarIssuesView({ issueId }: SimilarIssuesViewProps) {
 
   return (
     <div
-      className={cn('rounded-md border p-2 mb-2 mx-6 bg-grayAlpha-100')}
+      className={cn('rounded-md p-2 mb-2 mx-6 bg-grayAlpha-100')}
       onClick={(e) => {
         e.stopPropagation();
       }}
@@ -58,13 +57,13 @@ export function SimilarIssuesView({ issueId }: SimilarIssuesViewProps) {
                 size="sm"
                 className="px-2 pr-2 !bg-transparent"
               >
-                {isOpen ? (
-                  <RiArrowDownSFill size={16} className="mr-2" />
-                ) : (
-                  <RiArrowRightSFill size={16} className="mr-2" />
-                )}
                 <DuplicateLine2 size={16} className="mr-2" />
                 Similar Issues
+                {isOpen ? (
+                  <ChevronDown size={16} className="mr-2" />
+                ) : (
+                  <ChevronRight size={16} className="mr-2" />
+                )}
               </Button>
             </div>
           </CollapsibleTrigger>

@@ -136,7 +136,7 @@ export async function getAiFilter(
         { role: 'system', content: filterPrompt },
         { role: 'user', content: filterText },
       ],
-      model: 'gpt-4-turbo',
+      model: 'gpt-4o',
     });
     return JSON.parse(chatCompletion.choices[0].message.content);
   } catch (error) {

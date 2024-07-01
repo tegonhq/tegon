@@ -44,12 +44,8 @@ export function filterIssue(issue: IssueType, filter: FilterType) {
     case FilterTypeEnum.IS_NOT:
       return !castedValue.includes(fieldValue);
     case FilterTypeEnum.INCLUDES:
-      return fieldValue.includes(castedValue);
-    case FilterTypeEnum.INCLUDES_ANY:
       return castedValue.some((value) => fieldValue.includes(value));
     case FilterTypeEnum.EXCLUDES:
-      return !fieldValue.includes(castedValue);
-    case FilterTypeEnum.EXCLUDES_ANY:
       return !castedValue.some((value) => fieldValue.includes(value));
     case FilterTypeEnum.UNDEFINED:
       return fieldValue === null || fieldValue === undefined;

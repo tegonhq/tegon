@@ -21,9 +21,7 @@ export enum FilterTypeEnum {
   IS = 'IS',
   IS_NOT = 'IS_NOT',
   INCLUDES = 'INCLUDES',
-  INCLUDES_ANY = 'INCLUDES_ANY',
   EXCLUDES = 'EXCLUDES',
-  EXCLUDES_ANY = 'EXCLUDES_ANY',
   UNDEFINED = 'UNDEFINED',
 }
 

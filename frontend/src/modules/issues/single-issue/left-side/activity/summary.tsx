@@ -34,7 +34,7 @@ export function IssueSummary({ onClose }: IssueSummaryProps) {
 
   return (
     <div className="bg-grayAlpha-100 p-3 pt-1 mt-2 rounded relative">
-      <ul className="ml-6 list-disc [&>li]:mt-2">
+      <ul className="ml-6 list-disc mt-2">
         {summary.map((text: string, index: number) => (
           <li key={index}>{text}</li>
         ))}

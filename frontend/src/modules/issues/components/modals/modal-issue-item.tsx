@@ -28,7 +28,7 @@ export const ModalIssueItem = observer(({ issue }: ModalIssueItemProps) => {
         color={getWorkflowColor(workflow).color}
       />
       <div className="mr-3 font-mono min-w-[50px]">{`${team.identifier}-${issue.number}`}</div>
-      <div className="max-w-[300px]">
+      <div className="max-w-[500px]">
         <div className="truncate"> {issue.title}</div>
       </div>
     </div>

@@ -119,7 +119,7 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
 
   return (
     <div className="flex justify-between items-start border border-border p-1 rounded-md w-full">
-      <div className="flex gap-2 flex-wrap items-center h-full">
+      <div className="flex gap-2 flex-wrap items-center h-full grow">
         <AppliedFiltersView />
         {isLoading && (
           <div className="flex gap-2 items-center">
@@ -129,7 +129,7 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
         )}
         {!isLoading && (
           <Command
-            className="border-none shadow-none relative overflow-visible w-fit h-fit"
+            className="border-none shadow-none relative overflow-visible h-fit w-auto"
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onBlur={(e) => {
               if (e.target.localName === 'button' && e.relatedTarget === null) {
@@ -142,7 +142,7 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
               placeholder="Type for filters..."
               value={value}
               onValueChange={setValue}
-              containerClassName="border-0 rounded-md min-w-[300px] pl-0 py-1 bg-background-2"
+              containerClassName="border-0 rounded-md min-w-[400px] pl-0 py-1 bg-background-2"
               className="py-2 h-4 pl-1"
               autoFocus={isEmpty(filters)}
               ref={inputRef}

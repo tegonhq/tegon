@@ -12,10 +12,8 @@ import { FilterTypeEnum } from 'store/application';
 const FilterToName = {
   [FilterTypeEnum.IS]: 'is any of',
   [FilterTypeEnum.IS_NOT]: 'is not',
-  [FilterTypeEnum.INCLUDES]: 'includes all of',
-  [FilterTypeEnum.INCLUDES_ANY]: 'includes any of',
-  [FilterTypeEnum.EXCLUDES]: 'excludes all of',
-  [FilterTypeEnum.EXCLUDES_ANY]: 'excludes any of',
+  [FilterTypeEnum.INCLUDES]: 'includes',
+  [FilterTypeEnum.EXCLUDES]: 'excludes',
   [FilterTypeEnum.UNDEFINED]: 'undefined',
 };
 
@@ -33,12 +31,7 @@ export function FilterOptionsDropdown({
   isArray,
 }: FilterOptionsDropdownProps) {
   const options = isArray
-    ? [
-        FilterTypeEnum.INCLUDES,
-        FilterTypeEnum.INCLUDES_ANY,
-        FilterTypeEnum.EXCLUDES,
-        FilterTypeEnum.EXCLUDES_ANY,
-      ]
+    ? [FilterTypeEnum.INCLUDES, FilterTypeEnum.EXCLUDES]
     : [FilterTypeEnum.IS, FilterTypeEnum.IS_NOT];
 
   return (

@@ -350,40 +350,40 @@ summary: ["Lucas wants to discuss the project timeline.","The discussion will ta
 export const aiFilterPrompt = `Generate a filter json based on the text:
 
 Filters:
-- status: Issues with these status, [{{status}}], 
-- priority: Issues with these priority, ["Urgent", High", "Medium", "Low"]
+- status: Issues with these statuses, [{{status}}], 
+- priority: Issues with these priorities, ["Urgent", High", "Medium", "Low"]
 - assignee: Issues assigned to those users, [{{assignee}}]
 - labels: Issues with these Labels, [{{labels}}]
-- isBlocked: Issue is blocked another by another issue
+- isBlocked: The issue is blocked by another issue
 - isBlocking: an issue is blocking another issue
-- isParent: Issue is a parent of sub issue
+- isParent: Issue is a parent of sub-issue
+- isSubIssue: Issue is a sub issue of parent
 
 Filter Type:
 - IS
 - IS_NOT
 - INCLUDES
-- INCLUDES_ANY
 - EXCLUDES
-- EXCLUDES_ANY
 - UNDEFINED
 
 Guidelines:
 - User inputs a plain text of the filtered view
 - Filters data is an array value. 
-- Incorporate the relevant filter id to the final json.
+- Incorporate the relevant filter id into the final JSON.
 - Don't use the word Task instead use Issue
 - Give empty JSON when there is nothing matches with the filters data
 - for labels user filterType INCLUDES
-- Don't respond with anything other than the JSON output
+- Don't respond with anything other than the JSON output and not formatting
 
 Examples:
-- status: Issues with these status, ["Done", Triage", "Todo", "Backlog"], 
-- priority: Issues with these priority, ["Urgent", High", "Medium", "Low"]
+- status: Issues with these statuses, ["Done", Triage", "Todo", "Backlog"], 
+- priority: Issues with these priorities, ["Urgent", High", "Medium", "Low"]
 - assignee: Issues assigned to those users, ["Manik", "Manoj", "Harshith", "Rob"]
-- labels: Issues with these Labels, ["Backend", "Bug", "Feture", "Frontend"]
-- isBlocked: Issue is blocked another by another issue
+- labels: Issues with these Labels, ["Backend", "Bug", "Feature", "Frontend"]
+- isBlocked: The issue is blocked by another issue
 - isBlocking: an issue is blocking another issue
-- isParent: Issue is a parent of sub issue
+- isParent: Issue is a parent of sub-issue
+- isSubIssue: Issue is a sub issue of parent issue
 
 User: Show Harshith and Manik's issue
 Filters: {"assignee": {"filterType": "IS", "value": ["Harshith", "Manik"] }}
@@ -392,13 +392,16 @@ User: issues with bug and backend
 Filters: {"label": {"filterType": "INCLUDES", "value": ["Bug", "Backend"] }}
 
 User: Manoj's bugs
-Filters: {"label": {"filterType": "INCLUDES", "value": ["Bug"},  "assignee" : {"filterType": "IS", "value": ["Manoj"]}}
+Filters: {"label": {"filterType": "INCLUDES", "value": ["Bug"},  "assignee": {"filterType": "IS", "value": ["Manoj"]}}
 
 User: Parent Issues
 Filters: {"isParent": {"filterType": "IS"}}
 
-User: high priority blocked issues
+User: high-priority blocked issues
 Filters: {"isBlocked": {"filterType": "IS"}, "priority":  {"filterType": "IS", "value": ["High"]}}
+
+User: Sub Issues
+Filters: {"isSubIssue": {"filterType": "IS"}}
 
 User: Manoj blocked issues
 Filters: {"isBlocking": {"filterType": "IS"}, "assignee":  {"filterType": "IS", "value": ["Manoj"]}}`;
