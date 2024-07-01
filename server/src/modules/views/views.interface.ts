@@ -20,10 +20,8 @@ export interface ViewsRequestBody {
 export enum FilterTypeEnum {
   IS = 'IS',
   IS_NOT = 'IS_NOT',
-  INCLUDES = 'INCLUDLES',
-  INCLUDES_ANY = 'INCLUDES_ANY',
+  INCLUDES = 'INCLUDES',
   EXCLUDES = 'EXCLUDES',
-  EXCLUDES_ANY = 'EXCLUDES_ANY',
   UNDEFINED = 'UNDEFINED',
 }
 
@@ -102,16 +100,14 @@ Filter Type:
 - IS
 - IS_NOT
 - INCLUDES
-- INCLUDES_ANY
 - EXCLUDES
-- EXCLUDES_ANY
 - UNDEFINED
 
 Guidelines:
 - The view name should be a concise and descriptive title that reflects the purpose of the view based on the selected filters. It should be no more than 5 words.
 - The view description should provide more details about the view and explain how the selected filters are used to create the view. It should be 1-2 sentences long and no more than 30 words.
 - Incorporate the relevant filter values and types into the generated view name and description to provide clarity and specificity.
-- Filter input will be in this format {"filter": {"filterType": "INCLUDLES", "value": ["value1", "value2", "value3"]}}
+- Filter input will be in this format {"filter": {"filterType": "INCLUDES", "value": ["value1", "value2", "value3"]}}
 - If a filter type is "UNDEFINED," exclude that filter from the generated view name and description.
 - Don't use the word Task instead use Issue
 - Don't join values of the filter in the output of view name and description
@@ -122,7 +118,7 @@ Filters: {"Status": {"filterType": "INCLUDES", "value": ["Open", "In Progress"] 
 "Priority": {"filterType": "IS", "value": ["High"] }
 "Team": {"filterType": "IS", "value": ["Design"] }
 "Assignee": {"filterType": "UNDEFINED", "value": [] }
-"Labels": {"filterType": "INCLUDES_ANY", "value": ["Bug"] }
+"Labels": {"filterType": "INCLUDES", "value": ["Bug"] }
 }
 
 viewName: Open High-Priority Design Issues with Bug Label

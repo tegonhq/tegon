@@ -30,7 +30,7 @@ export const IssueLabelFilter = observer(
       : [];
 
     const change = (value: string[]) => {
-      onChange(value, FilterTypeEnum.INCLUDES_ANY);
+      onChange(value, FilterTypeEnum.INCLUDES);
     };
 
     return (

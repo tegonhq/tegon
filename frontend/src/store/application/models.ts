@@ -4,25 +4,11 @@ import { types } from 'mobx-state-tree';
 
 export const FilterModel = types.model({
   value: types.union(types.array(types.string), types.array(types.number)),
-  filterType: types.enumeration([
-    'IS',
-    'IS_NOT',
-    'INCLUDES',
-    'INCLUDES_ANY',
-    'EXCLUDES',
-    'EXCLUDES_ANY',
-  ]),
+  filterType: types.enumeration(['IS', 'IS_NOT', 'INCLUDES', 'EXCLUDES']),
 });
 
 export const FilterBooleanModel = types.model({
-  filterType: types.enumeration([
-    'IS',
-    'IS_NOT',
-    'INCLUDES',
-    'INCLUDES_ANY',
-    'EXCLUDES',
-    'EXCLUDES_ANY',
-  ]),
+  filterType: types.enumeration(['IS', 'IS_NOT', 'INCLUDES', 'EXCLUDES']),
 });
 
 export const FiltersModel = types.model({
