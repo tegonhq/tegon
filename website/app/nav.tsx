@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
 interface NavProps {
+  mobile?: boolean;
   links: Array<{
     title: string;
     label?: string;
@@ -27,11 +28,11 @@ export function checkIsActive(pathname: string, href: string): boolean {
   return false;
 }
 
-export function Nav({ links }: NavProps) {
+export function Nav({ links, mobile }: NavProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="grid gap-0.5">
+    <nav className={cn(mobile ? "flex gap-1 flex-wrap" : "grid gap-0.5")}>
       {links.map((link, index) => {
         const isActive = checkIsActive(pathname, link.href);
 

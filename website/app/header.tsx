@@ -16,7 +16,6 @@ import { Star } from "@/icons";
 
 export const Header = () => {
   const pathname = usePathname();
-  console.log(pathname);
 
   const getTitle = () => {
     if (pathname.includes("/integrations")) {
@@ -31,7 +30,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="flex px-6 w-full justify-between gap-2 items-center">
+    <header className="hidden xl:flex px-6 w-full justify-between gap-2 items-center">
       <div className="flex gap-2 py-4 items-center">
         <Breadcrumb>
           <BreadcrumbItem>
@@ -49,7 +48,13 @@ export const Header = () => {
         </Breadcrumb>
       </div>
       <div className="flex justify-end gap-3 py-2">
-        <Button variant="secondary" className="flex items-center gap-1">
+        <Button
+          variant="secondary"
+          className="flex items-center gap-1"
+          onClick={() => {
+            window.open("https://github.com/tegonhq/tegon", "_blank");
+          }}
+        >
           <Star />
           Star us on github
         </Button>

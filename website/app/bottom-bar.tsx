@@ -3,18 +3,17 @@
 "use client";
 
 import React from "react";
-
-import { Button } from "@/components/ui/button";
-import { Docs, SlackIcon } from "@/icons";
-import { RiGithubFill, RiSlackFill, RiSlackLine } from "@remixicon/react";
+import Image from "next/image";
+import { Logo } from "@/icons/logo";
 
 export function BottomBar() {
   const [newIssue, setNewIssue] = React.useState(false);
   const [search, setSearch] = React.useState(false);
 
   return (
-    <div className="w-full flex justify-between px-6 py-4">
-      <Button
+    <div className="w-full flex justify-center px-6 py-4">
+      <Logo className="h-6 w-fit text-muted-foreground" />
+      {/* <Button
         variant="ghost"
         isActive
         className="px-3"
@@ -45,7 +44,7 @@ export function BottomBar() {
         }}
       >
         <RiSlackLine size={20} />
-      </Button>
+      </Button> */}
     </div>
   );
 }

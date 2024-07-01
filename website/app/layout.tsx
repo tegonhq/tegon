@@ -32,7 +32,7 @@ export default function RootLayout({
           )}
         >
           <div className="h-[100vh] w-[100vw] flex">
-            <div className="min-w-[234px] flex flex-col">
+            <div className="hidden min-w-[234px] xl:flex flex-col">
               <div className="flex flex-col py-4 px-6">
                 <div className="flex justify-between items-center">
                   <Button variant="ghost" size="sm" className="p-0">
@@ -50,7 +50,7 @@ export default function RootLayout({
                     {
                       title: "Home",
                       icon: <Home className="h-4 w-4" />,
-                      href: `/home`,
+                      href: `/`,
                     },
                     {
                       title: "Integrations",
@@ -70,13 +70,40 @@ export default function RootLayout({
                   ]}
                 />
               </div>
-              {/* <BottomBar /> */}
+              <BottomBar />
             </div>
 
-            <div className="max-w-[calc(100vw_-_234px)] w-full">
+            <div className="xl:max-w-[calc(100vw_-_234px)] w-full">
               <main className="flex flex-col h-[100vh]">
                 <Header />
-                <div className="bg-background-2 rounded-tl-3xl flex flex-col h-[calc(100vh_-_53px)]">
+                <div className="p-3 flex xl:hidden">
+                  <Nav
+                    mobile
+                    links={[
+                      {
+                        title: "Home",
+                        icon: <Home className="h-4 w-4" />,
+                        href: `/`,
+                      },
+                      {
+                        title: "Integrations",
+                        icon: <StackLine className="h-4 w-4" />,
+                        href: `/integrations`,
+                      },
+                      {
+                        title: "Features",
+                        icon: <AI className="h-4 w-4" />,
+                        href: `/features`,
+                      },
+                      {
+                        title: "Our Story",
+                        icon: <TeamLine className="h-4 w-4" />,
+                        href: `/story`,
+                      },
+                    ]}
+                  />
+                </div>
+                <div className="bg-background-2 rounded-tl-3xl flex flex-col grow overflow-auto">
                   {children}
                 </div>
               </main>
