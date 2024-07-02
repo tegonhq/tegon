@@ -8,3 +8,4 @@ export * from "./stack-line";
 export * from "./in-progress-line";
 export * from "./star";
 export * from "./sentry-icon";
+export * from "./help";

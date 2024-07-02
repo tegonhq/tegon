@@ -101,7 +101,7 @@ export default function Features() {
       <Separator />
 
       <SettingSection title="Customisable Views" description={null}>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 pb-6">
           <div className="flex flex-col">
             <h3 className="font-medium text-md">Filter & Focus</h3>
             <p className="">
