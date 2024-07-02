@@ -6,8 +6,11 @@
 
 [![Star us on GitHub](https://img.shields.io/github/stars/tegonhq/tegon?color=FFD700&label=Stars&logo=Github)](https://github.com/tegonhq/tegon)
 
-[![Join our Slack Server](https://img.shields.io/badge/Slack-Join%20our%20community-1da1f2?style=flat&logo=slack&logoColor=%23fff)](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA)
-[![Tweet at us on Twitter](https://img.shields.io/badge/Twitter-tweet%20at%20us-1da1f2?style=flat&logo=twitter&logoColor=%23fff)](https://twitter.com/tegonhq)
+[![Join our Slack Server](https://img.shields.io/badge/Slack-1da1f2?style=flat&logo=slack&logoColor=%23fff)](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA)
+[![Documentation](https://img.shields.io/badge/Documentation-1da1f2?style=flat&logo=docs&logoColor=%23fff)](https://docs.tegon.ai/introduction)
+[![Website](https://img.shields.io/badge/Website-1da1f2?style=flat&logo=docs&logoColor=%23fff)](https://www.tegon.ai/)
+[![Twitter](https://img.shields.io/badge/Twitter-1da1f2?style=flat&logo=twitter&logoColor=%23fff)](https://twitter.com/tegonhq)
+
 
 [Love Tegon? Give us a ⭐ on GitHub!](https://github.com/tegonhq/tegon)
 
@@ -33,6 +36,14 @@ Issue Tracking is important for fast-paced teams, enabling them to organize list
 
 ## Demo Video
 https://www.loom.com/share/b664b01e9b064a02be5791c12b77a107?sid=d4146365-1597-4ff5-88fd-a07b08ddb9f4
+
+## Demo
+Go to [demo.tegon.ai](https://demo.tegon.ai/) and login with the following credentials
+
+```
+email: elon@xyz.com
+password: XfFNw6GwVJVQv6PA
+```
 
 ## Self Hosted
 To self-host Tegon on your own machine, you can do so using Docker. However note that you will need to add configurations for email, AI and storage services. Please refer to the documentation [here](https://docs.tegon.ai/oss/deploy-tegon).
