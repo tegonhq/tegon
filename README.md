@@ -31,6 +31,9 @@ Issue Tracking is important for fast-paced teams, enabling them to organize list
 - Issue tracking tools serve as a task database, directing engineers on what to work on but not aiding in faster task completion.
 - Existing tools don't effectively assist Engineering Managers in real-time task, feature, or bug prioritisation.
 
+## Demo Video
+https://www.loom.com/share/b664b01e9b064a02be5791c12b77a107?sid=d4146365-1597-4ff5-88fd-a07b08ddb9f4
+
 ## Self Hosted
 To self-host Tegon on your own machine, you can do so using Docker. However note that you will need to add configurations for email, AI and storage services. Please refer to the documentation [here](https://docs.tegon.ai/oss/deploy-tegon).
 
@@ -41,14 +44,22 @@ If you're interested in using Tegon Cloud, please book a [demo call](https://cal
 
 ## Features
 
-- Issues Tracking (List and Kanban View)
-- Automatically create a title from the description, eliminating the need to spend time crafting the perfect title
-- Suggest labels and assignees from the description
+- **Issues Tracking:**
+  - Interactive Layout - Choose between List or Kanban views.
+  - Focus on What Matters - Easily update key details and highlight critical dependencies (sub-tasks, blocked/blocking issues).
+  - List View - Perfect for scanning prioritized issues, grouped by status. Collapse sections for focus.
+  - Kanban View - Visualize workflow with Kanban boards, ideal for tracking progress at a glance.
+- **AI-powered Suggestions:** Automatically suggests titles, labels, assignees, and even identifies duplicate issues while you create new ones.
+- **AI Summarization:** Uses AI to generate concise summaries of issue activity, keeping you focused.
+- **Natural Language Filtering:** Filter issues with ease by simply typing in plain text.
+- **Automated Triaging:** AI saves time by automatically categorizing issues coming in triage
+- **Centralised Triage:**
+  - Unified Inbox - Capture issues from all sources (sales, support, monitoring tools) in a single queue.
+  - Slack Integration - Create issues directly from Slack, empowering non-technical users.
+  - Automatic Routing - Errors detected by tools (e.g., Sentry) automatically flow into triage for prioritization.
 - Custom Views
-- Identify duplicate issues
 - Sprints (coming soon)
 - Task Prioritisation (coming soon)
-- Suggest Stack Overflow references for Sentry-linked bug issues (coming soon)
 
 ## Integrations
 
@@ -58,18 +69,10 @@ If you're interested in using Tegon Cloud, please book a [demo call](https://cal
   - Link a Slack thread to an issue to provide full context about the discussions happening on a specific task or a feature request.
 - Sentry: Get information about Sentry errors in Tegon issues
 
-## Command Centre for Agents (Coming Soon)
-
-We're building a command centre for agents that will run multiple agents:
-
-- Code Review Agent: Reviews linked pull requests for new tasks, ensuring code quality by preventing the incorporation of suboptimal code.
-- Bug Agent: Upon bug assignment, will attempt to reproduce the bug, propose solutions, and in some cases, even implement these solutions in a new PR.
-- Task Prioritisation Agent: Assists team leaders in managing the sprint by doing a real-time assessment of the tasks, priority, and bandwidth and suggesting changes to be made.
-
 ## Contributing
 
 Whether it's big or small, we love contributions. Not sure where to get started? 
-You can join our [Slack](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2i1e781ip-zwauijRV9TRtRKoJi3tqng), and ask us any questions there.
+You can join our [Slack](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA), and ask us any questions there.
 
 ## License
 
