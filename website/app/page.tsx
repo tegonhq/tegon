@@ -1,17 +1,17 @@
 import { Badge, BadgeColor } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Docs, InProgressLine } from "@/icons";
+import { Docs, Help, InProgressLine } from "@/icons";
 import { RiGithubFill, RiSlackLine } from "@remixicon/react";
 import { RightSide } from "./right-side";
 
 export default function Home() {
   return (
-    <div className="grid grid-cols-5 h-full">
-      <div className="col-span-5 xl:col-span-4 flex flex-col">
+    <div className="grid grid-cols-5 h-full overflow-hidden">
+      <div className="col-span-5 xl:col-span-4 flex flex-col overflow-auto">
         <div className="xl:hidden flex">
           <RightSide />
         </div>
-        <div className="border-0 px-6 pt-6 pb-3 font-medium resize-none bg-transparent no-scrollbar overflow-hidden outline-none focus-visible:ring-0 text-xl">
+        <div className="border-0 px-6 pt-6 pb-3 font-medium resize-none bg-transparent no-scrollbar outline-none focus-visible:ring-0 text-xl">
           Tegon: The AI-first Issue Tracking Tool
         </div>
 
@@ -81,12 +81,23 @@ export default function Home() {
               </li>
             </ul>
           </div>
+
+          <div className="flex flex-col items-start gap-2 py-6">
+            <h3 className="text-lg font-medium">Demo</h3>
+
+            <iframe
+              src="https://www.loom.com/embed/b664b01e9b064a02be5791c12b77a107?sid=d4146365-1597-4ff5-88fd-a07b08ddb9f4"
+              frameBorder="0"
+              allowFullScreen
+              className="rounded border"
+            />
+          </div>
         </div>
 
         <div className="flex flex-col justify-between px-6 my-6">
           <div className="text-md mb-2 border-t pt-3"> Links</div>
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 pb-6">
             <a
               target="_blank"
               href="https://github.com/tegonhq/tegon"
@@ -98,7 +109,7 @@ export default function Home() {
             </a>
             <a
               target="_blank"
-              href="https://github.com/tegonhq/tegon"
+              href="https://join.slack.com/t/tegoncommunity/shared_invite/zt-2lxo6vq5v-s2zIC0DBDdwIDTdhJ4kBHw"
               className="cursor-pointer w-full bg-grayAlpha-100 px-2 pr-0 py-2 rounded-md flex gap-2 items-center justify-between"
             >
               <div className="flex items-center gap-2">
@@ -112,6 +123,15 @@ export default function Home() {
             >
               <div className="flex items-center gap-2">
                 <Docs size={20} /> Tegon Docs
+              </div>
+            </a>
+            <a
+              target="_blank"
+              href="https://calendly.com/manik-sync/talk-to-us"
+              className="cursor-pointer w-full bg-grayAlpha-100 px-2 pr-0 py-2 rounded-md flex gap-2 items-center justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <Help size={20} /> Schedule call
               </div>
             </a>
           </div>

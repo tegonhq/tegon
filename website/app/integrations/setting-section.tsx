@@ -55,7 +55,7 @@ export function SettingSection({
     <div className="flex gap-6 w-full flex-wrap xl:flex-nowrap">
       <div className="w-[400px] shrink-0 flex flex-col">
         <h3 className="text-lg"> {title} </h3>
-        <p className="text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground w-full">{description}</p>
       </div>
       <div className="grow">{children}</div>
     </div>

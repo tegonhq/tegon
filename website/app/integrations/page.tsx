@@ -8,10 +8,12 @@ export default function Integrations() {
   const Description = () => {
     return (
       <>
-        Tegon seamlessly integrates with the tools you already use, keeping you
-        productive and in the zone. Say goodbye to frustrating app switching!
-        Feel free to suggest a new integration by creating a GitHub issue - we
-        value your input!
+        <p>
+          Tegon seamlessly integrates with the tools you already use, keeping
+          you productive and in the zone. Say goodbye to frustrating app
+          switching! Feel free to suggest a new integration by creating a GitHub
+          issue - we value your input!
+        </p>
         <a
           className={cn(
             "mt-2 text-foreground",
@@ -29,7 +31,7 @@ export default function Integrations() {
   return (
     <main className="flex min-h-screen flex-col items-start w-full p-6">
       <SettingSection title="Integrations" description={Description()}>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 pb-6">
           <IntegrationCard
             name="Github"
             description="Automate your pull request and commit workflows and keep issues synced both ways"
