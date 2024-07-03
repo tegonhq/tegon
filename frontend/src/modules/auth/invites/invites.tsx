@@ -28,7 +28,7 @@ export function Invites() {
   React.useEffect(() => {
     if (context?.workspaces.length > 0) {
       router.replace(`/${context.workspaces[0].slug}`);
-    } else {
+    } else if (context?.invites.length === 0) {
       router.replace(`/waitlist`);
     }
 
