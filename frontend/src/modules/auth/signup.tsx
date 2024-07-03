@@ -31,6 +31,7 @@ export function SignUp() {
       }
     }
   }
+
   return (
     <AuthLayout>
       <div className="flex flex-col w-[360px]">

@@ -4,9 +4,12 @@
 import { Widget } from '@typeform/embed-react';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { SessionAuth } from 'supertokens-auth-react/recipe/session';
+import { SessionAuth, signOut } from 'supertokens-auth-react/recipe/session';
 
 import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
+
+import Logo from 'components/logo';
+import { Button } from 'components/ui/button';
 
 import { UserContext } from 'store/user-context';
 
@@ -28,8 +31,24 @@ export default function Waitlist() {
   }, [context?.workspaces]);
 
   return (
-    <div className="h-[100vh] w-[100vw] relative">
-      <Widget id="spaOtE0P" className="my-form h-[100vh]  w-[100vw]" />
+    <div className="h-[100vh] w-[100vw] flex flex-col">
+      <Widget
+        id="spaOtE0P"
+        className="my-form h-[calc(100vh_-_50px)] w-[100vw]"
+      />
+      <div className="flex items-center justify-center gap-2">
+        <Logo width={120} height={50} />
+        <Button
+          variant="secondary"
+          onClick={async () => {
+            await signOut();
+
+            router.replace('/auth/signin');
+          }}
+        >
+          Log out
+        </Button>
+      </div>
     </div>
   );
 }
