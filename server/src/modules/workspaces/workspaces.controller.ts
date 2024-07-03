@@ -18,6 +18,7 @@ import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import {
   CreateWorkspaceInput,
+  InviteActionBody,
   InviteUsersBody,
   UpdateWorkspaceInput,
   UserBody,
@@ -64,6 +65,21 @@ export class WorkspacesController {
   async seedWorkspaces() {
     await this.workspacesService.seedWorkspaces();
     return { status: 200 };
+  }
+
+  @Post('invite_action')
+  @UseGuards(new AuthGuard())
+  async inviteAction(
+    @SessionDecorator() session: SessionContainer,
+    @Body() inviteActionBody: InviteActionBody,
+  ) {
+    const userId = session.getUserId();
+
+    return await this.workspacesService.inviteAction(
+      inviteActionBody.inviteId,
+      userId,
+      inviteActionBody.accept,
+    );
   }
 
   @Get(':workspaceId')

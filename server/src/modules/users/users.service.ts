@@ -9,7 +9,12 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { SupertokensService } from 'modules/auth/supertokens/supertokens.service';
 
-import { PublicUser, UpdateUserBody, userSerializer } from './user.interface';
+import {
+  PublicUser,
+  UpdateUserBody,
+  userSerializer,
+  UserWithInvites,
+} from './user.interface';
 
 @Injectable()
 export class UsersService {
@@ -32,7 +37,7 @@ export class UsersService {
     });
   }
 
-  async getUser(id: string): Promise<User> {
+  async getUser(id: string): Promise<UserWithInvites> {
     const user = await this.prisma.user.findUnique({
       where: {
         id,
@@ -46,7 +51,9 @@ export class UsersService {
       },
     });
 
-    return userSerializer(user);
+    const invites = await this.getInvitesForUser(user.email);
+    const serializeUser = userSerializer(user);
+    return { ...serializeUser, invites };
   }
 
   async getUsersbyId(ids: string[]): Promise<PublicUser[]> {
@@ -217,7 +224,19 @@ export class UsersService {
     throw new BadRequestException(response.status);
   }
 
-  async getInvite(inviteId: string) {
-    return await this.prisma.invite.findUnique({ where: { id: inviteId } });
+  async getInvitesForUser(email: string) {
+    const invites = await this.prisma.invite.findMany({
+      where: { emailId: email, deleted: null },
+    });
+
+    return await Promise.all(
+      invites.map(async (invite) => {
+        const workspace = await this.prisma.workspace.findUnique({
+          where: { id: invite.workspaceId },
+        });
+
+        return { ...invite, workspace };
+      }),
+    );
   }
 }

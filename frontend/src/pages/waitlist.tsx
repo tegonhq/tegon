@@ -1,18 +1,19 @@
+/* eslint-disable @next/next/no-sync-scripts */
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { Widget } from '@typeform/embed-react';
 import { useRouter } from 'next/router';
-import * as React from 'react';
+import React from 'react';
 import { SessionAuth } from 'supertokens-auth-react/recipe/session';
 
 import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
 
-import { Loader } from 'components/ui/loader';
-
 import { UserContext } from 'store/user-context';
 
-export default function Home() {
+export default function Waitlist() {
   const context = React.useContext(UserContext);
   const router = useRouter();
+  const ref = React.useRef(null);
 
   React.useEffect(() => {
     if (context?.workspaces.length > 0) {
@@ -20,22 +21,21 @@ export default function Home() {
     }
 
     // Check if they have invites
-    else if (context?.invites.length > 0) {
+    if (context?.invites.length > 0) {
       router.replace(`/invites`);
-    }
-
-    // Check if they have invites
-    else {
-      router.replace(`/waitlist`);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context?.workspaces]);
 
-  return <Loader />;
+  return (
+    <div className="h-[100vh] w-[100vw] relative">
+      <Widget id="spaOtE0P" className="my-form h-[100vh]  w-[100vw]" />
+    </div>
+  );
 }
 
-Home.getLayout = function getLayout(page: React.ReactElement) {
+Waitlist.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <SessionAuth>
       <UserDataWrapper>{page}</UserDataWrapper>

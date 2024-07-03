@@ -48,6 +48,11 @@ export interface InviteUsersBody {
   role: Role;
 }
 
+export interface InviteActionBody {
+  accept: boolean;
+  inviteId: string;
+}
+
 export const labelSeedData = [
   { name: 'Bug', color: '#ed5b4a' },
   { name: 'Feature', color: '#00aa91' },

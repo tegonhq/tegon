@@ -207,19 +207,31 @@ export default class WorkspacesService {
     });
   }
 
-  async acceptInvite(inviteId: string, userId: string) {
-    const invite = await this.prisma.invite.update({
+  async inviteAction(
+    inviteId: string,
+    userId: string,
+    accepted: boolean = false,
+  ) {
+    if (accepted) {
+      const invite = await this.prisma.invite.update({
+        where: { id: inviteId },
+        data: { status: InviteStatus.ACCEPTED },
+      });
+
+      await this.addUserToWorkspace(invite.workspaceId, userId, {
+        teamIds: invite.teamIds,
+        joinedAt: new Date().toISOString(),
+        role: invite.role,
+        status: Status.ACTIVE,
+      });
+    }
+
+    return await this.prisma.invite.update({
       where: { id: inviteId },
-      data: { status: InviteStatus.ACCEPTED },
+      data: {
+        status: InviteStatus.ACCEPTED,
+        deleted: new Date().toISOString(),
+      },
     });
-
-    await this.addUserToWorkspace(invite.workspaceId, userId, {
-      teamIds: invite.teamIds,
-      joinedAt: new Date().toISOString(),
-      role: invite.role,
-      status: Status.ACTIVE,
-    });
-
-    return invite;
   }
 }

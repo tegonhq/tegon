@@ -24,7 +24,7 @@ import { Textarea } from 'components/ui/textarea';
 import { useToast } from 'components/ui/use-toast';
 import { useCurrentWorkspace } from 'hooks/workspace';
 
-import { useInviteUsersMutation } from 'services/users';
+import { useInviteUsersMutation } from 'services/workspace';
 
 import { useContextStore } from 'store/global-context-provider';
 

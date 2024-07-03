@@ -1,6 +1,5 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Invite } from '@@generated/invite/entities';
 import jwt from 'supertokens-node/lib/build/recipe/jwt';
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
 import Session from 'supertokens-node/recipe/session';
@@ -8,12 +7,8 @@ import ThirdPartyEmailPassword from 'supertokens-node/recipe/thirdpartyemailpass
 import UserRoles from 'supertokens-node/recipe/userroles';
 
 import { UsersService } from 'modules/users/users.service';
-import WorkspacesService from 'modules/workspaces/workspaces.service';
 
-export const recipeList = (
-  usersService: UsersService,
-  workspaceService: WorkspacesService,
-) => {
+export const recipeList = (usersService: UsersService) => {
   return [
     jwt.init(),
     UserRoles.init(),
@@ -29,12 +24,6 @@ export const recipeList = (
             // override the email password sign up function
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             async emailPasswordSignUp(input: any) {
-              const queryParam =
-                input.userContext._default.request.request.query;
-              let invite: Invite;
-              if (queryParam.token) {
-                invite = await usersService.getInvite(queryParam.token);
-              }
               const response =
                 await originalImplementation.emailPasswordSignUp(input);
 
@@ -48,13 +37,6 @@ export const recipeList = (
                   input.email,
                   input.email.split('@')[0],
                 );
-
-                if (invite) {
-                  await workspaceService.acceptInvite(
-                    invite.id,
-                    response.user.id,
-                  );
-                }
               }
               return response;
             },
@@ -62,12 +44,6 @@ export const recipeList = (
             // override the thirdparty sign in / up function
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             async thirdPartySignInUp(input: any) {
-              const queryParam =
-                input.userContext._default.request.request.query;
-              let invite: Invite;
-              if (queryParam.token) {
-                invite = await usersService.getInvite(queryParam.token);
-              }
               const response =
                 await originalImplementation.thirdPartySignInUp(input);
 
@@ -82,12 +58,6 @@ export const recipeList = (
                       input.email,
                       input.email.split('@')[0],
                     );
-                    if (invite) {
-                      await workspaceService.acceptInvite(
-                        invite.id,
-                        response.user.id,
-                      );
-                    }
                   } else {
                     // TODO: some post sign in logic
                   }

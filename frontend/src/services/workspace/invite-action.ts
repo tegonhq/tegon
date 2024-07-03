@@ -4,37 +4,30 @@ import { useMutation } from 'react-query';
 
 import { ajaxPost } from 'common/lib/ajax';
 
-export type InviteResponse = Record<string, string>;
+import type { Invite } from 'store/user-context';
 
-export interface InviteUsersParams {
-  emailIds: string;
-  workspaceId: string;
-  teamIds: string[];
+export interface InviteActionParams {
+  inviteId: string;
+  accept: boolean;
 }
 
-export function inviteUsers({
-  emailIds,
-  workspaceId,
-  teamIds,
-}: InviteUsersParams) {
+export function inviteAction({ inviteId, accept }: InviteActionParams) {
   return ajaxPost({
-    url: `/api/v1/users/invite_users`,
+    url: `/api/v1/workspaces/invite_action`,
     data: {
-      emailIds,
-      workspaceId,
-      teamIds,
-      role: 'USER',
+      inviteId,
+      accept,
     },
   });
 }
 
 interface MutationParams {
   onMutate?: () => void;
-  onSuccess?: (data: InviteResponse) => void;
+  onSuccess?: (data: Invite) => void;
   onError?: (error: string) => void;
 }
 
-export function useInviteUsersMutation({
+export function useInviteActionMutation({
   onMutate,
   onSuccess,
   onError,
@@ -50,11 +43,11 @@ export function useInviteUsersMutation({
     onError && onError(errorText);
   };
 
-  const onMutationSuccess = (data: InviteResponse) => {
+  const onMutationSuccess = (data: Invite) => {
     onSuccess && onSuccess(data);
   };
 
-  return useMutation(inviteUsers, {
+  return useMutation(inviteAction, {
     onError: onMutationError,
     onMutate: onMutationTriggered,
     onSuccess: onMutationSuccess,

@@ -35,6 +35,7 @@
     "@tiptap/extension-heading": "^2.2.4",
     "@tiptap/extension-placeholder": "^2.2.4",
     "@tiptap/extension-text": "^2.2.4",
+    "@typeform/embed-react": "^3.17.0",
     "@types/lodash.clonedeep": "^4.5.9",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
