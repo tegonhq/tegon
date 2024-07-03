@@ -99,14 +99,14 @@ export function SignForm() {
             Continue
           </Button>
 
-          <a
+          <Link
             className={cn(
               buttonVariants({ variant: 'secondary', size: 'lg', full: true }),
             )}
             href="/auth/signup"
           >
             Create a new account
-          </a>
+          </Link>
         </div>
       </form>
     </Form>

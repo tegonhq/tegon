@@ -13,7 +13,6 @@ import { UserContext } from 'store/user-context';
 export default function Waitlist() {
   const context = React.useContext(UserContext);
   const router = useRouter();
-  const ref = React.useRef(null);
 
   React.useEffect(() => {
     if (context?.workspaces.length > 0) {
