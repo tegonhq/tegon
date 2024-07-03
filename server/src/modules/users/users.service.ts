@@ -2,21 +2,14 @@
 
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { Role, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import supertokens from 'supertokens-node';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { SupertokensService } from 'modules/auth/supertokens/supertokens.service';
-import WorkspacesService from 'modules/workspaces/workspaces.service';
 
-import {
-  InviteUsersBody,
-  PublicUser,
-  UpdateUserBody,
-  userSerializer,
-} from './user.interface';
-import { generateRandomPassword } from './users.utils';
+import { PublicUser, UpdateUserBody, userSerializer } from './user.interface';
 
 @Injectable()
 export class UsersService {
@@ -24,10 +17,9 @@ export class UsersService {
   constructor(
     private prisma: PrismaService,
     private mailerService: MailerService,
-    private workspacesService: WorkspacesService,
   ) {}
 
-  async upsertUser(id: string, email: string, fullname: string, role?: Role) {
+  async upsertUser(id: string, email: string, fullname: string) {
     return await this.prisma.user.upsert({
       where: { email },
       create: {
@@ -35,7 +27,6 @@ export class UsersService {
         email,
         fullname,
         username: email.split('@')[0],
-        role: role ? role : Role.ADMIN,
       },
       update: {},
     });
@@ -105,84 +96,6 @@ export class UsersService {
       },
     });
     return userSerializer(user);
-  }
-
-  async inviteUsers(
-    supertokensService: SupertokensService,
-    session: SessionContainer,
-    inviteUsersBody: InviteUsersBody,
-  ): Promise<Record<string, string>> {
-    const { emailIds, workspaceId, teamIds, role } = inviteUsersBody;
-    const workspace = await this.workspacesService.getWorkspace({
-      workspaceId,
-    });
-    const iniviter = await this.getUser(session.getUserId());
-
-    const EmailPassword = supertokensService.getEmailPasswordRecipe();
-    const emails = emailIds.split(',');
-    const responseRecord: Record<string, string> = {};
-
-    for (const e of emails) {
-      const email = e.trim();
-      try {
-        let user = await this.prisma.user.findUnique({
-          where: { email },
-        });
-
-        if (!user) {
-          const signupResponse = await EmailPassword.signUp(
-            session!.getTenantId(),
-            email,
-            generateRandomPassword(10),
-          );
-
-          if (signupResponse.status === 'OK') {
-            user = await this.upsertUser(
-              signupResponse.user.id,
-              email,
-              email.split('@')[0],
-              role,
-            );
-
-            const response = await EmailPassword.createResetPasswordLink(
-              session!.getTenantId(),
-              user.id,
-              email,
-            );
-
-            if (response.status === 'OK') {
-              await this.mailerService.sendMail({
-                to: email,
-                subject: `Invite to ${workspace.name}`,
-                template: 'inviteUser',
-                context: {
-                  workspaceName: workspace.name,
-                  inviterName: iniviter.fullname,
-                  invitationUrl: response.link,
-                },
-              });
-              this.logger.log('Invite Email sent to user');
-            } else {
-              responseRecord[email] = 'Failed to create invite link';
-            }
-          } else {
-            responseRecord[email] = signupResponse.status;
-          }
-        }
-
-        await this.workspacesService.addUserToWorkspace(
-          workspaceId,
-          user.id,
-          teamIds,
-        );
-
-        responseRecord[email] = 'Success';
-      } catch (error) {
-        responseRecord[email] = error;
-      }
-    }
-
-    return responseRecord;
   }
 
   async changePassword(
@@ -302,5 +215,9 @@ export class UsersService {
     }
 
     throw new BadRequestException(response.status);
+  }
+
+  async getInvite(inviteId: string) {
+    return await this.prisma.invite.findUnique({ where: { id: inviteId } });
   }
 }

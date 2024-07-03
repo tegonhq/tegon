@@ -18,6 +18,7 @@ import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import {
   CreateWorkspaceInput,
+  InviteUsersBody,
   UpdateWorkspaceInput,
   UserBody,
   WorkspaceIdRequestBody,
@@ -105,6 +106,28 @@ export class WorkspacesController {
     return await this.workspacesService.addUserToWorkspace(
       WorkspaceIdRequestBody.workspaceId,
       UserBody.userId,
+    );
+  }
+
+  @Get(':workspaceId/invites')
+  @UseGuards(new AuthGuard())
+  async invitedUsers(@Param() WorkspaceIdRequestBody: WorkspaceIdRequestBody) {
+    return await this.workspacesService.getInvites(
+      WorkspaceIdRequestBody.workspaceId,
+    );
+  }
+
+  @Post(':workspaceId/invite_users')
+  @UseGuards(new AuthGuard())
+  async inviteUsers(
+    @SessionDecorator() session: SessionContainer,
+    @Param() workspaceIdRequestBody: WorkspaceIdRequestBody,
+    @Body() inviteUsersBody: InviteUsersBody,
+  ) {
+    return await this.workspacesService.inviteUsers(
+      session,
+      workspaceIdRequestBody.workspaceId,
+      inviteUsersBody,
     );
   }
 }

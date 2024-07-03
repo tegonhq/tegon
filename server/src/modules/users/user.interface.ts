@@ -1,7 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { User } from '@@generated/user/entities';
-import { Role } from '@prisma/client';
 import { IsArray, IsString } from 'class-validator';
 
 export class UserIdParams {
@@ -37,7 +36,6 @@ export function userSerializer(user: User) {
     email: user.email,
     fullname: user.fullname,
     username: user.username,
-    role: user.role,
     initialSetupComplete: user.initialSetupComplete,
     anonymousDataCollection: user.anonymousDataCollection,
 
@@ -45,11 +43,4 @@ export function userSerializer(user: User) {
       (uWorkspace) => uWorkspace.workspace,
     ),
   };
-}
-
-export interface InviteUsersBody {
-  emailIds: string;
-  workspaceId: string;
-  teamIds: string[];
-  role: Role;
 }

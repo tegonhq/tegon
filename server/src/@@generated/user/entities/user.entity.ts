@@ -1,5 +1,4 @@
 
-import {Role} from '@prisma/client'
 import {UsersOnWorkspaces} from '../../usersOnWorkspaces/entities/usersOnWorkspaces.entity'
 import {Template} from '../../template/entities/template.entity'
 import {Issue} from '../../issue/entities/issue.entity'
@@ -14,7 +13,6 @@ updatedAt: Date ;
 email: string ;
 fullname: string  | null;
 username: string ;
-role: Role ;
 initialSetupComplete: boolean ;
 anonymousDataCollection: boolean ;
 usersOnWorkspaces?: UsersOnWorkspaces[] ;

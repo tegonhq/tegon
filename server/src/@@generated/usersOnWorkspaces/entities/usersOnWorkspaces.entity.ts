@@ -1,5 +1,5 @@
 
-import {Prisma,Status} from '@prisma/client'
+import {Prisma,Status,Role} from '@prisma/client'
 import {User} from '../../user/entities/user.entity'
 import {Workspace} from '../../workspace/entities/workspace.entity'
 
@@ -15,4 +15,6 @@ workspaceId: string ;
 teamIds: string[] ;
 status: Status ;
 externalAccountMappings: Prisma.JsonValue  | null;
+role: Role ;
+joinedAt: Date  | null;
 }

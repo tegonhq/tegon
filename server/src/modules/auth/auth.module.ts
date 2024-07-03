@@ -8,13 +8,14 @@ import {
 } from '@nestjs/common';
 
 import { UsersModule } from 'modules/users/users.module';
+import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AuthMiddleware } from './auth.middleware';
 import { SupertokensService } from './supertokens/supertokens.service';
 
 @Module({
   providers: [SupertokensService],
-  exports: [],
+  exports: [SupertokensService],
   controllers: [],
 })
 export class AuthModule implements NestModule {
@@ -25,8 +26,8 @@ export class AuthModule implements NestModule {
   static forRoot(): DynamicModule {
     return {
       providers: [SupertokensService],
-      exports: [],
-      imports: [UsersModule],
+      exports: [SupertokensService],
+      imports: [UsersModule, WorkspacesModule],
       module: AuthModule,
     };
   }

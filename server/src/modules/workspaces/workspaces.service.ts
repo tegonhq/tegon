@@ -1,12 +1,23 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { Injectable } from '@nestjs/common';
-import { UsersOnWorkspaces, Workspace } from '@prisma/client';
+import { Injectable, Logger } from '@nestjs/common';
+import { MailerService } from '@nestjs-modules/mailer';
+import {
+  InviteStatus,
+  Status,
+  UsersOnWorkspaces,
+  Workspace,
+} from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+import { SessionContainer } from 'supertokens-node/recipe/session';
+
+import { UsersService } from 'modules/users/users.service';
 
 import {
   CreateWorkspaceInput,
+  InviteUsersBody,
   UpdateWorkspaceInput,
+  UserWorkspaceOtherData,
   WorkspaceIdRequestBody,
   integrationDefinitionSeedData,
   labelSeedData,
@@ -14,7 +25,12 @@ import {
 
 @Injectable()
 export default class WorkspacesService {
-  constructor(private prisma: PrismaService) {}
+  private readonly logger: Logger = new Logger('WorkspaceService');
+  constructor(
+    private prisma: PrismaService,
+    private mailerService: MailerService,
+    private usersService: UsersService,
+  ) {}
 
   async createWorkspace(
     userId: string,
@@ -123,14 +139,87 @@ export default class WorkspacesService {
   async addUserToWorkspace(
     workspaceId: string,
     userId: string,
-    teamIds?: string[],
+    otherData?: UserWorkspaceOtherData,
   ): Promise<UsersOnWorkspaces> {
     return await this.prisma.usersOnWorkspaces.upsert({
       where: {
         userId_workspaceId: { workspaceId, userId },
       },
-      update: { teamIds },
-      create: { workspaceId, userId, teamIds },
+      update: { ...otherData },
+      create: { workspaceId, userId, ...otherData },
     });
+  }
+
+  async inviteUsers(
+    session: SessionContainer,
+    workspaceId: string,
+    inviteUsersBody: InviteUsersBody,
+  ): Promise<Record<string, string>> {
+    const { emailIds, teamIds, role } = inviteUsersBody;
+    const workspace = await this.getWorkspace({
+      workspaceId,
+    });
+    const iniviter = await this.usersService.getUser(session.getUserId());
+
+    const emails = emailIds.split(',');
+    const responseRecord: Record<string, string> = {};
+
+    for (const e of emails) {
+      const email = e.trim();
+      try {
+        const invite = await this.prisma.invite.create({
+          data: {
+            emailId: email,
+            fullName: email.split('@')[0],
+            workspaceId,
+            sentAt: new Date().toISOString(),
+            expiresAt: new Date(),
+            status: InviteStatus.INVITED,
+            teamIds,
+            role,
+          },
+        });
+
+        await this.mailerService.sendMail({
+          to: email,
+          subject: `Invite to ${workspace.name}`,
+          template: 'inviteUser',
+          context: {
+            workspaceName: workspace.name,
+            inviterName: iniviter.fullname,
+            invitationUrl: `${process.env.PUBLIC_FRONTEND_HOST}/auth/signup?token=${invite.id}&email=${email}`,
+          },
+        });
+        this.logger.log('Invite Email sent to user');
+
+        responseRecord[email] = 'Success';
+      } catch (error) {
+        responseRecord[email] = error;
+      }
+    }
+
+    return responseRecord;
+  }
+
+  async getInvites(workspaceId: string) {
+    return await this.prisma.invite.findMany({
+      where: { workspaceId, status: { not: InviteStatus.ACCEPTED } },
+    });
+  }
+
+  async acceptInvite(inviteId: string, userId: string) {
+    const invite = await this.prisma.invite.update({
+      where: { id: inviteId },
+      data: { status: InviteStatus.ACCEPTED },
+    });
+
+    await this.addUserToWorkspace(invite.workspaceId, userId, {
+      teamIds: invite.teamIds,
+      joinedAt: new Date().toISOString(),
+      role: invite.role,
+      status: Status.ACTIVE,
+    });
+
+    return invite;
   }
 }

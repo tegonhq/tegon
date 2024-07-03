@@ -1,6 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
-import { IntegrationName } from '@prisma/client';
+import { IntegrationName, Role, Status } from '@prisma/client';
 import { IsOptional, IsString } from 'class-validator';
 
 export class CreateWorkspaceInput {
@@ -33,6 +33,19 @@ export class WorkspaceIdRequestBody {
 export class UserBody {
   @IsString()
   userId: string;
+}
+
+export interface UserWorkspaceOtherData {
+  teamIds?: string[];
+  status?: Status;
+  joinedAt?: string;
+  role?: Role;
+}
+
+export interface InviteUsersBody {
+  emailIds: string;
+  teamIds: string[];
+  role: Role;
 }
 
 export const labelSeedData = [
