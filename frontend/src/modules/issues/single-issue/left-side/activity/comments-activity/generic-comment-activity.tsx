@@ -140,9 +140,9 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         ) : (
           <div
             className={cn(
-              'text-base mt-2',
-              !comment.parentId && 'p-3 pt-0',
-              comment.parentId && 'pb-3',
+              'text-base',
+              !comment.parentId && 'p-3 py-2 pt-0',
+              comment.parentId && 'pb-2',
             )}
           >
             <Editor value={comment.body} editable={false} className="mb-0" />
@@ -150,7 +150,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         )}
 
         {childComments.length > 0 && (
-          <div className="w-full border-t p-3 pb-0">
+          <div className="w-full border-t px-3 py-2 pb-0">
             {childComments.map(
               (subComment: IssueCommentType, index: number) => (
                 <div
