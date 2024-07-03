@@ -94,9 +94,11 @@ export function SignForm() {
           Forgot password?
         </Link>
 
-        <Button type="submit" size="lg" full isLoading={isLoading}>
-          Continue
-        </Button>
+        <div className="flex justify-end">
+          <Button type="submit" size="lg" full isLoading={isLoading}>
+            Continue
+          </Button>
+        </div>
       </form>
     </Form>
   );
