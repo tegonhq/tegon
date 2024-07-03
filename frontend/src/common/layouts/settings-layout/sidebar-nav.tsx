@@ -52,7 +52,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
             `/${query.workspaceSlug}/team/${teamsStore.teams[0].identifier}/all`,
           );
         }}
-        className="group px-3 py-4 flex justify-start"
+        className="group my-2 px-4 flex justify-start"
       >
         <ChevronLeft className="mr-2 " size={20} />
         Settings

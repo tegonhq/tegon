@@ -9,6 +9,7 @@ services:
       POSTGRESQL_CONNECTION_URI: ${SUPERTOKEN_DATABASE_URL}
       REFRESH_TOKEN_VALIDITY: 2592000 # 30 days in seconds
       ACCESS_TOKEN_VALIDITY: 2592000 # 30 days in seconds
+      PASSWORD_RESET_TOKEN_LIFETIME: 86400
     ports:
       - 3567:3567
     networks:

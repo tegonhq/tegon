@@ -1,5 +1,6 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
+import { Invite } from '@@generated/invite/entities';
 import { User } from '@@generated/user/entities';
 import { IsArray, IsString } from 'class-validator';
 
@@ -28,6 +29,10 @@ export interface PublicUser {
   email: string;
 }
 
+export interface UserWithInvites extends User {
+  invites: Invite[];
+}
+
 export function userSerializer(user: User) {
   return {
     id: user.id,
@@ -36,7 +41,6 @@ export function userSerializer(user: User) {
     email: user.email,
     fullname: user.fullname,
     username: user.username,
-    role: user.role,
     initialSetupComplete: user.initialSetupComplete,
     anonymousDataCollection: user.anonymousDataCollection,
 

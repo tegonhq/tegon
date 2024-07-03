@@ -128,7 +128,7 @@ export async function getAiFilter(
   const filterPrompt = aiFilterPrompt
     .replace('{{status}}', filterData.workflowNames.join(', '))
     .replace('{{assignee}}', filterData.assigneeNames.join(', '))
-    .replace('{{labels}}', filterData.labelNames.join(', '));
+    .replace('{{label}}', filterData.labelNames.join(', '));
 
   try {
     const chatCompletion = await openaiClient.chat.completions.create({
@@ -136,7 +136,7 @@ export async function getAiFilter(
         { role: 'system', content: filterPrompt },
         { role: 'user', content: filterText },
       ],
-      model: 'gpt-4o',
+      model: 'gpt-4-turbo',
     });
     return JSON.parse(chatCompletion.choices[0].message.content);
   } catch (error) {

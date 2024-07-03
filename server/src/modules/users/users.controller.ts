@@ -22,6 +22,7 @@ import {
   UpdateUserBody,
   UserIdParams,
   UserIdsBody,
+  UserWithInvites,
 } from './user.interface';
 import { UsersService } from './users.service';
 
@@ -38,7 +39,9 @@ export class UsersController {
 
   @Get()
   @UseGuards(new AuthGuard())
-  async getUser(@SessionDecorator() session: SessionContainer): Promise<User> {
+  async getUser(
+    @SessionDecorator() session: SessionContainer,
+  ): Promise<UserWithInvites> {
     const userId = session.getUserId();
     const user = await this.usersService.getUser(userId);
 

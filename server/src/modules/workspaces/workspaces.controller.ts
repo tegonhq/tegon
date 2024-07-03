@@ -18,6 +18,8 @@ import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import {
   CreateWorkspaceInput,
+  InviteActionBody,
+  InviteUsersBody,
   UpdateWorkspaceInput,
   UserBody,
   WorkspaceIdRequestBody,
@@ -65,6 +67,21 @@ export class WorkspacesController {
     return { status: 200 };
   }
 
+  @Post('invite_action')
+  @UseGuards(new AuthGuard())
+  async inviteAction(
+    @SessionDecorator() session: SessionContainer,
+    @Body() inviteActionBody: InviteActionBody,
+  ) {
+    const userId = session.getUserId();
+
+    return await this.workspacesService.inviteAction(
+      inviteActionBody.inviteId,
+      userId,
+      inviteActionBody.accept,
+    );
+  }
+
   @Get(':workspaceId')
   @UseGuards(new AuthGuard())
   async getWorkspace(
@@ -105,6 +122,28 @@ export class WorkspacesController {
     return await this.workspacesService.addUserToWorkspace(
       WorkspaceIdRequestBody.workspaceId,
       UserBody.userId,
+    );
+  }
+
+  @Get(':workspaceId/invites')
+  @UseGuards(new AuthGuard())
+  async invitedUsers(@Param() WorkspaceIdRequestBody: WorkspaceIdRequestBody) {
+    return await this.workspacesService.getInvites(
+      WorkspaceIdRequestBody.workspaceId,
+    );
+  }
+
+  @Post(':workspaceId/invite_users')
+  @UseGuards(new AuthGuard())
+  async inviteUsers(
+    @SessionDecorator() session: SessionContainer,
+    @Param() workspaceIdRequestBody: WorkspaceIdRequestBody,
+    @Body() inviteUsersBody: InviteUsersBody,
+  ) {
+    return await this.workspacesService.inviteUsers(
+      session,
+      workspaceIdRequestBody.workspaceId,
+      inviteUsersBody,
     );
   }
 }

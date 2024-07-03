@@ -94,9 +94,20 @@ export function SignForm() {
           Forgot password?
         </Link>
 
-        <Button type="submit" full isLoading={isLoading}>
-          Continue
-        </Button>
+        <div className="flex flex-col gap-2 justify-end">
+          <Button type="submit" size="lg" full isLoading={isLoading}>
+            Continue
+          </Button>
+
+          <Link
+            className={cn(
+              buttonVariants({ variant: 'secondary', size: 'lg', full: true }),
+            )}
+            href="/auth/signup"
+          >
+            Create a new account
+          </Link>
+        </div>
       </form>
     </Form>
   );

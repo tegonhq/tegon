@@ -1,7 +1,7 @@
 /** Copyright (c) 2024, Tegon, all rights reserved. **/
 
 import { Injectable } from '@nestjs/common';
-import supertokens from 'supertokens-node';
+import supertokens, { deleteUser } from 'supertokens-node';
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
 
 import { UsersService } from 'modules/users/users.service';
@@ -28,5 +28,9 @@ export class SupertokensService {
 
   getEmailPasswordRecipe() {
     return EmailPassword;
+  }
+
+  async deleteUserForId(userId: string) {
+    await deleteUser(userId);
   }
 }

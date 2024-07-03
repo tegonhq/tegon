@@ -14,7 +14,7 @@ import { SupertokensService } from './supertokens/supertokens.service';
 
 @Module({
   providers: [SupertokensService],
-  exports: [],
+  exports: [SupertokensService],
   controllers: [],
 })
 export class AuthModule implements NestModule {
@@ -25,7 +25,7 @@ export class AuthModule implements NestModule {
   static forRoot(): DynamicModule {
     return {
       providers: [SupertokensService],
-      exports: [],
+      exports: [SupertokensService],
       imports: [UsersModule],
       module: AuthModule,
     };

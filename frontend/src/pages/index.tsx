@@ -18,6 +18,17 @@ export default function Home() {
     if (context?.workspaces.length > 0) {
       router.replace(`/${context.workspaces[0].slug}`);
     }
+
+    // Check if they have invites
+    else if (context?.invites.length > 0) {
+      router.replace(`/invites`);
+    }
+
+    // Check if they have invites
+    else {
+      router.replace(`/waitlist`);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context?.workspaces]);
 

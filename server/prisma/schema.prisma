@@ -33,7 +33,6 @@ model User {
 
   fullname                String?
   username                String
-  role                    Role
   initialSetupComplete    Boolean @default(false)
   anonymousDataCollection Boolean @default(false)
 
@@ -77,6 +76,8 @@ model UsersOnWorkspaces {
   teamIds                 String[]
   status                  Status    @default(ACTIVE)
   externalAccountMappings Json?
+  role                    Role      @default(ADMIN)
+  joinedAt                DateTime?
 
   @@unique([userId, workspaceId])
 }
@@ -472,6 +473,22 @@ model IssueSuggestion {
   issue               Issue?
 }
 
+model Invite {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  sentAt      DateTime
+  expiresAt   DateTime
+  emailId     String
+  fullName    String
+  workspaceId String
+  status      InviteStatus
+  teamIds     String[]
+  role        Role
+}
+
 enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
@@ -483,6 +500,7 @@ enum Role {
 }
 
 enum Status {
+  INVITED
   ACTIVE
   SUSPENDED
 }
@@ -561,4 +579,10 @@ enum AttachmentStatus {
   Uploaded
   Deleted
   External
+}
+
+enum InviteStatus {
+  INVITED
+  ACCEPTED
+  DECLINED
 }

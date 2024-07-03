@@ -31,6 +31,7 @@ export function SignUp() {
       }
     }
   }
+
   return (
     <AuthLayout>
       <div className="flex flex-col w-[360px]">
@@ -39,7 +40,7 @@ export function SignUp() {
           to continue to Tegon
         </div>
 
-        <Button className="flex gap-2" onClick={googleSignInClicked}>
+        <Button className="flex gap-2" size="lg" onClick={googleSignInClicked}>
           <RiGoogleFill size={18} /> Sign up with google
         </Button>
 

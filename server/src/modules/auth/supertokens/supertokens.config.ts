@@ -32,7 +32,7 @@ export const recipeList = (usersService: UsersService) => {
                 response.user.loginMethods.length === 1 &&
                 input.session === undefined
               ) {
-                usersService.upsertUser(
+                await usersService.upsertUser(
                   response.user.id,
                   input.email,
                   input.email.split('@')[0],
@@ -87,6 +87,7 @@ export const recipeList = (usersService: UsersService) => {
         },
       ],
     }),
+
     EmailPassword.init(),
   ];
 };

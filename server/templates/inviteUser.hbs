@@ -1,0 +1,60 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Workspace Invitation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #cacaca;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #e8e8e8;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #000000;
+    }
+    p {
+      font-size: 14px;
+      color: #3e3e3e;
+      line-height: 1.5;
+    }
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #447aee;
+      color: #e8e8e8;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .button:hover {
+      background-color: #004a98;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p>Hey!</p>
+    <p>You have been invited to join the <strong>{{workspaceName}}</strong> workspace by <strong>{{inviterName}}</strong>.</p>
+    <p>To accept the invitation and join the workspace, please click the button below:</p>
+    <div class="button-container">
+      <a href="{{invitationUrl}}" class="button">Accept Invitation</a>
+    </div>
+    <p>If you have any questions or need further assistance, please contact the workspace admin.</p>
+    <p>Best regards,<br>Tegon Team</p>
+  </div>
+</body>
+</html>
