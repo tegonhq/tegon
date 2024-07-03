@@ -9,6 +9,7 @@ import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
 
 import { AvatarText } from 'components/ui/avatar';
 import { Button } from 'components/ui/button';
+import { useToast } from 'components/ui/use-toast';
 
 import { useInviteActionMutation } from 'services/workspace';
 
@@ -16,11 +17,16 @@ import { UserContext, type Invite } from 'store/user-context';
 
 export function Invites() {
   const context = React.useContext(UserContext);
+  const { toast } = useToast();
   const router = useRouter();
   const { mutate: inviteAction, isLoading } = useInviteActionMutation({
     onSuccess: (data: Invite) => {
       if (data.status === 'ACCEPTED') {
         router.replace('/');
+        toast({
+          title: 'Invitation accepted',
+          description: 'Current invitation for the workspace has been accepted',
+        });
       }
     },
   });

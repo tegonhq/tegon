@@ -21,7 +21,7 @@ import { useContextStore } from 'store/global-context-provider';
 
 export const WorkspaceDropdown = observer(() => {
   const { workspaceStore } = useContextStore();
-  const { query, replace } = useRouter();
+  const { query, push, replace } = useRouter();
 
   return (
     <DropdownMenu>
@@ -42,7 +42,7 @@ export const WorkspaceDropdown = observer(() => {
         <DropdownMenuGroup>
           <DropdownMenuItem
             onClick={() => {
-              replace(`/${query.workspaceSlug}/settings/account/profile`);
+              push(`/${query.workspaceSlug}/settings/account/profile`);
             }}
           >
             Preferences
@@ -52,12 +52,18 @@ export const WorkspaceDropdown = observer(() => {
         <DropdownMenuGroup>
           <DropdownMenuItem
             onClick={() => {
-              replace(`/${query.workspaceSlug}/settings/overview`);
+              push(`/${query.workspaceSlug}/settings/overview`);
             }}
           >
             Workspace settings
           </DropdownMenuItem>
-          <DropdownMenuItem>Invite & manage members</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              push(`/${query.workspaceSlug}/settings/members`);
+            }}
+          >
+            Invite & manage members
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem

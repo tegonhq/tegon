@@ -20,7 +20,7 @@ export function getUser() {
 export function useGetUserQuery(): UseQueryResult<User, XHRErrorResponse> {
   return useQuery([GetUserQuery], () => getUser(), {
     retry: 1,
-    staleTime: 2000,
+    staleTime: 1,
     refetchOnWindowFocus: false, // Frequency of Change would be Low
   });
 }
