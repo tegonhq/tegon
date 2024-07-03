@@ -123,13 +123,14 @@ export default class WorkspacesService {
   async addUserToWorkspace(
     workspaceId: string,
     userId: string,
+    teamIds?: string[],
   ): Promise<UsersOnWorkspaces> {
     return await this.prisma.usersOnWorkspaces.upsert({
       where: {
         userId_workspaceId: { workspaceId, userId },
       },
-      update: {},
-      create: { workspaceId, userId },
+      update: { teamIds },
+      create: { workspaceId, userId, teamIds },
     });
   }
 }

@@ -87,6 +87,7 @@ export const recipeList = (usersService: UsersService) => {
         },
       ],
     }),
+
     EmailPassword.init(),
   ];
 };

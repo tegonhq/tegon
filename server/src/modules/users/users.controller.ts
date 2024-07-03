@@ -18,6 +18,7 @@ import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 import { SupertokensService } from 'modules/auth/supertokens/supertokens.service';
 
 import {
+  InviteUsersBody,
   PublicUser,
   UpdateUserBody,
   UserIdParams,
@@ -90,6 +91,19 @@ export class UsersController {
       this.supertokensService,
       token,
       newPassword,
+    );
+  }
+
+  @Post('invite_users')
+  @UseGuards(new AuthGuard())
+  async inviteUsers(
+    @SessionDecorator() session: SessionContainer,
+    @Body() inviteUsersBody: InviteUsersBody,
+  ) {
+    return await this.usersService.inviteUsers(
+      this.supertokensService,
+      session,
+      inviteUsersBody,
     );
   }
 
