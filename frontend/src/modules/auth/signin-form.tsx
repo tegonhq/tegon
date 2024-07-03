@@ -94,7 +94,7 @@ export function SignForm() {
           Forgot password?
         </Link>
 
-        <Button type="submit" full isLoading={isLoading}>
+        <Button type="submit" size="lg" full isLoading={isLoading}>
           Continue
         </Button>
       </form>

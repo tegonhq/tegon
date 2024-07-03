@@ -119,10 +119,11 @@ export class UsersService {
     const iniviter = await this.getUser(session.getUserId());
 
     const EmailPassword = supertokensService.getEmailPasswordRecipe();
-    const emails = emailIds.split(', ');
+    const emails = emailIds.split(',');
     const responseRecord: Record<string, string> = {};
 
-    for (const email of emails) {
+    for (const e of emails) {
+      const email = e.trim();
       try {
         let user = await this.prisma.user.findUnique({
           where: { email },

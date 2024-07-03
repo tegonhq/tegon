@@ -353,7 +353,7 @@ Filters:
 - status: Issues with these statuses, [{{status}}], 
 - priority: Issues with these priorities, ["Urgent", High", "Medium", "Low"]
 - assignee: Issues assigned to those users, [{{assignee}}]
-- labels: Issues with these Labels, [{{labels}}]
+- label: Issues with these Labels, [{{label}}]
 - isBlocked: The issue is blocked by another issue
 - isBlocking: an issue is blocking another issue
 - isParent: Issue is a parent of sub-issue
@@ -379,7 +379,7 @@ Examples:
 - status: Issues with these statuses, ["Done", Triage", "Todo", "Backlog"], 
 - priority: Issues with these priorities, ["Urgent", High", "Medium", "Low"]
 - assignee: Issues assigned to those users, ["Manik", "Manoj", "Harshith", "Rob"]
-- labels: Issues with these Labels, ["Backend", "Bug", "Feature", "Frontend"]
+- label: Issues with these Labels, ["Backend", "Bug", "Feature", "Frontend"]
 - isBlocked: The issue is blocked by another issue
 - isBlocking: an issue is blocking another issue
 - isParent: Issue is a parent of sub-issue
