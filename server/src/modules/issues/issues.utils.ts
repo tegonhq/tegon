@@ -128,7 +128,7 @@ export async function getAiFilter(
   const filterPrompt = aiFilterPrompt
     .replace('{{status}}', filterData.workflowNames.join(', '))
     .replace('{{assignee}}', filterData.assigneeNames.join(', '))
-    .replace('{{labels}}', filterData.labelNames.join(', '));
+    .replace('{{label}}', filterData.labelNames.join(', '));
 
   try {
     const chatCompletion = await openaiClient.chat.completions.create({
