@@ -51,7 +51,7 @@ To self-host Tegon on your own machine, you can do so using Docker. However note
 ## Tegon Cloud
 
 We offer a managed cloud version of Tegon that allows you to run Tegon without having to manage the infrastructure. It is currently in private beta. 
-If you're interested in using Tegon Cloud, please book a [demo call](https://calendly.com/manik-sync/talk-to-us).
+If you're interested in using Tegon Cloud, please book a [demo call](https://calendly.com/manik-tegon/30min).
 
 ## Features
 
