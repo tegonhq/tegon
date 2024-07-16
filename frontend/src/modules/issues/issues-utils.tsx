@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { sort } from 'fast-sort';
 import { usePathname } from 'next/navigation';
 import React from 'react';

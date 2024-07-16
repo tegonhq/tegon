@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { View } from '@@generated/view/entities';
 import {
   Body,

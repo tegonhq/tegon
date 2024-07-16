@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import {
   Body,
   Controller,
@@ -9,13 +7,13 @@ import {
   Post,
   Query,
   UseGuards,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Team, TeamPreference, UsersOnWorkspaces } from '@prisma/client';
-import { SessionContainer } from 'supertokens-node/recipe/session';
+} from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
+import { Team, TeamPreference, UsersOnWorkspaces } from "@prisma/client";
+import { SessionContainer } from "supertokens-node/recipe/session";
 
-import { AuthGuard } from 'modules/auth/auth.guard';
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import { AuthGuard } from "modules/auth/auth.guard";
+import { Session as SessionDecorator } from "modules/auth/session.decorator";
 
 import {
   UpdateTeamInput,
@@ -24,18 +22,18 @@ import {
   WorkspaceRequestParams,
   CreateTeamInput,
   TeamMemberInput,
-} from './teams.interface';
-import TeamsService from './teams.service';
+} from "./teams.interface";
+import TeamsService from "./teams.service";
 
 @Controller({
-  version: '1',
-  path: 'teams',
+  version: "1",
+  path: "teams",
 })
-@ApiTags('Teams')
+@ApiTags("Teams")
 export class TeamsController {
   constructor(private teamsService: TeamsService) {}
 
-  @Get(':teamId')
+  @Get(":teamId")
   @UseGuards(new AuthGuard())
   async getTeam(
     @Param()
@@ -44,10 +42,10 @@ export class TeamsController {
     return await this.teamsService.getTeam(teamId);
   }
 
-  @Get('name/:teamName')
+  @Get("name/:teamName")
   @UseGuards(new AuthGuard())
   async getTeamByName(
-    @Param('teamName') teamName: string,
+    @Param("teamName") teamName: string,
     @Query() workspaceParams: WorkspaceRequestParams,
   ): Promise<Team> {
     return await this.teamsService.getTeamByName(
@@ -71,7 +69,7 @@ export class TeamsController {
     );
   }
 
-  @Post(':teamId')
+  @Post(":teamId")
   @UseGuards(new AuthGuard())
   async updateTeam(
     @Param()
@@ -81,7 +79,7 @@ export class TeamsController {
     return await this.teamsService.updateTeam(teamRequestParams, teamData);
   }
 
-  @Delete(':teamId')
+  @Delete(":teamId")
   @UseGuards(new AuthGuard())
   async deleteTeam(
     @Param()
@@ -90,7 +88,7 @@ export class TeamsController {
     return await this.teamsService.deleteTeam(teamRequestParams);
   }
 
-  @Post(':teamId/preference')
+  @Post(":teamId/preference")
   @UseGuards(new AuthGuard())
   async createUpdatePreference(
     @Param()
@@ -103,7 +101,7 @@ export class TeamsController {
     );
   }
 
-  @Post(':teamId/add_member')
+  @Post(":teamId/add_member")
   @UseGuards(new AuthGuard())
   async addTeamMember(
     @Param() teamRequestParams: TeamRequestParams,
@@ -117,7 +115,7 @@ export class TeamsController {
     );
   }
 
-  @Get(':teamId/members')
+  @Get(":teamId/members")
   @UseGuards(new AuthGuard())
   async getTeamMembers(
     @Param()
@@ -126,7 +124,7 @@ export class TeamsController {
     return await this.teamsService.getTeamMembers(teamRequestParams);
   }
 
-  @Delete(':teamId/remove_member')
+  @Delete(":teamId/remove_member")
   @UseGuards(new AuthGuard())
   async removeTeamMemeber(
     @Param()

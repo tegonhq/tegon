@@ -1,16 +1,14 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import { IntegrationName } from "@prisma/client";
+import axios from "axios";
+import { PrismaService } from "nestjs-prisma";
 
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { IntegrationName } from '@prisma/client';
-import axios from 'axios';
-import { PrismaService } from 'nestjs-prisma';
+import { CreateIntegrationAccountBody } from "modules/integration-account/integration-account.interface";
+import { IntegrationAccountService } from "modules/integration-account/integration-account.service";
+import { getTemplate } from "modules/oauth-callback/oauth-callback.utils";
 
-import { CreateIntegrationAccountBody } from 'modules/integration-account/integration-account.interface';
-import { IntegrationAccountService } from 'modules/integration-account/integration-account.service';
-import { getTemplate } from 'modules/oauth-callback/oauth-callback.utils';
-
-import { VerifyInstallationBody } from './sentry.interface';
-import { EventBody, EventHeaders } from '../integrations.interface';
+import { VerifyInstallationBody } from "./sentry.interface";
+import { EventBody, EventHeaders } from "../integrations.interface";
 
 @Injectable()
 export default class SentryService {
@@ -18,7 +16,7 @@ export default class SentryService {
     private prisma: PrismaService,
     private integrationAccountService: IntegrationAccountService,
   ) {}
-  private readonly logger = new Logger('Sentry');
+  private readonly logger = new Logger("Sentry");
 
   async getRedirectURL(integrationDefinitionId: string) {
     const integrationDefinition =
@@ -26,7 +24,7 @@ export default class SentryService {
         where: { id: integrationDefinitionId },
       });
 
-    this.logger.log('In sentry redirectURl');
+    this.logger.log("In sentry redirectURl");
     const template = await getTemplate(integrationDefinition);
 
     return { status: 200, redirectURL: template.authorization_url };
@@ -45,17 +43,17 @@ export default class SentryService {
       });
 
     if (integrationDefinition === null) {
-      const errorMessage = 'No matching integration definition found';
+      const errorMessage = "No matching integration definition found";
 
       throw new BadRequestException(errorMessage);
     }
 
     const template = await getTemplate(integrationDefinition);
 
-    const url = `${template.token_url.replace('${installationId}', installationData.installationId)}`;
+    const url = `${template.token_url.replace("${installationId}", installationData.installationId)}`;
 
     const payload = {
-      grant_type: 'authorization_code',
+      grant_type: "authorization_code",
       code: installationData.code,
       client_id: integrationDefinition.clientId,
       client_secret: integrationDefinition.clientSecret,
@@ -68,7 +66,7 @@ export default class SentryService {
       const installationResponse = await axios.put(
         `https://sentry.io/api/0/sentry-app-installations/${installationData.installationId}/`,
         {
-          status: 'installed',
+          status: "installed",
         },
         {
           headers: {
@@ -76,9 +74,9 @@ export default class SentryService {
           },
         },
       );
-      if (installationResponse.data.status === 'installed') {
+      if (installationResponse.data.status === "installed") {
         const integrationConfiguration = {
-          scope: tokenData.scopes.join(','),
+          scope: tokenData.scopes.join(","),
           refresh_token: tokenData.refreshToken,
           access_token: tokenData.token,
           client_id: integrationDefinition.clientId,
@@ -99,18 +97,18 @@ export default class SentryService {
 
         return { status: true };
       }
-      throw new BadRequestException('Sentry integration connect failed');
+      throw new BadRequestException("Sentry integration connect failed");
     } catch (e) {
       throw new BadRequestException(e.message);
     }
   }
 
   async handleEvents(eventHeaders: EventHeaders, eventBody: EventBody) {
-    const hookType = eventHeaders['sentry-hook-resource'];
+    const hookType = eventHeaders["sentry-hook-resource"];
     this.logger.debug(
       `Received Sentry webhook event with hook type: ${hookType}`,
     );
-    if (hookType === 'installation' && eventBody.action === 'deleted') {
+    if (hookType === "installation" && eventBody.action === "deleted") {
       this.logger.log(
         `Handling Sentry installation deleted event for account ID: ${eventBody.installation.uuid}`,
       );
@@ -123,7 +121,7 @@ export default class SentryService {
       );
       return result;
     }
-    this.logger.log('Ignoring unhandled Sentry webhook event');
+    this.logger.log("Ignoring unhandled Sentry webhook event");
     return undefined;
   }
 }

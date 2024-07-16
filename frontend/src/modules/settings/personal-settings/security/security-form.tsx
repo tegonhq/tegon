@@ -1,4 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';

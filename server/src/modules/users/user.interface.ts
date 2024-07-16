@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Invite } from '@@generated/invite/entities';
 import { User } from '@@generated/user/entities';
 import { IsArray, IsString } from 'class-validator';

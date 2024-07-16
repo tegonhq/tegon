@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { capitalizeFirstLetter } from 'common/lib/common';
 import type { WorkflowCategoryEnum, WorkflowType } from 'common/types/team';
 

@@ -1,7 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { RiBookmarkFill, RiBookmarkLine, RiMoreFill } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';

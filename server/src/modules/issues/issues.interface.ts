@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Issue } from '@@generated/issue/entities';
 import { Team, User } from '@prisma/client';
 import {

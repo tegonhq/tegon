@@ -1,6 +1,4 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-import { Prisma } from '@prisma/client';
+import { Prisma } from "@prisma/client";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function loggingMiddleware(logger: any = console): Prisma.Middleware {

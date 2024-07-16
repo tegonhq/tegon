@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { Plugin, Response, SuperAgentRequest } from 'superagent';
 
 import { v4 as uuid } from 'uuid';

@@ -1,14 +1,12 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-import { IntegrationDefinition } from '@@generated/integrationDefinition/entities';
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
+import { IntegrationDefinition } from "@@generated/integrationDefinition/entities";
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "nestjs-prisma";
 
 import {
   IntegrationDefinitionCreateBody,
   IntegrationDefinitionRequestIdBody,
   IntegrationDefinitionUpdateBody,
-} from './integration-definition.interface';
+} from "./integration-definition.interface";
 
 @Injectable()
 export class IntegrationDefinitionService {

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { RiDownloadLine, RiFileLine } from '@remixicon/react';
 import { NodeViewWrapper } from '@tiptap/react';
 import { filesize } from 'filesize';

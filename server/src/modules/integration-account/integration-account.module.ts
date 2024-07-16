@@ -1,12 +1,10 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Module } from "@nestjs/common";
+import { PrismaModule, PrismaService } from "nestjs-prisma";
 
-import { Module } from '@nestjs/common';
-import { PrismaModule, PrismaService } from 'nestjs-prisma';
+import { IntegrationDefinitionService } from "modules/integration-definition/integration-definition.service";
 
-import { IntegrationDefinitionService } from 'modules/integration-definition/integration-definition.service';
-
-import { IntegrationAccountController } from './integration-account.controller';
-import { IntegrationAccountService } from './integration-account.service';
+import { IntegrationAccountController } from "./integration-account.controller";
+import { IntegrationAccountService } from "./integration-account.service";
 
 @Module({
   imports: [PrismaModule],

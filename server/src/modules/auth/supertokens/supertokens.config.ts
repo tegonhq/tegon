@@ -1,12 +1,10 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import jwt from "supertokens-node/lib/build/recipe/jwt";
+import EmailPassword from "supertokens-node/recipe/emailpassword";
+import Session from "supertokens-node/recipe/session";
+import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
+import UserRoles from "supertokens-node/recipe/userroles";
 
-import jwt from 'supertokens-node/lib/build/recipe/jwt';
-import EmailPassword from 'supertokens-node/recipe/emailpassword';
-import Session from 'supertokens-node/recipe/session';
-import ThirdPartyEmailPassword from 'supertokens-node/recipe/thirdpartyemailpassword';
-import UserRoles from 'supertokens-node/recipe/userroles';
-
-import { UsersService } from 'modules/users/users.service';
+import { UsersService } from "modules/users/users.service";
 
 export const recipeList = (usersService: UsersService) => {
   return [
@@ -28,14 +26,14 @@ export const recipeList = (usersService: UsersService) => {
                 await originalImplementation.emailPasswordSignUp(input);
 
               if (
-                response.status === 'OK' &&
+                response.status === "OK" &&
                 response.user.loginMethods.length === 1 &&
                 input.session === undefined
               ) {
                 await usersService.upsertUser(
                   response.user.id,
                   input.email,
-                  input.email.split('@')[0],
+                  input.email.split("@")[0],
                 );
               }
               return response;
@@ -47,7 +45,7 @@ export const recipeList = (usersService: UsersService) => {
               const response =
                 await originalImplementation.thirdPartySignInUp(input);
 
-              if (response.status === 'OK') {
+              if (response.status === "OK") {
                 if (input.session === undefined) {
                   if (
                     response.createdNewRecipeUser &&
@@ -56,7 +54,7 @@ export const recipeList = (usersService: UsersService) => {
                     usersService.upsertUser(
                       response.user.id,
                       input.email,
-                      input.email.split('@')[0],
+                      input.email.split("@")[0],
                     );
                   } else {
                     // TODO: some post sign in logic
@@ -72,14 +70,14 @@ export const recipeList = (usersService: UsersService) => {
       providers: [
         {
           config: {
-            thirdPartyId: 'google',
+            thirdPartyId: "google",
             clients: [
               {
                 clientId: process.env.GOOGLE_LOGIN_CLIENT_ID,
                 clientSecret: process.env.GOOGLE_LOGIN_CLIENT_SECRET,
                 scope: [
-                  'https://www.googleapis.com/auth/userinfo.email',
-                  'https://www.googleapis.com/auth/userinfo.profile',
+                  "https://www.googleapis.com/auth/userinfo.email",
+                  "https://www.googleapis.com/auth/userinfo.profile",
                 ],
               },
             ],

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { useMutation } from 'react-query';
 import { z } from 'zod';
 

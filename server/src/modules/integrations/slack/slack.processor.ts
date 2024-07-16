@@ -1,20 +1,18 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Process, Processor } from "@nestjs/bull";
+import { Logger } from "@nestjs/common";
+import { Job } from "bull";
 
-import { Process, Processor } from '@nestjs/bull';
-import { Logger } from '@nestjs/common';
-import { Job } from 'bull';
+import { IntegrationAccountWithRelations } from "modules/integration-account/integration-account.interface";
 
-import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
+import SlackService from "./slack.service";
+import { EventBody } from "../integrations.interface";
 
-import SlackService from './slack.service';
-import { EventBody } from '../integrations.interface';
-
-@Processor('slack')
+@Processor("slack")
 export class SlackProcessor {
   constructor(private slackService: SlackService) {}
-  private readonly logger: Logger = new Logger('SlackProcessor');
+  private readonly logger: Logger = new Logger("SlackProcessor");
 
-  @Process('handleThread')
+  @Process("handleThread")
   async handleThread(
     job: Job<{
       event: EventBody;
@@ -28,7 +26,7 @@ export class SlackProcessor {
     this.slackService.handleThread(event, integrationAccount);
   }
 
-  @Process('handleMessageReaction')
+  @Process("handleMessageReaction")
   async handleMessageReaction(
     job: Job<{
       event: EventBody;

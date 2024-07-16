@@ -1,9 +1,7 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { IntegrationName } from "@prisma/client";
+import { IsJSON, IsObject, IsOptional, IsString } from "class-validator";
 
-import { IntegrationName } from '@prisma/client';
-import { IsJSON, IsObject, IsOptional, IsString } from 'class-validator';
-
-import { WorkspaceIdRequestBody } from 'modules/workspaces/workspaces.interface';
+import { WorkspaceIdRequestBody } from "modules/workspaces/workspaces.interface";
 
 export interface GenericInputSpecification {
   input_specification?: {

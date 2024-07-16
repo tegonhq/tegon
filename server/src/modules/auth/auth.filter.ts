@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { ExceptionFilter, Catch, ArgumentsHost } from '@nestjs/common';
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import { Error as STError } from 'supertokens-node';

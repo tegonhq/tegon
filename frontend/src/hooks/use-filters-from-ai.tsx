@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Priorities } from 'common/types/issue';
 
 import { useContextStore } from 'store/global-context-provider';

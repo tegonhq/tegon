@@ -1,19 +1,17 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { InjectQueue } from "@nestjs/bull";
+import { Injectable } from "@nestjs/common";
+import { Queue } from "bull";
 
-import { InjectQueue } from '@nestjs/bull';
-import { Injectable } from '@nestjs/common';
-import { Queue } from 'bull';
+import { IntegrationAccountWithRelations } from "modules/integration-account/integration-account.interface";
 
-import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
-
-import { EventBody } from '../integrations.interface';
+import { EventBody } from "../integrations.interface";
 
 @Injectable()
 export class SlackQueue {
-  constructor(@InjectQueue('slack') private readonly slackQueue: Queue) {}
+  constructor(@InjectQueue("slack") private readonly slackQueue: Queue) {}
 
   async handleEventsJob(integrationAccountId: string, channelId: string) {
-    await this.slackQueue.add('addBotToChannel', {
+    await this.slackQueue.add("addBotToChannel", {
       integrationAccountId,
       channelId,
     });
@@ -23,7 +21,7 @@ export class SlackQueue {
     event: EventBody,
     integrationAccount: IntegrationAccountWithRelations,
   ) {
-    await this.slackQueue.add('handleThread', {
+    await this.slackQueue.add("handleThread", {
       event,
       integrationAccount,
     });
@@ -33,7 +31,7 @@ export class SlackQueue {
     event: EventBody,
     integrationAccount: IntegrationAccountWithRelations,
   ) {
-    await this.slackQueue.add('handleMessageReaction', {
+    await this.slackQueue.add("handleMessageReaction", {
       event,
       integrationAccount,
     });

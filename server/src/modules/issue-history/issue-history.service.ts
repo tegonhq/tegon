@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Injectable } from "@nestjs/common";
+import { IssueHistory } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
-import { Injectable } from '@nestjs/common';
-import { IssueHistory } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
-
-import { IssueHistoryData } from './issue-history.interface';
+import { IssueHistoryData } from "./issue-history.interface";
 
 @Injectable()
 export default class IssuesHistoryService {
@@ -19,7 +17,7 @@ export default class IssuesHistoryService {
   ): Promise<IssueHistory> {
     const lastIssueHistory = await this.prisma.issueHistory.findFirst({
       where: { issueId },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
 
     const { removedLabelIds, addedLabelIds, ...otherData } = issueData;

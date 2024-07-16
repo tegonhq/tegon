@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { cn } from 'common/lib/utils';
 
 import { AvatarText } from 'components/ui/avatar';

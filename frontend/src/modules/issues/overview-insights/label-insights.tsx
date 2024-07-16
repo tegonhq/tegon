@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { groupByKeyArray } from 'common/lib/common';
 import type { IssueType } from 'common/types/issue';
 import type { LabelType } from 'common/types/label';

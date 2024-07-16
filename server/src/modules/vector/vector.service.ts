@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CohereClient } from 'cohere-ai';
 import { PrismaService } from 'nestjs-prisma';

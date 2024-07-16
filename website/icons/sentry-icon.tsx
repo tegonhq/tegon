@@ -1,6 +1,4 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-import type { IconProps } from './types';
+import type { IconProps } from "./types";
 
 export function SentryIcon({ size = 18, className }: IconProps) {
   return (

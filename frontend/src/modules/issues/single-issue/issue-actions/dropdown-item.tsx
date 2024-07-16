@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function DropdownItem({ Icon, title }: { Icon: any; title: string }) {
   return (

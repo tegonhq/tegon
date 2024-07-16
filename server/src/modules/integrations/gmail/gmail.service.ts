@@ -1,20 +1,18 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
+import { IntegrationName, Issue } from "@prisma/client";
+import { CronJob } from "cron";
+import { PrismaService } from "nestjs-prisma";
 
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { IntegrationName, Issue } from '@prisma/client';
-import { CronJob } from 'cron';
-import { PrismaService } from 'nestjs-prisma';
+import { convertHtmlToTiptapJson } from "common/utils/tiptap.utils";
 
-import { convertHtmlToTiptapJson } from 'common/utils/tiptap.utils';
-
-import { AttachmentResponse } from 'modules/attachments/attachments.interface';
-import { AttachmentService } from 'modules/attachments/attachments.service';
+import { AttachmentResponse } from "modules/attachments/attachments.interface";
+import { AttachmentService } from "modules/attachments/attachments.service";
 import {
   CreateIssueInput,
   TeamRequestParams,
-} from 'modules/issues/issues.interface';
-import IssuesService from 'modules/issues/issues.service';
-import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
+} from "modules/issues/issues.interface";
+import IssuesService from "modules/issues/issues.service";
+import { LinkIssueData } from "modules/linked-issue/linked-issue.interface";
 
 import {
   GmailAttachment,
@@ -23,16 +21,16 @@ import {
   MessagesBody,
   Part,
   PartHeader,
-} from './gmail.interface';
+} from "./gmail.interface";
 import {
   extractForwardHtml,
   getFilesBuffer,
   getHeaders,
   getState,
   getTeam,
-} from './gmail.utils';
-import { EventBody } from '../integrations.interface';
-import { getRequest, postRequest } from '../integrations.utils';
+} from "./gmail.utils";
+import { EventBody } from "../integrations.interface";
+import { getRequest, postRequest } from "../integrations.utils";
 
 @Injectable()
 export default class GmailService implements OnModuleInit {
@@ -42,7 +40,7 @@ export default class GmailService implements OnModuleInit {
     private issuesService: IssuesService,
   ) {}
 
-  private readonly logger: Logger = new Logger('GmailService', {
+  private readonly logger: Logger = new Logger("GmailService", {
     timestamp: true,
   });
 
@@ -52,7 +50,7 @@ export default class GmailService implements OnModuleInit {
 
   async handleEvents(eventBody: EventBody) {
     const messageData = eventBody.message.data;
-    const decodedData = Buffer.from(messageData, 'base64').toString('utf-8');
+    const decodedData = Buffer.from(messageData, "base64").toString("utf-8");
     const { historyId } = JSON.parse(decodedData);
 
     this.logger.log(`History ID: ${historyId}`);
@@ -60,7 +58,7 @@ export default class GmailService implements OnModuleInit {
     const headers = await getHeaders();
 
     const messageResponse = await getRequest(
-      'https://gmail.googleapis.com/gmail/v1/users/me/messages?q=in:inbox+label:UNREAD',
+      "https://gmail.googleapis.com/gmail/v1/users/me/messages?q=in:inbox+label:UNREAD",
       headers,
     );
 
@@ -90,10 +88,10 @@ export default class GmailService implements OnModuleInit {
       return undefined;
     }
     const subject = payload.headers.find(
-      (header: PartHeader) => header.name === 'Subject',
+      (header: PartHeader) => header.name === "Subject",
     ).value;
     const deliveredTo = payload.headers.find(
-      (header: PartHeader) => header.name === 'Delivered-To',
+      (header: PartHeader) => header.name === "Delivered-To",
     ).value;
 
     // Get the team based on the delivered-to email address
@@ -104,7 +102,7 @@ export default class GmailService implements OnModuleInit {
         `https://gmail.googleapis.com/gmail/v1/users/me/threads/${threadId}/modify`,
         headers,
         {
-          removeLabelIds: ['INBOX'],
+          removeLabelIds: ["INBOX"],
           addLabelIds: [process.env.GMAIL_OTHER_LABEL], // This id is for Label Other
         },
       );
@@ -112,17 +110,17 @@ export default class GmailService implements OnModuleInit {
     }
 
     // Get the state ID for the 'opened' state of the team
-    const stateId = await getState(this.prisma, 'opened', team.id);
+    const stateId = await getState(this.prisma, "opened", team.id);
 
-    let htmlBody = '';
+    let htmlBody = "";
     const attachments: GmailAttachment[] = [];
 
     // Helper function to recursively extract HTML body and attachments from payload parts
     const extractHtmlAndAttachments = (parts: Part[]) => {
       for (const part of parts) {
-        if (part.mimeType === 'text/html') {
-          htmlBody = Buffer.from(part.body.data, 'base64').toString('utf-8');
-        } else if (part.mimeType.startsWith('multipart/')) {
+        if (part.mimeType === "text/html") {
+          htmlBody = Buffer.from(part.body.data, "base64").toString("utf-8");
+        } else if (part.mimeType.startsWith("multipart/")) {
           extractHtmlAndAttachments(part.parts);
         } else if (part.filename && part.body.attachmentId) {
           attachments.push({
@@ -142,7 +140,7 @@ export default class GmailService implements OnModuleInit {
     let forwardedFrom = forwardDetails.forwardedFrom;
     if (!forwardedFrom) {
       const fromValue = payload.headers.find(
-        (header: PartHeader) => header.name === 'From',
+        (header: PartHeader) => header.name === "From",
       ).value;
       const nameMatch = fromValue.match(/^([^<]+)/);
       forwardedFrom = nameMatch ? nameMatch[1].trim() : null;
@@ -185,7 +183,7 @@ export default class GmailService implements OnModuleInit {
       tiptapJson.content.push(
         ...issueTiptapJson.content.filter(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (node: any) => node.type === 'image' || node.type === 'fileExtension',
+          (node: any) => node.type === "image" || node.type === "fileExtension",
         ),
       );
     }
@@ -193,9 +191,9 @@ export default class GmailService implements OnModuleInit {
     // Add attachment URLs to the Tiptap JSON content
     tiptapJson.content.push(
       ...attachmentUrls.map((attachment) => ({
-        type: attachment.fileType.startsWith('image/')
-          ? 'image'
-          : 'fileExtension',
+        type: attachment.fileType.startsWith("image/")
+          ? "image"
+          : "fileExtension",
         attrs: {
           src: attachment.publicURL,
           alt: attachment.originalName,
@@ -244,7 +242,7 @@ export default class GmailService implements OnModuleInit {
     const modifyResponse = await postRequest(
       `https://gmail.googleapis.com/gmail/v1/users/me/threads/${threadId}/modify`,
       headers,
-      { removeLabelIds: ['UNREAD', 'INBOX'] },
+      { removeLabelIds: ["UNREAD", "INBOX"] },
     );
 
     if (modifyResponse.status === 200) {
@@ -257,23 +255,23 @@ export default class GmailService implements OnModuleInit {
   private async sendGmailWatchRequest() {
     try {
       await postRequest(
-        'https://gmail.googleapis.com/gmail/v1/users/me/watch',
+        "https://gmail.googleapis.com/gmail/v1/users/me/watch",
         await getHeaders(),
         {
-          labelIds: ['INBOX'],
+          labelIds: ["INBOX"],
           topicName: process.env.GMAIL_PUBSUB_TOPIC,
-          labelFilterBehavior: 'INCLUDE',
+          labelFilterBehavior: "INCLUDE",
         },
       );
-      this.logger.log('Gmail watch request successful');
+      this.logger.log("Gmail watch request successful");
     } catch (error) {
-      this.logger.error('Error scheduling Gmail watch:', error);
+      this.logger.error("Error scheduling Gmail watch:", error);
     }
   }
 
   private async scheduleGmailWatch() {
     await this.sendGmailWatchRequest();
-    const cronJob = new CronJob('0 0 * * *', async () => {
+    const cronJob = new CronJob("0 0 * * *", async () => {
       await this.sendGmailWatchRequest();
     });
 

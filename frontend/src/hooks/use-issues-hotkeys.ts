@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { useHotkeys } from 'react-hotkeys-hook';
 
 import { useContextStore } from 'store/global-context-provider';

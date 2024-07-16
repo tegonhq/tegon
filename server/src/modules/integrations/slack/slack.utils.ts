@@ -1,33 +1,31 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Readable } from "stream";
 
-import { Readable } from 'stream';
+import { Logger } from "@nestjs/common";
+import { IntegrationName } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
-import { Logger } from '@nestjs/common';
-import { IntegrationName } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
+import { TiptapMarks, TiptapNode } from "common/common.interface";
 
-import { TiptapMarks, TiptapNode } from 'common/common.interface';
-
-import { AttachmentResponse } from 'modules/attachments/attachments.interface';
+import { AttachmentResponse } from "modules/attachments/attachments.interface";
 import {
   ChannelTeamMapping,
   Config,
   IntegrationAccountWithRelations,
   Settings,
-} from 'modules/integration-account/integration-account.interface';
+} from "modules/integration-account/integration-account.interface";
 import {
   IssueCommentAction,
   IssueCommentWithRelations,
-} from 'modules/issue-comments/issue-comments.interface';
+} from "modules/issue-comments/issue-comments.interface";
 import {
   IssueWithRelations,
   UpdateIssueInput,
-} from 'modules/issues/issues.interface';
+} from "modules/issues/issues.interface";
 import {
   LinkedIssueSourceData,
   LinkedIssueWithRelations,
   LinkedSlackMessageType,
-} from 'modules/linked-issue/linked-issue.interface';
+} from "modules/linked-issue/linked-issue.interface";
 
 import {
   ModalType,
@@ -36,9 +34,9 @@ import {
   SlackElement,
   SlashCommandSessionRecord,
   slackIssueData,
-} from './slack.interface';
-import { EventBody, RequestHeaders } from '../integrations.interface';
-import { getRequest, getUserId, postRequest } from '../integrations.utils';
+} from "./slack.interface";
+import { EventBody, RequestHeaders } from "../integrations.interface";
+import { getRequest, getUserId, postRequest } from "../integrations.utils";
 
 export function getSlackHeaders(
   integrationAccount: IntegrationAccountWithRelations,
@@ -47,7 +45,7 @@ export function getSlackHeaders(
     integrationAccount.integrationConfiguration as Config;
   return {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${integrationConfig.api_key}`,
     },
   };
@@ -58,7 +56,7 @@ export async function addBotToChannel(
   channelId: string,
 ) {
   const botResponse = await postRequest(
-    'https://slack.com/api/conversations.join',
+    "https://slack.com/api/conversations.join",
     getSlackHeaders(integrationAccount),
     { channel: channelId },
   );
@@ -75,29 +73,29 @@ function createBlocks(
   return [
     {
       // Define an input block for selecting an issue type
-      type: 'input',
+      type: "input",
       block_id: team.teamId,
       dispatch_action: true,
       optional: true,
       element: {
-        type: 'static_select',
+        type: "static_select",
         placeholder: {
-          type: 'plain_text',
-          text: 'Select an option',
+          type: "plain_text",
+          text: "Select an option",
         },
         options: [
           {
             text: {
-              type: 'plain_text',
-              text: 'Generic Issue',
+              type: "plain_text",
+              text: "Generic Issue",
             },
-            value: 'generic_issue',
+            value: "generic_issue",
           },
         ],
         action_id: `${team.teamId}_action`,
       },
       label: {
-        type: 'plain_text',
+        type: "plain_text",
         text: team.teamName,
       },
     },
@@ -105,17 +103,17 @@ function createBlocks(
     ...(containsDescription
       ? [
           {
-            type: 'input',
-            block_id: 'description_block',
+            type: "input",
+            block_id: "description_block",
             element: {
-              type: 'plain_text_input',
+              type: "plain_text_input",
               multiline: true,
-              action_id: 'description_action',
+              action_id: "description_action",
               initial_value: sessionData.messageText ?? undefined,
             },
             label: {
-              type: 'plain_text',
-              text: 'Description',
+              type: "plain_text",
+              text: "Description",
             },
           },
         ]
@@ -195,18 +193,18 @@ function getMessagesBlock(sessionData: SlashCommandSessionRecord) {
   // Create the message block
   return [
     {
-      type: 'header',
-      block_id: 'message_header',
+      type: "header",
+      block_id: "message_header",
       text: {
-        type: 'plain_text',
-        text: 'Message',
+        type: "plain_text",
+        text: "Message",
         emoji: true,
       },
     },
     {
-      type: 'section',
+      type: "section",
       text: {
-        type: 'mrkdwn',
+        type: "mrkdwn",
         text: sessionData.messageText,
       },
     },
@@ -214,10 +212,10 @@ function getMessagesBlock(sessionData: SlashCommandSessionRecord) {
     ...(sessionData.messagedById
       ? [
           {
-            type: 'context',
+            type: "context",
             elements: [
               {
-                type: 'mrkdwn',
+                type: "mrkdwn",
                 text: `Sent by: <@${sessionData.messagedById}>`,
               },
             ],
@@ -261,15 +259,15 @@ export function getModalView(
   // Return the modal view and session data
   return {
     view: {
-      type: 'modal',
+      type: "modal",
       title: {
-        type: 'plain_text',
-        text: 'Create an Issue',
+        type: "plain_text",
+        text: "Create an Issue",
       },
       blocks: [...blocks, ...messagesBlock],
       submit: {
-        type: 'plain_text',
-        text: 'Submit',
+        type: "plain_text",
+        text: "Submit",
       },
     },
     sessionData,
@@ -282,12 +280,12 @@ export async function getState(
   teamId: string,
 ): Promise<string> {
   const category =
-    action === 'opened' ? 'TRIAGE' : action === 'closed' ? 'COMPLETED' : null;
+    action === "opened" ? "TRIAGE" : action === "closed" ? "COMPLETED" : null;
 
   if (category) {
     const workflow = await prisma.workflow.findFirst({
       where: { teamId, category },
-      orderBy: { position: 'asc' },
+      orderBy: { position: "asc" },
     });
     return workflow?.id;
   }
@@ -303,7 +301,7 @@ export async function getIssueData(
 ): Promise<slackIssueData> {
   // Get the state ID and user ID concurrently
   const [stateId, userId] = await Promise.all([
-    getState(prisma, 'opened', sessionData.teamId),
+    getState(prisma, "opened", sessionData.teamId),
     getUserId(prisma, eventBody.user),
   ]);
 
@@ -321,7 +319,7 @@ export async function getIssueData(
     eventBody.user,
   );
 
-  const slackUsername = slackUserResponse.user?.real_name || 'Slack';
+  const slackUsername = slackUserResponse.user?.real_name || "Slack";
 
   // Create the source metadata object
   const sourceMetadata = {
@@ -403,19 +401,19 @@ export async function getIssueMessageModal(
     {
       blocks: [
         {
-          type: 'section',
+          type: "section",
           text: {
-            type: 'mrkdwn',
+            type: "mrkdwn",
             text: `<${issueUrl}|${issueTitle}>`,
           },
         },
         ...descriptionBlocks,
         {
-          type: 'context',
+          type: "context",
           elements: [
             {
-              type: 'plain_text',
-              text: ':slack: This thread is synced with Slack',
+              type: "plain_text",
+              text: ":slack: This thread is synced with Slack",
               emoji: true,
             },
           ],
@@ -451,7 +449,7 @@ export async function upsertSlackMessage(
 
   // Send a POST request to the Slack API to post the message
   const response = await postRequest(
-    'https://slack.com/api/chat.postMessage',
+    "https://slack.com/api/chat.postMessage",
     getSlackHeaders(integrationAccount),
     {
       channel: parentSourceData.channelId,
@@ -468,7 +466,7 @@ export async function upsertSlackMessage(
     const messageData = response.data;
     // Determine the message based on the subtype
     const message =
-      messageData.subtype === 'message_changed'
+      messageData.subtype === "message_changed"
         ? messageData.message
         : messageData;
     // Generate the thread ID using the channel and message timestamp
@@ -501,7 +499,7 @@ export async function getSlackMessage(
   sessionData: SlashCommandSessionRecord,
 ) {
   const response = await postRequest(
-    'https://slack.com/api/conversations.history',
+    "https://slack.com/api/conversations.history",
     await getSlackHeaders(integrationAccount),
     {
       channel: sessionData.channelId,
@@ -543,7 +541,7 @@ export async function sendSlackMessage(
   payload: EventBody,
 ) {
   const response = await postRequest(
-    'https://slack.com/api/chat.postMessage',
+    "https://slack.com/api/chat.postMessage",
     getSlackHeaders(integrationAccount),
     payload,
   );
@@ -559,14 +557,14 @@ export async function sendEphemeralMessage(
   userId: string,
 ) {
   const response = await postRequest(
-    'https://slack.com/api/chat.postEphemeral',
+    "https://slack.com/api/chat.postEphemeral",
     getSlackHeaders(integrationAccount),
     {
       channel: channelId,
-      blocks: [{ type: 'section', text: { type: 'plain_text', text } }],
+      blocks: [{ type: "section", text: { type: "plain_text", text } }],
       thread_ts: threadTs,
       user: userId,
-      parse: 'full',
+      parse: "full",
     },
   );
 
@@ -603,10 +601,10 @@ export async function sendSlackLinkedMessage(
       channel: sourceData.channelId,
       blocks: [
         {
-          type: 'context',
+          type: "context",
           elements: [
             {
-              type: 'mrkdwn',
+              type: "mrkdwn",
               text: `This thread is linked with a Tegon issue <${issueUrl}|${issueIdentifier}>`,
             },
           ],
@@ -686,7 +684,7 @@ export async function createIssueCommentAndLinkIssue(
 
   // Return the linked issue data
   return {
-    url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${mainTs.replace('.', '')}`,
+    url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${mainTs.replace(".", "")}`,
     sourceId: `${sessionData.channelId}_${mainTs}`,
     source: {
       type: IntegrationName.Slack,
@@ -712,7 +710,7 @@ export function getChannelNameFromIntegrationAccount(
   const channelMapping = slackSettings.Slack.channelMappings.find(
     (mapping) => mapping.channelId === channelId,
   );
-  return channelMapping ? channelMapping.channelName : '';
+  return channelMapping ? channelMapping.channelName : "";
 }
 
 /**
@@ -728,7 +726,7 @@ export async function getFilesBuffer(
   // Set the headers for the Slack API request
   const headers = {
     ...getSlackHeaders(integrationAccount),
-    responseType: 'arraybuffer',
+    responseType: "arraybuffer",
   } as RequestHeaders;
 
   // Retrieve the files buffer for each file
@@ -738,19 +736,19 @@ export async function getFilesBuffer(
       const response = await getRequest(file.url_private, headers);
 
       // Convert the file data to a buffer
-      const fileBuffer = Buffer.from(response.data, 'binary');
+      const fileBuffer = Buffer.from(response.data, "binary");
 
       // Create a Multer file object
       const multerFile: Express.Multer.File = {
-        fieldname: 'file',
+        fieldname: "file",
         originalname: file.name,
-        encoding: '7bit',
+        encoding: "7bit",
         mimetype: file.mimetype,
         size: file.size,
         buffer: fileBuffer,
-        destination: '',
+        destination: "",
         filename: file.name,
-        path: '',
+        path: "",
         stream: new Readable(),
       };
 
@@ -768,21 +766,21 @@ export function convertSlackMessageToTiptapJson(
 ): string {
   const content: TiptapNode[] = blocks
     ? blocks.flatMap((block: SlackBlock) => {
-        if (block.type === 'rich_text') {
+        if (block.type === "rich_text") {
           return block.elements.flatMap((element: SlackElement) => {
             switch (element.type) {
-              case 'rich_text_section':
+              case "rich_text_section":
                 // Create a paragraph node for rich text sections
                 const paragraph: TiptapNode = {
-                  type: 'paragraph',
+                  type: "paragraph",
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   content: element.elements.flatMap((sectionElement: any) => {
-                    if (sectionElement.type === 'text') {
+                    if (sectionElement.type === "text") {
                       // Split the text by newline characters
-                      const textParts = sectionElement.text.split('\n');
+                      const textParts = sectionElement.text.split("\n");
                       return textParts.flatMap(
                         (text: string, index: number) => {
-                          if (text === '') {
+                          if (text === "") {
                             return [];
                           }
                           // Create marks based on the text style
@@ -793,28 +791,28 @@ export function convertSlackMessageToTiptapJson(
                             .filter(([_, value]) => value)
                             .map(([type]) => ({ type }));
                           return [
-                            { type: 'text', text, marks },
+                            { type: "text", text, marks },
                             // Add a hardBreak if it's not the last line
                             ...(index < textParts.length - 1
-                              ? [{ type: 'hardBreak' }]
+                              ? [{ type: "hardBreak" }]
                               : []),
                           ];
                         },
                       );
-                    } else if (sectionElement.type === 'link') {
+                    } else if (sectionElement.type === "link") {
                       // Create a text node with a link mark for links
                       return [
                         {
-                          type: 'text',
+                          type: "text",
                           text: sectionElement.url,
                           marks: [
                             {
-                              type: 'link',
+                              type: "link",
                               attrs: {
                                 href: sectionElement.url,
-                                target: '_blank',
-                                rel: 'noopener noreferrer',
-                                class: 'c-link',
+                                target: "_blank",
+                                rel: "noopener noreferrer",
+                                class: "c-link",
                               },
                             },
                           ],
@@ -826,19 +824,19 @@ export function convertSlackMessageToTiptapJson(
                 };
                 return [paragraph];
 
-              case 'rich_text_list':
+              case "rich_text_list":
                 // Determine the list type based on the style
                 const listType =
-                  element.style === 'ordered' ? 'orderedList' : 'bulletList';
+                  element.style === "ordered" ? "orderedList" : "bulletList";
                 // Create list items with paragraphs for each list element
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const listItems = element.elements.map((item: any) => ({
-                  type: 'listItem',
+                  type: "listItem",
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   content: item.elements.flatMap((listElement: any) =>
-                    listElement.text.split('\n').map((part: string) => ({
-                      type: 'paragraph',
-                      content: [{ type: 'text', text: part.trim() }],
+                    listElement.text.split("\n").map((part: string) => ({
+                      type: "paragraph",
+                      content: [{ type: "text", text: part.trim() }],
                     })),
                   ),
                 }));
@@ -851,34 +849,34 @@ export function convertSlackMessageToTiptapJson(
                   },
                 ];
 
-              case 'rich_text_quote':
+              case "rich_text_quote":
                 // Create blockquote nodes for each line of the quote
                 const blockquoteContent = element.elements[0].text
-                  .split('\n')
+                  .split("\n")
                   .map((line: string) => ({
-                    type: 'paragraph',
-                    content: [{ type: 'text', text: line.trim() }],
+                    type: "paragraph",
+                    content: [{ type: "text", text: line.trim() }],
                   }));
 
                 return [
                   {
-                    type: 'blockquote',
+                    type: "blockquote",
                     content: blockquoteContent,
                   },
                 ];
 
-              case 'rich_text_preformatted':
+              case "rich_text_preformatted":
                 // Create a codeBlock node for preformatted text
                 return [
                   {
-                    type: 'codeBlock',
+                    type: "codeBlock",
                     attrs: { language: null },
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     content: element.elements.flatMap((sectionElement: any) => {
-                      if (sectionElement.type === 'text') {
-                        return [{ type: 'text', text: sectionElement.text }];
-                      } else if (sectionElement.type === 'link') {
-                        return [{ type: 'text', text: sectionElement.url }];
+                      if (sectionElement.type === "text") {
+                        return [{ type: "text", text: sectionElement.text }];
+                      } else if (sectionElement.type === "link") {
+                        return [{ type: "text", text: sectionElement.url }];
                       }
                       return [];
                     }),
@@ -889,36 +887,36 @@ export function convertSlackMessageToTiptapJson(
                 return undefined;
             }
           });
-        } else if (block.type === 'header') {
+        } else if (block.type === "header") {
           const headingText = block.text.text;
           return [
             {
-              type: 'heading',
+              type: "heading",
               attrs: { level: 1 },
-              content: [{ type: 'text', text: headingText }],
+              content: [{ type: "text", text: headingText }],
             },
           ];
-        } else if (block.type === 'section' && block.text.type === 'mrkdwn') {
+        } else if (block.type === "section" && block.text.type === "mrkdwn") {
           const taskListItems = block.text.text
             .toString()
-            .split('\n')
+            .split("\n")
             .map((item: string) => {
-              const checked = item.startsWith(':white_check_mark:');
-              const itemText = item.slice(item.indexOf(' ') + 1);
+              const checked = item.startsWith(":white_check_mark:");
+              const itemText = item.slice(item.indexOf(" ") + 1);
               return {
-                type: 'taskItem',
+                type: "taskItem",
                 attrs: { checked },
                 content: [
                   {
-                    type: 'paragraph',
-                    content: [{ type: 'text', text: itemText }],
+                    type: "paragraph",
+                    content: [{ type: "text", text: itemText }],
                   },
                 ],
               };
             });
           return [
             {
-              type: 'taskList',
+              type: "taskList",
               content: taskListItems,
             },
           ];
@@ -931,9 +929,9 @@ export function convertSlackMessageToTiptapJson(
   if (attachmentUrls && attachmentUrls.length > 0) {
     content.push(
       ...attachmentUrls.map((attachment) => ({
-        type: attachment.fileType.startsWith('image/')
-          ? 'image'
-          : 'fileExtension',
+        type: attachment.fileType.startsWith("image/")
+          ? "image"
+          : "fileExtension",
         attrs: {
           src: attachment.publicURL,
           alt: attachment.originalName,
@@ -944,52 +942,52 @@ export function convertSlackMessageToTiptapJson(
   }
 
   // Return the stringified Tiptap JSON
-  return JSON.stringify({ type: 'doc', content });
+  return JSON.stringify({ type: "doc", content });
 }
 
 function processTiptapNode(node: TiptapNode, blocks: SlackBlock[]) {
   switch (node.type) {
-    case 'paragraph':
+    case "paragraph":
       // Create a rich text section for the paragraph node
       const richTextSection: SlackElement = {
-        type: 'rich_text_section',
+        type: "rich_text_section",
         elements:
           node.content
             ?.flatMap((child: TiptapNode) => {
-              if (child.type === 'text') {
+              if (child.type === "text") {
                 // Create a text element for the text node
                 const textElement: SlackElement = {
-                  type: 'text',
-                  text: child.text || '',
+                  type: "text",
+                  text: child.text || "",
                   style: {},
                 };
                 // Apply marks to the text element based on the node's marks
                 (child.marks || []).forEach((mark: TiptapMarks) => {
                   switch (mark.type) {
-                    case 'bold':
+                    case "bold":
                       textElement.style.bold = true;
                       break;
-                    case 'italic':
+                    case "italic":
                       textElement.style.italic = true;
                       break;
-                    case 'code':
+                    case "code":
                       textElement.style.code = true;
                       break;
-                    case 'strike':
+                    case "strike":
                       textElement.style.strike = true;
                       break;
-                    case 'link':
-                      textElement.type = 'link';
+                    case "link":
+                      textElement.type = "link";
                       textElement.url = mark.attrs.href;
                       break;
                   }
                 });
                 return textElement;
-              } else if (child.type === 'hardBreak') {
+              } else if (child.type === "hardBreak") {
                 // Create a text element for the hard break
                 return {
-                  type: 'text',
-                  text: '\n',
+                  type: "text",
+                  text: "\n",
                 };
               }
               return null;
@@ -998,36 +996,36 @@ function processTiptapNode(node: TiptapNode, blocks: SlackBlock[]) {
       };
       // Add the rich text section to the blocks array
       blocks.push({
-        type: 'rich_text',
+        type: "rich_text",
         elements: [richTextSection],
       });
       break;
-    case 'hardBreak':
+    case "hardBreak":
       // Handle hard breaks by appending a newline character to the last text element
       const lastBlockIndex = blocks.length - 1;
       const lastBlock = blocks[lastBlockIndex];
-      if (lastBlock && lastBlock.type === 'rich_text') {
+      if (lastBlock && lastBlock.type === "rich_text") {
         const lastElementIndex = lastBlock.elements.length - 1;
         const lastElement = lastBlock.elements[lastElementIndex];
-        if (lastElement && lastElement.type === 'rich_text_section') {
+        if (lastElement && lastElement.type === "rich_text_section") {
           const lastTextElementIndex = lastElement.elements.length - 1;
           const lastTextElement = lastElement.elements[lastTextElementIndex];
-          if (lastTextElement && lastTextElement.type === 'text') {
-            lastTextElement.text += '\n';
+          if (lastTextElement && lastTextElement.type === "text") {
+            lastTextElement.text += "\n";
           } else {
             lastElement.elements.push({
-              type: 'text',
-              text: '\n',
+              type: "text",
+              text: "\n",
             });
           }
           lastBlock.elements[lastElementIndex] = lastElement;
         } else {
           lastBlock.elements.push({
-            type: 'rich_text_section',
+            type: "rich_text_section",
             elements: [
               {
-                type: 'text',
-                text: '\n',
+                type: "text",
+                text: "\n",
               },
             ],
           });
@@ -1035,111 +1033,111 @@ function processTiptapNode(node: TiptapNode, blocks: SlackBlock[]) {
         blocks[lastBlockIndex] = lastBlock;
       }
       break;
-    case 'blockquote':
+    case "blockquote":
       // Create a rich text quote for the blockquote node
       const blockquoteElements =
         node.content?.flatMap((child: TiptapNode) =>
           child.content?.map((content) => ({
-            type: 'text',
+            type: "text",
             text: `${content.text}\n`,
           })),
         ) || [];
 
       if (blockquoteElements.length > 0) {
         blocks.push({
-          type: 'rich_text',
+          type: "rich_text",
           elements: [
             {
-              type: 'rich_text_quote',
+              type: "rich_text_quote",
               elements: blockquoteElements,
             },
           ],
         });
       }
       break;
-    case 'orderedList':
-    case 'bulletList':
+    case "orderedList":
+    case "bulletList":
       // Create a rich text list for the ordered or bullet list node
       const listElements =
         node.content?.map((listItem: TiptapNode) => ({
-          type: 'rich_text_section',
+          type: "rich_text_section",
           elements:
             listItem.content?.map((paragraph: TiptapNode) => ({
-              type: 'text',
-              text: paragraph.content?.[0]?.text || '',
+              type: "text",
+              text: paragraph.content?.[0]?.text || "",
             })) || [],
         })) || [];
       blocks.push({
-        type: 'rich_text',
+        type: "rich_text",
         elements: [
           {
-            type: 'rich_text_list',
-            style: node.type === 'orderedList' ? 'ordered' : 'bullet',
+            type: "rich_text_list",
+            style: node.type === "orderedList" ? "ordered" : "bullet",
             elements: listElements,
           },
         ],
       });
       break;
-    case 'codeBlock':
+    case "codeBlock":
       // Create a rich text preformatted block for the code block node
       const codeBlockElements =
         node.content?.map((content) => ({
-          type: 'text',
+          type: "text",
           text: content.text,
         })) || [];
 
       blocks.push({
-        type: 'rich_text',
+        type: "rich_text",
         elements: [
           {
-            type: 'rich_text_preformatted',
+            type: "rich_text_preformatted",
             elements: codeBlockElements,
           },
         ],
       });
       break;
-    case 'image':
+    case "image":
       // Create an image block for the image node
       blocks.push({
-        type: 'image',
-        image_url: node.attrs?.src || '',
-        alt_text: node.attrs?.alt || '',
+        type: "image",
+        image_url: node.attrs?.src || "",
+        alt_text: node.attrs?.alt || "",
       });
       break;
-    case 'heading':
+    case "heading":
       const headingText = node.content
         ?.map((child: TiptapNode) =>
-          child.type === 'text' ? child.text || '' : '',
+          child.type === "text" ? child.text || "" : "",
         )
-        .join('');
+        .join("");
       blocks.push({
-        type: 'header',
+        type: "header",
         text: {
-          type: 'plain_text',
+          type: "plain_text",
           text: headingText,
           emoji: true,
         },
       });
       break;
-    case 'taskList':
+    case "taskList":
       const taskListItems = node.content?.map((listItem: TiptapNode) => {
         const checked = listItem.attrs?.checked
-          ? ':white_check_mark:'
-          : ':black_medium_square:';
+          ? ":white_check_mark:"
+          : ":black_medium_square:";
         const itemText = listItem.content
           ?.map((child: TiptapNode) =>
             child.content
-              ?.map((grandChild: TiptapNode) => grandChild.text || '')
-              .join(''),
+              ?.map((grandChild: TiptapNode) => grandChild.text || "")
+              .join(""),
           )
-          .join('');
+          .join("");
         return `${checked} ${itemText}`;
       });
       blocks.push({
-        type: 'section',
+        type: "section",
         text: {
-          type: 'mrkdwn',
-          text: taskListItems?.join('\n'),
+          type: "mrkdwn",
+          text: taskListItems?.join("\n"),
         },
       });
       break;
@@ -1164,9 +1162,9 @@ export function convertTiptapJsonToSlackBlocks(message: string): SlackBlock[] {
     // If the input is not a valid Tiptap JSON, return a section block with the raw text
     return [
       {
-        type: 'section',
+        type: "section",
         text: {
-          type: 'mrkdwn',
+          type: "mrkdwn",
           text: message,
         },
       },

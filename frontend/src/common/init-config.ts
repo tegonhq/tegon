@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import SuperTokensReact from 'supertokens-auth-react';
 
 import { frontendConfig } from 'common/lib/config';

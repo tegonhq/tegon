@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { IconProps } from './types';
 
 export function PriorityMedium({ size = 18, className }: IconProps) {

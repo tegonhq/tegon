@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { RiArrowDownSFill, RiArrowRightSFill } from '@remixicon/react';
 import { useRouter } from 'next/router';
 import React from 'react';

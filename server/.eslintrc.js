@@ -97,14 +97,6 @@ module.exports = {
     '@typescript-eslint/consistent-indexed-object-style': ['warn', 'record'],
     '@typescript-eslint/consistent-type-definitions': ['warn', 'interface'],
     '@typescript-eslint/no-unused-vars': 'warn',
-    'notice/notice': [
-      'error',
-      {
-        mustMatch: 'Copyright \\(c\\) [0-9]{0,4}, Tegon, all rights reserved.',
-        template:
-          '/** Copyright (c) <%= YEAR %>, Tegon, all rights reserved. **/\n\n',
-      },
-    ],
   },
   parser: '@typescript-eslint/parser',
   ignorePatterns: ['src/@@generated/**/*.tsx', 'src/@@generated/**/*.ts'],

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 export const Session = createParamDecorator(

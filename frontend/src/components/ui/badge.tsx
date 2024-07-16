@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 

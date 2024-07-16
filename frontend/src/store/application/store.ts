@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import cloneDeep from 'lodash/cloneDeep';
 import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 

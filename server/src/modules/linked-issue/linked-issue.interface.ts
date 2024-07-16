@@ -1,21 +1,19 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { LinkedIssue } from "@prisma/client";
+import { IsEnum, IsJSON, IsOptional, IsString } from "class-validator";
 
-import { LinkedIssue } from '@prisma/client';
-import { IsEnum, IsJSON, IsOptional, IsString } from 'class-validator';
-
-import { IssueWithRelations } from 'modules/issues/issues.interface';
+import { IssueWithRelations } from "modules/issues/issues.interface";
 
 export enum LinkedIssueSubType {
-  GithubIssue = 'GithubIssue',
-  GithubPullRequest = 'GithubPullRequest',
-  ExternalLink = 'ExternalLink',
-  Slack = 'Slack',
-  Sentry = 'Sentry',
+  GithubIssue = "GithubIssue",
+  GithubPullRequest = "GithubPullRequest",
+  ExternalLink = "ExternalLink",
+  Slack = "Slack",
+  Sentry = "Sentry",
 }
 
 export enum LinkedSlackMessageType {
-  Message = 'Message',
-  Thread = 'Thread',
+  Message = "Message",
+  Thread = "Thread",
 }
 
 export class LinkIssueInput {

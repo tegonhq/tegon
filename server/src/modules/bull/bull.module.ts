@@ -1,10 +1,8 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { BullModule } from "@nestjs/bull";
+import { Global, Module } from "@nestjs/common";
 
-import { BullModule } from '@nestjs/bull';
-import { Global, Module } from '@nestjs/common';
-
-import { BullController } from './bull.controller';
-import { BullService } from './bull.service';
+import { BullController } from "./bull.controller";
+import { BullService } from "./bull.service";
 
 @Global()
 @Module({

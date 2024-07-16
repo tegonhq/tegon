@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { BadRequestException } from '@nestjs/common';
 import { IntegrationDefinition, IntegrationName } from '@prisma/client';
 

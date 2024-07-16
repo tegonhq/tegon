@@ -1,4 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
 export interface Message {
   id: string;
   threadId: string;

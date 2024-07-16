@@ -1,25 +1,23 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Controller, Get, Query, UseGuards } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-
-import { AuthGuard } from 'modules/auth/auth.guard';
+import { AuthGuard } from "modules/auth/auth.guard";
 
 import {
   BootstrapRequestQuery,
   DeltaRequestQuery,
-} from './sync-actions.interface';
-import SyncActionsService from './sync-actions.service';
+} from "./sync-actions.interface";
+import SyncActionsService from "./sync-actions.service";
 
 @Controller({
-  version: '1',
-  path: 'sync_actions',
+  version: "1",
+  path: "sync_actions",
 })
-@ApiTags('Sync Actions')
+@ApiTags("Sync Actions")
 export class SyncActionsController {
   constructor(private syncActionsService: SyncActionsService) {}
 
-  @Get('bootstrap')
+  @Get("bootstrap")
   @UseGuards(new AuthGuard())
   async getBootstrap(@Query() BootstrapQuery: BootstrapRequestQuery) {
     return await this.syncActionsService.getBootstrap(
@@ -29,7 +27,7 @@ export class SyncActionsController {
     );
   }
 
-  @Get('delta')
+  @Get("delta")
   @UseGuards(new AuthGuard())
   async getDelta(@Query() deltaQuery: DeltaRequestQuery) {
     return await this.syncActionsService.getDelta(

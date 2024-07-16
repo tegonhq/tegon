@@ -1,36 +1,34 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-import { IntegrationDefinition } from '@@generated/integrationDefinition/entities';
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { IntegrationDefinition } from "@@generated/integrationDefinition/entities";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiTags,
   ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+} from "@nestjs/swagger";
 
-import { AuthGuard } from 'modules/auth/auth.guard';
+import { AuthGuard } from "modules/auth/auth.guard";
 
 import {
   IntegrationDefinitionCreateBody,
   IntegrationDefinitionRequestIdBody,
   IntegrationDefinitionUpdateBody,
-} from './integration-definition.interface';
-import { IntegrationDefinitionService } from './integration-definition.service';
+} from "./integration-definition.interface";
+import { IntegrationDefinitionService } from "./integration-definition.service";
 
 @Controller({
-  version: '1',
-  path: 'integration_definition',
+  version: "1",
+  path: "integration_definition",
 })
-@ApiTags('Integration Definition')
+@ApiTags("Integration Definition")
 @ApiBadRequestResponse({
   status: 400,
-  type: 'string',
-  description: 'Bad Request',
+  type: "string",
+  description: "Bad Request",
 })
 @ApiUnauthorizedResponse({
   status: 401,
-  type: 'string',
-  description: 'Not authorised',
+  type: "string",
+  description: "Not authorised",
 })
 export class IntegrationDefinitionController {
   constructor(
@@ -48,7 +46,7 @@ export class IntegrationDefinitionController {
   /**
    * Update a integration definition in a workspace
    */
-  @Post(':integrationDefinitionId')
+  @Post(":integrationDefinitionId")
   async updateIntegrationDefinition(
     @Param()
     integrationDefinitionRequestIdBody: IntegrationDefinitionRequestIdBody,
@@ -79,7 +77,7 @@ export class IntegrationDefinitionController {
   /**
    * Get a integration definition in a workspace
    */
-  @Get(':integrationDefinitionId')
+  @Get(":integrationDefinitionId")
   async getIntegrationDefinitionWithId(
     @Param()
     integrationDefinitionRequestIdBody: IntegrationDefinitionRequestIdBody,

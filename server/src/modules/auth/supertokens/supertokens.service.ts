@@ -1,23 +1,21 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Injectable } from "@nestjs/common";
+import supertokens, { deleteUser } from "supertokens-node";
+import EmailPassword from "supertokens-node/recipe/emailpassword";
 
-import { Injectable } from '@nestjs/common';
-import supertokens, { deleteUser } from 'supertokens-node';
-import EmailPassword from 'supertokens-node/recipe/emailpassword';
+import { UsersService } from "modules/users/users.service";
 
-import { UsersService } from 'modules/users/users.service';
-
-import { recipeList } from './supertokens.config';
+import { recipeList } from "./supertokens.config";
 
 @Injectable()
 export class SupertokensService {
   constructor(private usersService: UsersService) {
     supertokens.init({
       appInfo: {
-        appName: 'Tegon',
+        appName: "Tegon",
         apiDomain: process.env.BACKEND_HOST,
-        websiteDomain: process.env.FRONTEND_HOST.split(',')[0] || '',
-        apiBasePath: '/auth',
-        websiteBasePath: '/auth',
+        websiteDomain: process.env.FRONTEND_HOST.split(",")[0] || "",
+        apiBasePath: "/auth",
+        websiteBasePath: "/auth",
       },
       supertokens: {
         connectionURI: process.env.SUPERTOKEN_CONNECTION_URI,

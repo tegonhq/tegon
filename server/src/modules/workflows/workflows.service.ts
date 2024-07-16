@@ -1,15 +1,13 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-import { Injectable } from '@nestjs/common';
-import { Workflow } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
+import { Injectable } from "@nestjs/common";
+import { Workflow } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
 import {
   CreateWorkflowInput,
   TeamRequestIdBody,
   UpdateWorkflowInput,
   WorkflowRequestIdBody,
-} from './workflows.interface';
+} from "./workflows.interface";
 
 @Injectable()
 export default class WorkflowsService {

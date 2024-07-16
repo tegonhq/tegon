@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { WorkflowType } from 'common/types/team';
 
 export function getDefaultStatus(workflows: WorkflowType[], pathname: string) {

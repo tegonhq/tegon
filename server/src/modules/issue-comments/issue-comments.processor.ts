@@ -1,22 +1,20 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-import { Process, Processor } from '@nestjs/bull';
-import { Logger } from '@nestjs/common';
-import { Job } from 'bull';
-import { PrismaService } from 'nestjs-prisma';
+import { Process, Processor } from "@nestjs/bull";
+import { Logger } from "@nestjs/common";
+import { Job } from "bull";
+import { PrismaService } from "nestjs-prisma";
 
 import {
   IssueCommentAction,
   IssueCommentWithRelations,
-} from './issue-comments.interface';
-import { handleTwoWaySync } from './issue-comments.utils';
+} from "./issue-comments.interface";
+import { handleTwoWaySync } from "./issue-comments.utils";
 
-@Processor('issueComments')
+@Processor("issueComments")
 export class IssueCommentsProcessor {
   constructor(private prisma: PrismaService) {}
-  private readonly logger: Logger = new Logger('IssueCommentsProcessor');
+  private readonly logger: Logger = new Logger("IssueCommentsProcessor");
 
-  @Process('twoWaySyncComments')
+  @Process("twoWaySyncComments")
   async handleTwoWaySync(
     job: Job<{
       issueComment: IssueCommentWithRelations;

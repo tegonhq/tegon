@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type request from 'superagent';
 import type { Primitive } from 'zod';
 

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { RiLoader4Line } from "@remixicon/react";

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 export enum NotificationTypeEnum {
   IssueAssigned = 'IssueAssigned',
   IssueUnAssigned = 'IssueUnAssigned',

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 export function Header() {
   return (
     <header className="flex pl-8 px-4 py-3 w-full border-b justify-between items-center">

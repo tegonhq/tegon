@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import React from 'react';
 
 import { Button } from 'components/ui/button';

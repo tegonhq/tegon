@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { AvatarText } from 'components/ui/avatar';
 import { Checkbox } from 'components/ui/checkbox';
 import { CommandGroup } from 'components/ui/command';

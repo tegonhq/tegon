@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import getConfig from 'next/config';
 import Router from 'next/router';
 import SessionReact from 'supertokens-auth-react/recipe/session';

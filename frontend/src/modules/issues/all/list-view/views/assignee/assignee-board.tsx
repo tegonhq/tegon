@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { DropResult } from '@hello-pangea/dnd';
 
 import { observer } from 'mobx-react-lite';

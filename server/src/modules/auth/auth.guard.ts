@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { VerifySessionOptions } from 'supertokens-node/recipe/session';
 

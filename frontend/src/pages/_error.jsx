@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import * as Sentry from '@sentry/nextjs';
 import Error from 'next/error';
 

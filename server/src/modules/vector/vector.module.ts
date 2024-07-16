@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Module } from '@nestjs/common';
 import { PrismaModule } from 'nestjs-prisma';
 import { Client as TypesenseClient } from 'typesense';

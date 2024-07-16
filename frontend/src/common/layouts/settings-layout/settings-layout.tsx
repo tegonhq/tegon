@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { AllProviders } from 'common/wrappers/all-providers';
 
 import { SidebarNav } from './sidebar-nav';

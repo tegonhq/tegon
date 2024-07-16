@@ -1,31 +1,29 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 // import { string } from '@prisma/client';
-import { ModelName } from '@prisma/client';
-import { Client } from 'pg';
+import { ModelName } from "@prisma/client";
+import { Client } from "pg";
 import {
   LogicalReplicationService,
   Wal2JsonPlugin,
-} from 'pg-logical-replication';
+} from "pg-logical-replication";
 
-import { SyncGateway } from 'modules/sync/sync.gateway';
-import SyncActionsService from 'modules/sync-actions/sync-actions.service';
+import { SyncGateway } from "modules/sync/sync.gateway";
+import SyncActionsService from "modules/sync-actions/sync-actions.service";
 
 import {
   logChangeType,
   logType,
   tablesToSendMessagesFor,
-} from './replication.interface';
+} from "./replication.interface";
 
-const REPLICATION_SLOT_NAME = 'tegon_replication_slot';
-const REPLICATION_SLOT_PLUGIN = 'wal2json';
+const REPLICATION_SLOT_NAME = "tegon_replication_slot";
+const REPLICATION_SLOT_PLUGIN = "wal2json";
 
 @Injectable()
 export default class ReplicationService {
   client: Client;
-  private readonly logger: Logger = new Logger('ReplicationService');
+  private readonly logger: Logger = new Logger("ReplicationService");
 
   constructor(
     private configService: ConfigService,
@@ -33,11 +31,11 @@ export default class ReplicationService {
     private syncActionsService: SyncActionsService,
   ) {
     this.client = new Client({
-      user: configService.get('POSTGRES_USER'),
-      host: configService.get('DB_HOST'),
-      database: configService.get('POSTGRES_DB'),
-      password: configService.get('POSTGRES_PASSWORD'),
-      port: configService.get('DB_PORT'),
+      user: configService.get("POSTGRES_USER"),
+      host: configService.get("DB_HOST"),
+      database: configService.get("POSTGRES_DB"),
+      password: configService.get("POSTGRES_PASSWORD"),
+      port: configService.get("DB_PORT"),
     });
   }
 
@@ -84,22 +82,22 @@ export default class ReplicationService {
       // Create replication slot
       const result = await this.client.query(createReplicationSlotQuery);
 
-      this.logger.log('Replication slot created successfully:', result.rows[0]);
+      this.logger.log("Replication slot created successfully:", result.rows[0]);
     } catch (error) {
-      this.logger.error('Error creating replication slot:', error);
+      this.logger.error("Error creating replication slot:", error);
     } finally {
       await this.client.end();
     }
   }
 
   async setupReplication() {
-    const dbSchema = this.configService.get('DB_SCHEMA');
+    const dbSchema = this.configService.get("DB_SCHEMA");
     const clientConfig = {
-      host: this.configService.get('DB_HOST'),
-      database: this.configService.get('POSTGRES_DB'),
-      user: this.configService.get('POSTGRES_USER'),
-      password: this.configService.get('POSTGRES_PASSWORD'),
-      port: this.configService.get('DB_PORT'),
+      host: this.configService.get("DB_HOST"),
+      database: this.configService.get("POSTGRES_DB"),
+      user: this.configService.get("POSTGRES_USER"),
+      password: this.configService.get("POSTGRES_PASSWORD"),
+      port: this.configService.get("DB_PORT"),
     };
     const service = new LogicalReplicationService(clientConfig);
     const plugin = new Wal2JsonPlugin();
@@ -109,27 +107,27 @@ export default class ReplicationService {
         this.logger.error(e);
       })
       .then(() => {
-        this.logger.log('Replication server connected');
+        this.logger.log("Replication server connected");
       });
 
-    service.on('data', (_lsn: string, log: logType) => {
+    service.on("data", (_lsn: string, log: logType) => {
       // log contains change data in JSON format
       if (log.change) {
         log.change.forEach(async (change: logChangeType) => {
           if (
             change.schema === dbSchema &&
-            change.kind !== 'delete' &&
+            change.kind !== "delete" &&
             tablesToSendMessagesFor.has(change.table as ModelName)
           ) {
             const { columnvalues, columnnames } = change;
-            const deletedIndex = columnnames.indexOf('deleted');
+            const deletedIndex = columnnames.indexOf("deleted");
             let isDeleted = false;
             if (columnvalues[deletedIndex]) {
               isDeleted = true;
             }
             let index = 0;
-            if (columnnames[index] !== 'id') {
-              index = columnnames.indexOf('id');
+            if (columnnames[index] !== "id") {
+              index = columnnames.indexOf("id");
             }
             const syncActionData =
               await this.syncActionsService.upsertSyncAction(
@@ -147,11 +145,11 @@ export default class ReplicationService {
 
             await this.syncGateway.wss
               .to(recipientId)
-              .emit('message', JSON.stringify(syncActionData));
+              .emit("message", JSON.stringify(syncActionData));
           }
         });
       } else {
-        this.logger.log('No change data in log');
+        this.logger.log("No change data in log");
       }
     });
   }

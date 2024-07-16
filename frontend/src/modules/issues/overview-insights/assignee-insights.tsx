@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { getTailwindColor } from 'common/color-utils';
 import { groupBy } from 'common/lib/common';
 import { cn } from 'common/lib/utils';

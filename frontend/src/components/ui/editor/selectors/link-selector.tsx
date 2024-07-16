@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Check, Trash } from 'lucide-react';
 import { useEditor } from 'novel';
 import { useEffect, useRef } from 'react';

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 

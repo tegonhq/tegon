@@ -1,18 +1,16 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Body, Controller, Post, Headers, UseGuards } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 
-import { Body, Controller, Post, Headers, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { GmailAuthGuard } from "common/gaurds/gmail-auth.gaurd";
 
-import { GmailAuthGuard } from 'common/gaurds/gmail-auth.gaurd';
-
-import { GmailQueue } from './gmail.queue';
-import { EventBody, EventHeaders } from '../integrations.interface';
+import { GmailQueue } from "./gmail.queue";
+import { EventBody, EventHeaders } from "../integrations.interface";
 
 @Controller({
-  version: '1',
-  path: 'gmail',
+  version: "1",
+  path: "gmail",
 })
-@ApiTags('Gmail')
+@ApiTags("Gmail")
 export class GmailController {
   constructor(private gmailQueue: GmailQueue) {}
 

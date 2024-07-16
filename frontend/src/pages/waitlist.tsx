@@ -1,6 +1,4 @@
 /* eslint-disable @next/next/no-sync-scripts */
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Widget } from '@typeform/embed-react';
 import { useRouter } from 'next/router';
 import React from 'react';

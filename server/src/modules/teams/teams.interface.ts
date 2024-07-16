@@ -1,4 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
 import { Preference, WorkflowCategory } from '@prisma/client';
 import { IsOptional, IsString } from 'class-validator';
 

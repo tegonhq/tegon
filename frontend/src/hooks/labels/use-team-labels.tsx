@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { computed } from 'mobx';
 import * as React from 'react';
 

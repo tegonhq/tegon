@@ -1,19 +1,17 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
+import { Injectable } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
 import {
   CreateIntegrationAccountBody,
   IntegrationAccountRequestBody,
   IntegrationAccountRequestIdBody,
   UpdateIntegrationAccountBody,
-} from './integration-account.interface';
+} from "./integration-account.interface";
 import {
   handleAppDeletion,
   storeIntegrationRelatedData,
-} from './integration-account.utils';
+} from "./integration-account.utils";
 
 @Injectable()
 export class IntegrationAccountService {
@@ -121,7 +119,7 @@ export class IntegrationAccountService {
       },
       orderBy: [
         {
-          updatedAt: 'asc',
+          updatedAt: "asc",
         },
       ],
       include: {

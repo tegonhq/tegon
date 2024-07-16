@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Cross2Icon } from '@radix-ui/react-icons';
 import { RiArrowDropRightLine } from '@remixicon/react';
 import React from 'react';

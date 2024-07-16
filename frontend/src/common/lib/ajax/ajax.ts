@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { AjaxBaseConfig, ExtendedPromise } from './ajaxBase';
 import type { SuperAgentRequest } from 'superagent';
 

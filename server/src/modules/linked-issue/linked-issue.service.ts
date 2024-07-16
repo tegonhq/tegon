@@ -1,19 +1,17 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
-} from '@nestjs/common';
-import { LinkedIssue } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
+} from "@nestjs/common";
+import { LinkedIssue } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
 import {
   ApiResponse,
   IssueRequestParams,
   TeamRequestParams,
-} from 'modules/issues/issues.interface';
+} from "modules/issues/issues.interface";
 
 import {
   CreateLinkIssueInput,
@@ -21,17 +19,17 @@ import {
   LinkedIssueIdParams,
   UpdateLinkedIssueAPIData,
   UpdateLinkedIssueData,
-} from './linked-issue.interface';
+} from "./linked-issue.interface";
 import {
   getLinkDetails,
   getLinkedIssueDataWithUrl,
   isValidLinkUrl,
   sendFirstComment,
-} from './linked-issue.utils';
+} from "./linked-issue.utils";
 
 @Injectable()
 export default class LinkedIssueService {
-  private readonly logger: Logger = new Logger('LinkedIssueService');
+  private readonly logger: Logger = new Logger("LinkedIssueService");
 
   constructor(private prisma: PrismaService) {}
 
@@ -82,7 +80,7 @@ export default class LinkedIssueService {
       );
       return linkedIssue;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to create linked issue');
+      throw new InternalServerErrorException("Failed to create linked issue");
     }
   }
 

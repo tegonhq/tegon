@@ -1,42 +1,40 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Injectable, Logger } from "@nestjs/common";
+import { IntegrationName, LinkedIssue, Prisma } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
-import { Injectable, Logger } from '@nestjs/common';
-import { IntegrationName, LinkedIssue, Prisma } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
-
-import { convertMarkdownToTiptapJson } from 'common/utils/tiptap.utils';
+import { convertMarkdownToTiptapJson } from "common/utils/tiptap.utils";
 
 import {
   IntegrationAccountWithRelations,
   Settings,
-} from 'modules/integration-account/integration-account.interface';
+} from "modules/integration-account/integration-account.interface";
 import {
   CreateIssueInput,
   IssueRequestParams,
   IssueWithRelations,
   TeamRequestParams,
   UpdateIssueInput,
-} from 'modules/issues/issues.interface';
-import IssuesService from 'modules/issues/issues.service';
+} from "modules/issues/issues.interface";
+import IssuesService from "modules/issues/issues.service";
 import {
   LinkedIssueSource,
   LinkedIssueSourceData,
   LinkedIssueSubType,
-} from 'modules/linked-issue/linked-issue.interface';
-import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
-import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
-import NotificationsService from 'modules/notifications/notifications.service';
+} from "modules/linked-issue/linked-issue.interface";
+import LinkedIssueService from "modules/linked-issue/linked-issue.service";
+import { NotificationEventFrom } from "modules/notifications/notifications.interface";
+import NotificationsService from "modules/notifications/notifications.service";
 
-import { eventsToListen } from './github.interface';
+import { eventsToListen } from "./github.interface";
 import {
   getIssueData,
   getState,
   getTeamId,
   sendGithubFirstComment,
   sendGithubPRFirstComment,
-} from './github.utils';
-import { EventBody, EventHeaders } from '../integrations.interface';
-import { getOrCreateLabelIds, getUserId } from '../integrations.utils';
+} from "./github.utils";
+import { EventBody, EventHeaders } from "../integrations.interface";
+import { getOrCreateLabelIds, getUserId } from "../integrations.utils";
 
 @Injectable()
 export default class GithubService {
@@ -46,15 +44,15 @@ export default class GithubService {
     private linkedIssueService: LinkedIssueService,
     private notificationsService: NotificationsService,
   ) {}
-  private readonly logger: Logger = new Logger('GithubService', {
+  private readonly logger: Logger = new Logger("GithubService", {
     timestamp: true,
   });
 
   async handleEvents(eventHeaders: EventHeaders, eventBody: EventBody) {
-    const eventType = eventHeaders['x-github-event'];
+    const eventType = eventHeaders["x-github-event"];
     if (
       eventsToListen.has(eventType) &&
-      !['tegon-bot[bot]', 'tegon-bot-dev[bot]'].includes(eventBody.sender.login)
+      !["tegon-bot[bot]", "tegon-bot-dev[bot]"].includes(eventBody.sender.login)
     ) {
       const integrationAccount = await this.prisma.integrationAccount.findFirst(
         {
@@ -66,23 +64,23 @@ export default class GithubService {
         return undefined;
       }
       switch (eventType) {
-        case 'issues':
+        case "issues":
           this.handleIssues(eventBody, integrationAccount);
           break;
 
-        case 'issue_comment':
+        case "issue_comment":
           this.handleIssueComments(eventBody, integrationAccount);
           break;
 
-        case 'pull_request':
+        case "pull_request":
           this.handlePullRequests(eventBody, integrationAccount);
           break;
 
-        case 'installation':
+        case "installation":
           this.handleInstallations(eventBody, integrationAccount);
           break;
 
-        case 'installation_repositories':
+        case "installation_repositories":
           this.handleRepositories(eventBody, integrationAccount);
           break;
 
@@ -90,7 +88,7 @@ export default class GithubService {
           console.warn(`couldn't find eventType ${eventType}`);
       }
     }
-    return { status: 200, message: 'handled event successfully' };
+    return { status: 200, message: "handled event successfully" };
   }
 
   /**
@@ -106,15 +104,15 @@ export default class GithubService {
     this.logger.debug(`Changes in App installation ${eventBody.action}`);
 
     // Skip handling for "installed" action
-    if (eventBody.action === 'created') {
+    if (eventBody.action === "created") {
       this.logger.debug('Skipping handling for "installed" action');
       return undefined;
     }
 
     // Prepare update data based on the event action
     const updateData: Prisma.IntegrationAccountUpdateInput = {
-      isActive: eventBody.action === 'unsuspend',
-      ...(eventBody.action === 'deleted' && { deleted: new Date() }),
+      isActive: eventBody.action === "unsuspend",
+      ...(eventBody.action === "deleted" && { deleted: new Date() }),
     };
 
     this.logger.debug(
@@ -160,7 +158,7 @@ export default class GithubService {
     );
 
     // If no linked issue exists and the action is not 'opened', return undefined
-    if (!linkedIssue?.issueId && action !== 'opened') {
+    if (!linkedIssue?.issueId && action !== "opened") {
       this.logger.log(`No linked issue found for GitHub issue ${issue.id}`);
       return undefined;
     }
@@ -175,7 +173,7 @@ export default class GithubService {
 
     let updateIssueData: UpdateIssueInput;
     switch (action) {
-      case 'opened': {
+      case "opened": {
         this.logger.log(`Creating new issue for GitHub issue ${issue.id}`);
         // Create a new issue
         const createdIssue = await this.issuesService.createIssueAPI(
@@ -198,9 +196,9 @@ export default class GithubService {
         return createdIssue;
       }
 
-      case 'edited':
-      case 'reopened':
-      case 'closed':
+      case "edited":
+      case "reopened":
+      case "closed":
         this.logger.log(
           `Updating issue for GitHub issue ${issue.id} with action ${action}`,
         );
@@ -216,8 +214,8 @@ export default class GithubService {
 
         break;
 
-      case 'labeled':
-      case 'unlabeled': {
+      case "labeled":
+      case "unlabeled": {
         this.logger.log(
           `Updating labels for GitHub issue ${issue.id} with action ${action}`,
         );
@@ -233,17 +231,17 @@ export default class GithubService {
         break;
       }
 
-      case 'assigned':
-      case 'unassigned': {
+      case "assigned":
+      case "unassigned": {
         this.logger.log(
           `Updating assignee for GitHub issue ${issue.id} with action ${action}`,
         );
         // Get the assignee ID if the issue is being assigned, otherwise set to null
         const assigneeId =
-          action === 'assigned' ? await getUserId(this.prisma, assignee) : null;
+          action === "assigned" ? await getUserId(this.prisma, assignee) : null;
 
         updateIssueData =
-          action === 'assigned'
+          action === "assigned"
             ? ({
                 assigneeId,
                 subscriberIds: [...linkedIssue.issue.subscriberIds, assigneeId],
@@ -309,7 +307,7 @@ export default class GithubService {
     });
 
     switch (eventBody.action) {
-      case 'created':
+      case "created":
         if (linkedComment) {
           this.logger.debug(
             `Linked comment already exists for GitHub comment ID: ${eventBody.comment.id}`,
@@ -362,7 +360,7 @@ export default class GithubService {
         );
         return issueComment;
 
-      case 'edited':
+      case "edited":
         if (linkedComment) {
           this.logger.log(
             `Updating linked comment for GitHub comment ID: ${eventBody.comment.id}`,
@@ -394,7 +392,7 @@ export default class GithubService {
         );
         return undefined;
 
-      case 'deleted':
+      case "deleted":
         if (linkedComment) {
           this.logger.log(
             `Marking linked comment as deleted for GitHub comment ID: ${eventBody.comment.id}`,
@@ -466,10 +464,10 @@ export default class GithubService {
     // Getting user and team models using names of team and users
     const [user, team] = await Promise.all([
       this.prisma.user.findFirst({
-        where: { username: { equals: userName, mode: 'insensitive' } },
+        where: { username: { equals: userName, mode: "insensitive" } },
       }),
       this.prisma.team.findFirst({
-        where: { identifier: { equals: teamSlug, mode: 'insensitive' } },
+        where: { identifier: { equals: teamSlug, mode: "insensitive" } },
       }),
     ]);
 
@@ -503,7 +501,7 @@ export default class GithubService {
     this.logger.log(`Pull request data: pullRequestId=${pullRequestId}}`);
 
     switch (action) {
-      case 'opened': {
+      case "opened": {
         // On opening a PR, it's creating a link to the issue
         const linkedIssue = await this.linkedIssueService.createLinkIssueAPI({
           url: pullRequest.html_url,
@@ -532,7 +530,7 @@ export default class GithubService {
         return linkedIssue;
       }
 
-      case 'closed': {
+      case "closed": {
         /** On closed, checking for all linked PR's, only updating status of ticket
          * when all other linked PR's are closed or only one linked PR
          * */
@@ -544,7 +542,7 @@ export default class GithubService {
           (linkedIssue) =>
             (linkedIssue.source as LinkedIssueSource).subType ===
               LinkedIssueSubType.GithubPullRequest &&
-            (linkedIssue.sourceData as LinkedIssueSourceData).state === 'open',
+            (linkedIssue.sourceData as LinkedIssueSourceData).state === "open",
         );
 
         const linkedIssueMap = openPRs.reduce(
@@ -569,7 +567,7 @@ export default class GithubService {
 
           // Updating ticket state to closed when only one PR left
           if (openPRs.length <= 1 && sourceData.mergedAt) {
-            const stateId = await getState(this.prisma, 'closed', team.id);
+            const stateId = await getState(this.prisma, "closed", team.id);
             if (stateId) {
               await this.issuesService.updateIssue(
                 { teamId: team.id } as TeamRequestParams,
@@ -618,7 +616,7 @@ export default class GithubService {
 
     // Get the repositories based on the event action (added or removed)
     const repositories =
-      eventBody.action === 'added'
+      eventBody.action === "added"
         ? eventBody.repositories_added
         : eventBody.repositories_removed;
 
@@ -636,7 +634,7 @@ export default class GithubService {
     );
 
     switch (eventBody.action) {
-      case 'added':
+      case "added":
         // Add the new repositories to the repoMap
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         repositories.forEach((repo: any) => {
@@ -649,7 +647,7 @@ export default class GithubService {
         });
         this.logger.debug(`Added repositories to repoMap`);
         break;
-      case 'removed':
+      case "removed":
         // Remove the repositories from the repoMap
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         repositories.forEach((repo: any) => {

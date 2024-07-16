@@ -1,4 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
 'use client';
 
 import { useParams } from 'next/navigation';

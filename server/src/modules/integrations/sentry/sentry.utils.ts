@@ -1,10 +1,8 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { PrismaService } from "nestjs-prisma";
 
-import { PrismaService } from 'nestjs-prisma';
+import { IntegrationAccountWithRelations } from "modules/integration-account/integration-account.interface";
 
-import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
-
-import { getRequest, postRequest } from '../integrations.utils';
+import { getRequest, postRequest } from "../integrations.utils";
 
 export async function getAccessToken(
   prisma: PrismaService,
@@ -23,7 +21,7 @@ export async function getAccessToken(
     const url = `https://sentry.io/api/0/sentry-app-installations/${integrationAccount.accountId}/authorizations/`;
 
     const payload = {
-      grant_type: 'refresh_token',
+      grant_type: "refresh_token",
       refresh_token,
       client_id,
       client_secret,
@@ -33,10 +31,10 @@ export async function getAccessToken(
 
     const tokens = new URLSearchParams(data);
 
-    config.refresh_token = tokens.get('refreshToken');
+    config.refresh_token = tokens.get("refreshToken");
 
-    config.access_token = tokens.get('token');
-    config.access_expires_in = tokens.get('expiresAt');
+    config.access_token = tokens.get("token");
+    config.access_expires_in = tokens.get("expiresAt");
 
     await prisma.integrationAccount.update({
       where: { id: integrationAccount.id },
@@ -54,7 +52,7 @@ export async function getSentryHeaders(
   const accessToken = await getAccessToken(prisma, integrationAccount);
   return {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
   };

@@ -1,6 +1,4 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-import type { Config } from './config.interface';
+import type { Config } from "./config.interface";
 
 export const config: Config = {
   cors: {
@@ -8,11 +6,11 @@ export const config: Config = {
   },
   superToken: {
     appInfo: {
-      appName: 'Tegon',
+      appName: "Tegon",
       apiDomain: process.env.BACKEND_HOST,
       websiteDomain: process.env.FRONTEND_HOST,
-      apiBasePath: '/auth',
-      websiteBasePath: '/auth',
+      apiBasePath: "/auth",
+      websiteBasePath: "/auth",
     },
     connectionURI: process.env.SUPERTOKEN_CONNECTION_URI,
   },
