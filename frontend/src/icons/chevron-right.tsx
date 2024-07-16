@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { IconProps } from './types';
 
 export function ChevronRight({ size = 16, className, color }: IconProps) {

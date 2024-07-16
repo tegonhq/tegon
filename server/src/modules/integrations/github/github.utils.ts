@@ -1,58 +1,56 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import fs from "fs/promises";
+import path from "path";
 
-import fs from 'fs/promises';
-import path from 'path';
-
-import { Team } from '@@generated/team/entities';
-import { BadRequestException, Logger } from '@nestjs/common';
+import { Team } from "@@generated/team/entities";
+import { BadRequestException, Logger } from "@nestjs/common";
 import {
   IntegrationAccount,
   IntegrationName,
   Issue,
   LinkedIssue,
   WorkflowCategory,
-} from '@prisma/client';
-import axios from 'axios';
-import jwt from 'jsonwebtoken';
-import { PrismaService } from 'nestjs-prisma';
+} from "@prisma/client";
+import axios from "axios";
+import jwt from "jsonwebtoken";
+import { PrismaService } from "nestjs-prisma";
 
 import {
   convertMarkdownToTiptapJson,
   convertTiptapJsonToMarkdown,
-} from 'common/utils/tiptap.utils';
+} from "common/utils/tiptap.utils";
 
 import {
   GithubRepositoryMappings,
   GithubSettings,
   IntegrationAccountWithRelations,
   Settings,
-} from 'modules/integration-account/integration-account.interface';
-import { Specification } from 'modules/integration-definition/integration-definition.interface';
+} from "modules/integration-account/integration-account.interface";
+import { Specification } from "modules/integration-definition/integration-definition.interface";
 import {
   IssueCommentAction,
   IssueCommentWithRelations,
   LinkedCommentSourceData,
-} from 'modules/issue-comments/issue-comments.interface';
+} from "modules/issue-comments/issue-comments.interface";
 import {
   IssueWithRelations,
   UpdateIssueInput,
-} from 'modules/issues/issues.interface';
+} from "modules/issues/issues.interface";
 import {
   LinkIssueData,
   LinkedIssueSourceData,
   LinkedIssueSubType,
-} from 'modules/linked-issue/linked-issue.interface';
-import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
+} from "modules/linked-issue/linked-issue.interface";
+import LinkedIssueService from "modules/linked-issue/linked-issue.service";
 
-import { githubHeaders, githubIssueData } from './github.interface';
-import { EventBody } from '../integrations.interface';
+import { githubHeaders, githubIssueData } from "./github.interface";
+import { EventBody } from "../integrations.interface";
 import {
   deleteRequest,
   getOrCreateLabelIds,
   getRequest,
   getUserId,
   postRequest,
-} from '../integrations.utils';
+} from "../integrations.utils";
 
 /**
  * Retrieves the state based on the GitHub action and team ID.
@@ -68,17 +66,17 @@ export async function getState(
 ): Promise<string> {
   // Determine the workflow category based on the GitHub action
   const category =
-    action === 'opened' || action === 'reopened'
-      ? 'TRIAGE'
-      : action === 'closed'
-        ? 'COMPLETED'
+    action === "opened" || action === "reopened"
+      ? "TRIAGE"
+      : action === "closed"
+        ? "COMPLETED"
         : null;
 
   if (category) {
     // Find the first workflow matching the team ID and category, ordered by position
     const workflow = await prisma.workflow.findFirst({
       where: { teamId, category },
-      orderBy: { position: 'asc' },
+      orderBy: { position: "asc" },
     });
     // Return the workflow ID if found
     return workflow?.id;
@@ -362,14 +360,14 @@ export async function getAccessToken(
     const tokens = new URLSearchParams(data);
 
     // Get the new access token expiration time in milliseconds
-    const expiresIn = Number(tokens.get('expires_in')) * 1000;
+    const expiresIn = Number(tokens.get("expires_in")) * 1000;
     // Get the new refresh token expiration time in milliseconds
     const refreshExpiresIn =
-      Number(tokens.get('refresh_token_expires_in')) * 1000;
+      Number(tokens.get("refresh_token_expires_in")) * 1000;
 
     // Update the configuration with the new refresh token, access token, and expiration times
-    config.refresh_token = tokens.get('refresh_token');
-    config.access_token = tokens.get('access_token');
+    config.refresh_token = tokens.get("refresh_token");
+    config.access_token = tokens.get("access_token");
     config.access_expires_in = (currentDate + expiresIn).toString();
     config.refresh_expires_in = (currentDate + refreshExpiresIn).toString();
 
@@ -393,7 +391,7 @@ export async function getBotJWTToken(
   const privateKeyPath = path.join(process.cwd(), `certs/${appId}.pem`);
 
   // Read private key synchronously to avoid unnecessary async operation
-  const privateKey = await fs.readFile(privateKeyPath, 'utf8');
+  const privateKey = await fs.readFile(privateKeyPath, "utf8");
 
   const now = Math.floor(Date.now() / 1000);
   const payload = {
@@ -402,7 +400,7 @@ export async function getBotJWTToken(
     iss: appId, // GitHub App's identifier
   };
 
-  return jwt.sign(payload, privateKey, { algorithm: 'RS256' });
+  return jwt.sign(payload, privateKey, { algorithm: "RS256" });
 }
 
 export async function getBotAccessToken(
@@ -490,7 +488,7 @@ async function getGithubLabels(
 
 export async function getGithubUser(token: string) {
   return (
-    (await getRequest('https://api.github.com/user', getGithubHeaders(token)))
+    (await getRequest("https://api.github.com/user", getGithubHeaders(token)))
       .data ?? {}
   );
 }
@@ -532,7 +530,7 @@ export async function upsertGithubIssue(
         : prisma.linkedIssue.findFirst({
             where: {
               issueId: issue.id,
-              source: { path: ['type'], equals: IntegrationName.Github },
+              source: { path: ["type"], equals: IntegrationName.Github },
             },
           }),
     ]);
@@ -554,13 +552,13 @@ export async function upsertGithubIssue(
     state:
       stateCategory === WorkflowCategory.COMPLETED ||
       stateCategory === WorkflowCategory.CANCELED
-        ? 'closed'
-        : 'open',
+        ? "closed"
+        : "open",
     state_reason:
       stateCategory === WorkflowCategory.COMPLETED
-        ? 'completed'
+        ? "completed"
         : stateCategory === WorkflowCategory.CANCELED
-          ? 'not_planned'
+          ? "not_planned"
           : null,
   };
 
@@ -650,17 +648,17 @@ export async function upsertGithubIssueComment(
   const linkedComment = await prisma.linkedComment.findFirst({
     where: {
       commentId: issueComment.id,
-      source: { path: ['type'], equals: IntegrationName.Github },
+      source: { path: ["type"], equals: IntegrationName.Github },
     },
   });
 
   switch (action) {
     case IssueCommentAction.CREATED:
-      logger.debug('Creating GitHub issue comment');
+      logger.debug("Creating GitHub issue comment");
       // Find the linked issue for the parent comment
       const linkedIssue = await prisma.linkedIssue.findFirst({
         where: {
-          source: { path: ['syncedCommentId'], equals: issueComment.parentId },
+          source: { path: ["syncedCommentId"], equals: issueComment.parentId },
         },
       });
 
@@ -695,14 +693,14 @@ export async function upsertGithubIssueComment(
             data: { sourceMetadata },
           }),
         ]);
-        logger.debug('GitHub issue comment created successfully');
+        logger.debug("GitHub issue comment created successfully");
         return githubIssueComment;
       }
-      logger.debug('Linked issue not found, skipping comment creation');
+      logger.debug("Linked issue not found, skipping comment creation");
       return undefined;
 
     case IssueCommentAction.UPDATED:
-      logger.debug('Updating GitHub issue comment');
+      logger.debug("Updating GitHub issue comment");
       if (linkedComment) {
         // Update the GitHub issue comment
         const updatedComment = await postRequest(
@@ -712,14 +710,14 @@ export async function upsertGithubIssueComment(
             body: convertTiptapJsonToMarkdown(issueComment.body),
           },
         );
-        logger.debug('GitHub issue comment updated successfully');
+        logger.debug("GitHub issue comment updated successfully");
         return updatedComment;
       }
-      logger.debug('Linked comment not found, skipping comment update');
+      logger.debug("Linked comment not found, skipping comment update");
       return undefined;
 
     case IssueCommentAction.DELETED:
-      logger.debug('Deleting GitHub issue comment');
+      logger.debug("Deleting GitHub issue comment");
       if (linkedComment) {
         // Delete the GitHub issue comment
         const deleteResponse = await deleteRequest(
@@ -732,10 +730,10 @@ export async function upsertGithubIssueComment(
           where: { id: linkedComment.id },
           data: { deleted: new Date().toISOString() },
         });
-        logger.debug('GitHub issue comment deleted successfully');
+        logger.debug("GitHub issue comment deleted successfully");
         return deleteResponse;
       }
-      logger.debug('Linked comment not found, skipping comment deletion');
+      logger.debug("Linked comment not found, skipping comment deletion");
       return undefined;
   }
 }

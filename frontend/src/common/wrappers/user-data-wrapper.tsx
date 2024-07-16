@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import * as React from 'react';
 
 import { useGetUserQuery } from 'services/users/get-user';

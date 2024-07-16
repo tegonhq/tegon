@@ -1,8 +1,6 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-
-import { getRequest } from 'modules/integrations/integrations.utils';
+import { getRequest } from "modules/integrations/integrations.utils";
 
 @Injectable()
 export class GmailAuthGuard implements CanActivate {
@@ -11,9 +9,9 @@ export class GmailAuthGuard implements CanActivate {
 
     // Add your custom authentication logic for Gmail here
     // For example, check for a specific header or token
-    const authHeader = request.headers['authorization'];
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.split(' ')[1];
+    const authHeader = request.headers["authorization"];
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
       const tokenResponse = await getRequest(
         `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`,
         { headers: {} },

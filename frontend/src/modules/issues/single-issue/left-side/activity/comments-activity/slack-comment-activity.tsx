@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { RiSlackFill } from '@remixicon/react';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';

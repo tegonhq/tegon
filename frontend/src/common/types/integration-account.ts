@@ -1,4 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
 import type { IntegrationName } from './integration-definition';
 
 export interface GithubRepositories {

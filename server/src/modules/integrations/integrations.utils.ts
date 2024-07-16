@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import axios from 'axios';
 import { PrismaService } from 'nestjs-prisma';
 

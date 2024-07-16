@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { IssueType } from 'common/types/issue';
 
 import { DropdownMenuItem } from 'components/ui/dropdown-menu';

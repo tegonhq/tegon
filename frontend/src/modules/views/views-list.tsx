@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { RiBookmarkFill, RiBookmarkLine } from '@remixicon/react';
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import React from 'react';
 
 import type { IntegrationAccountType } from 'common/types/integration-account';

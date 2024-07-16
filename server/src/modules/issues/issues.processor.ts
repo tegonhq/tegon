@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { LinkedIssue } from '@@generated/linkedIssue/entities';
 import { Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';

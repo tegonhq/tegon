@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 'use client';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import {

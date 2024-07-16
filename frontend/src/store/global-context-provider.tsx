@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { types, type Instance } from 'mobx-state-tree';
 import React from 'react';
 

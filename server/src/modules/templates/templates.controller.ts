@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import {
   Body,
   Controller,
@@ -9,27 +7,27 @@ import {
   Post,
   Query,
   UseGuards,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Template } from '@prisma/client';
-import { SessionContainer } from 'supertokens-node/recipe/session';
+} from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
+import { Template } from "@prisma/client";
+import { SessionContainer } from "supertokens-node/recipe/session";
 
-import { AuthGuard } from 'modules/auth/auth.guard';
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import { AuthGuard } from "modules/auth/auth.guard";
+import { Session as SessionDecorator } from "modules/auth/session.decorator";
 
 import {
   CreateTemplateInput,
   UpdateTemplateInput,
   TemplateRequestIdParams,
   RequestIdParams,
-} from './templates.interface';
-import TemplatesService from './templates.service';
+} from "./templates.interface";
+import TemplatesService from "./templates.service";
 
 @Controller({
-  version: '1',
-  path: 'templates',
+  version: "1",
+  path: "templates",
 })
-@ApiTags('Templates')
+@ApiTags("Templates")
 export class TemplatesController {
   constructor(private templatesService: TemplatesService) {}
 
@@ -51,7 +49,7 @@ export class TemplatesController {
     return await this.templatesService.getAllTemplates(requestParams);
   }
 
-  @Get(':templateId')
+  @Get(":templateId")
   @UseGuards(new AuthGuard())
   async getTemplate(
     @Param()
@@ -60,7 +58,7 @@ export class TemplatesController {
     return await this.templatesService.getTemplate(templateId);
   }
 
-  @Post(':templateId')
+  @Post(":templateId")
   @UseGuards(new AuthGuard())
   async updateTemplate(
     @Param()
@@ -70,7 +68,7 @@ export class TemplatesController {
     return await this.templatesService.updateTemplate(templateId, templateData);
   }
 
-  @Delete(':templateId')
+  @Delete(":templateId")
   @UseGuards(new AuthGuard())
   async deleteLabel(
     @Param()

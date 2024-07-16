@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Extension, mergeAttributes } from '@tiptap/core';
 import Heading from '@tiptap/extension-heading';
 import { cx } from 'class-variance-authority';

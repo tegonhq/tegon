@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';

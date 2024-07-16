@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Injectable, NestMiddleware } from '@nestjs/common';

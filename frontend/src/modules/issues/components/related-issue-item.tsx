@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { RiCloseLine } from '@remixicon/react';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';

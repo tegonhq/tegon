@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { RiClipboardLine, RiGitBranchLine } from '@remixicon/react';
 import copy from 'copy-to-clipboard';
 import { useRouter } from 'next/router';

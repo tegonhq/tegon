@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  db:
+    image: "tegonhq/tegon-postgres:${VERSION}"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - 5432:5432
+    networks:
+      - tegon
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  supertokens:
+    image: registry.supertokens.io/supertokens/supertokens-postgresql:latest
+    depends_on:
+      - db
+    environment:
+      POSTGRESQL_CONNECTION_URI: ${SUPERTOKEN_DATABASE_URL}
+      REFRESH_TOKEN_VALIDITY: 2592000 # 30 days in seconds
+      ACCESS_TOKEN_VALIDITY: 2592000 # 30 days in seconds
+      PASSWORD_RESET_TOKEN_LIFETIME: 86400
+    ports:
+      - 3567:3567
+    networks:
+      - tegon
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine3.19
+    networks:
+      - tegon
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+
+  typesense:
+    image: typesense/typesense:0.26.0.rc61
+    container_name: typesense
+    ports:
+      - 8108:8108
+    volumes:
+      - typesense-data:/data
+    networks:
+      - tegon
+    restart: unless-stopped
+    command: --data-dir /data --api-key=${TYPESENSE_API_KEY} --enable-cors
+
+networks:
+  app_network:
+    driver: bridge
+  tegon: {}
+
+volumes:
+  postgres-data:
+  typesense-data:

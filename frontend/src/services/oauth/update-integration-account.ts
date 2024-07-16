@@ -1,7 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-/** Copyright (c) 2023, Poozle, all rights reserved. **/
-
 import { useMutation } from 'react-query';
 
 import { ajaxPost } from 'common/lib/ajax';

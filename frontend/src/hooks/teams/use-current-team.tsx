@@ -1,6 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { computed } from 'mobx';
 import { useRouter } from 'next/router';
 import * as React from 'react';

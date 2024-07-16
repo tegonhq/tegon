@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { ImperativePanelHandle } from 'react-resizable-panels';
 
 import React from 'react';

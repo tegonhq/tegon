@@ -1,4 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
 import { TemplateCategory } from '@prisma/client';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 

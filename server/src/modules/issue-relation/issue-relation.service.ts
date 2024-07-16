@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Injectable } from '@nestjs/common';
 import { IssueRelation } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';

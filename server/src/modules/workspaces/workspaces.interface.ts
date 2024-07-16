@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { IntegrationName, Role, Status } from '@prisma/client';
 import { IsOptional, IsString } from 'class-validator';
 

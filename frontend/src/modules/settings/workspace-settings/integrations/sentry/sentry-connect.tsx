@@ -1,6 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 

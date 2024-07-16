@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { IntegrationDefinition } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';

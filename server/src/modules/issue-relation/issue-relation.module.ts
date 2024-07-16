@@ -1,13 +1,11 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { HttpModule } from "@nestjs/axios";
+import { Module } from "@nestjs/common";
+import { PrismaModule, PrismaService } from "nestjs-prisma";
 
-import { HttpModule } from '@nestjs/axios';
-import { Module } from '@nestjs/common';
-import { PrismaModule, PrismaService } from 'nestjs-prisma';
+import { NotificationsModule } from "modules/notifications/notifications.module";
 
-import { NotificationsModule } from 'modules/notifications/notifications.module';
-
-import { IssueRelationController } from './issue-relation.controller';
-import IssueRelationService from './issue-relation.service';
+import { IssueRelationController } from "./issue-relation.controller";
+import IssueRelationService from "./issue-relation.service";
 
 @Module({
   imports: [PrismaModule, HttpModule, NotificationsModule],

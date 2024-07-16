@@ -1,16 +1,14 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Body, Controller, Post, Headers } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 
-import { Body, Controller, Post, Headers } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-
-import { GithubQueue } from './github.queue';
-import { EventBody, EventHeaders } from '../integrations.interface';
+import { GithubQueue } from "./github.queue";
+import { EventBody, EventHeaders } from "../integrations.interface";
 
 @Controller({
-  version: '1',
-  path: 'github',
+  version: "1",
+  path: "github",
 })
-@ApiTags('Github')
+@ApiTags("Github")
 export class GithubController {
   constructor(private githubQueue: GithubQueue) {}
 

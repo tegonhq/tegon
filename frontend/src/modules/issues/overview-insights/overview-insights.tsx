@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { useFilterIssues } from 'modules/issues/issues-utils';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'components/ui/tabs';

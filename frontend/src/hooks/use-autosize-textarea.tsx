@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import * as React from 'react';
 
 // Updates the height of a <textarea> when the value changes.

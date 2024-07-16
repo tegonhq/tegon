@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { RiGithubFill } from '@remixicon/react';
 
 import type { IssueSourceMetadataType, IssueType } from 'common/types/issue';

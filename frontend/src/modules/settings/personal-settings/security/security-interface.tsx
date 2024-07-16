@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { z } from 'zod';
 
 export const SecuritySchema = z.object({

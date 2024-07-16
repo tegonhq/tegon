@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import {
   Body,
   Controller,
@@ -9,25 +7,25 @@ import {
   Post,
   Query,
   UseGuards,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Label } from '@prisma/client';
+} from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
+import { Label } from "@prisma/client";
 
-import { AuthGuard } from 'modules/auth/auth.guard';
+import { AuthGuard } from "modules/auth/auth.guard";
 
 import {
   CreateLabelInput,
   UpdateLabelInput,
   LabelRequestIdParams,
   RequestIdParams,
-} from './labels.interface';
-import LabelsService from './labels.service';
+} from "./labels.interface";
+import LabelsService from "./labels.service";
 
 @Controller({
-  version: '1',
-  path: 'labels',
+  version: "1",
+  path: "labels",
 })
-@ApiTags('Labels')
+@ApiTags("Labels")
 export class LabelsController {
   constructor(private labelsService: LabelsService) {}
 
@@ -45,7 +43,7 @@ export class LabelsController {
     return await this.labelsService.getAllLabels(requestParams);
   }
 
-  @Get(':labelId')
+  @Get(":labelId")
   @UseGuards(new AuthGuard())
   async getLabel(
     @Param()
@@ -54,7 +52,7 @@ export class LabelsController {
     return await this.labelsService.getLabel(labelId);
   }
 
-  @Post(':labelId')
+  @Post(":labelId")
   @UseGuards(new AuthGuard())
   async updateLabel(
     @Param()
@@ -64,7 +62,7 @@ export class LabelsController {
     return await this.labelsService.updateLabel(labelId, labelData);
   }
 
-  @Delete(':labelId')
+  @Delete(":labelId")
   @UseGuards(new AuthGuard())
   async deleteLabel(
     @Param()

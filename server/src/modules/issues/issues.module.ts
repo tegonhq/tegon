@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { IssueHistory } from '@@generated/issueHistory/entities';
 import { HttpModule } from '@nestjs/axios';
 import { BullModule } from '@nestjs/bull';

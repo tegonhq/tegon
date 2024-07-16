@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { CreateNewTeam } from './create-new-team';
 import { Export } from './export';
 import { Labels } from './labels';

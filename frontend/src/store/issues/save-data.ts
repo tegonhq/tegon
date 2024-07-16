@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { IssuesStoreType } from './store';
 
 import type { SyncActionRecord } from 'common/types/data-loader';

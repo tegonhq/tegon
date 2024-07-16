@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { UsersOnWorkspaceType } from 'common/types/workspace';
 
 import { ScrollArea } from 'components/ui/scroll-area';

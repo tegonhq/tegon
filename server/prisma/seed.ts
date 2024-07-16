@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

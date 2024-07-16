@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import isEqual from 'lodash.isequal';
 import { observer } from 'mobx-react-lite';
 

@@ -1,34 +1,32 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { Injectable, Logger } from "@nestjs/common";
+import { IntegrationName, IssueComment } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
-import { Injectable, Logger } from '@nestjs/common';
-import { IntegrationName, IssueComment } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
-
-import { AttachmentResponse } from 'modules/attachments/attachments.interface';
-import { AttachmentService } from 'modules/attachments/attachments.service';
+import { AttachmentResponse } from "modules/attachments/attachments.interface";
+import { AttachmentService } from "modules/attachments/attachments.service";
 import {
   IntegrationAccountWithRelations,
   Settings,
-} from 'modules/integration-account/integration-account.interface';
+} from "modules/integration-account/integration-account.interface";
 import {
   CreateIssueInput,
   IssueRequestParams,
   IssueWithRelations,
   TeamRequestParams,
   UpdateIssueInput,
-} from 'modules/issues/issues.interface';
-import IssuesService from 'modules/issues/issues.service';
-import { LinkedSlackMessageType } from 'modules/linked-issue/linked-issue.interface';
-import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
-import { OAuthCallbackService } from 'modules/oauth-callback/oauth-callback.service';
+} from "modules/issues/issues.interface";
+import IssuesService from "modules/issues/issues.service";
+import { LinkedSlackMessageType } from "modules/linked-issue/linked-issue.interface";
+import LinkedIssueService from "modules/linked-issue/linked-issue.service";
+import { OAuthCallbackService } from "modules/oauth-callback/oauth-callback.service";
 
 import {
   IntegrationAccountQueryParams,
   ModelViewType,
   SlashCommandSessionRecord,
   slackIssueData,
-} from './slack.interface';
-import { SlackQueue } from './slack.queue';
+} from "./slack.interface";
+import { SlackQueue } from "./slack.queue";
 import {
   convertSlackMessageToTiptapJson,
   createIssueCommentAndLinkIssue,
@@ -44,9 +42,9 @@ import {
   getState,
   sendEphemeralMessage,
   sendSlackMessage,
-} from './slack.utils';
-import { EventBody } from '../integrations.interface';
-import { getUserId, postRequest } from '../integrations.utils';
+} from "./slack.utils";
+import { EventBody } from "../integrations.interface";
+import { getUserId, postRequest } from "../integrations.utils";
 
 @Injectable()
 export default class SlackService {
@@ -61,14 +59,14 @@ export default class SlackService {
     private slackQueue: SlackQueue,
   ) {}
 
-  private readonly logger: Logger = new Logger('SlackService', {
+  private readonly logger: Logger = new Logger("SlackService", {
     timestamp: true,
   });
 
   async handleEvents(eventBody: EventBody) {
     // Check if the event is a URL verification challenge
-    if (eventBody.type === 'url_verification') {
-      this.logger.log('Responding to Slack URL verification challenge');
+    if (eventBody.type === "url_verification") {
+      this.logger.log("Responding to Slack URL verification challenge");
       return { challenge: eventBody.challenge };
     }
 
@@ -81,7 +79,7 @@ export default class SlackService {
 
     // If no integration account is found, log and return undefined
     if (!integrationAccount) {
-      this.logger.debug('No integration account found for team:', team_id);
+      this.logger.debug("No integration account found for team:", team_id);
       return undefined;
     }
 
@@ -91,24 +89,24 @@ export default class SlackService {
 
     // If the message is from the bot, ignore it
     if (isBotMessage) {
-      this.logger.debug('Ignoring bot message');
+      this.logger.debug("Ignoring bot message");
       return undefined;
     }
 
-    this.logger.log('Processing Slack event:', event.type);
+    this.logger.log("Processing Slack event:", event.type);
 
     // Handle different event types
     switch (event.type) {
-      case 'message':
+      case "message":
         // Handle thread messages
         this.slackQueue.handleThreadJob(event, integrationAccount);
         break;
-      case 'reaction_added':
+      case "reaction_added":
         // Handle message reactions)
         this.slackQueue.handleMessageReactionJob(eventBody, integrationAccount);
         break;
       default:
-        this.logger.debug('Unhandled Slack event type:', event.type);
+        this.logger.debug("Unhandled Slack event type:", event.type);
         return undefined;
     }
 
@@ -130,7 +128,7 @@ export default class SlackService {
       integrationAccount.integrationDefinitionId,
       redirectURL,
       userId,
-      'incoming-webhook',
+      "incoming-webhook",
     );
   }
 
@@ -191,7 +189,7 @@ export default class SlackService {
     try {
       // Make a POST request to the Slack API to open the modal view
       await postRequest(
-        'https://slack.com/api/views.open',
+        "https://slack.com/api/views.open",
         getSlackHeaders(integrationAccount),
         {
           trigger_id: triggerId,
@@ -224,12 +222,12 @@ export default class SlackService {
     // Check if the integration account exists
     if (!integrationAccount) {
       this.logger.log(`Integration account not found for token: ${token}`);
-      return { response_action: 'clear' };
+      return { response_action: "clear" };
     }
 
     // Check if the description is provided
     if (!containsDescription) {
-      this.logger.debug('Description not provided, updating modal view');
+      this.logger.debug("Description not provided, updating modal view");
       // Get the updated modal view and session data
       const { view, sessionData } = getModalView(
         integrationAccount,
@@ -241,11 +239,11 @@ export default class SlackService {
       // Update the session data
       this.session[token] = sessionData as SlashCommandSessionRecord;
       // Return the updated modal view
-      return { response_action: 'update', view };
+      return { response_action: "update", view };
     }
 
     // Description is provided, create the Slack issue
-    this.logger.debug('Description provided, creating Slack issue');
+    this.logger.debug("Description provided, creating Slack issue");
     // Get the issue data
     const issueData = await getIssueData(
       this.prisma,
@@ -261,7 +259,7 @@ export default class SlackService {
     );
 
     // Clear the modal view
-    return { response_action: 'clear' };
+    return { response_action: "clear" };
   }
 
   async createSlackIssue(
@@ -335,9 +333,9 @@ export default class SlackService {
   ): Promise<IssueComment> {
     // Get the message from the event body based on the subtype
     const message =
-      eventBody.subtype === 'message_changed' ? eventBody.message : eventBody;
+      eventBody.subtype === "message_changed" ? eventBody.message : eventBody;
 
-    if (message.username && message.username.includes('(via Tegon)')) {
+    if (message.username && message.username.includes("(via Tegon)")) {
       return undefined;
     }
 
@@ -476,7 +474,7 @@ export default class SlackService {
     );
 
     // If the reaction is not 'eyes' or the channel mapping doesn't exist, ignore the event
-    if (reaction !== 'eyes' || !channelMapping) {
+    if (reaction !== "eyes" || !channelMapping) {
       this.logger.debug(`Ignoring reaction event with reaction: ${reaction}`);
       return undefined;
     }
@@ -534,7 +532,7 @@ export default class SlackService {
         },
       }),
       Promise.all([
-        getState(this.prisma, 'opened', sessionData.teamId),
+        getState(this.prisma, "opened", sessionData.teamId),
         getUserId(this.prisma, { id: slackUserId }),
       ]),
     ]);
@@ -561,7 +559,7 @@ export default class SlackService {
       event.user,
     );
 
-    const slackUsername = slackUserResponse.user?.real_name || 'Slack';
+    const slackUsername = slackUserResponse.user?.real_name || "Slack";
 
     // Create source metadata object
     const sourceMetadata = {

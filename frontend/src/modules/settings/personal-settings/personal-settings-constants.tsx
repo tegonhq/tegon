@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Preferences } from './preferences';
 import { Profile } from './profile';
 import { Security } from './security';

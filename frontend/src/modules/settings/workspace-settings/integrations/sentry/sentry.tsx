@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Header } from 'modules/settings/header';
 import { SettingSection } from 'modules/settings/setting-section';
 

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { IntegrationName, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 

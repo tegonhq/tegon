@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import * as cookie from 'cookie';
 
 import { hasValidHeader } from 'common/authentication';

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { type UseQueryResult, useQuery } from 'react-query';
 
 import { type XHRErrorResponse, ajaxPost } from 'common/lib/ajax';

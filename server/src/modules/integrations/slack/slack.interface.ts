@@ -1,10 +1,8 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
+import { IntegrationName } from "@prisma/client";
+import { IsString } from "class-validator";
 
-import { IntegrationName } from '@prisma/client';
-import { IsString } from 'class-validator';
-
-import { UpdateIssueInput } from 'modules/issues/issues.interface';
-import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
+import { UpdateIssueInput } from "modules/issues/issues.interface";
+import { LinkIssueData } from "modules/linked-issue/linked-issue.interface";
 
 export class WorkspaceQueryParams {
   @IsString()

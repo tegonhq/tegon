@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { CommandItem } from 'components/ui/command';
 
 interface DropdownItemProps {

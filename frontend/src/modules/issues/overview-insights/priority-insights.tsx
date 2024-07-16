@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { groupBy } from 'common/lib/common';
 import { Priorities, type IssueType } from 'common/types/issue';
 

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { Storage } from '@google-cloud/storage';
 import {
   BadRequestException,

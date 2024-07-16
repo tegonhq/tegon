@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { getWorkflowColor } from 'common/status-color';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 import type { WorkflowType } from 'common/types/team';

@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 export type TiptapListTypes = 'orderedList' | 'bulletList' | 'taskList' | null;
 export interface TiptapAttrs {
   src?: string;

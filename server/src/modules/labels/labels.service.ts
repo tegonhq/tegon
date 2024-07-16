@@ -1,15 +1,13 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-import { Injectable } from '@nestjs/common';
-import { Label } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
+import { Injectable } from "@nestjs/common";
+import { Label } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
 import {
   CreateLabelInput,
   UpdateLabelInput,
   LabelRequestIdParams,
   RequestIdParams,
-} from './labels.interface';
+} from "./labels.interface";
 
 @Injectable()
 export default class LabelsService {

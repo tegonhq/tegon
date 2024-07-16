@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import ReactTimeAgo from 'react-time-ago';
 
 import { useGetLinkedIssueDetailsQuery } from 'services/linked-issues';

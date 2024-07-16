@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { DroppableProvided, DropResult } from '@hello-pangea/dnd';
 
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';

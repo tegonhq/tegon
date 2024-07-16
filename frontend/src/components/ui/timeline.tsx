@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import React, { type ReactNode } from 'react';
 import ReactTimeAgo from 'react-time-ago';
 

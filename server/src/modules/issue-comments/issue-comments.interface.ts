@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { IssueComment } from '@@generated/issueComment/entities';
 import { IsOptional, IsString } from 'class-validator';
 

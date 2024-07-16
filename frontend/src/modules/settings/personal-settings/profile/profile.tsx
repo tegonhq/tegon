@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { SettingSection } from 'modules/settings/setting-section';
 
 import { ProfileForm } from './profile-form';

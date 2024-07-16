@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import type { Editor } from '@tiptap/core';
 
 import { RiAttachmentLine } from '@remixicon/react';

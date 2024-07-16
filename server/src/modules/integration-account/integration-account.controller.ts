@@ -1,6 +1,4 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
-import { IntegrationAccount } from '@@generated/integrationAccount/entities';
+import { IntegrationAccount } from "@@generated/integrationAccount/entities";
 import {
   Body,
   Controller,
@@ -10,37 +8,37 @@ import {
   Post,
   Query,
   UseGuards,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiTags,
   ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
+} from "@nestjs/swagger";
 
-import { AuthGuard } from 'modules/auth/auth.guard';
+import { AuthGuard } from "modules/auth/auth.guard";
 
 import {
   CreateIntegrationAccountBody,
   IntegrationAccountRequestIdBody,
   IntegrationAccountsRequestBody,
   UpdateIntegrationAccountBody,
-} from './integration-account.interface';
-import { IntegrationAccountService } from './integration-account.service';
+} from "./integration-account.interface";
+import { IntegrationAccountService } from "./integration-account.service";
 
 @Controller({
-  version: '1',
-  path: 'integration_account',
+  version: "1",
+  path: "integration_account",
 })
-@ApiTags('Integration Account')
+@ApiTags("Integration Account")
 @ApiBadRequestResponse({
   status: 400,
-  type: 'string',
-  description: 'Bad Request',
+  type: "string",
+  description: "Bad Request",
 })
 @ApiUnauthorizedResponse({
   status: 401,
-  type: 'string',
-  description: 'Not authorised',
+  type: "string",
+  description: "Not authorised",
 })
 export class IntegrationAccountController {
   constructor(private integrationAccountService: IntegrationAccountService) {}
@@ -62,7 +60,7 @@ export class IntegrationAccountController {
   /**
    * Get a integration accounts in a workspace
    */
-  @Get(':integrationAccountId')
+  @Get(":integrationAccountId")
   @UseGuards(new AuthGuard())
   async getIntegrationAccount(
     @Param()
@@ -76,7 +74,7 @@ export class IntegrationAccountController {
   /**
    * Delete a Integration account
    */
-  @Delete(':integrationAccountId')
+  @Delete(":integrationAccountId")
   @UseGuards(new AuthGuard())
   async deleteIntegrationAccount(
     @Param()
@@ -90,7 +88,7 @@ export class IntegrationAccountController {
   /**
    * Update a integration account in workspace
    */
-  @Post(':integrationAccountId')
+  @Post(":integrationAccountId")
   @UseGuards(new AuthGuard())
   async updateIntegrationAccount(
     @Param()

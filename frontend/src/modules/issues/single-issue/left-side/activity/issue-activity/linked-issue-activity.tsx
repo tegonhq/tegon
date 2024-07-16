@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 import { RiGithubFill, RiLink } from '@remixicon/react';
 
 import {

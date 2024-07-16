@@ -1,5 +1,3 @@
-/** Copyright (c) 2024, Tegon, all rights reserved. **/
-
 /**
  * Generates an OKLCH color string with fixed lightness, chroma, and a random hue.
  * @returns {string} - The generated OKLCH color string.
