@@ -53,8 +53,6 @@ export async function hasValidHeader(
     }
     return false;
   }
-
-  return false;
 }
 
 export async function isSessionValid(

@@ -1,0 +1,53 @@
+---
+title: "Self-hosting"
+description: "You can self-host Tegon on your own infrastructure."
+---
+
+## Caveats
+
+This guide outlines a quick way to start self-hosting Tegon. Scaling, security, and reliability concerns are not fully addressed here. It's unlikely to result in a production-ready deployment on its own, but it's a good starting point.
+
+As self-hosted deployments tend to have unique requirements and configurations, we don't provide specific advice for scaling up or improving security and reliability.
+
+Should the burden ever get too much, we'd be happy to see you on [Tegon.ai cloud](https://tegon.ai/) where we deal with these concerns for you.
+
+<Accordion title="Please consider these additional warnings">
+- We use trigger.dev for the background jobs this there is a little bit of extra work to deploy the jobs
+- We are also restricted by the limitations of trigger.dev in scaling. You can check those in their [documentation](https://trigger.dev/docs/v3/open-source-self-hosting#caveats).
+</Accordion>
+
+## Requirements
+
+- 4 CPU
+- 8 GB RAM
+- Debian or derivative
+- Optional: A separate machine for the worker components
+
+## Instructions
+
+1. Install Docker on your workstation (see instructions). Make sure you're on the latest version of docker-compose.
+
+2. Run the following commands in your terminal:
+
+```bash
+git clone https://github.com/tegonhq/docker.git
+cd docker
+```
+
+3. Create a `.env` file
+
+```bash
+cp .env.example .env
+```
+
+4. Run the start script and follow the prompts, We handle 2 major steps in start script setting up trigger.dev and setting up tegon for you. 
+
+```bash
+./start.sh # hint: you can append --dev to run in developer mode when contributing
+```
+
+5. You can now check tegon at `http://localhost:8000`
+
+## FAQ
+
+If there are any questions that we couldn't answer here, we'd love to help you get started. [Join our Slack](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2i1e781ip-zwauijRV9TRtRKoJi3tqng) and feel free to ask your questions in the #support channel.

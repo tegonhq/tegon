@@ -11,7 +11,6 @@
 [![Website](https://img.shields.io/badge/Website-1da1f2?style=flat&logo=docs&logoColor=%23fff)](https://www.tegon.ai/)
 [![Twitter](https://img.shields.io/badge/Twitter-1da1f2?style=flat&logo=twitter&logoColor=%23fff)](https://twitter.com/tegonhq)
 
-
 [Love Tegon? Give us a ⭐ on GitHub!](https://github.com/tegonhq/tegon)
 
 </div>
@@ -35,9 +34,11 @@ Issue Tracking is important for fast-paced teams, enabling them to organize list
 - Existing tools don't effectively assist Engineering Managers in real-time task, feature, or bug prioritisation.
 
 ## Demo Video
+
 https://www.loom.com/share/b664b01e9b064a02be5791c12b77a107?sid=d4146365-1597-4ff5-88fd-a07b08ddb9f4
 
 ## Demo
+
 Go to [demo.tegon.ai](https://demo.tegon.ai/) and login with the following credentials
 
 ```
@@ -46,11 +47,12 @@ password: XfFNw6GwVJVQv6PA
 ```
 
 ## Self Hosted
-To self-host Tegon on your own machine, you can do so using Docker. However note that you will need to add configurations for email, AI and storage services. Please refer to the documentation [here](https://docs.tegon.ai/oss/deploy-tegon).
+
+To self-host Tegon on your own machine, you can do so using Docker. However note that you will need to add configurations for email, AI and storage services. Please refer to the documentation [here](https://docs.tegon.ai/oss/self-deployment).
 
 ## Tegon Cloud
 
-We offer a managed cloud version of Tegon that allows you to run Tegon without having to manage the infrastructure. It is currently in private beta. 
+We offer a managed cloud version of Tegon that allows you to run Tegon without having to manage the infrastructure. It is currently in private beta.
 If you're interested in using Tegon Cloud, please book a [demo call](https://calendly.com/manik-tegon/30min).
 
 ## Features
@@ -79,13 +81,3 @@ If you're interested in using Tegon Cloud, please book a [demo call](https://cal
   - Mention the Tegon bot in a Slack channel to automatically create a bug or feature request.
   - Link a Slack thread to an issue to provide full context about the discussions happening on a specific task or a feature request.
 - Sentry: Get information about Sentry errors in Tegon issues
-
-## Contributing
-
-Whether it's big or small, we love contributions. Not sure where to get started? 
-You can join our [Slack](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA), and ask us any questions there.
-
-## License
-
-The product is under the [MIT License](https://github.com/tegonhq/tegon/blob/main/LICENSE.md)
-

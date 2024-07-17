@@ -9,3 +9,4 @@ prisma/migrations/dev/
 .env
 
 certs/
+.trigger
