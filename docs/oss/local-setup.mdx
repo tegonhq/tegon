@@ -3,39 +3,38 @@ title: "Local Setup"
 description: "Run tegon in local for development"
 ---
 
-Some very basic steps to get started:
+## Instructions
 
-1. [Install Docker](https://docs.docker.com/get-docker/)
-2. [Install Docker Compose](https://docs.docker.com/compose/install/)
+1. Install Docker on your workstation (see instructions). Make sure you're on the latest version of docker-compose.
 
-On a Debian server, you can install everything you need with the following commands:
-
-```bash
-
-sudo apt-get update
-sudo apt-get install -y \
-    docker.io \
-    docker-compose
-```
-
-### Tegon setup
-
-Clone the [Tegon docker repository](https://github.com/tegonhq/tegon)
-```bash
-git clone https://github.com/tegonhq/tegon
-docker compose -f docker-compose.dev.yaml up -d
-```
-
-This will start supertokens, typesense, postgres database and redis in docker. 
-
-### Server setup
+2. Run the following commands in your terminal:
 
 ```bash
-cd server
-yarn 
+git clone https://github.com/tegonhq/docker.git
+git clone https://github.com/tegonhq/tegon.git
+cd docker
 ```
 
-Create a `.env` file inside server folder by copying the content from `.env.example`. We use openAI for our AI features. Setup your OpenAI account as described [here](https://platform.openai.com/docs/quickstart/account-setup)
+3. Create a `.env` file
+
+```bash
+cp .env.example .env
+```
+
+4. Run the start script and follow the prompts, We handle 2 major steps in start script setting up trigger.dev and setting up tegon for you. 
+
+```bash
+./start.sh --dev
+```
+
+5. Now go to server folder in the tegon folder
+
+```bash
+cd ../tegon/server
+yarn
+```
+
+6. Create a `.env` file inside server folder by copying the content from `.env.example`. We use openAI for our AI features. Setup your OpenAI account as described [here](https://platform.openai.com/docs/quickstart/account-setup)
 and add the key to `.env` file
 
 ```bash
@@ -43,17 +42,23 @@ yarn migrate:dev
 yarn start:dev
 ```
 
-In a new tab now we can run commands to create necessary workspace, team and users. 
+7. In a new tab now we can run commands to create necessary workspace, team and users. 
 
 ```bash
 node scripts/createUserWorkspaceTeam
 ```
-
-### Frontend setup
+8. Now you can move to frontend
 
 ```bash
-cd frontend
+cd ../frontend
 yarn 
 yarn dev
 ```
-Now you can access the app at http://localhost:3000
+
+
+5. Now you can access the app at http://localhost:3000
+
+## FAQ
+
+If there are any questions that we couldn't answer here, we'd love to help you get started. [Join our Slack](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2i1e781ip-zwauijRV9TRtRKoJi3tqng) and feel free to ask your questions in the #support channel.
+

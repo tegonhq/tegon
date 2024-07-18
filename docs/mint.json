@@ -66,7 +66,7 @@
       "group": "Tegon Open Source (OSS)",
       "pages": [
         "oss/local-setup",
-        "oss/deploy-tegon"
+        "oss/self-deployment"
       ]
     }
   ],

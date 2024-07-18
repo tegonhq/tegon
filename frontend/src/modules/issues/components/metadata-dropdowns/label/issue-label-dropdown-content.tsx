@@ -61,6 +61,7 @@ export function IssueLabelDropdownContent({
         label.name.toLowerCase() === labelSearch.toLowerCase(),
     );
   };
+
   return (
     <CommandList>
       <CommandGroup>
