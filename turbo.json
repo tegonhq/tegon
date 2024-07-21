@@ -1,0 +1,79 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "VERSION",
+
+    "POSTGRES_USER",
+    "POSTGRES_PASSWORD",
+    "POSTGRES_DB",
+
+    "DB_HOST",
+    "DB_PORT",
+    "DB_SCHEMA",
+    "DATABASE_URL",
+    "REPLICATION_DATABASE_URL",
+    "SYNC_SERVER",
+    "SUPERTOKEN_CONNECTION_URI",
+
+    "SENTRY_DSN",
+
+    "REDIS_URL",
+    "REDIS_PORT",
+
+    "PORT",
+    "FRONTEND_HOST",
+    "BACKEND_HOST",
+    "BACKEND_URL",
+    "PUBLIC_FRONTEND_HOST",
+    "PUBLIC_ATTACHMENT_URL",
+
+    "MASTER_TOKEN",
+
+    "GITHUB_CLIENT_ID",
+    "GITHUB_CLIENT_SECRET",
+    "SLACK_CLIENT_ID",
+    "SLACK_CLIENT_SECRET",
+    "SENTRY_CLIENT_ID",
+    "SENTRY_CLIENT_SECRET",
+
+    "TYPESENSE_HOST",
+    "TYPESENSE_PORT",
+    "TYPESENSE_PROTOCOL",
+    "TYPESENSE_API_KEY",
+
+    "GOOGLE_LOGIN_CLIENT_ID",
+    "GOOGLE_LOGIN_CLIENT_SECRET",
+
+    "GCP_BUCKET_NAME",
+    "GCP_SERVICE_ACCOUNT_FILE",
+
+    "SMTP_HOST",
+    "SMTP_PORT",
+    "SMTP_USER",
+    "SMTP_PASSWORD",
+    "SMTP_DEFAULT_FROM",
+
+    "COHERE_API_KEY",
+    "OPENAI_API_KEY",
+
+    "TRIGGER_DB",
+    "TRIGGER_DATABASE_URL",
+    "TRIGGER_COMMON_ID",
+    "TRIGGER_TOKEN",
+    "TRIGGER_ACCESS_TOKEN"
+  ],
+  "ui": "tui",
+  "tasks": {
+    "dev": {
+      "cache": false
+    },
+    "create-resources": {
+      "interactive": true,
+      "cache": false
+    },
+    "deploy-trigger-tasks": {
+      "env": [ "TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL" ],
+      "cache": false
+    }
+  }
+}

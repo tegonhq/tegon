@@ -1,0 +1,22 @@
+{
+  "name": "tegon",
+  "version": "0.1.0",
+  "description": "Tegon is an open-source, AI-first alternative to Jira, Linear",
+  "main": "index.js",
+  "repository": "https://github.com/tegonhq/tegon.git",
+  "author": "Tegon <support@tegon.ai>",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "dotenv -- turbo run dev --parallel",
+    "create-resources": "dotenv -- turbo run create-resources --filter=server",
+    "deploy-trigger-tasks": "dotenv -- turbo run deploy-trigger-tasks --filter=server --"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^7.4.2",
+    "turbo": "^2.0.9"
+  },
+  "packageManager": "yarn@1.22.22"
+}

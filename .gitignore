@@ -2,3 +2,5 @@
 .env.prod
 .env
 docker/.env
+node_modules
+.turbo

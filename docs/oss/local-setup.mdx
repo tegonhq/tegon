@@ -24,39 +24,37 @@ cp .env.example .env
 4. Run the start script and follow the prompts, We handle 2 major steps in start script setting up trigger.dev and setting up tegon for you. 
 
 ```bash
-./start.sh --dev
+./start.sh
 ```
 
-5. Now go to server folder in the tegon folder
+5. Depending on the contribution (server or frontend) you can comment that service or change the port. 
+
+
+## Server setup
+
+1. Now go to server folder in the tegon folder
 
 ```bash
 cd ../tegon/server
 yarn
 ```
 
-6. Create a `.env` file inside server folder by copying the content from `.env.example`. We use openAI for our AI features. Setup your OpenAI account as described [here](https://platform.openai.com/docs/quickstart/account-setup)
-and add the key to `.env` file
+2. Create a `.env` file inside server folder by copying the content from `.env.example` and change values according to your need.
 
 ```bash
 yarn migrate:dev
 yarn start:dev
 ```
 
-7. In a new tab now we can run commands to create necessary workspace, team and users. 
+## Frontend setup
 
-```bash
-node scripts/createUserWorkspaceTeam
-```
-8. Now you can move to frontend
+1. Now you can move to frontend
 
 ```bash
 cd ../frontend
 yarn 
 yarn dev
 ```
-
-
-5. Now you can access the app at http://localhost:3000
 
 ## FAQ
 
