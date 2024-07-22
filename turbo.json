@@ -26,6 +26,7 @@
     "BACKEND_URL",
     "PUBLIC_FRONTEND_HOST",
     "PUBLIC_ATTACHMENT_URL",
+    "BASE_HOST",
 
     "MASTER_TOKEN",
 
@@ -55,12 +56,21 @@
 
     "COHERE_API_KEY",
     "OPENAI_API_KEY",
+    "LOCAL_MODEL",
 
     "TRIGGER_DB",
     "TRIGGER_DATABASE_URL",
     "TRIGGER_COMMON_ID",
     "TRIGGER_TOKEN",
-    "TRIGGER_ACCESS_TOKEN"
+    "TRIGGER_ACCESS_TOKEN",
+
+    "GMAIL_CLIENT_ID",
+    "GMAIL_CLIENT_SECRET",
+    "GMAIL_REFRESH_TOKEN",
+    "GMAIL_REDIRECT_URI",
+    "GMAIL_WEBHOOK_SECRET",
+    "GMAIL_PUBSUBTOPIC",
+    "GMAIL_OTHER_LABEL"
   ],
   "ui": "tui",
   "tasks": {
@@ -82,7 +92,7 @@
       "cache": false
     },
     "deploy-trigger-tasks": {
-      "env": [ "TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL" ],
+      "env": ["TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL"],
       "cache": false
     },
     "db:generate": {

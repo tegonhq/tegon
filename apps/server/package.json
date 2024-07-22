@@ -73,6 +73,7 @@
     "knex": "^3.1.0",
     "nestjs-prisma": "0.22.0",
     "nodemailer": "^6.9.13",
+    "ollama": "^0.5.6",
     "openai": "^4.28.4",
     "passport": "0.7.0",
     "passport-jwt": "4.0.1",

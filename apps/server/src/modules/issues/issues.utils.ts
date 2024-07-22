@@ -3,6 +3,7 @@ import { IntegrationName, Issue, LinkedIssue, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import OpenAI from 'openai';
 
+import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
 import {
   sendGithubFirstComment,
@@ -98,7 +99,7 @@ function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-export async function getIssueTitle(
+export async function getIssueTitles(
   openaiClient: OpenAI,
   issueData: CreateIssueInput | UpdateIssueInput,
 ): Promise<string> {
@@ -118,10 +119,32 @@ export async function getIssueTitle(
   return '';
 }
 
+export async function getIssueTitle(
+  aiRequestsService: AIRequestsService,
+  issueData: CreateIssueInput | UpdateIssueInput,
+  workspaceId: string,
+): Promise<string> {
+  if (issueData.title) {
+    return issueData.title;
+  } else if (issueData.description) {
+    return await aiRequestsService.getLLMRequest({
+      messages: [
+        { role: 'system', content: titlePrompt },
+        { role: 'user', content: issueData.description },
+      ],
+      llmModel: 'gpt-3.5-turbo',
+      model: 'IssueTitle',
+      workspaceId,
+    });
+  }
+  return '';
+}
+
 export async function getAiFilter(
-  openaiClient: OpenAI,
+  aiRequestsService: AIRequestsService,
   filterText: string,
   filterData: Record<string, string[]>,
+  workspaceId: string,
 ) {
   const filterPrompt = aiFilterPrompt
     .replace('{{status}}', filterData.workflowNames.join(', '))
@@ -129,36 +152,39 @@ export async function getAiFilter(
     .replace('{{label}}', filterData.labelNames.join(', '));
 
   try {
-    const chatCompletion = await openaiClient.chat.completions.create({
+    const response = await aiRequestsService.getLLMRequest({
       messages: [
         { role: 'system', content: filterPrompt },
         { role: 'user', content: filterText },
       ],
-      model: 'gpt-4-turbo',
+      llmModel: 'gpt-4-turbo',
+      model: 'AIFilters',
+      workspaceId,
     });
-    return JSON.parse(chatCompletion.choices[0].message.content);
+    return JSON.parse(response);
   } catch (error) {
     return {};
   }
 }
 
 export async function getSuggestedLabels(
-  openaiClient: OpenAI,
+  aiRequestsService: AIRequestsService,
   labels: string[],
   description: string,
+  workspaceId: string,
 ) {
-  const chatCompletion: OpenAI.Chat.ChatCompletion =
-    await openaiClient.chat.completions.create({
-      messages: [
-        { role: 'system', content: labelPrompt },
-        {
-          role: 'user',
-          content: `Text Description  -  ${description} \n Company Specific Labels -  ${labels.join(',')}`,
-        },
-      ],
-      model: 'gpt-3.5-turbo',
-    });
-  return chatCompletion.choices[0].message.content;
+  return await aiRequestsService.getLLMRequest({
+    messages: [
+      { role: 'system', content: labelPrompt },
+      {
+        role: 'user',
+        content: `Text Description  -  ${description} \n Company Specific Labels -  ${labels.join(',')}`,
+      },
+    ],
+    llmModel: 'gpt-3.5-turbo',
+    model: 'LabelSuggestion',
+    workspaceId,
+  });
 }
 
 export async function getLastIssueNumber(
@@ -422,17 +448,29 @@ export async function getEquivalentStateIds(
   return equivalentStateIds;
 }
 
-export async function getSummary(openaiClient: OpenAI, conversations: string) {
-  const chatCompletion: OpenAI.Chat.ChatCompletion =
-    await openaiClient.chat.completions.create({
-      messages: [
-        { role: 'system', content: summarizePrompt },
-        {
-          role: 'user',
-          content: `[INPUT] conversations: ${conversations}`,
-        },
-      ],
-      model: 'gpt-3.5-turbo',
-    });
-  return chatCompletion.choices[0].message.content;
+export async function getSummary(
+  aiRequestsService: AIRequestsService,
+  conversations: string,
+  workspaceId: string,
+) {
+  return await aiRequestsService.getLLMRequest({
+    messages: [
+      { role: 'system', content: summarizePrompt },
+      {
+        role: 'user',
+        content: `[INPUT] conversations: ${conversations}`,
+      },
+    ],
+    llmModel: 'gpt-3.5-turbo',
+    model: 'IssueSummary',
+    workspaceId,
+  });
+}
+
+export async function getWorkspace(prisma: PrismaService, teamId: string) {
+  const team = await prisma.team.findUnique({
+    where: { id: teamId },
+    include: { workspace: true },
+  });
+  return team.workspace;
 }

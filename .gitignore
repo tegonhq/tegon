@@ -6,3 +6,4 @@ node_modules
 .turbo
 
 out
+docker-compose.prod.yaml
