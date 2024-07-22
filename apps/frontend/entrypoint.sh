@@ -23,3 +23,5 @@ done
 echo "Starting Nextjs"
 # Run any arguments passed to this script
 exec "$@"
+
+exec dumb-init node --max-old-space-size=8192 apps/frontend/server.js

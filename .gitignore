@@ -4,3 +4,5 @@
 docker/.env
 node_modules
 .turbo
+
+out

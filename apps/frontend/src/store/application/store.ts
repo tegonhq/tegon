@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep';
+import cloneDeep from 'lodash.clonedeep';
 import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 
 import { DisplaySettingsModel, FiltersModel } from './models';

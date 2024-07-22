@@ -1,65 +1,63 @@
-FROM node:18-alpine AS base
-
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+FROM node:18-alpine AS pruner
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock ./
+COPY --chown=node:node . .
+RUN npx -q turbo@1.10.9 prune --scope=frontend --docker
+RUN find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
 
-RUN yarn install --network-timeout 1000000000
+# Base strategy to have layer caching
+FROM node:18-alpine AS base
+RUN apk add openssl dumb-init libc6-compat
+WORKDIR /app
+COPY --chown=node:node .gitignore .gitignore
+COPY --from=pruner --chown=node:node /app/out/json/ .
+COPY --from=pruner --chown=node:node /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=pruner --chown=node:node /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
+## Dev deps
+FROM base AS dev-deps
+WORKDIR /app
+# Corepack is used to install pnpm
+RUN corepack enable
+ENV NODE_ENV development
+RUN pnpm install --ignore-scripts --no-frozen-lockfile
 
-# Rebuild the source code only when needed
+## Production deps
+FROM base AS production-deps
+WORKDIR /app
+# Corepack is used to install pnpm
+RUN corepack enable
+ENV NODE_ENV production
+RUN pnpm install --prod --no-frozen-lockfile
+
+## Builder (builds the frontend)
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-COPY .env.prod .env
+# Corepack is used to install pnpm
+RUN corepack enable
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+COPY --from=pruner --chown=node:node /app/out/full/ .
+COPY --from=dev-deps --chown=node:node /app/ .
+COPY apps/frontend/.env.prod .env
+COPY --chown=node:node turbo.json turbo.json
+RUN pnpm run build --filter=frontend...
 
-RUN yarn build
 
-# If using npm comment out above and use below instead
-# RUN npm run build
-
-# Production image, copy all the files and run next
-FROM base AS runner
-WORKDIR /app
-
+# Runner
+FROM node:18-alpine AS runner
 RUN apk add --no-cache dumb-init bash
-
+WORKDIR /app
+RUN corepack enable
 ENV NODE_ENV production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
-COPY --from=builder --chown=nextjs:nodejs /app/entrypoint.sh ./entrypoint.sh
-
-USER nextjs
+COPY --from=builder  --chown=node:node /app/apps/frontend/.next/standalone ./
+COPY --from=builder  --chown=node:node /app/apps/frontend/.next/static ./apps/frontend/.next/static
+COPY --from=builder  --chown=node:node /app/apps/frontend/public ./apps/frontend/public
+COPY --from=builder  --chown=node:node /app/apps/frontend/package.json ./apps/frontend/package.json
+COPY --from=builder  --chown=node:node /app/apps/frontend/entrypoint.sh ./apps/frontend/entrypoint.sh
 
 EXPOSE 3000
 
-ENV PORT 3000
+USER node
 
-# Make it executable
-RUN ["chmod", "+x", "/app/entrypoint.sh"]
-
-ENTRYPOINT ["/app/entrypoint.sh"]
-
-CMD ["node", "server.js"]
+CMD ["sh", "./apps/frontend/entrypoint.sh"]

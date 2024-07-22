@@ -64,15 +64,28 @@
   ],
   "ui": "tui",
   "tasks": {
-    "dev": {
+    "start-prod": {
+      "dependsOn": [ "db:generate" ],
       "cache": false
     },
+    "dev": {
+      "dependsOn": [ "db:generate" ],
+      "cache": false
+    },
+    "build": {
+      "dependsOn": [ "db:generate" ],
+      "outputs": [ "dist/**", ".next/**" ]
+    },
+    "lint": { },
     "create-resources": {
       "interactive": true,
       "cache": false
     },
     "deploy-trigger-tasks": {
       "env": [ "TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL" ],
+      "cache": false
+    },
+    "db:generate": {
       "cache": false
     }
   }
