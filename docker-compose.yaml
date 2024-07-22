@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: ./apps/frontend/Dockerfile
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - tegon
+
+  server:
+    container_name: server
+    build:
+      context: .
+      dockerfile: ./apps/server/Dockerfile
+    restart: always
+    ports:
+      - 3001:3001
+    networks:
+      - tegon
+
+# Define a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
+networks:
+  tegon:
+    external: true

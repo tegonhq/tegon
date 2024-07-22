@@ -7,16 +7,23 @@
   "author": "Tegon <support@tegon.ai>",
   "private": true,
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
     "dev": "dotenv -- turbo run dev --parallel",
+    "build": "dotenv -- turbo run build",
+    "lint": "turbo run lint",
+    "start": "turbo run start-prod",
+    "db:generate": "turbo run db:generate",
     "create-resources": "dotenv -- turbo run create-resources --filter=server",
     "deploy-trigger-tasks": "dotenv -- turbo run deploy-trigger-tasks --filter=server --"
   },
   "devDependencies": {
     "dotenv-cli": "^7.4.2",
-    "turbo": "^2.0.9"
+    "syncpack": "^12.3.3",
+    "turbo": "^2.0.9",
+    "zod": "3.23.8"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "pnpm@8.15.6"
 }

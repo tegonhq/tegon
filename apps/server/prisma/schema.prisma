@@ -8,10 +8,6 @@ generator client {
   // previewFeatures = []
 }
 
-generator dbml {
-  provider = "prisma-dbml-generator"
-}
-
 // TODO (harshith): Need to fix enum array in swagger
 generator nestjsDto {
   provider                        = "prisma-generator-nestjs-dto"

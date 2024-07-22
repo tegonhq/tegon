@@ -43,7 +43,7 @@ module.exports = {
   publicRuntimeConfig: {
     // Will be available on both server and client
     NEXT_PUBLIC_BASE_HOST: process.env.NEXT_PUBLIC_BASE_HOST,
-    NEXT_PUBLIC_SYNC_SERVER: process.env.NEXT_PUBLIC_SYNC_SERVER,
+    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   },
   output: 'standalone',
@@ -62,6 +62,8 @@ module.exports = withSentryConfig(
     silent: true,
     org: 'tegon',
     project: 'javascript-nextjs',
+    // Pass the auth token
+    authToken: process.env.SENTRY_AUTH_TOKEN,
   },
   {
     // For all available options, see:
