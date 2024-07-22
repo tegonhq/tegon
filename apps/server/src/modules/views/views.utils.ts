@@ -1,4 +1,4 @@
-import OpenAI from 'openai';
+import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 
 import {
   CreateViewsRequestBody,
@@ -6,18 +6,19 @@ import {
 } from './views.interface';
 
 export async function getViewNameDescription(
-  openaiClient: OpenAI,
+  aiRequestsService: AIRequestsService,
   filtersData: CreateViewsRequestBody,
+  workspaceId: string,
 ): Promise<Record<string, string>> {
-  const chatCompletion: OpenAI.Chat.ChatCompletion =
-    await openaiClient.chat.completions.create({
-      messages: [
-        { role: 'system', content: viewNameDescriptionPrompt },
-        { role: 'user', content: JSON.stringify(filtersData.filters) },
-      ],
-      model: 'gpt-3.5-turbo',
-    });
-  const content = chatCompletion.choices[0].message.content;
+  const content = await aiRequestsService.getLLMRequest({
+    messages: [
+      { role: 'system', content: viewNameDescriptionPrompt },
+      { role: 'user', content: JSON.stringify(filtersData.filters) },
+    ],
+    llmModel: 'gpt-3.5-turbo',
+    model: 'ViewNameDescription',
+    workspaceId,
+  });
   const viewNameRegex = /viewName:\s*(.*)/i;
   const viewDescriptionRegex = /viewDescription:\s*(.*)/i;
 

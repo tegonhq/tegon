@@ -8,6 +8,7 @@ import {IntegrationAccount} from '../../integrationAccount/entities/integrationA
 import {IntegrationDefinition} from '../../integrationDefinition/entities/integrationDefinition.entity'
 import {Attachment} from '../../attachment/entities/attachment.entity'
 import {View} from '../../view/entities/view.entity'
+import {AIRequest} from '../../aIRequest/entities/aIRequest.entity'
 
 
 export class Workspace {
@@ -27,4 +28,5 @@ integrationAccount?: IntegrationAccount[] ;
 integrationDefinition?: IntegrationDefinition[] ;
 attachments?: Attachment[] ;
 View?: View[] ;
+aiRequests?: AIRequest[] ;
 }

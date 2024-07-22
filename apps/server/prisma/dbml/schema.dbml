@@ -1,0 +1,627 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  email String [unique, not null]
+  fullname String
+  username String [not null]
+  initialSetupComplete Boolean [not null, default: false]
+  anonymousDataCollection Boolean [not null, default: false]
+  usersOnWorkspaces UsersOnWorkspaces [not null]
+  template Template [not null]
+  createdBy Issue [not null]
+  integrationAccount IntegrationAccount [not null]
+  attachment Attachment [not null]
+}
+
+Table Workspace {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  name String [not null]
+  slug String [unique, not null]
+  icon String
+  usersOnWorkspaces UsersOnWorkspaces [not null]
+  team Team [not null]
+  label Label [not null]
+  template Template [not null]
+  syncAction SyncAction [not null]
+  integrationAccount IntegrationAccount [not null]
+  integrationDefinition IntegrationDefinition [not null]
+  attachments Attachment [not null]
+  View View [not null]
+  aiRequests AIRequest [not null]
+}
+
+Table UsersOnWorkspaces {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  workspace Workspace [not null]
+  userId String [not null]
+  workspaceId String [not null]
+  teamIds String[] [not null]
+  status Status [not null, default: 'ACTIVE']
+  externalAccountMappings Json
+  role Role [not null, default: 'ADMIN']
+  joinedAt DateTime
+
+  indexes {
+    (userId, workspaceId) [unique]
+  }
+}
+
+Table Team {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  name String [not null]
+  identifier String [not null]
+  icon String
+  workspace Workspace [not null]
+  workspaceId String [not null]
+  issue Issue [not null]
+  label Label [not null]
+  template Template [not null]
+  workflow Workflow [not null]
+  teamPreference TeamPreference [not null]
+  View View [not null]
+
+  indexes {
+    (name, identifier, workspaceId) [unique]
+  }
+}
+
+Table Label {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  name String [not null]
+  color String [not null]
+  description String
+  workspace Workspace [not null]
+  workspaceId String [not null]
+  team Team
+  teamId String
+  group Label
+  groupId String
+  labels Label [not null]
+
+  indexes {
+    (name, workspaceId) [unique]
+  }
+}
+
+Table Template {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  name String [not null]
+  category TemplateCategory [not null]
+  templateData Json [not null]
+  createdBy User [not null]
+  createdById String [not null]
+  workspace Workspace [not null]
+  workspaceId String [not null]
+  team Team
+  teamId String
+}
+
+Table Workflow {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  name String [not null]
+  position Int [not null]
+  color String [not null]
+  category WorkflowCategory [not null]
+  team Team
+  teamId String [not null]
+}
+
+Table TeamPreference {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  team Team
+  teamId String [not null]
+  preference Preference [not null]
+  value String [not null]
+
+  indexes {
+    (teamId, preference) [unique]
+  }
+}
+
+Table SyncAction {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  modelName ModelName [not null]
+  modelId String [not null]
+  action ActionType [not null]
+  sequenceId BigInt [not null]
+  workspace Workspace [not null]
+  workspaceId String [not null]
+
+  indexes {
+    (modelId, action) [unique]
+  }
+}
+
+Table Issue {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  title String [not null]
+  number Int [not null]
+  description String
+  priority Int
+  dueDate DateTime
+  sortOrder Int
+  subIssueSortOrder Int
+  estimate Int
+  sourceMetadata Json
+  isBidirectional Boolean
+  team Team [not null]
+  teamId String [not null]
+  createdBy User
+  createdById String
+  subscriberIds String[] [not null]
+  assigneeId String
+  labelIds String[] [not null]
+  stateId String [not null]
+  parent Issue
+  parentId String
+  subIssue Issue [not null]
+  attachments String[] [not null]
+  comments IssueComment [not null]
+  history IssueHistory [not null]
+  linkedIssue LinkedIssue [not null]
+  issueRelations IssueRelation [not null]
+  IssueSuggestion IssueSuggestion
+  issueSuggestionId String [unique]
+
+  indexes {
+    (teamId, number) [unique]
+  }
+}
+
+Table LinkedIssue {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  url String [unique, not null]
+  sourceId String
+  source Json
+  sourceData Json
+  createdById String
+  issue Issue [not null]
+  issueId String [not null]
+}
+
+Table IssueComment {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  body String [not null]
+  userId String
+  sourceMetadata Json
+  reactions Reaction [not null]
+  reactionsData Json[] [not null]
+  issue Issue [not null]
+  issueId String [not null]
+  parent IssueComment
+  parentId String
+  attachments String[] [not null]
+  replies IssueComment [not null]
+  linkedComment LinkedComment [not null]
+}
+
+Table LinkedComment {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  url String [unique, not null]
+  sourceId String [not null]
+  source Json
+  sourceData Json
+  createdById String
+  comment IssueComment [not null]
+  commentId String [not null]
+}
+
+Table Reaction {
+  id String [pk]
+  reactedAt DateTime [default: `now()`, not null]
+  deleted DateTime
+  userId String [not null]
+  comment IssueComment [not null]
+  commentId String [not null]
+  emoji Emoji [not null]
+  emojiId String [not null]
+
+  indexes {
+    (emojiId, commentId, userId) [unique]
+  }
+}
+
+Table Emoji {
+  id String [pk]
+  name String [unique, not null]
+  reactions Reaction [not null]
+}
+
+Table IssueHistory {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  userId String
+  issue Issue [not null]
+  issueId String [not null]
+  sourceMetaData Json
+  addedLabelIds String[] [not null]
+  removedLabelIds String[] [not null]
+  fromPriority Int
+  toPriority Int
+  fromStateId String
+  toStateId String
+  fromEstimate Int
+  toEstimate Int
+  fromAssigneeId String
+  toAssigneeId String
+  fromParentId String
+  toParentId String
+  fromTeamId String
+  toTeamId String
+  relationChanges Json
+}
+
+Table IssueRelation {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  issue Issue [not null]
+  issueId String [not null]
+  relatedIssueId String [not null]
+  type IssueRelationType [not null]
+  metadata Json
+  createdById String
+  deletedById String
+  deleted DateTime
+
+  indexes {
+    (issueId, relatedIssueId, type) [unique]
+  }
+}
+
+Table IntegrationDefinition {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  name IntegrationName [not null]
+  icon String [not null]
+  spec Json [not null]
+  clientId String [not null]
+  clientSecret String [not null]
+  scopes String [not null]
+  workspace Workspace [not null]
+  workspaceId String [not null]
+  IntegrationAccount IntegrationAccount [not null]
+}
+
+Table IntegrationAccount {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  integrationConfiguration Json [not null]
+  accountId String
+  settings Json
+  isActive Boolean [not null, default: true]
+  integratedBy User [not null]
+  integratedById String [not null]
+  integrationDefinition IntegrationDefinition [not null]
+  integrationDefinitionId String [not null]
+  workspace Workspace [not null]
+  workspaceId String [not null]
+
+  indexes {
+    (accountId, integrationDefinitionId, workspaceId) [unique]
+  }
+}
+
+Table Notification {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  type NotificationActionType [not null]
+  userId String [not null]
+  issueId String
+  actionData Json
+  createdById String
+  sourceMetadata Json
+  readAt DateTime
+  snoozedUntil DateTime
+  workspaceId String [not null]
+}
+
+Table Attachment {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  fileName String
+  originalName String [not null]
+  fileType String [not null]
+  fileExt String [not null]
+  size Int [not null]
+  url String
+  status AttachmentStatus [not null]
+  sourceMetadata Json
+  uploadedBy User
+  uploadedById String
+  workspace Workspace
+  workspaceId String
+}
+
+Table View {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  workspaceId String [not null]
+  workspace Workspace [not null]
+  teamId String
+  team Team
+  name String [not null]
+  description String [not null]
+  filters Json [not null]
+  isBookmarked Boolean [not null, default: false]
+  createdById String [not null]
+}
+
+Table IssueSuggestion {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  issueId String [unique, not null]
+  suggestedLabelIds String[] [not null]
+  suggestedAssigneeId String
+  metadata Json
+  issue Issue
+}
+
+Table Invite {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  sentAt DateTime [not null]
+  expiresAt DateTime [not null]
+  emailId String [not null]
+  fullName String [not null]
+  workspaceId String [not null]
+  status InviteStatus [not null]
+  teamIds String[] [not null]
+  role Role [not null]
+}
+
+Table TriggerProject {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  projectId String [not null]
+  projectSecret String [not null]
+  slug String [not null]
+  workspaceId String
+}
+
+Table WorkspaceTriggerProject {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  triggerProjectId String [not null]
+  workspaceId String [not null]
+  status Boolean [not null]
+}
+
+Table AIRequest {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  deleted DateTime
+  modelName String [not null]
+  data String [not null]
+  response String
+  llmModel String [not null]
+  workspace Workspace [not null]
+  workspaceId String [not null]
+  successful Boolean [not null, default: false]
+}
+
+Enum Preference {
+  ISSUE_ESTIMATES
+  PRIORITIES
+}
+
+Enum Role {
+  ADMIN
+  USER
+}
+
+Enum Status {
+  INVITED
+  ACTIVE
+  SUSPENDED
+}
+
+Enum ModelName {
+  Workspace
+  Team
+  TeamPreference
+  Issue
+  Label
+  Workflow
+  Template
+  IssueComment
+  IssueHistory
+  UsersOnWorkspaces
+  IntegrationDefinition
+  IntegrationAccount
+  LinkedIssue
+  IssueRelation
+  Notification
+  View
+  IssueSuggestion
+}
+
+Enum ActionType {
+  I
+  U
+  D
+}
+
+Enum WorkflowCategory {
+  TRIAGE
+  BACKLOG
+  UNSTARTED
+  STARTED
+  COMPLETED
+  CANCELED
+}
+
+Enum TemplateCategory {
+  ISSUE
+  PROJECT
+  DOCUMENT
+}
+
+Enum IntegrationName {
+  Github
+  GithubPersonal
+  Slack
+  SlackPersonal
+  Sentry
+  Gmail
+}
+
+Enum IssueRelationType {
+  BLOCKS
+  BLOCKED
+  RELATED
+  DUPLICATE
+  DUPLICATE_OF
+  SIMILAR
+}
+
+Enum NotificationActionType {
+  IssueAssigned
+  IssueUnAssigned
+  IssueStatusChanged
+  IssuePriorityChanged
+  IssueNewComment
+  IssueBlocks
+}
+
+Enum AttachmentStatus {
+  Pending
+  Failed
+  Uploaded
+  Deleted
+  External
+}
+
+Enum InviteStatus {
+  INVITED
+  ACCEPTED
+  DECLINED
+}
+
+Ref: UsersOnWorkspaces.userId > User.id
+
+Ref: UsersOnWorkspaces.workspaceId > Workspace.id
+
+Ref: Team.workspaceId > Workspace.id
+
+Ref: Label.workspaceId > Workspace.id
+
+Ref: Label.teamId > Team.id
+
+Ref: Label.groupId - Label.id
+
+Ref: Template.createdById > User.id
+
+Ref: Template.workspaceId > Workspace.id
+
+Ref: Template.teamId > Team.id
+
+Ref: Workflow.teamId > Team.id
+
+Ref: TeamPreference.teamId > Team.id
+
+Ref: SyncAction.workspaceId > Workspace.id
+
+Ref: Issue.teamId > Team.id
+
+Ref: Issue.createdById > User.id
+
+Ref: Issue.parentId - Issue.id
+
+Ref: Issue.issueSuggestionId - IssueSuggestion.id
+
+Ref: LinkedIssue.issueId > Issue.id
+
+Ref: IssueComment.issueId > Issue.id
+
+Ref: IssueComment.parentId - IssueComment.id
+
+Ref: LinkedComment.commentId > IssueComment.id
+
+Ref: Reaction.commentId > IssueComment.id
+
+Ref: Reaction.emojiId > Emoji.id
+
+Ref: IssueHistory.issueId > Issue.id
+
+Ref: IssueRelation.issueId > Issue.id
+
+Ref: IntegrationDefinition.workspaceId > Workspace.id
+
+Ref: IntegrationAccount.integratedById > User.id
+
+Ref: IntegrationAccount.integrationDefinitionId > IntegrationDefinition.id
+
+Ref: IntegrationAccount.workspaceId > Workspace.id
+
+Ref: Attachment.uploadedById > User.id
+
+Ref: Attachment.workspaceId > Workspace.id
+
+Ref: View.workspaceId > Workspace.id
+
+Ref: View.teamId > Team.id
+
+Ref: AIRequest.workspaceId > Workspace.id

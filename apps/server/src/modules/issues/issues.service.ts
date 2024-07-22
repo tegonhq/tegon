@@ -2,10 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Issue, WorkflowCategory } from '@prisma/client';
 import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
-import OpenAI from 'openai';
 
 import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
 
+import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import {
@@ -47,11 +47,8 @@ import {
   getSubscriberIds,
   getSuggestedLabels,
   getSummary,
+  getWorkspace,
 } from './issues.utils';
-
-const openaiClient = new OpenAI({
-  apiKey: process.env['OPENAI_API_KEY'],
-});
 
 @Injectable()
 export default class IssuesService {
@@ -64,6 +61,7 @@ export default class IssuesService {
     private issueRelationService: IssueRelationService,
     private notificationsQueue: NotificationsQueue,
     private vectorService: VectorService,
+    private aiRequestsService: AIRequestsService,
   ) {}
 
   /**
@@ -159,8 +157,13 @@ export default class IssuesService {
       teamRequestParams.teamId,
     );
 
+    const workspace = await getWorkspace(this.prisma, teamRequestParams.teamId);
     // Generate the issue title using OpenAI
-    const issueTitle = await getIssueTitle(openaiClient, issueData);
+    const issueTitle = await getIssueTitle(
+      this.aiRequestsService,
+      issueData,
+      workspace.id,
+    );
 
     // Get the subscriber IDs based on the provided user, assignee, and subscription type
     const subscriberIds = getSubscriberIds(
@@ -554,9 +557,10 @@ export default class IssuesService {
     // Get suggested labels and similar issues concurrently
     const [labelsSuggested, similarIssues] = await Promise.all([
       getSuggestedLabels(
-        openaiClient,
+        this.aiRequestsService,
         labels.map((label) => label.name),
         suggestionsInput.description,
+        suggestionsInput.workspaceId,
       ),
       this.vectorService.searchEmbeddings(
         suggestionsInput.workspaceId,
@@ -882,9 +886,10 @@ export default class IssuesService {
         `Fetching suggested labels from OpenAI for issue ${issue.id}.`,
       );
       const gptLabels = await getSuggestedLabels(
-        openaiClient,
+        this.aiRequestsService,
         labels.map((label) => label.name),
         issue.description,
+        issue.team.workspaceId,
       );
 
       // Find the suggested labels in the database
@@ -1035,8 +1040,9 @@ export default class IssuesService {
 
     // Generate a summary of the formatted comments using OpenAI
     const rawSummary = await getSummary(
-      openaiClient,
+      this.aiRequestsService,
       formattedComments.join('\n'),
+      issueComments[0].issue.team.workspaceId,
     );
 
     // Extract bullet points from the raw summary using regex
@@ -1078,10 +1084,16 @@ export default class IssuesService {
 
     const workflowNames = workflow.map((workflow) => workflow.name);
 
-    return await getAiFilter(openaiClient, filterInput.text, {
-      labelNames,
-      assigneeNames,
-      workflowNames,
-    });
+    const workspace = await getWorkspace(this.prisma, teamRequestParams.teamId);
+    return await getAiFilter(
+      this.aiRequestsService,
+      filterInput.text,
+      {
+        labelNames,
+        assigneeNames,
+        workflowNames,
+      },
+      workspace.id,
+    );
   }
 }

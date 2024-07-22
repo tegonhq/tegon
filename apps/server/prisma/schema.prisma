@@ -58,6 +58,7 @@ model Workspace {
   integrationDefinition IntegrationDefinition[]
   attachments           Attachment[]
   View                  View[]
+  aiRequests            AIRequest[]
 }
 
 model UsersOnWorkspaces {
@@ -508,6 +509,22 @@ model WorkspaceTriggerProject {
   triggerProjectId String
   workspaceId      String
   status           Boolean
+}
+
+model AIRequest {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  modelName   String
+  data        String
+  response    String?
+  llmModel    String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+
+  successful Boolean @default(false)
 }
 
 enum Preference {

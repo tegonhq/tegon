@@ -3,6 +3,7 @@ import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
+import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
 import { IssuesModule } from 'modules/issues/issues.module';
@@ -35,6 +36,7 @@ import GithubService from './github.service';
     GithubQueue,
     GithubProcessor,
     IssueRelationService,
+    AIRequestsService,
   ],
   exports: [GithubService, GithubQueue],
 })
