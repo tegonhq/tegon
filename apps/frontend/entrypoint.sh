@@ -13,7 +13,7 @@ IFS=$'\n'
 # For each sed command
 for c in $(makeSedCommands); do
   # For each file in the .next directory
-  for f in $(find .next -type f); do
+  for f in $(find apps/frontend/.next -type f); do
     # Execute the command against the file
     COMMAND="$c $f"
     eval $COMMAND
