@@ -57,7 +57,7 @@ COPY --from=builder  --chown=node:node /app/apps/server/prisma ./apps/server/pri
 COPY --from=builder  --chown=node:node /app/apps/server/templates ./apps/server/templates
 COPY --from=builder  --chown=node:node /app/apps/server/scripts ./apps/server/scripts
 
-EXPOSE 3000
+EXPOSE 3001
 
 USER node
 
