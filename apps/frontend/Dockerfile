@@ -33,12 +33,16 @@ RUN pnpm install --prod --no-frozen-lockfile
 ## Builder (builds the frontend)
 FROM base AS builder
 WORKDIR /app
+ARG SENTRY_AUTH_TOKEN
+
 # Corepack is used to install pnpm
 RUN corepack enable
 
 COPY --from=pruner --chown=node:node /app/out/full/ .
 COPY --from=dev-deps --chown=node:node /app/ .
-COPY apps/frontend/.env.prod .env
+COPY apps/frontend/.prod.env .env
+RUN echo "SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN" >> .env
+RUN echo "[auth]\ntoken=$SENTRY_AUTH_TOKEN" >> /app/apps/frontend/.sentryclirc
 COPY --chown=node:node turbo.json turbo.json
 RUN pnpm run build --filter=frontend...
 

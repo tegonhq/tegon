@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/frontend/Dockerfile
+    image: tegonhq/tegon-webapp:0.2.0-alpha
     restart: always
     ports:
       - 3000:3000
@@ -17,6 +18,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/server/Dockerfile
+    image: tegonhq/tegon-server:0.2.0-alpha
     restart: always
     ports:
       - 3001:3001
