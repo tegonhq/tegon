@@ -107,10 +107,11 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@tegonhq/eslint-config": "workspace:*",
+    "@tegonhq/typescript-config": "workspace:*",
     "@nestjs/cli": "10.3.0",
     "@nestjs/schematics": "10.1.0",
     "@nestjs/testing": "10.3.1",
-    "@repo/eslint-config": "workspace:*",
     "@swc/cli": "^0.1.65",
     "@swc/core": "^1.3.105",
     "@types/bcrypt": "5.0.2",
@@ -137,7 +138,7 @@
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
     "tsconfig-paths": "4.2.0",
-    "typescript": "5"
+    "typescript": "^5.4.3"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -155,8 +156,5 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
   }
 }

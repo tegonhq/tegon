@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground text-base;
+    @apply antialiased;
+    overflow: hidden;
+    overflow-anchor: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-color) transparent;
+    /* shape-rendering: auto; */
+    /* --webkit-font-smoothing: antialiased; */
+    /* -webkit-font-smoothing: subpixel-antialiased; */
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

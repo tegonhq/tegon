@@ -6,10 +6,6 @@
   "repository": "https://github.com/tegonhq/tegon.git",
   "author": "Tegon <support@tegon.ai>",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "dev": "dotenv -- turbo run dev --parallel",
     "build": "dotenv -- turbo run build",
@@ -23,6 +19,7 @@
     "dotenv-cli": "^7.4.2",
     "syncpack": "^12.3.3",
     "turbo": "^2.0.9",
+    "typescript": "5.4.3",
     "zod": "3.23.8"
   },
   "packageManager": "pnpm@8.15.6"

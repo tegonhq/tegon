@@ -1,11 +1,11 @@
 version: "3"
 
 services:
-  frontend:
-    container_name: frontend
+  webapp:
+    container_name: webapp
     build:
       context: .
-      dockerfile: ./apps/frontend/Dockerfile
+      dockerfile: ./apps/webapp/Dockerfile
     image: tegonhq/tegon-webapp:0.2.0-alpha
     restart: always
     ports:

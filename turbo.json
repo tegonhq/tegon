@@ -2,6 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "globalEnv": [
     "VERSION",
+    "NODE_ENV",
 
     "POSTGRES_USER",
     "POSTGRES_PASSWORD",
@@ -70,33 +71,36 @@
     "GMAIL_REFRESH_TOKEN",
     "GMAIL_REDIRECT_URI",
     "GMAIL_WEBHOOK_SECRET",
-    "GMAIL_PUBSUBTOPIC",
+    "GMAIL_PUBSUB_TOPIC",
     "GMAIL_OTHER_LABEL"
   ],
   "ui": "tui",
   "tasks": {
     "start-prod": {
-      "dependsOn": ["db:generate"],
+      "dependsOn": [ "db:generate" ],
       "cache": false
     },
     "dev": {
-      "dependsOn": ["db:generate"],
+      "dependsOn": [ "db:generate", "ui:generate" ],
       "cache": false
     },
     "build": {
-      "dependsOn": ["db:generate"],
-      "outputs": ["dist/**", ".next/**"]
+      "dependsOn": [ "db:generate", "ui:generate" ],
+      "outputs": [ "dist/**", ".next/**" ]
     },
-    "lint": {},
+    "lint": { },
     "create-resources": {
       "interactive": true,
       "cache": false
     },
     "deploy-trigger-tasks": {
-      "env": ["TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL"],
+      "env": [ "TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL" ],
       "cache": false
     },
     "db:generate": {
+      "cache": false
+    },
+    "ui:generate": {
       "cache": false
     }
   }

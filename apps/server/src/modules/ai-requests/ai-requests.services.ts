@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Ollama } from 'ollama';
 import OpenAI from 'openai';
-import { ChatCompletionMessageParam } from 'openai/resources';
+import { ChatCompletionMessageParam } from 'openai/resources/index';
 
 import { requestInputBody } from './ai-requests.interface';
 
