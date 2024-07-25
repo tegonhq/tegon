@@ -1,0 +1,26 @@
+import { DropdownMenuItem } from '@tegonhq/ui/components/dropdown-menu';
+import { ParentIssueLine } from '@tegonhq/ui/icons/index';
+
+import type { IssueType } from 'common/types/issue';
+
+import { useUpdateIssueMutation } from 'services/issues';
+
+import { DropdownItem } from './dropdown-item';
+
+interface RemoveParentIssueProps {
+  issue: IssueType;
+}
+
+export function RemoveParentIssue({ issue }: RemoveParentIssueProps) {
+  const { mutate: updateIssue } = useUpdateIssueMutation({});
+
+  return (
+    <DropdownMenuItem
+      onClick={() => {
+        updateIssue({ id: issue.id, parentId: null, teamId: issue.teamId });
+      }}
+    >
+      <DropdownItem Icon={ParentIssueLine} title="Remove parent issue" />
+    </DropdownMenuItem>
+  );
+}

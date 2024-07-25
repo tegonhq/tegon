@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-frontend:
+  build-webapp:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,7 +26,7 @@ jobs:
 
       - name: Build and Push Frontend Docker Image
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -f apps/frontend/Dockerfile -t tegonhq/tegon-webapp:${{ github.ref_name }} --build-arg SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} --push .
+          docker buildx build --platform linux/amd64,linux/arm64 -f apps/webapp/Dockerfile -t tegonhq/tegon-webapp:${{ github.ref_name }} --build-arg SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} --push .
 
   build-server:
     runs-on: ubuntu-latest
