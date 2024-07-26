@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import ollama from 'ollama';
+import { Ollama } from 'ollama';
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources';
 
@@ -10,13 +10,15 @@ import { requestInputBody } from './ai-requests.interface';
 export default class AIRequestsService {
   private readonly logger: Logger = new Logger('RequestsService');
   private readonly openaiClient;
+  private readonly ollama;
   constructor(private prisma: PrismaService) {
     if (process.env['OPENAI_API_KEY']) {
       this.openaiClient = new OpenAI({
         apiKey: process.env['OPENAI_API_KEY'],
       });
     } else {
-      ollama.pull({ model: process.env['LOCAL_MODEL'] });
+      this.ollama = new Ollama({ host: process.env['OLLAMA_HOST'] });
+      this.ollama.pull({ model: process.env['LOCAL_MODEL'] });
     }
   }
 
@@ -25,6 +27,10 @@ export default class AIRequestsService {
     const messages = reqBody.messages;
     let model = reqBody.llmModel;
     this.logger.log(`Received request with model: ${model}`);
+    if (!process.env['OPENAI_API_KEY']) {
+      this.logger.log('OPENAI_API_KEY not found, using local model');
+      model = process.env['LOCAL_MODEL'];
+    }
     switch (model) {
       case 'gpt-3.5-turbo':
       case 'gpt-4-turbo':
@@ -39,9 +45,8 @@ export default class AIRequestsService {
         break;
       default:
         // Send request to ollama as fallback
-        model = process.env.LOCAL_MODEL;
         this.logger.log(`Sending request to ollama with model: ${model}`);
-        const response = await ollama.chat({
+        const response = await this.ollama.chat({
           model,
           messages,
         });
