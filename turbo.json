@@ -57,6 +57,7 @@
     "COHERE_API_KEY",
     "OPENAI_API_KEY",
     "LOCAL_MODEL",
+    "OLLAMA_HOST",
 
     "TRIGGER_DB",
     "TRIGGER_DATABASE_URL",
@@ -75,18 +76,18 @@
   "ui": "tui",
   "tasks": {
     "start-prod": {
-      "dependsOn": [ "db:generate" ],
+      "dependsOn": ["db:generate"],
       "cache": false
     },
     "dev": {
-      "dependsOn": [ "db:generate" ],
+      "dependsOn": ["db:generate"],
       "cache": false
     },
     "build": {
-      "dependsOn": [ "db:generate" ],
-      "outputs": [ "dist/**", ".next/**" ]
+      "dependsOn": ["db:generate"],
+      "outputs": ["dist/**", ".next/**"]
     },
-    "lint": { },
+    "lint": {},
     "create-resources": {
       "interactive": true,
       "cache": false
