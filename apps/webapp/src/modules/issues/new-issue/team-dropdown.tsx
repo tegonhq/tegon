@@ -38,8 +38,8 @@ export function TeamDropdown({ value, onChange }: TeamProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
-          className="flex items-center text-foreground gap-2"
+          variant="ghost"
+          className="flex items-center text-foreground gap-2 px-0"
         >
           <TeamIcon name={team.name} />
           {team?.name}

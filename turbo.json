@@ -77,11 +77,11 @@
   "ui": "tui",
   "tasks": {
     "start-prod": {
-      "dependsOn": [ "db:generate" ],
+      "dependsOn": [ "db:init-resources" ],
       "cache": false
     },
     "dev": {
-      "dependsOn": [ "db:generate", "ui:generate" ],
+      "dependsOn": [ "db:init-resources", "ui:generate" ],
       "cache": false
     },
     "build": {
@@ -97,7 +97,7 @@
       "env": [ "TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL" ],
       "cache": false
     },
-    "db:generate": {
+    "db:init-resources": {
       "cache": false
     },
     "ui:generate": {

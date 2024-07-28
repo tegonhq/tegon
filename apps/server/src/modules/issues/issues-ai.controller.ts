@@ -9,7 +9,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
+
 import { AuthGuard } from 'modules/auth/auth.guard';
+
+import IssuesAIService from './issues-ai.service';
 import {
   AIInput,
   DescriptionInput,
@@ -18,8 +22,6 @@ import {
   SubIssueInput,
   TeamRequestParams,
 } from './issues.interface';
-import IssuesAIService from './issues-ai.service';
-import { Response } from 'express';
 
 @Controller({
   version: '1',

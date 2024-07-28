@@ -8,11 +8,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import PromptsService from './prompts.service';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'modules/auth/auth.guard';
 import { Prompt } from '@prisma/client';
+
+import { AuthGuard } from 'modules/auth/auth.guard';
+
 import { PromptInput } from './prompts.interface';
+import PromptsService from './prompts.service';
 
 @Controller({
   version: '1',

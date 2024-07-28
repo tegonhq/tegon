@@ -14,7 +14,7 @@ import { useTeamWorkflows } from 'hooks/workflows';
 import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
 import { Activity } from './activity';
-import { FileUpload } from './file-upload/file-upload';
+import { FileUpload } from './file-upload/file-upload.tsx';
 import { FilterSmall } from './filters-small';
 import { IssueTitle } from './issue-title';
 import { LinkedIssuesView } from './linked-issues-view';

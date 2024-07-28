@@ -2,7 +2,7 @@ import { Button } from '@tegonhq/ui/components/button';
 import { CreateIssueLine, HelpLine, SearchLine } from '@tegonhq/ui/icons/index';
 import React from 'react';
 
-import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
+import { NewIssue } from 'modules/issues/new-issue';
 import { SearchDialog } from 'modules/search';
 
 export function BottomBar() {
@@ -40,7 +40,7 @@ export function BottomBar() {
         <SearchLine size={20} />
       </Button>
 
-      <NewIssueDialog open={newIssue} setOpen={setNewIssue} />
+      <NewIssue open={newIssue} setOpen={setNewIssue} />
       <SearchDialog open={search} setOpen={setSearch} />
     </div>
   );

@@ -10,12 +10,40 @@
     @apply bg-background text-foreground text-base;
     @apply antialiased;
     overflow: hidden;
-    overflow-anchor: none;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-color) transparent;
+
     /* shape-rendering: auto; */
     /* --webkit-font-smoothing: antialiased; */
     /* -webkit-font-smoothing: subpixel-antialiased; */
+  }
+
+  @supports (scrollbar-width: auto) {
+    .overflow-y-auto,
+    .overflow-x-auto,
+    .overflow-auto {
+      overflow-anchor: none;
+      scrollbar-color: var(--gray-500) transparent;
+      scrollbar-width: thin;
+    }
+  }
+
+  /* Legacy browsers with `::-webkit-scrollbar-*` support */
+  @supports selector(::-webkit-scrollbar) {
+    .overflow-y-auto::-webkit-scrollbar-thumb,
+    .overflow-x-auto::-webkit-scrollbar-thumb,
+    .overflow-auto::-webkit-scrollbar-thumb {
+      background: transparent;
+    }
+    .overflow-y-auto::-webkit-scrollbar-track,
+    .overflow-x-auto::-webkit-scrollbar-track,
+    .overflow-auto::-webkit-scrollbar-track {
+      background: var(--gray-600);
+    }
+
+    .overflow-y-auto::-webkit-scrollbar,
+    .overflow-x-auto::-webkit-scrollbar,
+    .overflow-auto::-webkit-scrollbar {
+      max-width: 5px;
+    }
   }
 }
 

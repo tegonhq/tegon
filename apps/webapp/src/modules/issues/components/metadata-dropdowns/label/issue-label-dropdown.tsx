@@ -92,11 +92,11 @@ export const IssueLabelDropdown = observer(
 
       return (
         <Button
-          variant="secondary"
+          variant="ghost"
           role="combobox"
           aria-expanded={open}
           className={cn(
-            'flex items-center justify-between text-xs font-normal',
+            'flex items-center justify-between font-normal',
             value.length > 0 && 'text-foreground',
             value.length === 0 && 'text-muted-foreground',
           )}
@@ -128,7 +128,7 @@ export const IssueLabelDropdown = observer(
 
       return (
         <div className="flex items-center">
-          <RiAddLine size={14} className="mr-1" />
+          <RiAddLine size={16} />
           Add Label
         </div>
       );

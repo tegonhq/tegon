@@ -8,6 +8,7 @@ import { PrismaService } from 'nestjs-prisma';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { VectorService } from 'modules/vector/vector.service';
 
+import IssuesAIService from './issues-ai.service';
 import {
   IssueAction,
   IssueRequestParams,
@@ -16,7 +17,6 @@ import {
   TeamRequestParams,
 } from './issues.interface';
 import { handleTwoWaySync } from './issues.utils';
-import IssuesAIService from './issues-ai.service';
 
 @Processor('issues')
 export class IssuesProcessor {

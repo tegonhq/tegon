@@ -11,7 +11,7 @@
     "build": "dotenv -- turbo run build",
     "lint": "turbo run lint",
     "start": "turbo run start-prod",
-    "db:generate": "turbo run db:generate",
+    "db:init-resources": "turbo run db:generate",
     "create-resources": "dotenv -- turbo run create-resources --filter=server",
     "deploy-trigger-tasks": "dotenv -- turbo run deploy-trigger-tasks --filter=server --"
   },

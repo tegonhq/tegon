@@ -2,7 +2,7 @@ import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Key } from 'ts-key-enum';
 
-import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
+// import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
 import { SearchDialog } from 'modules/search';
 
 import { SCOPES } from 'common/scopes';
@@ -50,10 +50,10 @@ export function GlobalShortcuts() {
 
   return (
     <>
-      <NewIssueDialog
+      {/* <NewIssueDialog
         open={state.newIssue}
         setOpen={(value) => stateChange(value, 'newIssue')}
-      />
+      /> */}
       <SearchDialog
         open={state.search}
         setOpen={(value) => stateChange(value, 'search')}

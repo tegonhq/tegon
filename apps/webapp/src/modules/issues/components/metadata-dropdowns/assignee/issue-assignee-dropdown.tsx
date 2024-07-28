@@ -102,11 +102,11 @@ export function IssueAssigneeDropdown({
 
     return (
       <Button
-        variant="secondary"
+        variant="ghost"
         role="combobox"
         aria-expanded={open}
         className={cn(
-          'flex items-center justify-between text-xs focus-visible:ring-1 focus-visible:border-primary gap-1',
+          'flex items-center justify-between focus-visible:ring-1 focus-visible:border-primary gap-1',
         )}
       >
         {value ? (

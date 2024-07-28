@@ -9,3 +9,5 @@ out
 docker-compose.prod.yaml
 
 *.tsbuildinfo
+
+dist

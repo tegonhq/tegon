@@ -6,11 +6,8 @@ import {
   EditorRoot,
   EditorCommand,
   EditorCommandItem,
-  EditorCommandEmpty,
   EditorContent,
-  EditorBubble,
   useEditor,
-  EditorCommandList,
 } from 'novel';
 import {
   ImageResizer,
@@ -23,6 +20,7 @@ import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 import { defaultExtensions, getPlaceholder } from './editor-extensions';
+import GenerativeMenuSwitch from './generative/generative-menu-switch';
 import {
   NodeSelector,
   TextButtons,
@@ -32,6 +30,7 @@ import {
 import { slashCommand, suggestionItems } from './slash-command';
 import { uploadFn } from './utils';
 import { cn } from '../../../lib/utils';
+import { CommandEmpty, CommandList } from '../command';
 import { Separator } from '../separator';
 
 interface EditorProps {
@@ -39,6 +38,7 @@ interface EditorProps {
   onChange?: (value: string, valueString?: string) => void;
   autoFocus?: boolean;
   className?: string;
+  editorClassName?: string;
   placeholder?: string | Extension;
   editable?: boolean;
   onFocus?: () => void;
@@ -57,6 +57,7 @@ export const EditorChild = ({
   const [openNode, setOpenNode] = useState(false);
   const [openColor, setOpenColor] = useState(false);
   const [openLink, setOpenLink] = useState(false);
+  const [openAI, setOpenAI] = useState(false);
   const { editor } = useEditor();
 
   React.useEffect(() => {
@@ -75,41 +76,35 @@ export const EditorChild = ({
   }, [value]);
 
   return (
-    <div className="relative w-full max-w-screen-lg">
+    <>
       <EditorCommand
         className={cn(
-          'z-50 h-auto font-sans max-h-[330px] overflow-y-auto w-72 rounded-md border border-muted bg-background backdrop-blur-md px-1 shadow-lg transition-all',
+          'font-sans w-52 rounded-md bg-background-2 backdrop-blur-md px-1 shadow-2 transition-all flex flex-col',
         )}
       >
-        <EditorCommandEmpty className="px-2 text-muted-foreground">
-          No results
-        </EditorCommandEmpty>
-        <EditorCommandList>
+        <CommandList className="overflow-auto">
+          <CommandEmpty className="px-2 text-muted-foreground">
+            No results
+          </CommandEmpty>
           {suggestionItems.map((item) => (
             <EditorCommandItem
               value={item.title}
               onCommand={(val) => item.command(val)}
-              className={`flex w-full items-center space-x-2 my-2 rounded-md px-2 py-1 text-left hover:bg-accent aria-selected:bg-accent hover:text-accent-foreground aria-selected:text-accent-foreground`}
+              className={`flex w-full items-center space-x-2 my-2 rounded px-2 py-1 text-left hover:bg-accent aria-selected:bg-accent hover:text-accent-foreground aria-selected:text-accent-foreground`}
               key={item.title}
             >
-              <div className="flex h-5 w-5 items-center justify-center">
+              <div className="flex h-4 w-4 items-center justify-center">
                 {item.icon}
               </div>
               <div>
                 <p className="font-medium">{item.title}</p>
-                <p className="text-xs">{item.description}</p>
               </div>
             </EditorCommandItem>
           ))}
-        </EditorCommandList>
+        </CommandList>
       </EditorCommand>
 
-      <EditorBubble
-        tippyOptions={{
-          placement: 'top',
-        }}
-        className="flex w-fit items-center max-w-[90vw] overflow-hidden rounded border bg-background shadow-xl"
-      >
+      <GenerativeMenuSwitch open={openAI} onOpenChange={setOpenAI}>
         <Separator orientation="vertical" />
         <NodeSelector open={openNode} onOpenChange={setOpenNode} />
         <Separator orientation="vertical" />
@@ -118,8 +113,8 @@ export const EditorChild = ({
         <TextButtons />
         <Separator orientation="vertical" />
         <ColorSelector open={openColor} onOpenChange={setOpenColor} />
-      </EditorBubble>
-    </div>
+      </GenerativeMenuSwitch>
+    </>
   );
 };
 
@@ -128,6 +123,7 @@ export const Editor = ({
   onChange,
   autoFocus = false,
   className,
+  editorClassName,
   placeholder,
   onFocus,
   onBlur,
@@ -166,15 +162,12 @@ export const Editor = ({
 
   return (
     // TODO: Change this to the editor input
-    <div onFocus={onFocus} onBlur={onBlur}>
+    <div onFocus={onFocus} onBlur={onBlur} className="relative">
       <EditorRoot>
         <EditorContent
           initialContent={getInitialValue()}
           extensions={getExtensions()}
-          className={cn(
-            'relative w-full min-w-full text-base sm:rounded-lg',
-            className,
-          )}
+          className={cn('w-full min-w-full text-base sm:rounded-lg', className)}
           onCreate={({ editor }) => {
             if (onCreate) {
               onCreate(editor);
@@ -198,7 +191,7 @@ export const Editor = ({
             },
             editable: () => editable,
             attributes: {
-              class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`,
+              class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full ${editorClassName}`,
             },
           }}
           onUpdate={({ editor }) => {

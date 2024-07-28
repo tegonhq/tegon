@@ -84,10 +84,10 @@ export function IssueStatusDropdown({
 
     return (
       <Button
-        variant="secondary"
+        variant="ghost"
         role="combobox"
         aria-expanded={open}
-        className="flex items-center gap-1 justify-between shadow-none text-xs font-normal focus-visible:ring-1 focus-visible:border-primary "
+        className="flex items-center gap-1 justify-between shadow-none focus-visible:ring-1 focus-visible:border-primary "
       >
         <CategoryIcon size={18} color={getWorkflowColor(workflow).color} />
         {workflow.name}
