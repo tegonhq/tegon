@@ -1,5 +1,13 @@
-import { IntegrationName, Role, Status } from '@prisma/client';
+import { IntegrationName, LLMModels, Role, Status } from '@prisma/client';
 import { IsOptional, IsString } from 'class-validator';
+import {
+  filterPrompt,
+  issueLabelPrompt,
+  issueSummarizePrompt,
+  issueTitlePrompt,
+  subIssuesPrompt,
+  viewNameDescriptionPrompt,
+} from 'modules/prompts/prompts.interface';
 
 export class CreateWorkspaceInput {
   @IsString()
@@ -141,5 +149,38 @@ export const integrationDefinitionSeedData = [
     clientSecret: process.env.SENTRY_CLIENT_SECRET,
     scopes:
       'event:read,event:write,issue:read,issue:write,org:read,org:write,member:read,member:write',
+  },
+];
+
+export const promptsSeedData = [
+  {
+    name: 'IssueTitle',
+    prompt: issueTitlePrompt,
+    model: LLMModels.GPT35TURBO,
+  },
+  {
+    name: 'IssueLabels',
+    prompt: issueLabelPrompt,
+    model: LLMModels.GPT35TURBO,
+  },
+  {
+    name: 'IssueSummary',
+    prompt: issueSummarizePrompt,
+    model: LLMModels.GPT35TURBO,
+  },
+  {
+    name: 'Filter',
+    prompt: filterPrompt,
+    model: LLMModels.GPT4TURBO,
+  },
+  {
+    name: 'SubIssues',
+    prompt: subIssuesPrompt,
+    model: LLMModels.GPT4TURBO,
+  },
+  {
+    name: 'ViewNameDescription',
+    prompt: viewNameDescriptionPrompt,
+    model: LLMModels.GPT35TURBO,
   },
 ];

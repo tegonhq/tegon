@@ -23,12 +23,10 @@ import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import {
   ApiResponse,
   CreateIssueInput,
-  FilterInput,
   IssueRequestParams,
   LinkIssueInput,
   MoveIssueInput,
   SubscribeIssueInput,
-  SuggestionsInput,
   TeamRequestParams,
   UpdateIssueInput,
   WorkspaceQueryParams,
@@ -54,28 +52,12 @@ export class IssuesController {
     @Body() issueData: CreateIssueInput,
   ) {
     const userId = session.getUserId();
-    return await this.issuesService.createIssue(teamParams, issueData, userId);
-  }
-
-  @Post('suggestions')
-  @UseGuards(new AuthGuard())
-  async suggestions(
-    @Query() teamRequestParams: TeamRequestParams,
-    @Body() suggestionsInput: SuggestionsInput,
-  ) {
-    return await this.issuesService.suggestions(
-      teamRequestParams,
-      suggestionsInput,
+    // return await this.issuesService.createIssue(teamParams, issueData, userId);
+    return await this.issuesService.createIssueAPI(
+      teamParams,
+      issueData,
+      userId,
     );
-  }
-
-  @Post('ai_filters')
-  @UseGuards(new AuthGuard())
-  async aiFilters(
-    @Query() teamRequestParams: TeamRequestParams,
-    @Body() filterInput: FilterInput,
-  ) {
-    return await this.issuesService.aiFilters(teamRequestParams, filterInput);
   }
 
   @Post(':issueId')
@@ -173,11 +155,5 @@ export class IssuesController {
       issueParams.issueId,
       moveData.teamId,
     );
-  }
-
-  @Get(':issueId/summarize')
-  @UseGuards(new AuthGuard())
-  async summarizeIssue(@Param() issueParams: IssueRequestParams) {
-    return await this.issuesService.summarizeIssue(issueParams.issueId);
   }
 }

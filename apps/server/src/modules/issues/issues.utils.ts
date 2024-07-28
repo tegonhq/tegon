@@ -1,7 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { IntegrationName, Issue, LinkedIssue, Prisma } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
-import OpenAI from 'openai';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
@@ -23,11 +22,8 @@ import {
   LinkIssueInput,
   SubscribeType,
   UpdateIssueInput,
-  aiFilterPrompt,
-  labelPrompt,
-  summarizePrompt,
-  titlePrompt,
 } from './issues.interface';
+import { LLMMappings } from 'modules/prompts/prompts.interface';
 
 export async function getIssueDiff(
   newIssueData: Issue,
@@ -99,27 +95,8 @@ function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-export async function getIssueTitles(
-  openaiClient: OpenAI,
-  issueData: CreateIssueInput | UpdateIssueInput,
-): Promise<string> {
-  if (issueData.title) {
-    return issueData.title;
-  } else if (issueData.description) {
-    const chatCompletion: OpenAI.Chat.ChatCompletion =
-      await openaiClient.chat.completions.create({
-        messages: [
-          { role: 'system', content: titlePrompt },
-          { role: 'user', content: issueData.description },
-        ],
-        model: 'gpt-3.5-turbo',
-      });
-    return chatCompletion.choices[0].message.content;
-  }
-  return '';
-}
-
 export async function getIssueTitle(
+  prisma: PrismaService,
   aiRequestsService: AIRequestsService,
   issueData: CreateIssueInput | UpdateIssueInput,
   workspaceId: string,
@@ -127,12 +104,15 @@ export async function getIssueTitle(
   if (issueData.title) {
     return issueData.title;
   } else if (issueData.description) {
+    const titlePrompt = await prisma.prompt.findFirst({
+      where: { name: 'IssueTitle', workspaceId },
+    });
     return await aiRequestsService.getLLMRequest({
       messages: [
-        { role: 'system', content: titlePrompt },
+        { role: 'system', content: titlePrompt.prompt },
         { role: 'user', content: issueData.description },
       ],
-      llmModel: 'gpt-3.5-turbo',
+      llmModel: LLMMappings[titlePrompt.model],
       model: 'IssueTitle',
       workspaceId,
     });
@@ -141,12 +121,16 @@ export async function getIssueTitle(
 }
 
 export async function getAiFilter(
+  prisma: PrismaService,
   aiRequestsService: AIRequestsService,
   filterText: string,
   filterData: Record<string, string[]>,
   workspaceId: string,
 ) {
-  const filterPrompt = aiFilterPrompt
+  const aiFilterPrompt = await prisma.prompt.findFirst({
+    where: { name: 'Filter', workspaceId },
+  });
+  const filterPrompt = aiFilterPrompt.prompt
     .replace('{{status}}', filterData.workflowNames.join(', '))
     .replace('{{assignee}}', filterData.assigneeNames.join(', '))
     .replace('{{label}}', filterData.labelNames.join(', '));
@@ -157,7 +141,7 @@ export async function getAiFilter(
         { role: 'system', content: filterPrompt },
         { role: 'user', content: filterText },
       ],
-      llmModel: 'gpt-4-turbo',
+      llmModel: LLMMappings[aiFilterPrompt.model],
       model: 'AIFilters',
       workspaceId,
     });
@@ -168,20 +152,24 @@ export async function getAiFilter(
 }
 
 export async function getSuggestedLabels(
+  prisma: PrismaService,
   aiRequestsService: AIRequestsService,
   labels: string[],
   description: string,
   workspaceId: string,
 ) {
+  const labelPrompt = await prisma.prompt.findUnique({
+    where: { name_workspaceId: { name: 'IssueLabels', workspaceId } },
+  });
   return await aiRequestsService.getLLMRequest({
     messages: [
-      { role: 'system', content: labelPrompt },
+      { role: 'system', content: labelPrompt.prompt },
       {
         role: 'user',
         content: `Text Description  -  ${description} \n Company Specific Labels -  ${labels.join(',')}`,
       },
     ],
-    llmModel: 'gpt-3.5-turbo',
+    llmModel: LLMMappings[labelPrompt.model],
     model: 'LabelSuggestion',
     workspaceId,
   });
@@ -449,19 +437,23 @@ export async function getEquivalentStateIds(
 }
 
 export async function getSummary(
+  prisma: PrismaService,
   aiRequestsService: AIRequestsService,
   conversations: string,
   workspaceId: string,
 ) {
+  const summarizePrompt = await prisma.prompt.findFirst({
+    where: { name: 'IssueSummary', workspaceId },
+  });
   return await aiRequestsService.getLLMRequest({
     messages: [
-      { role: 'system', content: summarizePrompt },
+      { role: 'system', content: summarizePrompt.prompt },
       {
         role: 'user',
         content: `[INPUT] conversations: ${conversations}`,
       },
     ],
-    llmModel: 'gpt-3.5-turbo',
+    llmModel: LLMMappings[summarizePrompt.model],
     model: 'IssueSummary',
     workspaceId,
   });

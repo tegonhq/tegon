@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Issue, WorkflowCategory } from '@prisma/client';
+import { Issue, Prisma, WorkflowCategory } from '@prisma/client';
 import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -8,45 +8,30 @@ import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
-import {
-  IssueRelationInput,
-  IssueRelationType,
-} from 'modules/issue-relation/issue-relation.interface';
+import { IssueRelationInput } from 'modules/issue-relation/issue-relation.interface';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
-import {
-  LinkIssueData,
-  LinkedIssueSubType,
-} from 'modules/linked-issue/linked-issue.interface';
-import { getLinkType } from 'modules/linked-issue/linked-issue.utils';
+import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
-import { VectorService } from 'modules/vector/vector.service';
 
 import {
-  ApiResponse,
   CreateIssueInput,
-  FilterInput,
   IssueAction,
   IssueRequestParams,
   IssueWithRelations,
   RelationInput,
   SubscribeType,
-  SuggestionsInput,
   TeamRequestParams,
   UpdateIssueInput,
   WorkspaceQueryParams,
 } from './issues.interface';
 import { IssuesQueue } from './issues.queue';
 import {
-  findExistingLink,
   getEquivalentStateIds,
-  getAiFilter,
   getIssueDiff,
   getIssueTitle,
   getLastIssueNumber,
   getSubscriberIds,
-  getSuggestedLabels,
-  getSummary,
   getWorkspace,
 } from './issues.utils';
 
@@ -60,77 +45,8 @@ export default class IssuesService {
     private issuesQueue: IssuesQueue,
     private issueRelationService: IssueRelationService,
     private notificationsQueue: NotificationsQueue,
-    private vectorService: VectorService,
     private aiRequestsService: AIRequestsService,
   ) {}
-
-  /**
-   * Creates a new issue with the provided data and performs related operations.
-   * @param teamRequestParams The team request parameters.
-   * @param issueData The data for creating the issue.
-   * @param userId The ID of the user creating the issue (optional).
-   * @param linkIssuedata The data for linking the issue (optional).
-   * @param linkMetaData Additional metadata for linking the issue (optional).
-   * @returns The created issue or an API response if there was an error.
-   */
-  async createIssue(
-    teamRequestParams: TeamRequestParams,
-    issueData: CreateIssueInput,
-    userId?: string,
-    linkIssuedata?: LinkIssueData,
-    linkMetaData?: Record<string, string>,
-  ): Promise<ApiResponse | Issue> {
-    // Destructure linkIssue from issueData and assign remaining properties to otherIssueData
-    const { linkIssue, ...otherIssueData } = issueData;
-
-    this.logger.debug(
-      `Creating issue with data: ${JSON.stringify(otherIssueData)}`,
-    );
-
-    // Check if a link issue exists and find its status
-    const linkStatus = linkIssue
-      ? await findExistingLink(this.prisma, linkIssue)
-      : null;
-    if (linkStatus?.status === 400) {
-      // Log an error if there was a problem finding the existing link
-      this.logger.error(
-        `Error finding existing link: ${JSON.stringify(linkStatus)}`,
-      );
-      return linkStatus;
-    }
-
-    // Create the issue using the API method
-    const issue = await this.createIssueAPI(
-      teamRequestParams,
-      otherIssueData,
-      userId,
-      linkIssuedata,
-      linkMetaData,
-    );
-
-    this.logger.log(`Created issue: ${issue.number}`);
-
-    if (linkIssue) {
-      // Set the link issue type based on the URL
-      linkIssue.type = getLinkType(linkIssue.url) as LinkedIssueSubType;
-      this.logger.log(
-        `Adding create link issue job for link: ${linkIssue.url}`,
-      );
-      // Add a create link issue job to the issues queue
-      this.issuesQueue.addCreateLinkIssueJob(
-        teamRequestParams,
-        linkIssue,
-        { issueId: issue.id },
-        userId,
-      );
-    } else if (otherIssueData.isBidirectional) {
-      this.logger.log(`Adding two-way sync job for issue: ${issue.id}`);
-      // Add a two-way sync job to the issues queue
-      this.issuesQueue.addTwoWaySyncJob(issue, IssueAction.CREATED, userId);
-    }
-
-    return issue;
-  }
 
   /**
    * Creates a new issue using the provided issue data and performs related operations.
@@ -149,21 +65,9 @@ export default class IssuesService {
     linkMetaData?: Record<string, string>,
   ): Promise<IssueWithRelations> {
     // Destructure issueData to separate parentId, issueRelation, and other issue data
-    const { parentId, issueRelation, ...otherIssueData } = issueData;
-
-    // Get the last issue number for the team
-    const lastNumber = await getLastIssueNumber(
-      this.prisma,
-      teamRequestParams.teamId,
-    );
+    const { parentId, subIssues, issueRelation, ...otherIssueData } = issueData;
 
     const workspace = await getWorkspace(this.prisma, teamRequestParams.teamId);
-    // Generate the issue title using OpenAI
-    const issueTitle = await getIssueTitle(
-      this.aiRequestsService,
-      issueData,
-      workspace.id,
-    );
 
     // Get the subscriber IDs based on the provided user, assignee, and subscription type
     const subscriberIds = getSubscriberIds(
@@ -174,63 +78,113 @@ export default class IssuesService {
     );
 
     // Create the issue in the database with the provided data
-    const issue = await this.prisma.issue.create({
-      data: {
-        title: issueTitle,
-        number: lastNumber + 1,
-        team: { connect: { id: teamRequestParams.teamId } },
-        subscriberIds,
-        ...otherIssueData,
-        ...(userId && { createdBy: { connect: { id: userId } } }),
-        ...(parentId && { parent: { connect: { id: parentId } } }),
-        ...(linkIssuedata && {
-          linkedIssue: { create: linkIssuedata },
-        }),
-        ...(linkMetaData && { sourceMetadata: linkMetaData }),
-      },
-      include: {
-        team: true,
-      },
-    });
-
-    // Upsert the issue history with the issue diff and other metadata
-    await this.upsertIssueHistory(
-      issue,
-      await getIssueDiff(issue, null),
-      userId,
-      linkMetaData,
-      issueRelation,
-    );
-
-    // Add the issue to the notification queue if there are subscribers
-    if (issue.subscriberIds) {
-      this.notificationsQueue.addToNotification(
-        NotificationEventFrom.IssueCreated,
-        issue.createdById,
-        {
-          issueId: issue.id,
-          subscriberIds: issue.subscriberIds,
-          toStateId: issue.stateId,
-          toPriority: issue.priority,
-          toAssigneeId: issue.assigneeId,
-          sourceMetadata: linkMetaData,
-          workspaceId: issue.team.workspaceId,
-        },
+    const issues = await this.prisma.$transaction(async (prisma) => {
+      // Get the last issue number for the team
+      let lastNumber = await getLastIssueNumber(
+        this.prisma,
+        teamRequestParams.teamId,
       );
-    }
 
-    // Add the issue to the vector service for similarity search
-    this.issuesQueue.addIssueToVector(issue);
+      const createIssue = async (data: Prisma.IssueCreateInput) => {
+        lastNumber++;
+        return prisma.issue.create({
+          data: {
+            title: data.title,
+            team: { connect: { id: teamRequestParams.teamId } },
+            subscriberIds,
+            ...data,
+            ...(userId && { createdBy: { connect: { id: userId } } }),
+            ...(linkIssuedata && {
+              linkedIssue: { create: linkIssuedata },
+            }),
+            ...(linkMetaData && { sourceMetadata: linkMetaData }),
+          },
+          include: {
+            team: true,
+          },
+        });
+      };
 
-    // Check if the issue state is in the triage category and handle it accordingly
-    const issueState = await this.prisma.workflow.findUnique({
-      where: { id: issue.stateId },
+      const createdIssues: IssueWithRelations[] = [];
+
+      const mainIssue = await createIssue({
+        ...otherIssueData,
+        title: await getIssueTitle(
+          this.prisma,
+          this.aiRequestsService,
+          issueData,
+          workspace.id,
+        ),
+        team: { connect: { id: teamRequestParams.teamId } },
+        number: lastNumber + 1,
+        ...(parentId && { parent: { connect: { id: parentId } } }),
+      });
+      createdIssues.push(mainIssue);
+
+      // Iterate through subIssues and create them
+      if (subIssues && subIssues.length > 0) {
+        for (const subIssueData of subIssues) {
+          const { subIssues, issueRelation, ...otherSubIssueData } =
+            subIssueData;
+          const subIssue = await createIssue({
+            ...otherSubIssueData,
+            number: lastNumber + 1,
+            team: { connect: { id: teamRequestParams.teamId } },
+            parent: { connect: { id: mainIssue.id } },
+            title: await getIssueTitle(
+              this.prisma,
+              this.aiRequestsService,
+              subIssueData,
+              workspace.id,
+            ),
+          });
+          createdIssues.push(subIssue);
+        }
+      }
+
+      return createdIssues;
     });
-    if (issueState.category === WorkflowCategory.TRIAGE) {
-      this.issuesQueue.handleTriageIssue(issue, false);
-    }
 
-    return issue;
+    issues.map(async (issue: IssueWithRelations) => {
+      // Upsert the issue history with the issue diff and other metadata
+      await this.upsertIssueHistory(
+        issue,
+        await getIssueDiff(issue, null),
+        userId,
+        linkMetaData,
+        issueRelation,
+      );
+
+      // Add the issue to the notification queue if there are subscribers
+      if (issue.subscriberIds) {
+        this.notificationsQueue.addToNotification(
+          NotificationEventFrom.IssueCreated,
+          issue.createdById,
+          {
+            issueId: issue.id,
+            subscriberIds: issue.subscriberIds,
+            toStateId: issue.stateId,
+            toPriority: issue.priority,
+            toAssigneeId: issue.assigneeId,
+            sourceMetadata: linkMetaData,
+            workspaceId: issue.team.workspaceId,
+          },
+        );
+      }
+
+      // Add the issue to the vector service for similarity search
+      this.issuesQueue.addIssueToVector(issue);
+
+      // Check if the issue state is in the triage category and handle it accordingly
+      const issueState = await this.prisma.workflow.findUnique({
+        where: { id: issue.stateId },
+      });
+      if (issueState.category === WorkflowCategory.TRIAGE) {
+        this.issuesQueue.handleTriageIssue(issue, false);
+      }
+    });
+
+    return issues[0];
   }
 
   /**
@@ -530,76 +484,6 @@ export default class IssuesService {
   }
 
   /**
-   * Generates suggestions for labels and assignees based on the issue description.
-   * @param teamRequestParams The team request parameters.
-   * @param suggestionsInput The input for generating suggestions, including the issue description and workspace ID.
-   * @returns An object containing the suggested labels and assignees.
-   */
-  async suggestions(
-    teamRequestParams: TeamRequestParams,
-    suggestionsInput: SuggestionsInput,
-  ) {
-    // Check if the description is empty or falsy
-    if (!suggestionsInput.description) {
-      return { labels: [], assignees: [] };
-    }
-
-    // Find labels based on the workspace ID and team ID
-    const labels = await this.prisma.label.findMany({
-      where: {
-        OR: [
-          { workspaceId: suggestionsInput.workspaceId },
-          { teamId: teamRequestParams.teamId },
-        ],
-      },
-    });
-
-    // Get suggested labels and similar issues concurrently
-    const [labelsSuggested, similarIssues] = await Promise.all([
-      getSuggestedLabels(
-        this.aiRequestsService,
-        labels.map((label) => label.name),
-        suggestionsInput.description,
-        suggestionsInput.workspaceId,
-      ),
-      this.vectorService.searchEmbeddings(
-        suggestionsInput.workspaceId,
-        suggestionsInput.description,
-        10,
-        0.2,
-      ),
-    ]);
-
-    // Find suggested labels based on the suggested label names
-    const suggestedLabels = await this.prisma.label.findMany({
-      where: {
-        name: { in: labelsSuggested.split(/,\s*/), mode: 'insensitive' },
-        OR: [
-          { workspaceId: suggestionsInput.workspaceId },
-          { teamId: teamRequestParams.teamId },
-        ],
-      },
-      select: { id: true, name: true, color: true },
-    });
-
-    // Extract unique assignee IDs from similar issues
-    const assigneeIds = new Set(
-      similarIssues
-        .filter((issue) => issue.assigneeId)
-        .map((issue) => issue.assigneeId),
-    );
-
-    // Map assignee IDs to assignee objects with scores
-    const assignees = Array.from(assigneeIds).map((assigneeId) => ({
-      id: assigneeId,
-      score: similarIssues.find((issue) => issue.assigneeId === assigneeId)
-        .score,
-    }));
-
-    return { labels: suggestedLabels, assignees };
-  }
-
-  /**
    * Updates the subscribers of an issue by adding the provided subscriber IDs.
    * @param issueId The ID of the issue to update.
    * @param subscriberIds An array of subscriber IDs to add to the issue.
@@ -824,276 +708,5 @@ export default class IssuesService {
       });
     });
     return updatedIssue;
-  }
-
-  /**
-   * Generates issue suggestions for a given issue.
-   * If the issue already has labels, returns undefined.
-   * If similar issues exist, uses their label IDs for suggestions.
-   * Otherwise, fetches suggested labels from OpenAI based on the issue description.
-   * Upserts the issue suggestion with the suggested label IDs.
-   * @param issue The issue to generate suggestions for.
-   * @returns The upserted issue suggestion or undefined if the issue already has labels.
-   */
-  async issueSuggestions(issue: IssueWithRelations) {
-    // If the issue already has labels, return undefined
-    if (issue.labelIds.length >= 1) {
-      this.logger.log(
-        `Issue ${issue.id} already has labels, skipping suggestions.`,
-      );
-      return undefined;
-    }
-
-    // Fetch labels for the workspace or team, and similar issues
-    const [labels, similarIssues] = await Promise.all([
-      this.prisma.label.findMany({
-        where: {
-          OR: [
-            { workspaceId: issue.team.workspaceId },
-            { teamId: issue.teamId },
-          ],
-        },
-      }),
-      this.prisma.issueRelation.findMany({
-        where: {
-          relatedIssueId: issue.id,
-          type: IssueRelationType.SIMILAR,
-          deleted: null,
-        },
-        include: {
-          issue: true,
-        },
-      }),
-    ]);
-
-    this.logger.log(
-      `Fetched ${labels.length} labels and ${similarIssues.length} similar issues for issue ${issue.id}.`,
-    );
-
-    let labelIds: string[];
-
-    // If similar issues exist, use their label IDs
-    if (similarIssues.length > 0) {
-      labelIds = similarIssues.flatMap(
-        (similarIssue) => similarIssue.issue.labelIds,
-      );
-      this.logger.log(
-        `Using label IDs from ${similarIssues.length} similar issues for issue ${issue.id}.`,
-      );
-    } else {
-      // Otherwise, get suggested labels from OpenAI based on the issue description
-      this.logger.log(
-        `Fetching suggested labels from OpenAI for issue ${issue.id}.`,
-      );
-      const gptLabels = await getSuggestedLabels(
-        this.aiRequestsService,
-        labels.map((label) => label.name),
-        issue.description,
-        issue.team.workspaceId,
-      );
-
-      // Find the suggested labels in the database
-      const suggestedLabels = await this.prisma.label.findMany({
-        where: {
-          name: { in: gptLabels.split(/,\s*/), mode: 'insensitive' },
-          OR: [
-            { workspaceId: issue.team.workspaceId },
-            { teamId: issue.teamId },
-          ],
-        },
-        select: { id: true },
-      });
-
-      // Extract the label IDs from the suggested labels
-      labelIds = suggestedLabels.map((label) => label.id);
-    }
-
-    // Upsert the issue suggestion with the suggested label IDs
-    // If the issue suggestion exists, update it; otherwise, create a new one
-    const suggestion = await this.prisma.issueSuggestion.upsert({
-      where: { issueId: issue.id },
-      create: {
-        issueId: issue.id,
-        issue: { connect: { id: issue.id } },
-        suggestedLabelIds: [...new Set(labelIds)], // Use a Set to ensure unique label IDs
-      },
-      update: {
-        suggestedLabelIds: [...new Set(labelIds)], // Use a Set to ensure unique label IDs
-      },
-    });
-
-    this.logger.log(
-      `Upserted issue suggestion for issue ${issue.id} with ${suggestion.suggestedLabelIds.length} suggested labels.`,
-    );
-
-    // Return the upserted issue suggestion
-    return suggestion;
-  }
-
-  /**
-   * Deletes an issue suggestion by marking it as deleted.
-   * @param issueId The ID of the issue associated with the suggestion.
-   * @returns The updated issue suggestion with the deleted timestamp.
-   */
-  async deleteIssueSuggestion(issueId: string) {
-    return await this.prisma.issueSuggestion.update({
-      where: { issueId },
-      data: { deleted: new Date().toISOString() },
-    });
-  }
-
-  /**
-   * Generates similar issue suggestions for a given issue in a workspace.
-   * @param workspaceId The ID of the workspace.
-   * @param issueId The ID of the issue to find similar issues for.
-   * @returns An array of similar issues.
-   */
-  async similarIssueSuggestion(workspaceId: string, issueId: string) {
-    // Find similar issues using the vector service
-    const similarIssues = await this.vectorService.similarIssues(
-      workspaceId,
-      issueId,
-    );
-
-    // Create issue relations for each similar issue
-    similarIssues.map(async (similarIssue) => {
-      const relationData: IssueRelationInput = {
-        type: IssueRelationType.SIMILAR,
-        issueId,
-        relatedIssueId: similarIssue.id,
-      };
-
-      // Create the issue relation using the issue relation service
-      await this.issueRelationService.createIssueRelation(null, relationData);
-    });
-
-    return similarIssues;
-  }
-
-  /**
-   * Generates similar issue suggestions for a given issue in a workspace.
-   * @param workspaceId The ID of the workspace.
-   * @param issueId The ID of the issue to find similar issues for.
-   * @returns An array of similar issues.
-   */
-  async summarizeIssue(issueId: string) {
-    // Fetch issue comments and their replies for the given issueId
-    const issueComments = await this.prisma.issueComment.findMany({
-      where: { issueId, deleted: null, parentId: null },
-      orderBy: { createdAt: 'asc' },
-      include: {
-        replies: {
-          where: { deleted: null },
-          orderBy: { createdAt: 'asc' },
-        },
-        issue: { include: { team: true } },
-      },
-    });
-
-    // If no comments are found, return undefined
-    if (issueComments.length < 1) {
-      return undefined;
-    }
-
-    // Fetch team users for the workspace and team associated with the issue
-    const teamUsers = await this.prisma.usersOnWorkspaces.findMany({
-      where: {
-        workspaceId: issueComments[0].issue.team.workspaceId,
-        teamIds: {
-          hasSome: [issueComments[0].issue.teamId],
-        },
-      },
-      include: { user: true },
-    });
-
-    // Create a mapping of user IDs to their full names
-    const formattedTeamUsers: Record<string, string> = teamUsers.reduce(
-      (acc: Record<string, string>, member) => {
-        acc[member.user.id] = member.user.fullname;
-        return acc;
-      },
-      {},
-    );
-
-    // Format comments and replies with user names
-    const formattedComments = issueComments.map((comment) => {
-      const sourceMetadata = comment.sourceMetadata as Record<string, string>;
-      const userName =
-        formattedTeamUsers[comment.userId] ||
-        sourceMetadata?.userDisplayName ||
-        null;
-      const message = convertTiptapJsonToText(comment.body);
-      const formattedReplies = comment.replies.map((reply) => {
-        const replySourceMetadata = reply.sourceMetadata as Record<
-          string,
-          string
-        >;
-        const replyUserName =
-          formattedTeamUsers[comment.userId] ||
-          replySourceMetadata?.userDisplayName ||
-          null;
-        const replyMessage = convertTiptapJsonToText(reply.body);
-        return `  Reply - ${replyUserName}: ${replyMessage}`;
-      });
-      return `Message - ${userName}: ${message}\n${formattedReplies.join('\n')}`;
-    });
-
-    // Generate a summary of the formatted comments using OpenAI
-    const rawSummary = await getSummary(
-      this.aiRequestsService,
-      formattedComments.join('\n'),
-      issueComments[0].issue.team.workspaceId,
-    );
-
-    // Extract bullet points from the raw summary using regex
-    const bulletPointRegex = /- (.*)/g;
-    const bulletPoints =
-      rawSummary
-        .match(bulletPointRegex)
-        ?.map((point) => point.replace(/^- /, '').trim()) || [];
-
-    // Return the extracted bullet points
-    return bulletPoints;
-  }
-
-  async aiFilters(
-    teamRequestParams: TeamRequestParams,
-    filterInput: FilterInput,
-  ) {
-    const labels = await this.prisma.label.findMany({
-      where: {
-        OR: [
-          { workspaceId: filterInput.workspaceId },
-          { teamId: teamRequestParams.teamId },
-        ],
-      },
-    });
-
-    const labelNames = labels.map((label) => label.name);
-
-    const assignee = await this.prisma.usersOnWorkspaces.findMany({
-      where: { teamIds: { has: teamRequestParams.teamId } },
-      include: { user: true },
-    });
-
-    const assigneeNames = assignee.map((assignee) => assignee.user.fullname);
-
-    const workflow = await this.prisma.workflow.findMany({
-      where: { teamId: teamRequestParams.teamId },
-    });
-
-    const workflowNames = workflow.map((workflow) => workflow.name);
-
-    const workspace = await getWorkspace(this.prisma, teamRequestParams.teamId);
-    return await getAiFilter(
-      this.aiRequestsService,
-      filterInput.text,
-      {
-        labelNames,
-        assigneeNames,
-        workflowNames,
-      },
-      workspace.id,
-    );
   }
 }

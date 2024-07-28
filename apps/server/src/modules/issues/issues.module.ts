@@ -15,6 +15,8 @@ import { IssuesController } from './issues.controller';
 import { IssuesProcessor } from './issues.processor';
 import { IssuesQueue } from './issues.queue';
 import IssuesService from './issues.service';
+import IssuesAIService from './issues-ai.service';
+import { IssuesAIController } from './issues-ai.controller';
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import IssuesService from './issues.service';
     VectorModule,
     BullModule.registerQueue({ name: 'issues' }),
   ],
-  controllers: [IssuesController],
+  controllers: [IssuesController, IssuesAIController],
   providers: [
     IssuesService,
     PrismaService,
@@ -35,6 +37,7 @@ import IssuesService from './issues.service';
     IssuesProcessor,
     IssueRelationService,
     AIRequestsService,
+    IssuesAIService,
   ],
   exports: [IssuesService, IssuesQueue],
 })

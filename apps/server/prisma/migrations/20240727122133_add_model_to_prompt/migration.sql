@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "LLMModels" AS ENUM ('GPT35TURBO', 'GPT4TURBO', 'LLAMA3', 'CLAUDEOPUS');
+
+-- AlterTable
+ALTER TABLE "Prompt" ADD COLUMN     "model" "LLMModels" NOT NULL DEFAULT 'GPT35TURBO';

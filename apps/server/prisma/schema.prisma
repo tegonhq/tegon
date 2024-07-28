@@ -59,6 +59,7 @@ model Workspace {
   attachments           Attachment[]
   View                  View[]
   aiRequests            AIRequest[]
+  prompts               Prompt[]
 }
 
 model UsersOnWorkspaces {
@@ -372,6 +373,7 @@ model IntegrationDefinition {
   workspaceId  String
 
   IntegrationAccount IntegrationAccount[]
+  @@unique([workspaceId, name])
 }
 
 model IntegrationAccount {
@@ -527,6 +529,21 @@ model AIRequest {
   successful Boolean @default(false)
 }
 
+model Prompt {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name        String
+  prompt      String  
+  model       LLMModels @default(GPT35TURBO)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+
+  @@unique([name, workspaceId])
+}
+
 enum Preference {
   ISSUE_ESTIMATES
   PRIORITIES
@@ -623,4 +640,11 @@ enum InviteStatus {
   INVITED
   ACCEPTED
   DECLINED
+}
+
+enum LLMModels {
+  GPT35TURBO
+  GPT4TURBO
+  LLAMA3
+  CLAUDEOPUS
 }

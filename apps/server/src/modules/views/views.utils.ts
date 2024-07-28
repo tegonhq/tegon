@@ -1,21 +1,24 @@
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 
-import {
-  CreateViewsRequestBody,
-  viewNameDescriptionPrompt,
-} from './views.interface';
+import { CreateViewsRequestBody } from './views.interface';
+import { PrismaService } from 'nestjs-prisma';
+import { LLMMappings } from 'modules/prompts/prompts.interface';
 
 export async function getViewNameDescription(
+  prisma: PrismaService,
   aiRequestsService: AIRequestsService,
   filtersData: CreateViewsRequestBody,
   workspaceId: string,
 ): Promise<Record<string, string>> {
+  const viewNameDescriptionPrompt = await prisma.prompt.findFirst({
+    where: { name: 'ViewNameDescription', workspaceId },
+  });
   const content = await aiRequestsService.getLLMRequest({
     messages: [
-      { role: 'system', content: viewNameDescriptionPrompt },
+      { role: 'system', content: viewNameDescriptionPrompt.prompt },
       { role: 'user', content: JSON.stringify(filtersData.filters) },
     ],
-    llmModel: 'gpt-3.5-turbo',
+    llmModel: LLMMappings[viewNameDescriptionPrompt.model],
     model: 'ViewNameDescription',
     workspaceId,
   });
