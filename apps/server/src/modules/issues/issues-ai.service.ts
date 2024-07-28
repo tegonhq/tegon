@@ -1,5 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
+
+import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
+
+import AIRequestsService from 'modules/ai-requests/ai-requests.services';
+import {
+  IssueRelationInput,
+  IssueRelationType,
+} from 'modules/issue-relation/issue-relation.interface';
+import IssueRelationService from 'modules/issue-relation/issue-relation.service';
+import { LLMMappings } from 'modules/prompts/prompts.interface';
+import { VectorService } from 'modules/vector/vector.service';
+
 import {
   AIInput,
   CreateIssueInput,
@@ -9,8 +22,6 @@ import {
   SubIssueInput,
   TeamRequestParams,
 } from './issues.interface';
-import { VectorService } from 'modules/vector/vector.service';
-import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import {
   getAiFilter,
   getDescription,
@@ -19,14 +30,6 @@ import {
   getSummary,
   getWorkspace,
 } from './issues.utils';
-import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
-import { LLMMappings } from 'modules/prompts/prompts.interface';
-import {
-  IssueRelationInput,
-  IssueRelationType,
-} from 'modules/issue-relation/issue-relation.interface';
-import IssueRelationService from 'modules/issue-relation/issue-relation.service';
-import { Response } from 'express';
 
 @Injectable()
 export default class IssuesAIService {
@@ -351,6 +354,7 @@ export default class IssuesAIService {
   async aiFilters(
     teamRequestParams: TeamRequestParams,
     filterInput: FilterInput,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<Record<string, any>> {
     // Retrieve labels based on the provided workspace and team IDs
     const labels = await this.prisma.label.findMany({
@@ -412,7 +416,7 @@ export default class IssuesAIService {
    */
   async generateSubIssues(
     subIssueInput: SubIssueInput,
-  ): Promise<{ title: string; description: string }[]> {
+  ): Promise<Array<{ title: string; description: string }>> {
     // Retrieve the sub-issue prompt based on the workspace ID
     const subIssuePrompt = await this.prisma.prompt.findFirst({
       where: { name: 'SubIssues', workspaceId: subIssueInput.workspaceId },
@@ -494,12 +498,11 @@ export default class IssuesAIService {
         }),
       );
       //   return subIssueTitles.map((title) => ({ title, description: '' }));
-    } else {
-      this.logger.debug(
-        `No sub-issues found in the generated content: ${subissues}`,
-      );
-      return [];
     }
+    this.logger.debug(
+      `No sub-issues found in the generated content: ${subissues}`,
+    );
+    return [];
   }
 
   /**
@@ -556,6 +559,7 @@ export default class IssuesAIService {
         complete: () => {
           response.end();
         },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         error: (error: any) => {
           console.error('Error in observable:', error);
           response.status(500).end('Internal Server Error');

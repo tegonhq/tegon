@@ -1,5 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
+
 import { PromptInput } from './prompts.interface';
 
 export default class PromptsService {

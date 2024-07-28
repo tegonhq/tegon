@@ -124,10 +124,8 @@ export default class IssuesService {
       // Iterate through subIssues and create them
       if (subIssues && subIssues.length > 0) {
         for (const subIssueData of subIssues) {
-          const { subIssues, issueRelation, ...otherSubIssueData } =
-            subIssueData;
           const subIssue = await createIssue({
-            ...otherSubIssueData,
+            ...subIssueData,
             number: lastNumber + 1,
             team: { connect: { id: teamRequestParams.teamId } },
             parent: { connect: { id: mainIssue.id } },

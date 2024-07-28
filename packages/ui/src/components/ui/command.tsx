@@ -57,7 +57,10 @@ const CommandInput = React.forwardRef<
   CommandInputProps
 >(({ className, icon, containerClassName, ...props }, ref) => (
   <div
-    className={cn('flex items-center border-b px-3', containerClassName)}
+    className={cn(
+      'flex items-center border-b border-border px-3',
+      containerClassName,
+    )}
     cmdk-input-wrapper=""
   >
     {icon && (
@@ -82,7 +85,10 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn('max-h-[500px] overflow-y-auto overflow-x-hidden', className)}
+    className={cn(
+      'command-list max-h-[500px] overflow-y-auto overflow-x-hidden',
+      className,
+    )}
     {...props}
   />
 ));

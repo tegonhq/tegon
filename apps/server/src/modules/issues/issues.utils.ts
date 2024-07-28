@@ -14,6 +14,7 @@ import {
   LinkedIssueSubType,
 } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
+import { LLMMappings } from 'modules/prompts/prompts.interface';
 
 import {
   CreateIssueInput,
@@ -23,7 +24,6 @@ import {
   SubscribeType,
   UpdateIssueInput,
 } from './issues.interface';
-import { LLMMappings } from 'modules/prompts/prompts.interface';
 
 export async function getIssueDiff(
   newIssueData: Issue,

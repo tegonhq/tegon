@@ -7,7 +7,7 @@ import { useIssueData } from 'hooks/issues';
 
 import { useCreateIssueCommentMutation } from 'services/issues/create-issue-comment';
 
-import { FileUpload } from '../../file-upload/file-upload';
+import { FileUpload } from '../../file-upload/file-upload.tsx';
 
 export function IssueComment() {
   const [editor, setEditor] = React.useState<EditorT>(undefined);

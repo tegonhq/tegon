@@ -156,7 +156,7 @@ export const IssueListItem = observer(
 
               <div
                 className={cn(
-                  'flex flex-col w-full py-2.5 border-b',
+                  'flex flex-col w-full py-2.5 border-b border-border',
                   noBorder && 'border-none',
                 )}
               >

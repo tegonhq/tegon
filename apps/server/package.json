@@ -35,6 +35,7 @@
     "migrate:resolve": "prisma migrate resolve --preview-feature",
     "prisma:studio": "prisma studio",
     "db:generate": "prisma generate",
+    "db:init-resources": "pnpm run migrate:dev && pnpm run db:generate",
     "create-resources": "node scripts/createUserWorkspaceTeam",
     "deploy-trigger-tasks": "npx trigger.dev@beta deploy --self-hosted"
   },

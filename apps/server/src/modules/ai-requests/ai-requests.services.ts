@@ -3,9 +3,9 @@ import { PrismaService } from 'nestjs-prisma';
 import { Ollama } from 'ollama';
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/index';
+import { Observable } from 'rxjs';
 
 import { requestInputBody } from './ai-requests.interface';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export default class AIRequestsService {
@@ -84,6 +84,7 @@ export default class AIRequestsService {
         let responseContent = '';
 
         (async () => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           let stream: any;
 
           switch (model) {

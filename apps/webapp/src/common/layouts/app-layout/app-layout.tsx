@@ -44,7 +44,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   return (
     <>
       <div className="h-[100vh] w-[100vw] flex">
-        <div className="min-w-[234px] flex flex-col">
+        <div className="min-w-[220px] flex flex-col">
           <div className="flex flex-col py-4 px-6">
             <div className="flex justify-between items-center">
               <WorkspaceDropdown />
@@ -79,7 +79,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
           <BottomBar />
         </div>
 
-        <div className="max-w-[calc(100vw_-_234px)] w-full">{children}</div>
+        <div className="max-w-[calc(100vw_-_220px)] w-full">{children}</div>
       </div>
 
       <GlobalShortcuts />

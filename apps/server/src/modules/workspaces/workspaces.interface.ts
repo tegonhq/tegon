@@ -1,5 +1,6 @@
 import { IntegrationName, LLMModels, Role, Status } from '@prisma/client';
 import { IsOptional, IsString } from 'class-validator';
+
 import {
   filterPrompt,
   issueDescriptionPrompt,

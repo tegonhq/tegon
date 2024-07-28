@@ -76,13 +76,13 @@ export function IssuePriorityDropdown({
 
     return (
       <Button
-        variant="secondary"
+        variant="ghost"
         role="combobox"
         aria-expanded={open}
-        className="flex items-center justify-between text-xs focus-visible:ring-1 focus-visible:border-primary"
+        className="flex items-center justify-between focus-visible:ring-1 focus-visible:border-primary"
       >
         <PriorityIcon.icon
-          size={14}
+          size={16}
           className={cn('mr-2 text-muted-foreground')}
         />
 

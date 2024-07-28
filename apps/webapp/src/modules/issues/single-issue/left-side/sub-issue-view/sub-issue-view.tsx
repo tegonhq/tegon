@@ -8,7 +8,7 @@ import { AddLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons/index';
 import * as React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
-import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
+import { NewIssue } from 'modules/issues/new-issue';
 
 import type { IssueType } from 'common/types/issue';
 
@@ -72,7 +72,7 @@ export function SubIssueView({ childIssues, issueId }: SubIssueViewProps) {
           </div>
         </CollapsibleContent>
       </Collapsible>
-      <NewIssueDialog
+      <NewIssue
         open={newIssueDialog}
         setOpen={setNewIssueDialog}
         parentId={issueId}

@@ -9,6 +9,9 @@ import {
   StarterKit,
   Placeholder,
   TiptapImage,
+  HighlightExtension,
+  AIHighlight,
+  MarkdownExtension,
 } from 'novel/extensions';
 import { UploadImagesPlugin } from 'novel/plugins';
 
@@ -157,5 +160,8 @@ export const defaultExtensions = [
   horizontalRule,
   heading,
   tiptapImage,
+  AIHighlight,
   fileExtension,
+  MarkdownExtension,
+  HighlightExtension,
 ];

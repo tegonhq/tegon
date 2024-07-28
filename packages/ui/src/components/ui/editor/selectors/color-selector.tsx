@@ -50,39 +50,39 @@ const TEXT_COLORS: BubbleColorMenuItem[] = [
 const HIGHLIGHT_COLORS: BubbleColorMenuItem[] = [
   {
     name: 'Default',
-    color: 'var(--novel-highlight-default)',
+    color: 'var(--novel-black)',
   },
   {
     name: 'Purple',
-    color: 'var(--novel-highlight-purple)',
+    color: '#9333EA',
   },
   {
     name: 'Red',
-    color: 'var(--novel-highlight-red)',
+    color: '#E00000',
   },
   {
     name: 'Yellow',
-    color: 'var(--novel-highlight-yellow)',
+    color: '#EAB308',
   },
   {
     name: 'Blue',
-    color: 'var(--novel-highlight-blue)',
+    color: '#2563EB',
   },
   {
     name: 'Green',
-    color: 'var(--novel-highlight-green)',
+    color: '#008A00',
   },
   {
     name: 'Orange',
-    color: 'var(--novel-highlight-orange)',
+    color: '#FFA500',
   },
   {
     name: 'Pink',
-    color: 'var(--novel-highlight-pink)',
+    color: '#BA4081',
   },
   {
     name: 'Gray',
-    color: 'var(--novel-highlight-gray)',
+    color: '#A8A29E',
   },
 ];
 
@@ -147,7 +147,7 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
             >
               <div className="flex items-center gap-2">
                 <div
-                  className="rounded-sm border px-2 py-px font-medium"
+                  className="rounded border border-border px-1.5 font-medium"
                   style={{ color }}
                 >
                   A
@@ -168,12 +168,12 @@ export const ColorSelector = ({ open, onOpenChange }: ColorSelectorProps) => {
                 editor.commands.unsetHighlight();
                 name !== 'Default' && editor.commands.setHighlight({ color });
               }}
-              className="flex cursor-pointer items-center justify-between px-2 py-1 hover:bg-accent hover:text-accent-foreground"
+              className="flex cursor-pointer items-center justify-between rounded px-2 py-1 hover:bg-accent hover:text-accent-foreground"
             >
               <div className="flex items-center gap-2">
                 <div
-                  className="rounded-sm border px-2 py-px font-medium"
-                  style={{ backgroundColor: color }}
+                  className="rounded-sm border border-border px-2 py-px font-medium"
+                  style={{ color }}
                 >
                   A
                 </div>

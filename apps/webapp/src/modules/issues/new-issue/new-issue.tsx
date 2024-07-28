@@ -1,68 +1,50 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, buttonVariants } from '@tegonhq/ui/components/button';
-import { Editor, type EditorT } from '@tegonhq/ui/components/editor/index';
+import { Form } from '@tegonhq/ui/components/form';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from '@tegonhq/ui/components/form';
-import { Switch } from '@tegonhq/ui/components/switch';
-import { useToast } from '@tegonhq/ui/components/use-toast';
-import { cn } from '@tegonhq/ui/lib/utils';
-import Link from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@tegonhq/ui/components/ui/accordion';
+import { Dialog, DialogContent } from '@tegonhq/ui/components/ui/dialog';
+import { useToast } from '@tegonhq/ui/components/ui/use-toast';
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Key } from 'ts-key-enum';
-import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 
-import { useGithubAccounts } from 'modules/settings/workspace-settings/integrations/github/github-utils';
-
 import { SCOPES } from 'common/scopes';
-import { IntegrationName } from 'common/types/integration-definition';
 import type { IssueType } from 'common/types/issue';
 
 import { useScope } from 'hooks';
-import { useTeam } from 'hooks/teams';
-import { useTeamWorkflows } from 'hooks/workflows';
 
 import {
   type CreateIssueParams,
   useCreateIssueMutation,
 } from 'services/issues/create-issue';
 
-import { useContextStore } from 'store/global-context-provider';
-
-import { DuplicateIssuesView } from './duplicates-view';
-import { IssueSuggestions } from './issue-suggestions';
-import { NewIssueDropdowns } from './new-issue-dropdowns';
-import {
-  getDefaultValues,
-  enableBidirectionalSwitch,
-  setDefaultValuesAgain,
-  isBidirectionalEnabled,
-} from './new-issue-utils';
+import { NewIssueForm } from './new-issue-form';
 import { NewIssueSchema } from './new-issues-type';
-import { FileUpload } from '../single-issue/left-side/file-upload/file-upload';
 
 interface NewIssueProps {
-  onClose: () => void;
-  teamIdentifier: string;
   parentId?: string;
+  open: boolean;
+  setOpen: (value: boolean) => void;
 }
 
-export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
+export function NewIssue({ open, setOpen, parentId }: NewIssueProps) {
   useScope(SCOPES.NewIssue);
-  const { workspaceSlug } = useParams();
-  const team = useTeam(teamIdentifier);
-  const { issuesStore } = useContextStore();
+  const { toast } = useToast();
+
+  const form = useForm<z.infer<typeof NewIssueSchema>>({
+    resolver: zodResolver(NewIssueSchema),
+    defaultValues: { issues: [{ parentId }] },
+  });
 
   const { mutate: createIssue, isLoading } = useCreateIssueMutation({
     onSuccess: (data: IssueType) => {
+      form.reset();
       toast({
         title: 'Issue Created',
         description: (
@@ -70,184 +52,78 @@ export function NewIssue({ onClose, teamIdentifier, parentId }: NewIssueProps) {
             <div>
               {data.number} - {data.title}
             </div>
-            <div>
-              <Link
-                className={cn(
-                  buttonVariants({ variant: 'ghost' }),
-                  'px-0 text-primary',
-                )}
-                href={`/${workspaceSlug}/issue/${team.identifier}-${data.number}`}
-              >
-                view issue
-              </Link>
-            </div>
           </div>
         ),
       });
     },
   });
 
-  const workflows = useTeamWorkflows(teamIdentifier);
-
-  const pathname = usePathname();
-  const [, rerenderHack] = React.useState<string[]>([]);
-  const [editor, setEditor] = React.useState<EditorT>(undefined);
-
-  const { toast } = useToast();
-
-  const { githubAccounts } = useGithubAccounts(IntegrationName.Github);
-  const enableBidirectionalOption = enableBidirectionalSwitch(
-    githubAccounts,
-    team.id,
-  );
-  const isBidirectional = isBidirectionalEnabled(githubAccounts, team.id);
-  const defaultValues = getDefaultValues(workflows, pathname, isBidirectional);
-
-  const [description, setDescription] = React.useState('');
-
-  const form = useForm<z.infer<typeof NewIssueSchema>>({
-    resolver: zodResolver(NewIssueSchema),
-    defaultValues,
+  const { fields } = useFieldArray({
+    control: form.control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: 'issues', // unique name for your Field Array
   });
 
-  // This is to change the default value for the workflow
-  React.useEffect(() => {
-    setDefaultValuesAgain(form, workflows, pathname, isBidirectional);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teamIdentifier]);
-
-  const onSubmit = (values: CreateIssueParams) => {
-    delete values['descriptionString'];
-
-    createIssue({ ...values, teamId: team.id, parentId });
-    onClose();
+  const onClose = () => {
+    setOpen(false);
   };
 
-  const setDescriptionValue = useDebouncedCallback((value) => {
-    setDescription(value);
-  }, 2000);
+  const onSubmit = (values: { issues: CreateIssueParams[] }) => {
+    const issue = values.issues[0];
+
+    createIssue({ ...issue, parentId } as CreateIssueParams);
+    onClose();
+  };
 
   // Shortcuts
   useHotkeys(`${Key.Meta}+${Key.Enter}`, () => form.handleSubmit(onSubmit)(), [
     SCOPES.NewIssue,
   ]);
 
-  const parentIssue = parentId ? issuesStore.getIssueById(parentId) : undefined;
-
   return (
-    <div className="flex flex-col gap-2">
-      {parentIssue && (
-        <div className="bg-accent text-accent-foreground rounded-md ml-2 p-2 py-1 flex gap-2 justify-start w-fit">
-          <div>Parent: </div>
-          <div>
-            {team.identifier}-{parentIssue.number}
-          </div>
-          <div className="max-w-[300px]">
-            <div className="truncate">{parentIssue.title}</div>
-          </div>
-        </div>
-      )}
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="p-3 pt-0 ">
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => {
-                return (
-                  <FormItem>
-                    <FormControl>
-                      <Editor
-                        {...field}
-                        onCreate={(editor) => setEditor(editor)}
-                        onChange={(value, valueString) => {
-                          field.onChange(value);
-                          form.setValue('descriptionString', valueString);
-                          setDescriptionValue(valueString);
-                        }}
-                        className="min-h-[50px] mb-8"
-                        autoFocus
-                        // This is when meta+Enter is triggered on description
-                        onSubmit={() => {
-                          form.handleSubmit(onSubmit)();
-                        }}
-                      />
-                    </FormControl>
-                  </FormItem>
-                );
-              }}
-            />
-            <div className="flex justify-end w-full py-1">
-              <FileUpload editor={editor} />
-            </div>
-
-            {description.trim() && (
-              <IssueSuggestions
-                teamId={team.id}
-                labelIds={form.getValues('labelIds')}
-                assigneeId={form.getValues('assigneeId')}
-                setLabelValue={(labelIds: string[]) => {
-                  form.setValue('labelIds', labelIds);
-                  rerenderHack(labelIds);
-                }}
-                setAssigneeValue={(assigneeId: string) => {
-                  form.setValue('assigneeId', assigneeId);
-                  rerenderHack([assigneeId]);
-                }}
-                description={description}
-              />
-            )}
-
-            <NewIssueDropdowns form={form} teamIdentifier={teamIdentifier} />
-          </div>
-
-          <div
-            className={cn(
-              'flex items-center justify-between p-3',
-              !enableBidirectionalOption && 'justify-end',
-            )}
-          >
-            {enableBidirectionalOption && (
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="flex items-center">
-                    <FormField
-                      control={form.control}
-                      name="isBidirectional"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Switch
-                              id="isBidirectional"
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-muted-foreground min-w-[150px] ml-2">
-                            Create github
-                          </FormLabel>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="flex gap-2">
-              <Button variant="ghost" isLoading={isLoading} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit" variant="secondary" isLoading={isLoading}>
-                Create issue
-              </Button>
-            </div>
-          </div>
-        </form>
-      </Form>
-      {form.getValues().description && (
-        <DuplicateIssuesView description={description} />
-      )}
-    </div>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent
+          closeIcon={false}
+          className="sm:max-w-[600px] min-w-[700px] gap-2"
+        >
+          <Form {...form}>
+            <form
+              className="flex flex-col overflow-hidden h-full"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <Accordion
+                type="single"
+                collapsible={false}
+                value={fields[0].id}
+                className="flex flex-col overflow-hidden h-full"
+              >
+                {fields.map((field, index) => {
+                  return (
+                    <AccordionItem
+                      value={field.id}
+                      key={field.id}
+                      className="flex flex-col overflow-hidden h-full"
+                    >
+                      <AccordionTrigger></AccordionTrigger>
+                      <AccordionContent className="flex flex-col h-full overflow-hidden">
+                        <NewIssueForm
+                          key={field.id}
+                          isSubIssue={index > 0}
+                          parentId={index === 0 && parentId}
+                          form={form}
+                          index={index}
+                          isLoading={isLoading}
+                          onClose={onClose}
+                        />
+                      </AccordionContent>
+                    </AccordionItem>
+                  );
+                })}
+              </Accordion>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

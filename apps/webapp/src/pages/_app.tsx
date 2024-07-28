@@ -1,6 +1,6 @@
 import './global.css';
-import '@tegonhq/ui/global.css';
 import '@tegonhq/ui/index.css';
+import '@tegonhq/ui/global.css';
 import type { NextComponentType } from 'next';
 import type { AppContext, AppInitialProps, AppLayoutProps } from 'next/app';
 

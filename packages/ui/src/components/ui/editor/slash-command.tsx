@@ -8,7 +8,6 @@ import {
   List,
   ListOrdered,
   Text,
-  TextQuote,
 } from 'lucide-react';
 import { createSuggestionItems } from 'novel/extensions';
 import { Command, renderItems } from 'novel/extensions';
@@ -100,20 +99,6 @@ export const suggestionItems = createSuggestionItems([
     },
   },
   {
-    title: 'Quote',
-    description: 'Capture a quote.',
-    searchTerms: ['blockquote'],
-    icon: <TextQuote size={18} />,
-    command: ({ editor, range }) =>
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .toggleNode('paragraph', 'paragraph')
-        .toggleBlockquote()
-        .run(),
-  },
-  {
     title: 'Code',
     description: 'Capture a code snippet.',
     searchTerms: ['codeblock'],
@@ -145,6 +130,7 @@ export const suggestionItems = createSuggestionItems([
 ]);
 
 export const slashCommand = Command.configure({
+  parent: 'tiptap',
   suggestion: {
     items: () => suggestionItems,
     render: renderItems,

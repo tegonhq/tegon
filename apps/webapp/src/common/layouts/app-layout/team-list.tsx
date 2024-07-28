@@ -73,7 +73,9 @@ export const TeamList = observer(() => {
                     title: 'Issues',
                     icon: IssuesLine,
                     href: `/${workspace.slug}/team/${team.identifier}/all`,
-                    activePaths: [`/${workspace.slug}/issue`],
+                    activePaths: [
+                      `/${workspace.slug}/issue/${team.identifier}-`,
+                    ],
                   },
                   {
                     title: 'Views',

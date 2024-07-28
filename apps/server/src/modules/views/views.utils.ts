@@ -1,8 +1,9 @@
+import { PrismaService } from 'nestjs-prisma';
+
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
+import { LLMMappings } from 'modules/prompts/prompts.interface';
 
 import { CreateViewsRequestBody } from './views.interface';
-import { PrismaService } from 'nestjs-prisma';
-import { LLMMappings } from 'modules/prompts/prompts.interface';
 
 export async function getViewNameDescription(
   prisma: PrismaService,
