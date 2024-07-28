@@ -9,6 +9,7 @@ import {IntegrationDefinition} from '../../integrationDefinition/entities/integr
 import {Attachment} from '../../attachment/entities/attachment.entity'
 import {View} from '../../view/entities/view.entity'
 import {AIRequest} from '../../aIRequest/entities/aIRequest.entity'
+import {Prompt} from '../../prompt/entities/prompt.entity'
 
 
 export class Workspace {
@@ -29,4 +30,5 @@ integrationDefinition?: IntegrationDefinition[] ;
 attachments?: Attachment[] ;
 View?: View[] ;
 aiRequests?: AIRequest[] ;
+prompts?: Prompt[] ;
 }

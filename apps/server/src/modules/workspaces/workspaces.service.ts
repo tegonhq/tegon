@@ -19,6 +19,7 @@ import {
   WorkspaceIdRequestBody,
   integrationDefinitionSeedData,
   labelSeedData,
+  promptsSeedData,
 } from './workspaces.interface';
 
 @Injectable()
@@ -126,6 +127,12 @@ export default class WorkspacesService {
           integrationDefinition: {
             createMany: {
               data: integrationDefinitionSeedData,
+              skipDuplicates: true,
+            },
+          },
+          prompts: {
+            createMany: {
+              data: promptsSeedData,
               skipDuplicates: true,
             },
           },
