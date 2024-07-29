@@ -1,4 +1,4 @@
-import type { IssueType } from '@tegonhq/types';
+import type { IssueType, WorkflowType } from '@tegonhq/types';
 
 import { IssueRelationEnum } from '@tegonhq/types';
 import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
@@ -16,9 +16,6 @@ import React from 'react';
 
 import { getWorkflowColor } from 'common/status-color';
 
-import { useTeamWithId } from 'hooks/teams';
-import { useTeamWorkflows } from 'hooks/workflows';
-
 import { useContextStore } from 'store/global-context-provider';
 
 export enum View {
@@ -35,14 +32,13 @@ interface IssueRelationsProps {
 
 export const IssueRelations = observer(
   ({ issue, currentView, setCurrentView }: IssueRelationsProps) => {
-    const { issueRelationsStore, issuesStore } = useContextStore();
+    const { issueRelationsStore, issuesStore, workflowsStore, teamsStore } =
+      useContextStore();
 
     const {
       push,
       query: { workspaceSlug },
     } = useRouter();
-    const team = useTeamWithId(issue.teamId);
-    const workflows = useTeamWorkflows(team.identifier);
 
     const blockedIssues = issueRelationsStore.getIssueRelationForType(
       issue.id,
@@ -65,6 +61,12 @@ export const IssueRelations = observer(
     }
 
     function getParentComponent() {
+      const workflows = workflowsStore.getWorkflowsForTeam(
+        parentIssue.teamId,
+      ) as WorkflowType[];
+
+      const team = teamsStore.getTeamWithId(parentIssue.teamId);
+
       const parentWorkflow =
         parentIssue &&
         workflows.find((workflow) => workflow.id === parentIssue.stateId);

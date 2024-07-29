@@ -500,7 +500,7 @@ export default class IssuesAIService {
           },
         },
       });
-      const responseStream = await this.aiRequestsService.LLMRequestStream({
+      const responseStream = await this.aiRequestsService.getLLMRequestStream({
         messages: [
           { role: 'system', content: descriptionPrompt.prompt },
           {
