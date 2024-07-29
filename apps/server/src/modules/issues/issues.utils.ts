@@ -466,3 +466,29 @@ export async function getWorkspace(prisma: PrismaService, teamId: string) {
   });
   return team.workspace;
 }
+
+export async function getDescription(
+  prisma: PrismaService,
+  aiRequestsService: AIRequestsService,
+  workspaceId: string,
+  descriptionInput: Record<string, string>,
+) {
+  const descriptionPrompt = await prisma.prompt.findUnique({
+    where: { name_workspaceId: { name: 'IssueDescription', workspaceId } },
+  });
+
+  return await aiRequestsService.getLLMRequest({
+    messages: [
+      { role: 'system', content: descriptionPrompt.prompt },
+      {
+        role: 'user',
+        content: `[INPUT] 
+        short_description: ${descriptionInput.shortDescription} 
+        user_input: ${descriptionInput.userInput}`,
+      },
+    ],
+    llmModel: LLMMappings[descriptionPrompt.model],
+    model: 'IssueDescription',
+    workspaceId,
+  });
+}

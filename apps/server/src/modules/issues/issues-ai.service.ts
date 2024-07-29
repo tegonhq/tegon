@@ -3,6 +3,7 @@ import { PrismaService } from 'nestjs-prisma';
 import {
   AIInput,
   CreateIssueInput,
+  DescriptionInput,
   FilterInput,
   IssueWithRelations,
   SubIssueInput,
@@ -12,6 +13,7 @@ import { VectorService } from 'modules/vector/vector.service';
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import {
   getAiFilter,
+  getDescription,
   getIssueTitle,
   getSuggestedLabels,
   getSummary,
@@ -24,6 +26,7 @@ import {
   IssueRelationType,
 } from 'modules/issue-relation/issue-relation.interface';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
+import { Response } from 'express';
 
 @Injectable()
 export default class IssuesAIService {
@@ -458,7 +461,39 @@ export default class IssuesAIService {
         .map((item) => item.trim().slice(1, -1));
 
       this.logger.debug(`Extracted sub-issue titles: ${subIssueTitles}`);
-      return subIssueTitles.map((title) => ({ title, description: '' }));
+
+      return Promise.all(
+        subIssueTitles.map(async (title: string) => {
+          const startTime = performance.now();
+          const aiDescription = await getDescription(
+            this.prisma,
+            this.aiRequestsService,
+            subIssueInput.workspaceId,
+            { shortDescription: title, userInput: subIssueInput.description },
+          );
+          const endTime = performance.now();
+          const elapsedTime = endTime - startTime;
+          this.logger.debug(
+            `getDescription execution time for title "${title}": ${elapsedTime} ms`,
+          );
+          // Extract the detailed description using regex
+          const regex = /\[OUTPUT\]\s*detailed_description:\s*([\s\S]*)/i;
+          const match = aiDescription.match(regex);
+
+          let description: string;
+          if (match && match[1]) {
+            description = match[1].trim();
+          } else {
+            this.logger.debug(
+              `No detailed description found in the AI output: ${aiDescription}`,
+            );
+            description = '';
+          }
+
+          return { title, description };
+        }),
+      );
+      //   return subIssueTitles.map((title) => ({ title, description: '' }));
     } else {
       this.logger.debug(
         `No sub-issues found in the generated content: ${subissues}`,
@@ -479,5 +514,56 @@ export default class IssuesAIService {
       { description: aiInput.description } as CreateIssueInput,
       aiInput.workspaceId,
     );
+  }
+
+  async getDescriptionStream(
+    descriptionInput: DescriptionInput,
+    response: Response,
+  ) {
+    try {
+      const descriptionPrompt = await this.prisma.prompt.findUnique({
+        where: {
+          name_workspaceId: {
+            name: 'IssueDescription',
+            workspaceId: descriptionInput.workspaceId,
+          },
+        },
+      });
+      const observable = await this.aiRequestsService.LLMRequestStream({
+        messages: [
+          { role: 'system', content: descriptionPrompt.prompt },
+          {
+            role: 'user',
+            content: `[INPUT] short_description: ${descriptionInput.description}
+                user_input: ${descriptionInput.userInput}`,
+          },
+        ],
+        llmModel: LLMMappings[descriptionPrompt.model],
+        model: 'IssueDescrptionStream',
+        workspaceId: descriptionInput.workspaceId,
+      });
+
+      response.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+      });
+
+      observable.subscribe({
+        next: (chunk: string) => {
+          response.write(`data: ${chunk}\n\n`);
+        },
+        complete: () => {
+          response.end();
+        },
+        error: (error: any) => {
+          console.error('Error in observable:', error);
+          response.status(500).end('Internal Server Error');
+        },
+      });
+    } catch (error) {
+      console.error('Error in callingFunction:', error);
+      response.status(500).end('Internal Server Error');
+    }
   }
 }
