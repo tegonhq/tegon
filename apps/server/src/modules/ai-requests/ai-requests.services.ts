@@ -5,6 +5,7 @@ import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/index';
 
 import { requestInputBody } from './ai-requests.interface';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export default class AIRequestsService {
@@ -34,6 +35,7 @@ export default class AIRequestsService {
     switch (model) {
       case 'gpt-3.5-turbo':
       case 'gpt-4-turbo':
+      case 'gpt-4o':
         // Send request to OpenAI
         this.logger.log(`Sending request to OpenAI with model: ${model}`);
         const chatCompletion: OpenAI.Chat.ChatCompletion =
@@ -68,5 +70,89 @@ export default class AIRequestsService {
     });
 
     return message;
+  }
+
+  async LLMRequestStream(
+    reqBody: requestInputBody,
+  ): Promise<Observable<string>> {
+    const messages = reqBody.messages;
+    let model = reqBody.llmModel;
+    this.logger.log(`Received request with model: ${model}`);
+
+    try {
+      const observable = new Observable<string>((subscriber) => {
+        let responseContent = '';
+
+        (async () => {
+          let stream: any;
+
+          switch (model) {
+            case 'gpt-3.5-turbo':
+            case 'gpt-4-turbo':
+            case 'gpt-4o':
+              // Send request to OpenAI
+              this.logger.log(`Sending request to OpenAI with model: ${model}`);
+              stream = await this.openaiClient.chat.completions.create({
+                model,
+                messages: messages as ChatCompletionMessageParam[],
+                stream: true,
+              });
+
+              /**  Iterate over the chunks received from the stream
+              Extract the content from the chunk
+              Append the content to the responseContent */
+              for await (const chunk of stream) {
+                const delta = chunk.choices[0]?.delta?.content || '';
+                responseContent += delta;
+
+                subscriber.next(delta);
+              }
+
+              break;
+
+            default:
+              // Send request to ollama as fallback
+              model = process.env.LOCAL_MODEL;
+              this.logger.log(`Sending request to ollama with model: ${model}`);
+              const ollamaStream = await ollama.chat({
+                model,
+                messages,
+                stream: true,
+              });
+
+              /**  Iterate over the chunks received from the stream
+              Extract the content from the chunk
+              Append the content to the responseContent */
+              for await (const chunk of ollamaStream) {
+                const delta = chunk.message.content || '';
+                responseContent += delta;
+
+                subscriber.next(delta);
+              }
+          }
+
+          subscriber.complete();
+
+          this.logger.log(`Saving request and response to database`);
+          await this.prisma.aIRequest.create({
+            data: {
+              data: JSON.stringify(
+                reqBody.messages.filter((message) => message.role === 'user'),
+              ),
+              modelName: reqBody.model,
+              workspaceId: reqBody.workspaceId,
+              response: responseContent,
+              successful: true,
+              llmModel: model,
+            },
+          });
+        })();
+      });
+
+      return observable;
+    } catch (error) {
+      this.logger.error(`Error in LLMRequestStream: ${error.message}`);
+      throw error;
+    }
   }
 }

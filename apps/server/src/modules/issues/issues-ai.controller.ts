@@ -5,18 +5,21 @@ import {
   Param,
   Post,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import {
   AIInput,
+  DescriptionInput,
   FilterInput,
   IssueRequestParams,
   SubIssueInput,
   TeamRequestParams,
 } from './issues.interface';
 import IssuesAIService from './issues-ai.service';
+import { Response } from 'express';
 
 @Controller({
   version: '1',
@@ -63,6 +66,19 @@ export class IssuesAIController {
     @Body() issueInput: SubIssueInput,
   ) {
     return await this.issuesAiService.generateSubIssues(issueInput);
+  }
+
+  @Post('stream/description')
+  @UseGuards(new AuthGuard())
+  async generateDescriptionStream(
+    @Query() _teamRequestParams: TeamRequestParams,
+    @Body() descriptionInput: DescriptionInput,
+    @Res() response: Response,
+  ) {
+    return await this.issuesAiService.getDescriptionStream(
+      descriptionInput,
+      response,
+    );
   }
 
   @Get(':issueId/summarize')

@@ -18,6 +18,7 @@ export enum LLMMappings {
   GPT4TURBO = 'gpt-4-turbo',
   LLAMA3 = 'llama3',
   CLAUDEOPUS = 'opus',
+  GPT4O = 'gpt-4o',
 }
 
 export const issueTitlePrompt = ` You have deep expertise in project management and task management for software teams. Whenever a text is provided to you, you have to create an issue title for software development tasks based on the description text.
@@ -299,3 +300,141 @@ viewName: Open High-Priority Design Issues with Bug Label
 
 viewDescription: This view shows open and in-progress tasks assigned to the Design team with high priority and labeled as a bug. It helps focus on critical design-related issues.
 `;
+
+export const issueDescriptionPrompt = `
+[TASK]
+"You will be given a short description of a professional or technical task, occasionally accompanied by specific user inputs or methods. Your objective is to expand this into a detailed, structured guide appropriate for industry professionals. This guide should include:
+1. A clear and concise introduction explaining the significance of the task.
+2. A detailed, step-by-step guide to executing the task, including any tools, technologies, or methods specified in the user's input.
+3. Clearly defined objectives or goals of the task.
+4. A conclusion that summarizes the benefits or outcomes of completing the task.
+5. Don't give reasoning in the response. I just want detailed output
+Aim to maintain high standards of clarity, precision, and relevance, ensuring the guide serves as an effective resource for professionals looking to implement the described processes. If the user input is provided, integrate it thoughtfully and accurately into the procedure. If no user input is specified, focus on the general best practices for the task."
+---
+
+[FORMAT]
+Follow the following format:
+
+[INPUT]
+short_description: A brief overview of the task or issue
+user_input: Additional input provided by the user, which can be null
+[OUTPUT]
+detailed_description: Elaborated steps or detailed explanation based on the given short description and user input
+
+
+---
+
+[EXAMPLES]
+
+[Example 1]
+[INPUT]
+short_description: Implement a content delivery network (CDN)
+user_input: using Cloudflare
+[OUTPUT]
+detailed_description: Steps to Implement a Content Delivery Network (CDN) using Cloudflare
+
+Step 1: Sign up for Cloudflare
+Create a Cloudflare account and set up a new zone.
+Step 2: Configure DNS Settings
+Configure DNS settings to point to Cloudflare's nameservers.
+Step 3: Set up CDN
+Configure Cloudflare's CDN settings to cache and distribute content.
+Step 4: Integrate with Origin Server
+Integrate Cloudflare with the origin server to fetch content.
+Step 5: Monitor and Optimize
+Monitor the CDN performance and optimize it for better content delivery.
+---
+[Example 2]
+[INPUT]
+short_description: Improve email marketing campaign performance
+user_input: I want to use A/B testing
+[OUTPUT]
+detailed_description: Introduction
+Improving email marketing campaign performance is essential to increase engagement and conversion rates. This document outlines the steps to improve email marketing campaign performance using A/B testing.
+Objectives
+Increase email open rates and click-through rates.
+Improve conversion rates and return on investment (ROI).
+Steps to Improve Email Marketing Campaign Performance
+#### 1. Identify Test Hypotheses
+Identify test hypotheses, such as subject line, email content, and call-to-action (CTA) button color.
+#### 2. Develop Test Plan
+Develop a test plan that outlines the test approach, sample size, and duration.
+#### 3. Create Test Variations
+Create test variations, such as A/B testing, to test the hypotheses.
+#### 4. Execute and Analyze the Test
+Execute and analyze the test using analytics tools, such as Google Analytics.
+#### 5. Refine and Optimize the Campaign
+Refine and optimize the campaign based on the test results.
+Conclusion
+By following these steps, you can improve email marketing campaign performance using A/B testing and increase engagement and conversion rates.
+---
+[Example 3]
+[INPUT]
+short_description: Implement a CI/CD pipeline for a web application
+user_input: using Jenkins and Docker
+[OUTPUT]
+detailed_description: Steps to Implement a CI/CD Pipeline for a Web Application using Jenkins and Docker
+
+Step 1: Set up Jenkins
+Install and configure Jenkins on a server.
+Step 2: Create a Docker Image
+Create a Docker image for the web application.
+Step 3: Configure Jenkins Pipeline
+Create a Jenkins pipeline that automates the build, test, and deployment process.
+Step 4: Integrate with Docker
+Integrate the Jenkins pipeline with Docker to deploy the application.
+Step 5: Monitor and Test
+Monitor the pipeline and perform regular tests to ensure application stability.
+---
+[Example 4]
+[INPUT]
+short_description: Improve customer onboarding experience
+user_input: I want to use a gamification approach
+[OUTPUT]
+detailed_description: Introduction
+Improving the customer onboarding experience is essential to increase customer satisfaction and reduce churn. This document outlines the steps to improve the customer onboarding experience using a gamification approach.
+Objectives
+Improve customer satisfaction and engagement.
+Reduce churn and increase customer retention.
+Steps to Improve Customer Onboarding Experience
+#### 1. Identify Onboarding Goals
+Identify the onboarding goals and key performance indicators (KPIs).
+#### 2. Design Gamification Elements
+Design gamification elements, such as rewards, badges, and leaderboards, to make the onboarding process engaging and fun.
+#### 3. Create Interactive Onboarding Content
+Create interactive onboarding content, such as videos, tutorials, and interactive guides, to educate customers about the product or service.
+#### 4. Implement Progress Tracking
+Implement progress tracking to track customers' progress and provide feedback.
+#### 5. Test and Refine the Onboarding Experience
+Test and refine the onboarding experience based on customer feedback and analytics data.
+Conclusion
+By following these steps, you can improve the customer onboarding experience using a gamification approach that increases customer satisfaction and engagement.
+---
+[Example 5]
+[INPUT]
+short_description: Set up a backup system for critical data
+user_input: using AWS services
+[OUTPUT]
+detailed_description: Steps to Set Up a Backup System using AWS Services
+
+Step 1: Choose an AWS Storage Service
+Select an AWS storage service (e.g., S3, EBS) to store backups.
+Step 2: Set up AWS Backup
+Configure AWS Backup to automate backups of critical data.
+Step 3: Define Backup Policy
+Create a backup policy that defines the frequency, retention period, and storage location.
+Step 4: Integrate with AWS Services
+Integrate the backup system with other AWS services (e.g., EC2, RDS).
+Step 5: Monitor and Test
+Monitor the backup system and perform regular tests to ensure data integrity.
+---
+
+
+
+For the given inputs, first generate your reasoning and then generate the outputs.
+
+[REASONING]
+my_reasoning: <Your careful and step-by-step reasoning before you return the desired outputs for the given inputs>
+
+[OUTPUT]
+detailed_description: <Your output here that matches the format of detailed_description>`;

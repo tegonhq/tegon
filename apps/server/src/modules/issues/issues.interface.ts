@@ -238,3 +238,8 @@ export class SubIssueInput extends AIInput {
   @IsArray()
   labelIds: string[];
 }
+
+export class DescriptionInput extends AIInput {
+  @IsString()
+  userInput: string;
+}

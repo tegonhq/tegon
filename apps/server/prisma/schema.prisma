@@ -647,4 +647,5 @@ enum LLMModels {
   GPT4TURBO
   LLAMA3
   CLAUDEOPUS
+  GPT4O
 }

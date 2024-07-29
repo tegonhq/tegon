@@ -2,6 +2,7 @@ import { IntegrationName, LLMModels, Role, Status } from '@prisma/client';
 import { IsOptional, IsString } from 'class-validator';
 import {
   filterPrompt,
+  issueDescriptionPrompt,
   issueLabelPrompt,
   issueSummarizePrompt,
   issueTitlePrompt,
@@ -182,5 +183,10 @@ export const promptsSeedData = [
     name: 'ViewNameDescription',
     prompt: viewNameDescriptionPrompt,
     model: LLMModels.GPT35TURBO,
+  },
+  {
+    name: 'IssueDescription',
+    prompt: issueDescriptionPrompt,
+    model: LLMModels.GPT4O,
   },
 ];
