@@ -272,11 +272,9 @@ export default class SlackService {
 
     // Create a new issue using the IssuesService
     const createdIssue = await this.issuesService.createIssueAPI(
-      { teamId: sessionData.teamId } as TeamRequestParams,
-      issueInput as CreateIssueInput,
+      { ...issueInput, teamId: sessionData.teamId } as CreateIssueInput,
       userId,
       null,
-      sourceMetadata,
     );
 
     // Get the Slack integration account for the user who created the issue

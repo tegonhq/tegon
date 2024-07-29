@@ -1,3 +1,6 @@
+import type { User } from '@tegonhq/types';
+
+import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -5,10 +8,7 @@ import React from 'react';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
 
-import { useUpdateIssueMutation } from 'services/issues';
-
 import { useContextStore } from 'store/global-context-provider';
-import type { User } from 'store/user-context';
 
 import { CommonDialog } from './common-dialog';
 

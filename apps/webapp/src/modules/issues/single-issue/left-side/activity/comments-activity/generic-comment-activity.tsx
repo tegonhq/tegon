@@ -4,6 +4,8 @@ import {
   RiMoreFill,
   RiSlackFill,
 } from '@remixicon/react';
+import { type IssueCommentType, type User } from '@tegonhq/types';
+import { Integration } from '@tegonhq/types';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import {
@@ -13,16 +15,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
-import { Editor } from '@tegonhq/ui/components/editor/index';
-import { EditLine } from '@tegonhq/ui/icons/index';
+import {
+  Editor,
+  EditorExtensions,
+  suggestionItems,
+} from '@tegonhq/ui/components/editor/index';
+import { EditLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
-import { type IssueCommentType } from 'common/types/issue';
-import { Integration } from 'common/types/linked-issue';
-
-import { UserContext, type User } from 'store/user-context';
+import { UserContext } from 'store/user-context';
 
 import { EditComment } from './edit-comment';
 import { ReplyComment } from './reply-comment';
@@ -142,7 +145,9 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
               comment.parentId && 'pb-2',
             )}
           >
-            <Editor value={comment.body} editable={false} className="mb-0" />
+            <Editor value={comment.body} editable={false} className="mb-0">
+              <EditorExtensions suggestionItems={suggestionItems} />
+            </Editor>
           </div>
         )}
 

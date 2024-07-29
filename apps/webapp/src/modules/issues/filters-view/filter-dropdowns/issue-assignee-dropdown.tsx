@@ -1,3 +1,5 @@
+import type { User } from '@tegonhq/types';
+
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import { Command, CommandInput } from '@tegonhq/ui/components/command';
@@ -12,8 +14,6 @@ import * as React from 'react';
 import { IssueAssigneeDropdownContent } from 'modules/issues/components';
 
 import { useUsersData } from 'hooks/users/use-users-data';
-
-import type { User } from 'store/user-context';
 
 interface IssueAssigneeDropdownProps {
   value?: string[];

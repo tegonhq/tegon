@@ -1,11 +1,11 @@
+import type { LinkedIssueType } from '@tegonhq/types';
+
 import {
   type IAnyStateTreeNode,
   type Instance,
   types,
   flow,
 } from 'mobx-state-tree';
-
-import type { LinkedIssueType } from 'common/types/linked-issue';
 
 import { tegonDatabase } from 'store/database';
 

@@ -1,13 +1,12 @@
+import type { LabelType } from '@tegonhq/types';
+
+import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { BadgeColor } from '@tegonhq/ui/components/badge';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import type { LabelType } from 'common/types/label';
-
 import { useTeamLabels } from 'hooks/labels';
 import { useCurrentTeam } from 'hooks/teams';
-
-import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 

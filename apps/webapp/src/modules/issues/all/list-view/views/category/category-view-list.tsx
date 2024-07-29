@@ -1,19 +1,20 @@
+import type { IssueType } from '@tegonhq/types';
+import type { WorkflowType } from '@tegonhq/types';
+
+import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@tegonhq/ui/components/collapsible';
-import { ChevronDown, ChevronRight } from '@tegonhq/ui/icons/index';
+import { ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
 
 import { getWorkflowColor } from 'common/status-color';
-import type { IssueType } from 'common/types/issue';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
-import type { WorkflowType } from 'common/types/team';
 
 import { useCurrentTeam } from 'hooks/teams';
 

@@ -1,5 +1,3 @@
-import type { ImperativePanelHandle } from 'react-resizable-panels';
-
 import {
   ResizableHandle,
   ResizablePanel,
@@ -14,8 +12,6 @@ import { NotificationsList } from './notifications-list';
 import { NotificationRightSide } from './right-side';
 
 export function Inbox() {
-  const ref = React.useRef<ImperativePanelHandle>(null);
-
   return (
     <main className="flex flex-col h-[100vh]">
       <Header />
@@ -24,7 +20,6 @@ export function Inbox() {
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel
             maxSize={50}
-            ref={ref}
             defaultSize={24}
             minSize={16}
             collapsible

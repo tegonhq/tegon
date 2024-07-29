@@ -1,14 +1,12 @@
 'use client';
 
+import type { BootstrapResponse } from '@tegonhq/types';
+
+import { useBootstrapRecords, useDeltaRecords } from '@tegonhq/services/sync';
 import { Loader } from '@tegonhq/ui/components/loader';
 import * as React from 'react';
 
-import type { BootstrapResponse } from 'common/types/data-loader';
-
 import { useCurrentWorkspace } from 'hooks/workspace';
-
-import { useBootstrapRecords } from 'services/sync/bootstrap-sync';
-import { useDeltaRecords } from 'services/sync/delta-sync';
 
 import { useContextStore } from 'store/global-context-provider';
 import { MODELS } from 'store/models';

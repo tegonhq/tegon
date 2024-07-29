@@ -1,13 +1,12 @@
-import * as React from 'react';
+import type { User } from '@tegonhq/types';
+import type { UsersOnWorkspaceType } from '@tegonhq/types';
 
-import type { UsersOnWorkspaceType } from 'common/types/workspace';
+import { useGetUsersQuery } from '@tegonhq/services/users';
+import * as React from 'react';
 
 import { useTeamWithId } from 'hooks/teams';
 
-import { useGetUsersQuery } from 'services/users/get-users';
-
 import { useContextStore } from 'store/global-context-provider';
-import type { User } from 'store/user-context';
 
 export function useUsersData(teamId?: string) {
   const { workspaceStore } = useContextStore();

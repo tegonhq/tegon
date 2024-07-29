@@ -1,10 +1,10 @@
+import type { TeamType } from '@tegonhq/types';
+
 import { RiAddLine } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
 import { Dialog, DialogTrigger } from '@tegonhq/ui/components/dialog';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-
-import type { TeamType } from 'common/types/team';
 
 import { useTeams } from 'hooks/teams';
 

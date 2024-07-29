@@ -1,11 +1,11 @@
+import type { User } from '@tegonhq/types';
+
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
 import { CommandGroup } from '@tegonhq/ui/components/command';
-import { AssigneeLine } from '@tegonhq/ui/icons/index';
+import { AssigneeLine } from '@tegonhq/ui/icons';
 
 import { useScope } from 'hooks';
-
-import type { User } from 'store/user-context';
 
 import { DropdownItem } from '../dropdown-item';
 

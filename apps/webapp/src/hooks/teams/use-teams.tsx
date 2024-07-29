@@ -1,4 +1,4 @@
-import type { TeamType } from 'common/types/team';
+import type { TeamType } from '@tegonhq/types';
 
 import { useContextStore } from 'store/global-context-provider';
 

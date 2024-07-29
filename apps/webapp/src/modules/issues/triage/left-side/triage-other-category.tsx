@@ -1,22 +1,22 @@
+import type { User } from '@tegonhq/types';
+import type { IssueType } from '@tegonhq/types';
+
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@tegonhq/ui/components/collapsible';
-import { ChevronDown, ChevronRight } from '@tegonhq/ui/icons/index';
+import { ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
-import type { IssueType } from 'common/types/issue';
 import { getUserData } from 'common/user-util';
 
 import { useCurrentTeam } from 'hooks/teams';
-
-import type { User } from 'store/user-context';
 
 import { getCreatedBy } from './triage-utils';
 

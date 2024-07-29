@@ -1,11 +1,11 @@
+import type { LabelType } from '@tegonhq/types';
+
 import { Button } from '@tegonhq/ui/components/button';
 import { Input } from '@tegonhq/ui/components/input';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { SettingSection } from 'modules/settings/setting-section';
-
-import type { LabelType } from 'common/types/label';
 
 import { useContextStore } from 'store/global-context-provider';
 

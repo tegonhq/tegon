@@ -1,4 +1,4 @@
-import type { SyncActionRecord } from 'common/types/data-loader';
+import type { SyncActionRecord } from '@tegonhq/types';
 
 import { saveCommentsData } from 'store/comments';
 import { saveIntegrationAccountData } from 'store/integration-accounts';

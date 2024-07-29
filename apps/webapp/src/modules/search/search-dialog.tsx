@@ -1,3 +1,6 @@
+import type { IssueType } from '@tegonhq/types';
+
+import { useGetSearchIssuesQuery } from '@tegonhq/services/search';
 import {
   CommandDialog,
   CommandEmpty,
@@ -12,11 +15,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { ModalIssueItem } from 'modules/issues/components/modals/modal-issue-item';
 
-import type { IssueType } from 'common/types/issue';
-
 import { useCurrentWorkspace } from 'hooks/workspace';
-
-import { useGetSearchIssuesQuery } from 'services/search';
 
 interface SearchDialogProps {
   open: boolean;

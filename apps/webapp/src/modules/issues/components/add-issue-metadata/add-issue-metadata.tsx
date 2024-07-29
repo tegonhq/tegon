@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@tegonhq/ui/components/ui/popover';
-import { AddLine } from '@tegonhq/ui/icons/index';
+import { AddLine } from '@tegonhq/ui/icons';
 import * as React from 'react';
 import { useWatch, type UseFormReturn } from 'react-hook-form';
 
@@ -20,6 +20,7 @@ interface AddIssueMetadataProps {
   onChange: (id: string, value: string | number | string[] | number[]) => void;
   form: UseFormReturn;
   index: number;
+  hideCommands?: string[];
 }
 
 export function AddIssueMetadata({
@@ -27,6 +28,7 @@ export function AddIssueMetadata({
   onChange,
   form,
   index,
+  hideCommands,
 }: AddIssueMetadataProps) {
   const values = useWatch({
     control: form.control,
@@ -41,7 +43,12 @@ export function AddIssueMetadata({
     : ContentMap.Assignee;
 
   const onSelect = (command: CommandInterface) => {
-    setFilter(command);
+    if (command.id === 'create-sub-issue') {
+      onChange(command.id, undefined);
+      setOpen(false);
+    } else {
+      setFilter(command);
+    }
   };
 
   const value = (filterId: string) => {
@@ -85,7 +92,10 @@ export function AddIssueMetadata({
               value={value(filter.id)}
             />
           ) : (
-            <DefaultPopoverContent onSelect={onSelect} />
+            <DefaultPopoverContent
+              onSelect={onSelect}
+              hideCommands={hideCommands}
+            />
           )}
         </Command>
       </PopoverContent>

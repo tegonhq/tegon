@@ -1,17 +1,14 @@
+import type { User } from '@tegonhq/types';
+
 import { RiGithubFill } from '@remixicon/react';
+import { type IssueCommentType } from '@tegonhq/types';
+import { LinkedIssueSubType, type LinkedIssueType } from '@tegonhq/types';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
-import { type IssueCommentType } from 'common/types/issue';
-import {
-  LinkedIssueSubType,
-  type LinkedIssueType,
-} from 'common/types/linked-issue';
-
 import { useContextStore } from 'store/global-context-provider';
-import type { User } from 'store/user-context';
 
 import { GenericCommentActivity } from './generic-comment-activity';
 import { ReplyComment } from './reply-comment';

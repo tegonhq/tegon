@@ -1,6 +1,5 @@
 import type { WorkspaceStoreType } from './store';
-
-import type { SyncActionRecord } from 'common/types/data-loader';
+import type { SyncActionRecord } from '@tegonhq/types';
 
 import { tegonDatabase } from 'store/database';
 import { MODELS } from 'store/models';

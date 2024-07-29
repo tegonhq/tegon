@@ -1,18 +1,13 @@
+import { useUpdateNotificationMutation } from '@tegonhq/services/notifications';
+import { NotificationTypeEnum, type NotificationType } from '@tegonhq/types';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
-import {
-  NotificationTypeEnum,
-  type NotificationType,
-} from 'common/types/notification';
-
 import { useTeamWithId } from 'hooks/teams';
 import { useUserData } from 'hooks/users';
-
-import { useUpdateNotificationMutation } from 'services/notifications';
 
 import { useContextStore } from 'store/global-context-provider';
 

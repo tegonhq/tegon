@@ -1,6 +1,5 @@
+import { useGetLinkedIssueDetailsQuery } from '@tegonhq/services/linked-issues';
 import ReactTimeAgo from 'react-time-ago';
-
-import { useGetLinkedIssueDetailsQuery } from 'services/linked-issues';
 
 interface SentryItemProps {
   linkedIssueId: string;

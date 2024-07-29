@@ -50,7 +50,7 @@ const heading = Heading.extend({
     const level: 1 | 2 | 3 = hasLevel
       ? node.attrs.level
       : this.options.levels[0];
-    const levelMap = { 1: 'text-xl', 2: 'text-lg', 3: 'text-base' };
+    const levelMap = { 1: 'text-xl', 2: 'text-lg', 3: 'text-md' };
 
     return [
       `h${level}`,
@@ -96,17 +96,17 @@ const starterKit = StarterKit.configure({
   },
   blockquote: {
     HTMLAttributes: {
-      class: cx('border-l-4 border-slate-400 dark:border-slate-500'),
+      class: cx('border-l-4 border-gray-400 dark:border-gray-500'),
     },
   },
   codeBlock: {
     HTMLAttributes: {
-      class: cx('rounded-sm bg-muted border p-5 font-mono font-medium'),
+      class: cx('rounded-sm bg-background-2 border p-5 font-mono font-medium'),
     },
   },
   code: {
     HTMLAttributes: {
-      class: cx('rounded-md bg-muted px-1.5 py-1 font-mono font-medium'),
+      class: cx('rounded-md bg-background-2 px-1.5 py-1 font-mono font-medium'),
       spellcheck: 'false',
     },
   },

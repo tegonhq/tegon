@@ -3,7 +3,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
 } from '@tegonhq/ui/components/breadcrumb';
-import { Inbox } from '@tegonhq/ui/icons/index';
+import { Inbox } from '@tegonhq/ui/icons';
 
 export function Header() {
   return (

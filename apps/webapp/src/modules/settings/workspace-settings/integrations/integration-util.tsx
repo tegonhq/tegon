@@ -1,10 +1,10 @@
-import React from 'react';
+import type { IntegrationAccountType } from '@tegonhq/types';
 
-import type { IntegrationAccountType } from 'common/types/integration-account';
 import {
   IntegrationName,
   type IntegrationDefinitionType,
-} from 'common/types/integration-definition';
+} from '@tegonhq/types';
+import React from 'react';
 
 import { useContextStore } from 'store/global-context-provider';
 

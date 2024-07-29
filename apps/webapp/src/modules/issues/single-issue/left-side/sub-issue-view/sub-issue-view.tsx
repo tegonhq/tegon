@@ -1,16 +1,16 @@
+import type { IssueType } from '@tegonhq/types';
+
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@tegonhq/ui/components/collapsible';
-import { AddLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons/index';
+import { AddLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import * as React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
 import { NewIssue } from 'modules/issues/new-issue';
-
-import type { IssueType } from 'common/types/issue';
 
 interface SubIssueViewProps {
   childIssues: IssueType[];

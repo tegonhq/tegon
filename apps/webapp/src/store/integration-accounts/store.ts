@@ -1,11 +1,11 @@
+import type { IntegrationAccountType } from '@tegonhq/types';
+
 import {
   type IAnyStateTreeNode,
   type Instance,
   types,
   flow,
 } from 'mobx-state-tree';
-
-import type { IntegrationAccountType } from 'common/types/integration-account';
 
 import { tegonDatabase } from 'store/database';
 

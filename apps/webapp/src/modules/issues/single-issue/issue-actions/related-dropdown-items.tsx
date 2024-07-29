@@ -1,3 +1,4 @@
+import { IssueRelationEnum } from '@tegonhq/types';
 import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
@@ -12,10 +13,8 @@ import {
   BlockedFill,
   DuplicateLine,
   BlocksFill,
-} from '@tegonhq/ui/icons/index';
+} from '@tegonhq/ui/icons';
 import * as React from 'react';
-
-import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { DropdownItem } from './dropdown-item';
 

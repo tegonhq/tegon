@@ -1,15 +1,14 @@
 import { RiGithubFill, RiLink, RiSlackFill } from '@remixicon/react';
+import { IntegrationName } from '@tegonhq/types';
+import { LinkedIssueSubType } from '@tegonhq/types';
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from '@tegonhq/ui/components/dropdown-menu';
-import { SentryIcon } from '@tegonhq/ui/icons/index';
+import { SentryIcon } from '@tegonhq/ui/icons';
 import { useRouter } from 'next/router';
 
 import { useIntegrationAccounts } from 'modules/settings/workspace-settings/integrations/integration-util';
-
-import { IntegrationName } from 'common/types/integration-definition';
-import { LinkedIssueSubType } from 'common/types/linked-issue';
 
 interface IssueLinkOptionsProps {
   setDialogOpen: (type: LinkedIssueSubType) => void;

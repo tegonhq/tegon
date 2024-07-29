@@ -1,3 +1,5 @@
+import type { User } from '@tegonhq/types';
+
 import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { observer } from 'mobx-react-lite';
@@ -6,8 +8,6 @@ import React from 'react';
 import { SettingSection } from 'modules/settings/setting-section';
 
 import { useUsersData } from 'hooks/users';
-
-import type { User } from 'store/user-context';
 
 import { AddMemberDialog } from './add-member-dialog';
 import { MemberItem } from './member-item';

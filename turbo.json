@@ -72,7 +72,9 @@
     "GMAIL_REDIRECT_URI",
     "GMAIL_WEBHOOK_SECRET",
     "GMAIL_PUBSUB_TOPIC",
-    "GMAIL_OTHER_LABEL"
+    "GMAIL_OTHER_LABEL",
+
+    "OLLAMA_HOST"
   ],
   "ui": "tui",
   "tasks": {
@@ -85,7 +87,7 @@
       "cache": false
     },
     "build": {
-      "dependsOn": [ "db:generate", "ui:generate" ],
+      "dependsOn": [ "db:init-resources", "ui:generate" ],
       "outputs": [ "dist/**", ".next/**" ]
     },
     "lint": { },

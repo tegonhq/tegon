@@ -1,6 +1,6 @@
-import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
+import type { LabelType } from '@tegonhq/types';
 
-import type { LabelType } from 'common/types/label';
+import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 
 import { LabelListItem, NoLabelList } from './label-list-item';
 

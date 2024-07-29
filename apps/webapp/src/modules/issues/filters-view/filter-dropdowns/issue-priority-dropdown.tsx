@@ -1,3 +1,4 @@
+import { Priorities } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { Command, CommandInput } from '@tegonhq/ui/components/command';
 import {
@@ -9,8 +10,6 @@ import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 
 import { IssuePriorityDropdownContent } from 'modules/issues/components';
-
-import { Priorities } from 'common/types/issue';
 
 interface IssuePriorityDropdownProps {
   value?: number[];

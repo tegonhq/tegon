@@ -1,3 +1,6 @@
+import type { User } from '@tegonhq/types';
+import type { IssueType } from '@tegonhq/types';
+
 import {
   Avatar,
   AvatarImage,
@@ -9,11 +12,8 @@ import { cn } from '@tegonhq/ui/lib/utils';
 
 import { getTailwindColor } from 'common/color-utils';
 import { groupBy } from 'common/lib/common';
-import type { IssueType } from 'common/types/issue';
 
 import { useUsersData } from 'hooks/users';
-
-import type { User } from 'store/user-context';
 
 interface AssigneeInsightsProps {
   issues: IssueType[];

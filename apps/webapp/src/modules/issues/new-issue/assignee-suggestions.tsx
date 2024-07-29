@@ -1,8 +1,8 @@
+import type { User } from '@tegonhq/types';
+
 import { Button } from '@tegonhq/ui/components/button';
 
 import { useUsersData } from 'hooks/users';
-
-import type { User } from 'store/user-context';
 
 interface AssigneeSuggestionsProps {
   userIds: string[];

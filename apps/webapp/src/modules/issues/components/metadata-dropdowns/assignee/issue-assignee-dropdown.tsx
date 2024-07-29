@@ -1,3 +1,5 @@
+import type { User } from '@tegonhq/types';
+
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import { Command, CommandInput } from '@tegonhq/ui/components/command';
@@ -6,13 +8,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
-import { AssigneeLine } from '@tegonhq/ui/icons/index';
+import { AssigneeLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 
 import { useUsersData } from 'hooks/users/use-users-data';
-
-import type { User } from 'store/user-context';
 
 import { IssueAssigneeDropdownContent } from './issue-assignee-dropdown-content';
 

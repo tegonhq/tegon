@@ -1,6 +1,6 @@
-import { useRouter } from 'next/router';
+import type { IssueType } from '@tegonhq/types';
 
-import type { IssueType } from 'common/types/issue';
+import { useRouter } from 'next/router';
 
 import { useCurrentTeam } from 'hooks/teams';
 

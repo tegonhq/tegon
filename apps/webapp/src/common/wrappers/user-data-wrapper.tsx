@@ -1,7 +1,6 @@
+import { useGetUserQuery } from '@tegonhq/services/users';
 import { Loader } from '@tegonhq/ui/components/loader';
 import * as React from 'react';
-
-import { useGetUserQuery } from 'services/users/get-user';
 
 import { UserContext } from 'store/user-context';
 

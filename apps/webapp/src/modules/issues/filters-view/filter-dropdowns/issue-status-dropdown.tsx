@@ -1,6 +1,6 @@
-// import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
+// import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types'
 
-// import type { WorkflowType } from 'common/types/team';
+// import type { WorkflowType } from '@tegonhq/types'
 
 import { Button } from '@tegonhq/ui/components/button';
 import { Command, CommandInput } from '@tegonhq/ui/components/command';

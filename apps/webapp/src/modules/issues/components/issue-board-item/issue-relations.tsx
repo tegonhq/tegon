@@ -1,13 +1,14 @@
+import type { IssueType } from '@tegonhq/types';
+
+import { IssueRelationEnum } from '@tegonhq/types';
+import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
 import { buttonVariants } from '@tegonhq/ui/components/button';
-import { BlockedFill, BlocksFill, SubIssue } from '@tegonhq/ui/icons/index';
+import { BlockedFill, BlocksFill, SubIssue } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { getWorkflowColor } from 'common/status-color';
-import type { IssueType } from 'common/types/issue';
-import { IssueRelationEnum } from 'common/types/issue-relation';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { useTeamWithId } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';

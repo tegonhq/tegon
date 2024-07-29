@@ -1,4 +1,11 @@
+import type {
+  GithubRepositoryMappings,
+  IntegrationAccountType,
+  Settings,
+} from '@tegonhq/types';
+
 import { RiDeleteBin7Fill } from '@remixicon/react';
+import { useUpdateIntegrationAccountMutation } from '@tegonhq/services/oauth';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,14 +20,6 @@ import {
 import { Button } from '@tegonhq/ui/components/button';
 import { useToast } from '@tegonhq/ui/components/use-toast';
 import React from 'react';
-
-import type {
-  GithubRepositoryMappings,
-  IntegrationAccountType,
-  Settings,
-} from 'common/types/integration-account';
-
-import { useUpdateIntegrationAccountMutation } from 'services/oauth';
 
 export interface GithubRepositoryMappingsWithAccount
   extends GithubRepositoryMappings {

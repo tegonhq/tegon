@@ -1,8 +1,12 @@
+import type { IssueType } from '@tegonhq/types';
+import type { WorkflowType } from '@tegonhq/types';
+
 import {
   Draggable,
   type DraggableProvided,
   type DraggableStateSnapshot,
 } from '@hello-pangea/dnd';
+import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
 import { BoardColumn, BoardItem } from '@tegonhq/ui/components/board';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { observer } from 'mobx-react-lite';
@@ -11,9 +15,6 @@ import React from 'react';
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
 import { getWorkflowColor } from 'common/status-color';
-import type { IssueType } from 'common/types/issue';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
-import type { WorkflowType } from 'common/types/team';
 
 import { useCurrentTeam } from 'hooks/teams';
 

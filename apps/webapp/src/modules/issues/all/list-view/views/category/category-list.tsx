@@ -1,6 +1,6 @@
-import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
+import type { WorkflowType } from '@tegonhq/types';
 
-import type { WorkflowType } from 'common/types/team';
+import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 
 import { CategoryViewList } from './category-view-list';
 

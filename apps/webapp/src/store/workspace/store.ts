@@ -1,14 +1,11 @@
+import type { UsersOnWorkspaceType, WorkspaceType } from '@tegonhq/types';
+
 import {
   type IAnyStateTreeNode,
   type Instance,
   types,
   flow,
 } from 'mobx-state-tree';
-
-import type {
-  UsersOnWorkspaceType,
-  WorkspaceType,
-} from 'common/types/workspace';
 
 import { tegonDatabase } from 'store/database';
 

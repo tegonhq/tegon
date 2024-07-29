@@ -1,3 +1,5 @@
+import type { LabelType } from '@tegonhq/types';
+
 import { Button } from '@tegonhq/ui/components/button';
 import { Command, CommandInput } from '@tegonhq/ui/components/command';
 import {
@@ -9,8 +11,6 @@ import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 
 import { IssueLabelDropdownContent } from 'modules/issues/components';
-
-import type { LabelType } from 'common/types/label';
 
 import { useTeamLabels } from 'hooks/labels';
 

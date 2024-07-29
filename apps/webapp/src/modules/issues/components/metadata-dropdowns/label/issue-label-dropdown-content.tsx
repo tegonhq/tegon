@@ -1,4 +1,7 @@
+import type { LabelType } from '@tegonhq/types';
+
 import { RiAddLine } from '@remixicon/react';
+import { useCreateLabelMutation } from '@tegonhq/services/labels';
 import { BadgeColor } from '@tegonhq/ui/components/badge';
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
 import {
@@ -10,11 +13,8 @@ import { Separator } from '@tegonhq/ui/components/separator';
 import React from 'react';
 
 import { generateOklchColor } from 'common/color-utils';
-import type { LabelType } from 'common/types/label';
 
 import { useCurrentWorkspace } from 'hooks/workspace';
-
-import { useCreateLabelMutation } from 'services/labels/create-label';
 
 interface IssueLabelDropdownContentProps {
   labels: LabelType[];

@@ -1,25 +1,20 @@
+import type { IssueType } from '@tegonhq/types';
+
+import { useGetSimilarIssuesQuery } from '@tegonhq/services/search';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@tegonhq/ui/components/collapsible';
-import {
-  ChevronDown,
-  ChevronRight,
-  DuplicateLine2,
-} from '@tegonhq/ui/icons/index';
+import { ChevronDown, ChevronRight, DuplicateLine2 } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { useRouter } from 'next/router';
 import React from 'react';
 
 import { ModalIssueItem } from 'modules/issues/components/modals/modal-issue-item';
 
-import type { IssueType } from 'common/types/issue';
-
 import { useCurrentWorkspace } from 'hooks/workspace';
-
-import { useGetSimilarIssuesQuery } from 'services/search';
 
 interface SimilarIssuesViewProps {
   issueId: string;

@@ -1,14 +1,13 @@
+import type { IssueType } from '@tegonhq/types';
+
+import { useUpdateIssueMutation } from '@tegonhq/services/issues';
+import { IssueRelationEnum } from '@tegonhq/types';
 import { CommandItem } from '@tegonhq/ui/components/command';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import type { IssueType } from 'common/types/issue';
-import { IssueRelationEnum } from 'common/types/issue-relation';
-
 import { useCurrentTeam } from 'hooks/teams';
-
-import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 

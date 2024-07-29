@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-sync-scripts */
 import { Button } from '@tegonhq/ui/components/button';
+import Logo from '@tegonhq/ui/components/logo';
 import { Widget } from '@typeform/embed-react';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { SessionAuth, signOut } from 'supertokens-auth-react/recipe/session';
 
 import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
-
-import Logo from 'components/logo';
 
 import { UserContext } from 'store/user-context';
 

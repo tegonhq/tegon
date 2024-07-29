@@ -1,3 +1,4 @@
+import { Priorities } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { Command, CommandInput } from '@tegonhq/ui/components/command';
 import {
@@ -7,8 +8,6 @@ import {
 } from '@tegonhq/ui/components/popover';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
-
-import { Priorities } from 'common/types/issue';
 
 import {
   IssuePriorityDropdownContent,

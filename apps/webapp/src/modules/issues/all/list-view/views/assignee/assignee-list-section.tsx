@@ -1,3 +1,7 @@
+import type { User } from '@tegonhq/types';
+import type { IssueType } from '@tegonhq/types';
+import type { UsersOnWorkspaceType } from '@tegonhq/types';
+
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import {
@@ -5,24 +9,16 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@tegonhq/ui/components/collapsible';
-import {
-  AssigneeLine,
-  ChevronDown,
-  ChevronRight,
-} from '@tegonhq/ui/icons/index';
+import { AssigneeLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
 
-import type { IssueType } from 'common/types/issue';
-import type { UsersOnWorkspaceType } from 'common/types/workspace';
-
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
 
 import { useContextStore } from 'store/global-context-provider';
-import type { User } from 'store/user-context';
 
 import { useFilterIssues } from '../../../../issues-utils';
 

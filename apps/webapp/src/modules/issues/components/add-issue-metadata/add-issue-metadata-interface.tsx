@@ -1,4 +1,9 @@
-import { AssigneeLine, LabelLine, PriorityHigh } from '@tegonhq/ui/icons/index';
+import {
+  AssigneeLine,
+  LabelLine,
+  PriorityHigh,
+  SubIssue,
+} from '@tegonhq/ui/icons';
 
 export const allCommands = [
   {
@@ -15,5 +20,10 @@ export const allCommands = [
     name: 'Priority',
     id: 'priority',
     Icon: PriorityHigh,
+  },
+  {
+    name: 'Create sub-issue',
+    id: 'create-sub-issue',
+    Icon: SubIssue,
   },
 ];

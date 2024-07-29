@@ -1,18 +1,15 @@
+import type { User } from '@tegonhq/types';
+
 import { RiSlackFill } from '@remixicon/react';
+import { type IssueCommentType } from '@tegonhq/types';
+import { LinkedSlackMessageType, type LinkedIssueType } from '@tegonhq/types';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
-import { SlackIcon } from '@tegonhq/ui/icons/index';
+import { SlackIcon } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
-import { type IssueCommentType } from 'common/types/issue';
-import {
-  LinkedSlackMessageType,
-  type LinkedIssueType,
-} from 'common/types/linked-issue';
-
 import { useContextStore } from 'store/global-context-provider';
-import type { User } from 'store/user-context';
 
 import { GenericCommentActivity } from './generic-comment-activity';
 import { ReplyComment } from './reply-comment';

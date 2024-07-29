@@ -1,12 +1,15 @@
+import { useCreateIssueCommentMutation } from '@tegonhq/services/issues';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
-import { Editor } from '@tegonhq/ui/components/editor/index';
-import { SendLine } from '@tegonhq/ui/icons/index';
+import {
+  Editor,
+  EditorExtensions,
+  suggestionItems,
+} from '@tegonhq/ui/components/editor/index';
+import { SendLine } from '@tegonhq/ui/icons';
 import * as React from 'react';
 
 import { useIssueData } from 'hooks/issues';
-
-import { useCreateIssueCommentMutation } from 'services/issues/create-issue-comment';
 
 import { UserContext } from 'store/user-context';
 
@@ -51,7 +54,9 @@ export function ReplyComment({
           }}
           onChange={(e) => setCommentValue(e)}
           className="w-full bg-transparent px-3 py-2 pt-0"
-        />
+        >
+          <EditorExtensions suggestionItems={suggestionItems} />
+        </Editor>
         <div className="flex justify-between items-center">
           {showReplyButton && (
             <>

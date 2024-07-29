@@ -1,15 +1,10 @@
 import { RiFileTransferLine } from '@remixicon/react';
+import { type IssueHistoryType } from '@tegonhq/types';
+import { IssueRelationEnum } from '@tegonhq/types';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
-import {
-  BlockedFill,
-  BlocksFill,
-  DuplicateLine,
-} from '@tegonhq/ui/icons/index';
+import { BlockedFill, BlocksFill, DuplicateLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { useRouter } from 'next/router';
-
-import { type IssueHistoryType } from 'common/types/issue';
-import { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { useTeamWithId } from 'hooks/teams';
 

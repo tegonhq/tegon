@@ -54,33 +54,23 @@ export class IssuesAIController {
 
   @Post('ai_title')
   @UseGuards(new AuthGuard())
-  async aiTitle(
-    @Query() _teamRequestParams: TeamRequestParams,
-    @Body() aiInput: AIInput,
-  ) {
+  async aiTitle(@Body() aiInput: AIInput) {
     return await this.issuesAiService.aiTitle(aiInput);
   }
 
   @Post('subissues/generate')
   @UseGuards(new AuthGuard())
-  async generateSubIssues(
-    @Query() _teamRequestParams: TeamRequestParams,
-    @Body() issueInput: SubIssueInput,
-  ) {
+  async generateSubIssues(@Body() issueInput: SubIssueInput) {
     return await this.issuesAiService.generateSubIssues(issueInput);
   }
 
   @Post('stream/description')
   @UseGuards(new AuthGuard())
   async generateDescriptionStream(
-    @Query() _teamRequestParams: TeamRequestParams,
     @Body() descriptionInput: DescriptionInput,
-    @Res() response: Response,
+    @Res({ passthrough: true }) response: Response,
   ) {
-    return await this.issuesAiService.getDescriptionStream(
-      descriptionInput,
-      response,
-    );
+    await this.issuesAiService.getDescriptionStream(descriptionInput, response);
   }
 
   @Get(':issueId/summarize')

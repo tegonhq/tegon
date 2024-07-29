@@ -1,3 +1,7 @@
+import type { User } from '@tegonhq/types';
+import type { IssueType } from '@tegonhq/types';
+import type { UsersOnWorkspaceType } from '@tegonhq/types';
+
 import {
   Draggable,
   type DraggableProvided,
@@ -6,20 +10,16 @@ import {
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { BoardColumn, BoardItem } from '@tegonhq/ui/components/board';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
-import { AssigneeLine } from '@tegonhq/ui/icons/index';
+import { AssigneeLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
-import type { IssueType } from 'common/types/issue';
-import type { UsersOnWorkspaceType } from 'common/types/workspace';
-
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
 
 import { useContextStore } from 'store/global-context-provider';
-import type { User } from 'store/user-context';
 
 import { useFilterIssues } from '../../../../issues-utils';
 

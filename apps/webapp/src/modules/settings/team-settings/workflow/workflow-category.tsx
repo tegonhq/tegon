@@ -1,5 +1,6 @@
+import type { WorkflowCategoryEnum, WorkflowType } from '@tegonhq/types';
+
 import { capitalizeFirstLetter } from 'common/lib/common';
-import type { WorkflowCategoryEnum, WorkflowType } from 'common/types/team';
 
 import { WorkflowItem } from './workflow-item';
 

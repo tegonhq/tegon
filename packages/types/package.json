@@ -1,0 +1,24 @@
+{
+  "name": "@tegonhq/types",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --fix"
+  },
+  "peerDependencies": {
+    "react": "^18"
+  },
+  "devDependencies": {
+    "@tegonhq/eslint-config": "workspace:*",
+    "@tegonhq/typescript-config": "workspace:*",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@tegonhq/ui": "workspace:*"
+  },
+  "exports": {
+    ".": [ "./src/index.ts" ]
+  }
+}

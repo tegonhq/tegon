@@ -1,5 +1,6 @@
-import type { IssueType } from 'common/types/issue';
-import { IssueRelationEnum } from 'common/types/issue-relation';
+import type { IssueType } from '@tegonhq/types';
+
+import { IssueRelationEnum } from '@tegonhq/types';
 
 import type { IssueRelationsStoreType } from 'store/issue-relation';
 import type { IssuesStoreType } from 'store/issues';

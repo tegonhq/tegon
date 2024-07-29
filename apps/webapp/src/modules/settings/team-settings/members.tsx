@@ -1,3 +1,5 @@
+import type { User } from '@tegonhq/types';
+
 import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { observer } from 'mobx-react-lite';
@@ -7,8 +9,6 @@ import { MemberItem } from 'modules/settings/workspace-settings/members/member-i
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
-
-import type { User } from 'store/user-context';
 
 import { SettingSection } from '../setting-section';
 import { AddMemberDialog } from '../workspace-settings/members/add-member-dialog';

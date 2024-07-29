@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@tegonhq/ui/components/select';
-import { BulletListLine, StackLine } from '@tegonhq/ui/icons/index';
+import { BulletListLine, StackLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import { useContextStore } from 'store/global-context-provider';

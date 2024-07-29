@@ -7,7 +7,7 @@ import {
   PriorityLow,
   PriorityMedium,
   UrgentFill,
-} from '@tegonhq/ui/icons/index';
+} from '@tegonhq/ui/icons';
 
 import { useScope } from 'hooks';
 

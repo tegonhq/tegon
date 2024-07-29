@@ -1,3 +1,6 @@
+import type { IssueType } from '@tegonhq/types';
+import type { LabelType } from '@tegonhq/types';
+
 import { BadgeColor } from '@tegonhq/ui/components/badge';
 import { Button } from '@tegonhq/ui/components/button';
 import {
@@ -5,14 +8,11 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@tegonhq/ui/components/collapsible';
-import { ChevronDown, ChevronRight } from '@tegonhq/ui/icons/index';
+import { ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
-
-import type { IssueType } from 'common/types/issue';
-import type { LabelType } from 'common/types/label';
 
 import { useCurrentTeam } from 'hooks/teams';
 

@@ -1,11 +1,10 @@
+import type { User } from '@tegonhq/types';
+import type { IssueSourceMetadataType } from '@tegonhq/types';
+
 import { RiGithubFill } from '@remixicon/react';
+import { Integration } from '@tegonhq/types';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
-import { SlackIcon } from '@tegonhq/ui/icons/index';
-
-import type { IssueSourceMetadataType } from 'common/types/issue';
-import { Integration } from 'common/types/linked-issue';
-
-import type { User } from 'store/user-context';
+import { SlackIcon } from '@tegonhq/ui/icons';
 
 export function getUserDetails(
   sourceMetadata: IssueSourceMetadataType,

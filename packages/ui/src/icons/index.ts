@@ -38,6 +38,17 @@ export * from './ai';
 export * from './help-line';
 export * from './create-issue-line';
 export * from './search-line';
+export * from './arrow-down-right';
+export * from './list-edit';
+export * from './text-line';
+export * from './heading-line';
+export * from './numbered-list-line';
+export * from './coding-line';
+export * from './link-line';
+export * from './bold-line';
+export * from './italic-line';
+export * from './strike-line';
+export * from './underline-line';
 
 export * from './team-line';
 export * from './issues-fill';

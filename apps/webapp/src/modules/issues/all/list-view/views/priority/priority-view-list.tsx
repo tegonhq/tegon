@@ -1,17 +1,16 @@
+import { Priorities, type IssueType } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@tegonhq/ui/components/collapsible';
-import { ChevronDown, ChevronRight } from '@tegonhq/ui/icons/index';
+import { ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
 import { PriorityIcons } from 'modules/issues/components';
-
-import { Priorities, type IssueType } from 'common/types/issue';
 
 import { useCurrentTeam } from 'hooks/teams';
 

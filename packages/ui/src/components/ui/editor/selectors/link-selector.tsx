@@ -3,13 +3,13 @@ import { useEditor } from 'novel';
 import { useEffect, useRef } from 'react';
 
 import { Button } from '@tegonhq/ui/components/button';
+import { Input } from '@tegonhq/ui/components/input';
 import {
   PopoverContent,
   Popover,
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
-
-import { cn } from '../../../../lib/utils';
+import { LinkLine } from '@tegonhq/ui/icons';
 
 export function isValidUrl(url: string) {
   try {
@@ -55,15 +55,11 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
   return (
     <Popover modal={true} open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" className="gap-2 rounded-none border-none">
-          <p className="text-base">↗</p>
-          <p
-            className={cn('underline decoration-stone-400 underline-offset-4', {
-              'text-blue-500': editor.isActive('link'),
-            })}
-          >
-            Link
-          </p>
+        <Button
+          variant="ghost"
+          className="gap-2 rounded border-none hover:bg-accent hover:text-accent-foreground"
+        >
+          <LinkLine size={16} />
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-60 p-0" sideOffset={10}>
@@ -75,20 +71,20 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
             const url = getUrlFromString(input.value);
             url && editor.chain().focus().setLink({ href: url }).run();
           }}
-          className="flex p-1"
+          className="flex items-center p-2 gap-2"
         >
-          <input
+          <Input
             ref={inputRef}
             type="text"
             placeholder="Paste a link"
-            className="flex-1 bg-background p-1 text-sm outline-none"
+            className="flex-1 outline-none"
             defaultValue={editor.getAttributes('link').href || ''}
           />
           {editor.getAttributes('link').href ? (
             <Button
-              variant="outline"
+              variant="secondary"
               type="button"
-              className="flex h-8 items-center rounded-sm p-1 text-red-600 transition-all hover:bg-red-100 dark:hover:bg-red-800"
+              className="h-8"
               onClick={() => {
                 editor.chain().focus().unsetLink().run();
               }}
@@ -96,7 +92,7 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
               <Trash className="h-4 w-4" />
             </Button>
           ) : (
-            <Button className="h-8 px-2">
+            <Button className="h-8" type="submit" variant="secondary">
               <Check className="h-4 w-4" />
             </Button>
           )}

@@ -1,10 +1,13 @@
+import type { IssueCommentType } from '@tegonhq/types';
+
+import { useUpdateIssueCommentMutation } from '@tegonhq/services/issues';
 import { Button } from '@tegonhq/ui/components/button';
-import { Editor } from '@tegonhq/ui/components/editor/index';
+import {
+  Editor,
+  EditorExtensions,
+  suggestionItems,
+} from '@tegonhq/ui/components/editor/index';
 import React from 'react';
-
-import type { IssueCommentType } from 'common/types/issue';
-
-import { useUpdateIssueCommentMutation } from 'services/issues/update-issue-comment';
 
 interface EditCommentProps {
   value: string;
@@ -33,7 +36,9 @@ export function EditComment({ value, onCancel, comment }: EditCommentProps) {
         value={commentValue}
         onChange={(e) => setCommentValue(e)}
         className="w-full bg-transparent p-3 pt-0 pl-0"
-      />
+      >
+        <EditorExtensions suggestionItems={suggestionItems} />
+      </Editor>
       <div className="flex justify-end items-center gap-2">
         <Button
           variant="ghost"

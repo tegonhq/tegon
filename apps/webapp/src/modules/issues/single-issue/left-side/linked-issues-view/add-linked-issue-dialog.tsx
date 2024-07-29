@@ -1,6 +1,5 @@
+import { LinkedIssueSubType } from '@tegonhq/types';
 import { Dialog, DialogContent } from '@tegonhq/ui/components/dialog';
-
-import { LinkedIssueSubType } from 'common/types/linked-issue';
 
 import { AddLinkedIssue } from './add-linked-issue';
 

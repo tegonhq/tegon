@@ -220,6 +220,7 @@ export default class GmailService implements OnModuleInit {
         description: JSON.stringify(tiptapJson),
         stateId,
         isBidirectional: false,
+        teamId: team.id,
       } as CreateIssueInput;
 
       const linkIssueData: LinkIssueData = {
@@ -230,7 +231,6 @@ export default class GmailService implements OnModuleInit {
       };
 
       issue = await this.issuesService.createIssueAPI(
-        { teamId: team.id } as TeamRequestParams,
         issueInput as CreateIssueInput,
         null,
         linkIssueData,

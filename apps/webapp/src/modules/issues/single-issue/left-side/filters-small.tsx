@@ -1,3 +1,4 @@
+import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { observer } from 'mobx-react-lite';
 
 import {
@@ -9,8 +10,6 @@ import {
 
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
-
-import { useUpdateIssueMutation } from 'services/issues';
 
 export const FilterSmall = observer(() => {
   const issue = useIssueData();

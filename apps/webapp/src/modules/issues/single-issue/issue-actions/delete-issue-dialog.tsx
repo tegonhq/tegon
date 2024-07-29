@@ -1,3 +1,6 @@
+import type { IssueType } from '@tegonhq/types';
+
+import { useDeleteIssueMutation } from '@tegonhq/services/issues';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -11,11 +14,7 @@ import {
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import type { IssueType } from 'common/types/issue';
-
 import { useCurrentTeam } from 'hooks/teams';
-
-import { useDeleteIssueMutation } from 'services/issues';
 
 interface DeleteIssueDialogProps {
   deleteIssueDialog: boolean;

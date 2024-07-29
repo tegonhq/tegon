@@ -1,14 +1,14 @@
+import type { User } from '@tegonhq/types';
+import type { IssueHistoryType } from '@tegonhq/types';
+import type { LinkedIssueType } from '@tegonhq/types';
+
 import { Timeline, TimelineItem } from '@tegonhq/ui/components/timeline';
 import { observer } from 'mobx-react-lite';
-
-import type { IssueHistoryType } from 'common/types/issue';
-import type { LinkedIssueType } from 'common/types/linked-issue';
 
 import { useIssueData } from 'hooks/issues';
 import { useUsersData } from 'hooks/users';
 
 import { useContextStore } from 'store/global-context-provider';
-import type { User } from 'store/user-context';
 
 import { ActivityItem } from './activity-item';
 import { LinkedIssueActivity } from './linked-issue-activity';

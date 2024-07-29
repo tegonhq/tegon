@@ -1,5 +1,5 @@
 import { Button } from '@tegonhq/ui/components/button';
-import { BoardLine, ListLine } from '@tegonhq/ui/icons/index';
+import { BoardLine, ListLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import { ViewEnum } from 'store/application';

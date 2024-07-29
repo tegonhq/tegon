@@ -1,7 +1,6 @@
+import { Integration } from '@tegonhq/types';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
 import * as React from 'react';
-
-import { Integration } from 'common/types/linked-issue';
 
 import {
   GenericCommentActivity,

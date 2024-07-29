@@ -1,29 +1,23 @@
-import { Editor } from '@tegonhq/ui/components/editor/index';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from '@tegonhq/ui/components/form';
-import { Switch } from '@tegonhq/ui/components/switch';
+import { Editor, EditorExtensions } from '@tegonhq/ui/components/editor/index';
+import { FormControl, FormField, FormItem } from '@tegonhq/ui/components/form';
+import { Loader } from '@tegonhq/ui/components/loader';
 import { Button } from '@tegonhq/ui/components/ui/button';
-import { cn } from '@tegonhq/ui/lib/utils';
+import { DeleteLine } from '@tegonhq/ui/icons';
 import React from 'react';
-import { type UseFormReturn } from 'react-hook-form';
+import {
+  useWatch,
+  type UseFieldArrayReturn,
+  type UseFormReturn,
+} from 'react-hook-form';
 
-import { useGithubAccounts } from 'modules/settings/workspace-settings/integrations/github/github-utils';
-
-import { IntegrationName } from 'common/types/integration-definition';
+import { AiWritingExtension } from 'common/ai-writing';
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { useSuggestionItems } from './hooks';
 import { NewIssueMetadata } from './new-issue-metadata';
-import {
-  enableBidirectionalSwitch,
-  isBidirectionalEnabled,
-  setDefaultValuesAgain,
-  useTeamForNewIssue,
-} from './new-issue-utils';
+import { NewIssueTitle } from './new-issue-title';
+import { setDefaultValuesAgain, useTeamForNewIssue } from './new-issue-utils';
 import { TeamDropdown } from './team-dropdown';
 import { AddIssueMetadata } from '../components/add-issue-metadata';
 
@@ -40,6 +34,8 @@ interface NewIssueFormProps {
   isLoading: boolean;
 
   onClose: () => void;
+
+  subIssueOperations: Partial<UseFieldArrayReturn>;
 }
 
 export function NewIssueForm({
@@ -48,18 +44,18 @@ export function NewIssueForm({
   index,
   isLoading,
   onClose,
+  subIssueOperations,
 }: NewIssueFormProps) {
-  const { team, setTeam } = useTeamForNewIssue();
-  const { workflowsStore } = useContextStore();
+  const issue = useWatch({
+    control: form.control,
+    name: `issues.${index}`,
+  });
 
-  // Check if bidirectinal is enabled
-  const { githubAccounts } = useGithubAccounts(IntegrationName.Github);
-  const enableBidirectionalOption = enableBidirectionalSwitch(
-    githubAccounts,
-    team.id,
-  );
-  const isBidirectional =
-    isBidirectionalEnabled(githubAccounts, team.id) && !isSubIssue;
+  console.log(issue);
+  const { team, setTeam } = useTeamForNewIssue(issue.teamId);
+  const { workflowsStore } = useContextStore();
+  const { suggestionItems, isLoading: aiLoading } =
+    useSuggestionItems(subIssueOperations);
 
   // This is to change the default value for the workflow
   React.useEffect(() => {
@@ -68,7 +64,6 @@ export function NewIssueForm({
       form,
       index,
       workflows,
-      isBidirectional,
       teamId: team.id,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,14 +74,27 @@ export function NewIssueForm({
   }
 
   const onChange = (id: string, value: string) => {
-    form.setValue(inputName(id), value);
+    if (id === 'create-sub-issue') {
+      subIssueOperations.append({
+        title: 'Sub Issue',
+        teamId: team.id,
+      });
+    } else {
+      form.setValue(inputName(id), value);
+    }
+  };
+
+  const getCommandsToHide = () => {
+    if (isSubIssue) {
+      return ['create-sub-issue'];
+    }
+
+    return [];
   };
 
   return (
     <div className="flex flex-col overflow-hidden">
-      <div className="p-4 text-lg font-normal flex justify-between items-center">
-        <h3> New issue </h3>
-      </div>
+      <NewIssueTitle isSubIssue={isSubIssue} form={form} index={index} />
 
       <div className="flex flex-col gap-2 p-4 pt-0 overflow-hidden">
         <FormField
@@ -98,10 +106,13 @@ export function NewIssueForm({
                 <FormControl>
                   <Editor
                     {...field}
-                    className="min-h-[200px]"
+                    className="new-issue-editor min-h-[200px]"
                     autoFocus
                     editorClassName="min-h-[300px]"
-                  />
+                    extensions={[AiWritingExtension]}
+                  >
+                    <EditorExtensions suggestionItems={suggestionItems} />
+                  </Editor>
                 </FormControl>
               </FormItem>
             );
@@ -126,44 +137,27 @@ export function NewIssueForm({
               form={form}
               index={index}
               onChange={onChange}
+              hideCommands={getCommandsToHide()}
             />
           </div>
         </div>
 
-        <div
-          className={cn(
-            'flex items-center justify-between p-3 pr-0 pb-0 shrink-0',
-            !enableBidirectionalOption && 'justify-end',
-          )}
-        >
-          {enableBidirectionalOption && (
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="flex items-center">
-                  <FormField
-                    control={form.control}
-                    name="isBidirectional"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Switch
-                            id="isBidirectional"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormLabel className="text-muted-foreground min-w-[150px] ml-2">
-                          Create github
-                        </FormLabel>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="flex gap-2">
+        <div className="flex items-center p-3 pr-0 pb-0 shrink-0 justify-end">
+          <div className="flex gap-2 items-center">
+            {aiLoading && <Loader text="Thinking..." variant="horizontal" />}
+            {isSubIssue && (
+              <Button
+                variant="ghost"
+                size="sm"
+                type="button"
+                isLoading={isLoading}
+                onClick={() => {
+                  subIssueOperations.remove(index);
+                }}
+              >
+                <DeleteLine size={16} />
+              </Button>
+            )}
             <Button
               variant="ghost"
               type="button"
