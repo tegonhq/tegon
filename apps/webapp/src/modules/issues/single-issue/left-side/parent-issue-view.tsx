@@ -9,17 +9,20 @@ import { useParams } from 'next/navigation';
 
 import { getWorkflowColor } from 'common/status-color';
 
-import { useCurrentTeam } from 'hooks/teams';
-import { useTeamWorkflows } from 'hooks/workflows';
+import { useContextStore } from 'store/global-context-provider';
 
 interface ParentIssueViewProps {
   issue: IssueType;
 }
 
 export function ParentIssueView({ issue }: ParentIssueViewProps) {
-  const team = useCurrentTeam();
   const { workspaceSlug } = useParams();
-  const workflows = useTeamWorkflows(team.identifier);
+  const { workflowsStore, teamsStore } = useContextStore();
+  const team = teamsStore.getTeamWithId(issue.parent.teamId);
+
+  const workflows = workflowsStore.getWorkflowsForTeam(
+    issue.parent.teamId,
+  ) as WorkflowType[];
 
   const workflow = workflows.find(
     (wk: WorkflowType) => wk.id === issue.parent.stateId,

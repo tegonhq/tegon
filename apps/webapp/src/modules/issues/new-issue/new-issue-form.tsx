@@ -150,7 +150,7 @@ export function NewIssueForm({
                 variant="ghost"
                 size="sm"
                 type="button"
-                isLoading={isLoading}
+                disabled={isLoading}
                 onClick={() => {
                   subIssueOperations.remove(index);
                 }}
