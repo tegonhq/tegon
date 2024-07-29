@@ -109,8 +109,8 @@ export class CreateIssueInput {
   @IsArray()
   subscriberIds?: string[];
 
-  @IsBoolean()
-  isBidirectional: boolean;
+  @IsString()
+  teamId: string;
 
   @IsOptional()
   @IsObject()

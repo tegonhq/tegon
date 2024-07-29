@@ -1,3 +1,5 @@
+import type { LabelType } from '@tegonhq/types';
+
 import { Button } from '@tegonhq/ui/components/button';
 import { Input } from '@tegonhq/ui/components/input';
 import { observer } from 'mobx-react-lite';
@@ -6,8 +8,6 @@ import * as React from 'react';
 import { EditLabel } from 'modules/settings/workspace-settings/labels/edit-label';
 import { Label } from 'modules/settings/workspace-settings/labels/label';
 import { NewLabel } from 'modules/settings/workspace-settings/labels/new-label';
-
-import type { LabelType } from 'common/types/label';
 
 import { useCurrentTeam } from 'hooks/teams';
 

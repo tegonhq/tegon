@@ -1,13 +1,11 @@
+import { useUpdateIssueMutation } from '@tegonhq/services/issues';
+import { Priorities } from '@tegonhq/types';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { PriorityIcons } from 'modules/issues/components';
 
-import { Priorities } from 'common/types/issue';
-
 import { useCurrentTeam } from 'hooks/teams';
-
-import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 

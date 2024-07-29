@@ -1,6 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
+import type {
+  GithubRepositories,
+  IntegrationAccountType,
+  Settings,
+} from '@tegonhq/types';
+import type { TeamType } from '@tegonhq/types';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RiGithubFill } from '@remixicon/react';
+import { useUpdateIntegrationAccountMutation } from '@tegonhq/services/oauth';
+import { IntegrationName } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DialogContent,
@@ -25,23 +34,13 @@ import {
 } from '@tegonhq/ui/components/select';
 import { Switch } from '@tegonhq/ui/components/switch';
 import { useToast } from '@tegonhq/ui/components/use-toast';
-import { TeamLine } from '@tegonhq/ui/icons/index';
+import { TeamLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import type {
-  GithubRepositories,
-  IntegrationAccountType,
-  Settings,
-} from 'common/types/integration-account';
-import { IntegrationName } from 'common/types/integration-definition';
-import type { TeamType } from 'common/types/team';
-
 import { useTeams } from 'hooks/teams';
-
-import { useUpdateIntegrationAccountMutation } from 'services/oauth';
 
 import { useGithubAccounts } from './github-utils';
 

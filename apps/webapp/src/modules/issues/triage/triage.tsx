@@ -1,5 +1,3 @@
-import type { ImperativePanelHandle } from 'react-resizable-panels';
-
 import {
   ResizableHandle,
   ResizablePanel,
@@ -18,7 +16,6 @@ import { RightSide } from './right-side';
 
 export function Triage() {
   useScope(SCOPES.AllIssues);
-  const ref = React.useRef<ImperativePanelHandle>(null);
 
   return (
     <main className="flex flex-col h-[100vh]">
@@ -28,7 +25,6 @@ export function Triage() {
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel
             maxSize={50}
-            ref={ref}
             defaultSize={24}
             minSize={16}
             collapsible

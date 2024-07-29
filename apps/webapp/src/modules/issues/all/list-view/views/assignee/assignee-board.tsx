@@ -1,11 +1,9 @@
 import type { DropResult } from '@hello-pangea/dnd';
+import type { UsersOnWorkspaceType } from '@tegonhq/types';
 
+import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { Board } from '@tegonhq/ui/components/board';
 import { observer } from 'mobx-react-lite';
-
-import type { UsersOnWorkspaceType } from 'common/types/workspace';
-
-import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 

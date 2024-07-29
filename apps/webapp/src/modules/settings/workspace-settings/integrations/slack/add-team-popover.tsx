@@ -1,3 +1,7 @@
+import type { IntegrationAccountType } from '@tegonhq/types';
+import type { TeamType } from '@tegonhq/types';
+
+import { useUpdateIntegrationAccountMutation } from '@tegonhq/services/oauth';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Command,
@@ -13,12 +17,7 @@ import { TeamIcon } from '@tegonhq/ui/components/team-icon';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import type { IntegrationAccountType } from 'common/types/integration-account';
-import type { TeamType } from 'common/types/team';
-
 import { useTeams } from 'hooks/teams';
-
-import { useUpdateIntegrationAccountMutation } from 'services/oauth';
 
 export interface Team {
   teamId: string;

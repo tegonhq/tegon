@@ -1,9 +1,8 @@
+import { WorkflowCategoryEnum, type WorkflowType } from '@tegonhq/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { SettingSection } from 'modules/settings/setting-section';
-
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { useCurrentTeam } from 'hooks/teams';
 

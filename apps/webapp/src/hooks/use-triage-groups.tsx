@@ -1,8 +1,8 @@
+import type { IssueSuggestionType, IssueType } from '@tegonhq/types';
+
+import { WorkflowCategoryEnum, type WorkflowType } from '@tegonhq/types';
 import { sort } from 'fast-sort';
 import React from 'react';
-
-import type { IssueSuggestionType, IssueType } from 'common/types/issue';
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { useContextStore } from 'store/global-context-provider';
 

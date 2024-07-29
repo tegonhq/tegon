@@ -1,12 +1,11 @@
+import type { IntegrationAccountType } from '@tegonhq/types';
+
 import { RiDeleteBin7Line } from '@remixicon/react';
+import { useUpdateIntegrationAccountMutation } from '@tegonhq/services/oauth';
 import { Button } from '@tegonhq/ui/components/button';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-
-import type { IntegrationAccountType } from 'common/types/integration-account';
-
-import { useUpdateIntegrationAccountMutation } from 'services/oauth';
 
 import { useContextStore } from 'store/global-context-provider';
 

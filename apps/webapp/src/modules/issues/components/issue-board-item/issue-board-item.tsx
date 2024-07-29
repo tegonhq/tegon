@@ -1,5 +1,6 @@
 import type { DraggableProvided } from '@hello-pangea/dnd';
 
+import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 
@@ -13,8 +14,6 @@ import {
 } from 'modules/issues/components';
 
 import { useTeamWithId } from 'hooks/teams/use-current-team';
-
-import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
 import { useContextStore } from 'store/global-context-provider';
 

@@ -1,7 +1,7 @@
 import { RiGithubFill } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
-import { SentryIcon, SlackIcon } from '@tegonhq/ui/icons/index';
+import { SentryIcon, SlackIcon } from '@tegonhq/ui/icons';
 import { useRouter } from 'next/router';
 
 import { Header } from 'modules/settings/header';

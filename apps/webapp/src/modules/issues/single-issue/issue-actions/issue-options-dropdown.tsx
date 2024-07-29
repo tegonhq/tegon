@@ -1,4 +1,7 @@
+import type { IssueRelationEnum } from '@tegonhq/types';
+
 import { RiMoreFill } from '@remixicon/react';
+import { LinkedIssueSubType } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DropdownMenu,
@@ -7,14 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
-import { ArrowForwardLine } from '@tegonhq/ui/icons/index';
+import { ArrowForwardLine } from '@tegonhq/ui/icons';
 import React from 'react';
 
 import { AddIssueRelationModal } from 'modules/issues/components/modals';
 import { MoveIssueToTeamDialog } from 'modules/shortcuts/dialogs';
-
-import type { IssueRelationEnum } from 'common/types/issue-relation';
-import { LinkedIssueSubType } from 'common/types/linked-issue';
 
 import { useIssueData } from 'hooks/issues';
 

@@ -1,6 +1,5 @@
 import type { IssueRelationsStoreType } from './store';
-
-import type { SyncActionRecord } from 'common/types/data-loader';
+import type { SyncActionRecord } from '@tegonhq/types';
 
 import { tegonDatabase } from 'store/database';
 

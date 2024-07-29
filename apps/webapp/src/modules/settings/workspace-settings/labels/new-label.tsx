@@ -1,3 +1,4 @@
+import { useCreateLabelMutation } from '@tegonhq/services/labels';
 import { Button } from '@tegonhq/ui/components/button';
 import { Input } from '@tegonhq/ui/components/input';
 import * as React from 'react';
@@ -5,8 +6,6 @@ import * as React from 'react';
 import { generateOklchColor } from 'common/color-utils';
 
 import { useCurrentWorkspace } from 'hooks/workspace/use-current-workspace';
-
-import { useCreateLabelMutation } from 'services/labels/create-label';
 
 interface NewLabelProps {
   onCancel: () => void;

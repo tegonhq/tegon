@@ -1,9 +1,8 @@
+import type { User } from '@tegonhq/types';
+import type { IssueHistoryType } from '@tegonhq/types';
+
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-
-import type { IssueHistoryType } from 'common/types/issue';
-
-import type { User } from 'store/user-context';
 
 import { LabelActivity } from './label-activity';
 import { PriorityActivity } from './priority-activity';

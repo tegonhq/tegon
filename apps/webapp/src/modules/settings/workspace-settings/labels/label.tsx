@@ -1,4 +1,7 @@
+import type { LabelType } from '@tegonhq/types';
+
 import { RiMoreFill } from '@remixicon/react';
+import { useDeleteLabelMutation } from '@tegonhq/services/labels';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DropdownMenu,
@@ -6,12 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
-import { DeleteLine, EditLine } from '@tegonhq/ui/icons/index';
+import { DeleteLine, EditLine } from '@tegonhq/ui/icons';
 import * as React from 'react';
-
-import type { LabelType } from 'common/types/label';
-
-import { useDeleteLabelMutation } from 'services/labels/delete-label';
 
 import { DeleteLabelAlert } from './delete-label-alert';
 

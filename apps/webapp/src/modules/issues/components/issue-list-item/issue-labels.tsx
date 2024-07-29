@@ -1,7 +1,7 @@
+import type { LabelType } from '@tegonhq/types';
+
 import { Badge, BadgeColor } from '@tegonhq/ui/components/badge';
 import { observer } from 'mobx-react-lite';
-
-import type { LabelType } from 'common/types/label';
 
 import { useContextStore } from 'store/global-context-provider';
 

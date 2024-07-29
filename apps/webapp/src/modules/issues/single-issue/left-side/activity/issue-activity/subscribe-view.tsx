@@ -1,12 +1,10 @@
+import { useUpdateIssueSubscribeMutation } from '@tegonhq/services/issues';
+import { SubscribeType } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { useToast } from '@tegonhq/ui/components/use-toast';
 import React from 'react';
 
-import { SubscribeType } from 'common/types/issue';
-
 import { useIssueData } from 'hooks/issues';
-
-import { useUpdateIssueSubscribeMutation } from 'services/issues/subscribe-issue';
 
 import { UserContext } from 'store/user-context';
 

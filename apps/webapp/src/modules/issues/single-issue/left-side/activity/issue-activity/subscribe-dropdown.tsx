@@ -1,10 +1,10 @@
+import type { User } from '@tegonhq/types';
+
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { useUsersData } from 'hooks/users';
-
-import type { User } from 'store/user-context';
 
 interface SubscribeDropdownProps {
   value: string[];

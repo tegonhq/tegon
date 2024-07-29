@@ -5,7 +5,7 @@ import {
 } from '@tegonhq/ui/components/breadcrumb';
 import { Button, buttonVariants } from '@tegonhq/ui/components/button';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
-import { SidebarLine } from '@tegonhq/ui/icons/index';
+import { SidebarLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';

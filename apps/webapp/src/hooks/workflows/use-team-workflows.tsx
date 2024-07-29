@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { WorkflowCategoryEnum, type WorkflowType } from '@tegonhq/types';
 import { computed } from 'mobx';
 import * as React from 'react';
-
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
 
 import { useContextStore } from 'store/global-context-provider';
 

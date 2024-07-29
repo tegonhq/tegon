@@ -1,25 +1,22 @@
 'use client';
 
-import Dexie from 'dexie';
-
-import type { IntegrationAccountType } from 'common/types/integration-account';
-import type { IntegrationDefinitionType } from 'common/types/integration-definition';
+import type { IntegrationAccountType } from '@tegonhq/types';
+import type { IntegrationDefinitionType } from '@tegonhq/types';
 import type {
   IssueType,
   IssueHistoryType,
   IssueCommentType,
   IssueSuggestionType,
-} from 'common/types/issue';
-import type { IssueRelationType } from 'common/types/issue-relation';
-import type { LabelType } from 'common/types/label';
-import type { LinkedIssueType } from 'common/types/linked-issue';
-import type { NotificationType } from 'common/types/notification';
-import type { TeamType, WorkflowType } from 'common/types/team';
-import type { ViewType } from 'common/types/view';
-import type {
-  UsersOnWorkspaceType,
-  WorkspaceType,
-} from 'common/types/workspace';
+} from '@tegonhq/types';
+import type { IssueRelationType } from '@tegonhq/types';
+import type { LabelType } from '@tegonhq/types';
+import type { LinkedIssueType } from '@tegonhq/types';
+import type { NotificationType } from '@tegonhq/types';
+import type { TeamType, WorkflowType } from '@tegonhq/types';
+import type { ViewType } from '@tegonhq/types';
+import type { UsersOnWorkspaceType, WorkspaceType } from '@tegonhq/types';
+
+import Dexie from 'dexie';
 
 import { MODELS } from './models';
 

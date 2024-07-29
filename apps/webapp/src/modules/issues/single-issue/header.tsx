@@ -5,7 +5,7 @@ import {
 } from '@tegonhq/ui/components/breadcrumb';
 import { Button } from '@tegonhq/ui/components/button';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
-import { CheckLine, CrossLine, SidebarLine } from '@tegonhq/ui/icons/index';
+import { CheckLine, CrossLine, SidebarLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

@@ -1,8 +1,10 @@
+import type { IssueType } from '@tegonhq/types';
+import type { WorkflowType } from '@tegonhq/types';
+
+import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
+
 import { groupBy } from 'common/lib/common';
 import { getWorkflowColor } from 'common/status-color';
-import type { IssueType } from 'common/types/issue';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
-import type { WorkflowType } from 'common/types/team';
 
 import { useContextStore } from 'store/global-context-provider';
 

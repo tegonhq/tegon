@@ -48,16 +48,11 @@ export class IssuesController {
   @UseGuards(new AuthGuard())
   async createIssue(
     @SessionDecorator() session: SessionContainer,
-    @Query() teamParams: TeamRequestParams,
     @Body() issueData: CreateIssueInput,
   ) {
     const userId = session.getUserId();
     // return await this.issuesService.createIssue(teamParams, issueData, userId);
-    return await this.issuesService.createIssueAPI(
-      teamParams,
-      issueData,
-      userId,
-    );
+    return await this.issuesService.createIssueAPI(issueData, userId);
   }
 
   @Post(':issueId')

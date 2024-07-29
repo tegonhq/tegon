@@ -1,3 +1,4 @@
+import { LinkedIssueSubType, type LinkedIssueType } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
@@ -9,14 +10,9 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
-import { AddLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons/index';
+import { AddLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-
-import {
-  LinkedIssueSubType,
-  type LinkedIssueType,
-} from 'common/types/linked-issue';
 
 import { useContextStore } from 'store/global-context-provider';
 

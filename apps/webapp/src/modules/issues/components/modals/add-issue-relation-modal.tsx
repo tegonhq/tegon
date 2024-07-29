@@ -1,3 +1,5 @@
+import type { IssueRelationEnum } from '@tegonhq/types';
+
 import {
   CommandDialog,
   CommandInput,
@@ -5,8 +7,6 @@ import {
 } from '@tegonhq/ui/components/command';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-
-import type { IssueRelationEnum } from 'common/types/issue-relation';
 
 import { ModalIssues } from './modal-issues';
 

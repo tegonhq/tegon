@@ -1,11 +1,9 @@
 import type { DropResult } from '@hello-pangea/dnd';
+import type { LabelType } from '@tegonhq/types';
 
+import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { Board } from '@tegonhq/ui/components/board';
 import { observer } from 'mobx-react-lite';
-
-import type { LabelType } from 'common/types/label';
-
-import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 

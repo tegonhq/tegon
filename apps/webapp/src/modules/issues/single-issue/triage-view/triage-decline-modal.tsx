@@ -1,4 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  useCreateIssueCommentMutation,
+  useUpdateIssueMutation,
+} from '@tegonhq/services/issues';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import {
@@ -14,7 +18,7 @@ import {
   FormItem,
 } from '@tegonhq/ui/components/form';
 import { Textarea } from '@tegonhq/ui/components/textarea';
-import { ChevronRight } from '@tegonhq/ui/icons/index';
+import { ChevronRight } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -22,11 +26,6 @@ import { z } from 'zod';
 
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
-
-import {
-  useCreateIssueCommentMutation,
-  useUpdateIssueMutation,
-} from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';

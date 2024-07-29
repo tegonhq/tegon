@@ -1,11 +1,11 @@
+import type { IntegrationDefinitionType } from '@tegonhq/types';
+
 import {
   type IAnyStateTreeNode,
   type Instance,
   types,
   flow,
 } from 'mobx-state-tree';
-
-import type { IntegrationDefinitionType } from 'common/types/integration-definition';
 
 import { tegonDatabase } from 'store/database';
 

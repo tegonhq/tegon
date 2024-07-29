@@ -1,13 +1,14 @@
 import type { SelectorItem } from './node-selector';
 
-import {
-  BoldIcon,
-  ItalicIcon,
-  UnderlineIcon,
-  StrikethroughIcon,
-  CodeIcon,
-} from 'lucide-react';
 import { EditorBubbleItem, useEditor } from 'novel';
+
+import {
+  BoldLine,
+  CodingLine,
+  ItalicLine,
+  StrikeLine,
+  UnderlineLine,
+} from '@tegonhq/ui/icons';
 
 import { cn } from '../../../../lib/utils';
 import { Button } from '../../button';
@@ -22,31 +23,31 @@ export const TextButtons = () => {
       name: 'bold',
       isActive: (editor) => editor.isActive('bold'),
       command: (editor) => editor.chain().focus().toggleBold().run(),
-      icon: BoldIcon,
+      icon: BoldLine,
     },
     {
       name: 'italic',
       isActive: (editor) => editor.isActive('italic'),
       command: (editor) => editor.chain().focus().toggleItalic().run(),
-      icon: ItalicIcon,
+      icon: ItalicLine,
     },
     {
       name: 'underline',
       isActive: (editor) => editor.isActive('underline'),
       command: (editor) => editor.chain().focus().toggleUnderline().run(),
-      icon: UnderlineIcon,
+      icon: UnderlineLine,
     },
     {
       name: 'strike',
       isActive: (editor) => editor.isActive('strike'),
       command: (editor) => editor.chain().focus().toggleStrike().run(),
-      icon: StrikethroughIcon,
+      icon: StrikeLine,
     },
     {
       name: 'code',
       isActive: (editor) => editor.isActive('code'),
       command: (editor) => editor.chain().focus().toggleCode().run(),
-      icon: CodeIcon,
+      icon: CodingLine,
     },
   ];
   return (
@@ -58,7 +59,10 @@ export const TextButtons = () => {
             item.command(editor);
           }}
         >
-          <Button className="rounded-none px-2" variant="ghost">
+          <Button
+            className="px-2 hover:bg-accent hover:text-accent-foreground"
+            variant="ghost"
+          >
             <item.icon
               className={cn('h-4 w-4', {
                 'text-blue-500': item.isActive(editor),

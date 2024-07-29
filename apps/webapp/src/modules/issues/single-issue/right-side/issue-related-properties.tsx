@@ -1,13 +1,9 @@
+import { type IssueType } from '@tegonhq/types';
+import { IssueRelationEnum, type IssueRelationType } from '@tegonhq/types';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { RelatedIssueItem } from 'modules/issues/components/related-issue-item';
-
-import { type IssueType } from 'common/types/issue';
-import {
-  IssueRelationEnum,
-  type IssueRelationType,
-} from 'common/types/issue-relation';
 
 import { useIssueData } from 'hooks/issues';
 

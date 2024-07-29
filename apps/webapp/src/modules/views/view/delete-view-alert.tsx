@@ -1,3 +1,4 @@
+import { useDeleteViewMutation } from '@tegonhq/services/views';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -9,8 +10,6 @@ import {
   AlertDialogFooter,
 } from '@tegonhq/ui/components/alert-dialog';
 import { useToast } from '@tegonhq/ui/components/use-toast';
-
-import { useDeleteViewMutation } from 'services/views';
 
 interface DeleteViewAlertProps {
   open: boolean;

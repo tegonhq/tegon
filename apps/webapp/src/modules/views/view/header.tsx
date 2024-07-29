@@ -1,4 +1,7 @@
+import type { ViewType } from '@tegonhq/types';
+
 import { RiBookmarkFill, RiBookmarkLine, RiMoreFill } from '@remixicon/react';
+import { useUpdateViewMutation } from '@tegonhq/services/views';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,17 +19,13 @@ import {
   EditLine,
   SidebarLine,
   StackLine,
-} from '@tegonhq/ui/icons/index';
+} from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import type { ViewType } from 'common/types/view';
-
 import { useCurrentTeam } from 'hooks/teams';
-
-import { useUpdateViewMutation } from 'services/views';
 
 import { useContextStore } from 'store/global-context-provider';
 

@@ -9,7 +9,7 @@ import {
   PriorityHigh,
   SubIssue,
   UnscopedLine,
-} from '@tegonhq/ui/icons/index';
+} from '@tegonhq/ui/icons';
 import * as React from 'react';
 
 export function DefaultFilterDropdown({

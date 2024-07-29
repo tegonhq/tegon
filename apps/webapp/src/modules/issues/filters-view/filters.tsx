@@ -1,4 +1,5 @@
 import { RiLoader4Line } from '@remixicon/react';
+import { useAIFilterIssuesMutation } from '@tegonhq/services/issues';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Command,
@@ -7,15 +8,13 @@ import {
   CommandGroup,
   CommandItem,
 } from '@tegonhq/ui/components/command';
-import { AI, CrossLine } from '@tegonhq/ui/icons/index';
+import { AI, CrossLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useFiltersFromAI } from 'hooks/use-filters-from-ai';
 import { useCurrentWorkspace } from 'hooks/workspace';
-
-import { useAIFilterIssuesMutation } from 'services/issues';
 
 import { FilterTypeEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
@@ -156,7 +155,7 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
             />
 
             {showOption && (
-              <CommandList className="absolute rounded-md shadow-1 min-w-[250px] top-8 z-10 bg-popover">
+              <CommandList className="absolute rounded-md shadow-1 border-[#ffffff38] min-w-[250px] top-8 z-10 bg-popover">
                 {filter ? (
                   <ContentComponent
                     onClose={() => {

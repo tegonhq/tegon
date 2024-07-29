@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useUpdateWorkspaceMutation } from '@tegonhq/services/workspace';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,
@@ -16,8 +17,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { SettingSection } from 'modules/settings/setting-section';
-
-import { useUpdateWorkspaceMutation } from 'services/workspace/update-workspace';
 
 import { useContextStore } from 'store/global-context-provider';
 

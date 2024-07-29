@@ -1,7 +1,7 @@
+import type { LabelType } from '@tegonhq/types';
+
 import { computed } from 'mobx';
 import * as React from 'react';
-
-import type { LabelType } from 'common/types/label';
 
 import { useContextStore } from 'store/global-context-provider';
 

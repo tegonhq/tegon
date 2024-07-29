@@ -1,4 +1,7 @@
+import type { TeamType } from '@tegonhq/types';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useInviteUsersMutation } from '@tegonhq/services/workspace';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DialogContent,
@@ -19,11 +22,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import type { TeamType } from 'common/types/team';
-
 import { useCurrentWorkspace } from 'hooks/workspace';
-
-import { useInviteUsersMutation } from 'services/workspace';
 
 import { useContextStore } from 'store/global-context-provider';
 

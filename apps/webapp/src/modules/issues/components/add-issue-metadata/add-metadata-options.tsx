@@ -10,14 +10,16 @@ import {
 
 export function DefaultPopoverContent({
   onSelect,
-  commands = [],
+  hideCommands = [],
 }: {
   onSelect: (command: CommandInterface) => void;
-  commands?: string[];
+  hideCommands?: string[];
 }) {
   const getCommands = () => {
-    if (commands && commands.length > 0) {
-      return allCommands.filter((command) => commands.includes(command.name));
+    if (hideCommands && hideCommands.length > 0) {
+      return allCommands.filter(
+        (command) => !hideCommands.includes(command.id),
+      );
     }
 
     return allCommands;

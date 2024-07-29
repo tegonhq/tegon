@@ -1,0 +1,46 @@
+{
+  "name": "@tegonhq/services",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --fix"
+  },
+  "peerDependencies": {
+    "react": "^18"
+  },
+  "devDependencies": {
+    "@tegonhq/eslint-config": "workspace:*",
+    "@tegonhq/typescript-config": "workspace:*",
+    "@types/node": "^20",
+    "@types/qs": "^6.9.12",
+    "@types/react": "^18",
+    "@types/superagent": "^8.1.4",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@tegonhq/types": "workspace:*",
+    "qs": "^6.12.0",
+    "react-query": "^3.39.3",
+    "superagent": "^8.1.2",
+    "zod": "3.23.8"
+  },
+  "exports": {
+    "./auth": "./src/auth/index.ts",
+    "./issue-relation": "./src/issue-relation/index.ts",
+    "./issues": [
+      "./src/issues/index.ts",
+      "./src/issues/ai/index.ts"
+    ],
+    "./labels": "./src/labels/index.ts",
+    "./linked-issues": "./src/linked-issues/index.ts",
+    "./notifications": "./src/notifications/index.ts",
+    "./oauth": "./src/oauth/index.ts",
+    "./search": "./src/search/index.ts",
+    "./sync": "./src/sync/index.ts",
+    "./team": "./src/team/index.ts",
+    "./users": "./src/users/index.ts",
+    "./views": "./src/views/index.ts",
+    "./workspace": "./src/workspace/index.ts",
+    "./utils": "./src/utils/ajax/index.ts"
+  }
+}

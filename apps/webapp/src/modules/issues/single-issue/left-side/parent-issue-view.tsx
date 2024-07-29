@@ -1,12 +1,13 @@
+import type { IssueType } from '@tegonhq/types';
+import type { WorkflowType } from '@tegonhq/types';
+
+import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
 import { buttonVariants } from '@tegonhq/ui/components/button';
 import { cn } from '@tegonhq/ui/lib/utils';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import { getWorkflowColor } from 'common/status-color';
-import type { IssueType } from 'common/types/issue';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
-import type { WorkflowType } from 'common/types/team';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';

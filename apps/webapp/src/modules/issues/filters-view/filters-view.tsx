@@ -1,5 +1,5 @@
 import { Button } from '@tegonhq/ui/components/button';
-import { Filter } from '@tegonhq/ui/icons/index';
+import { Filter } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 

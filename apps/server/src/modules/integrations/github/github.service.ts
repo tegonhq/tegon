@@ -177,8 +177,7 @@ export default class GithubService {
         this.logger.log(`Creating new issue for GitHub issue ${issue.id}`);
         // Create a new issue
         const createdIssue = await this.issuesService.createIssueAPI(
-          { teamId } as TeamRequestParams,
-          issueData.issueInput as CreateIssueInput,
+          { ...issueData.issueInput, teamId } as CreateIssueInput,
           issueData.userId,
           issueData.linkIssueData,
           issueData.sourceMetadata,

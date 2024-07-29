@@ -1,20 +1,19 @@
-import { Editor, type EditorT } from '@tegonhq/ui/components/editor/index';
+import { useUpdateIssueMutation } from '@tegonhq/services/issues';
+import { WorkflowCategoryEnum, type WorkflowType } from '@tegonhq/types';
+import { Editor, EditorExtensions } from '@tegonhq/ui/components/editor/index';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { Separator } from '@tegonhq/ui/components/separator';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types/team';
+import { useEditorSuggestionItems } from 'modules/issues/components/use-editor-suggestion-items';
 
 import { useIssueData } from 'hooks/issues';
 import { useTeamWithId } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
 
-import { useUpdateIssueMutation } from 'services/issues/update-issue';
-
 import { Activity } from './activity';
-import { FileUpload } from './file-upload/file-upload.tsx';
 import { FilterSmall } from './filters-small';
 import { IssueTitle } from './issue-title';
 import { LinkedIssuesView } from './linked-issues-view';
@@ -23,7 +22,6 @@ import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
 
 export const LeftSide = observer(() => {
-  const [editor, setEditor] = React.useState<EditorT>(undefined);
   const issue = useIssueData();
   const team = useTeamWithId(issue.teamId);
   const workflows = useTeamWorkflows(team.identifier);
@@ -34,6 +32,7 @@ export const LeftSide = observer(() => {
   const isTriageView = issue.stateId === triageWorkflow.id;
 
   const { mutate: updateIssue } = useUpdateIssueMutation({});
+  const { suggestionItems } = useEditorSuggestionItems();
 
   const onDescriptionChange = useDebouncedCallback((content: string) => {
     updateIssue({
@@ -67,14 +66,11 @@ export const LeftSide = observer(() => {
         )}
         <Editor
           value={issue.description}
-          onCreate={(editor) => setEditor(editor)}
           onChange={onDescriptionChange}
           className="min-h-[50px] mb-8 px-6 mt-3"
-        />
-
-        <div className="flex justify-end w-full py-1 px-4">
-          <FileUpload editor={editor} />
-        </div>
+        >
+          <EditorExtensions suggestionItems={suggestionItems} />
+        </Editor>
 
         <div className="mx-6">
           <Separator />

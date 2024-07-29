@@ -1,10 +1,9 @@
+import { useSummarizeIssue } from '@tegonhq/services/issues';
 import { Button } from '@tegonhq/ui/components/button';
-import { CrossLine } from '@tegonhq/ui/icons/index';
+import { CrossLine } from '@tegonhq/ui/icons';
 import React from 'react';
 
 import { useIssueData } from 'hooks/issues';
-
-import { useSummarizeIssue } from 'services/issues';
 
 interface IssueSummaryProps {
   onClose: () => void;

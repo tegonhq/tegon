@@ -1,9 +1,8 @@
-import React from 'react';
-
 import {
   IntegrationName,
   type IntegrationDefinitionType,
-} from 'common/types/integration-definition';
+} from '@tegonhq/types';
+import React from 'react';
 
 import { useContextStore } from 'store/global-context-provider';
 

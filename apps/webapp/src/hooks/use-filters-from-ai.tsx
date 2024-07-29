@@ -1,7 +1,8 @@
-import { Priorities } from 'common/types/issue';
+import type { User } from '@tegonhq/types';
+
+import { Priorities } from '@tegonhq/types';
 
 import { useContextStore } from 'store/global-context-provider';
-import type { User } from 'store/user-context';
 
 import { useUsersData } from './users';
 

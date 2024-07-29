@@ -1,6 +1,10 @@
 import type { z } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  ResetPasswordSchema,
+  useResetPasswordMutation,
+} from '@tegonhq/services/auth';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,
@@ -17,8 +21,6 @@ import { useForm } from 'react-hook-form';
 
 import { AuthLayout } from 'common/layouts/auth-layout';
 import { AuthGuard } from 'common/wrappers/auth-guard';
-
-import { ResetPasswordSchema, useResetPasswordMutation } from 'services/auth';
 
 export function ResetPassword() {
   const {

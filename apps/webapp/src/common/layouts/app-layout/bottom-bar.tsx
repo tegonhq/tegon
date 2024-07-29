@@ -1,13 +1,27 @@
 import { Button } from '@tegonhq/ui/components/button';
-import { CreateIssueLine, HelpLine, SearchLine } from '@tegonhq/ui/icons/index';
+import { CreateIssueLine, HelpLine, SearchLine } from '@tegonhq/ui/icons';
 import React from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 import { NewIssue } from 'modules/issues/new-issue';
 import { SearchDialog } from 'modules/search';
 
+import { SCOPES } from 'common/scopes';
+
 export function BottomBar() {
   const [newIssue, setNewIssue] = React.useState(false);
   const [search, setSearch] = React.useState(false);
+
+  useHotkeys(
+    'c',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (e: any) => {
+      setNewIssue(true);
+
+      e.preventDefault();
+    },
+    { scopes: [SCOPES.Global] },
+  );
 
   return (
     <div className="w-full flex justify-between px-6 py-4">

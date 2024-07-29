@@ -1,4 +1,7 @@
+import type { ViewType } from '@tegonhq/types';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useUpdateViewMutation } from '@tegonhq/services/views';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Dialog,
@@ -18,10 +21,6 @@ import { Input } from '@tegonhq/ui/components/input';
 import { useToast } from '@tegonhq/ui/components/use-toast';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-import type { ViewType } from 'common/types/view';
-
-import { useUpdateViewMutation } from 'services/views';
 
 export const EditViewSchema = z.object({
   name: z.string().min(6),

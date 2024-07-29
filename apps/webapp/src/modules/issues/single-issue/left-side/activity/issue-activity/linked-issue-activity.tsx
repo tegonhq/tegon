@@ -1,16 +1,15 @@
-import { RiGithubFill, RiLink } from '@remixicon/react';
-import { AvatarText } from '@tegonhq/ui/components/avatar';
-import { Gmail, SentryIcon, SlackIcon } from '@tegonhq/ui/icons/index';
+import type { User } from '@tegonhq/types';
 
+import { RiGithubFill, RiLink } from '@remixicon/react';
 import {
   Integration,
   LinkedSlackMessageType,
   type LinkedIssueType,
-} from 'common/types/linked-issue';
+} from '@tegonhq/types';
+import { AvatarText } from '@tegonhq/ui/components/avatar';
+import { Gmail, SentryIcon, SlackIcon } from '@tegonhq/ui/icons';
 
 import { useUsersData } from 'hooks/users';
-
-import type { User } from 'store/user-context';
 
 import { getUserDetails } from './user-activity-utils';
 

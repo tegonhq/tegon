@@ -1,3 +1,4 @@
+import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 
@@ -14,8 +15,6 @@ import {
 
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
-
-import { useUpdateIssueMutation } from 'services/issues/update-issue';
 
 import { IssueRelatedProperties } from './issue-related-properties';
 

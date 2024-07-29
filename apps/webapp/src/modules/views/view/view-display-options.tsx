@@ -1,3 +1,5 @@
+import type { ViewType } from '@tegonhq/types';
+
 import { observer } from 'mobx-react-lite';
 
 import {
@@ -5,8 +7,6 @@ import {
   LayoutSwitch,
   ViewOptions,
 } from 'modules/issues/components';
-
-import type { ViewType } from 'common/types/view';
 
 import { SaveViewAction } from './save-view-action';
 

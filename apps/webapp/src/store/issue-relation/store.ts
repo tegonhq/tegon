@@ -1,14 +1,10 @@
+import { IssueRelationEnum, type IssueRelationType } from '@tegonhq/types';
 import {
   type IAnyStateTreeNode,
   type Instance,
   types,
   flow,
 } from 'mobx-state-tree';
-
-import {
-  IssueRelationEnum,
-  type IssueRelationType,
-} from 'common/types/issue-relation';
 
 import { tegonDatabase } from 'store/database';
 

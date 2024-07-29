@@ -1,10 +1,10 @@
+import { type IssueHistoryType } from '@tegonhq/types';
+import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { getWorkflowColor } from 'common/status-color';
-import { type IssueHistoryType } from 'common/types/issue';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/types/status';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';

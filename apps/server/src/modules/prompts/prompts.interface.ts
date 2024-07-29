@@ -208,23 +208,19 @@ Utilizing the input specifics, break broad software development tasks into funct
 4. Include an explanatory note pinpointing how and why the main task was decomposed into the chosen subtasks, making the rationale transparent and educational for project management scenarios and enhancement tools.
 5. If you feel, this description can only have one issue and not much change from the main issue, then don't create a sub-issue, return empty sub-issues list. 
 6. For sub tasks with overlapping technological areas or functionalities, combine into unified subtasks to promote efficiency and clarity.
-7. Craft subtask titles succinctly, optimizing for immediate understanding and application.
+7. Craft subtask titles succinctly, optimizing for immediate understanding and application and the length shouldn't exceed 10 words.
+8. Don't create subtasks more than one for each category
 ---
-
 [FORMAT]
 Follow the following format:
-
 [INPUT]
 description: detailed description of the main issue
 labels: labels categorizing the main issue, such as 'feature', 'frontend', 'enhancements', 'bug', 'design' and 'backend'
 [OUTPUT]
 sub_issues: list of sizable sub-issues created from the main issue, excluding minor to-do tasks
 
-
 ---
-
 [EXAMPLES]
-
 [Example 1]
 [INPUT]
 description: Design new user profile page for social media platform
@@ -308,31 +304,26 @@ export const issueDescriptionPrompt = `
 2. A detailed, step-by-step guide to executing the task, including any tools, technologies, or methods specified in the user's input.
 3. Clearly defined objectives or goals of the task.
 4. A conclusion that summarizes the benefits or outcomes of completing the task.
-5. Don't give reasoning in the response. I just want detailed output
+5. I just want detailed output, don't give reasoning in the response.
+6. Don't provide code in the detailed description unless the user asks. 
 Aim to maintain high standards of clarity, precision, and relevance, ensuring the guide serves as an effective resource for professionals looking to implement the described processes. If the user input is provided, integrate it thoughtfully and accurately into the procedure. If no user input is specified, focus on the general best practices for the task."
 ---
-
 [FORMAT]
 Follow the following format:
-
 [INPUT]
 short_description: A brief overview of the task or issue
 user_input: Additional input provided by the user, which can be null
 [OUTPUT]
 detailed_description: Elaborated steps or detailed explanation based on the given short description and user input
 
-
 ---
-
 [EXAMPLES]
-
 [Example 1]
 [INPUT]
 short_description: Implement a content delivery network (CDN)
 user_input: using Cloudflare
 [OUTPUT]
 detailed_description: Steps to Implement a Content Delivery Network (CDN) using Cloudflare
-
 Step 1: Sign up for Cloudflare
 Create a Cloudflare account and set up a new zone.
 Step 2: Configure DNS Settings
@@ -374,7 +365,6 @@ short_description: Implement a CI/CD pipeline for a web application
 user_input: using Jenkins and Docker
 [OUTPUT]
 detailed_description: Steps to Implement a CI/CD Pipeline for a Web Application using Jenkins and Docker
-
 Step 1: Set up Jenkins
 Install and configure Jenkins on a server.
 Step 2: Create a Docker Image
@@ -416,7 +406,6 @@ short_description: Set up a backup system for critical data
 user_input: using AWS services
 [OUTPUT]
 detailed_description: Steps to Set Up a Backup System using AWS Services
-
 Step 1: Choose an AWS Storage Service
 Select an AWS storage service (e.g., S3, EBS) to store backups.
 Step 2: Set up AWS Backup
@@ -430,11 +419,8 @@ Monitor the backup system and perform regular tests to ensure data integrity.
 ---
 
 
-
 For the given inputs, first generate your reasoning and then generate the outputs.
-
 [REASONING]
 my_reasoning: <Your careful and step-by-step reasoning before you return the desired outputs for the given inputs>
-
 [OUTPUT]
 detailed_description: <Your output here that matches the format of detailed_description>`;

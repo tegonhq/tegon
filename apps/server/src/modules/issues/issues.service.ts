@@ -58,16 +58,17 @@ export default class IssuesService {
    * @returns The created issue with its relations.
    */
   async createIssueAPI(
-    teamRequestParams: TeamRequestParams,
     issueData: CreateIssueInput,
     userId?: string,
     linkIssuedata?: LinkIssueData,
     linkMetaData?: Record<string, string>,
   ): Promise<IssueWithRelations> {
-    // Destructure issueData to separate parentId, issueRelation, and other issue data
-    const { parentId, subIssues, issueRelation, ...otherIssueData } = issueData;
+    // Destructure issueData to separate parentId, subIssues, issueRelation, teamId, and other issue data
+    const { parentId, subIssues, issueRelation, teamId, ...otherIssueData } =
+      issueData;
 
-    const workspace = await getWorkspace(this.prisma, teamRequestParams.teamId);
+    // Fetch the workspace associated with the team
+    const workspace = await getWorkspace(this.prisma, teamId);
 
     // Get the subscriber IDs based on the provided user, assignee, and subscription type
     const subscriberIds = getSubscriberIds(
@@ -77,36 +78,31 @@ export default class IssuesService {
       SubscribeType.SUBSCRIBE,
     );
 
-    // Create the issue in the database with the provided data
+    // Create the issues in the database within a transaction
     const issues = await this.prisma.$transaction(async (prisma) => {
       // Get the last issue number for the team
-      let lastNumber = await getLastIssueNumber(
-        this.prisma,
-        teamRequestParams.teamId,
-      );
+      let lastNumber = await getLastIssueNumber(this.prisma, teamId);
 
+      // Helper function to create an issue
       const createIssue = async (data: Prisma.IssueCreateInput) => {
         lastNumber++;
         return prisma.issue.create({
           data: {
-            title: data.title,
-            team: { connect: { id: teamRequestParams.teamId } },
-            subscriberIds,
             ...data,
+            title: data.title,
+            team: { connect: { id: issueData.teamId } },
+            subscriberIds,
             ...(userId && { createdBy: { connect: { id: userId } } }),
-            ...(linkIssuedata && {
-              linkedIssue: { create: linkIssuedata },
-            }),
+            ...(linkIssuedata && { linkedIssue: { create: linkIssuedata } }),
             ...(linkMetaData && { sourceMetadata: linkMetaData }),
           },
-          include: {
-            team: true,
-          },
+          include: { team: true },
         });
       };
 
       const createdIssues: IssueWithRelations[] = [];
 
+      // Create the main issue
       const mainIssue = await createIssue({
         ...otherIssueData,
         title: await getIssueTitle(
@@ -115,7 +111,7 @@ export default class IssuesService {
           issueData,
           workspace.id,
         ),
-        team: { connect: { id: teamRequestParams.teamId } },
+        team: { connect: { id: teamId } },
         number: lastNumber + 1,
         ...(parentId && { parent: { connect: { id: parentId } } }),
       });
@@ -124,10 +120,11 @@ export default class IssuesService {
       // Iterate through subIssues and create them
       if (subIssues && subIssues.length > 0) {
         for (const subIssueData of subIssues) {
+          const { teamId, ...otherData } = subIssueData;
           const subIssue = await createIssue({
-            ...subIssueData,
+            ...otherData,
             number: lastNumber + 1,
-            team: { connect: { id: teamRequestParams.teamId } },
+            team: { connect: { id: teamId } },
             parent: { connect: { id: mainIssue.id } },
             title: await getIssueTitle(
               this.prisma,
@@ -143,7 +140,8 @@ export default class IssuesService {
       return createdIssues;
     });
 
-    issues.map(async (issue: IssueWithRelations) => {
+    // Process each created issue
+    for (const issue of issues) {
       // Upsert the issue history with the issue diff and other metadata
       await this.upsertIssueHistory(
         issue,
@@ -180,8 +178,9 @@ export default class IssuesService {
       if (issueState.category === WorkflowCategory.TRIAGE) {
         this.issuesQueue.handleTriageIssue(issue, false);
       }
-    });
+    }
 
+    // Return the main created issue
     return issues[0];
   }
 

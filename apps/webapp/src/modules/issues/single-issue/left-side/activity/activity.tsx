@@ -5,7 +5,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@tegonhq/ui/components/tabs';
-import { AI } from '@tegonhq/ui/icons/index';
+import { AI } from '@tegonhq/ui/icons';
 import React from 'react';
 
 import { CommentsActivity } from './comments-activity';

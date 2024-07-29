@@ -1,7 +1,7 @@
-import { Inbox } from '@tegonhq/ui/icons/index';
-import { observer } from 'mobx-react-lite';
+import type { NotificationType } from '@tegonhq/types';
 
-import type { NotificationType } from 'common/types/notification';
+import { Inbox } from '@tegonhq/ui/icons';
+import { observer } from 'mobx-react-lite';
 
 import { useContextStore } from 'store/global-context-provider';
 

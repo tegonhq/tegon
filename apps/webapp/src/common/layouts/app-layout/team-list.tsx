@@ -1,3 +1,5 @@
+import type { TeamType } from '@tegonhq/types';
+
 import {
   Accordion,
   AccordionContent,
@@ -10,11 +12,9 @@ import {
   IssuesLine,
   StackLine,
   TriageLine,
-} from '@tegonhq/ui/icons/index';
+} from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-
-import type { TeamType } from 'common/types/team';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useCurrentWorkspace } from 'hooks/workspace';

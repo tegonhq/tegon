@@ -25,20 +25,22 @@ export interface LoaderProps
     VariantProps<typeof loaderVariants> {
   height?: number;
   text?: string;
+  variant?: 'horizontal' | 'vertical';
 }
 
 const Loader = React.forwardRef<HTMLButtonElement, LoaderProps>(
-  ({ height = 300, size, text }) => {
+  ({ height = 300, size, text, variant = 'vertical' }) => {
     return (
       <div
         className={cn(
           loaderVariants({ size }),
           `h-[${height}px]`,
-          'w-full flex flex-col',
+          'w-full flex',
+          variant === 'horizontal' ? 'items-center gap-1' : 'flex-col gap-2',
         )}
       >
-        <RiLoader4Line size={18} className="animate-spin mr-2" />
-        {text && <p className="text-sm text-muted-foreground mt-2">{text}</p>}
+        <RiLoader4Line size={18} className="animate-spin" />
+        {text && <p className="text-sm text-muted-foreground">{text}</p>}
       </div>
     );
   },

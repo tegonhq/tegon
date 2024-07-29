@@ -1,7 +1,9 @@
-import { RiDownloadLine, RiFileLine } from '@remixicon/react';
+import { RiDownloadLine } from '@remixicon/react';
 import { NodeViewWrapper } from '@tiptap/react';
 import { filesize } from 'filesize';
 import React from 'react';
+
+import { LinkLine } from '@tegonhq/ui/icons';
 
 import { Button } from '../../../ui/button';
 
@@ -11,7 +13,7 @@ export const FileComponent = (props: any) => {
     <NodeViewWrapper className="react-component-with-content">
       <div className="content">
         <div
-          className="flex w-full items-center p-4 bg-grayAlpha-100 rounded-md gap-2 hover:bg-accent/50 my-1"
+          className="flex w-fit items-center p-3 bg-grayAlpha-100 rounded-lg gap-2 hover:bg-accent/50 my-1"
           onClick={() => {
             window.open(
               props.node.attrs.src
@@ -21,7 +23,7 @@ export const FileComponent = (props: any) => {
             );
           }}
         >
-          <RiFileLine size={16} />
+          <LinkLine size={20} />
 
           <div className="grow text-sm flex flex-col justify-center">
             <div>{props.node.attrs.alt}</div>
@@ -32,7 +34,7 @@ export const FileComponent = (props: any) => {
             )}
           </div>
 
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost">
             <RiDownloadLine
               size={16}
               onClick={() => {

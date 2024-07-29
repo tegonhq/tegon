@@ -24,7 +24,6 @@ import {
 } from './issues.interface';
 import {
   getAiFilter,
-  getDescription,
   getIssueTitle,
   getSuggestedLabels,
   getSummary,
@@ -445,8 +444,9 @@ export default class IssuesAIService {
         { role: 'system', content: subIssuePrompt.prompt },
         {
           role: 'user',
-          content: `[INPUT] description: ${subIssueInput.description}
-              labels: ${labelNames}`,
+          content: `[INPUT] 
+          description: ${subIssueInput.description}
+          labels: ${JSON.stringify(labelNames)}`,
         },
       ],
       llmModel: LLMMappings[subIssuePrompt.model],
@@ -460,45 +460,13 @@ export default class IssuesAIService {
     const match = subissues.match(regex);
 
     if (match && match[1]) {
-      const subIssueTitles = match[1]
-        .split(',')
-        .map((item) => item.trim().slice(1, -1));
+      const subIssueTitles = JSON.parse(`[${match[1]}]`);
 
       this.logger.debug(`Extracted sub-issue titles: ${subIssueTitles}`);
 
-      return Promise.all(
-        subIssueTitles.map(async (title: string) => {
-          const startTime = performance.now();
-          const aiDescription = await getDescription(
-            this.prisma,
-            this.aiRequestsService,
-            subIssueInput.workspaceId,
-            { shortDescription: title, userInput: subIssueInput.description },
-          );
-          const endTime = performance.now();
-          const elapsedTime = endTime - startTime;
-          this.logger.debug(
-            `getDescription execution time for title "${title}": ${elapsedTime} ms`,
-          );
-          // Extract the detailed description using regex
-          const regex = /\[OUTPUT\]\s*detailed_description:\s*([\s\S]*)/i;
-          const match = aiDescription.match(regex);
-
-          let description: string;
-          if (match && match[1]) {
-            description = match[1].trim();
-          } else {
-            this.logger.debug(
-              `No detailed description found in the AI output: ${aiDescription}`,
-            );
-            description = '';
-          }
-
-          return { title, description };
-        }),
-      );
-      //   return subIssueTitles.map((title) => ({ title, description: '' }));
+      return subIssueTitles;
     }
+
     this.logger.debug(
       `No sub-issues found in the generated content: ${subissues}`,
     );
@@ -532,7 +500,7 @@ export default class IssuesAIService {
           },
         },
       });
-      const observable = await this.aiRequestsService.LLMRequestStream({
+      const responseStream = await this.aiRequestsService.LLMRequestStream({
         messages: [
           { role: 'system', content: descriptionPrompt.prompt },
           {
@@ -546,25 +514,15 @@ export default class IssuesAIService {
         workspaceId: descriptionInput.workspaceId,
       });
 
-      response.writeHead(200, {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        Connection: 'keep-alive',
-      });
+      response.setHeader('Content-Type', 'text/event-stream');
+      response.setHeader('Cache-Control', 'no-cache');
+      response.setHeader('Connection', 'keep-alive');
 
-      observable.subscribe({
-        next: (chunk: string) => {
-          response.write(`data: ${chunk}\n\n`);
-        },
-        complete: () => {
-          response.end();
-        },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        error: (error: any) => {
-          console.error('Error in observable:', error);
-          response.status(500).end('Internal Server Error');
-        },
-      });
+      for await (const textPart of responseStream.textStream) {
+        response.write(textPart);
+      }
+
+      response.end();
     } catch (error) {
       console.error('Error in callingFunction:', error);
       response.status(500).end('Internal Server Error');

@@ -1,10 +1,7 @@
-export interface requestMessage {
-  role: string;
-  content: string;
-}
+import { CoreMessage } from 'ai';
 
 export interface requestInputBody {
-  messages: requestMessage[];
+  messages: CoreMessage[];
   model: string;
   workspaceId: string;
   llmModel: string;

@@ -1,22 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
+import type { User } from '@tegonhq/types';
+
 import { RiAddLine } from '@remixicon/react';
+import {
+  useDeleteIntegrationAccount,
+  useCreateRedirectURLMutation,
+} from '@tegonhq/services/oauth';
+import {
+  type IntegrationAccountType,
+  type Settings,
+  IntegrationName,
+} from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import type {
-  IntegrationAccountType,
-  Settings,
-} from 'common/types/integration-account';
-import { IntegrationName } from 'common/types/integration-definition';
-
 import { useUsersData } from 'hooks/users';
-
-import { useDeleteIntegrationAccount } from 'services/oauth';
-import { useCreateRedirectURLMutation } from 'services/oauth/create-redirect-url';
-
-import type { User } from 'store/user-context';
 
 import { useGithubAccounts } from './github-utils';
 

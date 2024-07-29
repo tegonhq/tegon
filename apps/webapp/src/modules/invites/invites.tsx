@@ -1,3 +1,6 @@
+import type { Invite } from '@tegonhq/types';
+
+import { useInviteActionMutation } from '@tegonhq/services/workspace';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import { useToast } from '@tegonhq/ui/components/use-toast';
@@ -8,9 +11,7 @@ import { SessionAuth, signOut } from 'supertokens-auth-react/recipe/session';
 import { AuthLayout } from 'common/layouts/auth-layout';
 import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
 
-import { useInviteActionMutation } from 'services/workspace';
-
-import { UserContext, type Invite } from 'store/user-context';
+import { UserContext } from 'store/user-context';
 
 export function Invites() {
   const context = React.useContext(UserContext);

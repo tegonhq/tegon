@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
+import {
+  useDeleteIntegrationAccount,
+  useCreateRedirectURLMutation,
+} from '@tegonhq/services/oauth';
+import { IntegrationName } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-
-import { IntegrationName } from 'common/types/integration-definition';
-
-import { useDeleteIntegrationAccount } from 'services/oauth';
-import { useCreateRedirectURLMutation } from 'services/oauth/create-redirect-url';
 
 import { useIntegrationAccount } from '../integration-util';
 

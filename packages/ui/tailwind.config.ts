@@ -43,6 +43,7 @@ const config = {
       colors: {
         border: {
           DEFAULT: 'oklch(var(--border))',
+          'border-1': 'rgba(255, 255, 255, 0.22)',
         },
         input: 'oklch(var(--input))',
         ring: 'oklch(var(--ring))',
@@ -153,8 +154,8 @@ const config = {
         sm: 'calc(var(--radius) - 2px)',
       },
       boxShadow: {
-        1: '0px 6px 20px 0px rgba(0, 0, 0, 0.15)',
-        2: '0px 0px 2px 0px rgba(0, 0, 0, 0.2)',
+        1: '0px 6px 20px 0px rgba(0, 0, 0, 0.15), 0px 0px 2px 0px rgba(0, 0, 0, 0.2)',
+        2: '',
       },
       keyframes: {
         'accordion-down': {

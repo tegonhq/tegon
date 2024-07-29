@@ -26,6 +26,9 @@ importers:
 
   apps/server:
     dependencies:
+      '@ai-sdk/openai':
+        specifier: ^0.0.40
+        version: 0.0.40(zod@3.22.3)
       '@devoxa/prisma-relay-cursor-connection':
         specifier: 3.1.1
         version: 3.1.1(@prisma/client@5.17.0(prisma@5.17.0))
@@ -140,6 +143,9 @@ importers:
       '@xenova/transformers':
         specifier: ^2.16.1
         version: 2.17.2
+      ai:
+        specifier: ^3.2.37
+        version: 3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.22.3)
       axios:
         specifier: ^1.6.7
         version: 1.7.2(debug@4.3.5)
@@ -185,6 +191,9 @@ importers:
       ollama:
         specifier: ^0.5.6
         version: 0.5.6
+      ollama-ai-provider:
+        specifier: ^0.10.0
+        version: 0.10.0(zod@3.22.3)
       openai:
         specifier: ^4.28.4
         version: 4.52.7
@@ -324,6 +333,9 @@ importers:
 
   apps/webapp:
     dependencies:
+      '@hello-pangea/dnd':
+        specifier: ^16.6.0
+        version: 16.6.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@hookform/resolvers':
         specifier: 3.9.0
         version: 3.9.0(react-hook-form@7.49.3(react@18.3.1))
@@ -333,15 +345,27 @@ importers:
       '@sentry/nextjs':
         specifier: ^7.105.0
         version: 7.118.0(next@14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.89.0)
+      '@tegonhq/services':
+        specifier: workspace:*
+        version: link:../../packages/services
+      '@tegonhq/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@tegonhq/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@tiptap/core':
         specifier: ^2.3.0
         version: 2.5.4(@tiptap/pm@2.5.4)
+      '@tiptap/react':
+        specifier: ^2.5.4
+        version: 2.5.4(@tiptap/core@2.5.4(@tiptap/pm@2.5.4))(@tiptap/pm@2.5.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@typeform/embed-react':
         specifier: ^3.17.0
         version: 3.20.0(react@18.3.1)
+      ai:
+        specifier: ^3.2.37
+        version: 3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -393,6 +417,9 @@ importers:
       next:
         specifier: 14.1.0
         version: 14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next-themes:
+        specifier: ^0.2.1
+        version: 0.2.1(next@14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       qs:
         specifier: ^6.12.0
         version: 6.12.3
@@ -417,9 +444,6 @@ importers:
       socket.io-client:
         specifier: ^4.7.4
         version: 4.7.5
-      superagent:
-        specifier: ^8.1.2
-        version: 8.1.2
       supertokens-auth-react:
         specifier: ^0.36.1
         version: 0.36.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(supertokens-web-js@0.8.0)
@@ -495,6 +519,74 @@ importers:
         version: 3.4.6(ts-node@10.9.2(@types/node@20.14.11)(typescript@5.5.3))
       typescript:
         specifier: ^5.4.3
+        version: 5.5.3
+
+  packages/services:
+    dependencies:
+      '@tegonhq/types':
+        specifier: workspace:*
+        version: link:../types
+      qs:
+        specifier: ^6.12.0
+        version: 6.12.3
+      react:
+        specifier: ^18
+        version: 18.3.1
+      react-query:
+        specifier: ^3.39.3
+        version: 3.39.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      superagent:
+        specifier: ^8.1.2
+        version: 8.1.2
+      zod:
+        specifier: 3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@tegonhq/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@tegonhq/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@types/node':
+        specifier: ^20
+        version: 20.14.11
+      '@types/qs':
+        specifier: ^6.9.12
+        version: 6.9.15
+      '@types/react':
+        specifier: ^18
+        version: 18.3.3
+      '@types/superagent':
+        specifier: ^8.1.4
+        version: 8.1.7
+      typescript:
+        specifier: ^5.4.5
+        version: 5.5.3
+
+  packages/types:
+    dependencies:
+      '@tegonhq/ui':
+        specifier: workspace:*
+        version: link:../ui
+      react:
+        specifier: ^18
+        version: 18.3.1
+    devDependencies:
+      '@tegonhq/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@tegonhq/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@types/node':
+        specifier: ^20
+        version: 20.14.11
+      '@types/react':
+        specifier: ^18
+        version: 18.3.3
+      typescript:
+        specifier: ^5.4.5
         version: 5.5.3
 
   packages/ui:
@@ -592,6 +684,9 @@ importers:
       geist:
         specifier: ^1.3.0
         version: 1.3.1(next@14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+      jotai:
+        specifier: ^2.9.1
+        version: 2.9.1(@types/react@18.3.3)(react@18.3.1)
       lucide-react:
         specifier: ^0.395.0
         version: 0.395.0(react@18.3.1)
@@ -628,6 +723,12 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.6(ts-node@10.9.2(@types/node@20.14.11)(typescript@5.5.3)))
+      tippy.js:
+        specifier: ^6.3.7
+        version: 6.3.7
+      tunnel-rat:
+        specifier: ^0.1.2
+        version: 0.1.2(@types/react@18.3.3)(react@18.3.1)
       use-debounce:
         specifier: ^10.0.0
         version: 10.0.1(react@18.3.1)
@@ -709,6 +810,21 @@ importers:
 
 packages:
 
+  '@ai-sdk/openai@0.0.40':
+    resolution: {integrity: sha512-9Iq1UaBHA5ZzNv6j3govuKGXrbrjuWvZIgWNJv4xzXlDMHu9P9hnqlBr/Aiay54WwCuTVNhTzAUTfFgnTs2kbQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.0.0
+
+  '@ai-sdk/provider-utils@1.0.0':
+    resolution: {integrity: sha512-Akq7MmGQII8xAuoVjJns/n/2BTUrF6qaXIj/3nEuXk/hPSdETlLWRSrjrTmLpte1VIPE5ecNzTALST+6nz47UQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
+
   '@ai-sdk/provider-utils@1.0.5':
     resolution: {integrity: sha512-XfOawxk95X3S43arn2iQIFyWGMi0DTxsf9ETc6t7bh91RPWOOPYN1tsmS5MTKD33OGJeaDQ/gnVRzXUCRBrckQ==}
     engines: {node: '>=18'}
@@ -717,6 +833,10 @@ packages:
     peerDependenciesMeta:
       zod:
         optional: true
+
+  '@ai-sdk/provider@0.0.11':
+    resolution: {integrity: sha512-VTipPQ92Moa5Ovg/nZIc8yNoIFfukZjUHZcQMduJbiUh3CLQyrBAKTEV9AwjPy8wgVxj3+GZjon0yyOJKhfp5g==}
+    engines: {node: '>=18'}
 
   '@ai-sdk/provider@0.0.14':
     resolution: {integrity: sha512-gaQ5Y033nro9iX1YUjEDFDRhmMcEiCk56LJdIUbX5ozEiCNCfpiBpEqrjSp/Gp5RzBS2W0BVxfG7UGW6Ezcrzg==}
@@ -6596,8 +6716,8 @@ packages:
   jose@4.15.9:
     resolution: {integrity: sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==}
 
-  jotai@2.9.0:
-    resolution: {integrity: sha512-MioTpMvR78IGfJ+W8EwQj3kwTkb+u0reGnTyg3oJZMWK9rK9v8NBSC9Rhrg9jrrFYA6bGZtzJa96zsuAYF6W3w==}
+  jotai@2.9.1:
+    resolution: {integrity: sha512-t4Q7FIqQB3N/1art4OcqdlEtPmQ2h4DNIzTFhvt06WE0kCpQ1QoG+1A1IGTaQBi2KdDRsnywj+ojmHHKgw6PDA==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@types/react': '>=17.0.0'
@@ -7726,6 +7846,15 @@ packages:
   obuf@1.1.2:
     resolution: {integrity: sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==}
 
+  ollama-ai-provider@0.10.0:
+    resolution: {integrity: sha512-ppzofC1JtB8yQ2TRAGm6I9ppoRSpXZGQV4u5ez2JAQ5hwnkJKULgEg5Hc4rt84ErF3MpEIpG1ZSBV4njlL6LPQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
+
   ollama@0.5.6:
     resolution: {integrity: sha512-4BySAMt96+OCt4emL6DE78UBCGqC7GvteM9LRCd6WwJyefn0x9w2BrcUcLm9nJ9bYpRsmkhf0Au18Q5MhsA14w==}
 
@@ -7875,6 +8004,9 @@ packages:
   parseurl@1.3.3:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
     engines: {node: '>= 0.8'}
+
+  partial-json@0.1.7:
+    resolution: {integrity: sha512-Njv/59hHaokb/hRUjce3Hdv12wd60MtM9Z5Olmn+nehe0QDAsRtRbJPvJ0Z91TusF0SuZRIvnM+S4l6EIP8leA==}
 
   passport-jwt@4.0.1:
     resolution: {integrity: sha512-UCKMDYhNuGOBE9/9Ycuoyh7vP6jpeTp/+sfMJl7nLff/t6dps+iaeE0hhNkKN8/HZHcJ7lCdOyDxHdDoxoSvdQ==}
@@ -10143,6 +10275,30 @@ packages:
 
 snapshots:
 
+  '@ai-sdk/openai@0.0.40(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider': 0.0.14
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      zod: 3.22.3
+
+  '@ai-sdk/provider-utils@1.0.0(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider': 0.0.11
+      eventsource-parser: 1.1.2
+      nanoid: 3.3.6
+      secure-json-parse: 2.7.0
+    optionalDependencies:
+      zod: 3.22.3
+
+  '@ai-sdk/provider-utils@1.0.5(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider': 0.0.14
+      eventsource-parser: 1.1.2
+      nanoid: 3.3.6
+      secure-json-parse: 2.7.0
+    optionalDependencies:
+      zod: 3.22.3
+
   '@ai-sdk/provider-utils@1.0.5(zod@3.23.8)':
     dependencies:
       '@ai-sdk/provider': 0.0.14
@@ -10152,9 +10308,22 @@ snapshots:
     optionalDependencies:
       zod: 3.23.8
 
+  '@ai-sdk/provider@0.0.11':
+    dependencies:
+      json-schema: 0.4.0
+
   '@ai-sdk/provider@0.0.14':
     dependencies:
       json-schema: 0.4.0
+
+  '@ai-sdk/react@0.0.30(react@18.3.1)(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      '@ai-sdk/ui-utils': 0.0.20(zod@3.22.3)
+      swr: 2.2.5(react@18.3.1)
+    optionalDependencies:
+      react: 18.3.1
+      zod: 3.22.3
 
   '@ai-sdk/react@0.0.30(react@18.3.1)(zod@3.23.8)':
     dependencies:
@@ -10165,10 +10334,27 @@ snapshots:
       react: 18.3.1
       zod: 3.23.8
 
+  '@ai-sdk/solid@0.0.23(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      '@ai-sdk/ui-utils': 0.0.20(zod@3.22.3)
+    transitivePeerDependencies:
+      - zod
+
   '@ai-sdk/solid@0.0.23(zod@3.23.8)':
     dependencies:
       '@ai-sdk/provider-utils': 1.0.5(zod@3.23.8)
       '@ai-sdk/ui-utils': 0.0.20(zod@3.23.8)
+    transitivePeerDependencies:
+      - zod
+
+  '@ai-sdk/svelte@0.0.24(svelte@4.2.18)(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      '@ai-sdk/ui-utils': 0.0.20(zod@3.22.3)
+      sswr: 2.1.0(svelte@4.2.18)
+    optionalDependencies:
+      svelte: 4.2.18
     transitivePeerDependencies:
       - zod
 
@@ -10182,12 +10368,29 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
+  '@ai-sdk/ui-utils@0.0.20(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      secure-json-parse: 2.7.0
+    optionalDependencies:
+      zod: 3.22.3
+
   '@ai-sdk/ui-utils@0.0.20(zod@3.23.8)':
     dependencies:
       '@ai-sdk/provider-utils': 1.0.5(zod@3.23.8)
       secure-json-parse: 2.7.0
     optionalDependencies:
       zod: 3.23.8
+
+  '@ai-sdk/vue@0.0.24(vue@3.4.34(typescript@5.5.3))(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      '@ai-sdk/ui-utils': 0.0.20(zod@3.22.3)
+      swrv: 1.0.4(vue@3.4.34(typescript@5.5.3))
+    optionalDependencies:
+      vue: 3.4.34(typescript@5.5.3)
+    transitivePeerDependencies:
+      - zod
 
   '@ai-sdk/vue@0.0.24(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)':
     dependencies:
@@ -14586,6 +14789,32 @@ snapshots:
       clean-stack: 2.2.0
       indent-string: 4.0.0
 
+  ai@3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.22.3):
+    dependencies:
+      '@ai-sdk/provider': 0.0.14
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      '@ai-sdk/react': 0.0.30(react@18.3.1)(zod@3.22.3)
+      '@ai-sdk/solid': 0.0.23(zod@3.22.3)
+      '@ai-sdk/svelte': 0.0.24(svelte@4.2.18)(zod@3.22.3)
+      '@ai-sdk/ui-utils': 0.0.20(zod@3.22.3)
+      '@ai-sdk/vue': 0.0.24(vue@3.4.34(typescript@5.5.3))(zod@3.22.3)
+      '@opentelemetry/api': 1.9.0
+      eventsource-parser: 1.1.2
+      json-schema: 0.4.0
+      jsondiffpatch: 0.6.0
+      nanoid: 3.3.6
+      secure-json-parse: 2.7.0
+      zod-to-json-schema: 3.22.5(zod@3.22.3)
+    optionalDependencies:
+      openai: 4.52.7
+      react: 18.3.1
+      sswr: 2.1.0(svelte@4.2.18)
+      svelte: 4.2.18
+      zod: 3.22.3
+    transitivePeerDependencies:
+      - solid-js
+      - vue
+
   ai@3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8):
     dependencies:
       '@ai-sdk/provider': 0.0.14
@@ -16214,7 +16443,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.15.0
       is-glob: 4.0.3
@@ -17994,7 +18223,7 @@ snapshots:
 
   jose@4.15.9: {}
 
-  jotai@2.9.0(@types/react@18.3.3)(react@18.3.1):
+  jotai@2.9.1(@types/react@18.3.3)(react@18.3.1):
     optionalDependencies:
       '@types/react': 18.3.3
       react: 18.3.1
@@ -19502,7 +19731,7 @@ snapshots:
       '@tiptap/suggestion': 2.5.4(@tiptap/core@2.5.4(@tiptap/pm@2.5.4))(@tiptap/pm@2.5.4)
       '@types/node': 18.15.3
       cmdk: 0.2.1(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      jotai: 2.9.0(@types/react@18.3.3)(react@18.3.1)
+      jotai: 2.9.1(@types/react@18.3.3)(react@18.3.1)
       katex: 0.16.11
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -19594,6 +19823,14 @@ snapshots:
   oblivious-set@1.0.0: {}
 
   obuf@1.1.2: {}
+
+  ollama-ai-provider@0.10.0(zod@3.22.3):
+    dependencies:
+      '@ai-sdk/provider': 0.0.11
+      '@ai-sdk/provider-utils': 1.0.0(zod@3.22.3)
+      partial-json: 0.1.7
+    optionalDependencies:
+      zod: 3.22.3
 
   ollama@0.5.6:
     dependencies:
@@ -19795,6 +20032,8 @@ snapshots:
     optional: true
 
   parseurl@1.3.3: {}
+
+  partial-json@0.1.7: {}
 
   passport-jwt@4.0.1:
     dependencies:
@@ -22426,6 +22665,10 @@ snapshots:
   zod-error@1.5.0:
     dependencies:
       zod: 3.23.8
+
+  zod-to-json-schema@3.22.5(zod@3.22.3):
+    dependencies:
+      zod: 3.22.3
 
   zod-to-json-schema@3.22.5(zod@3.23.8):
     dependencies:

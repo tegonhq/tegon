@@ -1,11 +1,10 @@
+import type { LabelType } from '@tegonhq/types';
+
+import { useSuggestionIssueMutation } from '@tegonhq/services/issues';
 import { Button } from '@tegonhq/ui/components/button';
 import React from 'react';
 
-import type { LabelType } from 'common/types/label';
-
 import { useCurrentWorkspace } from 'hooks/workspace';
-
-import { useSuggestionIssueMutation } from 'services/issues/issue-suggestions';
 
 import { AssigneeSuggestions } from './assignee-suggestions';
 

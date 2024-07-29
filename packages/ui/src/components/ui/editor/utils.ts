@@ -80,6 +80,7 @@ export const createFileUpload =
             size: response.size,
           },
         })
+        .exitCode()
         .focus()
         .run();
     });

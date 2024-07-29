@@ -1,23 +1,22 @@
+import type {
+  GithubRepositoryMappings,
+  IntegrationAccountType,
+  Settings,
+} from '@tegonhq/types';
+import type { TeamType } from '@tegonhq/types';
+
 import { RiGithubFill } from '@remixicon/react';
+import { useUpdateIntegrationAccountMutation } from '@tegonhq/services/oauth';
+import { IntegrationName } from '@tegonhq/types';
 import { Badge } from '@tegonhq/ui/components/badge';
 import { Button } from '@tegonhq/ui/components/button';
 import { Dialog } from '@tegonhq/ui/components/dialog';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
 import { useToast } from '@tegonhq/ui/components/use-toast';
-import { EditLine } from '@tegonhq/ui/icons/index';
+import { EditLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
-
-import type {
-  GithubRepositoryMappings,
-  IntegrationAccountType,
-  Settings,
-} from 'common/types/integration-account';
-import { IntegrationName } from 'common/types/integration-definition';
-import type { TeamType } from 'common/types/team';
-
-import { useUpdateIntegrationAccountMutation } from 'services/oauth';
 
 import {
   DeleteRepoTeamLink,

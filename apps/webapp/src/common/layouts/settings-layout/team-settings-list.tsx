@@ -1,3 +1,5 @@
+import type { TeamType } from '@tegonhq/types';
+
 import { RiAddLine } from '@remixicon/react';
 import {
   Accordion,
@@ -7,14 +9,12 @@ import {
 } from '@tegonhq/ui/components/accordion';
 import { buttonVariants } from '@tegonhq/ui/components/button';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
-import { ChevronRight, TeamLine } from '@tegonhq/ui/icons/index';
+import { ChevronRight, TeamLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-
-import type { TeamType } from 'common/types/team';
 
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';

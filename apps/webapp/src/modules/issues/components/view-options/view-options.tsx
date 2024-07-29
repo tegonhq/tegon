@@ -4,7 +4,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
-import { SettingsLine } from '@tegonhq/ui/icons/index';
+import { SettingsLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import { useContextStore } from 'store/global-context-provider';
