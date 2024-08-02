@@ -1,0 +1,21 @@
+{
+  "id": "Github",
+  "name": "IntegrationName.Github",
+  "icon": "github.svg",
+  "spec": {
+    "other_data": {
+      "app_id": "804579"
+    },
+    "auth_specification": {
+      "OAuth2": {
+        "token_url": "https://github.com/login/oauth/access_token",
+        "authorization_url": "https://github.com/apps/tegon-bot/installations/new"
+      }
+    }
+  },
+  "clientId": "process.env.GITHUB_CLIENT_ID",
+  "clientSecret": "process.env.GITHUB_CLIENT_SECRET",
+  "scopes": "repo",
+  "traige": true,
+  "bi-directional": true
+}
