@@ -51,7 +51,6 @@ export class IssuesController {
     @Body() issueData: CreateIssueInput,
   ) {
     const userId = session.getUserId();
-    // return await this.issuesService.createIssue(teamParams, issueData, userId);
     return await this.issuesService.createIssueAPI(issueData, userId);
   }
 

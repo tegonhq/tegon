@@ -14,6 +14,12 @@ import { LLMMappings } from 'modules/prompts/prompts.interface';
 import { VectorService } from 'modules/vector/vector.service';
 
 import {
+  getAiFilter,
+  getIssueTitle,
+  getSuggestedLabels,
+  getSummary,
+} from './issues-ai.utils';
+import {
   AIInput,
   CreateIssueInput,
   DescriptionInput,
@@ -22,13 +28,7 @@ import {
   SubIssueInput,
   TeamRequestParams,
 } from './issues.interface';
-import {
-  getAiFilter,
-  getIssueTitle,
-  getSuggestedLabels,
-  getSummary,
-  getWorkspace,
-} from './issues.utils';
+import { getWorkspace } from './issues.utils';
 
 @Injectable()
 export default class IssuesAIService {

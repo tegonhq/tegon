@@ -27,12 +27,13 @@ import {
 } from './issues.interface';
 import { IssuesQueue } from './issues.queue';
 import {
+  getCreateIssueInput,
   getEquivalentStateIds,
   getIssueDiff,
-  getIssueTitle,
   getLastIssueNumber,
   getSubscriberIds,
   getWorkspace,
+  handlePostCreateIssue,
 } from './issues.utils';
 
 @Injectable()
@@ -64,19 +65,10 @@ export default class IssuesService {
     linkMetaData?: Record<string, string>,
   ): Promise<IssueWithRelations> {
     // Destructure issueData to separate parentId, subIssues, issueRelation, teamId, and other issue data
-    const { parentId, subIssues, issueRelation, teamId, ...otherIssueData } =
-      issueData;
+    const { issueRelation, teamId } = issueData;
 
     // Fetch the workspace associated with the team
     const workspace = await getWorkspace(this.prisma, teamId);
-
-    // Get the subscriber IDs based on the provided user, assignee, and subscription type
-    const subscriberIds = getSubscriberIds(
-      userId,
-      issueData.assigneeId,
-      null,
-      SubscribeType.SUBSCRIBE,
-    );
 
     // Create the issues in the database within a transaction
     const issues = await this.prisma.$transaction(async (prisma) => {
@@ -90,8 +82,8 @@ export default class IssuesService {
           data: {
             ...data,
             title: data.title,
+            number: lastNumber,
             team: { connect: { id: issueData.teamId } },
-            subscriberIds,
             ...(userId && { createdBy: { connect: { id: userId } } }),
             ...(linkIssuedata && { linkedIssue: { create: linkIssuedata } }),
             ...(linkMetaData && { sourceMetadata: linkMetaData }),
@@ -100,40 +92,29 @@ export default class IssuesService {
         });
       };
 
+      // Create one list with both issue data and respective subissues
+      const createIssuesData = [issueData, ...(issueData.subIssues ?? [])];
       const createdIssues: IssueWithRelations[] = [];
+      let mainIssueId: string;
 
-      // Create the main issue
-      const mainIssue = await createIssue({
-        ...otherIssueData,
-        title: await getIssueTitle(
+      // Create issues recursively
+      for (const issueData of createIssuesData) {
+        const { parentId, ...otherData } = issueData;
+        const issueInput = await getCreateIssueInput(
           this.prisma,
           this.aiRequestsService,
-          issueData,
-          workspace.id,
-        ),
-        team: { connect: { id: teamId } },
-        number: lastNumber + 1,
-        ...(parentId && { parent: { connect: { id: parentId } } }),
-      });
-      createdIssues.push(mainIssue);
-
-      // Iterate through subIssues and create them
-      if (subIssues && subIssues.length > 0) {
-        for (const subIssueData of subIssues) {
-          const { teamId, ...otherData } = subIssueData;
-          const subIssue = await createIssue({
+          {
             ...otherData,
-            number: lastNumber + 1,
-            team: { connect: { id: teamId } },
-            parent: { connect: { id: mainIssue.id } },
-            title: await getIssueTitle(
-              this.prisma,
-              this.aiRequestsService,
-              subIssueData,
-              workspace.id,
-            ),
-          });
-          createdIssues.push(subIssue);
+            ...(parentId ? { parentId } : { parentId: mainIssueId }),
+          },
+          workspace.id,
+          userId,
+        );
+
+        createdIssues.push(await createIssue(issueInput));
+        // Assign first issue Id as parent id for rest of the issues
+        if (createdIssues.length === 1) {
+          mainIssueId = createdIssues[0].id;
         }
       }
 
@@ -141,44 +122,26 @@ export default class IssuesService {
     });
 
     // Process each created issue
-    for (const issue of issues) {
-      // Upsert the issue history with the issue diff and other metadata
-      await this.upsertIssueHistory(
-        issue,
-        await getIssueDiff(issue, null),
-        userId,
-        linkMetaData,
-        issueRelation,
-      );
-
-      // Add the issue to the notification queue if there are subscribers
-      if (issue.subscriberIds) {
-        this.notificationsQueue.addToNotification(
-          NotificationEventFrom.IssueCreated,
-          issue.createdById,
-          {
-            issueId: issue.id,
-            subscriberIds: issue.subscriberIds,
-            toStateId: issue.stateId,
-            toPriority: issue.priority,
-            toAssigneeId: issue.assigneeId,
-            sourceMetadata: linkMetaData,
-            workspaceId: issue.team.workspaceId,
-          },
+    await Promise.all(
+      issues.map(async (issue: IssueWithRelations) => {
+        // Upsert the issue history with the issue diff and other metadata
+        this.upsertIssueHistory(
+          issue,
+          await getIssueDiff(issue, null),
+          userId,
+          linkMetaData,
+          issueRelation,
         );
-      }
 
-      // Add the issue to the vector service for similarity search
-      this.issuesQueue.addIssueToVector(issue);
-
-      // Check if the issue state is in the triage category and handle it accordingly
-      const issueState = await this.prisma.workflow.findUnique({
-        where: { id: issue.stateId },
-      });
-      if (issueState.category === WorkflowCategory.TRIAGE) {
-        this.issuesQueue.handleTriageIssue(issue, false);
-      }
-    }
+        handlePostCreateIssue(
+          this.prisma,
+          this.notificationsQueue,
+          this.issuesQueue,
+          issue,
+          linkMetaData,
+        );
+      }),
+    );
 
     // Return the main created issue
     return issues[0];
