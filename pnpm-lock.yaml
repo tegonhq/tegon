@@ -74,6 +74,9 @@ importers:
       '@prisma/client':
         specifier: ^5.17.0
         version: 5.17.0(prisma@5.17.0)
+      '@prisma/instrumentation':
+        specifier: ^5.17.0
+        version: 5.17.0
       '@tiptap/core':
         specifier: ^2.3.0
         version: 2.5.4(@tiptap/pm@2.5.4)
@@ -2162,6 +2165,9 @@ packages:
 
   '@prisma/get-platform@5.17.0':
     resolution: {integrity: sha512-UlDgbRozCP1rfJ5Tlkf3Cnftb6srGrEQ4Nm3og+1Se2gWmCZ0hmPIi+tQikGDUVLlvOWx3Gyi9LzgRP+HTXV9w==}
+
+  '@prisma/instrumentation@5.17.0':
+    resolution: {integrity: sha512-c1Sle4ji8aasMcYfBBHFM56We4ljfenVtRmS8aY06BllS7SoU6SmJBwG7vil+GHiR0Yrh+t9iBwt4AY0Jr4KNQ==}
 
   '@prisma/internals@4.6.1':
     resolution: {integrity: sha512-oPE01UMMY5W9PAr+uP0MaHO4o7SD3b7dVqaEuZsj6NRN7jtoKujQXp+zo74BAeqjLJyCiHXhTIReuO9NExiZtg==}
@@ -12364,6 +12370,14 @@ snapshots:
   '@prisma/get-platform@5.17.0':
     dependencies:
       '@prisma/debug': 5.17.0
+
+  '@prisma/instrumentation@5.17.0':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/instrumentation': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base': 1.25.1(@opentelemetry/api@1.9.0)
+    transitivePeerDependencies:
+      - supports-color
 
   '@prisma/internals@4.6.1':
     dependencies:

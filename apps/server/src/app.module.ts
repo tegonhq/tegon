@@ -33,6 +33,7 @@ import { TemplatesModule } from 'modules/templates/templates.module';
 import { TriggerdevModule } from 'modules/triggerdev/triggerdev.module';
 import { UsersModule } from 'modules/users/users.module';
 import { ViewsModule } from 'modules/views/views.module';
+import { WebhookModule } from 'modules/webhook/webhook.module';
 import { WorkflowsModule } from 'modules/workflows/workflows.module';
 import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
@@ -90,6 +91,7 @@ import { AppService } from './app.service';
     SentryModule,
     TriggerdevModule,
 
+    WebhookModule,
     GithubModule,
     SlackModule,
     SentryModule,

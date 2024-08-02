@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -26,6 +27,12 @@ import LinkedIssueService from './linked-issue.service';
 @ApiTags('Linked Issue')
 export class LinkedIssueController {
   constructor(private linkedIssueService: LinkedIssueService) {}
+
+  @Get('source')
+  @UseGuards(new AuthGuard())
+  async getLinkedIssueBySourceId(@Query('sourceId') sourceId: string) {
+    return await this.linkedIssueService.getLinkedIssueBySourceId(sourceId);
+  }
 
   @Post(':linkedIssueId')
   @UseGuards(new AuthGuard())
