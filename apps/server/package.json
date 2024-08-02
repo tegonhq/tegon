@@ -37,7 +37,9 @@
     "db:generate": "prisma generate",
     "db:init-resources": "pnpm run migrate:dev && pnpm run db:generate",
     "create-resources": "node scripts/createUserWorkspaceTeam",
-    "deploy-trigger-tasks": "npx trigger.dev@beta deploy --self-hosted"
+    "deploy-trigger-tasks": "npx trigger.dev@beta deploy --self-hosted",
+    "trigger-dev": "npx trigger.dev@beta dev -a http://localhost:3030",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.40",
@@ -56,6 +58,7 @@
     "@nestjs/swagger": "7.2.0",
     "@nestjs/websockets": "^10.3.1",
     "@prisma/client": "^5.17.0",
+    "@prisma/instrumentation": "^5.17.0",
     "@tiptap/core": "^2.3.0",
     "@tiptap/extension-blockquote": "^2.4.0",
     "@tiptap/extension-bullet-list": "^2.4.0",

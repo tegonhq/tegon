@@ -1,5 +1,7 @@
 import type { TriggerConfig } from '@trigger.dev/sdk/v3';
 
+import { PrismaInstrumentation } from '@prisma/instrumentation';
+
 export const config: TriggerConfig = {
   project: 'proj_common',
   logLevel: 'log',
@@ -13,5 +15,10 @@ export const config: TriggerConfig = {
       randomize: true,
     },
   },
-  triggerDirectories: ['/integrations'],
+  triggerDirectories: ['./integrations', './src/trigger'],
+
+  instrumentations: [new PrismaInstrumentation()],
+
+  additionalFiles: ['./prisma/schema.prisma'],
+  additionalPackages: ['prisma@5.17.0'],
 };
