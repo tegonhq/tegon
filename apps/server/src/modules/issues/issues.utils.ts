@@ -1,5 +1,11 @@
 import { Logger } from '@nestjs/common';
-import { IntegrationName, Issue, LinkedIssue, Prisma } from '@prisma/client';
+import {
+  IntegrationName,
+  Issue,
+  LinkedIssue,
+  Prisma,
+  WorkflowCategory,
+} from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
@@ -14,16 +20,18 @@ import {
   LinkedIssueSubType,
 } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
-import { LLMMappings } from 'modules/prompts/prompts.interface';
+import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
+import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
+import { getIssueTitle } from './issues-ai.utils';
 import {
   CreateIssueInput,
   IssueAction,
   IssueWithRelations,
   LinkIssueInput,
   SubscribeType,
-  UpdateIssueInput,
 } from './issues.interface';
+import { IssuesQueue } from './issues.queue';
 
 export async function getIssueDiff(
   newIssueData: Issue,
@@ -93,86 +101,6 @@ function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
 
 function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-export async function getIssueTitle(
-  prisma: PrismaService,
-  aiRequestsService: AIRequestsService,
-  issueData: CreateIssueInput | UpdateIssueInput,
-  workspaceId: string,
-): Promise<string> {
-  if (issueData.title) {
-    return issueData.title;
-  } else if (issueData.description) {
-    const titlePrompt = await prisma.prompt.findFirst({
-      where: { name: 'IssueTitle', workspaceId },
-    });
-    return await aiRequestsService.getLLMRequest({
-      messages: [
-        { role: 'system', content: titlePrompt.prompt },
-        { role: 'user', content: issueData.description },
-      ],
-      llmModel: LLMMappings[titlePrompt.model],
-      model: 'IssueTitle',
-      workspaceId,
-    });
-  }
-  return '';
-}
-
-export async function getAiFilter(
-  prisma: PrismaService,
-  aiRequestsService: AIRequestsService,
-  filterText: string,
-  filterData: Record<string, string[]>,
-  workspaceId: string,
-) {
-  const aiFilterPrompt = await prisma.prompt.findFirst({
-    where: { name: 'Filter', workspaceId },
-  });
-  const filterPrompt = aiFilterPrompt.prompt
-    .replace('{{status}}', filterData.workflowNames.join(', '))
-    .replace('{{assignee}}', filterData.assigneeNames.join(', '))
-    .replace('{{label}}', filterData.labelNames.join(', '));
-
-  try {
-    const response = await aiRequestsService.getLLMRequest({
-      messages: [
-        { role: 'system', content: filterPrompt },
-        { role: 'user', content: filterText },
-      ],
-      llmModel: LLMMappings[aiFilterPrompt.model],
-      model: 'AIFilters',
-      workspaceId,
-    });
-    return JSON.parse(response);
-  } catch (error) {
-    return {};
-  }
-}
-
-export async function getSuggestedLabels(
-  prisma: PrismaService,
-  aiRequestsService: AIRequestsService,
-  labels: string[],
-  description: string,
-  workspaceId: string,
-) {
-  const labelPrompt = await prisma.prompt.findUnique({
-    where: { name_workspaceId: { name: 'IssueLabels', workspaceId } },
-  });
-  return await aiRequestsService.getLLMRequest({
-    messages: [
-      { role: 'system', content: labelPrompt.prompt },
-      {
-        role: 'user',
-        content: `Text Description  -  ${description} \n Company Specific Labels -  ${labels.join(',')}`,
-      },
-    ],
-    llmModel: LLMMappings[labelPrompt.model],
-    model: 'LabelSuggestion',
-    workspaceId,
-  });
 }
 
 export async function getLastIssueNumber(
@@ -436,29 +364,6 @@ export async function getEquivalentStateIds(
   return equivalentStateIds;
 }
 
-export async function getSummary(
-  prisma: PrismaService,
-  aiRequestsService: AIRequestsService,
-  conversations: string,
-  workspaceId: string,
-) {
-  const summarizePrompt = await prisma.prompt.findFirst({
-    where: { name: 'IssueSummary', workspaceId },
-  });
-  return await aiRequestsService.getLLMRequest({
-    messages: [
-      { role: 'system', content: summarizePrompt.prompt },
-      {
-        role: 'user',
-        content: `[INPUT] conversations: ${conversations}`,
-      },
-    ],
-    llmModel: LLMMappings[summarizePrompt.model],
-    model: 'IssueSummary',
-    workspaceId,
-  });
-}
-
 export async function getWorkspace(prisma: PrismaService, teamId: string) {
   const team = await prisma.team.findUnique({
     where: { id: teamId },
@@ -467,28 +372,70 @@ export async function getWorkspace(prisma: PrismaService, teamId: string) {
   return team.workspace;
 }
 
-export async function getDescription(
+export async function handlePostCreateIssue(
+  prisma: PrismaService,
+  notificationsQueue: NotificationsQueue,
+  issuesQueue: IssuesQueue,
+  issue: IssueWithRelations,
+  linkMetaData: Record<string, string>,
+) {
+  // Add the issue to the notification queue if there are subscribers
+  if (issue.subscriberIds) {
+    notificationsQueue.addToNotification(
+      NotificationEventFrom.IssueCreated,
+      issue.createdById,
+      {
+        issueId: issue.id,
+        subscriberIds: issue.subscriberIds,
+        toStateId: issue.stateId,
+        toPriority: issue.priority,
+        toAssigneeId: issue.assigneeId,
+        sourceMetadata: linkMetaData,
+        workspaceId: issue.team.workspaceId,
+      },
+    );
+  }
+
+  // Add the issue to the vector service for similarity search
+  issuesQueue.addIssueToVector(issue);
+
+  // Check if the issue state is in the triage category and handle it accordingly
+  const issueState = await prisma.workflow.findUnique({
+    where: { id: issue.stateId },
+  });
+  if (issueState.category === WorkflowCategory.TRIAGE) {
+    issuesQueue.handleTriageIssue(issue, false);
+  }
+}
+
+export async function getCreateIssueInput(
   prisma: PrismaService,
   aiRequestsService: AIRequestsService,
+  issueData: CreateIssueInput,
   workspaceId: string,
-  descriptionInput: Record<string, string>,
+  userId: string,
 ) {
-  const descriptionPrompt = await prisma.prompt.findUnique({
-    where: { name_workspaceId: { name: 'IssueDescription', workspaceId } },
-  });
+  const { parentId, teamId, ...otherIssueData } = issueData;
 
-  return await aiRequestsService.getLLMRequest({
-    messages: [
-      { role: 'system', content: descriptionPrompt.prompt },
-      {
-        role: 'user',
-        content: `[INPUT] 
-        short_description: ${descriptionInput.shortDescription} 
-        user_input: ${descriptionInput.userInput}`,
-      },
-    ],
-    llmModel: LLMMappings[descriptionPrompt.model],
-    model: 'IssueDescription',
-    workspaceId,
-  });
+  delete otherIssueData.subIssues;
+  delete otherIssueData.issueRelation;
+
+  return {
+    ...otherIssueData,
+    title: await getIssueTitle(
+      prisma,
+      aiRequestsService,
+      issueData,
+      workspaceId,
+    ),
+    team: { connect: { id: teamId } },
+    subscriberIds: getSubscriberIds(
+      userId,
+      issueData.assigneeId,
+      null,
+      SubscribeType.SUBSCRIBE,
+    ),
+    number: 0, // We're just initializing the number here, overwriting this while creating issue
+    ...(parentId && { parent: { connect: { id: parentId } } }),
+  };
 }
