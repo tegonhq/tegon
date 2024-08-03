@@ -1,10 +1,10 @@
 import type { WorkflowType } from '@tegonhq/types';
 
-import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
 import { CommandGroup, CommandItem } from '@tegonhq/ui/components/command';
 
 import { getWorkflowColor } from 'common/status-color';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 interface IssueStatusDropdownContentProps {
   workflows: WorkflowType[];

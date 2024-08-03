@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IntegrationName, LinkedIssue, Prisma } from '@prisma/client';
+import { IssueWithRelations } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { convertMarkdownToTiptapJson } from 'common/utils/tiptap.utils';
@@ -11,7 +12,6 @@ import {
 import {
   CreateIssueInput,
   IssueRequestParams,
-  IssueWithRelations,
   TeamRequestParams,
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
@@ -177,10 +177,13 @@ export default class GithubService {
         this.logger.log(`Creating new issue for GitHub issue ${issue.id}`);
         // Create a new issue
         const createdIssue = await this.issuesService.createIssueAPI(
-          { ...issueData.issueInput, teamId } as CreateIssueInput,
+          {
+            ...issueData.issueInput,
+            teamId,
+            linkIssueData: issueData.linkIssueData,
+            sourceMetadata: issueData.sourceMetadata,
+          } as CreateIssueInput,
           issueData.userId,
-          issueData.linkIssueData,
-          issueData.sourceMetadata,
         );
 
         // Send the first comment for the new issue
@@ -570,15 +573,16 @@ export default class GithubService {
             if (stateId) {
               await this.issuesService.updateIssue(
                 { teamId: team.id } as TeamRequestParams,
-                { stateId } as UpdateIssueInput,
+                {
+                  stateId,
+                  linkMetaData: {
+                    id: integrationAccount.id,
+                    type: IntegrationName.Github,
+                    userDisplayName: sender.login,
+                  },
+                } as UpdateIssueInput,
                 { issueId: linkedIssue.issueId } as IssueRequestParams,
                 user.id,
-                null,
-                {
-                  id: integrationAccount.id,
-                  type: IntegrationName.Github,
-                  userDisplayName: sender.login,
-                },
               );
               this.logger.log(
                 `Updated issue state to closed: issueId=${linkedIssue.issueId}`,

@@ -1,12 +1,12 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Issue } from '@prisma/client';
+import { IssueWithRelations } from '@tegonhq/types';
 import { Queue } from 'bull';
 
 import {
   IssueAction,
   IssueRequestParams,
-  IssueWithRelations,
   LinkIssueInput,
   TeamRequestParams,
 } from './issues.interface';

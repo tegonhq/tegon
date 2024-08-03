@@ -14,6 +14,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { IntegrationAccountWithRelations } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
@@ -54,6 +55,16 @@ export class IntegrationAccountController {
   ): Promise<IntegrationAccount[]> {
     return await this.integrationAccountService.getIntegrationAccountsForWorkspace(
       integrationAccountsRequestBody.workspaceId,
+    );
+  }
+
+  @Get('source')
+  @UseGuards(new AuthGuard())
+  async getIntegrationAccountByAccountId(
+    @Query('accountId') accountId: string,
+  ): Promise<IntegrationAccountWithRelations> {
+    return await this.integrationAccountService.getIntegrationAccountByAccountId(
+      accountId,
     );
   }
 

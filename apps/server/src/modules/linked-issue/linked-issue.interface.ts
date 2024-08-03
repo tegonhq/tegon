@@ -1,5 +1,11 @@
 import { LinkedIssue } from '@prisma/client';
-import { IsEnum, IsJSON, IsOptional, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsJSON,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 import { IssueWithRelations } from 'modules/issues/issues.interface';
 
@@ -87,29 +93,24 @@ export class LinkedIssueIdParams {
   linkedIssueId: string;
 }
 
-export class UpdateLinkedIssueAPIData {
+export class UpdateLinkedIssueData {
   @IsOptional()
   @IsString()
   url?: string;
 
   @IsOptional()
-  @IsJSON()
+  @IsString()
+  title?: string;
+
+  @IsOptional()
+  @IsObject()
   source?: Record<string, string | number>;
 
   @IsOptional()
-  @IsJSON()
+  @IsObject()
   sourceData?: Record<string, string | number>;
 
   @IsOptional()
   @IsString()
   createdById?: string;
-}
-
-export class UpdateLinkedIssueData {
-  @IsString()
-  url: string;
-
-  @IsOptional()
-  @IsString()
-  title?: string;
 }

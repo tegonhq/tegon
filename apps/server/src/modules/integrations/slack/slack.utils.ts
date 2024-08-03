@@ -2,6 +2,7 @@ import { Readable } from 'stream';
 
 import { Logger } from '@nestjs/common';
 import { IntegrationName } from '@prisma/client';
+import { IssueWithRelations } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { TiptapMarks, TiptapNode } from 'common/common.interface';
@@ -17,10 +18,7 @@ import {
   IssueCommentAction,
   IssueCommentWithRelations,
 } from 'modules/issue-comments/issue-comments.interface';
-import {
-  IssueWithRelations,
-  UpdateIssueInput,
-} from 'modules/issues/issues.interface';
+import { UpdateIssueInput } from 'modules/issues/issues.interface';
 import {
   LinkedIssueSourceData,
   LinkedIssueWithRelations,

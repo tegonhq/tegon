@@ -7,6 +7,8 @@ import { createOllama } from 'ollama-ai-provider';
 
 import { requestInputBody } from './ai-requests.interface';
 
+import {} from '@tegonhq/types';
+
 interface StreamResponse {
   textStream: AsyncIterable<string> & ReadableStream<string>;
 }

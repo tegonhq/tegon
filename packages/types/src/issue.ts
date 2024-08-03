@@ -1,5 +1,8 @@
-import type { IssueRelationEnum } from './issue-relation';
+import type { IssueRelationEnum, IssueRelationType } from './issue-relation';
 import type { Integration } from './linked-issue';
+
+import { TeamType } from './team';
+import { User } from './user';
 
 export interface IssueSourceMetadataType {
   type: Integration;
@@ -9,14 +12,17 @@ export interface IssueSourceMetadataType {
 
 export interface IssueType {
   id: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deleted?: Date;
+
   title: string;
   number: number;
   description: string;
   priority: number;
-  dueDate?: string;
+  dueDate?: Date;
   sortOrder: number;
+  subIssueSortOrder?: number;
   estimate?: number;
   teamId: string;
   createdById?: string;
@@ -25,11 +31,19 @@ export interface IssueType {
   parentId?: string;
   stateId: string;
   subscriberIds: string[];
-  sourceMetadata?: string;
+  attachments: string[];
+
+  sourceMetadata?: any;
+  isBidirectional?: boolean;
 
   // for frontend usage
   children?: IssueType[];
   parent?: IssueType;
+}
+
+export interface IssueWithRelations extends IssueType {
+  team?: TeamType;
+  createdBy?: User;
 }
 
 export interface IssueHistoryType {
@@ -85,4 +99,38 @@ export interface IssueSuggestionType {
   issueId: string;
   suggestedLabelIds: string[];
   suggestedAssigneeId?: string;
+}
+
+export interface LinkIssueData {
+  url: string;
+  sourceId: string;
+  source?: Record<string, string | number>;
+  sourceData?: Record<string, string | number>;
+  createdById?: string;
+}
+
+export interface UpdateIssueInput {
+  title?: string;
+  description?: string;
+  priority?: number;
+  dueDate?: Date;
+  sortOrder?: number;
+  subIssueSortOrder?: number;
+  estimate?: number;
+  labelIds?: string[];
+  assigneeId?: string;
+  stateId?: string;
+  parentId?: string;
+  isBidirectional?: boolean;
+  subscriberIds?: string[];
+  issueRelation?: IssueRelationInput;
+  attachments?: string[];
+  userId?: string;
+  linkIssueData?: LinkIssueData;
+  sourceMetadata?: Record<string, string>;
+}
+export class IssueRelationInput {
+  type?: IssueRelationType;
+  issueId?: string;
+  relatedIssueId?: string;
 }
