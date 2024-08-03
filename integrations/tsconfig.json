@@ -1,0 +1,10 @@
+{
+  "extends": "@tegonhq/typescript-config/base.json",
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@tegonhq/types": ["workspace/*"]
+    },
+    "module": "commonjs"
+  }
+}

@@ -1,12 +1,12 @@
-import { PrismaClient } from '@prisma/client';
-import axios from 'axios';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaClient } from "@prisma/client";
+import axios from "axios";
+import { PrismaService } from "nestjs-prisma";
 
 import {
   labelDataType,
   PostRequestBody,
   RequestHeaders,
-} from './integrations-interface';
+} from "./integrations-interface";
 
 export async function getRequest(url: string, headers: RequestHeaders) {
   try {
@@ -15,7 +15,7 @@ export async function getRequest(url: string, headers: RequestHeaders) {
       status: response.status,
       data: response.data,
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
       status: error.response.status,
       data: {},
@@ -27,7 +27,7 @@ export async function getRequest(url: string, headers: RequestHeaders) {
 export async function postRequest(
   url: string,
   headers: RequestHeaders,
-  body: PostRequestBody,
+  body: PostRequestBody
 ) {
   try {
     const response = await axios.post(url, body, headers);
@@ -35,7 +35,7 @@ export async function postRequest(
       status: response.status,
       data: response.data,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error making POST request to ${url}: ${error.message}`);
     return {
       status: error.response.status,
@@ -52,7 +52,7 @@ export async function deleteRequest(url: string, headers: RequestHeaders) {
       status: response.status,
       data: response.data,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error making DELETE request to ${url}: ${error.message}`);
     return {
       status: error.response.status,
@@ -66,7 +66,7 @@ export async function getOrCreateLabelIds(
   prisma: PrismaService,
   labels: labelDataType[],
   teamId: string,
-  workspaceId: string,
+  workspaceId: string
 ): Promise<string[]> {
   // Extract label names from the input
   const labelNames = labels.map((label) => label.name);
@@ -74,14 +74,14 @@ export async function getOrCreateLabelIds(
   // Find existing labels with matching names (case-insensitive)
   const existingLabels = await prisma.label.findMany({
     where: {
-      name: { in: labelNames, mode: 'insensitive' },
+      name: { in: labelNames, mode: "insensitive" },
       workspaceId,
     },
   });
 
   // Create a map of existing label names to their IDs
   const existingLabelMap = new Map(
-    existingLabels.map((label) => [label.name.toLowerCase(), label.id]),
+    existingLabels.map((label) => [label.name.toLowerCase(), label.id])
   );
 
   // Create new labels for names that don't have a match
@@ -96,8 +96,8 @@ export async function getOrCreateLabelIds(
             teamId,
             workspaceId,
           },
-        }),
-      ),
+        })
+      )
   );
 
   // Combine the IDs of existing and new labels
@@ -109,7 +109,7 @@ export async function getOrCreateLabelIds(
 
 export async function getUserId(
   prisma: PrismaClient,
-  userData: Record<string, string>,
+  userData: Record<string, string>
 ) {
   const integrationAccount = await prisma.integrationAccount.findFirst({
     where: { accountId: userData?.id.toString() },
