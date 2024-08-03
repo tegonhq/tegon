@@ -6,6 +6,7 @@ import {
   Prisma,
   WorkflowCategory,
 } from '@prisma/client';
+import { IssueWithRelations } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
@@ -27,14 +28,13 @@ import { getIssueTitle } from './issues-ai.utils';
 import {
   CreateIssueInput,
   IssueAction,
-  IssueWithRelations,
   LinkIssueInput,
   SubscribeType,
 } from './issues.interface';
 import { IssuesQueue } from './issues.queue';
 
 export async function getIssueDiff(
-  newIssueData: Issue,
+  newIssueData: IssueWithRelations,
   currentIssueData: Issue,
 ): Promise<IssueHistoryData> {
   let issueHistoryData: IssueHistoryData = {} as IssueHistoryData;
@@ -51,7 +51,10 @@ export async function getIssueDiff(
   if (currentIssueData) {
     // If currentIssueData exists, compare the values for each key
     keys.forEach((key) => {
-      const newIssueValue = getProperty(newIssueData, key as keyof Issue);
+      const newIssueValue = getProperty(
+        newIssueData,
+        key as keyof IssueWithRelations,
+      );
       const currentIssueValue = getProperty(
         currentIssueData,
         key as keyof Issue,
@@ -85,7 +88,7 @@ export async function getIssueDiff(
       const toKey = `to${capitalize(key)}` as keyof IssueHistoryData;
       issueHistoryData = {
         ...issueHistoryData,
-        [toKey]: getProperty(newIssueData, key as keyof Issue),
+        [toKey]: getProperty(newIssueData, key as keyof IssueWithRelations),
       };
     });
     // Add all labelIds from newIssueData as addedLabelIds
@@ -419,6 +422,8 @@ export async function getCreateIssueInput(
 
   delete otherIssueData.subIssues;
   delete otherIssueData.issueRelation;
+  delete otherIssueData.linkIssueData;
+  delete otherIssueData.sourceMetadata;
 
   return {
     ...otherIssueData,

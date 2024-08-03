@@ -1,11 +1,8 @@
 import { Body, Controller, Post, Headers, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { EventBody, EventHeaders } from '@tegonhq/types';
 
 import WebhookService from './webhook.service';
-import {
-  EventBody,
-  EventHeaders,
-} from '../../../integrations/integrations-interface';
 
 @Controller({
   version: '1',

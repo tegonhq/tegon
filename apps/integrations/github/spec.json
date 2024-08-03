@@ -13,8 +13,14 @@
       }
     }
   },
-  "clientId": "process.env.GITHUB_CLIENT_ID",
-  "clientSecret": "process.env.GITHUB_CLIENT_SECRET",
+  "input": {
+    "clientId": "process.env.GITHUB_CLIENT_ID",
+    "clientSecret": "process.env.GITHUB_CLIENT_SECRET",
+    "teamMapping": {
+      "tegonTeamId": "",
+      "channelId": ""
+    }
+  },
   "scopes": "repo",
   "traige": true,
   "bi-directional": true

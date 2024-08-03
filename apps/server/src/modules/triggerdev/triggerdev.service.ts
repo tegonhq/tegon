@@ -30,12 +30,25 @@ export class TriggerdevService {
       slug: 'common',
     });
 
+    // const integrtionProjectExists = await this.checkIfProjectExist({
+    //   slug: 'integration',
+    // });
+
     this.createPersonalToken();
 
     if (!commonProjectExists) {
       this.logger.log(`Common project doesn't exist`);
-      await this.createProject('Tegon', 'common', process.env.TRIGGER_TOKEN);
+      await this.createProject('Common', 'common', process.env.TRIGGER_TOKEN);
     }
+
+    // if (!integrtionProjectExists) {
+    //   this.logger.log(`Integration project doesn't exist`);
+    //   await this.createProject(
+    //     'Integration',
+    //     'integration',
+    //     process.env.TRIGGER_TOKEN,
+    //   );
+    // }
   }
 
   // Create personal token taking from the .env

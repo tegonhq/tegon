@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Issue, Prisma, WorkflowCategory } from '@prisma/client';
+import { IssueWithRelations } from '@tegonhq/types';
 import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -18,7 +19,6 @@ import {
   CreateIssueInput,
   IssueAction,
   IssueRequestParams,
-  IssueWithRelations,
   RelationInput,
   SubscribeType,
   TeamRequestParams,
@@ -61,11 +61,9 @@ export default class IssuesService {
   async createIssueAPI(
     issueData: CreateIssueInput,
     userId?: string,
-    linkIssuedata?: LinkIssueData,
-    linkMetaData?: Record<string, string>,
   ): Promise<IssueWithRelations> {
     // Destructure issueData to separate parentId, subIssues, issueRelation, teamId, and other issue data
-    const { issueRelation, teamId } = issueData;
+    const { issueRelation, teamId, linkIssueData, sourceMetadata } = issueData;
 
     // Fetch the workspace associated with the team
     const workspace = await getWorkspace(this.prisma, teamId);
@@ -76,7 +74,9 @@ export default class IssuesService {
       let lastNumber = await getLastIssueNumber(this.prisma, teamId);
 
       // Helper function to create an issue
-      const createIssue = async (data: Prisma.IssueCreateInput) => {
+      const createIssue = async (
+        data: Prisma.IssueCreateInput,
+      ): Promise<IssueWithRelations> => {
         lastNumber++;
         return prisma.issue.create({
           data: {
@@ -85,10 +85,10 @@ export default class IssuesService {
             number: lastNumber,
             team: { connect: { id: issueData.teamId } },
             ...(userId && { createdBy: { connect: { id: userId } } }),
-            ...(linkIssuedata && { linkedIssue: { create: linkIssuedata } }),
-            ...(linkMetaData && { sourceMetadata: linkMetaData }),
+            ...(linkIssueData && { linkedIssue: { create: linkIssueData } }),
+            ...(sourceMetadata && { sourceMetadata }),
           },
-          include: { team: true },
+          include: { team: true, createdBy: true },
         });
       };
 
@@ -129,7 +129,7 @@ export default class IssuesService {
           issue,
           await getIssueDiff(issue, null),
           userId,
-          linkMetaData,
+          sourceMetadata,
           issueRelation,
         );
 
@@ -138,7 +138,7 @@ export default class IssuesService {
           this.notificationsQueue,
           this.issuesQueue,
           issue,
-          linkMetaData,
+          sourceMetadata,
         );
       }),
     );
@@ -162,19 +162,18 @@ export default class IssuesService {
     issueData: UpdateIssueInput,
     issueParams: IssueRequestParams,
     userId?: string,
-    linkIssuedata?: LinkIssueData,
-    linkMetaData?: Record<string, string>,
   ): Promise<Issue> {
     this.logger.log(`Updating issue with ID: ${issueParams.issueId}`);
 
+    const { linkIssueData, sourceMetadata, ...otherIssueData } = issueData;
     // Call the updateIssueApi method to update the issue
     const updatedIssue = await this.updateIssueApi(
       teamRequestParams,
-      issueData,
+      otherIssueData,
       issueParams,
       userId,
-      linkIssuedata,
-      linkMetaData,
+      linkIssueData,
+      sourceMetadata,
     );
 
     // Check if the updated issue is bidirectional
@@ -365,7 +364,7 @@ export default class IssuesService {
    * @param issueRelation The issue relation input (optional).
    */
   private async upsertIssueHistory(
-    issue: Issue,
+    issue: IssueWithRelations,
     issueDiff: IssueHistoryData,
     userId?: string,
     linkMetaData?: Record<string, string>,

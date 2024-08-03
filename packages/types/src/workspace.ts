@@ -1,9 +1,12 @@
 export interface WorkspaceType {
   id: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deleted: Date;
+
   slug: string;
   name: string;
+  icon?: string;
 }
 
 export interface UsersOnWorkspaceType {
