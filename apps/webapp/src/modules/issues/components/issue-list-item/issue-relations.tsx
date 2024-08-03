@@ -1,7 +1,6 @@
 import type { IssueType, WorkflowType } from '@tegonhq/types';
 
 import { IssueRelationEnum } from '@tegonhq/types';
-import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
 import { Button, buttonVariants } from '@tegonhq/ui/components/button';
 import {
   BlockedFill,
@@ -15,6 +14,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import { getWorkflowColor } from 'common/status-color';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 import { useContextStore } from 'store/global-context-provider';
 

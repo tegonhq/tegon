@@ -2,6 +2,7 @@
   "extends": "@tegonhq/typescript-config/nest.json",
   "compilerOptions": {
     "baseUrl": "src",
+    "module": "NodeNext",
     "outDir": "./dist"
   },
   "exclude": ["node_modules"],

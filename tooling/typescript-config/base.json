@@ -5,6 +5,7 @@
     "target": "ES2022",
     "baseUrl": "src",
     "skipLibCheck": true,
+    "moduleResolution": "nodenext",
     "strict": true,
     "strictNullChecks": false,
     "preserveConstEnums": true,

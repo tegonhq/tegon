@@ -14,6 +14,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { IntegrationAccountWithRelations } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
@@ -24,7 +25,6 @@ import {
   UpdateIntegrationAccountBody,
 } from './integration-account.interface';
 import { IntegrationAccountService } from './integration-account.service';
-import { IntegrationAccountWithRelations } from '@tegonhq/types';
 
 @Controller({
   version: '1',

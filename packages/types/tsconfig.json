@@ -1,13 +1,10 @@
 {
-  "extends": "@tegonhq/typescript-config/next.json",
+  "extends": "@tegonhq/typescript-config/nest.json",
   "compilerOptions": {
     "baseUrl": "src",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+    "module": "NodeNext",
+    "outDir": "./dist"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "include": ["**/*.ts", "**/*.tsx"]
 }

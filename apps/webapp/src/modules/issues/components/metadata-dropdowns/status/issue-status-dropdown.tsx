@@ -1,4 +1,3 @@
-import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { Command, CommandInput } from '@tegonhq/ui/components/command';
 import {
@@ -11,6 +10,7 @@ import * as React from 'react';
 import { IssueStatusDropdownContent } from 'modules/issues/components';
 
 import { getWorkflowColor } from 'common/status-color';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 import { useTeamWorkflows } from 'hooks/workflows/use-team-workflows';
 

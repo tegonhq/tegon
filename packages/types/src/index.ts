@@ -6,7 +6,6 @@ export * from './issue';
 export * from './label';
 export * from './linked-issue';
 export * from './notification';
-export * from './status';
 export * from './team';
 export * from './view';
 export * from './workspace';

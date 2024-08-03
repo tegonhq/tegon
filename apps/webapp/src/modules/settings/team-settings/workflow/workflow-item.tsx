@@ -1,8 +1,7 @@
 import type { WorkflowType } from '@tegonhq/types';
 
-import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
-
 import { getWorkflowColor } from 'common/status-color';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 interface WorkflowItemProps {
   workflow: WorkflowType;

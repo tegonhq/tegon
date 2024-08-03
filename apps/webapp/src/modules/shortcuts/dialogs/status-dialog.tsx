@@ -1,11 +1,11 @@
 import type { WorkflowType } from '@tegonhq/types';
 
 import { useUpdateIssueMutation } from '@tegonhq/services/issues';
-import { WORKFLOW_CATEGORY_ICONS } from '@tegonhq/types';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { getWorkflowColor } from 'common/status-color';
+import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 import { useCurrentTeam } from 'hooks/teams';
 

@@ -590,13 +590,6 @@ importers:
         version: 5.5.3
 
   packages/types:
-    dependencies:
-      '@tegonhq/ui':
-        specifier: workspace:*
-        version: link:../ui
-      react:
-        specifier: ^18
-        version: 18.3.1
     devDependencies:
       '@tegonhq/eslint-config':
         specifier: workspace:*
@@ -607,9 +600,6 @@ importers:
       '@types/node':
         specifier: ^20
         version: 20.14.11
-      '@types/react':
-        specifier: ^18
-        version: 18.3.3
       typescript:
         specifier: ^5.4.5
         version: 5.5.3
