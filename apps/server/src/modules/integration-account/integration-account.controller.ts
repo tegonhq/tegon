@@ -24,6 +24,7 @@ import {
   UpdateIntegrationAccountBody,
 } from './integration-account.interface';
 import { IntegrationAccountService } from './integration-account.service';
+import { IntegrationAccountWithRelations } from '@tegonhq/types';
 
 @Controller({
   version: '1',
@@ -113,6 +114,16 @@ export class IntegrationAccountController {
   ): Promise<IntegrationAccount> {
     return await this.integrationAccountService.createIntegrationAccount(
       createIntegrationAccountBody,
+    );
+  }
+
+  @Get()
+  @UseGuards(new AuthGuard())
+  async getIntegrationAccountByAccountId(
+    @Query('accountId') accountId: string,
+  ): Promise<IntegrationAccountWithRelations> {
+    return await this.integrationAccountService.getIntegrationAccountByAccountId(
+      accountId,
     );
   }
 }

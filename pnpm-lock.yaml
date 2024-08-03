@@ -96,6 +96,9 @@ importers:
       '@prisma/instrumentation':
         specifier: ^5.17.0
         version: 5.17.0
+      '@tegonhq/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@tiptap/core':
         specifier: ^2.3.0
         version: 2.5.4(@tiptap/pm@2.5.4)

@@ -15,10 +15,26 @@ export const config: TriggerConfig = {
       randomize: true,
     },
   },
-  triggerDirectories: ['./integrations', './src/trigger'],
+  triggerDirectories: ['./src/trigger'],
 
   instrumentations: [new PrismaInstrumentation()],
 
   additionalFiles: ['./prisma/schema.prisma'],
   additionalPackages: ['prisma@5.17.0'],
 };
+
+// export const integrationConfig: TriggerConfig = {
+//   project: 'proj_integration',
+//   logLevel: 'debug',
+//   retries: {
+//     enabledInDev: true,
+//     default: {
+//       maxAttempts: 3,
+//       minTimeoutInMs: 1000,
+//       maxTimeoutInMs: 10000,
+//       factor: 2,
+//       randomize: true,
+//     },
+//   },
+//   triggerDirectories: ['../../integrations'],
+// };

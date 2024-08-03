@@ -1,4 +1,8 @@
-import type { IntegrationName } from './integration-definition';
+import type {
+  IntegrationDefinitionType,
+  IntegrationName,
+} from './integration-definition';
+import type { WorkspaceType } from './workspace';
 
 export interface GithubRepositories {
   id: string;
@@ -44,4 +48,10 @@ export interface IntegrationAccountType {
   integratedById: string;
   integrationDefinitionId: string;
   workspaceId: string;
+}
+
+export interface IntegrationAccountWithRelations
+  extends IntegrationAccountType {
+  workspace: WorkspaceType;
+  integrationDefinition: IntegrationDefinitionType;
 }

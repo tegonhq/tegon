@@ -5,6 +5,6 @@
     "paths": {
       "@tegonhq/types": ["workspace/*"]
     },
-    "module": "commonjs"
+    "moduleResolution": "Bundler"
   }
 }

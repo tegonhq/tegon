@@ -14,6 +14,6 @@ export const config: TriggerConfig = {
     },
   },
 
-  triggerDirectories: ["./src"],
-  additionalPackages: ["@tegonhq/types"],
+  triggerDirectories: ["./"],
+  additionalPackages: ["@tegonhq/types", "axios:1.6.7"],
 };

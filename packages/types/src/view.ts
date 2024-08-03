@@ -1,4 +1,4 @@
-import type { FiltersModelType } from 'store/application';
+import type { FiltersModelType } from './application';
 
 export interface ViewType {
   id: string;
