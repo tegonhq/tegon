@@ -1,6 +1,6 @@
 {
-  "name": "tegon-integration",
-  "version": "0.2.0",
+  "name": "@tegonhq/integrations",
+  "version": "0.0.0",
   "description": "Integration triggers",
   "private": true,
   "scripts": {
@@ -11,5 +11,9 @@
     "@tegonhq/types": "workspace:*",
     "@trigger.dev/sdk": "3.0.0-beta.50",
     "axios": "^1.6.7"
+  },
+  "devDependencies": {
+    "@tegonhq/eslint-config": "workspace:*",
+    "@tegonhq/typescript-config": "workspace:*"
   }
 }
