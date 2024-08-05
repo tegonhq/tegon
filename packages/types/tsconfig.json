@@ -1,0 +1,16 @@
+{
+  "extends": "@tegonhq/typescript-config/node.json",
+  "include": ["./src/**/*.ts", "tsup.config.ts"],
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "paths": {
+      "@tegonhq/tsup/*": ["../../tooling/tsup/src/*"]
+    },
+    "lib": ["DOM", "DOM.Iterable"],
+    "declaration": false,
+    "declarationMap": false,
+    "stripInternal": true
+  },
+  "exclude": ["node_modules"]
+}

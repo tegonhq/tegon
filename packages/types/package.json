@@ -2,13 +2,34 @@
   "name": "@tegonhq/types",
   "version": "0.0.0",
   "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.mjs",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "lint": "eslint . --fix"
+    "dev": "tsup --watch",
+    "lint": "eslint . --fix",
+    "clean": "rimraf dist",
+    "build": "npm run clean && npm run build:tsup",
+    "build:tsup": "tsup --dts-resolve",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@tegonhq/eslint-config": "workspace:*",
+    "@tegonhq/typescript-config": "workspace:*",
     "@types/node": "^20",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "rimraf": "^3.0.2",
+    "tsup": "^8.0.1"
   },
-  "main": "./src/index.ts"
+  ".": {
+    "import": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "require": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  }
 }
