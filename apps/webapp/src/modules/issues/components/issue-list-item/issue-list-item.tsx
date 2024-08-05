@@ -1,5 +1,5 @@
-import type { IssueType } from '@tegonhq/types';
-import type { IssueRelationType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
+import type { IssueRelationType } from 'common/types';
 
 import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { Checkbox } from '@tegonhq/ui/components/checkbox';

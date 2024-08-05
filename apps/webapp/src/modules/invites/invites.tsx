@@ -1,4 +1,4 @@
-import type { Invite } from '@tegonhq/types';
+import type { Invite } from 'common/types';
 
 import { useInviteActionMutation } from '@tegonhq/services/workspace';
 import { AvatarText } from '@tegonhq/ui/components/avatar';

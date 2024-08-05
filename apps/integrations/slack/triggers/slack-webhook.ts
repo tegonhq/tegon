@@ -1,16 +1,15 @@
 import { logger, task, tasks } from "@trigger.dev/sdk/v3";
-import {
-  IntegrationAccountWithRelations,
-  Settings,
-  WebhookPayload,
-} from "@tegonhq/types";
+import { IntegrationAccount, Settings, WebhookPayload } from "@tegonhq/types";
 import { getRequest } from "../../integration.utils";
 
 export const slackWebhook = task({
   id: "slack-webhook",
   init: async (payload: WebhookPayload) => {
-    const { team_id: teamId } = payload.eventBody;
-    let integrationAccount: IntegrationAccountWithRelations;
+    const {
+      team_id: teamId,
+      event: { user: slackUserId },
+    } = payload.eventBody;
+    let integrationAccount: IntegrationAccount;
     let userId: string;
     if (teamId) {
       const integrationAccountResponse = await getRequest(
@@ -19,7 +18,7 @@ export const slackWebhook = task({
       );
       integrationAccount = integrationAccountResponse.data;
       const userIntegrationAccountResponse = await getRequest(
-        `${process.env.BACKEND_HOST}/v1/integration-account/source?accountId=${teamId}`,
+        `${process.env.BACKEND_HOST}/v1/integration_account/source?accountId=${slackUserId}`,
         { headers: { Authorization: payload.accesstoken } }
       );
       userId = userIntegrationAccountResponse.data.integratedById;
@@ -27,9 +26,9 @@ export const slackWebhook = task({
 
     return { integrationAccount, userId };
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   run: async (payload: WebhookPayload, { init }) => {
-    const { eventBody, eventHeaders } = payload;
+    const { eventBody, eventHeaders, accesstoken } = payload;
 
     // Check if the event is a URL verification challenge
     if (eventBody.type === "url_verification") {
@@ -37,11 +36,11 @@ export const slackWebhook = task({
       return { challenge: eventBody.challenge };
     }
 
-    const { event, team_id } = eventBody;
+    const { event, team_id: teamId } = eventBody;
 
     // If no integration account is found, log and return undefined
     if (!init.integrationAccount) {
-      logger.debug("No integration account found for team:", team_id);
+      logger.debug("No integration account found for team:", teamId);
       return undefined;
     }
 
@@ -62,6 +61,7 @@ export const slackWebhook = task({
       eventHeaders,
       integrationAccount: init.integrationAccount,
       userId: init.userId,
+      accesstoken,
     };
 
     // Handle different event types

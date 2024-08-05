@@ -1,4 +1,4 @@
-import { WorkflowCategoryEnum, type WorkflowType } from '@tegonhq/types';
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
 import {
   type IAnyStateTreeNode,
   type Instance,

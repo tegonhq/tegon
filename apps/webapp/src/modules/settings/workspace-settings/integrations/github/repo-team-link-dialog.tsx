@@ -3,13 +3,13 @@ import type {
   GithubRepositories,
   IntegrationAccountType,
   Settings,
-} from '@tegonhq/types';
-import type { TeamType } from '@tegonhq/types';
+} from 'common/types';
+import type { TeamType } from 'common/types';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RiGithubFill } from '@remixicon/react';
 import { useUpdateIntegrationAccountMutation } from '@tegonhq/services/oauth';
-import { IntegrationName } from '@tegonhq/types';
+import { IntegrationName } from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DialogContent,

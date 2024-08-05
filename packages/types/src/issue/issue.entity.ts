@@ -1,0 +1,43 @@
+import { JsonValue } from '../common';
+import { IssueComment } from '../issue-comment';
+import { IssueHistory } from '../issue-history';
+import { IssueRelation } from '../issue-relation';
+import { IssueSuggestion } from '../issue-suggestion';
+import { LinkedIssue } from '../linked-issue';
+import { Team } from '../team';
+import { User } from '../user';
+
+export class Issue {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deleted: Date | null;
+  title: string;
+  number: number;
+  description: string | null;
+  priority: number | null;
+  dueDate: Date | null;
+  sortOrder: number | null;
+  subIssueSortOrder: number | null;
+  estimate: number | null;
+  sourceMetadata: JsonValue | null;
+  isBidirectional: boolean | null;
+  team?: Team;
+  teamId: string;
+  createdBy?: User | null;
+  createdById: string | null;
+  subscriberIds: string[];
+  assigneeId: string | null;
+  labelIds: string[];
+  stateId: string;
+  parent?: Issue | null;
+  parentId: string | null;
+  subIssue?: Issue[];
+  attachments: string[];
+  comments?: IssueComment[];
+  history?: IssueHistory[];
+  linkedIssue?: LinkedIssue[];
+  issueRelations?: IssueRelation[];
+  IssueSuggestion?: IssueSuggestion | null;
+  issueSuggestionId: string | null;
+}

@@ -1,14 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { IntegrationName, IssueComment } from '@prisma/client';
-import { IssueWithRelations } from '@tegonhq/types';
+import {
+  IntegrationName,
+  IssueComment,
+  IntegrationAccount,
+  Issue,
+  AttachmentResponse,
+} from '@tegonhq/types';
+import {} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-import { AttachmentResponse } from 'modules/attachments/attachments.interface';
 import { AttachmentService } from 'modules/attachments/attachments.service';
-import {
-  IntegrationAccountWithRelations,
-  Settings,
-} from 'modules/integration-account/integration-account.interface';
+import { Settings } from 'modules/integration-account/integration-account.interface';
 import {
   CreateIssueInput,
   IssueRequestParams,
@@ -263,7 +265,7 @@ export default class SlackService {
   }
 
   async createSlackIssue(
-    integrationAccount: IntegrationAccountWithRelations,
+    integrationAccount: IntegrationAccount,
     sessionData: SlashCommandSessionRecord,
     issueData: slackIssueData,
   ) {
@@ -329,7 +331,7 @@ export default class SlackService {
 
   async handleThread(
     eventBody: EventBody,
-    integrationAccount: IntegrationAccountWithRelations,
+    integrationAccount: IntegrationAccount,
   ): Promise<IssueComment> {
     // Get the message from the event body based on the subtype
     const message =
@@ -456,8 +458,8 @@ export default class SlackService {
 
   async handleMessageReaction(
     eventBody: EventBody,
-    integrationAccount: IntegrationAccountWithRelations,
-  ): Promise<IssueWithRelations | undefined> {
+    integrationAccount: IntegrationAccount,
+  ): Promise<Issue | undefined> {
     // Extract relevant data from the event body
     const { event, team_id: slackTeamId } = eventBody;
     const { reaction } = event;

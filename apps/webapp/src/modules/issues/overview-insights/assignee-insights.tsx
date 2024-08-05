@@ -1,5 +1,5 @@
-import type { User } from '@tegonhq/types';
-import type { IssueType } from '@tegonhq/types';
+import type { User } from 'common/types';
+import type { IssueType } from 'common/types';
 
 import {
   Avatar,

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Label } from '@prisma/client';
+import { Label } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {

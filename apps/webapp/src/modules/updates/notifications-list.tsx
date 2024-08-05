@@ -1,4 +1,4 @@
-import type { NotificationType } from '@tegonhq/types';
+import type { NotificationType } from 'common/types';
 
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { sort } from 'fast-sort';

@@ -1,23 +1,23 @@
 import { Readable } from 'stream';
 
 import { Logger } from '@nestjs/common';
-import { IntegrationName } from '@prisma/client';
-import { IssueWithRelations } from '@tegonhq/types';
+import {
+  IntegrationNameEnum,
+  Issue,
+  IntegrationAccount,
+  IssueComment,
+  AttachmentResponse,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { TiptapMarks, TiptapNode } from 'common/common.interface';
 
-import { AttachmentResponse } from 'modules/attachments/attachments.interface';
 import {
   ChannelTeamMapping,
   Config,
-  IntegrationAccountWithRelations,
   Settings,
 } from 'modules/integration-account/integration-account.interface';
-import {
-  IssueCommentAction,
-  IssueCommentWithRelations,
-} from 'modules/issue-comments/issue-comments.interface';
+import { IssueCommentAction } from 'modules/issue-comments/issue-comments.interface';
 import { UpdateIssueInput } from 'modules/issues/issues.interface';
 import {
   LinkedIssueSourceData,
@@ -36,9 +36,7 @@ import {
 import { EventBody, RequestHeaders } from '../integrations.interface';
 import { getRequest, getUserId, postRequest } from '../integrations.utils';
 
-export function getSlackHeaders(
-  integrationAccount: IntegrationAccountWithRelations,
-) {
+export function getSlackHeaders(integrationAccount: IntegrationAccount) {
   const integrationConfig =
     integrationAccount.integrationConfiguration as Config;
   return {
@@ -50,7 +48,7 @@ export function getSlackHeaders(
 }
 
 export async function addBotToChannel(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   channelId: string,
 ) {
   const botResponse = await postRequest(
@@ -233,7 +231,7 @@ function getMessagesBlock(sessionData: SlashCommandSessionRecord) {
  * @returns An object containing the modal view and session data.
  */
 export function getModalView(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   channelId: string,
   modelViewType: ModelViewType,
   sessionData: SlashCommandSessionRecord,
@@ -295,7 +293,7 @@ export async function getIssueData(
   prisma: PrismaService,
   sessionData: SlashCommandSessionRecord,
   eventBody: EventBody,
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
 ): Promise<slackIssueData> {
   // Get the state ID and user ID concurrently
   const [stateId, userId] = await Promise.all([
@@ -322,7 +320,7 @@ export async function getIssueData(
   // Create the source metadata object
   const sourceMetadata = {
     id: integrationAccount.id,
-    type: IntegrationName.Slack,
+    type: IntegrationNameEnum.Slack,
     subType: LinkedSlackMessageType.Thread,
     channelId: sessionData.channelId,
     userDisplayName: slackUsername,
@@ -344,7 +342,7 @@ export async function getSlackUserIntegrationAccount(
         integratedById: userId,
         integrationDefinition: {
           workspaceId,
-          name: IntegrationName.SlackPersonal,
+          name: IntegrationNameEnum.SlackPersonal,
         },
       },
     });
@@ -355,12 +353,12 @@ export async function getSlackUserIntegrationAccount(
 export async function getSlackIntegrationAccount(
   prisma: PrismaService,
   slackTeamId: string,
-): Promise<IntegrationAccountWithRelations> {
+): Promise<IntegrationAccount> {
   return prisma.integrationAccount.findFirst({
     where: {
       accountId: slackTeamId,
       integrationDefinition: {
-        name: IntegrationName.Slack,
+        name: IntegrationNameEnum.Slack,
       },
     },
     include: { integrationDefinition: true, workspace: true },
@@ -375,7 +373,7 @@ export async function getSlackIntegrationAccount(
  */
 export async function getIssueMessageModal(
   prisma: PrismaService,
-  issue: IssueWithRelations,
+  issue: Issue,
 ) {
   // Find the workspace based on the issue's team workspace ID
   const workspace = await prisma.workspace.findUnique({
@@ -424,8 +422,8 @@ export async function getIssueMessageModal(
 export async function upsertSlackMessage(
   prisma: PrismaService,
   logger: Logger,
-  issueComment: IssueCommentWithRelations,
-  integrationAccount: IntegrationAccountWithRelations,
+  issueComment: IssueComment,
+  integrationAccount: IntegrationAccount,
   userId: string,
   action: IssueCommentAction,
 ) {
@@ -475,7 +473,7 @@ export async function upsertSlackMessage(
       parentTs: message.thread_ts,
       channelId: messageData.channel,
       channelType: messageData.channel_type,
-      type: IntegrationName.Slack,
+      type: IntegrationNameEnum.Slack,
       userDisplayName: message.username ? message.username : message.user,
     };
 
@@ -484,7 +482,7 @@ export async function upsertSlackMessage(
       data: {
         url: threadId,
         sourceId: threadId,
-        source: { type: IntegrationName.Slack },
+        source: { type: IntegrationNameEnum.Slack },
         commentId: issueComment.id,
         sourceData,
       },
@@ -493,7 +491,7 @@ export async function upsertSlackMessage(
 }
 
 export async function getSlackMessage(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   sessionData: SlashCommandSessionRecord,
 ) {
   const response = await postRequest(
@@ -511,7 +509,7 @@ export async function getSlackMessage(
 }
 
 export async function getSlackTeamInfo(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   slackTeamId: string,
 ) {
   const response = await getRequest(
@@ -523,7 +521,7 @@ export async function getSlackTeamInfo(
 }
 
 export async function getExternalSlackUser(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   slackUserId: string,
 ) {
   const response = await getRequest(
@@ -535,7 +533,7 @@ export async function getExternalSlackUser(
 }
 
 export async function sendSlackMessage(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   payload: EventBody,
 ) {
   const response = await postRequest(
@@ -548,7 +546,7 @@ export async function sendSlackMessage(
 }
 
 export async function sendEphemeralMessage(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   channelId: string,
   text: string,
   threadTs: string,
@@ -572,7 +570,7 @@ export async function sendEphemeralMessage(
 export async function sendSlackLinkedMessage(
   prisma: PrismaService,
   logger: Logger,
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   linkedIssue: LinkedIssueWithRelations,
 ) {
   try {
@@ -651,15 +649,15 @@ export async function createIssueCommentAndLinkIssue(
   prisma: PrismaService,
   messageData: EventBody,
   sessionData: SlashCommandSessionRecord,
-  integrationAccount: IntegrationAccountWithRelations,
-  createdIssue: IssueWithRelations,
+  integrationAccount: IntegrationAccount,
+  createdIssue: Issue,
   userId?: string,
 ) {
   // Extract relevant data from the Slack message event
   const { ts: messageTs, thread_ts: parentTs, channel_type } = messageData;
 
   // Generate the comment body with the Slack channel name
-  const commentBody = `${IntegrationName.Slack} thread in #${getChannelNameFromIntegrationAccount(integrationAccount, sessionData.channelId)}`;
+  const commentBody = `${IntegrationNameEnum.Slack} thread in #${getChannelNameFromIntegrationAccount(integrationAccount, sessionData.channelId)}`;
 
   // Create an issue comment in the database
   const issueComment = await prisma.issueComment.create({
@@ -672,7 +670,7 @@ export async function createIssueCommentAndLinkIssue(
         parentTs,
         channelId: sessionData.channelId,
         channelType: channel_type,
-        type: IntegrationName.Slack,
+        type: IntegrationNameEnum.Slack,
       },
     },
   });
@@ -685,7 +683,7 @@ export async function createIssueCommentAndLinkIssue(
     url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${mainTs.replace('.', '')}`,
     sourceId: `${sessionData.channelId}_${mainTs}`,
     source: {
-      type: IntegrationName.Slack,
+      type: IntegrationNameEnum.Slack,
       subType: LinkedSlackMessageType.Thread,
       syncedCommentId: issueComment.id,
     },
@@ -700,7 +698,7 @@ export async function createIssueCommentAndLinkIssue(
 }
 
 export function getChannelNameFromIntegrationAccount(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   channelId: string,
 ) {
   const slackSettings = integrationAccount.settings as Settings;
@@ -718,7 +716,7 @@ export function getChannelNameFromIntegrationAccount(
  * @returns An array of Multer files.
  */
 export async function getFilesBuffer(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   files: EventBody[],
 ): Promise<Express.Multer.File[]> {
   // Set the headers for the Slack API request

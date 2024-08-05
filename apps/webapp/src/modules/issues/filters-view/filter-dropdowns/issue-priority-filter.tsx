@@ -1,4 +1,4 @@
-import { Priorities } from '@tegonhq/types';
+import { Priorities } from 'common/types';
 import { observer } from 'mobx-react-lite';
 
 import { IssuePriorityDropdownContent } from 'modules/issues/components';

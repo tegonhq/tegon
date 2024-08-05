@@ -1,4 +1,9 @@
-import { IntegrationName, Prisma } from '@prisma/client';
+import {
+  IntegrationName,
+  IntegrationAccount,
+  JsonObject,
+  JsonValue,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -17,13 +22,12 @@ import {
 import {
   ChannelMapping,
   Config,
-  IntegrationAccountWithRelations,
   Settings,
 } from './integration-account.interface';
 
 export async function storeIntegrationRelatedData(
   prisma: PrismaService,
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   integrationName: IntegrationName,
   userId: string,
   workspaceId: string,
@@ -44,7 +48,7 @@ export async function storeIntegrationRelatedData(
           where: { id: integrationAccount.id },
           data: {
             settings: { [IntegrationName.Github]: githubSettings },
-          } as unknown as Prisma.JsonObject,
+          } as unknown as JsonObject,
         });
       }
 
@@ -129,7 +133,7 @@ export async function storeIntegrationRelatedData(
               botUserId: settingsData.bot_user_id,
               channelMappings: channelMappings as ChannelMapping[],
             },
-          } as unknown as Prisma.JsonValue,
+          } as unknown as JsonValue,
         },
       });
       break;
@@ -173,7 +177,7 @@ export async function storeIntegrationRelatedData(
 }
 
 export async function handleAppDeletion(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
 ) {
   if (
     integrationAccount.integrationDefinition.name === IntegrationName.Github

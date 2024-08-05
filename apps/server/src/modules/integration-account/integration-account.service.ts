@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { IntegrationAccountWithRelations } from '@tegonhq/types';
+import { InputJsonValue } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -136,8 +135,7 @@ export class IntegrationAccountService {
     return await this.prisma.integrationAccount.update({
       data: {
         ...updateIntegrationAccountBody,
-        settings:
-          updateIntegrationAccountBody.settings as Prisma.InputJsonValue,
+        settings: updateIntegrationAccountBody.settings as InputJsonValue,
       },
       where: {
         id: integrationAccountId,
@@ -145,9 +143,7 @@ export class IntegrationAccountService {
     });
   }
 
-  async getIntegrationAccountByAccountId(
-    accountId: string,
-  ): Promise<IntegrationAccountWithRelations> {
+  async getIntegrationAccountByAccountId(accountId: string) {
     return await this.prisma.integrationAccount.findFirst({
       where: { accountId, deleted: null },
       include: { workspace: true, integrationDefinition: true },

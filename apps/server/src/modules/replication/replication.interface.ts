@@ -1,4 +1,4 @@
-import { ModelName } from '@prisma/client';
+import { ModelNameEnum } from '@tegonhq/types';
 
 export interface logChangeType {
   kind: string;
@@ -15,21 +15,26 @@ export interface logType {
 }
 
 export const tablesToSendMessagesFor = new Map([
-  [ModelName.Workspace, true],
-  [ModelName.Team, true],
-  [ModelName.TeamPreference, true],
-  [ModelName.Issue, true],
-  [ModelName.Label, true],
-  [ModelName.Workflow, true],
-  [ModelName.Template, true],
-  [ModelName.IssueComment, true],
-  [ModelName.IssueHistory, true],
-  [ModelName.UsersOnWorkspaces, true],
-  [ModelName.IntegrationAccount, true],
-  [ModelName.IntegrationDefinition, true],
-  [ModelName.LinkedIssue, true],
-  [ModelName.IssueRelation, true],
-  [ModelName.Notification, true],
-  [ModelName.View, true],
-  [ModelName.IssueSuggestion, true],
+  [ModelNameEnum.Workspace, true],
+  [ModelNameEnum.Team, true],
+  [ModelNameEnum.TeamPreference, true],
+  [ModelNameEnum.Issue, true],
+  [ModelNameEnum.Label, true],
+  [ModelNameEnum.Workflow, true],
+  [ModelNameEnum.Template, true],
+  [ModelNameEnum.IssueComment, true],
+  [ModelNameEnum.IssueHistory, true],
+  [ModelNameEnum.UsersOnWorkspaces, true],
+  [ModelNameEnum.IntegrationAccount, true],
+  [ModelNameEnum.IntegrationDefinition, true],
+  [ModelNameEnum.LinkedIssue, true],
+  [ModelNameEnum.IssueRelation, true],
+  [ModelNameEnum.Notification, true],
+  [ModelNameEnum.View, true],
+  [ModelNameEnum.IssueSuggestion, true],
+]);
+
+export const tablesToTrigger = new Map([
+  [ModelNameEnum.Issue, true],
+  [ModelNameEnum.IssueComment, true],
 ]);

@@ -1,8 +1,12 @@
 import { Logger } from '@nestjs/common';
-import { IntegrationName, LinkedIssue, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import {
+  IntegrationAccount,
+  IntegrationName,
+  LinkedIssue,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
 import {
   getBotAccessToken,
   getGithubHeaders,
@@ -85,11 +89,11 @@ export async function getLinkedIssueDataWithUrl(
   issueId: string,
   userId: string,
 ): Promise<{
-  integrationAccount: IntegrationAccountWithRelations | null;
+  integrationAccount: IntegrationAccount | null;
   linkInput: CreateLinkIssueInput;
   linkDataType: LinkedIssueSubType;
 }> {
-  let integrationAccount: IntegrationAccountWithRelations;
+  let integrationAccount: IntegrationAccount;
   switch (linkData.type) {
     case LinkedIssueSubType.GithubIssue:
     case LinkedIssueSubType.GithubPullRequest:
@@ -340,7 +344,7 @@ export async function sendFirstComment(
   prisma: PrismaService,
   logger: Logger,
   linkedIssueService: LinkedIssueService,
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   linkedIssue: LinkedIssueWithRelations,
   type: LinkedIssueSubType,
 ) {
@@ -391,7 +395,7 @@ export async function getLinkDetails(
   linkedIssue: LinkedIssue,
 ) {
   const linkedIssueSource = linkedIssue.source as LinkedIssueSource;
-  let integrationAccount: IntegrationAccountWithRelations;
+  let integrationAccount: IntegrationAccount;
   switch (linkedIssueSource.type) {
     case IntegrationName.Sentry:
       const sentryMatch = linkedIssue.url.match(sentryRegex);

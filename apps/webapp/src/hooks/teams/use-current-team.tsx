@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import type { TeamType } from '@tegonhq/types';
+import type { TeamType } from 'common/types';
 
 import { computed } from 'mobx';
 import { useRouter } from 'next/router';

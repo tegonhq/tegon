@@ -1,4 +1,4 @@
-import type { IssueType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import {

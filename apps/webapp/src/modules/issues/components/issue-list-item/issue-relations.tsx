@@ -1,6 +1,6 @@
-import type { IssueType, WorkflowType } from '@tegonhq/types';
+import type { IssueType, WorkflowType } from 'common/types';
 
-import { IssueRelationEnum } from '@tegonhq/types';
+import { IssueRelationEnum } from 'common/types';
 import { Button, buttonVariants } from '@tegonhq/ui/components/button';
 import {
   BlockedFill,

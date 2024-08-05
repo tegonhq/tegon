@@ -1,4 +1,4 @@
-import type { IssueHistoryType } from '@tegonhq/types';
+import type { IssueHistoryType } from 'common/types';
 
 import {
   type IAnyStateTreeNode,

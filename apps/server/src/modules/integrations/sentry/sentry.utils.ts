@@ -1,12 +1,11 @@
 import { PrismaService } from 'nestjs-prisma';
 
-import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
-
 import { getRequest, postRequest } from '../integrations.utils';
+import { IntegrationAccount } from '@tegonhq/types';
 
 export async function getAccessToken(
   prisma: PrismaService,
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
 ) {
   const config = integrationAccount.integrationConfiguration as Record<
     string,
@@ -47,7 +46,7 @@ export async function getAccessToken(
 
 export async function getSentryHeaders(
   prisma: PrismaService,
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
 ) {
   const accessToken = await getAccessToken(prisma, integrationAccount);
   return {
@@ -60,7 +59,7 @@ export async function getSentryHeaders(
 
 export async function getSentryIssue(
   prisma: PrismaService,
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   orgSlug: string,
   issueId: string,
 ) {
@@ -73,7 +72,7 @@ export async function getSentryIssue(
 
 export async function createSentryComment(
   prisma: PrismaService,
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   issueId: string,
   comment: string,
 ) {

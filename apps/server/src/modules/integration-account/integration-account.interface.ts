@@ -1,9 +1,4 @@
-import {
-  IntegrationAccount,
-  IntegrationDefinition,
-  IntegrationName,
-  Workspace,
-} from '@prisma/client';
+import { IntegrationNameEnum } from '@tegonhq/types';
 import { IsObject, IsOptional, IsString } from 'class-validator';
 
 import { WorkspaceIdRequestBody } from 'modules/workspaces/workspaces.interface';
@@ -63,10 +58,10 @@ export interface SentrySettings {
 }
 
 export interface Settings {
-  [IntegrationName.Github]?: GithubSettings;
-  [IntegrationName.GithubPersonal]?: GithubPersonalSettings;
-  [IntegrationName.Slack]?: SlackSettings;
-  [IntegrationName.Sentry]?: SentrySettings;
+  [IntegrationNameEnum.Github]?: GithubSettings;
+  [IntegrationNameEnum.GithubPersonal]?: GithubPersonalSettings;
+  [IntegrationNameEnum.Slack]?: SlackSettings;
+  [IntegrationNameEnum.Sentry]?: SentrySettings;
 }
 
 export class IntegrationAccountRequestIdBody {
@@ -125,9 +120,4 @@ export class UpdateIntegrationAccountBody {
   @IsString()
   @IsOptional()
   userId: string;
-}
-
-export interface IntegrationAccountWithRelations extends IntegrationAccount {
-  workspace: Workspace;
-  integrationDefinition: IntegrationDefinition;
 }

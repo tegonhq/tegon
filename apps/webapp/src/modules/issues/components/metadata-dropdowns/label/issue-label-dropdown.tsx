@@ -1,4 +1,4 @@
-import type { LabelType } from '@tegonhq/types';
+import type { LabelType } from 'common/types';
 
 import { RiAddLine } from '@remixicon/react';
 import { Badge, BadgeColor } from '@tegonhq/ui/components/badge';

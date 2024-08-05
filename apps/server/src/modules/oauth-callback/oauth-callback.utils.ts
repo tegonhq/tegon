@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { IntegrationDefinition, IntegrationName } from '@prisma/client';
+import { IntegrationDefinition, IntegrationName } from '@tegonhq/types';
 
 import { getGithubUser } from 'modules/integrations/github/github.utils';
 

@@ -1,11 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import {
-  InviteStatus,
-  Status,
+  InviteStatusEnum,
+  RoleEnum,
   UsersOnWorkspaces,
   Workspace,
-} from '@prisma/client';
+  WorkspaceStatusEnum,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
@@ -179,7 +180,7 @@ export default class WorkspacesService {
             workspaceId,
             sentAt: new Date().toISOString(),
             expiresAt: new Date(),
-            status: InviteStatus.INVITED,
+            status: InviteStatusEnum.INVITED,
             teamIds,
             role,
           },
@@ -208,7 +209,7 @@ export default class WorkspacesService {
 
   async getInvites(workspaceId: string) {
     return await this.prisma.invite.findMany({
-      where: { workspaceId, status: { not: InviteStatus.ACCEPTED } },
+      where: { workspaceId, status: { not: InviteStatusEnum.ACCEPTED } },
     });
   }
 
@@ -220,21 +221,21 @@ export default class WorkspacesService {
     if (accepted) {
       const invite = await this.prisma.invite.update({
         where: { id: inviteId },
-        data: { status: InviteStatus.ACCEPTED },
+        data: { status: InviteStatusEnum.ACCEPTED },
       });
 
       await this.addUserToWorkspace(invite.workspaceId, userId, {
         teamIds: invite.teamIds,
         joinedAt: new Date().toISOString(),
-        role: invite.role,
-        status: Status.ACTIVE,
+        role: invite.role as RoleEnum,
+        status: WorkspaceStatusEnum.ACTIVE,
       });
     }
 
     return await this.prisma.invite.update({
       where: { id: inviteId },
       data: {
-        status: InviteStatus.ACCEPTED,
+        status: InviteStatusEnum.ACCEPTED,
         deleted: new Date().toISOString(),
       },
     });

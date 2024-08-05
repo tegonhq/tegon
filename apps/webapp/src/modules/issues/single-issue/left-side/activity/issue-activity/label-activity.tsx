@@ -1,5 +1,5 @@
-import type { IssueHistoryType } from '@tegonhq/types';
-import type { LabelType } from '@tegonhq/types';
+import type { IssueHistoryType } from 'common/types';
+import type { LabelType } from 'common/types';
 
 import { Badge, BadgeColor } from '@tegonhq/ui/components/badge';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';

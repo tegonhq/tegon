@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ActionType, ModelName } from '@prisma/client';
+import { ActionTypeEnum, ModelNameEnum, SyncAction } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -17,7 +17,7 @@ export default class SyncActionsService {
   async upsertSyncAction(
     lsn: string,
     action: string,
-    modelName: ModelName,
+    modelName: ModelNameEnum,
     modelId: string,
     isDeleted: boolean,
   ) {
@@ -26,7 +26,7 @@ export default class SyncActionsService {
     let actionType = convertToActionType(action);
 
     if (isDeleted) {
-      actionType = ActionType.D;
+      actionType = ActionTypeEnum.D;
     }
     const syncActionData = await this.prisma.syncAction.upsert({
       where: {
@@ -60,7 +60,7 @@ export default class SyncActionsService {
     let syncActions = await this.prisma.syncAction.findMany({
       where: {
         workspaceId,
-        modelName: { in: modelNames.split(',') as ModelName[] },
+        modelName: { in: modelNames.split(',') as ModelNameEnum[] },
       },
       orderBy: {
         sequenceId: 'asc',
@@ -79,7 +79,11 @@ export default class SyncActionsService {
     );
 
     return {
-      syncActions: await getSyncActionsData(this.prisma, syncActions, userId),
+      syncActions: await getSyncActionsData(
+        this.prisma,
+        syncActions as SyncAction[],
+        userId,
+      ),
       lastSequenceId: await getLastSequenceId(this.prisma, workspaceId),
     };
   }
@@ -94,7 +98,7 @@ export default class SyncActionsService {
       where: {
         workspaceId,
         sequenceId: { gt: lastSequenceId },
-        modelName: { in: modelNames.split(',') as ModelName[] },
+        modelName: { in: modelNames.split(',') as ModelNameEnum[] },
       },
       orderBy: {
         sequenceId: 'asc',
@@ -103,7 +107,11 @@ export default class SyncActionsService {
     });
 
     return {
-      syncActions: await getSyncActionsData(this.prisma, syncActions, userId),
+      syncActions: await getSyncActionsData(
+        this.prisma,
+        syncActions as SyncAction[],
+        userId,
+      ),
       lastSequenceId: await getLastSequenceId(this.prisma, workspaceId),
     };
   }

@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { IntegrationDefinition } from '@prisma/client';
+import { IntegrationDefinition } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 import * as simpleOauth2 from 'simple-oauth2';
 

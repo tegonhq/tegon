@@ -1,4 +1,4 @@
-import type { WorkflowType } from '@tegonhq/types';
+import type { WorkflowType } from 'common/types';
 
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
 import { CommandGroup, CommandItem } from '@tegonhq/ui/components/command';

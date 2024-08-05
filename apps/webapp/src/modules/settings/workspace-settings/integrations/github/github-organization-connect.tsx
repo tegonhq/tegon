@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import type { User } from '@tegonhq/types';
+import type { User } from 'common/types';
 
 import { RiAddLine } from '@remixicon/react';
 import {
@@ -10,7 +10,7 @@ import {
   type IntegrationAccountType,
   type Settings,
   IntegrationName,
-} from '@tegonhq/types';
+} from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';

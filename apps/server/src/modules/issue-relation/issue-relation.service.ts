@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
-import { IssueRelation } from '@prisma/client';
+import {
+  IssueRelation,
+  IssueRelationEnum,
+  IssueRelationType,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
@@ -9,7 +13,6 @@ import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 import {
   IssueRelationIdRequestParams,
   IssueRelationInput,
-  IssueRelationType,
   ReverseIssueRelationType,
 } from './issue-relation.interface';
 
@@ -170,7 +173,9 @@ export default class IssueRelationService {
           relationChanges: {
             issueId: issueRelation.relatedIssueId,
             relatedIssueId: issueRelation.issueId,
-            type: ReverseIssueRelationType[issueRelation.type],
+            type: ReverseIssueRelationType[
+              issueRelation.type as IssueRelationEnum
+            ],
             ...(isDeleted !== undefined && { isDeleted }),
           },
         },

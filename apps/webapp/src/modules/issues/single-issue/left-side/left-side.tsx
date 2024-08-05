@@ -1,5 +1,5 @@
 import { useUpdateIssueMutation } from '@tegonhq/services/issues';
-import { WorkflowCategoryEnum, type WorkflowType } from '@tegonhq/types';
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
 import { Editor, EditorExtensions } from '@tegonhq/ui/components/editor/index';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { Separator } from '@tegonhq/ui/components/separator';

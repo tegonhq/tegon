@@ -1,4 +1,4 @@
-import { LinkedIssueSubType, type LinkedIssueType } from '@tegonhq/types';
+import { LinkedIssueSubType, type LinkedIssueType } from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,

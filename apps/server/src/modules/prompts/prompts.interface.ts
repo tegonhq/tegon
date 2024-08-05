@@ -1,4 +1,4 @@
-import { LLMModels } from '@prisma/client';
+import { LLMModels } from '@tegonhq/types';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class PromptInput {

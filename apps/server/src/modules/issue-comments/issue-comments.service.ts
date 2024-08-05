@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IssueComment } from '@prisma/client';
+import { IssueComment } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import IssuesService from 'modules/issues/issues.service';
@@ -32,11 +32,16 @@ export default class IssueCommentsService {
     userId: string,
     commentData: CommentInput,
   ): Promise<IssueComment> {
+    const { linkCommentMetadata, ...otherCommentData } = commentData;
+
     const issueComment = await this.prisma.issueComment.create({
       data: {
-        ...commentData,
+        ...otherCommentData,
         userId,
         issueId: issueRequestParams.issueId,
+        ...(linkCommentMetadata && {
+          linkedComment: { create: linkCommentMetadata },
+        }),
       },
       include: {
         issue: { include: { team: true } },
@@ -46,13 +51,13 @@ export default class IssueCommentsService {
 
     this.issuesService.updateSubscribers(issueRequestParams.issueId, [userId]);
 
-    await this.issueCommentsQueue.addTwoWaySyncJob(
-      issueComment,
-      IssueCommentAction.CREATED,
-      userId,
-    );
+    // this.issueCommentsQueue.addTwoWaySyncJob(
+    //   issueComment,
+    //   IssueCommentAction.CREATED,
+    //   userId,
+    // );
 
-    await this.notificationsQueue.addToNotification(
+    this.notificationsQueue.addToNotification(
       NotificationEventFrom.NewComment,
       userId,
       {
@@ -219,6 +224,20 @@ export default class IssueCommentsService {
     return await this.prisma.issueComment.update({
       where: { id: issueComment.id },
       data: { reactionsData: reactionData },
+    });
+  }
+
+  async getLinkedCommentBySource(sourceId: string) {
+    return this.prisma.linkedComment.findFirst({
+      where: { sourceId },
+      include: { comment: true },
+    });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async createLinkedComment(createLinkedCommentInput: any) {
+    return this.prisma.linkedComment.create({
+      data: createLinkedCommentInput,
     });
   }
 }

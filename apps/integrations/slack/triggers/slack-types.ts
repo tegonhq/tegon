@@ -1,8 +1,4 @@
-import {
-  IntegrationAccountWithRelations,
-  LinkIssueData,
-  UpdateIssueInput,
-} from "@tegonhq/types";
+import { IntegrationAccount, ModelNameEnum } from "@tegonhq/types";
 
 export interface SlashCommandSessionRecord {
   slackTeamId?: string;
@@ -34,15 +30,18 @@ export interface SlackElement {
 }
 
 export interface SlackCreateIssuePayload {
-  integrationAccount: IntegrationAccountWithRelations;
-  accessToken: string;
+  integrationAccount: IntegrationAccount;
+  accesstoken: string;
   sessionData: SlashCommandSessionRecord;
   issueData: slackIssueData;
 }
 
 export interface slackIssueData {
-  linkIssueData?: LinkIssueData;
-  issueInput: UpdateIssueInput;
-  sourceMetadata: Record<string, any>;
+  linkIssueData?: any;
+  issueInput: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  sourceMetadata?: Record<string, any>;
   userId: string | null;
 }
+
+export const twoWaySyncModels = new Map([[ModelNameEnum.IssueComment, true]]);

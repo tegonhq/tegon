@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { User } from '@prisma/client';
+import { User } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 import supertokens from 'supertokens-node';
 import { SessionContainer } from 'supertokens-node/recipe/session';

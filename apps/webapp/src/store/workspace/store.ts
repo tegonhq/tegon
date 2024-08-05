@@ -1,4 +1,4 @@
-import type { UsersOnWorkspaceType, WorkspaceType } from '@tegonhq/types';
+import type { UsersOnWorkspaceType, WorkspaceType } from 'common/types';
 
 import {
   type IAnyStateTreeNode,

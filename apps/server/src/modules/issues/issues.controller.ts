@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Issue } from '@prisma/client';
+import { Issue } from '@tegonhq/types';
 import { Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 

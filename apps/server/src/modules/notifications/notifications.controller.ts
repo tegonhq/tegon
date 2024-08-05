@@ -7,7 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Notification } from '@prisma/client';
+import { Notification } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 

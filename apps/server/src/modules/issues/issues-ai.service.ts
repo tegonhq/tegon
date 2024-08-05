@@ -1,14 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { IssueRelationEnum } from '@tegonhq/types';
 import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
 
 import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
-import {
-  IssueRelationInput,
-  IssueRelationType,
-} from 'modules/issue-relation/issue-relation.interface';
+import { IssueRelationInput } from 'modules/issue-relation/issue-relation.interface';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
 import { LLMMappings } from 'modules/prompts/prompts.interface';
 import { VectorService } from 'modules/vector/vector.service';
@@ -143,7 +141,7 @@ export default class IssuesAIService {
       this.prisma.issueRelation.findMany({
         where: {
           relatedIssueId: issue.id,
-          type: IssueRelationType.SIMILAR,
+          type: IssueRelationEnum.SIMILAR,
           deleted: null,
         },
         include: {
@@ -245,7 +243,7 @@ export default class IssuesAIService {
     // Create issue relations for each similar issue
     similarIssues.map(async (similarIssue) => {
       const relationData: IssueRelationInput = {
-        type: IssueRelationType.SIMILAR,
+        type: IssueRelationEnum.SIMILAR,
         issueId,
         relatedIssueId: similarIssue.id,
       };

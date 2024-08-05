@@ -1,6 +1,6 @@
 import { Controller, Delete, Param, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { IssueRelation } from '@prisma/client';
+import { IssueRelation } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';

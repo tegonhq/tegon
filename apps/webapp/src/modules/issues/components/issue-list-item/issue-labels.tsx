@@ -1,4 +1,4 @@
-import type { LabelType } from '@tegonhq/types';
+import type { LabelType } from 'common/types';
 
 import { Badge, BadgeColor } from '@tegonhq/ui/components/badge';
 import { observer } from 'mobx-react-lite';

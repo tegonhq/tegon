@@ -1,12 +1,10 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
+import { IssueComment } from '@tegonhq/types';
 import { Job } from 'bull';
 import { PrismaService } from 'nestjs-prisma';
 
-import {
-  IssueCommentAction,
-  IssueCommentWithRelations,
-} from './issue-comments.interface';
+import { IssueCommentAction } from './issue-comments.interface';
 import { handleTwoWaySync } from './issue-comments.utils';
 
 @Processor('issueComments')
@@ -17,7 +15,7 @@ export class IssueCommentsProcessor {
   @Process('twoWaySyncComments')
   async handleTwoWaySync(
     job: Job<{
-      issueComment: IssueCommentWithRelations;
+      issueComment: IssueComment;
       action: IssueCommentAction;
       userId: string;
     }>,

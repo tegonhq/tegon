@@ -4,7 +4,7 @@ import {
   Integration,
   LinkedSlackMessageType,
   type LinkedIssueType,
-} from '@tegonhq/types';
+} from 'common/types';
 import {
   AlertDialog,
   AlertDialogAction,

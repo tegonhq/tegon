@@ -3,7 +3,7 @@ import {
   type DraggableProvided,
   type DraggableStateSnapshot,
 } from '@hello-pangea/dnd';
-import { Priorities, type IssueType } from '@tegonhq/types';
+import { Priorities, type IssueType } from 'common/types';
 import { BoardColumn, BoardItem } from '@tegonhq/ui/components/board';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { observer } from 'mobx-react-lite';

@@ -1,7 +1,7 @@
-import type { IssueRelationEnum } from '@tegonhq/types';
+import type { IssueRelationEnum } from 'common/types';
 
 import { RiMoreFill } from '@remixicon/react';
-import { LinkedIssueSubType } from '@tegonhq/types';
+import { LinkedIssueSubType } from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DropdownMenu,

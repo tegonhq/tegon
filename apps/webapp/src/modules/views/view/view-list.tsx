@@ -1,4 +1,4 @@
-import type { ViewType } from '@tegonhq/types';
+import type { ViewType } from 'common/types';
 
 import { observer } from 'mobx-react-lite';
 import { usePathname } from 'next/navigation';

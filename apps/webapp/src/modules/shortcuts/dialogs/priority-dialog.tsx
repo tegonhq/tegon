@@ -1,5 +1,5 @@
 import { useUpdateIssueMutation } from '@tegonhq/services/issues';
-import { Priorities } from '@tegonhq/types';
+import { Priorities } from 'common/types';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 

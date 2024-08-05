@@ -1,4 +1,7 @@
-import { NotificationActionType } from '@prisma/client';
+import {
+  NotificationActionType,
+  NotificationActionTypeEnum,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -92,7 +95,7 @@ async function createUnassignedNotification(
 ) {
   await prisma.notification.create({
     data: {
-      type: NotificationActionType.IssueUnAssigned,
+      type: NotificationActionTypeEnum.IssueUnAssigned,
       userId: fromAssigneeId,
       createdById,
       issueId,

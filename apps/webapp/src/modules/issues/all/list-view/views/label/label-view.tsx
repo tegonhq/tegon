@@ -1,4 +1,4 @@
-import type { LabelType } from '@tegonhq/types';
+import type { LabelType } from 'common/types';
 
 import { observer } from 'mobx-react-lite';
 

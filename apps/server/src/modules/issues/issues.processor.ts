@@ -1,7 +1,6 @@
-import { LinkedIssue } from '@@generated/linkedIssue/entities';
 import { Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
-import { Issue } from '@prisma/client';
+import { Issue, LinkedIssue } from '@tegonhq/types';
 import { Job } from 'bull';
 import { PrismaService } from 'nestjs-prisma';
 
