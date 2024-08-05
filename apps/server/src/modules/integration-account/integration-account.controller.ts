@@ -58,6 +58,16 @@ export class IntegrationAccountController {
     );
   }
 
+  @Get('source')
+  @UseGuards(new AuthGuard())
+  async getIntegrationAccountByAccountId(
+    @Query('accountId') accountId: string,
+  ): Promise<IntegrationAccountWithRelations> {
+    return await this.integrationAccountService.getIntegrationAccountByAccountId(
+      accountId,
+    );
+  }
+
   /**
    * Get a integration accounts in a workspace
    */
@@ -114,16 +124,6 @@ export class IntegrationAccountController {
   ): Promise<IntegrationAccount> {
     return await this.integrationAccountService.createIntegrationAccount(
       createIntegrationAccountBody,
-    );
-  }
-
-  @Get()
-  @UseGuards(new AuthGuard())
-  async getIntegrationAccountByAccountId(
-    @Query('accountId') accountId: string,
-  ): Promise<IntegrationAccountWithRelations> {
-    return await this.integrationAccountService.getIntegrationAccountByAccountId(
-      accountId,
     );
   }
 }

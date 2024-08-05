@@ -1,3 +1,5 @@
+import { WorkspaceType } from './workspace';
+
 interface Workspace {
   name: string;
   slug: string;
@@ -13,10 +15,16 @@ export interface Invite {
 }
 
 export interface User {
-  fullname: string;
-  email: string;
   id: string;
+  createdAt: Date;
+  updatedAt: Date;
+
+  email: string;
+  fullname: string;
   username: string;
-  workspaces: Workspace[];
-  invites: Invite[];
+  initialSetupComplete: boolean;
+  anonymousDataCollection: boolean;
+
+  workspaces?: WorkspaceType[];
+  invites?: Invite[];
 }

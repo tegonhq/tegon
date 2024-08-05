@@ -2,8 +2,9 @@
   "extends": "@tegonhq/typescript-config/nest.json",
   "compilerOptions": {
     "baseUrl": "src",
-    "paths": {
-      "@tegonhq/types": ["workspace/*"]
-    }
-  }
+    "module": "commonjs",
+    "outDir": "./dist"
+  },
+  "exclude": ["node_modules"],
+  "include": ["**/*.ts", "**/*.tsx"]
 }

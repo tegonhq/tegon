@@ -36,12 +36,17 @@ export interface Specification {
 
 export interface IntegrationDefinitionType {
   id: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deleted: Date;
 
-  name: IntegrationName;
+  name: any;
   icon: string;
-  spec: string;
+  spec: any;
   scopes: string;
+
+  clientId: string;
+  clientSecret: string;
+
   workspaceId: string;
 }

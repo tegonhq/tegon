@@ -7,11 +7,8 @@
   },
   "devDependencies": {
     "@tegonhq/eslint-config": "workspace:*",
-    "@tegonhq/typescript-config": "workspace:*",
     "@types/node": "^20",
     "typescript": "^5.4.5"
   },
-  "exports": {
-    ".": [ "./src/index.ts" ]
-  }
+  "main": "./src/index.ts"
 }

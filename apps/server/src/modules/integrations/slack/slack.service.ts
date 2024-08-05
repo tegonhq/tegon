@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IntegrationName, IssueComment } from '@prisma/client';
+import { IssueWithRelations } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { AttachmentResponse } from 'modules/attachments/attachments.interface';
@@ -11,7 +12,6 @@ import {
 import {
   CreateIssueInput,
   IssueRequestParams,
-  IssueWithRelations,
   TeamRequestParams,
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
@@ -272,9 +272,11 @@ export default class SlackService {
 
     // Create a new issue using the IssuesService
     const createdIssue = await this.issuesService.createIssueAPI(
-      { ...issueInput, teamId: sessionData.teamId } as CreateIssueInput,
+      {
+        ...issueInput,
+        teamId: sessionData.teamId,
+      } as CreateIssueInput,
       userId,
-      null,
     );
 
     // Get the Slack integration account for the user who created the issue

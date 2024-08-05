@@ -1,5 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { IntegrationName, Issue } from '@prisma/client';
+import { IntegrationName } from '@prisma/client';
+import { IssueWithRelations } from '@tegonhq/types';
 import { CronJob } from 'cron';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -73,7 +74,7 @@ export default class GmailService implements OnModuleInit {
   async handleMessage(
     messageId: string,
     headers: GmailHeaders,
-  ): Promise<Issue | undefined> {
+  ): Promise<IssueWithRelations | undefined> {
     this.logger.log(`Processing message with ID: ${messageId}`);
 
     // Fetch the message data from the Gmail API
@@ -215,14 +216,6 @@ export default class GmailService implements OnModuleInit {
       );
     } else {
       // If the issue is not linked, create a new issue
-      const issueInput: CreateIssueInput = {
-        title: subject,
-        description: JSON.stringify(tiptapJson),
-        stateId,
-        isBidirectional: false,
-        teamId: team.id,
-      } as CreateIssueInput;
-
       const linkIssueData: LinkIssueData = {
         url: `https://mail.google.com/mail/u/0/#inbox/${threadId}`,
         sourceId: threadId,
@@ -230,11 +223,18 @@ export default class GmailService implements OnModuleInit {
         sourceData: { messageId, threadId },
       };
 
-      issue = await this.issuesService.createIssueAPI(
-        issueInput as CreateIssueInput,
-        null,
+      const issueInput: CreateIssueInput = {
+        title: subject,
+        description: JSON.stringify(tiptapJson),
+        stateId,
+        isBidirectional: false,
+        teamId: team.id,
         linkIssueData,
         sourceMetadata,
+      } as CreateIssueInput;
+
+      issue = await this.issuesService.createIssueAPI(
+        issueInput as CreateIssueInput,
       );
     }
     this.logger.log(`Issue Id of the Gmail message: ${issue.id}`);

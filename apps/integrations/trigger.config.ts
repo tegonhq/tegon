@@ -2,7 +2,7 @@ import type { TriggerConfig } from "@trigger.dev/sdk/v3";
 
 export const config: TriggerConfig = {
   project: "proj_qidqfzjuoicehslbvjlu",
-  logLevel: "log",
+  logLevel: "debug",
   retries: {
     enabledInDev: true,
     default: {
@@ -14,6 +14,5 @@ export const config: TriggerConfig = {
     },
   },
 
-  triggerDirectories: ["./"],
-  additionalPackages: ["@tegonhq/types", "axios:1.6.7"],
+  triggerDirectories: ["./slack", "./github"],
 };

@@ -14,7 +14,10 @@ import {
 } from 'class-validator';
 
 import { IssueRelationType } from 'modules/issue-relation/issue-relation.interface';
-import { LinkedIssueSubType } from 'modules/linked-issue/linked-issue.interface';
+import {
+  LinkedIssueSubType,
+  LinkIssueData,
+} from 'modules/linked-issue/linked-issue.interface';
 
 export class TeamRequestParams {
   @IsString()
@@ -129,6 +132,14 @@ export class CreateIssueInput {
   @ValidateNested({ each: true })
   @Type(() => CreateIssueInput)
   subIssues?: CreateIssueInput[];
+
+  @IsOptional()
+  @IsObject()
+  linkIssueData?: LinkIssueData;
+
+  @IsOptional()
+  @IsObject()
+  sourceMetadata?: Record<string, string>;
 }
 
 export class UpdateIssueInput {
@@ -182,7 +193,7 @@ export class UpdateIssueInput {
 
   @IsOptional()
   @IsArray()
-  subscriberIds: string[];
+  subscriberIds?: string[];
 
   @IsOptional()
   @IsObject()
@@ -191,6 +202,18 @@ export class UpdateIssueInput {
   @IsOptional()
   @IsArray()
   attachments?: string[];
+
+  @IsOptional()
+  @IsString()
+  userId?: string;
+
+  @IsOptional()
+  @IsObject()
+  linkIssueData?: LinkIssueData;
+
+  @IsOptional()
+  @IsObject()
+  sourceMetadata?: Record<string, string>;
 }
 
 export interface IssueWithRelations extends Issue {

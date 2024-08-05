@@ -10,6 +10,7 @@ import {
   LinkedIssue,
   WorkflowCategory,
 } from '@prisma/client';
+import { IssueWithRelations } from '@tegonhq/types';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { PrismaService } from 'nestjs-prisma';
@@ -31,10 +32,7 @@ import {
   IssueCommentWithRelations,
   LinkedCommentSourceData,
 } from 'modules/issue-comments/issue-comments.interface';
-import {
-  IssueWithRelations,
-  UpdateIssueInput,
-} from 'modules/issues/issues.interface';
+import { UpdateIssueInput } from 'modules/issues/issues.interface';
 import {
   LinkIssueData,
   LinkedIssueSourceData,
@@ -190,7 +188,7 @@ export async function sendGithubFirstComment(
   logger: Logger,
   linkedIssueService: LinkedIssueService,
   integrationAccount: IntegrationAccountWithRelations,
-  issue: Issue,
+  issue: IssueWithRelations,
   issueSourceId: string,
 ) {
   const { workspace } = integrationAccount;
@@ -227,7 +225,7 @@ export async function sendGithubFirstComment(
   logger.debug(`Issue comment created for issue ${issueId}`);
 
   // Update the linked issue with the synced comment ID
-  await linkedIssueService.updateLinkIssueApi(
+  await linkedIssueService.updateLinkIssue(
     { linkedIssueId: linkedIssue.id },
     {
       source: {

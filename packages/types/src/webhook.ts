@@ -9,6 +9,7 @@ export type EventHeaders = Record<string, any>;
 export interface WebhookPayload {
   eventHeaders: EventHeaders;
   eventBody: EventBody;
-  integrationAccount: IntegrationAccountWithRelations;
-  userId: string;
+  integrationAccount?: IntegrationAccountWithRelations;
+  userId?: string;
+  accesstoken?: string;
 }

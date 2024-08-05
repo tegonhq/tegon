@@ -46,6 +46,18 @@ export class LinkedIssueController {
     );
   }
 
+  @Post('source/:sourceId')
+  @UseGuards(new AuthGuard())
+  async updateLinkedIssueBySourceId(
+    @Param('sourceId') sourceId: string,
+    @Body() linkedIssueData: UpdateLinkedIssueData,
+  ) {
+    return await this.linkedIssueService.updateLinkIssueBySource(
+      sourceId,
+      linkedIssueData,
+    );
+  }
+
   @Delete(':linkedIssueId')
   @UseGuards(new AuthGuard())
   async deleteLinkedIssue(

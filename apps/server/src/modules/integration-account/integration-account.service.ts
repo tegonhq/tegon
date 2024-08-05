@@ -148,7 +148,7 @@ export class IntegrationAccountService {
   async getIntegrationAccountByAccountId(
     accountId: string,
   ): Promise<IntegrationAccountWithRelations> {
-    return this.prisma.integrationAccount.findFirst({
+    return await this.prisma.integrationAccount.findFirst({
       where: { accountId, deleted: null },
       include: { workspace: true, integrationDefinition: true },
     });

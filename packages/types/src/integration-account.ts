@@ -39,17 +39,19 @@ export interface Settings {
 
 export interface IntegrationAccountType {
   id: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deleted?: Date;
 
-  accountId: string;
-  settings: string;
+  integrationConfiguration: any;
+  accountId?: string;
+  settings: any | null;
 
+  isActive: boolean;
   integratedById: string;
   integrationDefinitionId: string;
   workspaceId: string;
 }
-
 export interface IntegrationAccountWithRelations
   extends IntegrationAccountType {
   workspace: WorkspaceType;

@@ -17,7 +17,6 @@ import {
   CreateLinkIssueInput,
   LinkIssueInput,
   LinkedIssueIdParams,
-  UpdateLinkedIssueAPIData,
   UpdateLinkedIssueData,
 } from './linked-issue.interface';
 import {
@@ -126,29 +125,39 @@ export default class LinkedIssueService {
       }
     }
 
-    const sourceData = {
+    const sourceData = linkedIssueData.sourceData || linkedIssue.sourceData;
+    const finalSourceData = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(linkedIssue.sourceData as any),
+      ...(sourceData as any),
       title: linkedIssueData.title,
     };
 
     return this.prisma.linkedIssue.update({
       where: { id: linkedIssueIdParams.linkedIssueId },
       data: {
-        url: linkedIssueData.url,
-        sourceData,
+        sourceData: finalSourceData,
+        ...(linkedIssueData.url && { url: linkedIssueData.url }),
+        ...(linkedIssueData.source && { source: linkedIssueData.source }),
       },
     });
   }
 
-  async updateLinkIssueApi(
-    linkedIssueIdParams: LinkedIssueIdParams,
-    linkedIssueData: UpdateLinkedIssueAPIData,
+  async updateLinkIssueBySource(
+    sourceId: string,
+    linkedIssueData: UpdateLinkedIssueData,
   ) {
-    return this.prisma.linkedIssue.update({
-      where: { id: linkedIssueIdParams.linkedIssueId },
-      data: linkedIssueData,
+    const linkedIssue = await this.prisma.linkedIssue.findFirst({
+      where: { sourceId, deleted: null },
     });
+
+    if (!linkedIssue) {
+      return undefined;
+    }
+
+    return await this.updateLinkIssue(
+      { linkedIssueId: linkedIssue.id },
+      linkedIssueData,
+    );
   }
 
   async deleteLinkIssue(linkedIssueIdParams: LinkedIssueIdParams) {

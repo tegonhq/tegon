@@ -5,7 +5,7 @@
     "target": "ES2022",
     "baseUrl": "src",
     "skipLibCheck": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "strict": true,
     "strictNullChecks": false,
     "preserveConstEnums": true,
@@ -24,6 +24,6 @@
     "sourceMap": true,
     "declaration": false,
     "removeComments": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   }
 }

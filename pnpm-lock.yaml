@@ -594,9 +594,6 @@ importers:
       '@tegonhq/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint-config
-      '@tegonhq/typescript-config':
-        specifier: workspace:*
-        version: link:../../tooling/typescript-config
       '@types/node':
         specifier: ^20
         version: 20.14.11
