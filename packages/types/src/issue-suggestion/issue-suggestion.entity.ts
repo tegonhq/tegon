@@ -1,5 +1,5 @@
-import { Prisma } from '@prisma/client';
-import { Issue } from '../../issue/issue.entity';
+import { JsonValue } from '../common';
+import { Issue } from '../issue';
 
 export class IssueSuggestion {
   id: string;
@@ -9,6 +9,6 @@ export class IssueSuggestion {
   issueId: string;
   suggestedLabelIds: string[];
   suggestedAssigneeId: string | null;
-  metadata: Prisma.JsonValue | null;
+  metadata: JsonValue | null;
   issue?: Issue | null;
 }

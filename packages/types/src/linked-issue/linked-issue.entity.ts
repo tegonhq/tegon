@@ -1,5 +1,5 @@
-import { Prisma } from '@prisma/client';
-import { Issue } from '../../issue/issue.entity';
+import { JsonValue } from '../common';
+import { Issue } from '../issue';
 
 export class LinkedIssue {
   id: string;
@@ -8,8 +8,8 @@ export class LinkedIssue {
   deleted: Date | null;
   url: string;
   sourceId: string | null;
-  source: Prisma.JsonValue | null;
-  sourceData: Prisma.JsonValue | null;
+  source: JsonValue | null;
+  sourceData: JsonValue | null;
   createdById: string | null;
   issue?: Issue;
   issueId: string;

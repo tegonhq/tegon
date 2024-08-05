@@ -1,4 +1,4 @@
-import { IntegrationAccount } from '@@generated/integrationAccount/entities';
+import { IntegrationAccount } from '@tegonhq/types';
 import {
   Body,
   Controller,
