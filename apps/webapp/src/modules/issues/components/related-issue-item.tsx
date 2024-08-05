@@ -1,5 +1,5 @@
-import type { IssueType } from '@tegonhq/types';
-import type { IssueRelationType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
+import type { IssueRelationType } from 'common/types';
 
 import { RiCloseLine } from '@remixicon/react';
 import { useDeleteIssueRelationMutation } from '@tegonhq/services/issue-relation';

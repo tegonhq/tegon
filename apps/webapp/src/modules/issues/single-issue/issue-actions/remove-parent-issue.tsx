@@ -1,4 +1,4 @@
-import type { IssueType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
 
 import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { DropdownMenuItem } from '@tegonhq/ui/components/dropdown-menu';

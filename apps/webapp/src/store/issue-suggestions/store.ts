@@ -1,4 +1,4 @@
-import type { IssueSuggestionType } from '@tegonhq/types';
+import type { IssueSuggestionType } from 'common/types';
 
 import {
   type IAnyStateTreeNode,

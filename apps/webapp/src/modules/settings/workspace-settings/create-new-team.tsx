@@ -1,4 +1,4 @@
-import type { TeamType } from '@tegonhq/types';
+import type { TeamType } from 'common/types';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateTeamMutation } from '@tegonhq/services/team';

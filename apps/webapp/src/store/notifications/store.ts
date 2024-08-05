@@ -1,4 +1,4 @@
-import type { NotificationType } from '@tegonhq/types';
+import type { NotificationType } from 'common/types';
 
 import { sort } from 'fast-sort';
 import {

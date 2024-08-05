@@ -1,4 +1,4 @@
-import type { IssueType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
 
 import { useGetSimilarIssuesQuery } from '@tegonhq/services/search';
 import { Button } from '@tegonhq/ui/components/button';

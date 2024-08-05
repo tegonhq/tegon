@@ -1,5 +1,5 @@
-import type { User } from '@tegonhq/types';
-import type { IssueHistoryType } from '@tegonhq/types';
+import type { User } from 'common/types';
+import type { IssueHistoryType } from 'common/types';
 
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';

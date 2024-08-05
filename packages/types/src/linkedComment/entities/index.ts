@@ -1,0 +1,2 @@
+
+export * from './linkedComment.entity';

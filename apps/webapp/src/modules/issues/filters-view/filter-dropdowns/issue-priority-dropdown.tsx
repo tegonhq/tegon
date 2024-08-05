@@ -1,4 +1,4 @@
-import { Priorities } from '@tegonhq/types';
+import { Priorities } from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { Command, CommandInput } from '@tegonhq/ui/components/command';
 import {

@@ -1,4 +1,4 @@
-import type { LabelType } from '@tegonhq/types';
+import type { LabelType } from 'common/types';
 
 import { useSuggestionIssueMutation } from '@tegonhq/services/issues';
 import { Button } from '@tegonhq/ui/components/button';

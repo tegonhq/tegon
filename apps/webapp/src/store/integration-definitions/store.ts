@@ -1,4 +1,4 @@
-import type { IntegrationDefinitionType } from '@tegonhq/types';
+import type { IntegrationDefinitionType } from 'common/types';
 
 import {
   type IAnyStateTreeNode,

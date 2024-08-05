@@ -1,4 +1,4 @@
-import type { LabelType } from '@tegonhq/types';
+import type { LabelType } from 'common/types';
 
 import { RiMoreFill } from '@remixicon/react';
 import { useDeleteLabelMutation } from '@tegonhq/services/labels';

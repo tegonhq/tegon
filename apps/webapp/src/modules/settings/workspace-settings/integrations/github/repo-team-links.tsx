@@ -1,4 +1,4 @@
-import type { TeamType } from '@tegonhq/types';
+import type { TeamType } from 'common/types';
 
 import { RiAddLine } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';

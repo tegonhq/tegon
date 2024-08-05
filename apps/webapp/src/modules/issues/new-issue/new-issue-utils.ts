@@ -1,4 +1,4 @@
-import type { TeamType, WorkflowType } from '@tegonhq/types';
+import type { TeamType, WorkflowType } from 'common/types';
 import type { UseFormReturn } from 'react-hook-form';
 
 import React from 'react';

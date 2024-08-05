@@ -1,5 +1,5 @@
-import type { IssueType } from '@tegonhq/types';
-import type { WorkflowType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
+import type { WorkflowType } from 'common/types';
 
 import { buttonVariants } from '@tegonhq/ui/components/button';
 import { cn } from '@tegonhq/ui/lib/utils';

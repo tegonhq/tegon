@@ -1,8 +1,8 @@
-import type { User } from '@tegonhq/types';
-import type { IssueSourceMetadataType, IssueType } from '@tegonhq/types';
+import type { User } from 'common/types';
+import type { IssueSourceMetadataType, IssueType } from 'common/types';
 
 import { RiGithubFill } from '@remixicon/react';
-import { Integration } from '@tegonhq/types';
+import { Integration } from 'common/types';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Gmail, SlackIcon } from '@tegonhq/ui/icons';
 

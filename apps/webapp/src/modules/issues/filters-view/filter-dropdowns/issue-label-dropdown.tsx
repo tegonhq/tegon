@@ -1,4 +1,4 @@
-import type { LabelType } from '@tegonhq/types';
+import type { LabelType } from 'common/types';
 
 import { Button } from '@tegonhq/ui/components/button';
 import { Command, CommandInput } from '@tegonhq/ui/components/command';

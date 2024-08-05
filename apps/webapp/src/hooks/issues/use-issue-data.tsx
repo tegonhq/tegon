@@ -1,4 +1,4 @@
-import type { IssueType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
 
 import { useRouter } from 'next/router';
 

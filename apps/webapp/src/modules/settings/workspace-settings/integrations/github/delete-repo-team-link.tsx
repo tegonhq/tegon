@@ -2,7 +2,7 @@ import type {
   GithubRepositoryMappings,
   IntegrationAccountType,
   Settings,
-} from '@tegonhq/types';
+} from 'common/types';
 
 import { RiDeleteBin7Fill } from '@remixicon/react';
 import { useUpdateIntegrationAccountMutation } from '@tegonhq/services/oauth';

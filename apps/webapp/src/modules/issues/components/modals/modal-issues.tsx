@@ -1,7 +1,7 @@
-import type { IssueType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
 
 import { useUpdateIssueMutation } from '@tegonhq/services/issues';
-import { IssueRelationEnum } from '@tegonhq/types';
+import { IssueRelationEnum } from 'common/types';
 import { CommandItem } from '@tegonhq/ui/components/command';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';

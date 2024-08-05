@@ -1,4 +1,4 @@
-import type { ViewType } from '@tegonhq/types';
+import type { ViewType } from 'common/types';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUpdateViewMutation } from '@tegonhq/services/views';

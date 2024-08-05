@@ -1,4 +1,4 @@
-import type { IssueType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
 
 import { RiArrowDownSFill, RiArrowRightSFill } from '@remixicon/react';
 import { useGetDuplicateIssuesQuery } from '@tegonhq/services/search';

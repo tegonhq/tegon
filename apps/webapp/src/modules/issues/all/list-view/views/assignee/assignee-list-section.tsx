@@ -1,6 +1,6 @@
-import type { User } from '@tegonhq/types';
-import type { IssueType } from '@tegonhq/types';
-import type { UsersOnWorkspaceType } from '@tegonhq/types';
+import type { User } from 'common/types';
+import type { IssueType } from 'common/types';
+import type { UsersOnWorkspaceType } from 'common/types';
 
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';

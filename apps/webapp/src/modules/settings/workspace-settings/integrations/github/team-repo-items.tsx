@@ -2,12 +2,12 @@ import type {
   GithubRepositoryMappings,
   IntegrationAccountType,
   Settings,
-} from '@tegonhq/types';
-import type { TeamType } from '@tegonhq/types';
+} from 'common/types';
+import type { TeamType } from 'common/types';
 
 import { RiGithubFill } from '@remixicon/react';
 import { useUpdateIntegrationAccountMutation } from '@tegonhq/services/oauth';
-import { IntegrationName } from '@tegonhq/types';
+import { IntegrationName } from 'common/types';
 import { Badge } from '@tegonhq/ui/components/badge';
 import { Button } from '@tegonhq/ui/components/button';
 import { Dialog } from '@tegonhq/ui/components/dialog';

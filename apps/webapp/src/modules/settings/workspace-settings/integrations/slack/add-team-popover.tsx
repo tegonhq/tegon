@@ -1,5 +1,5 @@
-import type { IntegrationAccountType } from '@tegonhq/types';
-import type { TeamType } from '@tegonhq/types';
+import type { IntegrationAccountType } from 'common/types';
+import type { TeamType } from 'common/types';
 
 import { useUpdateIntegrationAccountMutation } from '@tegonhq/services/oauth';
 import { Button } from '@tegonhq/ui/components/button';

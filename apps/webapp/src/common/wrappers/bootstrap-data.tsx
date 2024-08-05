@@ -1,6 +1,6 @@
 'use client';
 
-import type { BootstrapResponse } from '@tegonhq/types';
+import type { BootstrapResponse } from 'common/types';
 
 import { useBootstrapRecords, useDeltaRecords } from '@tegonhq/services/sync';
 import { Loader } from '@tegonhq/ui/components/loader';

@@ -1,4 +1,4 @@
-import { Priorities, type IssueType } from '@tegonhq/types';
+import { Priorities, type IssueType } from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,

@@ -1,4 +1,4 @@
-import type { User } from '@tegonhq/types';
+import type { User } from 'common/types';
 
 import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';

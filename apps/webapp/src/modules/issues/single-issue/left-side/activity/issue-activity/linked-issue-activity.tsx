@@ -1,11 +1,11 @@
-import type { User } from '@tegonhq/types';
+import type { User } from 'common/types';
 
 import { RiGithubFill, RiLink } from '@remixicon/react';
 import {
   Integration,
   LinkedSlackMessageType,
   type LinkedIssueType,
-} from '@tegonhq/types';
+} from 'common/types';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Gmail, SentryIcon, SlackIcon } from '@tegonhq/ui/icons';
 

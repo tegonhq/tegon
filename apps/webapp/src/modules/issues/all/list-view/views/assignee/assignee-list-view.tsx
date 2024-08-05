@@ -1,4 +1,4 @@
-import type { UsersOnWorkspaceType } from '@tegonhq/types';
+import type { UsersOnWorkspaceType } from 'common/types';
 
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 

@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateLinkedIssueMutation } from '@tegonhq/services/linked-issues';
-import { LinkedIssueSubType } from '@tegonhq/types';
+import { LinkedIssueSubType } from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DialogDescription,

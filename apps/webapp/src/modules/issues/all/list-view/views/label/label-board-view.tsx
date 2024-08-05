@@ -1,5 +1,5 @@
 import type { DropResult } from '@hello-pangea/dnd';
-import type { LabelType } from '@tegonhq/types';
+import type { LabelType } from 'common/types';
 
 import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { Board } from '@tegonhq/ui/components/board';

@@ -1,4 +1,4 @@
-import { Integration } from '@tegonhq/types';
+import { Integration } from 'common/types';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
 import * as React from 'react';
 

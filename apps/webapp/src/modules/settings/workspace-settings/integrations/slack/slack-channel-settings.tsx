@@ -1,4 +1,4 @@
-import type { IntegrationAccountType } from '@tegonhq/types';
+import type { IntegrationAccountType } from 'common/types';
 
 import { RiDeleteBin7Line } from '@remixicon/react';
 import { useUpdateIntegrationAccountMutation } from '@tegonhq/services/oauth';

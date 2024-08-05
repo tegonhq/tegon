@@ -4,8 +4,8 @@ import {
   RiMoreFill,
   RiSlackFill,
 } from '@remixicon/react';
-import { type IssueCommentType, type User } from '@tegonhq/types';
-import { Integration } from '@tegonhq/types';
+import { type IssueCommentType, type User } from 'common/types';
+import { Integration } from 'common/types';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import {

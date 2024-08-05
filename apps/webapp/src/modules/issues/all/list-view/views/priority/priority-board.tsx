@@ -1,7 +1,7 @@
 import type { DropResult } from '@hello-pangea/dnd';
 
 import { useUpdateIssueMutation } from '@tegonhq/services/issues';
-import { Priorities } from '@tegonhq/types';
+import { Priorities } from 'common/types';
 import { Board } from '@tegonhq/ui/components/board';
 import { observer } from 'mobx-react-lite';
 

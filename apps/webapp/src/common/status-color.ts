@@ -1,4 +1,4 @@
-import type { WorkflowType } from '@tegonhq/types';
+import type { WorkflowType } from 'common/types';
 
 export const WorkflowColors = {
   Triage: {

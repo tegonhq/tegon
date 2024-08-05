@@ -1,5 +1,5 @@
 import type { DropResult } from '@hello-pangea/dnd';
-import type { UsersOnWorkspaceType } from '@tegonhq/types';
+import type { UsersOnWorkspaceType } from 'common/types';
 
 import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { Board } from '@tegonhq/ui/components/board';
