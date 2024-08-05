@@ -1,1 +1,0 @@
-export * from './integrationAccount.entity';

@@ -1,4 +1,8 @@
-import { InviteStatus } from '@prisma/client';
+export enum InviteStatus {
+  INVITED = 'INVITED',
+  ACCEPTED = 'ACCEPTED',
+  DECLINED = 'DECLINED',
+}
 
 export enum Role {
   ADMIN = 'ADMIN',
