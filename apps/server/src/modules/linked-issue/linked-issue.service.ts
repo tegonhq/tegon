@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { LinkedIssue } from '@prisma/client';
+import { LinkedIssue } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {

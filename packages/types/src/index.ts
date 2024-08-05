@@ -7,6 +7,7 @@ export * from './emoji';
 export * from './integration-account';
 export * from './integration-definition';
 export * from './invite';
+export * from './issue';
 export * from './issue-comment';
 export * from './issue-history';
 export * from './issue-relation';

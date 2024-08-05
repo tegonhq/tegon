@@ -1,9 +1,8 @@
-import { IntegrationDefinition } from '@@generated/integrationDefinition/entities';
 import { Injectable } from '@nestjs/common';
+import { IntegrationDefinition } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
-  IntegrationDefinitionCreateBody,
   IntegrationDefinitionRequestIdBody,
   IntegrationDefinitionUpdateBody,
 } from './integration-definition.interface';
@@ -13,7 +12,9 @@ export class IntegrationDefinitionService {
   constructor(private prisma: PrismaService) {}
 
   async getIntegrationDefinitions(): Promise<IntegrationDefinition[]> {
-    return await this.prisma.integrationDefinition.findMany({});
+    return (await this.prisma.integrationDefinition.findMany(
+      {},
+    )) as IntegrationDefinition[];
   }
 
   async getIntegrationDefinitionWithId(
@@ -21,17 +22,6 @@ export class IntegrationDefinitionService {
   ): Promise<IntegrationDefinition> {
     return await this.prisma.integrationDefinition.findUnique({
       where: { id: integrationDefinitionRequestIdBody.integrationDefinitionId },
-    });
-  }
-
-  async createIntegrationDefinition(
-    integrationDefinitionCreateBody: IntegrationDefinitionCreateBody,
-  ) {
-    return await this.prisma.integrationDefinition.create({
-      data: {
-        ...integrationDefinitionCreateBody,
-        spec: JSON.stringify(integrationDefinitionCreateBody.spec),
-      },
     });
   }
 

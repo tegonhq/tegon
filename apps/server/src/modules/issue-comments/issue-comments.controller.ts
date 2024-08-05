@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { IssueComment } from '@prisma/client';
+import { IssueComment } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';

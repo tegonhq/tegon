@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { LinkedIssue } from '@prisma/client';
+import { LinkedIssue } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { ApiResponse } from 'modules/issues/issues.interface';

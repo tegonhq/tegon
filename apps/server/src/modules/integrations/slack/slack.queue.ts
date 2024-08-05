@@ -1,8 +1,7 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
+import { IntegrationAccount } from '@tegonhq/types';
 import { Queue } from 'bull';
-
-import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
 
 import { EventBody } from '../integrations.interface';
 
@@ -19,7 +18,7 @@ export class SlackQueue {
 
   async handleThreadJob(
     event: EventBody,
-    integrationAccount: IntegrationAccountWithRelations,
+    integrationAccount: IntegrationAccount,
   ) {
     await this.slackQueue.add('handleThread', {
       event,
@@ -29,7 +28,7 @@ export class SlackQueue {
 
   async handleMessageReactionJob(
     event: EventBody,
-    integrationAccount: IntegrationAccountWithRelations,
+    integrationAccount: IntegrationAccount,
   ) {
     await this.slackQueue.add('handleMessageReaction', {
       event,

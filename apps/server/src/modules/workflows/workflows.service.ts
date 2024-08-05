@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Workflow } from '@prisma/client';
+import { Workflow } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
-  CreateWorkflowInput,
   TeamRequestIdBody,
   UpdateWorkflowInput,
   WorkflowRequestIdBody,
@@ -19,14 +18,6 @@ export default class WorkflowsService {
     return await this.prisma.workflow.findMany({
       where: {
         teamId: teamRequestIdBody.teamId,
-      },
-    });
-  }
-
-  async createWorkflow(workflowData: CreateWorkflowInput): Promise<Workflow> {
-    return await this.prisma.workflow.create({
-      data: {
-        ...workflowData,
       },
     });
   }

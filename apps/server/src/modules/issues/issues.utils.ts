@@ -1,16 +1,15 @@
 import { Logger } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import {
+  IntegrationAccount,
   IntegrationName,
   Issue,
   LinkedIssue,
-  Prisma,
   WorkflowCategory,
-} from '@prisma/client';
-import { IssueWithRelations } from '@tegonhq/types';
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
-import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
 import {
   sendGithubFirstComment,
   upsertGithubIssue,
@@ -34,7 +33,7 @@ import {
 import { IssuesQueue } from './issues.queue';
 
 export async function getIssueDiff(
-  newIssueData: IssueWithRelations,
+  newIssueData: Issue,
   currentIssueData: Issue,
 ): Promise<IssueHistoryData> {
   let issueHistoryData: IssueHistoryData = {} as IssueHistoryData;
@@ -51,10 +50,7 @@ export async function getIssueDiff(
   if (currentIssueData) {
     // If currentIssueData exists, compare the values for each key
     keys.forEach((key) => {
-      const newIssueValue = getProperty(
-        newIssueData,
-        key as keyof IssueWithRelations,
-      );
+      const newIssueValue = getProperty(newIssueData, key as keyof Issue);
       const currentIssueValue = getProperty(
         currentIssueData,
         key as keyof Issue,
@@ -88,7 +84,7 @@ export async function getIssueDiff(
       const toKey = `to${capitalize(key)}` as keyof IssueHistoryData;
       issueHistoryData = {
         ...issueHistoryData,
-        [toKey]: getProperty(newIssueData, key as keyof IssueWithRelations),
+        [toKey]: getProperty(newIssueData, key as keyof Issue),
       };
     });
     // Add all labelIds from newIssueData as addedLabelIds
@@ -162,7 +158,7 @@ export async function handleTwoWaySync(
   prisma: PrismaService,
   logger: Logger,
   linkedIssueService: LinkedIssueService,
-  issue: IssueWithRelations,
+  issue: Issue,
   action: IssueAction,
   userId: string,
 ) {
@@ -173,7 +169,7 @@ export async function handleTwoWaySync(
   if (linkedIssues.length > 0) {
     linkedIssues.map(async (linkedIssue: LinkedIssue) => {
       const linkedSource = linkedIssue.source as LinkedIssueSource;
-      let integrationAccount: IntegrationAccountWithRelations;
+      let integrationAccount: IntegrationAccount;
       switch (linkedSource.type) {
         case IntegrationName.Github: {
           integrationAccount = await getLinkedIntegrationAccount(
@@ -244,7 +240,7 @@ export async function createGithubIssue(
   prisma: PrismaService,
   logger: Logger,
   linkedIssueService: LinkedIssueService,
-  issue: IssueWithRelations,
+  issue: Issue,
   userId: string,
   linkedIssueId?: string,
 ) {
@@ -379,7 +375,7 @@ export async function handlePostCreateIssue(
   prisma: PrismaService,
   notificationsQueue: NotificationsQueue,
   issuesQueue: IssuesQueue,
-  issue: IssueWithRelations,
+  issue: Issue,
   linkMetaData: Record<string, string>,
 ) {
   // Add the issue to the notification queue if there are subscribers

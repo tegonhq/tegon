@@ -1,4 +1,4 @@
-import { IntegrationName } from '@prisma/client';
+import { IntegrationName } from '@tegonhq/types';
 import { IsJSON, IsObject, IsOptional, IsString } from 'class-validator';
 
 import { WorkspaceIdRequestBody } from 'modules/workspaces/workspaces.interface';

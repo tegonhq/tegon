@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IssueComment } from '@prisma/client';
+
 import { PrismaService } from 'nestjs-prisma';
 
 import IssuesService from 'modules/issues/issues.service';
@@ -17,6 +17,7 @@ import {
   reactionDataType,
 } from './issue-comments.interface';
 import { IssueCommentsQueue } from './issue-comments.queue';
+import { IssueComment } from '@tegonhq/types';
 
 @Injectable()
 export default class IssueCommentsService {

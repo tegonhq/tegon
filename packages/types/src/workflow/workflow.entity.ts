@@ -1,6 +1,15 @@
 import { Team } from '../team';
 
-export enum WorkflowCategory {
+export const WorkflowCategory = {
+  TRIAGE: 'TRIAGE',
+  BACKLOG: 'BACKLOG',
+  UNSTARTED: 'UNSTARTED',
+  STARTED: 'STARTED',
+  COMPLETED: 'COMPLETED',
+  CANCELED: 'CANCELED',
+};
+
+export enum WorkflowCategoryEnum {
   TRIAGE = 'TRIAGE',
   BACKLOG = 'BACKLOG',
   UNSTARTED = 'UNSTARTED',
@@ -8,6 +17,9 @@ export enum WorkflowCategory {
   COMPLETED = 'COMPLETED',
   CANCELED = 'CANCELED',
 }
+
+export type WorkflowCategory =
+  (typeof WorkflowCategory)[keyof typeof WorkflowCategory];
 
 export class Workflow {
   id: string;

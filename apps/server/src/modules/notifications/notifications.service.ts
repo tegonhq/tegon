@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Notification, NotificationActionType } from '@prisma/client';
+import {
+  Notification,
+  NotificationActionType,
+  NotificationActionTypeEnum,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -47,7 +51,7 @@ export default class NotificationsService {
           if (!existingNotification) {
             await this.prisma.notification.create({
               data: {
-                type,
+                type: type as NotificationActionTypeEnum,
                 userId,
                 issueId,
                 createdById,
@@ -76,7 +80,7 @@ export default class NotificationsService {
     return await this.prisma.notification.updateMany({
       where: {
         actionData: { path: [], equals: actionData },
-        type,
+        type: type as NotificationActionTypeEnum,
         issueId: notificationData.issueId,
       },
       data: { deleted: new Date().toISOString() },

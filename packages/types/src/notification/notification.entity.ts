@@ -1,6 +1,6 @@
 import { JsonValue } from '../common';
 
-export enum NotificationActionType {
+export enum NotificationActionTypeEnum {
   IssueAssigned = 'IssueAssigned',
   IssueUnAssigned = 'IssueUnAssigned',
   IssueStatusChanged = 'IssueStatusChanged',
@@ -8,6 +8,18 @@ export enum NotificationActionType {
   IssueNewComment = 'IssueNewComment',
   IssueBlocks = 'IssueBlocks',
 }
+
+export const NotificationActionType = {
+  IssueAssigned: 'IssueAssigned',
+  IssueUnAssigned: 'IssueUnAssigned',
+  IssueStatusChanged: 'IssueStatusChanged',
+  IssuePriorityChanged: 'IssuePriorityChanged',
+  IssueNewComment: 'IssueNewComment',
+  IssueBlocks: 'IssueBlocks',
+};
+
+export type NotificationActionType =
+  (typeof NotificationActionType)[keyof typeof NotificationActionType];
 
 export class Notification {
   id: string;

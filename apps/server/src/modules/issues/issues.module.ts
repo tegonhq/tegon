@@ -1,4 +1,4 @@
-import { IssueHistory } from '@@generated/issueHistory/entities';
+import { IssueHistory } from '@tegonhq/types';
 import { HttpModule } from '@nestjs/axios';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';

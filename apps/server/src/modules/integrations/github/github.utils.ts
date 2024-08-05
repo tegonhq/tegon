@@ -1,16 +1,16 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { Team } from '@@generated/team/entities';
 import { BadRequestException, Logger } from '@nestjs/common';
 import {
-  IntegrationAccount,
-  IntegrationName,
-  Issue,
+  Team,
   LinkedIssue,
+  IntegrationAccount,
+  IntegrationNameEnum,
   WorkflowCategory,
-} from '@prisma/client';
-import { IssueWithRelations } from '@tegonhq/types';
+  IssueComment,
+  Issue,
+} from '@tegonhq/types';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { PrismaService } from 'nestjs-prisma';
@@ -23,13 +23,11 @@ import {
 import {
   GithubRepositoryMappings,
   GithubSettings,
-  IntegrationAccountWithRelations,
   Settings,
 } from 'modules/integration-account/integration-account.interface';
 import { Specification } from 'modules/integration-definition/integration-definition.interface';
 import {
   IssueCommentAction,
-  IssueCommentWithRelations,
   LinkedCommentSourceData,
 } from 'modules/issue-comments/issue-comments.interface';
 import { UpdateIssueInput } from 'modules/issues/issues.interface';
@@ -95,7 +93,7 @@ export function getTeamId(
   accountSettings: Settings,
 ): string | undefined {
   // Get the GitHub settings from the account settings
-  const githubSettings = accountSettings[IntegrationName.Github];
+  const githubSettings = accountSettings[IntegrationNameEnum.Github];
 
   // Find the repository mapping that matches the given repository ID
   const mapping = githubSettings.repositoryMappings.find(
@@ -138,7 +136,7 @@ export async function getIssueData(
     url: eventBody.issue.html_url,
     sourceId: eventBody.issue.id.toString(),
     source: {
-      type: IntegrationName.Github,
+      type: IntegrationNameEnum.Github,
       subType: LinkedIssueSubType.GithubIssue,
     },
     sourceData: {
@@ -166,7 +164,7 @@ export async function getIssueData(
   // Prepare the source metadata
   const sourceMetadata = {
     id: integrationAccount.id,
-    type: IntegrationName.Github,
+    type: IntegrationNameEnum.Github,
     userDisplayName: eventBody.sender.login,
   };
 
@@ -187,8 +185,8 @@ export async function sendGithubFirstComment(
   prisma: PrismaService,
   logger: Logger,
   linkedIssueService: LinkedIssueService,
-  integrationAccount: IntegrationAccountWithRelations,
-  issue: IssueWithRelations,
+  integrationAccount: IntegrationAccount,
+  issue: Issue,
   issueSourceId: string,
 ) {
   const { workspace } = integrationAccount;
@@ -208,10 +206,10 @@ export async function sendGithubFirstComment(
   );
 
   // Create the comment body and source metadata
-  const commentBody = `${IntegrationName.Github} thread in ${title}`;
+  const commentBody = `${IntegrationNameEnum.Github} thread in ${title}`;
   const sourceMetadata = issue.sourceMetadata
     ? issue.sourceMetadata
-    : { id: integrationAccount.id, type: IntegrationName.Github };
+    : { id: integrationAccount.id, type: IntegrationNameEnum.Github };
 
   // Create the issue comment in the database
   const issueComment = await prisma.issueComment.create({
@@ -229,7 +227,7 @@ export async function sendGithubFirstComment(
     { linkedIssueId: linkedIssue.id },
     {
       source: {
-        type: IntegrationName.Github,
+        type: IntegrationNameEnum.Github,
         subType: LinkedIssueSubType.GithubIssue,
         syncedCommentId: issueComment.id,
       },
@@ -257,7 +255,7 @@ export async function sendGithubFirstComment(
  */
 export async function sendGithubPRFirstComment(
   prisma: PrismaService,
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   team: Team,
   issue: Issue,
   url: string,
@@ -290,7 +288,7 @@ export async function sendGithubComment(
 }
 
 export async function getGithubSettings(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   token: string,
 ): Promise<GithubSettings> {
   const installationId = integrationAccount.accountId;
@@ -380,9 +378,7 @@ export async function getAccessToken(
   return config.access_token;
 }
 
-export async function getBotJWTToken(
-  integrationAccount: IntegrationAccountWithRelations,
-) {
+export async function getBotJWTToken(integrationAccount: IntegrationAccount) {
   const spec = integrationAccount.integrationDefinition
     .spec as unknown as Specification;
   const appId = spec.other_data.app_id;
@@ -403,7 +399,7 @@ export async function getBotJWTToken(
 
 export async function getBotAccessToken(
   prisma: PrismaService,
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
 ) {
   let config = integrationAccount.integrationConfiguration as Record<
     string,
@@ -461,7 +457,7 @@ async function getGithubUserIntegrationAccount(
       integratedById: userId,
       integrationDefinition: {
         workspaceId,
-        name: IntegrationName.GithubPersonal,
+        name: IntegrationNameEnum.GithubPersonal,
       },
     },
   });
@@ -494,8 +490,8 @@ export async function getGithubUser(token: string) {
 export async function upsertGithubIssue(
   prisma: PrismaService,
   logger: Logger,
-  issue: IssueWithRelations,
-  integrationAccount: IntegrationAccountWithRelations,
+  issue: Issue,
+  integrationAccount: IntegrationAccount,
   userId: string,
   linkedIssueId?: string,
 ) {
@@ -528,7 +524,7 @@ export async function upsertGithubIssue(
         : prisma.linkedIssue.findFirst({
             where: {
               issueId: issue.id,
-              source: { path: ['type'], equals: IntegrationName.Github },
+              source: { path: ['type'], equals: IntegrationNameEnum.Github },
             },
           }),
     ]);
@@ -602,7 +598,7 @@ export async function upsertGithubIssue(
     // Get the bot access token
     getBotAccessToken(prisma, integrationAccount),
     // Find the default repository mapping
-    IntegrationSettings[IntegrationName.Github].repositoryMappings.find(
+    IntegrationSettings[IntegrationNameEnum.Github].repositoryMappings.find(
       (repo: GithubRepositoryMappings) => repo.default,
     ),
   ]);
@@ -624,8 +620,8 @@ export async function upsertGithubIssue(
 export async function upsertGithubIssueComment(
   prisma: PrismaService,
   logger: Logger,
-  issueComment: IssueCommentWithRelations,
-  integrationAccount: IntegrationAccountWithRelations,
+  issueComment: IssueComment,
+  integrationAccount: IntegrationAccount,
   userId: string,
   action: IssueCommentAction,
 ) {
@@ -646,7 +642,7 @@ export async function upsertGithubIssueComment(
   const linkedComment = await prisma.linkedComment.findFirst({
     where: {
       commentId: issueComment.id,
-      source: { path: ['type'], equals: IntegrationName.Github },
+      source: { path: ['type'], equals: IntegrationNameEnum.Github },
     },
   });
 
@@ -680,7 +676,7 @@ export async function upsertGithubIssueComment(
             data: {
               sourceId: githubIssueComment.id.toString(),
               url: githubIssueComment.html_url,
-              source: { type: IntegrationName.Github },
+              source: { type: IntegrationNameEnum.Github },
               sourceData: sourceMetadata,
               commentId: issueComment.id,
               createdById: userId,

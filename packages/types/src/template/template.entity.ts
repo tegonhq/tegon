@@ -3,11 +3,20 @@ import { Team } from '../team';
 import { User } from '../user/user.entity';
 import { Workspace } from '../workspace/workspace.entity';
 
-export enum TemplateCategory {
+export enum TemplateCategoryEnum {
   ISSUE = 'ISSUE',
   PROJECT = 'PROJECT',
   DOCUMENT = 'DOCUMENT',
 }
+
+export const TemplateCategory = {
+  ISSUE: 'ISSUE',
+  PROJECT: 'PROJECT',
+  DOCUMENT: 'DOCUMENT',
+};
+
+export type TemplateCategory =
+  (typeof TemplateCategory)[keyof typeof TemplateCategory];
 
 export class Template {
   id: string;

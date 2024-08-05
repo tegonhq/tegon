@@ -1,11 +1,9 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
+import { IssueComment } from '@tegonhq/types';
 import { Queue } from 'bull';
 
-import {
-  IssueCommentAction,
-  IssueCommentWithRelations,
-} from './issue-comments.interface';
+import { IssueCommentAction } from './issue-comments.interface';
 
 @Injectable()
 export class IssueCommentsQueue {
@@ -14,7 +12,7 @@ export class IssueCommentsQueue {
   ) {}
 
   async addTwoWaySyncJob(
-    issueComment: IssueCommentWithRelations,
+    issueComment: IssueComment,
     action: IssueCommentAction,
     userId: string,
   ) {

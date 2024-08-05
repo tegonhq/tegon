@@ -2,7 +2,16 @@ import { JsonValue } from '../common';
 import { IntegrationAccount } from '../integration-account';
 import { Workspace } from '../workspace';
 
-export enum IntegrationName {
+export const IntegrationName = {
+  Github: 'Github',
+  GithubPersonal: 'GithubPersonal',
+  Slack: 'Slack',
+  SlackPersonal: 'SlackPersonal',
+  Sentry: 'Sentry',
+  Gmail: 'Gmail',
+};
+
+export enum IntegrationNameEnum {
   Github = 'Github',
   GithubPersonal = 'GithubPersonal',
   Slack = 'Slack',
@@ -10,6 +19,9 @@ export enum IntegrationName {
   Sentry = 'Sentry',
   Gmail = 'Gmail',
 }
+
+export type IntegrationName =
+  (typeof IntegrationName)[keyof typeof IntegrationName];
 
 export class IntegrationDefinition {
   id: string;

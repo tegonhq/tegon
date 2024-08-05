@@ -1,7 +1,16 @@
 import { JsonValue } from '../common';
 import { Issue } from '../issue';
 
-export enum IssueRelationType {
+export const IssueRelationType = {
+  BLOCKS: 'BLOCKS',
+  BLOCKED: 'BLOCKED',
+  RELATED: 'RELATED',
+  DUPLICATE: 'DUPLICATE',
+  DUPLICATE_OF: 'DUPLICATE_OF',
+  SIMILAR: 'SIMILAR',
+};
+
+export enum IssueRelationEnum {
   BLOCKS = 'BLOCKS',
   BLOCKED = 'BLOCKED',
   RELATED = 'RELATED',
@@ -9,6 +18,9 @@ export enum IssueRelationType {
   DUPLICATE_OF = 'DUPLICATE_OF',
   SIMILAR = 'SIMILAR',
 }
+
+export type IssueRelationType =
+  (typeof IssueRelationType)[keyof typeof IssueRelationType];
 
 export class IssueRelation {
   id: string;

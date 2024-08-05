@@ -1,20 +1,17 @@
 import { Logger } from '@nestjs/common';
-import { IntegrationName } from '@prisma/client';
+import { IntegrationNameEnum, IssueComment } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { Settings } from 'modules/integration-account/integration-account.interface';
 import { upsertGithubIssueComment } from 'modules/integrations/github/github.utils';
 import { upsertSlackMessage } from 'modules/integrations/slack/slack.utils';
 
-import {
-  IssueCommentAction,
-  IssueCommentWithRelations,
-} from './issue-comments.interface';
+import { IssueCommentAction } from './issue-comments.interface';
 
 export async function handleTwoWaySync(
   prisma: PrismaService,
   logger: Logger,
-  issueComment: IssueCommentWithRelations,
+  issueComment: IssueComment,
   action: IssueCommentAction,
   userId: string,
 ) {
@@ -36,8 +33,9 @@ export async function handleTwoWaySync(
 
     const integrationAccountSettings = integrationAccount.settings as Settings;
 
-    const githubSettings = integrationAccountSettings[IntegrationName.Github];
-    const slackSettings = integrationAccountSettings[IntegrationName.Slack];
+    const githubSettings =
+      integrationAccountSettings[IntegrationNameEnum.Github];
+    const slackSettings = integrationAccountSettings[IntegrationNameEnum.Slack];
 
     if (githubSettings) {
       // Two-way sync is enabled for this team

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Template } from '@prisma/client';
+import { Template } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {

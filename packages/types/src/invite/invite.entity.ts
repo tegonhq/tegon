@@ -1,13 +1,28 @@
-export enum InviteStatus {
+export enum InviteStatusEnum {
   INVITED = 'INVITED',
   ACCEPTED = 'ACCEPTED',
   DECLINED = 'DECLINED',
 }
 
-export enum Role {
+export const InviteStatus = {
+  INVITED: 'INVITED',
+  ACCEPTED: 'ACCEPTED',
+  DECLINED: 'DECLINED',
+};
+
+export type InviteStatus = (typeof InviteStatus)[keyof typeof InviteStatus];
+
+export const Role = {
+  ADMIN: 'ADMIN',
+  USER: 'USER',
+};
+
+export enum RoleEnum {
   ADMIN = 'ADMIN',
   USER = 'USER',
 }
+
+export type Role = (typeof Role)[keyof typeof Role];
 
 export class Invite {
   id: string;

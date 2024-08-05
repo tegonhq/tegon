@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Team, UsersOnWorkspaces } from '@prisma/client';
+import { Team, UsersOnWorkspaces } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {

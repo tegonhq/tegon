@@ -1,4 +1,4 @@
-import { Preference, WorkflowCategory } from '@prisma/client';
+import { PreferenceEnum, WorkflowCategoryEnum } from '@tegonhq/types';
 import { IsOptional, IsString } from 'class-validator';
 
 export class CreateTeamInput {
@@ -39,7 +39,7 @@ export class WorkspaceRequestParams {
 
 export class PreferenceInput {
   @IsString()
-  preference: Preference;
+  preference: PreferenceEnum;
 
   @IsString()
   value: IssueEstimateValues | Priorities;
@@ -65,49 +65,49 @@ enum Priorities {
 export const workflowSeedData = [
   {
     name: 'Triage',
-    category: WorkflowCategory.TRIAGE,
+    category: WorkflowCategoryEnum.TRIAGE,
     color: '#D94B0E',
     position: 0,
   },
   {
     name: 'Unscoped',
-    category: WorkflowCategory.BACKLOG,
+    category: WorkflowCategoryEnum.BACKLOG,
     color: '#9F3DEF',
     position: 1,
   },
   {
     name: 'Backlog',
-    category: WorkflowCategory.BACKLOG,
+    category: WorkflowCategoryEnum.BACKLOG,
     color: '#8E862C',
     position: 2,
   },
   {
     name: 'Todo',
-    category: WorkflowCategory.UNSTARTED,
+    category: WorkflowCategoryEnum.UNSTARTED,
     color: '#5C5C5C',
     position: 3,
   },
   {
     name: 'In Progress',
-    category: WorkflowCategory.STARTED,
+    category: WorkflowCategoryEnum.STARTED,
     color: '#C28C11',
     position: 4,
   },
   {
     name: 'In Review',
-    category: WorkflowCategory.STARTED,
+    category: WorkflowCategoryEnum.STARTED,
     color: '#3F8EF7',
     position: 5,
   },
   {
     name: 'Done',
-    category: WorkflowCategory.COMPLETED,
+    category: WorkflowCategoryEnum.COMPLETED,
     color: '#3CAF20',
     position: 6,
   },
   {
     name: 'Canceled',
-    category: WorkflowCategory.CANCELED,
+    category: WorkflowCategoryEnum.CANCELED,
     color: '#5C5C5C',
     position: 7,
   },

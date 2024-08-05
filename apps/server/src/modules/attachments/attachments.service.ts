@@ -4,7 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { AttachmentStatus } from '@prisma/client';
+import { AttachmentStatus } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {

@@ -1,4 +1,4 @@
-import { IntegrationName } from '@prisma/client';
+import { IntegrationName } from '@tegonhq/types';
 
 import { UpdateIssueInput } from 'modules/issues/issues.interface';
 import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';

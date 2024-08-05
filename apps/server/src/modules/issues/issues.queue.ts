@@ -1,7 +1,7 @@
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
-import { Issue } from '@prisma/client';
-import { IssueWithRelations } from '@tegonhq/types';
+import { Issue } from '@tegonhq/types';
+
 import { Queue } from 'bull';
 
 import {
@@ -34,12 +34,12 @@ export class IssuesQueue {
     });
   }
 
-  async addIssueToVector(issue: IssueWithRelations) {
+  async addIssueToVector(issue: Issue) {
     this.logger.log(`Adding issue to vector queue ${issue.id}`);
     await this.issuesQueue.add('addIssueToVector', { issue });
   }
 
-  async handleTriageIssue(issue: IssueWithRelations, isDeleted: boolean) {
+  async handleTriageIssue(issue: Issue, isDeleted: boolean) {
     this.logger.log(`Handling Triage issue ${issue.id}`);
     await this.issuesQueue.add('handleTriageIssue', { issue, isDeleted });
   }

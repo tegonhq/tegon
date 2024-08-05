@@ -1,4 +1,4 @@
-import { View } from '@@generated/view/entities';
+import { View } from '@tegonhq/types';
 import {
   Body,
   Controller,

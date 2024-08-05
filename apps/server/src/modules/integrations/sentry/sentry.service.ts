@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { IntegrationName } from '@prisma/client';
+import { IntegrationNameEnum } from '@tegonhq/types';
 import axios from 'axios';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -38,7 +38,7 @@ export default class SentryService {
       await this.prisma.integrationDefinition.findFirst({
         where: {
           workspaceId: installationData.workspaceId,
-          name: IntegrationName.Sentry,
+          name: IntegrationNameEnum.Sentry,
         },
       });
 
@@ -91,7 +91,7 @@ export default class SentryService {
           accountId: installationData.installationId,
           userId,
           settings: {
-            [IntegrationName.Sentry]: { orgSlug: installationData.orgSlug },
+            [IntegrationNameEnum.Sentry]: { orgSlug: installationData.orgSlug },
           },
         } as CreateIntegrationAccountBody);
 

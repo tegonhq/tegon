@@ -3,11 +3,20 @@ import { Role } from '../invite';
 import { User } from '../user';
 import { Workspace } from '../workspace';
 
-export enum WorkspaceStatus {
+export enum WorkspaceStatusEnum {
   INVITED = 'INVITED',
   ACTIVE = 'ACTIVE',
   SUSPENDED = 'SUSPENDED',
 }
+
+export const WorkspaceStatus = {
+  INVITED: 'INVITED',
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+};
+
+export type WorkspaceStatus =
+  (typeof WorkspaceStatus)[keyof typeof WorkspaceStatus];
 
 export class UsersOnWorkspaces {
   id: string;
