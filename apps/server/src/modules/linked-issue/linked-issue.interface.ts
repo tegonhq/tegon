@@ -1,4 +1,4 @@
-import { LinkedIssue } from '@prisma/client';
+import { LinkedIssue } from '@tegonhq/types';
 import {
   IsEnum,
   IsJSON,

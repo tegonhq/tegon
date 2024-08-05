@@ -4,14 +4,10 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { AttachmentStatus } from '@prisma/client';
+import { AttachmentResponse, AttachmentStatus } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-import {
-  AttachmentRequestParams,
-  AttachmentResponse,
-  ExternalFile,
-} from './attachments.interface';
+import { AttachmentRequestParams, ExternalFile } from './attachments.interface';
 
 @Injectable()
 export class AttachmentService {
@@ -41,9 +37,9 @@ export class AttachmentService {
           size: file.size,
           status: AttachmentStatus.Pending,
           fileExt: file.originalname.split('.').pop(),
-          uploadedById: userId,
           workspaceId,
           sourceMetadata,
+          ...(userId ? { uploadedById: userId } : {}),
         },
         include: {
           workspace: true,

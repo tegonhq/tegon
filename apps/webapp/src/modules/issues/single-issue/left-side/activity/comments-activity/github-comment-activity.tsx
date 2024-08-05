@@ -1,8 +1,8 @@
-import type { User } from '@tegonhq/types';
+import type { User } from 'common/types';
 
 import { RiGithubFill } from '@remixicon/react';
-import { type IssueCommentType } from '@tegonhq/types';
-import { LinkedIssueSubType, type LinkedIssueType } from '@tegonhq/types';
+import { type IssueCommentType } from 'common/types';
+import { LinkedIssueSubType, type LinkedIssueType } from 'common/types';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';

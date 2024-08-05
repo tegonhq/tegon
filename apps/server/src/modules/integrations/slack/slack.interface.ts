@@ -1,4 +1,4 @@
-import { IntegrationName } from '@prisma/client';
+import { IntegrationName } from '@tegonhq/types';
 import { IsString } from 'class-validator';
 
 import { UpdateIssueInput } from 'modules/issues/issues.interface';

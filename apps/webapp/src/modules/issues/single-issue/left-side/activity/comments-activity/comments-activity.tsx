@@ -1,5 +1,5 @@
-import type { User } from '@tegonhq/types';
-import type { IssueCommentType } from '@tegonhq/types';
+import type { User } from 'common/types';
+import type { IssueCommentType } from 'common/types';
 
 import { Timeline } from '@tegonhq/ui/components/timeline';
 import { observer } from 'mobx-react-lite';

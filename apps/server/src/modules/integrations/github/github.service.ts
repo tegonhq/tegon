@@ -1,14 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { IntegrationName, LinkedIssue, Prisma } from '@prisma/client';
-import { IssueWithRelations } from '@tegonhq/types';
+import { IntegrationName, LinkedIssue } from '@tegonhq/types';
+import { Issue, IntegrationAccount } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { convertMarkdownToTiptapJson } from 'common/utils/tiptap.utils';
 
-import {
-  IntegrationAccountWithRelations,
-  Settings,
-} from 'modules/integration-account/integration-account.interface';
+import { Settings } from 'modules/integration-account/integration-account.interface';
 import {
   CreateIssueInput,
   IssueRequestParams,
@@ -35,6 +32,7 @@ import {
 } from './github.utils';
 import { EventBody, EventHeaders } from '../integrations.interface';
 import { getOrCreateLabelIds, getUserId } from '../integrations.utils';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export default class GithubService {
@@ -99,7 +97,7 @@ export default class GithubService {
    */
   async handleInstallations(
     eventBody: EventBody,
-    integrationAccount: IntegrationAccountWithRelations,
+    integrationAccount: IntegrationAccount,
   ) {
     this.logger.debug(`Changes in App installation ${eventBody.action}`);
 
@@ -135,8 +133,8 @@ export default class GithubService {
    */
   async handleIssues(
     eventBody: EventBody,
-    integrationAccount: IntegrationAccountWithRelations,
-  ): Promise<IssueWithRelations> {
+    integrationAccount: IntegrationAccount,
+  ): Promise<Issue> {
     const accountSettings = integrationAccount.settings as Settings;
     // Get the team ID for the repository
     const teamId = getTeamId(
@@ -283,7 +281,7 @@ export default class GithubService {
    */
   async handleIssueComments(
     eventBody: EventBody,
-    integrationAccount: IntegrationAccountWithRelations,
+    integrationAccount: IntegrationAccount,
   ) {
     // Get the linked issue by the GitHub issue ID
     const linkedIssue = await this.linkedIssueService.getLinkedIssueBySourceId(
@@ -437,7 +435,7 @@ export default class GithubService {
    */
   async handlePullRequests(
     eventBody: EventBody,
-    integrationAccount: IntegrationAccountWithRelations,
+    integrationAccount: IntegrationAccount,
   ): Promise<LinkedIssue | undefined> {
     const { pull_request: pullRequest, action, sender } = eventBody;
     const branchName = pullRequest.head.ref;
@@ -613,7 +611,7 @@ export default class GithubService {
    */
   async handleRepositories(
     eventBody: EventBody,
-    integrationAccount: IntegrationAccountWithRelations,
+    integrationAccount: IntegrationAccount,
   ) {
     const integrationAccountSettings = integrationAccount.settings as Settings;
 

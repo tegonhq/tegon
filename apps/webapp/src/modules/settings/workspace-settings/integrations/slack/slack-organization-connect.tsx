@@ -2,7 +2,7 @@ import {
   useCreateRedirectURLMutation,
   useDeleteIntegrationAccount,
 } from '@tegonhq/services/oauth';
-import { IntegrationName } from '@tegonhq/types';
+import { IntegrationName } from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { observer } from 'mobx-react-lite';
 import React from 'react';

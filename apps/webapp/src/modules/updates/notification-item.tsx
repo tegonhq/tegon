@@ -1,5 +1,5 @@
 import { useUpdateNotificationMutation } from '@tegonhq/services/notifications';
-import { NotificationTypeEnum, type NotificationType } from '@tegonhq/types';
+import { NotificationTypeEnum, type NotificationType } from 'common/types';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';

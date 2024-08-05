@@ -1,6 +1,6 @@
 import { RiGithubFill, RiLink, RiSlackFill } from '@remixicon/react';
-import { IntegrationName } from '@tegonhq/types';
-import { LinkedIssueSubType } from '@tegonhq/types';
+import { IntegrationName } from 'common/types';
+import { LinkedIssueSubType } from 'common/types';
 import {
   DropdownMenuGroup,
   DropdownMenuItem,

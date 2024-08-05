@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Issue, Prisma, WorkflowCategory } from '@prisma/client';
-import { IssueWithRelations } from '@tegonhq/types';
+import { Prisma } from '@prisma/client';
+import { Issue, WorkflowCategoryEnum } from '@tegonhq/types';
 import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -61,7 +61,7 @@ export default class IssuesService {
   async createIssueAPI(
     issueData: CreateIssueInput,
     userId?: string,
-  ): Promise<IssueWithRelations> {
+  ): Promise<Issue> {
     // Destructure issueData to separate parentId, subIssues, issueRelation, teamId, and other issue data
     const { issueRelation, teamId, linkIssueData, sourceMetadata } = issueData;
 
@@ -76,7 +76,7 @@ export default class IssuesService {
       // Helper function to create an issue
       const createIssue = async (
         data: Prisma.IssueCreateInput,
-      ): Promise<IssueWithRelations> => {
+      ): Promise<Issue> => {
         lastNumber++;
         return prisma.issue.create({
           data: {
@@ -94,7 +94,7 @@ export default class IssuesService {
 
       // Create one list with both issue data and respective subissues
       const createIssuesData = [issueData, ...(issueData.subIssues ?? [])];
-      const createdIssues: IssueWithRelations[] = [];
+      const createdIssues: Issue[] = [];
       let mainIssueId: string;
 
       // Create issues recursively
@@ -123,7 +123,7 @@ export default class IssuesService {
 
     // Process each created issue
     await Promise.all(
-      issues.map(async (issue: IssueWithRelations) => {
+      issues.map(async (issue: Issue) => {
         // Upsert the issue history with the issue diff and other metadata
         this.upsertIssueHistory(
           issue,
@@ -297,10 +297,11 @@ export default class IssuesService {
     // Handle triage issues if the current or updated issue state is in the triage category
     if (
       [currentIssueState.category, updatedIssueState.category].includes(
-        WorkflowCategory.TRIAGE,
+        WorkflowCategoryEnum.TRIAGE,
       )
     ) {
-      const isDeleted = updatedIssueState.category !== WorkflowCategory.TRIAGE;
+      const isDeleted =
+        updatedIssueState.category !== WorkflowCategoryEnum.TRIAGE;
       this.issuesQueue.handleTriageIssue(
         isDeleted ? currentIssue : updatedIssue,
         isDeleted,
@@ -364,7 +365,7 @@ export default class IssuesService {
    * @param issueRelation The issue relation input (optional).
    */
   private async upsertIssueHistory(
-    issue: IssueWithRelations,
+    issue: Issue,
     issueDiff: IssueHistoryData,
     userId?: string,
     linkMetaData?: Record<string, string>,
@@ -453,7 +454,7 @@ export default class IssuesService {
       where: { id: issueId },
       data: {
         subscriberIds: {
-          push: subscriberIds,
+          set: subscriberIds,
         },
       },
     });

@@ -1,4 +1,4 @@
-import { type IssueHistoryType } from '@tegonhq/types';
+import { type IssueHistoryType } from 'common/types';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';

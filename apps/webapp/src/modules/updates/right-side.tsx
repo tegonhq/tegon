@@ -1,4 +1,4 @@
-import type { NotificationType } from '@tegonhq/types';
+import type { NotificationType } from 'common/types';
 
 import { Inbox } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';

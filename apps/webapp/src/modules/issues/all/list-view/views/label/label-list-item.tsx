@@ -1,5 +1,5 @@
-import type { IssueType } from '@tegonhq/types';
-import type { LabelType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
+import type { LabelType } from 'common/types';
 
 import { BadgeColor } from '@tegonhq/ui/components/badge';
 import { Button } from '@tegonhq/ui/components/button';

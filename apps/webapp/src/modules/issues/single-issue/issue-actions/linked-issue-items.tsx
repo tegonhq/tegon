@@ -4,7 +4,7 @@ import {
   RiLink,
   RiSlackFill,
 } from '@remixicon/react';
-import { LinkedIssueSubType } from '@tegonhq/types';
+import { LinkedIssueSubType } from 'common/types';
 import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,

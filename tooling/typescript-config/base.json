@@ -20,10 +20,11 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "incremental": true,
     "sourceMap": true,
     "declaration": false,
     "removeComments": true,
     "esModuleInterop": true
-  }
+  },
+  "exclude": [ "node_modules", "**/*/lib", "**/*/dist" ],
+  "references": [ { "path": "../utils/" } ]
 }

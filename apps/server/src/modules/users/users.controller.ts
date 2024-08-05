@@ -1,4 +1,4 @@
-import { User } from '@@generated/user/entities';
+import { User } from '@tegonhq/types';
 import {
   Body,
   Controller,

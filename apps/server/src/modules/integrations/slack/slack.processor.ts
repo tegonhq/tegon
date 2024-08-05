@@ -1,8 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
+import { IntegrationAccount } from '@tegonhq/types';
 import { Job } from 'bull';
-
-import { IntegrationAccountWithRelations } from 'modules/integration-account/integration-account.interface';
 
 import SlackService from './slack.service';
 import { EventBody } from '../integrations.interface';
@@ -16,7 +15,7 @@ export class SlackProcessor {
   async handleThread(
     job: Job<{
       event: EventBody;
-      integrationAccount: IntegrationAccountWithRelations;
+      integrationAccount: IntegrationAccount;
     }>,
   ) {
     const { event, integrationAccount } = job.data;
@@ -30,7 +29,7 @@ export class SlackProcessor {
   async handleMessageReaction(
     job: Job<{
       event: EventBody;
-      integrationAccount: IntegrationAccountWithRelations;
+      integrationAccount: IntegrationAccount;
     }>,
   ) {
     const { event, integrationAccount } = job.data;

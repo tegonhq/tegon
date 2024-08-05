@@ -1,4 +1,4 @@
-import type { ViewType } from '@tegonhq/types';
+import type { ViewType } from 'common/types';
 
 import { useUpdateViewMutation } from '@tegonhq/services/views';
 import { Button } from '@tegonhq/ui/components/button';

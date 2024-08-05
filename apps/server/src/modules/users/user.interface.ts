@@ -1,5 +1,4 @@
-import { Invite } from '@@generated/invite/entities';
-import { User } from '@@generated/user/entities';
+import { Invite, User } from '@tegonhq/types';
 import { IsArray, IsString } from 'class-validator';
 
 export class UserIdParams {

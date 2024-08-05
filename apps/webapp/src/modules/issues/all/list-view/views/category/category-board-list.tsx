@@ -1,5 +1,5 @@
-import type { IssueType } from '@tegonhq/types';
-import type { WorkflowType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
+import type { WorkflowType } from 'common/types';
 
 import {
   Draggable,

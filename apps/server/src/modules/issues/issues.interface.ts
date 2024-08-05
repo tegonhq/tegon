@@ -1,5 +1,4 @@
-import { Issue } from '@@generated/issue/entities';
-import { Team, User } from '@prisma/client';
+import { Issue, IssueRelationEnum, Team, User } from '@tegonhq/types';
 import { Type } from 'class-transformer';
 import {
   IsArray,
@@ -13,7 +12,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { IssueRelationType } from 'modules/issue-relation/issue-relation.interface';
 import {
   LinkedIssueSubType,
   LinkIssueData,
@@ -53,8 +51,8 @@ export class WorkspaceQueryParams {
 
 export class RelationInput {
   @IsOptional()
-  @IsEnum(IssueRelationType)
-  type?: IssueRelationType;
+  @IsEnum(IssueRelationEnum)
+  type?: IssueRelationEnum;
 
   @IsOptional()
   @IsString()

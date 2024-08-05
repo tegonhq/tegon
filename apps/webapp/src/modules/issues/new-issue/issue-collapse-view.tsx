@@ -1,5 +1,5 @@
-import type { User } from '@tegonhq/types';
-import type { WorkflowType } from '@tegonhq/types';
+import type { User } from 'common/types';
+import type { WorkflowType } from 'common/types';
 
 import { AvatarText } from '@tegonhq/ui/components/ui/avatar';
 import { Button } from '@tegonhq/ui/components/ui/button';

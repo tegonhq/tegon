@@ -1,4 +1,4 @@
-import type { LabelType } from '@tegonhq/types';
+import type { LabelType } from 'common/types';
 
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 

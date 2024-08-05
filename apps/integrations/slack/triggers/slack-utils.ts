@@ -1,12 +1,12 @@
 import {
   AttachmentResponse,
   EventBody,
-  IntegrationAccountWithRelations,
-  IssueWithRelations,
+  IntegrationAccount,
+  Issue,
   Settings,
   TiptapMarks,
   TiptapNode,
-  WorkflowType,
+  Workflow,
 } from "@tegonhq/types";
 import {
   SlackBlock,
@@ -15,10 +15,9 @@ import {
 } from "./slack-types";
 import { getRequest, postRequest } from "../../integration.utils";
 
-export function getSlackHeaders(
-  integrationAccount: IntegrationAccountWithRelations
-) {
-  const integrationConfig = integrationAccount.integrationConfiguration;
+export function getSlackHeaders(integrationAccount: IntegrationAccount) {
+  const integrationConfig =
+    integrationAccount.integrationConfiguration as Record<string, any>;
   return {
     headers: {
       "Content-Type": "application/json",
@@ -28,7 +27,7 @@ export function getSlackHeaders(
 }
 
 export async function getSlackMessage(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   sessionData: SlashCommandSessionRecord
 ) {
   const response = await postRequest(
@@ -46,7 +45,7 @@ export async function getSlackMessage(
 }
 
 export async function sendSlackMessage(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   payload: EventBody
 ) {
   const response = await postRequest(
@@ -59,7 +58,7 @@ export async function sendSlackMessage(
 }
 
 export async function sendEphemeralMessage(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   channelId: string,
   text: string,
   threadTs: string,
@@ -81,7 +80,7 @@ export async function sendEphemeralMessage(
 }
 
 export async function getExternalSlackUser(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   slackUserId: string
 ) {
   const response = await getRequest(
@@ -92,7 +91,7 @@ export async function getExternalSlackUser(
   return response.data;
 }
 
-export function getStateId(action: string, workflowStates: WorkflowType[]) {
+export function getStateId(action: string, workflowStates: Workflow[]) {
   const category =
     action === "opened" ? "TRIAGE" : action === "closed" ? "COMPLETED" : null;
   if (category) {
@@ -106,7 +105,7 @@ export function getStateId(action: string, workflowStates: WorkflowType[]) {
 }
 
 export function getChannelNameFromIntegrationAccount(
-  integrationAccount: IntegrationAccountWithRelations,
+  integrationAccount: IntegrationAccount,
   channelId: string
 ) {
   const slackSettings = integrationAccount.settings as Settings;
@@ -310,7 +309,7 @@ export function convertSlackMessageToTiptapJson(
  * @returns An array containing the Slack message modal blocks.
  */
 export async function getIssueMessageModal(
-  issue: IssueWithRelations,
+  issue: Issue,
   workspaceSlug: string
 ) {
   // Generate the issue identifier using the team identifier and issue number

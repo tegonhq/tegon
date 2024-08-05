@@ -1,4 +1,4 @@
-import { WorkflowCategory } from '@prisma/client';
+import { WorkflowCategory } from '@tegonhq/types';
 import { IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class CreateWorkflowInput {

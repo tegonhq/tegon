@@ -1,6 +1,6 @@
-import type { User } from '@tegonhq/types';
-import type { IssueHistoryType } from '@tegonhq/types';
-import type { LinkedIssueType } from '@tegonhq/types';
+import type { User } from 'common/types';
+import type { IssueHistoryType } from 'common/types';
+import type { LinkedIssueType } from 'common/types';
 
 import { Timeline, TimelineItem } from '@tegonhq/ui/components/timeline';
 import { observer } from 'mobx-react-lite';

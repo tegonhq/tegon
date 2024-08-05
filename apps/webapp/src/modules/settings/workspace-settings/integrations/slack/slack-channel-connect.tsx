@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useSlackChannelCreateRedirectURLMutation } from '@tegonhq/services/oauth';
-import { IntegrationName } from '@tegonhq/types';
+import { IntegrationName } from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { observer } from 'mobx-react-lite';
 import React from 'react';

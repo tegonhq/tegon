@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Workflow } from '@prisma/client';
+import { Workflow } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
@@ -16,7 +16,6 @@ import {
   UpdateWorkflowInput,
   WorkflowRequestIdBody,
   TeamRequestIdBody,
-  CreateWorkflowInput,
 } from './workflows.interface';
 import WorkflowsService from './workflows.service';
 
@@ -27,14 +26,6 @@ import WorkflowsService from './workflows.service';
 @ApiTags('Workflows')
 export class WorkflowsController {
   constructor(private workflowsService: WorkflowsService) {}
-
-  @Post()
-  @UseGuards(new AuthGuard())
-  async createWorkflow(
-    @Body() workflowData: CreateWorkflowInput,
-  ): Promise<Workflow> {
-    return await this.workflowsService.createWorkflow(workflowData);
-  }
 
   @Get()
   @UseGuards(new AuthGuard())

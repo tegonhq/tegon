@@ -1,4 +1,9 @@
-import { IntegrationName, LLMModels, Role, Status } from '@prisma/client';
+import {
+  IntegrationNameEnum,
+  LLMModelsEnum,
+  RoleEnum,
+  WorkspaceStatusEnum,
+} from '@tegonhq/types';
 import { IsOptional, IsString } from 'class-validator';
 
 import {
@@ -45,15 +50,15 @@ export class UserBody {
 
 export interface UserWorkspaceOtherData {
   teamIds?: string[];
-  status?: Status;
+  status?: WorkspaceStatusEnum;
   joinedAt?: string;
-  role?: Role;
+  role?: RoleEnum;
 }
 
 export interface InviteUsersBody {
   emailIds: string;
   teamIds: string[];
-  role: Role;
+  role: RoleEnum;
 }
 
 export interface InviteActionBody {
@@ -72,7 +77,7 @@ export const labelSeedData = [
 
 export const integrationDefinitionSeedData = [
   {
-    name: IntegrationName.Github,
+    name: IntegrationNameEnum.Github,
     icon: 'github.svg',
     spec: {
       other_data: { app_id: '804579' },
@@ -89,7 +94,7 @@ export const integrationDefinitionSeedData = [
     scopes: 'repo',
   },
   {
-    name: IntegrationName.GithubPersonal,
+    name: IntegrationNameEnum.GithubPersonal,
     icon: 'github.svg',
     spec: {
       auth_specification: {
@@ -104,7 +109,7 @@ export const integrationDefinitionSeedData = [
     scopes: '',
   },
   {
-    name: IntegrationName.Slack,
+    name: IntegrationNameEnum.Slack,
     icon: 'slack.svg',
     spec: {
       auth_specification: {
@@ -120,7 +125,7 @@ export const integrationDefinitionSeedData = [
       'app_mentions:read,chat:write,chat:write.customize,channels:history,groups:history,mpim:history,im:history,commands,links:read,links:write,users:read,users:read.email,channels:read,groups:read,im:read,mpim:read,reactions:read,reactions:write,files:read,files:write,channels:join,groups:write.invites,channels:write.invites,team:read',
   },
   {
-    name: IntegrationName.SlackPersonal,
+    name: IntegrationNameEnum.SlackPersonal,
     icon: 'slack.svg',
     spec: {
       auth_specification: {
@@ -135,7 +140,7 @@ export const integrationDefinitionSeedData = [
     scopes: 'chat:write,im:history,im:write,reactions:read',
   },
   {
-    name: IntegrationName.Sentry,
+    name: IntegrationNameEnum.Sentry,
     icon: 'sentry.svg',
     spec: {
       auth_specification: {
@@ -158,36 +163,36 @@ export const promptsSeedData = [
   {
     name: 'IssueTitle',
     prompt: issueTitlePrompt,
-    model: LLMModels.GPT35TURBO,
+    model: LLMModelsEnum.GPT35TURBO,
   },
   {
     name: 'IssueLabels',
     prompt: issueLabelPrompt,
-    model: LLMModels.GPT35TURBO,
+    model: LLMModelsEnum.GPT35TURBO,
   },
   {
     name: 'IssueSummary',
     prompt: issueSummarizePrompt,
-    model: LLMModels.GPT35TURBO,
+    model: LLMModelsEnum.GPT35TURBO,
   },
   {
     name: 'Filter',
     prompt: filterPrompt,
-    model: LLMModels.GPT4TURBO,
+    model: LLMModelsEnum.GPT4TURBO,
   },
   {
     name: 'SubIssues',
     prompt: subIssuesPrompt,
-    model: LLMModels.GPT4TURBO,
+    model: LLMModelsEnum.GPT4TURBO,
   },
   {
     name: 'ViewNameDescription',
     prompt: viewNameDescriptionPrompt,
-    model: LLMModels.GPT35TURBO,
+    model: LLMModelsEnum.GPT35TURBO,
   },
   {
     name: 'IssueDescription',
     prompt: issueDescriptionPrompt,
-    model: LLMModels.GPT4O,
+    model: LLMModelsEnum.GPT4O,
   },
 ];

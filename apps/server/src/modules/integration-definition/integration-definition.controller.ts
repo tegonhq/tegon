@@ -1,15 +1,12 @@
-import { IntegrationDefinition } from '@@generated/integrationDefinition/entities';
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-
-import { AuthGuard } from 'modules/auth/auth.guard';
+import { IntegrationDefinition } from '@tegonhq/types';
 
 import {
-  IntegrationDefinitionCreateBody,
   IntegrationDefinitionRequestIdBody,
   IntegrationDefinitionUpdateBody,
 } from './integration-definition.interface';
@@ -52,25 +49,10 @@ export class IntegrationDefinitionController {
     integrationDefinitionRequestIdBody: IntegrationDefinitionRequestIdBody,
     @Body()
     integrationDefinitionUpdateBody: IntegrationDefinitionUpdateBody,
-  ) {
+  ): Promise<IntegrationDefinition> {
     return await this.integrationDefinitionService.updateIntegrationDefinition(
       integrationDefinitionUpdateBody,
       integrationDefinitionRequestIdBody.integrationDefinitionId,
-    );
-  }
-
-  /**
-   * Create a integration definition.
-   * Used for custom integrations
-   */
-  @Post()
-  @UseGuards(new AuthGuard())
-  async createIntegrationDefinition(
-    @Body()
-    integrationDefinitionCreateBody: IntegrationDefinitionCreateBody,
-  ): Promise<IntegrationDefinition> {
-    return await this.integrationDefinitionService.createIntegrationDefinition(
-      integrationDefinitionCreateBody,
     );
   }
 
@@ -81,7 +63,7 @@ export class IntegrationDefinitionController {
   async getIntegrationDefinitionWithId(
     @Param()
     integrationDefinitionRequestIdBody: IntegrationDefinitionRequestIdBody,
-  ) {
+  ): Promise<IntegrationDefinition> {
     return await this.integrationDefinitionService.getIntegrationDefinitionWithId(
       integrationDefinitionRequestIdBody,
     );

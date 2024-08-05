@@ -1,4 +1,4 @@
-import { IssueRelationEnum } from '@tegonhq/types';
+import { IssueRelationEnum } from 'common/types';
 import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,

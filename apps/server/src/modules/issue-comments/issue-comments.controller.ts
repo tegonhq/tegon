@@ -6,9 +6,10 @@ import {
   Post,
   Query,
   UseGuards,
+  Get,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { IssueComment } from '@prisma/client';
+import { IssueComment } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -25,11 +26,28 @@ import IssueCommentsService from './issue-comments.service';
 
 @Controller({
   version: '1',
-  path: 'issue-comments',
+  path: 'issue_comments',
 })
 @ApiTags('issue-comments')
 export class IssueCommentsController {
   constructor(private issueCommentsService: IssueCommentsService) {}
+
+  @Get('linked_comment')
+  @UseGuards(new AuthGuard())
+  async getLinkedComment(@Query('sourceId') sourceId: string) {
+    return await this.issueCommentsService.getLinkedCommentBySource(sourceId);
+  }
+
+  @Post('linked_comment')
+  @UseGuards(new AuthGuard())
+  async createLinkedComment(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    @Body() createLinkedCommentInput: any,
+  ) {
+    return await this.issueCommentsService.createLinkedComment(
+      createLinkedCommentInput,
+    );
+  }
 
   @Post()
   @UseGuards(new AuthGuard())

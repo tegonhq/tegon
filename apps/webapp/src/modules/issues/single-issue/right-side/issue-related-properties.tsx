@@ -1,5 +1,5 @@
-import { type IssueType } from '@tegonhq/types';
-import { IssueRelationEnum, type IssueRelationType } from '@tegonhq/types';
+import { type IssueType } from 'common/types';
+import { IssueRelationEnum, type IssueRelationType } from 'common/types';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 

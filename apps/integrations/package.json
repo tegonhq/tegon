@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "@tegonhq/eslint-config": "workspace:*",
-    "@tegonhq/typescript-config": "workspace:*"
+    "@tegonhq/typescript-config": "workspace:*",
+    "@types/node": "^22.1.0"
   }
 }

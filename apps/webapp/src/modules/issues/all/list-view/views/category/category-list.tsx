@@ -1,4 +1,4 @@
-import type { WorkflowType } from '@tegonhq/types';
+import type { WorkflowType } from 'common/types';
 
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 

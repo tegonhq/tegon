@@ -1,5 +1,5 @@
-import type { User } from '@tegonhq/types';
-import type { UsersOnWorkspaceType } from '@tegonhq/types';
+import type { User } from 'common/types';
+import type { UsersOnWorkspaceType } from 'common/types';
 
 import { useGetUsersQuery } from '@tegonhq/services/users';
 import * as React from 'react';

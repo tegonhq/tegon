@@ -8,18 +8,6 @@ generator client {
   // previewFeatures = []
 }
 
-// TODO (harshith): Need to fix enum array in swagger
-generator nestjsDto {
-  provider                        = "prisma-generator-nestjs-dto"
-  output                          = "../src/@@generated"
-  outputToNestJsResourceStructure = "true"
-  exportRelationModifierClasses   = "true"
-  reExport                        = "true"
-  entityPrefix                    = ""
-  entitySuffix                    = ""
-  fileNamingStyle                 = "camel"
-}
-
 model User {
   id String @id @unique
 
@@ -373,6 +361,7 @@ model IntegrationDefinition {
   workspaceId  String
 
   IntegrationAccount IntegrationAccount[]
+
   @@unique([workspaceId, name])
 }
 
@@ -536,7 +525,7 @@ model Prompt {
   deleted   DateTime?
 
   name        String
-  prompt      String  
+  prompt      String
   model       LLMModels @default(GPT35TURBO)
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   workspaceId String

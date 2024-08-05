@@ -7,6 +7,7 @@
     "module": "commonjs",
     "target": "ES2022",
     "strictBindCallApply": false,
+    "incremental": true,
     "outDir": "./dist"
   }
 }

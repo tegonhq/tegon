@@ -1,12 +1,10 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { IntegrationName } from '@prisma/client';
-import { IssueWithRelations } from '@tegonhq/types';
+import { Issue, IntegrationName, AttachmentResponse } from '@tegonhq/types';
 import { CronJob } from 'cron';
 import { PrismaService } from 'nestjs-prisma';
 
 import { convertHtmlToTiptapJson } from 'common/utils/tiptap.utils';
 
-import { AttachmentResponse } from 'modules/attachments/attachments.interface';
 import { AttachmentService } from 'modules/attachments/attachments.service';
 import {
   CreateIssueInput,
@@ -74,7 +72,7 @@ export default class GmailService implements OnModuleInit {
   async handleMessage(
     messageId: string,
     headers: GmailHeaders,
-  ): Promise<IssueWithRelations | undefined> {
+  ): Promise<Issue | undefined> {
     this.logger.log(`Processing message with ID: ${messageId}`);
 
     // Fetch the message data from the Gmail API

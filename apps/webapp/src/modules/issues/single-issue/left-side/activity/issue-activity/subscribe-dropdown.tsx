@@ -1,4 +1,4 @@
-import type { User } from '@tegonhq/types';
+import type { User } from 'common/types';
 
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { observer } from 'mobx-react-lite';

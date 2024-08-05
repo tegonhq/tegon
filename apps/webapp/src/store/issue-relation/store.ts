@@ -1,4 +1,4 @@
-import { IssueRelationEnum, type IssueRelationType } from '@tegonhq/types';
+import { IssueRelationEnum, type IssueRelationType } from 'common/types';
 import {
   type IAnyStateTreeNode,
   type Instance,

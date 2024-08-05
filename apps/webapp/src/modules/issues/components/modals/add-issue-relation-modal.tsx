@@ -1,4 +1,4 @@
-import type { IssueRelationEnum } from '@tegonhq/types';
+import type { IssueRelationEnum } from 'common/types';
 
 import {
   CommandDialog,

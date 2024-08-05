@@ -1,5 +1,5 @@
-import type { IssueType } from '@tegonhq/types';
-import type { TeamType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
+import type { TeamType } from 'common/types';
 
 import { useMoveIssueToTeamMutation } from '@tegonhq/services/issues';
 import {

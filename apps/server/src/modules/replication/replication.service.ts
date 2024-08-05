@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ModelName } from '@prisma/client';
+import { ModelName, ModelNameEnum } from '@tegonhq/types';
+import { configure, tasks } from '@trigger.dev/sdk/v3';
 import { Client } from 'pg';
 import {
   LogicalReplicationService,
@@ -14,6 +15,7 @@ import {
   logChangeType,
   logType,
   tablesToSendMessagesFor,
+  tablesToTrigger,
 } from './replication.interface';
 
 const REPLICATION_SLOT_NAME = 'tegon_replication_slot';
@@ -35,6 +37,9 @@ export default class ReplicationService {
       database: configService.get('POSTGRES_DB'),
       password: configService.get('POSTGRES_PASSWORD'),
       port: configService.get('DB_PORT'),
+    });
+    configure({
+      secretKey: process.env['TRIGGER_SECRET_KEY'],
     });
   }
 
@@ -113,38 +118,44 @@ export default class ReplicationService {
       // log contains change data in JSON format
       if (log.change) {
         log.change.forEach(async (change: logChangeType) => {
-          if (
-            change.schema === dbSchema &&
-            change.kind !== 'delete' &&
-            tablesToSendMessagesFor.has(change.table as ModelName)
-          ) {
-            const { columnvalues, columnnames } = change;
-            const deletedIndex = columnnames.indexOf('deleted');
-            let isDeleted = false;
-            if (columnvalues[deletedIndex]) {
-              isDeleted = true;
-            }
-            let index = 0;
-            if (columnnames[index] !== 'id') {
-              index = columnnames.indexOf('id');
-            }
+          if (change.schema !== dbSchema || change.kind === 'delete') {
+            return;
+          }
+
+          const { columnvalues, columnnames } = change;
+          const modelName = change.table as ModelNameEnum;
+          const deletedIndex = columnnames?.indexOf('deleted');
+          const isDeleted = deletedIndex !== -1 && !!columnvalues[deletedIndex];
+          const idIndex = columnnames.indexOf('id');
+          const modelId = columnvalues[idIndex];
+
+          if (tablesToSendMessagesFor.has(modelName)) {
             const syncActionData =
               await this.syncActionsService.upsertSyncAction(
                 _lsn,
                 change.kind,
-                change.table as ModelName,
-                columnvalues[index],
+                modelName,
+                modelId,
                 isDeleted,
               );
 
             const recipientId =
-              change.table === ModelName.Notification
+              modelName === ModelName.Notification
                 ? syncActionData.data.userId
                 : syncActionData.workspaceId;
 
             this.syncGateway.wss
               .to(recipientId)
               .emit('message', JSON.stringify(syncActionData));
+          }
+
+          if (tablesToTrigger.has(modelName)) {
+            tasks.trigger(`${modelName}-trigger`, {
+              action: change.kind,
+              modelName,
+              modelId,
+              isDeleted,
+            });
           }
         });
       } else {
