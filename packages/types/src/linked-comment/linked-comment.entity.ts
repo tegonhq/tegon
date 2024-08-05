@@ -1,5 +1,5 @@
-import { Prisma } from '@prisma/client';
-import { IssueComment } from '../../issue-comment/issueComment.entity';
+import { JsonValue } from '../common';
+import { IssueComment } from '../issue-comment';
 
 export class LinkedComment {
   id: string;
@@ -8,8 +8,8 @@ export class LinkedComment {
   deleted: Date | null;
   url: string;
   sourceId: string;
-  source: Prisma.JsonValue | null;
-  sourceData: Prisma.JsonValue | null;
+  source: JsonValue | null;
+  sourceData: JsonValue | null;
   createdById: string | null;
   comment?: IssueComment;
   commentId: string;

@@ -1,9 +1,9 @@
 import { JsonValue } from '../common';
 import { IssueComment } from '../issue-comment';
-import { IssueHistory } from '../issueHistory';
-import { IssueRelation } from '../issueRelation';
-import { IssueSuggestion } from '../issueSuggestion';
-import { LinkedIssue } from '../linkedIssue';
+import { IssueHistory } from '../issue-history';
+import { IssueRelation } from '../issue-relation';
+import { IssueSuggestion } from '../issue-suggestion';
+import { LinkedIssue } from '../linked-issue';
 import { Team } from '../team';
 import { User } from '../user';
 

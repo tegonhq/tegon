@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@tegonhq/eslint-config": "workspace:*",
-    "common/typescript-config": "workspace:*",
+    "@tegonhq/typescript-config": "workspace:*",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/lodash.isequal": "^4.5.8",
     "@types/node": "^20.11.5",
