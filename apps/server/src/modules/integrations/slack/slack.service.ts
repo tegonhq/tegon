@@ -4,11 +4,11 @@ import {
   IssueComment,
   IntegrationAccount,
   Issue,
+  AttachmentResponse,
 } from '@tegonhq/types';
 import {} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-import { AttachmentResponse } from 'modules/attachments/attachments.interface';
 import { AttachmentService } from 'modules/attachments/attachments.service';
 import { Settings } from 'modules/integration-account/integration-account.interface';
 import {

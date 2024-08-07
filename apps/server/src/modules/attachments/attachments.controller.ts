@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -20,7 +21,8 @@ import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import {
   AttachmentRequestParams,
-  WorkspaceRequestParams,
+  AttachmentQueryParams,
+  AttachmentBody,
 } from './attachments.interface';
 import { AttachmentService } from './attachments.service';
 
@@ -37,15 +39,21 @@ export class AttachmentController {
   @UseGuards(new AuthGuard())
   async uploadFiles(
     @SessionDecorator() session: SessionContainer,
-    @Query() workspaceRequestParams: WorkspaceRequestParams,
+    @Query() attachmentQueryParams: AttachmentQueryParams,
     @UploadedFiles() files: Express.Multer.File[],
+    @Body() attachmentBody: AttachmentBody,
   ) {
     const userId = session.getUserId();
 
-    return this.attachementService.uploadAttachment(
+    const sourceMetadata = attachmentBody.sourceMetadata
+      ? JSON.parse(attachmentBody.sourceMetadata)
+      : null;
+
+    return await this.attachementService.uploadAttachment(
       files,
       userId,
-      workspaceRequestParams.workspaceId,
+      attachmentQueryParams.workspaceId,
+      sourceMetadata,
     );
   }
 

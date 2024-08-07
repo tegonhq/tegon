@@ -33,3 +33,8 @@ export const tablesToSendMessagesFor = new Map([
   [ModelNameEnum.View, true],
   [ModelNameEnum.IssueSuggestion, true],
 ]);
+
+export const tablesToTrigger = new Map([
+  [ModelNameEnum.Issue, true],
+  [ModelNameEnum.IssueComment, true],
+]);

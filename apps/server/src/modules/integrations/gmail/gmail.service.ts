@@ -1,11 +1,10 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { Issue, IntegrationName } from '@tegonhq/types';
+import { Issue, IntegrationName, AttachmentResponse } from '@tegonhq/types';
 import { CronJob } from 'cron';
 import { PrismaService } from 'nestjs-prisma';
 
 import { convertHtmlToTiptapJson } from 'common/utils/tiptap.utils';
 
-import { AttachmentResponse } from 'modules/attachments/attachments.interface';
 import { AttachmentService } from 'modules/attachments/attachments.service';
 import {
   CreateIssueInput,

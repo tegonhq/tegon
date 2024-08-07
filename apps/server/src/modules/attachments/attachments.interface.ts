@@ -1,6 +1,6 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
-export class WorkspaceRequestParams {
+export class AttachmentQueryParams {
   @IsString()
   workspaceId: string;
 }
@@ -13,13 +13,6 @@ export class AttachmentRequestParams {
   attachmentId: string;
 }
 
-export interface AttachmentResponse {
-  publicURL: string;
-  fileType: string;
-  originalName: string;
-  size: number;
-}
-
 export interface ExternalFile {
   fieldname: string;
   originalname: string;
@@ -30,4 +23,10 @@ export interface ExternalFile {
   filename: string;
   path: string;
   url: string;
+}
+
+export class AttachmentBody {
+  @IsOptional()
+  @IsString()
+  sourceMetadata: string;
 }

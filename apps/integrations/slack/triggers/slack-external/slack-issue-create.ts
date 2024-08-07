@@ -1,17 +1,17 @@
 import { logger, task } from "@trigger.dev/sdk/v3";
-import { SlackCreateIssuePayload } from "./slack-types";
-import { postRequest } from "../../integration.utils";
+import { SlackCreateIssuePayload } from "../slack-types";
+import { postRequest } from "../../../integration.utils";
 import {
   getChannelNameFromIntegrationAccount,
   getIssueMessageModal,
   sendSlackMessage,
-} from "./slack-utils";
+} from "../slack-utils";
 import { IntegrationName } from "@tegonhq/types";
 
 export const slackIssueCreate = task({
   id: "slack-issue-create",
   run: async (payload: SlackCreateIssuePayload) => {
-    const { integrationAccount, sessionData, issueData, accessToken } = payload;
+    const { integrationAccount, sessionData, issueData, accesstoken } = payload;
 
     // Extract issueInput, sourceMetadata, and userId from issueData
     const { issueInput, sourceMetadata } = issueData;
@@ -21,8 +21,8 @@ export const slackIssueCreate = task({
     const createdIssue = (
       await postRequest(
         `${process.env.BACKEND_HOST}/v1/issues?teamId=${sessionData.teamId}`,
-        { headers: { Authorization: accessToken } },
-        { issueInput }
+        { headers: { Authorization: accesstoken } },
+        { ...issueInput }
       )
     ).data;
 
@@ -44,6 +44,7 @@ export const slackIssueCreate = task({
       integrationAccount,
       messagePayload
     );
+
     if (messageResponse.ok) {
       logger.info("Slack message sent successfully", { messageResponse });
 
@@ -62,14 +63,15 @@ export const slackIssueCreate = task({
         idTs: messageTs,
         channelType,
       };
-      const issueComment = (
-        await postRequest(
-          `${process.env.BACKEND_HOST}/v1/issues?teamId=${sessionData.teamId}`,
-          { headers: { Authorization: accessToken } },
-          { body: commentBody, issueId: createdIssue.id, commentSourceMetadata }
-        )
-      ).data;
 
+      const issueComment =
+        (
+          await postRequest(
+            `${process.env.BACKEND_HOST}/v1/issue_comments?issueId=${createdIssue.id}`,
+            { headers: { Authorization: accesstoken } },
+            { body: commentBody, sourceMetadata: commentSourceMetadata }
+          )
+        ).data || null;
       logger.info("Issue comment created successfully", { issueComment });
 
       issueInput.linkIssueData.source.syncedCommentId = issueComment.id;
@@ -77,7 +79,7 @@ export const slackIssueCreate = task({
 
       await postRequest(
         `${process.env.BACKEND_HOST}/v1/linked_issues/source/${issueInput.linkIssueData.sourceId}`,
-        { headers: { Authorization: accessToken } },
+        { headers: { Authorization: accesstoken } },
         {
           sourceData: issueInput.linkIssueData.sourceData,
           source: issueInput.linkIssueData.source,

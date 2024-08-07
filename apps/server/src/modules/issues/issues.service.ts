@@ -454,7 +454,7 @@ export default class IssuesService {
       where: { id: issueId },
       data: {
         subscriberIds: {
-          push: subscriberIds,
+          set: subscriberIds,
         },
       },
     });

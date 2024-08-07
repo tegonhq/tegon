@@ -22,19 +22,3 @@ export const config: TriggerConfig = {
   additionalFiles: ['./prisma/schema.prisma'],
   additionalPackages: ['prisma@5.17.0'],
 };
-
-// export const integrationConfig: TriggerConfig = {
-//   project: 'proj_integration',
-//   logLevel: 'debug',
-//   retries: {
-//     enabledInDev: true,
-//     default: {
-//       maxAttempts: 3,
-//       minTimeoutInMs: 1000,
-//       maxTimeoutInMs: 10000,
-//       factor: 2,
-//       randomize: true,
-//     },
-//   },
-//   triggerDirectories: ['../../integrations'],
-// };

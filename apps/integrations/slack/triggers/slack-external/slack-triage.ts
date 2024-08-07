@@ -1,24 +1,25 @@
 import {
   AttachmentResponse,
   IntegrationName,
-  LinkedSlackMessageType,
   Settings,
   WebhookPayload,
 } from "@tegonhq/types";
 import { logger, runs, task, tasks } from "@trigger.dev/sdk/v3";
-import { SlashCommandSessionRecord } from "./slack-types";
+import {
+  SlackCreateIssuePayload,
+  SlashCommandSessionRecord,
+} from "../slack-types";
 import {
   convertSlackMessageToTiptapJson,
   getExternalSlackUser,
   getSlackMessage,
   getStateId,
   sendEphemeralMessage,
-} from "./slack-utils";
-import { getRequest } from "../../integration.utils";
+} from "../slack-utils";
+import { getRequest } from "../../../integration.utils";
 
 export const slackTraige = task({
   id: "slack-triage",
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   run: async (payload: WebhookPayload) => {
     const { eventBody, integrationAccount, userId, accesstoken } = payload;
     logger.log("check this log");
@@ -54,6 +55,7 @@ export const slackTraige = task({
     }
 
     const teamId = channelMapping.teams[0].teamId;
+    console.log(teamId);
 
     // Create session data object
     const sessionData: SlashCommandSessionRecord = {
@@ -77,17 +79,17 @@ export const slackTraige = task({
     const sourceId = `${channelId}_${mainTs}`;
     let linkedIssue, workflowStates;
     // Check if the thread is already linked to an existing issue
-    Promise.all([
+    await Promise.all([
       getRequest(
-        `${process.env.BACKEND_HOST}/v1/linked_issue/source?sourceId=${sourceId}`,
+        `${process.env.BACKEND_HOST}/v1/linked_issues/source?sourceId=${sourceId}`,
         { headers: { Authorization: accesstoken } }
       ),
-      getRequest(`${process.env.BACKEND_HOST}/v1/workflows?teamId=${teamId}`, {
+      getRequest(`${process.env.BACKEND_HOST}/v1/${teamId}/workflows`, {
         headers: { Authorization: accesstoken },
       }),
     ]).then(([linkedIssueResponse, workflowStateResponse]) => {
-      linkedIssue = linkedIssueResponse.data;
-      workflowStates = workflowStateResponse.data;
+      linkedIssue = linkedIssueResponse.data || null;
+      workflowStates = workflowStateResponse.data || null;
     });
 
     // If the thread is already linked to an issue, send an ephemeral message and return
@@ -129,7 +131,7 @@ export const slackTraige = task({
     const sourceMetadata = {
       id: integrationAccount.id,
       type: IntegrationName.Slack,
-      subType: LinkedSlackMessageType.Thread,
+      subType: "Thread",
       channelId: sessionData.channelId,
       userDisplayName: slackUsername,
     };
@@ -148,7 +150,8 @@ export const slackTraige = task({
       sourceId,
       source: {
         type: IntegrationName.Slack,
-        subType: LinkedSlackMessageType.Thread,
+        subType: "Thread",
+        integrationAccountId: integrationAccount.id,
       },
       sourceData: {
         channelId: sessionData.channelId,
@@ -164,6 +167,7 @@ export const slackTraige = task({
       stateId,
       isBidirectional: true,
       subscriberIds: [...(userId ? [userId] : [])],
+      teamId,
       sourceMetadata,
       linkIssueData,
     };
@@ -172,8 +176,8 @@ export const slackTraige = task({
       integrationAccount,
       accesstoken,
       sessionData,
-      issueInput,
-    });
+      issueData: { issueInput, sourceMetadata, userId },
+    } as SlackCreateIssuePayload);
 
     const run = await runs.poll(handle.id);
     return run.output;

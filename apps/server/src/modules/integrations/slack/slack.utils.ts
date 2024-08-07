@@ -6,12 +6,12 @@ import {
   Issue,
   IntegrationAccount,
   IssueComment,
+  AttachmentResponse,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { TiptapMarks, TiptapNode } from 'common/common.interface';
 
-import { AttachmentResponse } from 'modules/attachments/attachments.interface';
 import {
   ChannelTeamMapping,
   Config,
