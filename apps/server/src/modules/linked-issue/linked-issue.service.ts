@@ -4,27 +4,26 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { LinkedIssue } from '@tegonhq/types';
+import {
+  CreateLinkIssueInput,
+  IntegrationInternalInput,
+  InternalActionTypeEnum,
+  LinkedIssue,
+  LinkIssueInput,
+} from '@tegonhq/types';
+import { runs, tasks } from '@trigger.dev/sdk/v3';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
   ApiResponse,
   IssueRequestParams,
-  TeamRequestParams,
 } from 'modules/issues/issues.interface';
 
 import {
-  CreateLinkIssueInput,
-  LinkIssueInput,
   LinkedIssueIdParams,
   UpdateLinkedIssueData,
 } from './linked-issue.interface';
-import {
-  getLinkDetails,
-  getLinkedIssueDataWithUrl,
-  isValidLinkUrl,
-  sendFirstComment,
-} from './linked-issue.utils';
+import { getLinkDetails } from './linked-issue.utils';
 
 @Injectable()
 export default class LinkedIssueService {
@@ -33,50 +32,80 @@ export default class LinkedIssueService {
   constructor(private prisma: PrismaService) {}
 
   async createLinkIssue(
-    teamParams: TeamRequestParams,
     linkData: LinkIssueInput,
     issueParams: IssueRequestParams,
     userId: string,
   ): Promise<ApiResponse | LinkedIssue> {
-    if (!isValidLinkUrl(linkData)) {
-      throw new BadRequestException("Provided url doesn't exist");
-    }
-
-    let linkedIssue = await this.prisma.linkedIssue.findFirst({
+    const linkedIssue = await this.prisma.linkedIssue.findFirst({
       where: { url: linkData.url, deleted: null },
       include: { issue: { include: { team: true } } },
     });
     if (linkedIssue) {
+      this.logger.debug(
+        `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
+      );
       throw new BadRequestException(
         `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
       );
     }
     try {
-      const { integrationAccount, linkInput, linkDataType } =
-        await getLinkedIssueDataWithUrl(
-          this.prisma,
-          linkData,
-          teamParams.teamId,
-          issueParams.issueId,
+      if (linkData.type === 'ExternalLink') {
+        return this.prisma.linkedIssue.create({
+          data: {
+            url: linkData.url,
+            issueId: issueParams.issueId,
+            createdById: userId,
+            source: { type: 'ExternalLink' },
+          },
+        });
+      }
+
+      const handler = await tasks.trigger(`${linkData.type.toLowerCase()}`, {
+        actionType: InternalActionTypeEnum.LinkIssue,
+        accesstoken: '',
+        payload: {
+          url: linkData.url,
           userId,
-        );
+          issueId: issueParams.issueId,
+          type: linkData.type,
+          subType: linkData.subType,
+        },
+      } as IntegrationInternalInput);
 
-      linkedIssue = await this.createLinkIssueAPI(linkInput);
+      const runResponse = await runs.poll(handler.id);
 
-      await this.prisma.issue.update({
-        where: { id: issueParams.issueId },
-        data: { isBidirectional: true },
-      });
+      if (runResponse.status === 'COMPLETED') {
+        return JSON.parse(runResponse.output) as LinkedIssue;
+      } else if (runResponse.status === 'FAILED') {
+        const error = runResponse.attempts[0].error;
+        throw new BadRequestException(error.message);
+      }
 
-      //   send a first comment function
-      await sendFirstComment(
-        this.prisma,
-        this.logger,
-        this,
-        integrationAccount,
-        linkedIssue,
-        linkDataType,
-      );
+      // const { integrationAccount, linkInput, linkDataType } =
+      //   await getLinkedIssueDataWithUrl(
+      //     this.prisma,
+      //     linkData,
+      //     teamParams.teamId,
+      //     issueParams.issueId,
+      //     userId,
+      //   );
+
+      // linkedIssue = await this.createLinkIssueAPI(linkInput);
+
+      // await this.prisma.issue.update({
+      //   where: { id: issueParams.issueId },
+      //   data: { isBidirectional: true },
+      // });
+
+      // //   send a first comment function
+      // await sendFirstComment(
+      //   this.prisma,
+      //   this.logger,
+      //   this,
+      //   integrationAccount,
+      //   linkedIssue,
+      //   linkDataType,
+      // );
       return linkedIssue;
     } catch (error) {
       throw new InternalServerErrorException('Failed to create linked issue');
@@ -89,7 +118,7 @@ export default class LinkedIssueService {
       update: { deleted: null, ...linkIssueData },
       create: linkIssueData,
       include: {
-        issue: { include: { team: { include: { workspace: true } } } },
+        issue: { include: { team: true } },
       },
     });
   }

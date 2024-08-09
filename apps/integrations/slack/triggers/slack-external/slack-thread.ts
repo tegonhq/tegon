@@ -11,7 +11,7 @@ import {
   getExternalSlackUser,
 } from "../slack-utils";
 
-export const salckThread = task({
+export const slackThread = task({
   id: "slack-thread",
   run: async (payload: WebhookPayload) => {
     const { eventBody, integrationAccount, accesstoken } = payload;

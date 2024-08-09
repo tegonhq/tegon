@@ -1,5 +1,6 @@
 import {
   AttachmentResponse,
+  CreateLinkIssueInput,
   EventBody,
   IntegrationAccount,
   Issue,
@@ -14,6 +15,7 @@ import {
   SlashCommandSessionRecord,
 } from "./slack-types";
 import { getRequest, postRequest } from "../../integration.utils";
+import { logger } from "@trigger.dev/sdk/v3";
 
 export function getSlackHeaders(integrationAccount: IntegrationAccount) {
   const integrationConfig =
@@ -114,6 +116,82 @@ export function getChannelNameFromIntegrationAccount(
     (mapping: any) => mapping.channelId === channelId
   );
   return channelMapping ? channelMapping.channelName : "";
+}
+
+export async function createLinkIssueComment(
+  messageResponse: EventBody,
+  integrationAccount: IntegrationAccount,
+  linkIssueInput: CreateLinkIssueInput,
+  channelId: string,
+  issueId: string,
+  accesstoken: string,
+  // TODO(Manoj): Fix this type
+  sourceMetadata: any
+) {
+  // Extract relevant data from the Slack message event
+  const {
+    ts: messageTs,
+    thread_ts: parentTs,
+    channel_type: channelType,
+  } = messageResponse.message;
+
+  // Generate the comment body with the Slack channel name
+  const commentBody = `Slack thread in #${getChannelNameFromIntegrationAccount(integrationAccount, channelId)}`;
+  const commentSourceMetadata = {
+    ...sourceMetadata,
+    parentTs,
+    idTs: messageTs,
+    channelType,
+  };
+
+  const issueComment =
+    (
+      await postRequest(
+        `${process.env.BACKEND_HOST}/v1/issue_comments?issueId=${issueId}`,
+        { headers: { Authorization: accesstoken } },
+        { body: commentBody, sourceMetadata: commentSourceMetadata }
+      )
+    ).data || null;
+  logger.info("Issue comment created successfully", { issueComment });
+
+  linkIssueInput.source.syncedCommentId = issueComment.id;
+  linkIssueInput.sourceData.messageTs = messageTs;
+
+  await postRequest(
+    `${process.env.BACKEND_HOST}/v1/linked_issues/source/${linkIssueInput.sourceId}`,
+    { headers: { Authorization: accesstoken } },
+    {
+      sourceData: linkIssueInput.sourceData,
+      source: linkIssueInput.source,
+    }
+  );
+
+  logger.info("Linked issue updated successfully");
+}
+
+export async function addBotToChannel(
+  integrationAccount: IntegrationAccount,
+  channelId: string
+) {
+  const botResponse = await postRequest(
+    "https://slack.com/api/conversations.join",
+    getSlackHeaders(integrationAccount),
+    { channel: channelId }
+  );
+
+  return botResponse.data.ok;
+}
+
+export async function getSlackTeamInfo(
+  integrationAccount: IntegrationAccount,
+  slackTeamId: string
+) {
+  const response = await getRequest(
+    `https://slack.com/api/team.info?team=${slackTeamId}`,
+    await getSlackHeaders(integrationAccount)
+  );
+
+  return response.data;
 }
 
 export function convertSlackMessageToTiptapJson(

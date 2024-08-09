@@ -85,12 +85,10 @@ export class IssuesController {
   async linkIssue(
     @SessionDecorator() session: SessionContainer,
     @Param() issueParams: IssueRequestParams,
-    @Query() teamParams: TeamRequestParams,
     @Body() linkData: LinkIssueInput,
   ) {
     const userId = session.getUserId();
     return await this.linkedIssueService.createLinkIssue(
-      teamParams,
       linkData,
       issueParams,
       userId,

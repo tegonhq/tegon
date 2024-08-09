@@ -1,7 +1,7 @@
 import { IntegrationAccount } from '../integration-account';
 import { Issue } from '../issue';
 import { IssueComment } from '../issue-comment';
-import { LinkedIssue } from '../linked-issue';
+import { LinkedIssue, LinkIssueInput } from '../linked-issue';
 import { ModelNameEnum } from '../sync-action';
 import { User } from '../user';
 
@@ -18,13 +18,35 @@ export interface TwoWaySyncIssueCommentInput {
 
 export enum InternalActionTypeEnum {
   TwoWaySync = 'TwoWaySync',
+  LinkIssue = 'LinkIssue',
+  IntegrationSettings = 'IntegrationSettings',
+  IntegrationDelete = 'IntegrationDelete',
 }
 type ModelPayload = TwoWaySyncInput | TwoWaySyncIssueCommentInput;
 
-export interface IntegrationInternalInput {
-  integrationAccount: IntegrationAccount;
-  accesstoken: string;
+export interface TwoWaySyncPayload {
   modelName: ModelNameEnum;
-  actionType: InternalActionTypeEnum;
   modelPayload: ModelPayload;
+}
+
+export interface LinkIssuePayload extends LinkIssueInput {
+  userId: string;
+  issueId: string;
+}
+
+export interface IntegrationAccountSettingsPayload {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  settingsData?: Record<string, any>;
+}
+
+type Payload =
+  | TwoWaySyncPayload
+  | LinkIssuePayload
+  | IntegrationAccountSettingsPayload;
+
+export interface IntegrationInternalInput {
+  integrationAccount?: IntegrationAccount;
+  actionType: InternalActionTypeEnum;
+  accesstoken: string;
+  payload: Payload;
 }

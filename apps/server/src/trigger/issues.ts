@@ -37,10 +37,12 @@ export const issueTrigger = task({
           tasks.trigger(
             `${integrationAccount.integrationDefinition.name.toLowerCase()}-internal`,
             {
-              modelName: ModelNameEnum.Issue,
               integrationAccount,
               actionType: InternalActionTypeEnum.TwoWaySync,
-              modelPayload: { issue } as TwoWaySyncInput,
+              payload: {
+                modelName: ModelNameEnum.Issue,
+                modelPayload: { issue } as TwoWaySyncInput,
+              },
             } as IntegrationInternalInput,
           );
         });
@@ -60,10 +62,12 @@ export const issueTrigger = task({
         console.log(integrationAccount);
 
         tasks.trigger(`${linkedIssueSource.type.toLowerCase()}-internal`, {
-          modelName: ModelNameEnum.Issue,
           integrationAccount,
           actionType: InternalActionTypeEnum.TwoWaySync,
-          modelPayload: { issue, linkedIssue } as TwoWaySyncInput,
+          payload: {
+            modelName: ModelNameEnum.Issue,
+            modelPayload: { issue, linkedIssue } as TwoWaySyncInput,
+          },
         } as IntegrationInternalInput);
       });
     }

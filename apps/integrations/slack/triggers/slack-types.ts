@@ -44,4 +44,28 @@ export interface slackIssueData {
   userId: string | null;
 }
 
+export const slackLinkRegex =
+  /^https:\/\/(\w+)\.slack\.com\/archives\/([A-Z0-9]+)\/p(\d{10})(\d{6})(?:\?thread_ts=(\d{10}\.\d{6}))?/;
+
 export const twoWaySyncModels = new Map([[ModelNameEnum.IssueComment, true]]);
+
+export interface SlackChannel {
+  channelName: string;
+  channelId: string;
+  webhookUrl: string;
+  botJoined: boolean;
+}
+
+export interface SlackChannelMappings {
+  teamId: string;
+  id: string;
+}
+export interface SlackIntegrationSettings {
+  teamId: string;
+  teamName: string;
+  teamDomain: string;
+  teamUrl: string;
+  botUserId: string;
+  channels: SlackChannel[];
+  mappings: SlackChannelMappings[];
+}

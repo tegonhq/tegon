@@ -10,6 +10,7 @@ import {
   WorkflowCategory,
   IssueComment,
   Issue,
+  LinkedIssueSourceData,
 } from '@tegonhq/types';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
@@ -33,7 +34,6 @@ import {
 import { UpdateIssueInput } from 'modules/issues/issues.interface';
 import {
   LinkIssueData,
-  LinkedIssueSourceData,
   LinkedIssueSubType,
 } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';

@@ -5,6 +5,7 @@ import {
   IntegrationName,
   Issue,
   LinkedIssue,
+  LinkedIssueSource,
   WorkflowCategory,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
@@ -15,10 +16,7 @@ import {
   upsertGithubIssue,
 } from 'modules/integrations/github/github.utils';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
-import {
-  LinkedIssueSource,
-  LinkedIssueSubType,
-} from 'modules/linked-issue/linked-issue.interface';
+import { LinkedIssueSubType } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';

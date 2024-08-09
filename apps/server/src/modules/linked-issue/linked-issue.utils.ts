@@ -1,9 +1,12 @@
 import { Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import {
+  CreateLinkIssueInput,
   IntegrationAccount,
   IntegrationName,
   LinkedIssue,
+  LinkedIssueSource,
+  LinkIssueInput,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -21,9 +24,6 @@ import {
 } from 'modules/integrations/slack/slack.utils';
 
 import {
-  CreateLinkIssueInput,
-  LinkIssueInput,
-  LinkedIssueSource,
   LinkedIssueSubType,
   LinkedIssueWithRelations,
   LinkedSlackMessageType,

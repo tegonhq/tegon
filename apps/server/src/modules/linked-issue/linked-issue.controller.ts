@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { LinkedIssue } from '@tegonhq/types';
+import { CreateLinkIssueInput, LinkedIssue } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { ApiResponse } from 'modules/issues/issues.interface';
@@ -32,6 +32,12 @@ export class LinkedIssueController {
   @UseGuards(new AuthGuard())
   async getLinkedIssueBySourceId(@Query('sourceId') sourceId: string) {
     return await this.linkedIssueService.getLinkedIssueBySourceId(sourceId);
+  }
+
+  @Post()
+  @UseGuards(new AuthGuard())
+  async createLinkIssueApi(@Body() linkedIssueData: CreateLinkIssueInput) {
+    return await this.linkedIssueService.createLinkIssueAPI(linkedIssueData);
   }
 
   @Post(':linkedIssueId')

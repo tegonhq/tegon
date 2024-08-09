@@ -54,10 +54,9 @@ export class IssuesProcessor {
       userId: string;
     }>,
   ) {
-    const { teamRequestParams, linkIssue, issueParams, userId } = job.data;
+    const { linkIssue, issueParams, userId } = job.data;
     this.logger.log(`Creating link issue for the url: ${linkIssue.url}`);
     const response = await this.linkedIssueService.createLinkIssue(
-      teamRequestParams,
       linkIssue,
       issueParams,
       userId,

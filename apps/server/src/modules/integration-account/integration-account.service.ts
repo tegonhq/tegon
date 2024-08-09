@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { InputJsonValue } from '@tegonhq/types';
+import { Prisma } from '@prisma/client';
+import {
+  InputJsonValue,
+  IntegrationInternalInput,
+  InternalActionTypeEnum,
+} from '@tegonhq/types';
+import { tasks } from '@trigger.dev/sdk/v3';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -8,10 +14,6 @@ import {
   IntegrationAccountRequestIdBody,
   UpdateIntegrationAccountBody,
 } from './integration-account.interface';
-import {
-  handleAppDeletion,
-  storeIntegrationRelatedData,
-} from './integration-account.utils';
 
 @Injectable()
 export class IntegrationAccountService {
@@ -50,13 +52,14 @@ export class IntegrationAccountService {
       },
     });
 
-    await storeIntegrationRelatedData(
-      this.prisma,
-      integrationAccount,
-      integrationAccount.integrationDefinition.name,
-      userId,
-      workspaceId,
-      settings,
+    tasks.trigger(
+      `${integrationAccount.integrationDefinition.name.toLowerCase()}-internal`,
+      {
+        integrationAccount,
+        accesstoken: '',
+        payload: { settingsData: settings },
+        actionType: InternalActionTypeEnum.IntegrationSettings,
+      } as IntegrationInternalInput,
     );
 
     return integrationAccount;
@@ -92,7 +95,14 @@ export class IntegrationAccountService {
       },
     });
 
-    await handleAppDeletion(integrationAccount);
+    tasks.trigger(
+      `${integrationAccount.integrationDefinition.name.toLowerCase()}-internal`,
+      {
+        integrationAccount,
+        accesstoken: '',
+        actionType: InternalActionTypeEnum.IntegrationDelete,
+      } as IntegrationInternalInput,
+    );
 
     return integrationAccount;
   }
@@ -147,6 +157,29 @@ export class IntegrationAccountService {
     return await this.prisma.integrationAccount.findFirst({
       where: { accountId, deleted: null },
       include: { workspace: true, integrationDefinition: true },
+    });
+  }
+
+  async getIntegrationAccountBySettings(
+    path: string[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    searchArray?: Array<Record<string, any>>,
+    searchString?: string,
+  ) {
+    const settings = searchArray
+      ? { path, array_contains: searchArray }
+      : { path, equals: searchString };
+
+    console.log(settings);
+    return await this.prisma.integrationAccount.findFirst({
+      where: {
+        settings: settings as Prisma.JsonFilter,
+        isActive: true,
+      },
+      include: {
+        integrationDefinition: true,
+        workspace: true,
+      },
     });
   }
 }

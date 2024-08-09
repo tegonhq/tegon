@@ -2,6 +2,7 @@ import {
   IntegrationInternalInput,
   ModelNameEnum,
   TwoWaySyncIssueCommentInput,
+  TwoWaySyncPayload,
 } from "@tegonhq/types";
 import { AbortTaskRunError, task } from "@trigger.dev/sdk/v3";
 import { postRequest } from "../../../integration.utils";
@@ -12,8 +13,10 @@ import {
 
 export const slackIssueCommentTwoWay = task({
   id: `slack-${ModelNameEnum.IssueComment}-two-way-sync`,
-  run: async (payload: IntegrationInternalInput) => {
-    const { modelPayload, integrationAccount, accesstoken } = payload;
+  run: async (internalPayload: IntegrationInternalInput) => {
+    const { payload, integrationAccount, accesstoken } = internalPayload;
+    const { modelPayload } = payload as TwoWaySyncPayload;
+
     const { issueComment, user } = modelPayload as TwoWaySyncIssueCommentInput;
     const integrationDefinitionName =
       integrationAccount.integrationDefinition.name;

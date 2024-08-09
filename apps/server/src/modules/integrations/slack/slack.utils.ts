@@ -7,6 +7,7 @@ import {
   IntegrationAccount,
   IssueComment,
   AttachmentResponse,
+  LinkedIssueSourceData,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -20,7 +21,6 @@ import {
 import { IssueCommentAction } from 'modules/issue-comments/issue-comments.interface';
 import { UpdateIssueInput } from 'modules/issues/issues.interface';
 import {
-  LinkedIssueSourceData,
   LinkedIssueWithRelations,
   LinkedSlackMessageType,
 } from 'modules/linked-issue/linked-issue.interface';

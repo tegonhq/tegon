@@ -64,6 +64,12 @@ export interface Settings {
   [IntegrationNameEnum.Sentry]?: SentrySettings;
 }
 
+export interface GetIASettingsInput {
+  path: string;
+  searchArray?: string;
+  searchString?: string;
+}
+
 export class IntegrationAccountRequestIdBody {
   @IsString()
   integrationAccountId: string;

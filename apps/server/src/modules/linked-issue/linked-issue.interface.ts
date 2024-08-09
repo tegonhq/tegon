@@ -1,11 +1,5 @@
 import { LinkedIssue } from '@tegonhq/types';
-import {
-  IsEnum,
-  IsJSON,
-  IsObject,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsJSON, IsObject, IsOptional, IsString } from 'class-validator';
 
 import { IssueWithRelations } from 'modules/issues/issues.interface';
 
@@ -20,34 +14,6 @@ export enum LinkedIssueSubType {
 export enum LinkedSlackMessageType {
   Message = 'Message',
   Thread = 'Thread',
-}
-
-export class LinkIssueInput {
-  @IsString()
-  url: string;
-
-  @IsOptional()
-  @IsEnum(LinkedIssueSubType)
-  type?: LinkedIssueSubType;
-
-  @IsOptional()
-  @IsString()
-  title?: string;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type LinkedIssueSource = Record<string, any>;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type LinkedIssueSourceData = Record<string, any>;
-
-export interface CreateLinkIssueInput {
-  url: string;
-  issueId: string;
-  createdById: string;
-  sourceId?: string;
-  source?: LinkedIssueSource;
-  sourceData?: LinkedIssueSourceData;
 }
 
 export interface LinkedIssueWithRelations extends LinkedIssue {

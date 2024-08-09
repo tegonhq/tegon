@@ -1,5 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { IntegrationName, LinkedIssue } from '@tegonhq/types';
+import { Prisma } from '@prisma/client';
+import {
+  IntegrationName,
+  LinkedIssue,
+  LinkedIssueSource,
+  LinkedIssueSourceData,
+} from '@tegonhq/types';
 import { Issue, IntegrationAccount } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -13,11 +19,7 @@ import {
   UpdateIssueInput,
 } from 'modules/issues/issues.interface';
 import IssuesService from 'modules/issues/issues.service';
-import {
-  LinkedIssueSource,
-  LinkedIssueSourceData,
-  LinkedIssueSubType,
-} from 'modules/linked-issue/linked-issue.interface';
+import { LinkedIssueSubType } from 'modules/linked-issue/linked-issue.interface';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import NotificationsService from 'modules/notifications/notifications.service';
@@ -32,7 +34,6 @@ import {
 } from './github.utils';
 import { EventBody, EventHeaders } from '../integrations.interface';
 import { getOrCreateLabelIds, getUserId } from '../integrations.utils';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export default class GithubService {

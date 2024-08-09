@@ -19,6 +19,7 @@ import { AuthGuard } from 'modules/auth/auth.guard';
 
 import {
   CreateIntegrationAccountBody,
+  GetIASettingsInput,
   IntegrationAccountRequestIdBody,
   IntegrationAccountsRequestBody,
   UpdateIntegrationAccountBody,
@@ -64,6 +65,18 @@ export class IntegrationAccountController {
   ): Promise<IntegrationAccount> {
     return await this.integrationAccountService.getIntegrationAccountByAccountId(
       accountId,
+    );
+  }
+
+  @Get('settings')
+  @UseGuards(new AuthGuard())
+  async getIntegrationAccountBySettings(
+    @Query() settingsInput: GetIASettingsInput,
+  ): Promise<IntegrationAccount> {
+    return await this.integrationAccountService.getIntegrationAccountBySettings(
+      JSON.parse(settingsInput.path),
+      settingsInput.searchArray ? JSON.parse(settingsInput.searchArray) : null,
+      settingsInput.searchString,
     );
   }
 
