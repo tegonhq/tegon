@@ -1,31 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
-
-export class IssueCommentRequestParams {
-  @IsString()
-  issueCommentId: string;
-}
-
-export class IssueRequestParams {
-  @IsString()
-  issueId: string;
-}
-
-export class CommentInput {
-  @IsString()
-  body: string;
-
-  @IsOptional()
-  @IsString()
-  parentId?: string;
-
-  @IsOptional()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  linkCommentMetadata: any;
-
-  @IsOptional()
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  sourceMetadata: any;
-}
+import { IsString } from 'class-validator';
 
 export class ReactionInput {
   @IsString()

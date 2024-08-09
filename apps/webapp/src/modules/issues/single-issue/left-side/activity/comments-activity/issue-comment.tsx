@@ -1,4 +1,4 @@
-import { useCreateIssueCommentMutation } from '@tegonhq/services/issues';
+import { useCreateIssueCommentMutation } from 'services/issues';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Editor,

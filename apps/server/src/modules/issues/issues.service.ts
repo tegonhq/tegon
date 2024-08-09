@@ -1,6 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { Issue, WorkflowCategoryEnum } from '@tegonhq/types';
+import {
+  CreateIssueDto,
+  CreateIssueRelationDto,
+  CreateLinkedIssueDto,
+  Issue,
+  IssueRequestParamsDto,
+  TeamRequestParamsDto,
+  UpdateIssueDto,
+  WorkflowCategoryEnum,
+  WorkspaceRequestParamsDto,
+} from '@tegonhq/types';
 import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -9,22 +19,11 @@ import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
-import { IssueRelationInput } from 'modules/issue-relation/issue-relation.interface';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
-import { LinkIssueData } from 'modules/linked-issue/linked-issue.interface';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
-import {
-  CreateIssueInput,
-  IssueAction,
-  IssueRequestParams,
-  RelationInput,
-  SubscribeType,
-  TeamRequestParams,
-  UpdateIssueInput,
-  WorkspaceQueryParams,
-} from './issues.interface';
+import { SubscribeType } from './issues.interface';
 import { IssuesQueue } from './issues.queue';
 import {
   getCreateIssueInput,
@@ -59,7 +58,7 @@ export default class IssuesService {
    * @returns The created issue with its relations.
    */
   async createIssueAPI(
-    issueData: CreateIssueInput,
+    issueData: CreateIssueDto,
     userId?: string,
   ): Promise<Issue> {
     // Destructure issueData to separate parentId, subIssues, issueRelation, teamId, and other issue data
@@ -148,49 +147,6 @@ export default class IssuesService {
   }
 
   /**
-   * Updates an existing issue with the provided data and performs related operations.
-   * @param teamRequestParams The team request parameters.
-   * @param issueData The data for updating the issue.
-   * @param issueParams The parameters for identifying the issue to update.
-   * @param userId The ID of the user updating the issue (optional).
-   * @param linkIssuedata The data for linking the issue (optional).
-   * @param linkMetaData Additional metadata for linking the issue (optional).
-   * @returns The updated issue.
-   */
-  async updateIssue(
-    teamRequestParams: TeamRequestParams,
-    issueData: UpdateIssueInput,
-    issueParams: IssueRequestParams,
-    userId?: string,
-  ): Promise<Issue> {
-    this.logger.log(`Updating issue with ID: ${issueParams.issueId}`);
-
-    const { linkIssueData, sourceMetadata, ...otherIssueData } = issueData;
-    // Call the updateIssueApi method to update the issue
-    const updatedIssue = await this.updateIssueApi(
-      teamRequestParams,
-      otherIssueData,
-      issueParams,
-      userId,
-      linkIssueData,
-      sourceMetadata,
-    );
-
-    // Check if the updated issue is bidirectional
-    if (updatedIssue.isBidirectional) {
-      this.logger.log(`Adding two-way sync job for issue: ${updatedIssue.id}`);
-      // Add a two-way sync job to the issues queue for the updated issue
-      this.issuesQueue.addTwoWaySyncJob(
-        updatedIssue,
-        IssueAction.UPDATED,
-        userId,
-      );
-    }
-
-    return updatedIssue;
-  }
-
-  /**
    * Updates an issue using the API.
    * @param teamRequestParams The team request parameters.
    * @param issueData The updated issue data.
@@ -201,11 +157,11 @@ export default class IssuesService {
    * @returns The updated issue.
    */
   async updateIssueApi(
-    teamRequestParams: TeamRequestParams,
-    issueData: UpdateIssueInput,
-    issueParams: IssueRequestParams,
+    teamRequestParams: TeamRequestParamsDto,
+    issueData: UpdateIssueDto,
+    issueParams: IssueRequestParamsDto,
     userId?: string,
-    linkIssuedata?: LinkIssueData,
+    linkIssuedata?: CreateLinkedIssueDto,
     linkMetaData?: Record<string, string>,
   ) {
     // Destructure the issue data
@@ -318,8 +274,8 @@ export default class IssuesService {
    * @returns The deleted issue.
    */
   async deleteIssue(
-    teamRequestParams: TeamRequestParams,
-    issueParams: IssueRequestParams,
+    teamRequestParams: TeamRequestParamsDto,
+    issueParams: IssueRequestParamsDto,
   ): Promise<Issue> {
     this.logger.log(
       `Deleting issue with id ${issueParams.issueId} for team ${teamRequestParams.teamId}`,
@@ -369,7 +325,7 @@ export default class IssuesService {
     issueDiff: IssueHistoryData,
     userId?: string,
     linkMetaData?: Record<string, string>,
-    issueRelation?: RelationInput,
+    issueRelation?: CreateIssueRelationDto,
   ): Promise<void> {
     this.logger.log(`Upserting issue history for issue ${issue.id}`);
 
@@ -386,7 +342,7 @@ export default class IssuesService {
       this.logger.log(`Creating issue relation for issue ${issue.id}`);
 
       // Create the issue relation input object
-      const relationInput: IssueRelationInput = {
+      const relationInput: CreateIssueRelationDto = {
         issueId: issueRelation.issueId || issue.id,
         relatedIssueId: issueRelation.relatedIssueId || issue.id,
         type: issueRelation.type,
@@ -465,7 +421,9 @@ export default class IssuesService {
    * @param workspaceParams The workspace query parameters.
    * @returns A Promise that resolves to the CSV string of exported issues.
    */
-  async exportIssues(workspaceParams: WorkspaceQueryParams): Promise<string> {
+  async exportIssues(
+    workspaceParams: WorkspaceRequestParamsDto,
+  ): Promise<string> {
     // Find all issues for the given workspace, including related data
     const issues = await this.prisma.issue.findMany({
       where: { team: { workspaceId: workspaceParams.workspaceId } },

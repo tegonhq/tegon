@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { Label } from '@tegonhq/types';
+import {
+  CreateLabelDto,
+  Label,
+  LabelRequestParamsDto,
+  UpdateLabelDto,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-import {
-  CreateLabelInput,
-  UpdateLabelInput,
-  LabelRequestIdParams,
-  RequestIdParams,
-} from './labels.interface';
+import { RequestIdParams } from './labels.interface';
 
 @Injectable()
 export default class LabelsService {
   constructor(private prisma: PrismaService) {}
 
-  async createLabel(labelData: CreateLabelInput): Promise<Label> {
+  async createLabel(labelData: CreateLabelDto): Promise<Label> {
     return await this.prisma.label.upsert({
       where: {
         name_workspaceId: {
@@ -40,7 +40,7 @@ export default class LabelsService {
     });
   }
 
-  async getLabel(LabelRequestIdParams: LabelRequestIdParams): Promise<Label> {
+  async getLabel(LabelRequestIdParams: LabelRequestParamsDto): Promise<Label> {
     return await this.prisma.label.findUnique({
       where: {
         id: LabelRequestIdParams.labelId,
@@ -53,8 +53,8 @@ export default class LabelsService {
   }
 
   async updateLabel(
-    LabelRequestIdParams: LabelRequestIdParams,
-    labelData: UpdateLabelInput,
+    LabelRequestIdParams: LabelRequestParamsDto,
+    labelData: UpdateLabelDto,
   ): Promise<Label> {
     return await this.prisma.label.update({
       data: {
@@ -66,7 +66,7 @@ export default class LabelsService {
     });
   }
 
-  async deleteLabel(labelRequestIdParams: LabelRequestIdParams) {
+  async deleteLabel(labelRequestIdParams: LabelRequestParamsDto) {
     const label = await this.prisma.label.update({
       where: {
         id: labelRequestIdParams.labelId,

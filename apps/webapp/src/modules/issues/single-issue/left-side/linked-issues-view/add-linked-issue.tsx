@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateLinkedIssueMutation } from '@tegonhq/services/linked-issues';
-import { LinkedIssueSubType } from 'common/types';
+import { useCreateLinkedIssueMutation } from 'services/linked-issues';
 import { Button } from '@tegonhq/ui/components/button';
 import {
+  Dialog,
+  DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
@@ -18,6 +19,8 @@ import { Input } from '@tegonhq/ui/components/input';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { LinkedIssueSubType } from 'common/types';
+
 import { useCurrentTeam } from 'hooks/teams';
 
 export const URLSchema = z.object({
@@ -25,25 +28,27 @@ export const URLSchema = z.object({
   title: z.optional(z.string()),
 });
 
-interface AddGithubIssueProps {
+interface AddLinkedIssueProps {
   issueId: string;
   placeholder: string;
   type: LinkedIssueSubType;
   title: string;
   description?: string;
   askTitleInForm: boolean;
-  onClose: () => void;
+  setOpen: (value: boolean) => void;
+  open: boolean;
 }
 
 export function AddLinkedIssue({
   issueId,
-  onClose,
+  setOpen,
+  open,
   title,
   description,
   askTitleInForm,
   type,
   placeholder,
-}: AddGithubIssueProps) {
+}: AddLinkedIssueProps) {
   const currentTeam = useCurrentTeam();
   const form = useForm<z.infer<typeof URLSchema>>({
     resolver: zodResolver(URLSchema),
@@ -57,7 +62,7 @@ export function AddLinkedIssue({
         form.setError('url', { message: error });
       },
       onSuccess: () => {
-        onClose();
+        setOpen(false);
       },
     },
   );
@@ -73,60 +78,82 @@ export function AddLinkedIssue({
   };
 
   return (
-    <div className="p-6">
-      <DialogHeader>
-        <DialogTitle className="text-md text-foreground font-normal">
-          {title}
-        </DialogTitle>
-        {description && <DialogDescription>{description}</DialogDescription>}
-      </DialogHeader>
-
-      <div className="mt-4">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder={placeholder} {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {askTitleInForm && (
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        placeholder="Title for the above link"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(open);
+      }}
+    >
+      <DialogContent className="sm:max-w-[600px]" closeIcon={false}>
+        <div className="p-6">
+          <DialogHeader>
+            <DialogTitle className="text-md text-foreground font-normal">
+              {title}
+            </DialogTitle>
+            {description && (
+              <DialogDescription>{description}</DialogDescription>
             )}
+          </DialogHeader>
 
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" disabled={isLoading} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit" variant="secondary" isLoading={isLoading}>
-                Add
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </div>
-    </div>
+          <div className="mt-4">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
+                <FormField
+                  control={form.control}
+                  name="url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder={placeholder} {...field} />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {askTitleInForm && (
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            placeholder="Title for the above link"
+                            {...field}
+                          />
+                        </FormControl>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="ghost"
+                    disabled={isLoading}
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="secondary"
+                    isLoading={isLoading}
+                  >
+                    Add
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

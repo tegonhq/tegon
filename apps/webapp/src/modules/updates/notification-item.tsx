@@ -1,4 +1,4 @@
-import { useUpdateNotificationMutation } from '@tegonhq/services/notifications';
+import { useUpdateNotificationMutation } from 'services/notifications';
 import { NotificationTypeEnum, type NotificationType } from 'common/types';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';

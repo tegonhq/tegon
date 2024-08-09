@@ -1,10 +1,17 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { IntegrationDefinition } from '@tegonhq/types';
+import {
+  IntegrationDefinition,
+  WorkspaceRequestParamsDto,
+} from '@tegonhq/types';
+import { SessionContainer } from 'supertokens-node/recipe/session';
+
+import { AuthGuard } from 'modules/auth/auth.guard';
+import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import {
   IntegrationDefinitionRequestIdBody,
@@ -36,8 +43,34 @@ export class IntegrationDefinitionController {
    * Get all integration definitions in a workspace
    */
   @Get()
-  async getIntegrationDefinitionsByWorkspace() {
-    return await this.integrationDefinitionService.getIntegrationDefinitions();
+  async getIntegrationDefinitionsByWorkspace(
+    @Param()
+    workspaceDto: WorkspaceRequestParamsDto,
+  ) {
+    return await this.integrationDefinitionService.getIntegrationDefinitions(
+      workspaceDto.workspaceId,
+    );
+  }
+
+  // /**
+  //  * Get spec for integration definition
+  //  */
+  @Get(':integrationDefinitionId/spec')
+  @UseGuards(new AuthGuard())
+  async getIntegrationDefinitionSpec(
+    @SessionDecorator() session: SessionContainer,
+    @Param()
+    integrationDefinitionRequestIdBody: IntegrationDefinitionRequestIdBody,
+  ) {
+    const userId = session.getUserId();
+
+    const integrationDefinition =
+      await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
+        integrationDefinitionRequestIdBody.integrationDefinitionId,
+        userId,
+      );
+
+    return integrationDefinition.spec;
   }
 
   /**

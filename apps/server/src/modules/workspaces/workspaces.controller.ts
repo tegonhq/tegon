@@ -8,7 +8,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { UsersOnWorkspaces, Workspace } from '@tegonhq/types';
+import {
+  UsersOnWorkspaces,
+  Workspace,
+  WorkspaceRequestParamsDto,
+} from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -20,7 +24,6 @@ import {
   InviteUsersBody,
   UpdateWorkspaceInput,
   UserBody,
-  WorkspaceIdRequestBody,
 } from './workspaces.interface';
 import WorkspacesService from './workspaces.service';
 
@@ -84,7 +87,7 @@ export class WorkspacesController {
   @UseGuards(new AuthGuard())
   async getWorkspace(
     @Param()
-    workspaceId: WorkspaceIdRequestBody,
+    workspaceId: WorkspaceRequestParamsDto,
   ): Promise<Workspace> {
     return await this.workspacesService.getWorkspace(workspaceId);
   }
@@ -93,7 +96,7 @@ export class WorkspacesController {
   @UseGuards(new AuthGuard())
   async updateWorkspace(
     @Param()
-    workspaceId: WorkspaceIdRequestBody,
+    workspaceId: WorkspaceRequestParamsDto,
     @Body() workspaceData: UpdateWorkspaceInput,
   ): Promise<Workspace> {
     return await this.workspacesService.updateWorkspace(
@@ -106,7 +109,7 @@ export class WorkspacesController {
   @UseGuards(new AuthGuard())
   async deleteWorkspace(
     @Param()
-    workspaceId: WorkspaceIdRequestBody,
+    workspaceId: WorkspaceRequestParamsDto,
   ): Promise<Workspace> {
     return await this.workspacesService.deleteWorkspace(workspaceId);
   }
@@ -114,20 +117,22 @@ export class WorkspacesController {
   @Post(':workspaceId/add_users')
   @UseGuards(new AuthGuard())
   async addUserToWorkspace(
-    @Param() WorkspaceIdRequestBody: WorkspaceIdRequestBody,
+    @Param() WorkspaceRequestParamsDto: WorkspaceRequestParamsDto,
     @Body() UserBody: UserBody,
   ): Promise<UsersOnWorkspaces> {
     return await this.workspacesService.addUserToWorkspace(
-      WorkspaceIdRequestBody.workspaceId,
+      WorkspaceRequestParamsDto.workspaceId,
       UserBody.userId,
     );
   }
 
   @Get(':workspaceId/invites')
   @UseGuards(new AuthGuard())
-  async invitedUsers(@Param() WorkspaceIdRequestBody: WorkspaceIdRequestBody) {
+  async invitedUsers(
+    @Param() WorkspaceRequestParamsDto: WorkspaceRequestParamsDto,
+  ) {
     return await this.workspacesService.getInvites(
-      WorkspaceIdRequestBody.workspaceId,
+      WorkspaceRequestParamsDto.workspaceId,
     );
   }
 
@@ -135,7 +140,7 @@ export class WorkspacesController {
   @UseGuards(new AuthGuard())
   async inviteUsers(
     @SessionDecorator() session: SessionContainer,
-    @Param() workspaceIdRequestBody: WorkspaceIdRequestBody,
+    @Param() workspaceIdRequestBody: WorkspaceRequestParamsDto,
     @Body() inviteUsersBody: InviteUsersBody,
   ) {
     return await this.workspacesService.inviteUsers(

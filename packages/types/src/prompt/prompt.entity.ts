@@ -25,6 +25,7 @@ export class Prompt {
   deleted: Date | null;
   name: string;
   prompt: string;
+
   model: LLMModels;
   workspace?: Workspace;
   workspaceId: string;

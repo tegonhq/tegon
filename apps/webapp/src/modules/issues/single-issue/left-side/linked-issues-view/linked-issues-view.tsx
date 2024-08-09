@@ -1,23 +1,18 @@
-import { LinkedIssueSubType, type LinkedIssueType } from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@tegonhq/ui/components/collapsible';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@tegonhq/ui/components/dropdown-menu';
 import { AddLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
+import { LinkedIssueSubType, type LinkedIssueType } from 'common/types';
+
 import { useContextStore } from 'store/global-context-provider';
 
-import { AddLinkedIssueDialog } from './add-linked-issue-dialog';
-import { IssueLinkOptions } from './issue-link-options';
+import { AddLinkedIssue } from './add-linked-issue';
 import { LinkedIssueItem } from './linked-issue-item';
 
 interface LinkedIssuesView {
@@ -26,8 +21,7 @@ interface LinkedIssuesView {
 
 export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
   const { linkedIssuesStore } = useContextStore();
-  const [dialogOpen, setDialogOpen] =
-    React.useState<LinkedIssueSubType>(undefined);
+  const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
   const linkedIssues = linkedIssuesStore.linkedIssues.filter(
     (linkedIssue: LinkedIssueType) => linkedIssue.issueId === issueId,
@@ -47,7 +41,7 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
           <div>
             <CollapsibleTrigger asChild>
               <div className="flex items-center">
-                <Button variant="ghost" className="px-0 text-md">
+                <Button variant="link" className="px-0 text-md">
                   Links
                   {isOpen ? (
                     <ChevronDown size={16} className="ml-1" />
@@ -66,16 +60,13 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
           </div>
 
           <div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="pr-0">
-                  <AddLine size={16} />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <IssueLinkOptions setDialogOpen={setDialogOpen} />
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button
+              variant="link"
+              className="pr-0"
+              onClick={() => setDialogOpen(true)}
+            >
+              <AddLine size={16} />
+            </Button>
           </div>
         </div>
         <CollapsibleContent className="flex gap-1 flex-col px-4">
@@ -85,10 +76,14 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
         </CollapsibleContent>
       </Collapsible>
 
-      <AddLinkedIssueDialog
-        open={dialogOpen}
-        setOpen={setDialogOpen}
+      <AddLinkedIssue
         issueId={issueId}
+        setOpen={setDialogOpen}
+        open={dialogOpen}
+        title="Add link to issue"
+        placeholder="https://"
+        type={LinkedIssueSubType.ExternalLink}
+        askTitleInForm
       />
     </>
   );

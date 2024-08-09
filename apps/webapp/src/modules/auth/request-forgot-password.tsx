@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   RequestForgotPasswordSchema,
   useRequestForgotPasswordMutation,
-} from '@tegonhq/services/auth';
+} from 'services/auth';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,

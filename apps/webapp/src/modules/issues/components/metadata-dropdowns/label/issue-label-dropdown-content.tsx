@@ -1,7 +1,7 @@
 import type { LabelType } from 'common/types';
 
 import { RiAddLine } from '@remixicon/react';
-import { useCreateLabelMutation } from '@tegonhq/services/labels';
+import { useCreateLabelMutation } from 'services/labels';
 import { BadgeColor } from '@tegonhq/ui/components/badge';
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
 import {

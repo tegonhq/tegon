@@ -1,18 +1,24 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { IntegrationDefinition } from '@tegonhq/types';
-import { PrismaService } from 'nestjs-prisma';
+import {
+  IntegrationEventPayload,
+  IntegrationPayloadEventType,
+} from '@tegonhq/types';
 import * as simpleOauth2 from 'simple-oauth2';
 
-import { CreateIntegrationAccountBody } from 'modules/integration-account/integration-account.interface';
-import { IntegrationAccountService } from 'modules/integration-account/integration-account.service';
+import { IntegrationDefinitionService } from 'modules/integration-definition/integration-definition.service';
+import {
+  TriggerdevService,
+  TriggerProjects,
+} from 'modules/triggerdev/triggerdev.service';
 
 import {
+  OAuthBodyInterface,
   CallbackParams,
   ProviderTemplateOAuth2,
   SessionRecord,
+  SentryCallbackBody,
 } from './oauth-callback.interface';
 import {
-  getAccountId,
   getSimpleOAuth2ClientConfig,
   getTemplate,
 } from './oauth-callback.utils';
@@ -26,52 +32,35 @@ export class OAuthCallbackService {
   private readonly logger = new Logger(OAuthCallbackService.name);
 
   constructor(
-    private prisma: PrismaService,
-    private integrationAccountService: IntegrationAccountService,
+    private integrationDefinitionService: IntegrationDefinitionService,
+    private triggerdevService: TriggerdevService,
   ) {}
 
-  async getIntegrationDefinition(integrationDefinitionId: string) {
-    let integrationDefinition: IntegrationDefinition;
-
-    try {
-      integrationDefinition =
-        await this.prisma.integrationDefinition.findUnique({
-          where: { id: integrationDefinitionId },
-        });
-    } catch (e) {
-      throw new BadRequestException({
-        error: 'No integrations found',
-      });
-    }
-
-    if (!integrationDefinition) {
-      throw new BadRequestException({
-        error: 'No integration defnition found',
-      });
-    }
-
-    return integrationDefinition;
-  }
-
   async getRedirectURL(
-    workspaceId: string,
-    integrationDefinitionId: string,
-    redirectURL: string,
+    oAuthBody: OAuthBodyInterface,
     userId: string,
     specificScopes?: string,
   ) {
+    const { integrationDefinitionId, workspaceId, redirectURL, personal } =
+      oAuthBody;
+
     this.logger.log(
       `We got OAuth request for ${workspaceId}: ${integrationDefinitionId}`,
     );
 
-    const integrationDefinition = await this.getIntegrationDefinition(
-      integrationDefinitionId,
-    );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const spec = integrationDefinition.spec as Record<string, any>;
-    const externalConfig = spec.auth_specification['OAuth2'];
-    const template = await getTemplate(integrationDefinition);
-    const scopesString = specificScopes || integrationDefinition.scopes;
+    const integrationDefinition =
+      await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
+        integrationDefinitionId,
+        userId,
+      );
+
+    const spec = integrationDefinition.spec;
+    const externalConfig = personal
+      ? spec.personal_auth.OAuth2
+      : spec.workspace_auth.OAuth2;
+    const template = await getTemplate(integrationDefinition, personal);
+
+    const scopesString = specificScopes || externalConfig.scopes.join(',');
     const additionalAuthParams = template.authorization_params || {};
 
     try {
@@ -94,6 +83,7 @@ export class OAuthCallbackService {
         workspaceId,
         config: externalConfig,
         userId,
+        personal,
       };
 
       const scopes = [
@@ -141,12 +131,14 @@ export class OAuthCallbackService {
     }
 
     const integrationDefinition =
-      await this.prisma.integrationDefinition.findUnique({
-        where: { id: sessionRecord.integrationDefinitionId },
-      });
+      await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
+        sessionRecord.integrationDefinitionId,
+        sessionRecord.userId,
+      );
 
     const template = (await getTemplate(
       integrationDefinition,
+      sessionRecord.personal,
     )) as ProviderTemplateOAuth2;
 
     if (integrationDefinition === null) {
@@ -183,12 +175,15 @@ export class OAuthCallbackService {
       : '';
 
     try {
+      const scopes = sessionRecord.personal
+        ? integrationDefinition.spec.personal_auth.OAuth2.scopes
+        : integrationDefinition.spec.workspace_auth.OAuth2.scopes;
       const simpleOAuthClient = new simpleOauth2.AuthorizationCode(
         getSimpleOAuth2ClientConfig(
           {
             client_id: integrationDefinition.clientId,
             client_secret: integrationDefinition.clientSecret,
-            scopes: integrationDefinition.scopes,
+            scopes: scopes.join(','),
           },
           template,
           sessionRecord.config,
@@ -207,41 +202,26 @@ export class OAuthCallbackService {
           headers,
         },
       );
-      let integrationConfiguration;
 
-      const accountId = await getAccountId(
-        integrationDefinition.name,
-        params,
-        tokensResponse,
+      const payload: IntegrationEventPayload = {
+        event: IntegrationPayloadEventType.IntegrationCreate,
+        payload: {
+          userId: sessionRecord.userId,
+          workspaceId: sessionRecord.workspaceId,
+          data: {
+            oauthResponse: tokensResponse,
+            oauthParams: params,
+            integrationDefinition,
+            personal: sessionRecord.personal,
+          },
+        },
+      };
+
+      this.triggerdevService.triggerTask(
+        TriggerProjects.Integration,
+        `${integrationDefinition.name}-handler`,
+        payload,
       );
-      if (
-        tokensResponse.token.access_token &&
-        tokensResponse.token.refresh_token
-      ) {
-        integrationConfiguration = {
-          // ...otherParams,
-          scope: tokensResponse.token.scope,
-          refresh_token: tokensResponse.token.refresh_token,
-          access_token: tokensResponse.token.access_token,
-          client_id: integrationDefinition.clientId,
-          client_secret: integrationDefinition.clientSecret,
-        };
-      } else {
-        integrationConfiguration = {
-          // ...otherParams,
-          api_key: tokensResponse.token.access_token,
-        };
-      }
-
-      await this.integrationAccountService.createIntegrationAccount({
-        integrationDefinitionId: integrationDefinition.id,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        config: integrationConfiguration as any,
-        workspaceId: sessionRecord.workspaceId,
-        accountId,
-        userId: sessionRecord.userId,
-        settings: tokensResponse.token,
-      } as CreateIntegrationAccountBody);
 
       res.redirect(
         `${sessionRecord.redirectURL}?success=true&integrationName=${integrationDefinition.name}${accountIdentifier}${integrationKeys}`,
@@ -251,5 +231,35 @@ export class OAuthCallbackService {
         `${sessionRecord.redirectURL}?success=false&error=${e.message}${accountIdentifier}${integrationKeys}`,
       );
     }
+  }
+
+  async sentryCallbackHandler(
+    userId: string,
+    callbackData: SentryCallbackBody,
+  ) {
+    const integrationDefinition =
+      await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
+        callbackData.integrationDefinitionId,
+        userId,
+      );
+
+    const payload: IntegrationEventPayload = {
+      event: IntegrationPayloadEventType.IntegrationCreate,
+      payload: {
+        userId,
+        workspaceId: callbackData.workspaceId,
+        data: {
+          oauthResponse: callbackData,
+          integrationDefinition,
+          personal: false,
+        },
+      },
+    };
+
+    return await this.triggerdevService.triggerTask(
+      TriggerProjects.Integration,
+      `${integrationDefinition.name}-handler`,
+      payload,
+    );
   }
 }

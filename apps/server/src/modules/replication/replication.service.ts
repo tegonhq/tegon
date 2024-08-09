@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ModelName, ModelNameEnum } from '@tegonhq/types';
-import { configure, tasks } from '@trigger.dev/sdk/v3';
+import { configure } from '@trigger.dev/sdk/v3';
 import { Client } from 'pg';
 import {
   LogicalReplicationService,
@@ -150,12 +150,12 @@ export default class ReplicationService {
           }
 
           if (tablesToTrigger.has(modelName)) {
-            tasks.trigger(`${modelName}-trigger`, {
-              action: change.kind,
-              modelName,
-              modelId,
-              isDeleted,
-            });
+            // tasks.trigger(`${modelName}-trigger`, {
+            //   action: change.kind,
+            //   modelName,
+            //   modelId,
+            //   isDeleted,
+            // });
           }
         });
       } else {

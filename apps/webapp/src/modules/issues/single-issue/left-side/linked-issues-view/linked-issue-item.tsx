@@ -1,5 +1,5 @@
 import { RiGithubFill, RiLink, RiMoreFill } from '@remixicon/react';
-import { useDeleteLinkedIssueMutation } from '@tegonhq/services/linked-issues';
+import { useDeleteLinkedIssueMutation } from 'services/linked-issues';
 import {
   Integration,
   LinkedSlackMessageType,

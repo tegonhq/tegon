@@ -1,52 +1,13 @@
-import type { LabelType } from '@tegonhq/types';
+import type { LabelRequestParamsDto, UpdateLabelDto } from '@tegonhq/types';
 
-import { useMutation } from 'react-query';
+import axios from 'axios';
 
-import { ajaxPost } from '@tegonhq/services/utils';
+type UpdateLabelParams = LabelRequestParamsDto & UpdateLabelDto;
 
-interface UpdateLabelParams {
-  name: string;
-  labelId: string;
-}
-
-export function updateLabel(params: UpdateLabelParams) {
+export async function updateLabel(params: UpdateLabelParams) {
   const { labelId, ...otherParams } = params;
 
-  return ajaxPost({
-    url: `/api/v1/labels/${labelId}`,
-    data: otherParams,
-  });
-}
+  const response = await axios.post(`/api/v1/labels/${labelId}`, otherParams);
 
-interface MutationParams {
-  onMutate?: () => void;
-  onSuccess?: (data: LabelType) => void;
-  onError?: (error: string) => void;
-}
-
-export function useUpdateLabelMutation({
-  onMutate,
-  onSuccess,
-  onError,
-}: MutationParams) {
-  const onMutationTriggered = () => {
-    onMutate && onMutate();
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onMutationError = (errorResponse: any) => {
-    const errorText = errorResponse?.errors?.message || 'Error occured';
-
-    onError && onError(errorText);
-  };
-
-  const onMutationSuccess = (data: LabelType) => {
-    onSuccess && onSuccess(data);
-  };
-
-  return useMutation(updateLabel, {
-    onError: onMutationError,
-    onMutate: onMutationTriggered,
-    onSuccess: onMutationSuccess,
-  });
+  return response.data;
 }

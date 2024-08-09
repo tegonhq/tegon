@@ -1,5 +1,4 @@
-import { IssueRelationEnum } from '@tegonhq/types';
-import { IsString } from 'class-validator';
+import { Issue, IssueRelation } from '@tegonhq/types';
 
 export enum ReverseIssueRelationType {
   BLOCKS = 'BLOCKED',
@@ -10,13 +9,6 @@ export enum ReverseIssueRelationType {
   SIMILAR = 'SIMILAR',
 }
 
-export interface IssueRelationInput {
-  type: IssueRelationEnum;
-  issueId: string;
-  relatedIssueId: string;
-}
-
-export class IssueRelationIdRequestParams {
-  @IsString()
-  issueRelationId: string;
+export interface IssueRelationWithIssue extends IssueRelation {
+  issue: Issue;
 }

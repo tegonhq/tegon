@@ -9,16 +9,18 @@ import {
   Get,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { IssueComment } from '@tegonhq/types';
+import {
+  CreateIssueCommentDto,
+  CreateIssueCommentRequestParamsDto,
+  IssueComment,
+  IssueCommentRequestParamsDto,
+} from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import {
-  CommentInput,
-  IssueCommentRequestParams,
-  IssueRequestParams,
   ReactionInput,
   ReactionRequestParams,
 } from './issue-comments.interface';
@@ -53,8 +55,8 @@ export class IssueCommentsController {
   @UseGuards(new AuthGuard())
   async createIssueComment(
     @SessionDecorator() session: SessionContainer,
-    @Query() issueParams: IssueRequestParams,
-    @Body() commentData: CommentInput,
+    @Query() issueParams: CreateIssueCommentRequestParamsDto,
+    @Body() commentData: CreateIssueCommentDto,
   ): Promise<IssueComment> {
     const userId = session.getUserId();
     return await this.issueCommentsService.createIssueComment(
@@ -67,8 +69,8 @@ export class IssueCommentsController {
   @Post(':issueCommentId')
   @UseGuards(new AuthGuard())
   async updateIssueComment(
-    @Param() issueCommentParams: IssueCommentRequestParams,
-    @Body() commentData: CommentInput,
+    @Param() issueCommentParams: IssueCommentRequestParamsDto,
+    @Body() commentData: CreateIssueCommentDto,
   ): Promise<IssueComment> {
     return await this.issueCommentsService.updateIssueComment(
       issueCommentParams,
@@ -79,7 +81,7 @@ export class IssueCommentsController {
   @Delete(':issueCommentId')
   @UseGuards(new AuthGuard())
   async deleteIssueComment(
-    @Param() issueCommentParams: IssueCommentRequestParams,
+    @Param() issueCommentParams: IssueCommentRequestParamsDto,
   ): Promise<IssueComment> {
     return await this.issueCommentsService.deleteIssueComment(
       issueCommentParams,
@@ -90,7 +92,7 @@ export class IssueCommentsController {
   @UseGuards(new AuthGuard())
   async createCommentReaction(
     @SessionDecorator() session: SessionContainer,
-    @Param() issueCommentParams: IssueCommentRequestParams,
+    @Param() issueCommentParams: IssueCommentRequestParamsDto,
     @Body() reactionData: ReactionInput,
   ): Promise<IssueComment> {
     const userId = session.getUserId();

@@ -1,54 +1,9 @@
-import type { LabelType } from '@tegonhq/types';
+import type { CreateLabelDto } from '@tegonhq/types';
 
-import { useMutation } from 'react-query';
+import axios from 'axios';
 
-import { ajaxPost } from '@tegonhq/services/utils';
+export async function createLabel(params: CreateLabelDto) {
+  const response = await axios.post('/api/v1/labels', params);
 
-export interface CreateLabelParams {
-  name: string;
-  color: string;
-  workspaceId: string;
-
-  groupId?: string;
-  teamId?: string;
-}
-
-export function createLabel(params: CreateLabelParams) {
-  return ajaxPost({
-    url: '/api/v1/labels',
-    data: params,
-  });
-}
-
-export interface MutationParams {
-  onMutate?: () => void;
-  onSuccess?: (data: LabelType) => void;
-  onError?: (error: string) => void;
-}
-
-export function useCreateLabelMutation({
-  onMutate,
-  onSuccess,
-  onError,
-}: MutationParams) {
-  const onMutationTriggered = () => {
-    onMutate && onMutate();
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onMutationError = (errorResponse: any) => {
-    const errorText = errorResponse?.errors?.message || 'Error occured';
-
-    onError && onError(errorText);
-  };
-
-  const onMutationSuccess = (data: LabelType) => {
-    onSuccess && onSuccess(data);
-  };
-
-  return useMutation(createLabel, {
-    onError: onMutationError,
-    onMutate: onMutationTriggered,
-    onSuccess: onMutationSuccess,
-  });
+  return response.data;
 }

@@ -27,6 +27,7 @@ export class UsersOnWorkspaces {
   userId: string;
   workspaceId: string;
   teamIds: string[];
+
   status: WorkspaceStatus;
   externalAccountMappings: JsonValue | null;
   role: Role;

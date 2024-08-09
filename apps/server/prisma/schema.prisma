@@ -43,7 +43,7 @@ model Workspace {
   template              Template[]
   syncAction            SyncAction[]
   integrationAccount    IntegrationAccount[]
-  integrationDefinition IntegrationDefinition[]
+  integrationDefinition IntegrationDefinitionV2[]
   attachments           Attachment[]
   View                  View[]
   aiRequests            AIRequest[]
@@ -345,24 +345,20 @@ model IssueRelation {
   @@unique([issueId, relatedIssueId, type])
 }
 
-model IntegrationDefinition {
+model IntegrationDefinitionV2 {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name         IntegrationName
+  name         String     @unique
   icon         String
-  spec         Json
   clientId     String
   clientSecret String
-  scopes       String
-  workspace    Workspace       @relation(references: [id], fields: [workspaceId])
-  workspaceId  String
+  workspace    Workspace? @relation(references: [id], fields: [workspaceId])
+  workspaceId  String?
 
   IntegrationAccount IntegrationAccount[]
-
-  @@unique([workspaceId, name])
 }
 
 model IntegrationAccount {
@@ -376,12 +372,13 @@ model IntegrationAccount {
   accountId                String?
   settings                 Json?
   isActive                 Boolean @default(true)
+  personal                 Boolean @default(false)
 
-  integratedBy            User                  @relation(references: [id], fields: [integratedById])
+  integratedBy            User                    @relation(references: [id], fields: [integratedById])
   integratedById          String
-  integrationDefinition   IntegrationDefinition @relation(references: [id], fields: [integrationDefinitionId])
+  integrationDefinition   IntegrationDefinitionV2 @relation(references: [id], fields: [integrationDefinitionId])
   integrationDefinitionId String
-  workspace               Workspace             @relation(references: [id], fields: [workspaceId])
+  workspace               Workspace               @relation(references: [id], fields: [workspaceId])
   workspaceId             String
 
   @@unique([accountId, integrationDefinitionId, workspaceId])
@@ -588,15 +585,6 @@ enum TemplateCategory {
   ISSUE
   PROJECT
   DOCUMENT
-}
-
-enum IntegrationName {
-  Github
-  GithubPersonal
-  Slack
-  SlackPersonal
-  Sentry
-  Gmail
 }
 
 enum IssueRelationType {

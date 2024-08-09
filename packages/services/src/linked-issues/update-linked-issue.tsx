@@ -1,55 +1,21 @@
-import type { LinkedIssueType } from '@tegonhq/types';
+import type {
+  LinkedIssueRequestParamsDto,
+  UpdateLinkedIssueDto,
+} from '@tegonhq/types';
 
-import { useMutation } from 'react-query';
+import axios from 'axios';
 
-import { ajaxPost } from '@tegonhq/services/utils';
+export type UpdateLinkedIssueParams = UpdateLinkedIssueDto &
+  LinkedIssueRequestParamsDto;
 
-export interface UpdateLinkedIssueParams {
-  title?: string;
-  url: string;
-  linkedIssueId: string;
-}
-
-export function updateLinkedIssue({
+export async function updateLinkedIssue({
   linkedIssueId,
   ...otherParams
 }: UpdateLinkedIssueParams) {
-  return ajaxPost({
-    url: `/api/v1/linked_issues/${linkedIssueId}`,
-    data: otherParams,
-  });
-}
+  const response = await axios.post(
+    `/api/v1/linked_issues/${linkedIssueId}`,
+    otherParams,
+  );
 
-interface MutationParams {
-  onMutate?: () => void;
-  onSuccess?: (data: LinkedIssueType) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onError?: (error: any) => void;
-}
-
-export function useUpdateLinkedIssueMutation({
-  onMutate,
-  onSuccess,
-  onError,
-}: MutationParams) {
-  const onMutationTriggered = () => {
-    onMutate && onMutate();
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onMutationError = (errorResponse: any) => {
-    const errorText = errorResponse?.errors?.message || 'Error occured';
-
-    onError && onError(errorText);
-  };
-
-  const onMutationSuccess = (data: LinkedIssueType) => {
-    onSuccess && onSuccess(data);
-  };
-
-  return useMutation(updateLinkedIssue, {
-    onError: onMutationError,
-    onMutate: onMutationTriggered,
-    onSuccess: onMutationSuccess,
-  });
+  return response.data;
 }

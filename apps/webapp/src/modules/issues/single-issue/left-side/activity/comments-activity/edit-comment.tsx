@@ -1,6 +1,6 @@
 import type { IssueCommentType } from 'common/types';
 
-import { useUpdateIssueCommentMutation } from '@tegonhq/services/issues';
+import { useUpdateIssueCommentMutation } from 'services/issues';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Editor,

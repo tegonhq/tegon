@@ -13,6 +13,7 @@
     "start": "turbo run start-prod",
     "db:init-resources": "turbo run db:generate",
     "create-resources": "dotenv -- turbo run create-resources --filter=server",
+    "trigger-dev": "dotenv -- turbo run trigger-dev --filter=integrations",
     "deploy-trigger-tasks": "dotenv -- turbo run deploy-trigger-tasks --filter=server --"
   },
   "devDependencies": {

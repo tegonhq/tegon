@@ -15,7 +15,6 @@
     "@remixicon/react": "^4.2.0",
     "@sentry/nextjs": "^7.105.0",
     "@tegonhq/services": "workspace:*",
-    "common/types": "workspace:*",
     "@tegonhq/ui": "workspace:*",
     "@tiptap/core": "^2.3.0",
     "@tiptap/react": "^2.5.4",

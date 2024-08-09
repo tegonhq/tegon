@@ -1,12 +1,11 @@
 import { Controller, Delete, Param, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { IssueRelation } from '@tegonhq/types';
+import { IssueRelation, IssueRelationIdRequestDto } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
-import { IssueRelationIdRequestParams } from './issue-relation.interface';
 import IssuesRelationService from './issue-relation.service';
 
 @Controller({
@@ -22,7 +21,7 @@ export class IssueRelationController {
   async deleteLabel(
     @SessionDecorator() session: SessionContainer,
     @Param()
-    issueRelationId: IssueRelationIdRequestParams,
+    issueRelationId: IssueRelationIdRequestDto,
   ): Promise<IssueRelation> {
     const userId = session.getUserId();
     return await this.issueRelation.deleteIssueRelation(

@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import {
+  CreateIssueRelationDto,
   IssueRelation,
   IssueRelationEnum,
+  IssueRelationIdRequestDto,
   IssueRelationType,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
@@ -11,8 +13,7 @@ import { NotificationEventFrom } from 'modules/notifications/notifications.inter
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
 import {
-  IssueRelationIdRequestParams,
-  IssueRelationInput,
+  IssueRelationWithIssue,
   ReverseIssueRelationType,
 } from './issue-relation.interface';
 
@@ -25,9 +26,9 @@ export default class IssueRelationService {
 
   async createIssueRelation(
     userId: string,
-    relationData: IssueRelationInput,
+    relationData: CreateIssueRelationDto,
   ): Promise<IssueRelation> {
-    const issueRelationData = await this.prisma.issueRelation.upsert({
+    const issueRelationData = (await this.prisma.issueRelation.upsert({
       where: {
         issueId_relatedIssueId_type: {
           issueId: relationData.issueId,
@@ -43,7 +44,7 @@ export default class IssueRelationService {
         ...relationData,
       },
       include: { issue: { include: { team: true } } },
-    });
+    })) as IssueRelationWithIssue;
 
     const inverseRelationData = await this.prisma.issueRelation.upsert({
       where: {
@@ -99,12 +100,12 @@ export default class IssueRelationService {
 
   async deleteIssueRelation(
     userId: string,
-    issueRelationId: IssueRelationIdRequestParams,
+    { issueRelationId }: IssueRelationIdRequestDto,
   ): Promise<IssueRelation> {
     const deleted = new Date().toISOString();
 
     const issueRelationData = await this.prisma.issueRelation.update({
-      where: { id: issueRelationId.issueRelationId },
+      where: { id: issueRelationId },
       data: { deleted, deletedById: userId },
       include: { issue: { include: { team: true } } },
     });

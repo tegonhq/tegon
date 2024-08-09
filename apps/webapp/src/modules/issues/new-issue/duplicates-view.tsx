@@ -1,7 +1,7 @@
 import type { IssueType } from 'common/types';
 
 import { RiArrowDownSFill, RiArrowRightSFill } from '@remixicon/react';
-import { useGetDuplicateIssuesQuery } from '@tegonhq/services/search';
+import { useGetDuplicateIssuesQuery } from 'services/search';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,

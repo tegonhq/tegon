@@ -1,4 +1,4 @@
-import { useAITitleMutation } from '@tegonhq/services/issues';
+import { useAITitleMutation } from 'services/issues';
 import {
   FormControl,
   FormField,

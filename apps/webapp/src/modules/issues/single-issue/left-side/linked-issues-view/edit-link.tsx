@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useUpdateLinkedIssueMutation } from '@tegonhq/services/linked-issues';
+import { useUpdateLinkedIssueMutation } from 'services/linked-issues';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Dialog,

@@ -13,16 +13,16 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { IntegrationAccount } from '@tegonhq/types';
+import {
+  CreateIntegrationAccountDto,
+  IntegrationAccount,
+  IntegrationAccountIdDto,
+  UpdateIntegrationAccountDto,
+} from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
-import {
-  CreateIntegrationAccountBody,
-  IntegrationAccountRequestIdBody,
-  IntegrationAccountsRequestBody,
-  UpdateIntegrationAccountBody,
-} from './integration-account.interface';
+import { IntegrationAccountsRequestBody } from './integration-account.interface';
 import { IntegrationAccountService } from './integration-account.service';
 
 @Controller({
@@ -57,7 +57,7 @@ export class IntegrationAccountController {
     );
   }
 
-  @Get('source')
+  @Get('accountId')
   @UseGuards(new AuthGuard())
   async getIntegrationAccountByAccountId(
     @Query('accountId') accountId: string,
@@ -74,7 +74,7 @@ export class IntegrationAccountController {
   @UseGuards(new AuthGuard())
   async getIntegrationAccount(
     @Param()
-    integrationAccountIdRequestIdBody: IntegrationAccountRequestIdBody,
+    integrationAccountIdRequestIdBody: IntegrationAccountIdDto,
   ): Promise<IntegrationAccount> {
     return await this.integrationAccountService.getIntegrationAccountWithId(
       integrationAccountIdRequestIdBody,
@@ -88,7 +88,7 @@ export class IntegrationAccountController {
   @UseGuards(new AuthGuard())
   async deleteIntegrationAccount(
     @Param()
-    integrationAccountIdRequestIdBody: IntegrationAccountRequestIdBody,
+    integrationAccountIdRequestIdBody: IntegrationAccountIdDto,
   ) {
     return await this.integrationAccountService.deleteIntegrationAccount(
       integrationAccountIdRequestIdBody,
@@ -102,9 +102,9 @@ export class IntegrationAccountController {
   @UseGuards(new AuthGuard())
   async updateIntegrationAccount(
     @Param()
-    integrationAccountIdRequestIdBody: IntegrationAccountRequestIdBody,
+    integrationAccountIdRequestIdBody: IntegrationAccountIdDto,
     @Body()
-    updateIntegrationAccountBody: UpdateIntegrationAccountBody,
+    updateIntegrationAccountBody: UpdateIntegrationAccountDto,
   ): Promise<IntegrationAccount> {
     return await this.integrationAccountService.updateIntegrationAccount(
       integrationAccountIdRequestIdBody.integrationAccountId,
@@ -119,7 +119,7 @@ export class IntegrationAccountController {
   @UseGuards(new AuthGuard())
   async createIntegrationAccount(
     @Body()
-    createIntegrationAccountBody: CreateIntegrationAccountBody,
+    createIntegrationAccountBody: CreateIntegrationAccountDto,
   ): Promise<IntegrationAccount> {
     return await this.integrationAccountService.createIntegrationAccount(
       createIntegrationAccountBody,

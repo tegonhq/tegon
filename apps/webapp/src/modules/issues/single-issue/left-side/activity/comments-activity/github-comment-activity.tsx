@@ -1,12 +1,12 @@
-import type { User } from 'common/types';
-
 import { RiGithubFill } from '@remixicon/react';
-import { type IssueCommentType } from 'common/types';
-import { LinkedIssueSubType, type LinkedIssueType } from 'common/types';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
+
+import { LinkedIssueSubType, type LinkedIssueType } from 'common/types';
+import { type IssueCommentType } from 'common/types';
+import type { User } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 

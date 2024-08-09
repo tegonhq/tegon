@@ -61,8 +61,10 @@ export class SyncAction {
   createdAt: Date;
   updatedAt: Date;
   deleted: Date | null;
+
   modelName: ModelName;
   modelId: string;
+
   action: ActionType;
   sequenceId: bigint;
   workspace?: Workspace;

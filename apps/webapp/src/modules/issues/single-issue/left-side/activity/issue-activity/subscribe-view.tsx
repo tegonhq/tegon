@@ -1,4 +1,4 @@
-import { useUpdateIssueSubscribeMutation } from '@tegonhq/services/issues';
+import { useUpdateIssueSubscribeMutation } from 'services/issues';
 import { SubscribeType } from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { useToast } from '@tegonhq/ui/components/use-toast';

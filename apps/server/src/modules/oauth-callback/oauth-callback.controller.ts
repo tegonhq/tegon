@@ -13,7 +13,11 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
-import { BodyInterface, CallbackParams } from './oauth-callback.interface';
+import {
+  OAuthBodyInterface,
+  CallbackParams,
+  SentryCallbackBody,
+} from './oauth-callback.interface';
 import { OAuthCallbackService } from './oauth-callback.service';
 
 @Controller({
@@ -28,14 +32,22 @@ export class OAuthCallbackController {
   @UseGuards(new AuthGuard())
   async getRedirectURL(
     @SessionDecorator() session: SessionContainer,
-    @Body() body: BodyInterface,
+    @Body() body: OAuthBodyInterface,
   ) {
     const userId = session.getUserId();
-    return await this.oAuthCallbackService.getRedirectURL(
-      body.workspaceId,
-      body.integrationDefinitionId,
-      body.redirectURL,
+    return await this.oAuthCallbackService.getRedirectURL(body, userId);
+  }
+
+  @Post('callback/sentry')
+  @UseGuards(new AuthGuard())
+  async sentryCallback(
+    @SessionDecorator() session: SessionContainer,
+    @Body() callbackBody: SentryCallbackBody,
+  ) {
+    const userId = session.getUserId();
+    return await this.oAuthCallbackService.sentryCallbackHandler(
       userId,
+      callbackBody,
     );
   }
 

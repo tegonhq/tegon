@@ -1,7 +1,7 @@
 import type { ViewType } from 'common/types';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useUpdateViewMutation } from '@tegonhq/services/views';
+import { useUpdateViewMutation } from 'services/views';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Dialog,

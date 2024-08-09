@@ -1,7 +1,8 @@
 'use client';
 
+import Dexie from 'dexie';
+
 import type { IntegrationAccountType } from 'common/types';
-import type { IntegrationDefinitionType } from 'common/types';
 import type {
   IssueType,
   IssueHistoryType,
@@ -16,8 +17,6 @@ import type { TeamType, WorkflowType } from 'common/types';
 import type { ViewType } from 'common/types';
 import type { UsersOnWorkspaceType, WorkspaceType } from 'common/types';
 
-import Dexie from 'dexie';
-
 import { MODELS } from './models';
 
 export class TegonDatabase extends Dexie {
@@ -29,7 +28,6 @@ export class TegonDatabase extends Dexie {
   issueHistory: Dexie.Table<IssueHistoryType, string>;
   comments: Dexie.Table<IssueCommentType, string>;
   usersOnWorkspaces: Dexie.Table<UsersOnWorkspaceType, string>;
-  integrationDefinitions: Dexie.Table<IntegrationDefinitionType, string>;
   integrationAccounts: Dexie.Table<IntegrationAccountType, string>;
   linkedIssues: Dexie.Table<LinkedIssueType, string>;
   issueRelations: Dexie.Table<IssueRelationType, string>;
@@ -40,7 +38,7 @@ export class TegonDatabase extends Dexie {
   constructor() {
     super('TegonDatabase');
 
-    this.version(8).stores({
+    this.version(9).stores({
       [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug',
       [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',
@@ -55,10 +53,8 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,userId,issueId,assedLabelIds,removedLabelIds,fromPriority,toPriority,fromStateId,toStateId,fromEstimate,toEstimate,fromAssigneeId,toAssigneeId,fromParentId,toParentId,sourceMetadata',
       [MODELS.IssueComment]:
         'id,createdAt,updatedAt,userId,issueId,body,parentId,sourceMetadata',
-      [MODELS.IntegrationDefinition]:
-        'id,createdAt,updatedAt,userId,name,icon,spec,scopes,workspaceId',
       [MODELS.IntegrationAccount]:
-        'id,createdAt,updatedAt,accountId,settings,integratedById,integrationDefinitionId,workspaceId',
+        'id,createdAt,updatedAt,accountId,settings,personal,integratedById,integrationDefinitionId,workspaceId',
       [MODELS.LinkedIssue]:
         'id,createdAt,updatedAt,url,sourceId,source,sourceData,issueId,createdById',
       [MODELS.IssueRelation]:
@@ -79,7 +75,6 @@ export class TegonDatabase extends Dexie {
     this.usersOnWorkspaces = this.table(MODELS.UsersOnWorkspaces);
     this.issueHistory = this.table(MODELS.IssueHistory);
     this.comments = this.table(MODELS.IssueComment);
-    this.integrationDefinitions = this.table(MODELS.IntegrationDefinition);
     this.integrationAccounts = this.table(MODELS.IntegrationAccount);
     this.linkedIssues = this.table(MODELS.LinkedIssue);
     this.issueRelations = this.table(MODELS.IssueRelation);

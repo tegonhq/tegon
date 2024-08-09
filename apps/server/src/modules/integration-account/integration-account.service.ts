@@ -1,24 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { InputJsonValue } from '@tegonhq/types';
+import {
+  CreateIntegrationAccountDto,
+  InputJsonValue,
+  IntegrationAccountIdDto,
+  IntegrationPayloadEventType,
+  UpdateIntegrationAccountDto,
+} from '@tegonhq/types';
+import { tasks } from '@trigger.dev/sdk/v3';
 import { PrismaService } from 'nestjs-prisma';
 
-import {
-  CreateIntegrationAccountBody,
-  IntegrationAccountRequestBody,
-  IntegrationAccountRequestIdBody,
-  UpdateIntegrationAccountBody,
-} from './integration-account.interface';
-import {
-  handleAppDeletion,
-  storeIntegrationRelatedData,
-} from './integration-account.utils';
+import { IntegrationAccountRequestBody } from './integration-account.interface';
 
 @Injectable()
 export class IntegrationAccountService {
   constructor(private prisma: PrismaService) {}
 
   async createIntegrationAccount(
-    createIntegrationAccountBody: CreateIntegrationAccountBody,
+    createIntegrationAccountBody: CreateIntegrationAccountDto,
   ) {
     const { integrationDefinitionId, config, workspaceId, userId, settings } =
       createIntegrationAccountBody;
@@ -43,6 +41,7 @@ export class IntegrationAccountService {
         accountId: createIntegrationAccountBody.accountId,
         integratedBy: { connect: { id: userId } },
         isActive: true,
+        settings: createIntegrationAccountBody.settings,
       },
       include: {
         integrationDefinition: true,
@@ -50,20 +49,21 @@ export class IntegrationAccountService {
       },
     });
 
-    await storeIntegrationRelatedData(
-      this.prisma,
-      integrationAccount,
-      integrationAccount.integrationDefinition.name,
-      userId,
-      workspaceId,
-      settings,
+    tasks.trigger(
+      `${integrationAccount.integrationDefinition.name.toLowerCase()}-handler`,
+      {
+        integrationAccount,
+        accesstoken: '',
+        payload: { settingsData: settings },
+        actionType: IntegrationPayloadEventType.IntegrationCreate,
+      },
     );
 
     return integrationAccount;
   }
 
   async getIntegrationAccountWithId(
-    integrationAccountRequestIdBody: IntegrationAccountRequestIdBody,
+    integrationAccountRequestIdBody: IntegrationAccountIdDto,
   ) {
     return await this.prisma.integrationAccount.findUnique({
       where: {
@@ -76,7 +76,7 @@ export class IntegrationAccountService {
   }
 
   async deleteIntegrationAccount(
-    integrationAccountRequestIdBody: IntegrationAccountRequestIdBody,
+    integrationAccountRequestIdBody: IntegrationAccountIdDto,
   ) {
     const integrationAccount = await this.prisma.integrationAccount.update({
       where: {
@@ -92,7 +92,14 @@ export class IntegrationAccountService {
       },
     });
 
-    await handleAppDeletion(integrationAccount);
+    tasks.trigger(
+      `${integrationAccount.integrationDefinition.name.toLowerCase()}-internal`,
+      {
+        integrationAccount,
+        accesstoken: '',
+        actionType: IntegrationPayloadEventType.IntegrationDelete,
+      },
+    );
 
     return integrationAccount;
   }
@@ -130,7 +137,7 @@ export class IntegrationAccountService {
 
   async updateIntegrationAccount(
     integrationAccountId: string,
-    updateIntegrationAccountBody: UpdateIntegrationAccountBody,
+    updateIntegrationAccountBody: UpdateIntegrationAccountDto,
   ) {
     return await this.prisma.integrationAccount.update({
       data: {

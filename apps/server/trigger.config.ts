@@ -8,7 +8,7 @@ export const config: TriggerConfig = {
   retries: {
     enabledInDev: true,
     default: {
-      maxAttempts: 3,
+      maxAttempts: 1,
       minTimeoutInMs: 1000,
       maxTimeoutInMs: 10000,
       factor: 2,

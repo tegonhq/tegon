@@ -1,9 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { IntegrationEventPayload } from '@tegonhq/types';
 import Knex, { Knex as KnexT } from 'knex';
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
 
-import { encryptToken, hashToken } from './triggerdev.utils';
+import { encryptToken, hashToken, triggerTaskSync } from './triggerdev.utils';
+
+export const TriggerProjects = {
+  Integration: 'integration',
+  Common: 'common',
+};
 
 @Injectable()
 export class TriggerdevService {
@@ -30,25 +36,25 @@ export class TriggerdevService {
       slug: 'common',
     });
 
-    // const integrtionProjectExists = await this.checkIfProjectExist({
-    //   slug: 'integration',
-    // });
+    const integrtionProjectExists = await this.checkIfProjectExist({
+      slug: 'integration',
+    });
 
     this.createPersonalToken();
 
     if (!commonProjectExists) {
       this.logger.log(`Common project doesn't exist`);
-      await this.createProject('Common', 'common', process.env.TRIGGER_TOKEN);
+      await this.createProject('Common', 'common', uuidv4().replace(/-/g, ''));
     }
 
-    // if (!integrtionProjectExists) {
-    //   this.logger.log(`Integration project doesn't exist`);
-    //   await this.createProject(
-    //     'Integration',
-    //     'integration',
-    //     process.env.TRIGGER_TOKEN,
-    //   );
-    // }
+    if (!integrtionProjectExists) {
+      this.logger.log(`Integration project doesn't exist`);
+      await this.createProject(
+        'Integration',
+        'integration',
+        uuidv4().replace(/-/g, ''),
+      );
+    }
   }
 
   // Create personal token taking from the .env
@@ -77,15 +83,26 @@ export class TriggerdevService {
     });
   }
 
-  async getProject(whereClause: {
-    name?: string;
-    slug?: string;
-    id?: string;
-  }): Promise<boolean> {
+  async getProject(whereClause: { name?: string; slug?: string; id?: string }) {
     try {
       const response = await this.knex('Project')
         .where(whereClause)
         .select('id', 'name', 'slug');
+
+      return response[0];
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  async getProdRuntimeForProject(projectId: string) {
+    try {
+      const response = await this.knex('RuntimeEnvironment')
+        .where({
+          projectId,
+          slug: 'dev',
+        })
+        .select('id', 'slug', 'apiKey');
 
       return response[0];
     } catch (e) {
@@ -150,5 +167,34 @@ export class TriggerdevService {
 
       return undefined;
     }
+  }
+
+  async getProdRuntimeKey(projectSlug: string) {
+    const project = await this.getProject({ slug: projectSlug });
+    const runtime = await this.getProdRuntimeForProject(project.id);
+
+    return runtime.apiKey;
+  }
+
+  async getUserId(accountId: string) {
+    const integrationAccount = await this.prisma.integrationAccount.findFirst({
+      where: {
+        accountId,
+        deleted: null,
+      },
+    });
+
+    return integrationAccount.integratedById;
+  }
+
+  async triggerTask(
+    projectSlug: string,
+    id: string,
+    payload: IntegrationEventPayload,
+  ) {
+    const apiKey = await this.getProdRuntimeKey(projectSlug);
+    const response = await triggerTaskSync(id, payload, apiKey);
+
+    return response;
   }
 }

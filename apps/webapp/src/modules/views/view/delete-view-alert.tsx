@@ -1,4 +1,4 @@
-import { useDeleteViewMutation } from '@tegonhq/services/views';
+import { useDeleteViewMutation } from 'services/views';
 import {
   AlertDialog,
   AlertDialogContent,

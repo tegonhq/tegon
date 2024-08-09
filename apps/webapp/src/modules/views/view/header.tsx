@@ -1,7 +1,7 @@
 import type { ViewType } from 'common/types';
 
 import { RiBookmarkFill, RiBookmarkLine, RiMoreFill } from '@remixicon/react';
-import { useUpdateViewMutation } from '@tegonhq/services/views';
+import { useUpdateViewMutation } from 'services/views';
 import {
   Breadcrumb,
   BreadcrumbItem,

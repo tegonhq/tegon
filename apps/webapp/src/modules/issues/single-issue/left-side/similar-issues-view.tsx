@@ -1,6 +1,6 @@
 import type { IssueType } from 'common/types';
 
-import { useGetSimilarIssuesQuery } from '@tegonhq/services/search';
+import { useGetSimilarIssuesQuery } from 'services/search';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,

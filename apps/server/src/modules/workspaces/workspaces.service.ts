@@ -5,6 +5,7 @@ import {
   RoleEnum,
   UsersOnWorkspaces,
   Workspace,
+  WorkspaceRequestParamsDto,
   WorkspaceStatusEnum,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
@@ -17,8 +18,6 @@ import {
   InviteUsersBody,
   UpdateWorkspaceInput,
   UserWorkspaceOtherData,
-  WorkspaceIdRequestBody,
-  integrationDefinitionSeedData,
   labelSeedData,
   promptsSeedData,
 } from './workspaces.interface';
@@ -43,7 +42,6 @@ export default class WorkspacesService {
           create: { userId },
         },
         label: { create: labelSeedData },
-        integrationDefinition: { create: integrationDefinitionSeedData },
       },
       include: {
         usersOnWorkspaces: true,
@@ -80,7 +78,7 @@ export default class WorkspacesService {
   }
 
   async getWorkspace(
-    WorkspaceIdRequestBody: WorkspaceIdRequestBody,
+    WorkspaceIdRequestBody: WorkspaceRequestParamsDto,
   ): Promise<Workspace> {
     return await this.prisma.workspace.findUnique({
       where: {
@@ -97,7 +95,7 @@ export default class WorkspacesService {
   }
 
   async updateWorkspace(
-    WorkspaceIdRequestBody: WorkspaceIdRequestBody,
+    WorkspaceIdRequestBody: WorkspaceRequestParamsDto,
     workspaceData: UpdateWorkspaceInput,
   ): Promise<Workspace> {
     return await this.prisma.workspace.update({
@@ -109,7 +107,7 @@ export default class WorkspacesService {
   }
 
   async deleteWorkspace(
-    WorkspaceIdRequestBody: WorkspaceIdRequestBody,
+    WorkspaceIdRequestBody: WorkspaceRequestParamsDto,
   ): Promise<Workspace> {
     return await this.prisma.workspace.delete({
       where: {
@@ -125,12 +123,6 @@ export default class WorkspacesService {
       await this.prisma.workspace.update({
         where: { id: workspace.id },
         data: {
-          integrationDefinition: {
-            createMany: {
-              data: integrationDefinitionSeedData,
-              skipDuplicates: true,
-            },
-          },
           prompts: {
             createMany: {
               data: promptsSeedData,

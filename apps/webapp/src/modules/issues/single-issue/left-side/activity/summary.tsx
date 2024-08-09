@@ -1,4 +1,4 @@
-import { useSummarizeIssue } from '@tegonhq/services/issues';
+import { useSummarizeIssue } from 'services/issues';
 import { Button } from '@tegonhq/ui/components/button';
 import { CrossLine } from '@tegonhq/ui/icons';
 import React from 'react';

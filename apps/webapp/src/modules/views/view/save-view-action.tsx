@@ -1,6 +1,6 @@
 import type { ViewType } from 'common/types';
 
-import { useUpdateViewMutation } from '@tegonhq/services/views';
+import { useUpdateViewMutation } from 'services/views';
 import { Button } from '@tegonhq/ui/components/button';
 import { Separator } from '@tegonhq/ui/components/separator';
 import { useToast } from '@tegonhq/ui/components/use-toast';

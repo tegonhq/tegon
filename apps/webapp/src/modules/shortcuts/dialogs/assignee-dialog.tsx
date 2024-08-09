@@ -1,6 +1,6 @@
 import type { User } from 'common/types';
 
-import { useUpdateIssueMutation } from '@tegonhq/services/issues';
+import { useUpdateIssueMutation } from 'services/issues';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { observer } from 'mobx-react-lite';
 import React from 'react';

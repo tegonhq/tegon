@@ -1,7 +1,7 @@
 import type { IssueType } from 'common/types';
 import type { IssueRelationType } from 'common/types';
 
-import { useUpdateIssueMutation } from '@tegonhq/services/issues';
+import { useUpdateIssueMutation } from 'services/issues';
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';

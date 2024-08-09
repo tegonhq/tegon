@@ -1,7 +1,7 @@
 import type { LabelType } from 'common/types';
 
 import { RiMoreFill } from '@remixicon/react';
-import { useDeleteLabelMutation } from '@tegonhq/services/labels';
+import { useDeleteLabelMutation } from 'services/labels';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DropdownMenu,

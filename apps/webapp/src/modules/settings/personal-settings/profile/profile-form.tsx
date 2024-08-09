@@ -1,8 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  useUpdateUserMutation,
-  type UpdateUserParams,
-} from '@tegonhq/services/users';
+import { useUpdateUserMutation, type UpdateUserParams } from 'services/users';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,

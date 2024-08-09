@@ -9,15 +9,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { LinkedIssue } from '@tegonhq/types';
+import {
+  LinkedIssue,
+  LinkedIssueRequestParamsDto,
+  UpdateLinkedIssueDto,
+} from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { ApiResponse } from 'modules/issues/issues.interface';
 
-import {
-  LinkedIssueIdParams,
-  UpdateLinkedIssueData,
-} from './linked-issue.interface';
 import LinkedIssueService from './linked-issue.service';
 
 @Controller({
@@ -34,11 +34,21 @@ export class LinkedIssueController {
     return await this.linkedIssueService.getLinkedIssueBySourceId(sourceId);
   }
 
+  @Get(':linkedIssueId')
+  @UseGuards(new AuthGuard())
+  async getLinkedIssue(
+    @Param() linkedIssueIdParams: LinkedIssueRequestParamsDto,
+  ): Promise<LinkedIssue> {
+    return await this.linkedIssueService.getLinkedIssue(
+      linkedIssueIdParams.linkedIssueId,
+    );
+  }
+
   @Post(':linkedIssueId')
   @UseGuards(new AuthGuard())
   async updateLinkedIssue(
-    @Param() linkedIssueIdParams: LinkedIssueIdParams,
-    @Body() linkedIssueData: UpdateLinkedIssueData,
+    @Param() linkedIssueIdParams: LinkedIssueRequestParamsDto,
+    @Body() linkedIssueData: UpdateLinkedIssueDto,
   ): Promise<LinkedIssue | ApiResponse> {
     return await this.linkedIssueService.updateLinkIssue(
       linkedIssueIdParams,
@@ -50,7 +60,7 @@ export class LinkedIssueController {
   @UseGuards(new AuthGuard())
   async updateLinkedIssueBySourceId(
     @Param('sourceId') sourceId: string,
-    @Body() linkedIssueData: UpdateLinkedIssueData,
+    @Body() linkedIssueData: UpdateLinkedIssueDto,
   ) {
     return await this.linkedIssueService.updateLinkIssueBySource(
       sourceId,
@@ -61,16 +71,8 @@ export class LinkedIssueController {
   @Delete(':linkedIssueId')
   @UseGuards(new AuthGuard())
   async deleteLinkedIssue(
-    @Param() linkedIssueIdParams: LinkedIssueIdParams,
+    @Param() linkedIssueIdParams: LinkedIssueRequestParamsDto,
   ): Promise<LinkedIssue> {
     return await this.linkedIssueService.deleteLinkIssue(linkedIssueIdParams);
-  }
-
-  @Get(':linkedIssueId/details')
-  @UseGuards(new AuthGuard())
-  async linkedIssueDetails(@Param() linkedIssueIdParams: LinkedIssueIdParams) {
-    return await this.linkedIssueService.linkedIssueDetails(
-      linkedIssueIdParams,
-    );
   }
 }

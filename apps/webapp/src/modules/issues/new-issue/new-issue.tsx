@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   type CreateIssueParams,
   useCreateIssueMutation,
-} from '@tegonhq/services/issues';
+} from 'services/issues';
 import { Form } from '@tegonhq/ui/components/form';
 import {
   Accordion,

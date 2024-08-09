@@ -1,4 +1,4 @@
-import { useAIContinueWritingMutation } from '@tegonhq/services/issues';
+import { useAIContinueWritingMutation } from 'services/issues';
 import { Button } from '@tegonhq/ui/components/button';
 import { Card, CardContent } from '@tegonhq/ui/components/card';
 import { Textarea } from '@tegonhq/ui/components/textarea';

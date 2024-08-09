@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useCreateIssueCommentMutation,
   useUpdateIssueMutation,
-} from '@tegonhq/services/issues';
+} from 'services/issues';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import {

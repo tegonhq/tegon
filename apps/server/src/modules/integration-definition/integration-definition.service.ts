@@ -1,6 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { IntegrationDefinition } from '@tegonhq/types';
+import {
+  IntegrationDefinition,
+  IntegrationEventPayload,
+  IntegrationPayloadEventType,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
+
+import {
+  TriggerdevService,
+  TriggerProjects,
+} from 'modules/triggerdev/triggerdev.service';
 
 import {
   IntegrationDefinitionRequestIdBody,
@@ -9,33 +18,67 @@ import {
 
 @Injectable()
 export class IntegrationDefinitionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private triggerdevService: TriggerdevService,
+  ) {}
 
-  async getIntegrationDefinitions(): Promise<IntegrationDefinition[]> {
-    return (await this.prisma.integrationDefinition.findMany(
-      {},
-    )) as IntegrationDefinition[];
+  async getIntegrationDefinitions(
+    workspaceId: string,
+  ): Promise<IntegrationDefinition[]> {
+    return await this.prisma.integrationDefinitionV2.findMany({
+      where: {
+        OR: [
+          {
+            workspaceId: null,
+          },
+          {
+            workspaceId,
+          },
+        ],
+      },
+    });
   }
 
   async getIntegrationDefinitionWithId(
     integrationDefinitionRequestIdBody: IntegrationDefinitionRequestIdBody,
   ): Promise<IntegrationDefinition> {
-    return await this.prisma.integrationDefinition.findUnique({
+    return await this.prisma.integrationDefinitionV2.findUnique({
       where: { id: integrationDefinitionRequestIdBody.integrationDefinitionId },
     });
+  }
+
+  async getIntegrationDefinitionWithSpec(
+    integrationDefinitionId: string,
+    userId: string,
+  ): Promise<IntegrationDefinition> {
+    const integrationDefinition = await this.getIntegrationDefinitionWithId({
+      integrationDefinitionId,
+    });
+
+    const payload: IntegrationEventPayload = {
+      event: IntegrationPayloadEventType.IntegrationSpec,
+      payload: {
+        userId,
+      },
+    };
+
+    const spec = await this.triggerdevService.triggerTask(
+      TriggerProjects.Integration,
+      `${integrationDefinition.name}-handler`,
+      payload,
+    );
+
+    return { ...integrationDefinition, spec };
   }
 
   async updateIntegrationDefinition(
     integrationDefinitionUpdateBody: IntegrationDefinitionUpdateBody,
     integrationDefinitionId: string,
   ) {
-    const { spec, ...otherIntegrationDefinitionBody } =
-      integrationDefinitionUpdateBody;
-    return await this.prisma.integrationDefinition.update({
-      data: {
-        ...otherIntegrationDefinitionBody,
-        ...(spec ?? { spec: JSON.stringify(spec) }),
-      },
+    integrationDefinitionUpdateBody;
+    return await this.prisma.integrationDefinitionV2.update({
+      data: integrationDefinitionUpdateBody,
       where: {
         id: integrationDefinitionId,
       },

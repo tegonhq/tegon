@@ -1,6 +1,6 @@
 import type { LabelType } from 'common/types';
 
-import { useUpdateIssueMutation } from '@tegonhq/services/issues';
+import { useUpdateIssueMutation } from 'services/issues';
 import { BadgeColor } from '@tegonhq/ui/components/badge';
 import { observer } from 'mobx-react-lite';
 import React from 'react';

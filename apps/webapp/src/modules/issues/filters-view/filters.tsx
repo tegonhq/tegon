@@ -1,5 +1,5 @@
 import { RiLoader4Line } from '@remixicon/react';
-import { useAIFilterIssuesMutation } from '@tegonhq/services/issues';
+import { useAIFilterIssuesMutation } from 'services/issues';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Command,

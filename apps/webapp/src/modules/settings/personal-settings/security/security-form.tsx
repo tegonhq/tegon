@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useChangePasswordMutation,
   type ChangePasswordParams,
-} from '@tegonhq/services/users';
+} from 'services/users';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,

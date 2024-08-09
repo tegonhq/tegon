@@ -1,4 +1,5 @@
-import { IsOptional, IsString } from 'class-validator';
+import { OAuth2Params } from '@tegonhq/types';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export interface RedirectURLParams {
   workspaceSlug: string;
@@ -8,20 +9,24 @@ export interface RedirectURLParams {
 
 export interface SessionRecord {
   integrationDefinitionId: string;
-  config: Record<string, string>;
+  config: OAuth2Params;
   redirectURL: string;
   workspaceId: string;
   accountIdentifier?: string;
   integrationKeys?: string;
+  personal: boolean;
   userId?: string;
 }
 
-export class BodyInterface {
+export class OAuthBodyInterface {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config?: any;
 
   @IsString()
   redirectURL: string;
+
+  @IsBoolean()
+  personal: boolean = false;
 
   @IsString()
   @IsOptional()
@@ -33,6 +38,13 @@ export class BodyInterface {
 
 export type CallbackParams = Record<string, string>;
 
+export interface SentryCallbackBody {
+  workspaceId: string;
+  integrationDefinitionId: string;
+  installationId: string;
+  code: string;
+  orgSlug: string;
+}
 export interface ProviderConfig {
   client_id: string;
   client_secret: string;
@@ -43,18 +55,8 @@ const enum ProviderAuthModes {
   'OAuth2' = 'OAuth2',
 }
 
-export interface ProviderTemplate {
+export interface ProviderTemplate extends OAuth2Params {
   auth_mode: ProviderAuthModes;
-  authorization_url: string;
-  authorization_params?: Record<string, string>;
-  default_scopes?: string[];
-  scope_separator?: string;
-  token_url: string;
-  token_params?: Record<string, string>;
-  redirect_uri_metadata?: string[];
-  token_response_metadata?: string[];
-
-  token_expiration_buffer?: number; // In seconds.
 }
 
 export enum OAuthAuthorizationMethod {

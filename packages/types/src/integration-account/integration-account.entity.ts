@@ -11,6 +11,7 @@ export class IntegrationAccount {
   integrationConfiguration: JsonValue;
   accountId: string | null;
   settings: JsonValue | null;
+  personal: boolean;
   isActive: boolean;
   integratedBy?: User;
   integratedById: string;

@@ -1,6 +1,6 @@
 import type { WorkflowType } from 'common/types';
 
-import { useUpdateIssueMutation } from '@tegonhq/services/issues';
+import { useUpdateIssueMutation } from 'services/issues';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 

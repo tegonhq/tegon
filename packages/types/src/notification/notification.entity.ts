@@ -26,6 +26,7 @@ export class Notification {
   createdAt: Date;
   updatedAt: Date;
   deleted: Date | null;
+
   type: NotificationActionType;
   userId: string;
   issueId: string | null;

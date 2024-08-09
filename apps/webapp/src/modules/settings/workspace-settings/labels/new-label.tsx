@@ -1,4 +1,4 @@
-import { useCreateLabelMutation } from '@tegonhq/services/labels';
+import { useCreateLabelMutation } from 'services/labels';
 import { Button } from '@tegonhq/ui/components/button';
 import { Input } from '@tegonhq/ui/components/input';
 import * as React from 'react';

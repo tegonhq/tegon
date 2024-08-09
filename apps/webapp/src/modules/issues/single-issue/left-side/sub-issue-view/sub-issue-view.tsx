@@ -30,7 +30,7 @@ export function SubIssueView({ childIssues, issueId }: SubIssueViewProps) {
           <div>
             <CollapsibleTrigger asChild>
               <div className="flex items-center">
-                <Button variant="ghost" className="px-0 text-md">
+                <Button variant="link" className="px-0 text-md">
                   Sub-issues
                   {isOpen ? (
                     <ChevronDown size={16} className="ml-1" />
@@ -50,7 +50,7 @@ export function SubIssueView({ childIssues, issueId }: SubIssueViewProps) {
 
           <div>
             <Button
-              variant="ghost"
+              variant="link"
               className="pr-0"
               onClick={() => setNewIssueDialog(true)}
               disabled={newIssueDialog}

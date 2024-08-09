@@ -2,7 +2,7 @@ import type { IssueType } from 'common/types';
 import type { IssueRelationType } from 'common/types';
 
 import { RiCloseLine } from '@remixicon/react';
-import { useDeleteIssueRelationMutation } from '@tegonhq/services/issue-relation';
+import { useDeleteIssueRelationMutation } from 'services/issue-relation';
 import { Button } from '@tegonhq/ui/components/button';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
