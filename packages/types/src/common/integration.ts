@@ -1,30 +1,55 @@
-import { IntegrationAccount } from '../integration-account';
-import { Issue } from '../issue';
-import { IssueComment } from '../issue-comment';
-import { LinkedIssue } from '../linked-issue';
-import { ModelNameEnum } from '../sync-action';
-import { User } from '../user';
+export interface IntegrationLifecyclePayload extends Record<string, any> {}
 
-export interface TwoWaySyncInput {
-  issue: Issue;
-  linkedIssue?: LinkedIssue;
+interface CommonInternalPayload {
+  userId: string;
 }
 
-export interface TwoWaySyncIssueCommentInput {
-  issueComment: IssueComment;
-  action: string;
-  user: User;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type WebhookData = Record<string, any>;
+
+export interface IntegrationSpec extends CommonInternalPayload {}
+
+export enum IntegrationPayloadEventType {
+  IntegrationSpec = 'IntegrationSpec',
+
+  // Internal configuration
+  IntegrationCreate = 'IntegrationCreate',
+  IntegrationDelete = 'IntegrationDelete',
+
+  // When the extension gets a external webhook
+  Webhook = 'Webhook',
 }
 
-export enum InternalActionTypeEnum {
-  TwoWaySync = 'TwoWaySync',
-}
-type ModelPayload = TwoWaySyncInput | TwoWaySyncIssueCommentInput;
-
-export interface IntegrationInternalInput {
-  integrationAccount: IntegrationAccount;
-  accesstoken: string;
-  modelName: ModelNameEnum;
-  actionType: InternalActionTypeEnum;
-  modelPayload: ModelPayload;
-}
+export type IntegrationEventPayload =
+  | {
+      event: IntegrationPayloadEventType.IntegrationCreate;
+      payload: {
+        userId: string;
+        workspaceId: string;
+        data: IntegrationLifecyclePayload;
+      };
+    }
+  | {
+      event: IntegrationPayloadEventType.IntegrationDelete;
+      payload: {
+        userId: string;
+        workspaceId: string;
+        integrationAccountId: string;
+        data: IntegrationLifecyclePayload;
+      };
+    }
+  | {
+      event: IntegrationPayloadEventType.IntegrationSpec;
+      payload: {
+        workspaceId?: string;
+        userId: string;
+      };
+    }
+  | {
+      event: IntegrationPayloadEventType.Webhook;
+      payload: {
+        userId: string;
+        workspaceId: string;
+        data: WebhookData;
+      };
+    };

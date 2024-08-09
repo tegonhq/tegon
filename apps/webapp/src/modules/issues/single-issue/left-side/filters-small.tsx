@@ -1,4 +1,4 @@
-import { useUpdateIssueMutation } from '@tegonhq/services/issues';
+import { useUpdateIssueMutation } from 'services/issues';
 import { observer } from 'mobx-react-lite';
 
 import {

@@ -5,19 +5,13 @@ import { SettingSection } from 'modules/settings/setting-section';
 
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
-import { SlackChannelConnext } from './slack-channel-connect';
-import { SlackOrganizationConnect } from './slack-organization-connect';
-import { SlackPersonalConnect } from './slack-personal-connect';
-
 export function Slack() {
   return (
     <SettingSection
       title="Slack"
       description="Create issues from Slack messages and sync threads"
     >
-      <SlackPersonalConnect />
-      <SlackOrganizationConnect />
-      <SlackChannelConnext />
+      <h2> We are launching new workflow</h2>
     </SettingSection>
   );
 }

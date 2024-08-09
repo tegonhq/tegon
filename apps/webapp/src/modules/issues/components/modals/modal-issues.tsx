@@ -1,6 +1,6 @@
 import type { IssueType } from 'common/types';
 
-import { useUpdateIssueMutation } from '@tegonhq/services/issues';
+import { useUpdateIssueMutation } from 'services/issues';
 import { IssueRelationEnum } from 'common/types';
 import { CommandItem } from '@tegonhq/ui/components/command';
 import { observer } from 'mobx-react-lite';

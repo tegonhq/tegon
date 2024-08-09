@@ -9,16 +9,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Label } from '@tegonhq/types';
+import {
+  CreateLabelDto,
+  Label,
+  LabelRequestParamsDto,
+  UpdateLabelDto,
+} from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
-import {
-  CreateLabelInput,
-  UpdateLabelInput,
-  LabelRequestIdParams,
-  RequestIdParams,
-} from './labels.interface';
+import { RequestIdParams } from './labels.interface';
 import LabelsService from './labels.service';
 
 @Controller({
@@ -31,7 +31,7 @@ export class LabelsController {
 
   @Post()
   @UseGuards(new AuthGuard())
-  async createLabel(@Body() labelData: CreateLabelInput): Promise<Label> {
+  async createLabel(@Body() labelData: CreateLabelDto): Promise<Label> {
     return await this.labelsService.createLabel(labelData);
   }
 
@@ -47,7 +47,7 @@ export class LabelsController {
   @UseGuards(new AuthGuard())
   async getLabel(
     @Param()
-    labelId: LabelRequestIdParams,
+    labelId: LabelRequestParamsDto,
   ): Promise<Label> {
     return await this.labelsService.getLabel(labelId);
   }
@@ -56,8 +56,8 @@ export class LabelsController {
   @UseGuards(new AuthGuard())
   async updateLabel(
     @Param()
-    labelId: LabelRequestIdParams,
-    @Body() labelData: UpdateLabelInput,
+    labelId: LabelRequestParamsDto,
+    @Body() labelData: UpdateLabelDto,
   ): Promise<Label> {
     return await this.labelsService.updateLabel(labelId, labelData);
   }
@@ -66,7 +66,7 @@ export class LabelsController {
   @UseGuards(new AuthGuard())
   async deleteLabel(
     @Param()
-    labelId: LabelRequestIdParams,
+    labelId: LabelRequestParamsDto,
   ): Promise<Label> {
     return await this.labelsService.deleteLabel(labelId);
   }

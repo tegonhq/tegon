@@ -1,7 +1,7 @@
 import type { ViewType } from 'common/types';
 
 import { RiBookmarkFill, RiBookmarkLine } from '@remixicon/react';
-import { useUpdateViewMutation } from '@tegonhq/services/views';
+import { useUpdateViewMutation } from 'services/views';
 import { Button } from '@tegonhq/ui/components/button';
 import { cn } from '@tegonhq/ui/lib/utils';
 import dayjs from 'dayjs';

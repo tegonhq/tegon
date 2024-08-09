@@ -88,13 +88,6 @@ export async function getWorkspaceId(
       });
       return issueHistory.issue.team.workspaceId;
 
-    case ModelName.IntegrationDefinition:
-      const integrationDefinition =
-        await prisma.integrationDefinition.findUnique({
-          where: { id: modelId },
-        });
-      return integrationDefinition.workspaceId;
-
     case ModelName.IntegrationAccount:
       const integrationAccount = await prisma.integrationAccount.findUnique({
         where: { id: modelId },
@@ -157,23 +150,6 @@ export async function getModelData(
     Template: prisma.template,
     IssueComment: prisma.issueComment,
     IssueHistory: prisma.issueHistory,
-    IntegrationDefinition: {
-      findUnique: (args: { where: { id: string } }) =>
-        prisma.integrationDefinition.findUnique({
-          ...args,
-          select: {
-            id: true,
-            name: true,
-            icon: true,
-            workspaceId: true,
-            createdAt: true,
-            updatedAt: true,
-            deleted: true,
-            scopes: true,
-            spec: true,
-          },
-        }),
-    },
     IntegrationAccount: {
       findUnique: (args: { where: { id: string } }) =>
         prisma.integrationAccount.findUnique({

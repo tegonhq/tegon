@@ -4,27 +4,17 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { LinkedIssue } from '@tegonhq/types';
+import {
+  IssueRequestParamsDto,
+  LinkedIssue,
+  LinkedIssueRequestParamsDto,
+  LinkIssueInput,
+  UpdateLinkedIssueDto,
+} from '@tegonhq/types';
+import { tasks } from '@trigger.dev/sdk/v3';
 import { PrismaService } from 'nestjs-prisma';
 
-import {
-  ApiResponse,
-  IssueRequestParams,
-  TeamRequestParams,
-} from 'modules/issues/issues.interface';
-
-import {
-  CreateLinkIssueInput,
-  LinkIssueInput,
-  LinkedIssueIdParams,
-  UpdateLinkedIssueData,
-} from './linked-issue.interface';
-import {
-  getLinkDetails,
-  getLinkedIssueDataWithUrl,
-  isValidLinkUrl,
-  sendFirstComment,
-} from './linked-issue.utils';
+import { ApiResponse } from 'modules/issues/issues.interface';
 
 @Injectable()
 export default class LinkedIssueService {
@@ -33,64 +23,48 @@ export default class LinkedIssueService {
   constructor(private prisma: PrismaService) {}
 
   async createLinkIssue(
-    teamParams: TeamRequestParams,
     linkData: LinkIssueInput,
-    issueParams: IssueRequestParams,
+    issueParams: IssueRequestParamsDto,
     userId: string,
   ): Promise<ApiResponse | LinkedIssue> {
-    if (!isValidLinkUrl(linkData)) {
-      throw new BadRequestException("Provided url doesn't exist");
-    }
-
     let linkedIssue = await this.prisma.linkedIssue.findFirst({
       where: { url: linkData.url, deleted: null },
       include: { issue: { include: { team: true } } },
     });
     if (linkedIssue) {
+      this.logger.debug(
+        `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
+      );
       throw new BadRequestException(
         `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
       );
     }
     try {
-      const { integrationAccount, linkInput, linkDataType } =
-        await getLinkedIssueDataWithUrl(
-          this.prisma,
-          linkData,
-          teamParams.teamId,
-          issueParams.issueId,
-          userId,
-        );
-
-      linkedIssue = await this.createLinkIssueAPI(linkInput);
-
-      await this.prisma.issue.update({
-        where: { id: issueParams.issueId },
-        data: { isBidirectional: true },
+      linkedIssue = await this.prisma.linkedIssue.create({
+        data: {
+          url: linkData.url,
+          issueId: issueParams.issueId,
+          createdById: userId,
+          source: { type: 'ExternalLink' },
+          sourceData: {
+            ...(linkData.title ? { title: linkData.title } : {}),
+          },
+        },
+        include: { issue: { include: { team: true } } },
       });
 
-      //   send a first comment function
-      await sendFirstComment(
-        this.prisma,
-        this.logger,
-        this,
-        integrationAccount,
-        linkedIssue,
-        linkDataType,
-      );
+      tasks.trigger('link-issue', { linkedIssue });
+
       return linkedIssue;
     } catch (error) {
       throw new InternalServerErrorException('Failed to create linked issue');
     }
   }
 
-  async createLinkIssueAPI(linkIssueData: CreateLinkIssueInput) {
-    return this.prisma.linkedIssue.upsert({
-      where: { url: linkIssueData.url },
-      update: { deleted: null, ...linkIssueData },
-      create: linkIssueData,
-      include: {
-        issue: { include: { team: { include: { workspace: true } } } },
-      },
+  async getLinkedIssue(linkedIssueId: string) {
+    return this.prisma.linkedIssue.findUnique({
+      where: { id: linkedIssueId },
+      include: { issue: { include: { team: true } } },
     });
   }
 
@@ -102,22 +76,32 @@ export default class LinkedIssueService {
   }
 
   async updateLinkIssue(
-    linkedIssueIdParams: LinkedIssueIdParams,
-    linkedIssueData: UpdateLinkedIssueData,
+    linkedIssueIdParams: LinkedIssueRequestParamsDto,
+    linkedIssueData: UpdateLinkedIssueDto,
   ): Promise<ApiResponse | LinkedIssue> {
+    // Find the linked issue by its ID
     const linkedIssue = await this.prisma.linkedIssue.findUnique({
       where: { id: linkedIssueIdParams.linkedIssueId },
     });
 
-    if (linkedIssueData.url) {
+    // Check if the URL or sourceId is being assigned to another issue
+    if (linkedIssueData.url || linkedIssueData.sourceId) {
+      const linkConditions = {
+        ...(linkedIssueData.url && { url: linkedIssueData.url }),
+        ...(!linkedIssueData.url &&
+          linkedIssueData.sourceId && { sourceId: linkedIssueData.sourceId }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        deleted: null as any,
+        NOT: { id: linkedIssueIdParams.linkedIssueId },
+      };
+
+      // Find an existing linked issue with the updated URL or sourceId
       const existingLinkedIssue = await this.prisma.linkedIssue.findFirst({
-        where: {
-          url: linkedIssueData.url,
-          deleted: null,
-          NOT: { id: linkedIssueIdParams.linkedIssueId },
-        },
+        where: linkConditions,
         include: { issue: { include: { team: true } } },
       });
+
+      // If an existing linked issue is found, throw an error
       if (existingLinkedIssue) {
         throw new BadRequestException(
           `This URL has already been linked to an issue ${existingLinkedIssue.issue.team.identifier}-${existingLinkedIssue.issue.number}`,
@@ -125,26 +109,32 @@ export default class LinkedIssueService {
       }
     }
 
-    const sourceData = linkedIssueData.sourceData || linkedIssue.sourceData;
+    // Merge the existing sourceData with the updated sourceData
     const finalSourceData = {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ...(sourceData as any),
-      title: linkedIssueData.title,
+      ...(typeof linkedIssue.sourceData === 'object' &&
+      linkedIssue.sourceData !== null
+        ? linkedIssue.sourceData
+        : {}),
+      ...linkedIssueData.sourceData,
+      ...(linkedIssueData.title && { title: linkedIssueData.title }),
     };
 
+    // Update the linked issue with the provided data
     return this.prisma.linkedIssue.update({
       where: { id: linkedIssueIdParams.linkedIssueId },
       data: {
         sourceData: finalSourceData,
         ...(linkedIssueData.url && { url: linkedIssueData.url }),
         ...(linkedIssueData.source && { source: linkedIssueData.source }),
+        ...(linkedIssueData.sourceId && { sourceId: linkedIssueData.sourceId }),
       },
+      include: { issue: { include: { team: true } } },
     });
   }
 
   async updateLinkIssueBySource(
     sourceId: string,
-    linkedIssueData: UpdateLinkedIssueData,
+    linkedIssueData: UpdateLinkedIssueDto,
   ) {
     const linkedIssue = await this.prisma.linkedIssue.findFirst({
       where: { sourceId, deleted: null },
@@ -160,18 +150,10 @@ export default class LinkedIssueService {
     );
   }
 
-  async deleteLinkIssue(linkedIssueIdParams: LinkedIssueIdParams) {
+  async deleteLinkIssue(linkedIssueIdParams: LinkedIssueRequestParamsDto) {
     return this.prisma.linkedIssue.update({
       where: { id: linkedIssueIdParams.linkedIssueId },
       data: { deleted: new Date().toISOString() },
     });
-  }
-
-  async linkedIssueDetails(linkedIssueIdParams: LinkedIssueIdParams) {
-    const linkedIssue = await this.prisma.linkedIssue.findUnique({
-      where: { id: linkedIssueIdParams.linkedIssueId },
-    });
-
-    return await getLinkDetails(this.prisma, linkedIssue);
   }
 }

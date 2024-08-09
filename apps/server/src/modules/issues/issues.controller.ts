@@ -12,7 +12,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Issue } from '@tegonhq/types';
+import {
+  CreateIssueDto,
+  CreateLinkedIssueDto,
+  Issue,
+  IssueRequestParamsDto,
+  TeamRequestParamsDto,
+  UpdateIssueDto,
+  WorkspaceRequestParamsDto,
+} from '@tegonhq/types';
 import { Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
@@ -20,17 +28,7 @@ import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 
-import {
-  ApiResponse,
-  CreateIssueInput,
-  IssueRequestParams,
-  LinkIssueInput,
-  MoveIssueInput,
-  SubscribeIssueInput,
-  TeamRequestParams,
-  UpdateIssueInput,
-  WorkspaceQueryParams,
-} from './issues.interface';
+import { ApiResponse, SubscribeIssueInput } from './issues.interface';
 import IssuesService from './issues.service';
 
 @Controller({
@@ -48,7 +46,7 @@ export class IssuesController {
   @UseGuards(new AuthGuard())
   async createIssue(
     @SessionDecorator() session: SessionContainer,
-    @Body() issueData: CreateIssueInput,
+    @Body() issueData: CreateIssueDto,
   ) {
     const userId = session.getUserId();
     return await this.issuesService.createIssueAPI(issueData, userId);
@@ -58,12 +56,12 @@ export class IssuesController {
   @UseGuards(new AuthGuard())
   async updateIssue(
     @SessionDecorator() session: SessionContainer,
-    @Param() issueParams: IssueRequestParams,
-    @Query() teamParams: TeamRequestParams,
-    @Body() issueData: UpdateIssueInput,
+    @Param() issueParams: IssueRequestParamsDto,
+    @Query() teamParams: TeamRequestParamsDto,
+    @Body() issueData: UpdateIssueDto,
   ): Promise<Issue | ApiResponse> {
     const userId = session.getUserId();
-    return await this.issuesService.updateIssue(
+    return await this.issuesService.updateIssueApi(
       teamParams,
       issueData,
       issueParams,
@@ -74,8 +72,8 @@ export class IssuesController {
   @Delete(':issueId')
   @UseGuards(new AuthGuard())
   async deleteIssue(
-    @Param() issueParams: IssueRequestParams,
-    @Query() teamParams: TeamRequestParams,
+    @Param() issueParams: IssueRequestParamsDto,
+    @Query() teamParams: TeamRequestParamsDto,
   ): Promise<Issue> {
     return await this.issuesService.deleteIssue(teamParams, issueParams);
   }
@@ -84,13 +82,11 @@ export class IssuesController {
   @UseGuards(new AuthGuard())
   async linkIssue(
     @SessionDecorator() session: SessionContainer,
-    @Param() issueParams: IssueRequestParams,
-    @Query() teamParams: TeamRequestParams,
-    @Body() linkData: LinkIssueInput,
+    @Param() issueParams: IssueRequestParamsDto,
+    @Body() linkData: CreateLinkedIssueDto,
   ) {
     const userId = session.getUserId();
     return await this.linkedIssueService.createLinkIssue(
-      teamParams,
       linkData,
       issueParams,
       userId,
@@ -101,7 +97,7 @@ export class IssuesController {
   @UseGuards(new AuthGuard())
   async subscribeIssue(
     @SessionDecorator() session: SessionContainer,
-    @Param() issueParams: IssueRequestParams,
+    @Param() issueParams: IssueRequestParamsDto,
     @Body() subscriberData: SubscribeIssueInput,
   ) {
     const userId = session.getUserId();
@@ -115,7 +111,7 @@ export class IssuesController {
   @Get('export')
   @UseGuards(new AuthGuard())
   async exportIssues(
-    @Query() workspaceParams: WorkspaceQueryParams,
+    @Query() workspaceParams: WorkspaceRequestParamsDto,
     @Res() res: Response,
   ): Promise<void> {
     const csvString = await this.issuesService.exportIssues(workspaceParams);
@@ -140,8 +136,8 @@ export class IssuesController {
   @UseGuards(new AuthGuard())
   async moveIssue(
     @SessionDecorator() session: SessionContainer,
-    @Param() issueParams: IssueRequestParams,
-    @Body() moveData: MoveIssueInput,
+    @Param() issueParams: IssueRequestParamsDto,
+    @Body() moveData: TeamRequestParamsDto,
   ) {
     const userId = session.getUserId();
     return await this.issuesService.moveIssue(

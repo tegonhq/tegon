@@ -51,7 +51,6 @@ export function NewIssueForm({
     name: `issues.${index}`,
   });
 
-  console.log(issue);
   const { team, setTeam } = useTeamForNewIssue(issue.teamId);
   const { workflowsStore } = useContextStore();
   const { suggestionItems, isLoading: aiLoading } =

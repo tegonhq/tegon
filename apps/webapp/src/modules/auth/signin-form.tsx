@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SignInSchema, useSignInMutation } from '@tegonhq/services/auth';
+import { SignInSchema, useSignInMutation } from 'services/auth';
 import { Button, buttonVariants } from '@tegonhq/ui/components/button';
 import {
   Form,

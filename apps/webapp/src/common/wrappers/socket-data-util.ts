@@ -2,7 +2,6 @@ import type { SyncActionRecord } from 'common/types';
 
 import { saveCommentsData } from 'store/comments';
 import { saveIntegrationAccountData } from 'store/integration-accounts';
-import { saveIntegrationDefinitionData } from 'store/integration-definitions';
 import { saveIssueHistoryData } from 'store/issue-history';
 import { saveIssueRelationData } from 'store/issue-relation';
 import { saveIssueSuggestionData } from 'store/issue-suggestions';
@@ -76,13 +75,6 @@ export async function saveSocketData(
           return await saveIntegrationAccountData(
             [record],
             MODEL_STORE_MAP[MODELS.IntegrationAccount],
-          );
-        }
-
-        case MODELS.IntegrationDefinition: {
-          return await saveIntegrationDefinitionData(
-            [record],
-            MODEL_STORE_MAP[MODELS.IntegrationDefinition],
           );
         }
 

@@ -2,13 +2,24 @@ import { JsonValue } from '../common';
 import { User } from '../user';
 import { Workspace } from '../workspace';
 
-export enum AttachmentStatus {
+export enum AttachmentStatusEnum {
   Pending = 'Pending',
   Failed = 'Failed',
   Uploaded = 'Uploaded',
   Deleted = 'Deleted',
   External = 'External',
 }
+
+export const AttachmentStatus = {
+  Pending: 'Pending',
+  Failed: 'Failed',
+  Uploaded: 'Uploaded',
+  Deleted: 'Deleted',
+  External: 'External',
+};
+
+export type AttachmentStatus =
+  (typeof AttachmentStatus)[keyof typeof AttachmentStatus];
 
 export class Attachment {
   id: string;

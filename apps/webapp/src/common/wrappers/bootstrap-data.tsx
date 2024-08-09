@@ -2,7 +2,7 @@
 
 import type { BootstrapResponse } from 'common/types';
 
-import { useBootstrapRecords, useDeltaRecords } from '@tegonhq/services/sync';
+import { useBootstrapRecords, useDeltaRecords } from 'services/sync';
 import { Loader } from '@tegonhq/ui/components/loader';
 import * as React from 'react';
 
@@ -32,7 +32,6 @@ export function BootstrapWrapper({ children }: Props) {
     teamsStore,
     labelsStore,
     integrationAccountsStore,
-    integrationDefinitionsStore,
     linkedIssuesStore,
     issueRelationsStore,
     notificationsStore,
@@ -50,7 +49,6 @@ export function BootstrapWrapper({ children }: Props) {
     [MODELS.IssueHistory]: issuesHistoryStore,
     [MODELS.IssueComment]: commentsStore,
     [MODELS.IntegrationAccount]: integrationAccountsStore,
-    [MODELS.IntegrationDefinition]: integrationDefinitionsStore,
     [MODELS.LinkedIssue]: linkedIssuesStore,
     [MODELS.IssueRelation]: issueRelationsStore,
     [MODELS.Notification]: notificationsStore,

@@ -1,12 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { IssueRelationEnum } from '@tegonhq/types';
+import {
+  CreateIssueDto,
+  CreateIssueRelationDto,
+  IssueRelationEnum,
+  TeamRequestParamsDto,
+} from '@tegonhq/types';
 import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
 
 import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
-import { IssueRelationInput } from 'modules/issue-relation/issue-relation.interface';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
 import { LLMMappings } from 'modules/prompts/prompts.interface';
 import { VectorService } from 'modules/vector/vector.service';
@@ -19,12 +23,10 @@ import {
 } from './issues-ai.utils';
 import {
   AIInput,
-  CreateIssueInput,
   DescriptionInput,
   FilterInput,
   IssueWithRelations,
   SubIssueInput,
-  TeamRequestParams,
 } from './issues.interface';
 import { getWorkspace } from './issues.utils';
 
@@ -46,7 +48,7 @@ export default class IssuesAIService {
    * @returns An object containing the suggested labels and assignees.
    */
   async suggestions(
-    teamRequestParams: TeamRequestParams,
+    teamRequestParams: TeamRequestParamsDto,
     suggestionsInput: AIInput,
   ) {
     // Check if the description is empty or falsy
@@ -242,7 +244,7 @@ export default class IssuesAIService {
 
     // Create issue relations for each similar issue
     similarIssues.map(async (similarIssue) => {
-      const relationData: IssueRelationInput = {
+      const relationData: CreateIssueRelationDto = {
         type: IssueRelationEnum.SIMILAR,
         issueId,
         relatedIssueId: similarIssue.id,
@@ -349,7 +351,7 @@ export default class IssuesAIService {
    * @returns The generated AI filter.
    */
   async aiFilters(
-    teamRequestParams: TeamRequestParams,
+    teamRequestParams: TeamRequestParamsDto,
     filterInput: FilterInput,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<Record<string, any>> {
@@ -480,7 +482,7 @@ export default class IssuesAIService {
     return await getIssueTitle(
       this.prisma,
       this.aiRequestsService,
-      { description: aiInput.description } as CreateIssueInput,
+      { description: aiInput.description } as CreateIssueDto,
       aiInput.workspaceId,
     );
   }

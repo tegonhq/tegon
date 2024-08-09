@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useUpdateWorkspaceMutation } from '@tegonhq/services/workspace';
+import { useUpdateWorkspaceMutation } from 'services/workspace';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,

@@ -1,5 +1,3 @@
-import type { IntegrationDefinitionType } from 'common/types';
-
 import {
   type IAnyStateTreeNode,
   type Instance,
@@ -7,7 +5,7 @@ import {
   flow,
 } from 'mobx-state-tree';
 
-import { tegonDatabase } from 'store/database';
+import type { IntegrationDefinitionType } from 'common/types';
 
 import { IntegrationDefinition } from './models';
 
@@ -48,9 +46,6 @@ export const IntegrationDefinitionsStore: IAnyStateTreeNode = types
     };
 
     const load = flow(function* () {
-      const integrationDefinitions =
-        yield tegonDatabase.integrationDefinitions.toArray();
-
       self.integrationDefinitions = integrationDefinitions;
     });
 

@@ -1,4 +1,4 @@
-import { useGetUserQuery } from '@tegonhq/services/users';
+import { useGetUserQuery } from 'services/users';
 import { Loader } from '@tegonhq/ui/components/loader';
 import * as React from 'react';
 

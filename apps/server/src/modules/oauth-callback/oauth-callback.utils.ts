@@ -1,10 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
-import { IntegrationDefinition, IntegrationName } from '@tegonhq/types';
-
-import { getGithubUser } from 'modules/integrations/github/github.utils';
+import { IntegrationDefinition, OAuth2Params } from '@tegonhq/types';
 
 import {
-  CallbackParams,
   OAuthAuthorizationMethod,
   OAuthBodyFormat,
   ProviderConfig,
@@ -30,7 +27,7 @@ export function interpolateString(str: string, replacers: Record<string, any>) {
 export function getSimpleOAuth2ClientConfig(
   providerConfig: ProviderConfig,
   template: ProviderTemplate,
-  connectionConfig: Record<string, string>,
+  connectionConfig: OAuth2Params,
 ) {
   const tokenUrl = new URL(
     interpolateString(template.token_url, connectionConfig),
@@ -65,14 +62,12 @@ export function getSimpleOAuth2ClientConfig(
 
 export async function getTemplate(
   integrationDefinition: IntegrationDefinition,
+  personal: boolean,
 ): Promise<ProviderTemplate> {
-  const spec =
-    typeof integrationDefinition.spec === 'string'
-      ? JSON.parse(integrationDefinition.spec)
-      : integrationDefinition.spec;
-
-  const template: ProviderTemplate = spec.auth_specification
-    .OAuth2 as ProviderTemplate;
+  const spec = integrationDefinition.spec;
+  const template: ProviderTemplate = (
+    personal ? spec.personal_auth.OAuth2 : spec.workspace_auth.OAuth2
+  ) as ProviderTemplate;
 
   if (!template) {
     throw new BadRequestException({
@@ -81,33 +76,4 @@ export async function getTemplate(
   }
 
   return template;
-}
-
-export async function getAccountId(
-  integrationName: IntegrationName,
-  params: CallbackParams,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  response: any,
-): Promise<string> {
-  switch (integrationName) {
-    case IntegrationName.Github:
-      return params.installation_id;
-
-    case IntegrationName.Slack:
-      return response.token.team.id;
-
-    case IntegrationName.GithubPersonal:
-      if (response.token.access_token) {
-        const accessToken = response.token.access_token;
-        const userData = await getGithubUser(accessToken);
-        return userData.id.toString();
-      }
-      return undefined;
-
-    case IntegrationName.SlackPersonal:
-      return response.token.authed_user.id;
-
-    default:
-      return undefined;
-  }
 }

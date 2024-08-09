@@ -1,34 +1,5 @@
-import { IntegrationName } from '@tegonhq/types';
-import { IsJSON, IsObject, IsOptional, IsString } from 'class-validator';
-
-import { WorkspaceIdRequestBody } from 'modules/workspaces/workspaces.interface';
-
-export interface GenericInputSpecification {
-  input_specification?: {
-    type: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    properties: Record<string, any>;
-  };
-}
-
-export interface AuthSpecification extends GenericInputSpecification {
-  token_url?: string;
-  auth_mode?: string;
-  authorization_url?: string;
-  authorization_params?: Record<string, string>;
-  token_params?: Record<string, string>;
-  refresh_params?: Record<string, string>;
-  scope_seperator?: string;
-  default_scopes?: string[];
-  headers?: Record<string, string>;
-}
-
-export interface Specification {
-  auth_specification: Record<string, AuthSpecification>;
-  other_inputs?: GenericInputSpecification;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  other_data?: Record<string, any>;
-}
+import { Spec, WorkspaceRequestParamsDto } from '@tegonhq/types';
+import { IsObject, IsOptional, IsString } from 'class-validator';
 
 export class IntegrationDefinitionRequestIdBody {
   /**
@@ -39,43 +10,29 @@ export class IntegrationDefinitionRequestIdBody {
 }
 
 export class IntegrationDefinitionSpec {
-  spec: Specification;
+  spec: Spec;
 }
 
-export class IntegrationDefinitionCreateBody extends WorkspaceIdRequestBody {
+export class IntegrationDefinitionCreateBody extends WorkspaceRequestParamsDto {
   @IsObject()
-  name: IntegrationName;
+  name: string;
 
   @IsString()
   icon: string;
 
-  @IsJSON()
-  spec: Specification;
-
   @IsString()
   clientId: string;
 
   @IsString()
   clientSecret: string;
-
-  @IsString()
-  scopes: string;
 }
 
 export class IntegrationDefinitionUpdateBody {
   @IsOptional()
-  @IsJSON()
-  spec: Specification;
-
-  @IsOptional()
   @IsString()
   clientId: string;
 
   @IsOptional()
   @IsString()
   clientSecret: string;
-
-  @IsOptional()
-  @IsString()
-  scopes: string;
 }

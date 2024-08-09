@@ -1,40 +1,41 @@
-import { JsonValue } from '../common';
+import { JsonObject } from '../common';
 import { IntegrationAccount } from '../integration-account';
 import { Workspace } from '../workspace';
 
-export const IntegrationName = {
-  Github: 'Github',
-  GithubPersonal: 'GithubPersonal',
-  Slack: 'Slack',
-  SlackPersonal: 'SlackPersonal',
-  Sentry: 'Sentry',
-  Gmail: 'Gmail',
-};
-
-export enum IntegrationNameEnum {
-  Github = 'Github',
-  GithubPersonal = 'GithubPersonal',
-  Slack = 'Slack',
-  SlackPersonal = 'SlackPersonal',
-  Sentry = 'Sentry',
-  Gmail = 'Gmail',
+export class OAuth2Params {
+  authorization_url: string;
+  authorization_params?: Record<string, string>;
+  default_scopes?: string[];
+  scope_separator?: string;
+  token_url: string;
+  token_params?: Record<string, string>;
+  redirect_uri_metadata?: string[];
+  token_response_metadata?: string[];
+  token_expiration_buffer?: number; // In seconds.
+  scopes?: string[];
 }
 
-export type IntegrationName =
-  (typeof IntegrationName)[keyof typeof IntegrationName];
+export class Spec {
+  workspace_auth: {
+    OAuth2: OAuth2Params;
+  };
+  personal_auth?: {
+    OAuth2: OAuth2Params;
+  };
+  other_data?: JsonObject;
+}
 
 export class IntegrationDefinition {
   id: string;
   createdAt: Date;
   updatedAt: Date;
   deleted: Date | null;
-  name: IntegrationName;
+  name: string;
   icon: string;
-  spec: JsonValue;
+  spec?: Spec;
   clientId: string;
   clientSecret: string;
-  scopes: string;
   workspace?: Workspace;
-  workspaceId: string;
+  workspaceId?: string;
   IntegrationAccount?: IntegrationAccount[];
 }

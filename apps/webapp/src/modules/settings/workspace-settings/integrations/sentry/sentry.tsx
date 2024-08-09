@@ -5,15 +5,13 @@ import { SettingSection } from 'modules/settings/setting-section';
 
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
-import { SentryConnect } from './sentry-connect';
-
 export function Sentry() {
   return (
     <SettingSection
       title="Sentry"
       description="Connect sentry issues with tegon issues"
     >
-      <SentryConnect />
+      <h2> We are launching new workflow</h2>
     </SettingSection>
   );
 }

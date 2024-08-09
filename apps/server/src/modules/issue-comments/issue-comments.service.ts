@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { IssueComment } from '@tegonhq/types';
+import {
+  CreateIssueCommentDto,
+  CreateIssueCommentRequestParamsDto,
+  IssueComment,
+  IssueCommentRequestParamsDto,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import IssuesService from 'modules/issues/issues.service';
@@ -7,30 +12,24 @@ import { NotificationEventFrom } from 'modules/notifications/notifications.inter
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
 import {
-  CommentInput,
-  IssueCommentAction,
-  IssueCommentRequestParams,
-  IssueRequestParams,
   ReactionInput,
   ReactionRequestParams,
   commentReactionType,
   reactionDataType,
 } from './issue-comments.interface';
-import { IssueCommentsQueue } from './issue-comments.queue';
 
 @Injectable()
 export default class IssueCommentsService {
   constructor(
     private prisma: PrismaService,
-    private issueCommentsQueue: IssueCommentsQueue,
     private notificationsQueue: NotificationsQueue,
     private issuesService: IssuesService,
   ) {}
 
   async createIssueComment(
-    issueRequestParams: IssueRequestParams,
+    issueRequestParams: CreateIssueCommentRequestParamsDto,
     userId: string,
-    commentData: CommentInput,
+    commentData: CreateIssueCommentDto,
   ): Promise<IssueComment> {
     const { linkCommentMetadata, ...otherCommentData } = commentData;
 
@@ -72,8 +71,8 @@ export default class IssueCommentsService {
   }
 
   async updateIssueComment(
-    issueCommentParams: IssueCommentRequestParams,
-    commentData: CommentInput,
+    issueCommentParams: IssueCommentRequestParamsDto,
+    commentData: CreateIssueCommentDto,
   ): Promise<IssueComment> {
     const issueComment = await this.prisma.issueComment.update({
       where: {
@@ -86,17 +85,11 @@ export default class IssueCommentsService {
       },
     });
 
-    await this.issueCommentsQueue.addTwoWaySyncJob(
-      issueComment,
-      IssueCommentAction.UPDATED,
-      issueComment.userId,
-    );
-
     return issueComment;
   }
 
   async deleteIssueComment(
-    issueCommentParams: IssueCommentRequestParams,
+    issueCommentParams: IssueCommentRequestParamsDto,
   ): Promise<IssueComment> {
     const issueComment = await this.prisma.issueComment.update({
       where: {
@@ -111,17 +104,12 @@ export default class IssueCommentsService {
       },
     });
 
-    await this.issueCommentsQueue.addTwoWaySyncJob(
-      issueComment,
-      IssueCommentAction.DELETED,
-      issueComment.userId,
-    );
     return issueComment;
   }
 
   async createCommentReaction(
     userId: string,
-    issueCommentParams: IssueCommentRequestParams,
+    issueCommentParams: IssueCommentRequestParamsDto,
     reactionInput: ReactionInput,
   ): Promise<IssueComment> {
     const emoji = await this.prisma.emoji.upsert({

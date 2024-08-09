@@ -19,6 +19,7 @@ export class TeamPreference {
   deleted: Date | null;
   team?: Team | null;
   teamId: string | null;
+
   preference: Preference;
   value: string;
 }

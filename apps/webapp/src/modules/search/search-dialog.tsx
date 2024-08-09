@@ -1,6 +1,6 @@
 import type { IssueType } from 'common/types';
 
-import { useGetSearchIssuesQuery } from '@tegonhq/services/search';
+import { useGetSearchIssuesQuery } from 'services/search';
 import {
   CommandDialog,
   CommandEmpty,

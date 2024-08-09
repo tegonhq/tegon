@@ -1,14 +1,13 @@
+import { CreateIssueDto, UpdateIssueDto } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { LLMMappings } from 'modules/prompts/prompts.interface';
 
-import { CreateIssueInput, UpdateIssueInput } from './issues.interface';
-
 export async function getIssueTitle(
   prisma: PrismaService,
   aiRequestsService: AIRequestsService,
-  issueData: CreateIssueInput | UpdateIssueInput,
+  issueData: CreateIssueDto | UpdateIssueDto,
   workspaceId: string,
 ): Promise<string> {
   if (issueData.title) {

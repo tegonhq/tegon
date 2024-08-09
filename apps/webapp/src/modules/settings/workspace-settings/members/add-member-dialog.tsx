@@ -1,7 +1,7 @@
 import type { TeamType } from 'common/types';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useInviteUsersMutation } from '@tegonhq/services/workspace';
+import { useInviteUsersMutation } from 'services/workspace';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DialogContent,

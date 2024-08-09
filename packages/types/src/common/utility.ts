@@ -23,6 +23,7 @@ export type JsonValue =
   | string
   | number
   | boolean
+  | Date
   | JsonObject
   | JsonArray
   | null;

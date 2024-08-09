@@ -29,6 +29,7 @@ export class IssueRelation {
   issue?: Issue;
   issueId: string;
   relatedIssueId: string;
+
   type: IssueRelationType;
   metadata: JsonValue | null;
   createdById: string | null;

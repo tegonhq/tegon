@@ -1,7 +1,7 @@
 import type { IssueType } from 'common/types';
 import type { TeamType } from 'common/types';
 
-import { useMoveIssueToTeamMutation } from '@tegonhq/services/issues';
+import { useMoveIssueToTeamMutation } from 'services/issues';
 import {
   AlertDialog,
   AlertDialogContent,

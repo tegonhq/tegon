@@ -4,7 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { AttachmentResponse, AttachmentStatus } from '@tegonhq/types';
+import { AttachmentResponse, AttachmentStatusEnum } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { AttachmentRequestParams, ExternalFile } from './attachments.interface';
@@ -35,7 +35,7 @@ export class AttachmentService {
           originalName: file.originalname,
           fileType: file.mimetype,
           size: file.size,
-          status: AttachmentStatus.Pending,
+          status: AttachmentStatusEnum.Pending,
           fileExt: file.originalname.split('.').pop(),
           workspaceId,
           sourceMetadata,
@@ -60,7 +60,7 @@ export class AttachmentService {
       const publicURL = `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/${workspaceId}/${attachment.id}`;
       await this.prisma.attachment.update({
         where: { id: attachment.id },
-        data: { status: AttachmentStatus.Uploaded, url: publicURL },
+        data: { status: AttachmentStatusEnum.Uploaded, url: publicURL },
       });
 
       return {
@@ -87,7 +87,7 @@ export class AttachmentService {
           originalName: file.originalname,
           fileType: file.mimetype,
           size: file.size,
-          status: AttachmentStatus.External,
+          status: AttachmentStatusEnum.External,
           fileExt: file.originalname.split('.').pop(),
           uploadedById: userId,
           workspaceId,
@@ -160,7 +160,7 @@ export class AttachmentService {
           where: { id: attachmentId },
           data: {
             deleted: new Date().toISOString(),
-            status: AttachmentStatus.Deleted,
+            status: AttachmentStatusEnum.Deleted,
           },
         }),
       ]);

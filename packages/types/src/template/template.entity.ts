@@ -24,6 +24,7 @@ export class Template {
   updatedAt: Date;
   deleted: Date | null;
   name: string;
+
   category: TemplateCategory;
   templateData: JsonValue;
   createdBy?: User;

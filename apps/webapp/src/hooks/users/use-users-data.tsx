@@ -1,7 +1,7 @@
 import type { User } from 'common/types';
 import type { UsersOnWorkspaceType } from 'common/types';
 
-import { useGetUsersQuery } from '@tegonhq/services/users';
+import { useGetUsersQuery } from 'services/users';
 import * as React from 'react';
 
 import { useTeamWithId } from 'hooks/teams';

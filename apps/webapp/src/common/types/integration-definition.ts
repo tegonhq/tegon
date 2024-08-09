@@ -1,12 +1,3 @@
-export enum IntegrationName {
-  Github = 'Github',
-  GithubPersonal = 'GithubPersonal',
-  Slack = 'Slack',
-  SlackPersonal = 'SlackPersonal',
-  Sentry = 'Sentry',
-  Gmail = 'Gmail',
-}
-
 export interface GenericInputSpecification {
   input_specification?: {
     type: string;
@@ -39,9 +30,8 @@ export interface IntegrationDefinitionType {
   createdAt: string;
   updatedAt: string;
 
-  name: IntegrationName;
+  name: string;
   icon: string;
   spec: string;
-  scopes: string;
   workspaceId: string;
 }

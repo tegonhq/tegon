@@ -1,6 +1,6 @@
 import type { IssueType } from 'common/types';
 
-import { useDeleteIssueMutation } from '@tegonhq/services/issues';
+import { useDeleteIssueMutation } from 'services/issues';
 import {
   AlertDialog,
   AlertDialogContent,

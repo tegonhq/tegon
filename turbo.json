@@ -33,6 +33,7 @@
 
     "GITHUB_CLIENT_ID",
     "GITHUB_CLIENT_SECRET",
+    "GITHUB_APP_PEM",
     "SLACK_CLIENT_ID",
     "SLACK_CLIENT_SECRET",
     "SENTRY_CLIENT_ID",
@@ -65,8 +66,8 @@
     "TRIGGER_COMMON_ID",
     "TRIGGER_TOKEN",
     "TRIGGER_ACCESS_TOKEN",
-    "TRIGGER_SECRET_KEY",
     "TRIGGER_API_URL",
+    "TRIGGER_INTEGRATION_SECRET_KEY",
 
     "GMAIL_CLIENT_ID",
     "GMAIL_CLIENT_SECRET",
@@ -99,6 +100,9 @@
     },
     "deploy-trigger-tasks": {
       "env": ["TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL"],
+      "cache": false
+    },
+    "trigger-dev": {
       "cache": false
     },
     "db:init-resources": {

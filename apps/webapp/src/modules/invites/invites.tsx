@@ -1,6 +1,6 @@
 import type { Invite } from 'common/types';
 
-import { useInviteActionMutation } from '@tegonhq/services/workspace';
+import { useInviteActionMutation } from 'services/workspace';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import { useToast } from '@tegonhq/ui/components/use-toast';

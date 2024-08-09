@@ -20,9 +20,10 @@
     "@tegonhq/eslint-config": "workspace:*",
     "@tegonhq/typescript-config": "workspace:*",
     "@types/node": "^20",
-    "typescript": "^5.4.5",
+    "class-transformer": "0.5.1",
     "rimraf": "^3.0.2",
-    "tsup": "^8.0.1"
+    "tsup": "^8.0.1",
+    "typescript": "^5.4.5"
   },
   ".": {
     "import": {
@@ -31,5 +32,8 @@
     },
     "require": "./dist/index.js",
     "types": "./dist/index.d.ts"
+  },
+  "dependencies": {
+    "class-validator": "0.14.1"
   }
 }

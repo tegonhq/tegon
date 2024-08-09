@@ -1,10 +1,7 @@
 import type { z } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  ResetPasswordSchema,
-  useResetPasswordMutation,
-} from '@tegonhq/services/auth';
+import { ResetPasswordSchema, useResetPasswordMutation } from 'services/auth';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,

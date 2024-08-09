@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { IssueRequestParamsDto, TeamRequestParamsDto } from '@tegonhq/types';
 import { Response } from 'express';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -18,9 +19,7 @@ import {
   AIInput,
   DescriptionInput,
   FilterInput,
-  IssueRequestParams,
   SubIssueInput,
-  TeamRequestParams,
 } from './issues.interface';
 
 @Controller({
@@ -34,7 +33,7 @@ export class IssuesAIController {
   @Post('suggestions')
   @UseGuards(new AuthGuard())
   async suggestions(
-    @Query() teamRequestParams: TeamRequestParams,
+    @Query() teamRequestParams: TeamRequestParamsDto,
     @Body() suggestionsInput: AIInput,
   ) {
     return await this.issuesAiService.suggestions(
@@ -46,7 +45,7 @@ export class IssuesAIController {
   @Post('ai_filters')
   @UseGuards(new AuthGuard())
   async aiFilters(
-    @Query() teamRequestParams: TeamRequestParams,
+    @Query() teamRequestParams: TeamRequestParamsDto,
     @Body() filterInput: FilterInput,
   ) {
     return await this.issuesAiService.aiFilters(teamRequestParams, filterInput);
@@ -75,7 +74,7 @@ export class IssuesAIController {
 
   @Get(':issueId/summarize')
   @UseGuards(new AuthGuard())
-  async summarizeIssue(@Param() issueParams: IssueRequestParams) {
+  async summarizeIssue(@Param() issueParams: IssueRequestParamsDto) {
     return await this.issuesAiService.summarizeIssue(issueParams.issueId);
   }
 }

@@ -1,5 +1,5 @@
-import type { User } from 'common/types';
-
 import { createContext } from 'react';
+
+import type { User } from 'common/types';
 
 export const UserContext = createContext<User>(undefined);

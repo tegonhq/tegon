@@ -1,33 +1,9 @@
-import { type UseQueryResult, useQuery } from 'react-query';
+import axios from 'axios';
 
-import { type XHRErrorResponse, ajaxGet } from '@tegonhq/services/utils';
-
-export const GetLinkedIssueDetailsQuery = 'getLinkedIssueDetailsQuery';
-
-interface LinkedIssueDetails {
-  status: string;
-  events: string;
-  lastSeen: string;
-  seenByUser: boolean;
-  priority: string;
-}
-
-export function getLinkedIssueDetails(linkedIssueId: string) {
-  return ajaxGet({
-    url: `/api/v1/linked_issues/${linkedIssueId}/details`,
-  });
-}
-
-export function useGetLinkedIssueDetailsQuery(
-  linkedIssueId: string,
-): UseQueryResult<LinkedIssueDetails, XHRErrorResponse> {
-  return useQuery(
-    [GetLinkedIssueDetailsQuery, linkedIssueId],
-    () => getLinkedIssueDetails(linkedIssueId),
-    {
-      retry: 1,
-      staleTime: 1,
-      refetchOnWindowFocus: false, // Frequency of Change would be Low
-    },
+export async function getLinkedIssueDetails(linkedIssueId: string) {
+  const response = await axios.get(
+    `/api/v1/linked_issues/${linkedIssueId}/details`,
   );
+
+  return response.data;
 }
