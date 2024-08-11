@@ -17,6 +17,7 @@ import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { IssueRelatedProperties } from './issue-related-properties';
+import { DatePicker } from '@nextui-org/date-picker';
 
 export const RightSide = observer(() => {
   const issue = useIssueData();
@@ -86,6 +87,16 @@ export const RightSide = observer(() => {
             onChange={labelsChange}
             variant={IssueLabelDropdownVariant.LINK}
             teamIdentifier={currentTeam.identifier}
+          />
+        </div>
+        <div className={cn('flex flex-col justify-start items-start gap-1')}>
+          <div className="text-xs text-left">Due Date</div>
+          <DatePicker
+            className="selectorIcon"
+            description="outside-left"
+            labelPlacement="outside-left"
+            variant="underlined"
+            size="sm"
           />
         </div>
       </div>
