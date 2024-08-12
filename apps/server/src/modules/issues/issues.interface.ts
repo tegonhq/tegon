@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
-  IsDate,
+  // IsDate,
   IsEnum,
   IsNumber,
   IsObject,
@@ -75,7 +75,7 @@ export class CreateIssueInput {
   priority?: number;
 
   @IsOptional()
-  @IsDate()
+  // @IsDate()
   dueDate?: Date;
 
   @IsOptional()
@@ -145,7 +145,7 @@ export class UpdateIssueInput {
   priority?: number;
 
   @IsOptional()
-  @IsDate()
+  // @IsDate()
   dueDate?: Date;
 
   @IsOptional()
