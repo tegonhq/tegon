@@ -23,5 +23,10 @@
     "typescript": "5.4.3",
     "zod": "3.23.8"
   },
-  "packageManager": "pnpm@8.15.6"
+  "packageManager": "pnpm@8.15.6",
+  "dependencies": {
+    "@internationalized/date": "^3.5.5",
+    "@nextui-org/date-picker": "^2.1.6",
+    "@react-types/calendar": "^3.4.8"
+  }
 }
