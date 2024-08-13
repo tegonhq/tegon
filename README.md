@@ -48,36 +48,32 @@ password: XfFNw6GwVJVQv6PA
 
 ## Self Hosted
 
-To self-host Tegon on your own machine, you can do so using Docker. However note that you will need to add configurations for email, AI and storage services. Please refer to the documentation [here](https://docs.tegon.ai/oss/self-deployment).
+1. Install Docker on your workstation (see instructions). Make sure you’re on the latest version of docker-compose.
+
+2. Run the following commands in your terminal:
+```
+git clone https://github.com/tegonhq/docker.git
+cd docker
+```
+3. Create a .env file
+```
+cp .env.example .env
+```
+4. Run the start script and follow the prompts
+```
+./start.sh
+```
+5. You can now check tegon at http://localhost:8000
 
 ## Tegon Cloud
 
 We offer a managed cloud version of Tegon that allows you to run Tegon without having to manage the infrastructure. It is currently in private beta.
 If you're interested in using Tegon Cloud, please book a [demo call](https://calendly.com/manik-tegon/30min).
 
-## Features
+## Join the community
 
-- **Issues Tracking:**
-  - Interactive Layout - Choose between List or Kanban views.
-  - Focus on What Matters - Easily update key details and highlight critical dependencies (sub-tasks, blocked/blocking issues).
-  - List View - Perfect for scanning prioritized issues, grouped by status. Collapse sections for focus.
-  - Kanban View - Visualize workflow with Kanban boards, ideal for tracking progress at a glance.
-- **AI-powered Suggestions:** Automatically suggests titles, labels, assignees, and even identifies duplicate issues while you create new ones.
-- **AI Summarization:** Uses AI to generate concise summaries of issue activity, keeping you focused.
-- **Natural Language Filtering:** Filter issues with ease by simply typing in plain text.
-- **Automated Triaging:** AI saves time by automatically categorizing issues coming in triage
-- **Centralised Triage:**
-  - Unified Inbox - Capture issues from all sources (sales, support, monitoring tools) in a single queue.
-  - Slack Integration - Create issues directly from Slack, empowering non-technical users.
-  - Automatic Routing - Errors detected by tools (e.g., Sentry) automatically flow into triage for prioritization.
-- Custom Views
-- Sprints (coming soon)
-- Task Prioritisation (coming soon)
-
-## Integrations
-
-- Github: Automatically update issues status based on commits and pull requests and link mentions of issues back to Tegon
-- Slack:
-  - Mention the Tegon bot in a Slack channel to automatically create a bug or feature request.
-  - Link a Slack thread to an issue to provide full context about the discussions happening on a specific task or a feature request.
-- Sentry: Get information about Sentry errors in Tegon issues
+- Star the repo
+- Check out our [documentation](https://docs.tegon.ai/introduction)
+- Follow us on [Twitter](https://twitter.com/tegonhq) or [LinkedIn](https://www.linkedin.com/company/tegon-ai)
+- Join our [Slack](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA)
+- [Contributions](https://github.com/tegonhq/tegon/contribute) are, of course, most welcome!
