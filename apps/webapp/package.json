@@ -23,6 +23,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "copy-to-clipboard": "^3.3.3",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.10",
     "dexie": "^3.2.4",
     "dexie-observable": "^4.0.1-beta.13",
