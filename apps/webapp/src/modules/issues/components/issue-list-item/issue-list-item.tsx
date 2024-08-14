@@ -24,6 +24,7 @@ import { useContextStore } from 'store/global-context-provider';
 import { IssueLabels } from './issue-labels';
 import { IssueRelations, View } from './issue-relations';
 import { getRelationIssues } from './utils';
+import { Calendar } from '@tegonhq/ui/icons';
 
 interface IssueListItemProps {
   issueId: string;
@@ -34,6 +35,17 @@ interface IssueListItemProps {
 interface IssueRelationIssuesProps {
   view: View;
   issue: IssueType;
+}
+
+function formatDateToDayMonth(isoString: string): string {
+  const date = new Date(isoString);
+
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'short',
+  };
+
+  return date.toLocaleDateString('en-GB', options);
 }
 
 export const IssueRelationIssues = observer(
@@ -164,10 +176,14 @@ export const IssueListItem = observer(
                     <span className="flex items-center justify-start shrink min-w-[0px]">
                       <span className="text-left">{issue.title}</span>
                     </span>
-
                     <IssueLabels labelIds={issue.labelIds} />
                   </div>
-
+                  {issue.dueDate && (
+                    <div className="inline-flex min-w-[70px] text-xs">
+                      <Calendar /> &nbsp;
+                      {formatDateToDayMonth(issue.dueDate)}
+                    </div>
+                  )}
                   <div className="flex shrink-0 items-center gap-8">
                     <div className="w-[80px]">
                       <IssuePriorityDropdown

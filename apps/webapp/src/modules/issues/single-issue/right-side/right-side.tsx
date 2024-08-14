@@ -2,7 +2,7 @@ import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
   IssueAssigneeDropdown,
@@ -51,12 +51,23 @@ export const RightSide = observer(() => {
       teamId: issue.teamId,
     });
   };
+
+  const dueDateChange = (dueDate: Date) => {
+    updateIssue({ id: issue.id, dueDate: dueDate, teamId: issue.teamId });
+  };
+
   const disablePastDates = (date: Date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return date < today;
   };
-  const [date, setDate] = React.useState<Date>();
+  const [dueDate, setDueDate] = React.useState<Date>(
+    issue.dueDate ? new Date(issue.dueDate) : null,
+  );
+  useEffect(() => {
+    console.log(dueDate);
+    dueDateChange(dueDate);
+  }, [dueDate]);
   return (
     <>
       <div className="grow p-6 flex flex-col gap-4">
@@ -110,18 +121,18 @@ export const RightSide = observer(() => {
                 variant={'outline'}
                 className={cn(
                   'w-[240px] justify-start text-left font-normal',
-                  !date && 'text-muted-foreground',
+                  !dueDate && 'text-muted-foreground',
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? format(date, 'PPP') : <span>Pick a date</span>}
+                {dueDate ? format(dueDate, 'PPP') : <span>Pick a date</span>}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
-                selected={date}
-                onSelect={setDate}
+                selected={dueDate}
+                onSelect={setDueDate}
                 disabled={disablePastDates}
               />
             </PopoverContent>
