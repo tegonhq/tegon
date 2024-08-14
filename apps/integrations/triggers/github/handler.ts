@@ -10,8 +10,8 @@ import { handler } from '../../utils/handler';
 async function run(eventPayload: IntegrationEventPayload) {
   switch (eventPayload.event) {
     case IntegrationPayloadEventType.IntegrationSpec:
-      console.log(spec());
       return spec();
+
     // Used to save settings data
     case IntegrationPayloadEventType.IntegrationCreate:
       return await integrationCreate(

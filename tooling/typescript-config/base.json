@@ -25,6 +25,5 @@
     "removeComments": true,
     "esModuleInterop": true
   },
-  "exclude": [ "node_modules", "**/*/lib", "**/*/dist" ],
-  "references": [ { "path": "../utils/" } ]
+  "exclude": [ "node_modules", "**/*/lib", "**/*/dist" ]
 }

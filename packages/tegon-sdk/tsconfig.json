@@ -1,10 +1,11 @@
 {
   "extends": "@tegonhq/typescript-config/node.json",
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "tsup.config.ts"],
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "paths": {
+      "@tegonhq/services": ["../services/src/index"],
       "@tegonhq/types": ["../types/src/index"]
     },
     "lib": ["DOM", "DOM.Iterable"],
