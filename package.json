@@ -24,8 +24,7 @@
   },
   "packageManager": "pnpm@8.15.6",
   "dependencies": {
-    "@internationalized/date": "^3.5.5",
-    "@nextui-org/date-picker": "^2.1.6",
-    "@react-types/calendar": "^3.4.8"
+    "date-fns": "^3.6.0",
+    "react-day-picker": "^8.9.1"
   }
 }

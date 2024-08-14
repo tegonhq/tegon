@@ -1,11 +1,8 @@
-import type { DateValue } from '@react-types/calendar';
-
-import { CalendarDate } from '@internationalized/date';
-import { DatePicker } from '@nextui-org/date-picker';
 import { useUpdateIssueMutation } from '@tegonhq/services/issues';
 import { cn } from '@tegonhq/ui/lib/utils';
+import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import {
   IssueAssigneeDropdown,
@@ -22,56 +19,19 @@ import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { IssueRelatedProperties } from './issue-related-properties';
-
-interface Calendar {
-  calendar: {
-    identifier: string;
-  };
-  day: number;
-  era: string;
-  month: number;
-  year: number;
-}
-
-function calendarToDate(calendar: Calendar): Date {
-  if (calendar === null || calendar === undefined) {
-    return null;
-  }
-  const { day, month, year, era } = calendar;
-
-  // Adjust year based on era
-  let adjustedYear = year;
-  if (era === 'BC') {
-    adjustedYear = -year + 1; // Simple example of BC handling
-  }
-  const jsMonth = month - 1;
-  const date = new Date(adjustedYear, jsMonth, day);
-
-  return date;
-}
-
-function convertToCalendarDate(dateStr: string): CalendarDate {
-  if (!dateStr) {
-    return null;
-  }
-  const date = new Date(dateStr);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1; // Months are 0-based in JavaScript
-  const day = date.getDate();
-
-  return new CalendarDate(year, month, day);
-}
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@tegonhq/ui/components/popover';
+import { Calendar } from '@tegonhq/ui/components/calendar';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { Button } from '@tegonhq/ui/components/button';
 
 export const RightSide = observer(() => {
   const issue = useIssueData();
   const { mutate: updateIssue } = useUpdateIssueMutation({});
   const currentTeam = useCurrentTeam();
-  const [dueDate, setDueDate] = React.useState<DateValue>(
-    convertToCalendarDate(issue.dueDate?.toString()),
-  );
-  useEffect(() => {
-    dueDateChange();
-  }, [dueDate]);
   const statusChange = (stateId: string) => {
     updateIssue({ id: issue.id, stateId, teamId: issue.teamId });
   };
@@ -84,11 +44,6 @@ export const RightSide = observer(() => {
     updateIssue({ id: issue.id, labelIds, teamId: issue.teamId });
   };
 
-  const dueDateChange = () => {
-    const convertedDate = calendarToDate(dueDate);
-    updateIssue({ id: issue.id, dueDate: convertedDate, teamId: issue.teamId });
-  };
-
   const priorityChange = (priority: number) => {
     updateIssue({
       id: issue.id,
@@ -96,7 +51,12 @@ export const RightSide = observer(() => {
       teamId: issue.teamId,
     });
   };
-
+  const disablePastDates = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date < today;
+  };
+  const [date, setDate] = React.useState<Date>();
   return (
     <>
       <div className="grow p-6 flex flex-col gap-4">
@@ -144,15 +104,28 @@ export const RightSide = observer(() => {
         </div>
         <div className={cn('flex flex-col justify-start items-start gap-1')}>
           <div className="text-xs text-left">Due Date</div>
-          <DatePicker
-            className="selectorIcon"
-            description="outside-left"
-            labelPlacement="outside-left"
-            variant="underlined"
-            size="sm"
-            value={dueDate}
-            onChange={setDueDate}
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={'outline'}
+                className={cn(
+                  'w-[240px] justify-start text-left font-normal',
+                  !date && 'text-muted-foreground',
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {date ? format(date, 'PPP') : <span>Pick a date</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                disabled={disablePastDates}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </>
