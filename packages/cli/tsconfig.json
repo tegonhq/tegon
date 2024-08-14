@@ -1,6 +1,12 @@
 {
   "extends": "@tegonhq/typescript-config/node.json",
-  "include": ["./src/**/*.ts"],
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./e2e/**/*.ts",
+    "./types.d.ts",
+    "./tsup.config.ts"
+  ],
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -10,7 +16,10 @@
     "lib": ["DOM", "DOM.Iterable"],
     "declaration": false,
     "declarationMap": false,
-    "stripInternal": true
+    "stripInternal": true,
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "types": ["node"]
   },
   "exclude": ["node_modules"]
 }

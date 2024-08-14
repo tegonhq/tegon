@@ -45,9 +45,7 @@ export const IntegrationDefinitionsStore: IAnyStateTreeNode = types
       }
     };
 
-    const load = flow(function* () {
-      self.integrationDefinitions = integrationDefinitions;
-    });
+    const load = flow(function* () {});
 
     return { update, deleteById, load };
   });

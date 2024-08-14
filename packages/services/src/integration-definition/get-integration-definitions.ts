@@ -1,13 +1,8 @@
 import {
-  CreateIssueCommentDto,
   IntegrationDefinition,
   WorkspaceRequestParamsDto,
 } from '@tegonhq/types';
 import axios from 'axios';
-
-export class CreateIssueCommentProps extends CreateIssueCommentDto {
-  issueId: string;
-}
 
 export async function getIntegrationDefinitions({
   workspaceId,
