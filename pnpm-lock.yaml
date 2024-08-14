@@ -712,12 +712,6 @@ importers:
 
   packages/tegon-sdk:
     dependencies:
-      '@tegonhq/services':
-        specifier: workspace:*
-        version: link:../services
-      '@tegonhq/types':
-        specifier: workspace:*
-        version: link:../types
       chalk:
         specifier: ^5.2.0
         version: 5.3.0
@@ -743,6 +737,12 @@ importers:
         specifier: 3.22.3
         version: 3.22.3
     devDependencies:
+      '@tegonhq/services':
+        specifier: workspace:*
+        version: link:../services
+      '@tegonhq/types':
+        specifier: workspace:*
+        version: link:../types
       '@tegonhq/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -789,6 +789,9 @@ importers:
       class-transformer:
         specifier: 0.5.1
         version: 0.5.1
+      reflect-metadata:
+        specifier: ^0.2.1
+        version: 0.2.2
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2

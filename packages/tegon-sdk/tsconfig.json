@@ -4,10 +4,6 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "paths": {
-      "@tegonhq/services": ["../services/src/index"],
-      "@tegonhq/types": ["../types/src/index"]
-    },
     "lib": ["DOM", "DOM.Iterable"],
     "declaration": false,
     "declarationMap": false,
