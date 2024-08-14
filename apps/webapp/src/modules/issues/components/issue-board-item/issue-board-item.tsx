@@ -1,8 +1,10 @@
 import type { DraggableProvided } from '@hello-pangea/dnd';
 
 import { useUpdateIssueMutation } from '@tegonhq/services/issues';
+import { Calendar } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
+import React from 'react';
 
 import {
   IssueAssigneeDropdown,
@@ -28,6 +30,17 @@ interface BoardIssueItemProps {
 
 function getStyle(provided: DraggableProvided) {
   return provided.draggableProps.style;
+}
+
+function formatDateToDayMonth(isoString: string): string {
+  const date = new Date(isoString);
+
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'short',
+  };
+
+  return date.toLocaleDateString('en-GB', options);
 }
 
 export const BoardIssueItem = observer(
@@ -91,11 +104,19 @@ export const BoardIssueItem = observer(
         <IssueRelations issue={issue} />
 
         <div className="flex gap-2 items-center justify-between">
-          <IssuePriorityDropdown
-            value={issue.priority ?? 0}
-            onChange={priorityChange}
-            variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
-          />
+          <div className="inline-flex gap-2 items-end">
+            <IssuePriorityDropdown
+              value={issue.priority ?? 0}
+              onChange={priorityChange}
+              variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
+            />
+            {issue.dueDate && (
+              <div className="inline-flex min-w-[70px] text-xs">
+                <Calendar size={18} /> &nbsp;
+                {formatDateToDayMonth(issue.dueDate)}
+              </div>
+            )}
+          </div>
 
           <IssueAssigneeDropdown
             value={issue.assigneeId}
