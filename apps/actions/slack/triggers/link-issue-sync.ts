@@ -1,12 +1,13 @@
 import {
   EventBody,
   IntegrationAccount,
-  LinkIssuePayload,
+  LinkedIssueCreateActionPayload,
   UpdateLinkedIssueDto,
-  WebhookData,
 } from '@tegonhq/types';
 import { AbortTaskRunError, logger } from '@trigger.dev/sdk/v3';
 import axios from 'axios';
+
+import { slackLinkRegex } from 'types';
 
 import {
   createLinkIssueComment,
@@ -16,25 +17,20 @@ import {
 
 export const linkIssueSync = async (
   integrationAccount: IntegrationAccount,
-  payload: WebhookData,
+  payload: LinkedIssueCreateActionPayload,
 ) => {
-  const {
-    linkIssueId,
-    matchedRegex,
-    matchedRegexType: type,
-  } = payload as LinkIssuePayload;
+  const { linkIssueId } = payload;
 
-  const slackRegex = new RegExp(matchedRegex, 'i');
   let linkedIssue = (
     await axios.get(
       `${process.env.BACKEND_HOST}/v1/linked_issues/${linkIssueId}`,
     )
   ).data;
 
-  const match = linkedIssue.url.match(slackRegex);
+  const match = linkedIssue.url.match(slackLinkRegex);
 
   if (!match) {
-    throw new AbortTaskRunError("Slack link didn't match with link regex");
+    throw new AbortTaskRunError("Link didn't match with Slack link regex");
   }
 
   const [
@@ -48,8 +44,6 @@ export const linkIssueSync = async (
   const parentTs = `${messageTimestamp}.${messageTimestampMicro}`;
   const messageTs = threadTs ? threadTs.replace('p', '') : parentTs;
 
-  const subType = integrationAccount ? 'Thread' : 'Message';
-
   let message: string;
   if (integrationAccount) {
     const slackMessageResponse = await getSlackMessage(integrationAccount, {
@@ -62,8 +56,7 @@ export const linkIssueSync = async (
   const linkIssueData: UpdateLinkedIssueDto = {
     sourceId: `${channelId}_${parentTs || messageTs}`,
     source: {
-      type,
-      subType,
+      type: 'Slack',
       integrationAccountId: integrationAccount.id,
     },
     sourceData: {

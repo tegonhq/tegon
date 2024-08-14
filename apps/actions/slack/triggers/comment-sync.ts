@@ -1,4 +1,7 @@
-import { IntegrationAccount, IssueCommentSyncPayload } from '@tegonhq/types';
+import {
+  IntegrationAccount,
+  IssueCommentCreateActionPayload,
+} from '@tegonhq/types';
 import { AbortTaskRunError } from '@trigger.dev/sdk/v3';
 import axios from 'axios';
 
@@ -6,7 +9,7 @@ import { convertTiptapJsonToSlackBlocks, getSlackHeaders } from '../utils';
 
 export const commentSync = async (
   integrationAccount: IntegrationAccount,
-  data: IssueCommentSyncPayload,
+  data: IssueCommentCreateActionPayload,
 ) => {
   const { issueComment } = data;
   const integrationDefinitionName =

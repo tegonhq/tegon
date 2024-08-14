@@ -15,6 +15,7 @@ model Action {
   deleted   DateTime?
 
   name         String
+  integrations String[]
   workspace    Workspace?     @relation(fields: [workspaceId], references: [id])
   workspaceId  String?
   actionEntity ActionEntity[]

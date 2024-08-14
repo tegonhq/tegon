@@ -555,6 +555,40 @@ importers:
         specifier: ^5.4.3
         version: 5.5.3
 
+  apps/workflows:
+    dependencies:
+      '@tegonhq/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@trigger.dev/sdk':
+        specifier: 3.0.0-beta.50
+        version: 3.0.0-beta.50(typescript@5.5.3)
+      axios:
+        specifier: ^1.6.7
+        version: 1.7.2(debug@4.3.5)
+      configstore:
+        specifier: ^7.0.0
+        version: 7.0.0
+    devDependencies:
+      '@tegonhq/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@tegonhq/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@types/configstore':
+        specifier: ^6.0.2
+        version: 6.0.2
+      '@types/jsonwebtoken':
+        specifier: ^9.0.6
+        version: 9.0.6
+      '@types/node':
+        specifier: ^22.1.0
+        version: 22.1.0
+      jsonwebtoken:
+        specifier: ^9.0.2
+        version: 9.0.2
+
   packages/cli:
     dependencies:
       '@anatine/esbuild-decorators':
@@ -15260,7 +15294,7 @@ snapshots:
 
   '@types/mute-stream@0.0.4':
     dependencies:
-      '@types/node': 22.1.0
+      '@types/node': 20.14.11
 
   '@types/node-fetch@2.6.11':
     dependencies:
@@ -21776,7 +21810,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 22.1.0
+      '@types/node': 20.14.11
       long: 5.2.3
 
   proxy-addr@2.0.7:
