@@ -74,3 +74,4 @@ export * from './slack-icon';
 export * from './stack-line';
 export * from './bar-fill';
 export * from './sentry-icon';
+export * from './calendar';
