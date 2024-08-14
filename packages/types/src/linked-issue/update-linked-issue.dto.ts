@@ -1,15 +1,17 @@
 import { IsJSON, IsOptional, IsString } from 'class-validator';
 
 export class UpdateLinkedIssueDto {
+  @IsOptional()
   @IsString()
-  url: string;
-
-  @IsString()
-  sourceId: string;
+  url?: string;
 
   @IsOptional()
   @IsString()
-  title: string;
+  sourceId?: string;
+
+  @IsOptional()
+  @IsString()
+  title?: string;
 
   @IsOptional()
   @IsJSON()

@@ -1,0 +1,10 @@
+{
+  "extends": "@tegonhq/typescript-config/nest.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "commonjs",
+    "outDir": "./dist"
+  },
+  "exclude": ["node_modules"],
+  "include": ["**/*.ts", "**/*.tsx", ".eslintrc.js"]
+}

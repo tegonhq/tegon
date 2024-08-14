@@ -8,172 +8,131 @@ generator client {
   // previewFeatures = []
 }
 
-model User {
-  id String @id @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-
-  fullname                String?
-  username                String
-  initialSetupComplete    Boolean @default(false)
-  anonymousDataCollection Boolean @default(false)
-
-  usersOnWorkspaces  UsersOnWorkspaces[]
-  template           Template[]
-  createdBy          Issue[]
-  integrationAccount IntegrationAccount[]
-  attachment         Attachment[]
-}
-
-model Workspace {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  name String
-  slug String  @unique
-  icon String?
-
-  usersOnWorkspaces     UsersOnWorkspaces[]
-  team                  Team[]
-  label                 Label[]
-  template              Template[]
-  syncAction            SyncAction[]
-  integrationAccount    IntegrationAccount[]
-  integrationDefinition IntegrationDefinitionV2[]
-  attachments           Attachment[]
-  View                  View[]
-  aiRequests            AIRequest[]
-  prompts               Prompt[]
-}
-
-model UsersOnWorkspaces {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user                    User      @relation(fields: [userId], references: [id])
-  workspace               Workspace @relation(fields: [workspaceId], references: [id])
-  userId                  String
-  workspaceId             String
-  teamIds                 String[]
-  status                  Status    @default(ACTIVE)
-  externalAccountMappings Json?
-  role                    Role      @default(ADMIN)
-  joinedAt                DateTime?
-
-  @@unique([userId, workspaceId])
-}
-
-model Team {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  name       String
-  identifier String
-  icon       String?
-
-  workspace      Workspace        @relation(fields: [workspaceId], references: [id])
-  workspaceId    String
-  issue          Issue[]
-  label          Label[]
-  template       Template[]
-  workflow       Workflow[]
-  teamPreference TeamPreference[]
-  View           View[]
-
-  @@unique([name, identifier, workspaceId])
-}
-
-model Label {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  name        String
-  color       String
-  description String?
-
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  workspaceId String
-  team        Team?     @relation(fields: [teamId], references: [id])
-  teamId      String?
-  group       Label?    @relation("Group", fields: [groupId], references: [id])
-  groupId     String?
-  labels      Label[]   @relation("Group")
-
-  @@unique([name, workspaceId])
-}
-
-model Template {
+model Action {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
   name         String
-  category     TemplateCategory
-  templateData Json
+  workspace    Workspace?     @relation(fields: [workspaceId], references: [id])
+  workspaceId  String?
+  actionEntity ActionEntity[]
+}
 
-  createdBy   User      @relation(fields: [createdById], references: [id])
-  createdById String
+model ActionEntity {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  type   String
+  entity String
+
+  action   Action @relation(fields: [actionId], references: [id])
+  actionId String
+
+  @@unique([type, entity, actionId])
+}
+
+model Attachment {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  fileName       String?
+  originalName   String
+  fileType       String
+  fileExt        String
+  size           Int
+  url            String?
+  status         AttachmentStatus
+  sourceMetadata Json?
+
+  uploadedBy   User?      @relation(fields: [uploadedById], references: [id])
+  uploadedById String?
+  workspace    Workspace? @relation(fields: [workspaceId], references: [id])
+  workspaceId  String?
+}
+
+model AIRequest {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  modelName   String
+  data        String
+  response    String?
+  llmModel    String
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   workspaceId String
-  team        Team?     @relation(fields: [teamId], references: [id])
-  teamId      String?
+
+  successful Boolean @default(false)
 }
 
-model Workflow {
+model Emoji {
+  id        String     @id @default(uuid())
+  name      String
+  reactions Reaction[]
+
+  @@unique([name])
+}
+
+model IntegrationAccount {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name     String
-  position Int
-  color    String
-  category WorkflowCategory
+  integrationConfiguration Json
+  // Unique Identifier for each connected app or personal account
+  accountId                String?
+  settings                 Json?
+  isActive                 Boolean @default(true)
+  personal                 Boolean @default(false)
 
-  team   Team?  @relation(fields: [teamId], references: [id])
-  teamId String
+  integratedBy            User                    @relation(references: [id], fields: [integratedById])
+  integratedById          String
+  integrationDefinition   IntegrationDefinitionV2 @relation(references: [id], fields: [integrationDefinitionId])
+  integrationDefinitionId String
+  workspace               Workspace               @relation(references: [id], fields: [workspaceId])
+  workspaceId             String
+
+  @@unique([accountId, integrationDefinitionId, workspaceId])
 }
 
-model TeamPreference {
+model IntegrationDefinitionV2 {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  team   Team?  @relation(fields: [teamId], references: [id])
-  teamId String
+  name         String     @unique
+  icon         String
+  clientId     String
+  clientSecret String
+  workspace    Workspace? @relation(references: [id], fields: [workspaceId])
+  workspaceId  String?
 
-  preference Preference
-  value      String
-
-  @@unique([teamId, preference])
+  IntegrationAccount IntegrationAccount[]
 }
 
-model SyncAction {
+model Invite {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  modelName  ModelName
-  modelId    String
-  action     ActionType
-  sequenceId BigInt
-
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  sentAt      DateTime
+  expiresAt   DateTime
+  emailId     String
+  fullName    String
   workspaceId String
-
-  @@unique([modelId, action])
+  status      InviteStatus
+  teamIds     String[]
+  role        Role
 }
 
 model Issue {
@@ -217,24 +176,6 @@ model Issue {
   @@unique([teamId, number])
 }
 
-model LinkedIssue {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  url         String
-  sourceId    String?
-  source      Json?
-  sourceData  Json?
-  createdById String?
-
-  issue   Issue  @relation(fields: [issueId], references: [id])
-  issueId String
-
-  @@unique([url])
-}
-
 model IssueComment {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
@@ -255,47 +196,6 @@ model IssueComment {
 
   replies       IssueComment[]  @relation("Report")
   linkedComment LinkedComment[]
-}
-
-model LinkedComment {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  url         String
-  sourceId    String
-  source      Json?
-  sourceData  Json?
-  createdById String?
-
-  comment   IssueComment @relation(fields: [commentId], references: [id])
-  commentId String
-
-  @@unique([url])
-}
-
-model Reaction {
-  id        String    @id @default(uuid())
-  reactedAt DateTime  @default(now())
-  deleted   DateTime?
-
-  userId String
-
-  comment   IssueComment @relation(fields: [commentId], references: [id])
-  commentId String
-  emoji     Emoji        @relation(fields: [emojiId], references: [id])
-  emojiId   String
-
-  @@unique([emojiId, commentId, userId])
-}
-
-model Emoji {
-  id        String     @id @default(uuid())
-  name      String
-  reactions Reaction[]
-
-  @@unique([name])
 }
 
 model IssueHistory {
@@ -345,43 +245,74 @@ model IssueRelation {
   @@unique([issueId, relatedIssueId, type])
 }
 
-model IntegrationDefinitionV2 {
+model IssueSuggestion {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name         String     @unique
-  icon         String
-  clientId     String
-  clientSecret String
-  workspace    Workspace? @relation(references: [id], fields: [workspaceId])
-  workspaceId  String?
-
-  IntegrationAccount IntegrationAccount[]
+  issueId             String   @unique
+  suggestedLabelIds   String[]
+  suggestedAssigneeId String?
+  metadata            Json?
+  issue               Issue?
 }
 
-model IntegrationAccount {
+model Label {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  integrationConfiguration Json
-  // Unique Identifier for each connected app or personal account
-  accountId                String?
-  settings                 Json?
-  isActive                 Boolean @default(true)
-  personal                 Boolean @default(false)
+  name        String
+  color       String
+  description String?
 
-  integratedBy            User                    @relation(references: [id], fields: [integratedById])
-  integratedById          String
-  integrationDefinition   IntegrationDefinitionV2 @relation(references: [id], fields: [integrationDefinitionId])
-  integrationDefinitionId String
-  workspace               Workspace               @relation(references: [id], fields: [workspaceId])
-  workspaceId             String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+  team        Team?     @relation(fields: [teamId], references: [id])
+  teamId      String?
+  group       Label?    @relation("Group", fields: [groupId], references: [id])
+  groupId     String?
+  labels      Label[]   @relation("Group")
 
-  @@unique([accountId, integrationDefinitionId, workspaceId])
+  @@unique([name, workspaceId])
+}
+
+model LinkedComment {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  url         String
+  sourceId    String
+  source      Json?
+  sourceData  Json?
+  createdById String?
+
+  comment   IssueComment @relation(fields: [commentId], references: [id])
+  commentId String
+
+  @@unique([url])
+}
+
+model LinkedIssue {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  url         String
+  sourceId    String?
+  source      Json?
+  sourceData  Json?
+  createdById String?
+
+  issue   Issue  @relation(fields: [issueId], references: [id])
+  issueId String
+
+  @@unique([url])
 }
 
 model Notification {
@@ -403,25 +334,157 @@ model Notification {
   workspaceId String
 }
 
-model Attachment {
+model Prompt {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  fileName       String?
-  originalName   String
-  fileType       String
-  fileExt        String
-  size           Int
-  url            String?
-  status         AttachmentStatus
-  sourceMetadata Json?
+  name        String
+  prompt      String
+  model       LLMModels @default(GPT35TURBO)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
 
-  uploadedBy   User?      @relation(fields: [uploadedById], references: [id])
-  uploadedById String?
-  workspace    Workspace? @relation(fields: [workspaceId], references: [id])
-  workspaceId  String?
+  @@unique([name, workspaceId])
+}
+
+model Reaction {
+  id        String    @id @default(uuid())
+  reactedAt DateTime  @default(now())
+  deleted   DateTime?
+
+  userId String
+
+  comment   IssueComment @relation(fields: [commentId], references: [id])
+  commentId String
+  emoji     Emoji        @relation(fields: [emojiId], references: [id])
+  emojiId   String
+
+  @@unique([emojiId, commentId, userId])
+}
+
+model SyncAction {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  modelName  ModelName
+  modelId    String
+  action     ActionType
+  sequenceId BigInt
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+
+  @@unique([modelId, action])
+}
+
+model Team {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name       String
+  identifier String
+  icon       String?
+
+  workspace      Workspace        @relation(fields: [workspaceId], references: [id])
+  workspaceId    String
+  issue          Issue[]
+  label          Label[]
+  template       Template[]
+  workflow       Workflow[]
+  teamPreference TeamPreference[]
+  View           View[]
+
+  @@unique([name, identifier, workspaceId])
+}
+
+model TeamPreference {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  team   Team?  @relation(fields: [teamId], references: [id])
+  teamId String
+
+  preference Preference
+  value      String
+
+  @@unique([teamId, preference])
+}
+
+model Template {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name         String
+  category     TemplateCategory
+  templateData Json
+
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  createdById String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+  team        Team?     @relation(fields: [teamId], references: [id])
+  teamId      String?
+}
+
+// this is mapping between the projects in trigger to tegon
+// we use common slug project to run all the internal trigger background jobs
+model TriggerProject {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  projectId     String
+  projectSecret String
+  slug          String
+  workspaceId   String?
+}
+
+model User {
+  id String @id @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+
+  fullname                String?
+  username                String
+  initialSetupComplete    Boolean @default(false)
+  anonymousDataCollection Boolean @default(false)
+
+  usersOnWorkspaces  UsersOnWorkspaces[]
+  template           Template[]
+  createdBy          Issue[]
+  integrationAccount IntegrationAccount[]
+  attachment         Attachment[]
+}
+
+model UsersOnWorkspaces {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user                    User      @relation(fields: [userId], references: [id])
+  workspace               Workspace @relation(fields: [workspaceId], references: [id])
+  userId                  String
+  workspaceId             String
+  teamIds                 String[]
+  status                  Status    @default(ACTIVE)
+  externalAccountMappings Json?
+  role                    Role      @default(ADMIN)
+  joinedAt                DateTime?
+
+  @@unique([userId, workspaceId])
 }
 
 model View {
@@ -445,47 +508,43 @@ model View {
   createdById String
 }
 
-model IssueSuggestion {
+model Workflow {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  issueId             String   @unique
-  suggestedLabelIds   String[]
-  suggestedAssigneeId String?
-  metadata            Json?
-  issue               Issue?
+  name     String
+  position Int
+  color    String
+  category WorkflowCategory
+
+  team   Team?  @relation(fields: [teamId], references: [id])
+  teamId String
 }
 
-model Invite {
+model Workspace {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  sentAt      DateTime
-  expiresAt   DateTime
-  emailId     String
-  fullName    String
-  workspaceId String
-  status      InviteStatus
-  teamIds     String[]
-  role        Role
-}
+  name String
+  slug String  @unique
+  icon String?
 
-// this is mapping between the projects in trigger to tegon
-// we use common slug project to run all the internal trigger background jobs
-model TriggerProject {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  projectId     String
-  projectSecret String
-  slug          String
-  workspaceId   String?
+  usersOnWorkspaces     UsersOnWorkspaces[]
+  team                  Team[]
+  label                 Label[]
+  template              Template[]
+  syncAction            SyncAction[]
+  integrationAccount    IntegrationAccount[]
+  integrationDefinition IntegrationDefinitionV2[]
+  attachments           Attachment[]
+  View                  View[]
+  aiRequests            AIRequest[]
+  prompts               Prompt[]
+  action                Action[]
 }
 
 model WorkspaceTriggerProject {
@@ -497,37 +556,6 @@ model WorkspaceTriggerProject {
   triggerProjectId String
   workspaceId      String
   status           Boolean
-}
-
-model AIRequest {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  modelName   String
-  data        String
-  response    String?
-  llmModel    String
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  workspaceId String
-
-  successful Boolean @default(false)
-}
-
-model Prompt {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  name        String
-  prompt      String
-  model       LLMModels @default(GPT35TURBO)
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  workspaceId String
-
-  @@unique([name, workspaceId])
 }
 
 enum Preference {

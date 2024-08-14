@@ -26,7 +26,6 @@ export const tablesToSendMessagesFor = new Map([
   [ModelNameEnum.IssueHistory, true],
   [ModelNameEnum.UsersOnWorkspaces, true],
   [ModelNameEnum.IntegrationAccount, true],
-  [ModelNameEnum.IntegrationDefinition, true],
   [ModelNameEnum.LinkedIssue, true],
   [ModelNameEnum.IssueRelation, true],
   [ModelNameEnum.Notification, true],
