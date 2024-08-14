@@ -15200,7 +15200,7 @@ snapshots:
 
   '@types/jsonwebtoken@9.0.6':
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.1.0
 
   '@types/keyv@3.1.4':
     dependencies:
@@ -15257,7 +15257,7 @@ snapshots:
 
   '@types/mute-stream@0.0.4':
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.1.0
 
   '@types/node-fetch@2.6.11':
     dependencies:
@@ -21773,7 +21773,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.14.11
+      '@types/node': 22.1.0
       long: 5.2.3
 
   proxy-addr@2.0.7:
