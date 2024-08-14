@@ -1,6 +1,13 @@
-import { useUpdateIssueMutation } from '@tegonhq/services/issues';
+import { Button } from '@tegonhq/ui/components/button';
+import { Calendar } from '@tegonhq/ui/components/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@tegonhq/ui/components/popover';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { format } from 'date-fns';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 
@@ -18,15 +25,9 @@ import {
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
 
+import { useUpdateIssueMutation } from 'services/issues';
+
 import { IssueRelatedProperties } from './issue-related-properties';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@tegonhq/ui/components/popover';
-import { Calendar } from '@tegonhq/ui/components/calendar';
-import { Calendar as CalendarIcon } from 'lucide-react';
-import { Button } from '@tegonhq/ui/components/button';
 
 export const RightSide = observer(() => {
   const issue = useIssueData();
@@ -53,7 +54,7 @@ export const RightSide = observer(() => {
   };
 
   const dueDateChange = (dueDate: Date) => {
-    updateIssue({ id: issue.id, dueDate: dueDate, teamId: issue.teamId });
+    updateIssue({ id: issue.id, dueDate, teamId: issue.teamId });
   };
 
   const disablePastDates = (date: Date) => {
