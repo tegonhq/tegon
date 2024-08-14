@@ -13,6 +13,13 @@ export const config: TriggerConfig = {
       randomize: true,
     },
   },
-
-  triggerDirectories: ['./triggers'],
+  dependenciesToBundle: [
+    'configstore',
+    'xdg-basedir',
+    'atomically',
+    'stubborn-fs',
+    'when-exit',
+    'dot-prop',
+  ],
+  triggerDirectories: ['./slack'],
 };

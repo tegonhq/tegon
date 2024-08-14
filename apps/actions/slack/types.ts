@@ -1,4 +1,4 @@
-import { IntegrationAccount, ModelNameEnum } from "@tegonhq/types";
+import { IntegrationAccount, ModelNameEnum } from '@tegonhq/types';
 
 export interface SlashCommandSessionRecord {
   slackTeamId?: string;
