@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 export * from './common';
 export * from './integration-account';
 export * from './integration-definition';

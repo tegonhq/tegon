@@ -12,7 +12,10 @@ const options: Options = {
   clean: true,
   bundle: true,
   splitting: false,
-  dts: true,
+  dts: {
+    entry: "src/index.ts", // Replace with your entry point
+    resolve: true, // This bundles the .d.ts files together
+  },
   treeshake: {
     preset: "recommended",
   },
