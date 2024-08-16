@@ -12,7 +12,8 @@ import { handler } from '../../utils/handler';
  */
 async function init(eventPayload: IntegrationEventPayload) {
   if (
-    eventPayload.event === IntegrationPayloadEventType.GetIntegrationAccount
+    eventPayload.event === IntegrationPayloadEventType.GetIntegrationAccount ||
+    eventPayload.event === IntegrationPayloadEventType.Webhook
   ) {
     return { accountId: eventPayload.payload.data.eventBody.team_id };
   }

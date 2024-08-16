@@ -1,8 +1,7 @@
-import { ActionPayload, ModelNameEnum } from '@tegonhq/types';
-import { logger } from '@trigger.dev/sdk/v3';
+import { ActionPayload, ModelNameEnum, debug } from '@tegonhq/sdk';
 
-import { commentSync } from './comment-sync';
-import { linkIssueSync } from './link-issue-sync';
+import { commentSync } from '../triggers/comment-sync';
+import { linkIssueSync } from '../triggers/link-issue-sync';
 
 export const onCreateHandler = async (actionPayload: ActionPayload) => {
   const {
@@ -19,7 +18,7 @@ export const onCreateHandler = async (actionPayload: ActionPayload) => {
       return await linkIssueSync(integrationAccounts, data);
 
     default:
-      logger.debug('Unhandled Slack event type:', data.type);
+      debug('Unhandled Slack event type:', data.type);
   }
 
   return { status: 200 };

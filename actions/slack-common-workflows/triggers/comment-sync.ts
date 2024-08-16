@@ -2,8 +2,7 @@ import {
   IntegrationAccount,
   IssueComment,
   IssueCommentCreateActionPayload,
-} from '@tegonhq/types';
-import { AbortTaskRunError } from '@trigger.dev/sdk/v3';
+} from '@tegonhq/sdk';
 import axios from 'axios';
 
 import { convertTiptapJsonToSlackBlocks, getSlackHeaders } from '../utils';
@@ -94,8 +93,4 @@ export const commentSync = async (
       )
     ).data;
   }
-
-  throw new AbortTaskRunError(
-    `Sending message to slack failed. This is the response ${JSON.stringify(response.data)}`,
-  );
 };

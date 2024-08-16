@@ -1,6 +1,6 @@
 {
-  "name": "@born4rhell/sdk",
-  "version": "0.1.6",
+  "name": "@tegonhq/sdk",
+  "version": "0.1.0-beta.1",
   "description": "Tegon Node.JS SDK",
   "license": "MIT",
   "main": "./dist/index.js",

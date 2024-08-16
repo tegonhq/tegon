@@ -11,6 +11,7 @@ async function run(eventPayload: IntegrationEventPayload) {
   switch (eventPayload.event) {
     case IntegrationPayloadEventType.IntegrationSpec:
       return spec();
+
     // Used to save settings data
     case IntegrationPayloadEventType.IntegrationCreate:
       return await integrationCreate(

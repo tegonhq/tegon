@@ -1,4 +1,4 @@
-import { ActionEventPayload, JsonValue } from '@tegonhq/types';
+import { ActionEventPayload, JsonObject, JsonValue } from '@tegonhq/types';
 import { task as triggerTask, schedules } from '@trigger.dev/sdk/v3';
 import axios from 'axios';
 
@@ -23,36 +23,12 @@ export function handler(name: string, run: RunFunction, init: InitFunction) {
   return triggerTask({
     id,
     init: async (eventPayload: ActionEventPayload) => {
+      let userId, accountId;
+
       if (eventPayload.payload.userId) {
-        const {
-          token,
-          userId: authenticatedUserId,
-          action,
-        } = await getTokenFromAPI({
-          userId: eventPayload.payload.userId,
-          id,
-        });
-
-        setToken(token);
-
-        return { userId: authenticatedUserId, action };
-      }
-
-      if (init) {
-        const { userId, accountId } = await init(eventPayload);
-
-        const {
-          token,
-          userId: authenticatedUserId,
-          action,
-        } = await getTokenFromAPI({
-          userId,
-          accountId,
-          id,
-        });
-        setToken(token);
-
-        return { userId: authenticatedUserId, action };
+        userId = eventPayload.payload.userId;
+      } else if (init) {
+        ({ userId, accountId } = await init(eventPayload));
       }
 
       const {
@@ -60,8 +36,11 @@ export function handler(name: string, run: RunFunction, init: InitFunction) {
         userId: authenticatedUserId,
         action,
       } = await getTokenFromAPI({
+        userId,
+        accountId,
         id,
       });
+
       setToken(token);
 
       return { userId: authenticatedUserId, action };
@@ -69,7 +48,7 @@ export function handler(name: string, run: RunFunction, init: InitFunction) {
     run: async (
       eventPayload: ActionEventPayload,
       { init },
-    ): Promise<JsonValue> => {
+    ): Promise<JsonObject> => {
       return await run({
         ...eventPayload,
         payload: {
