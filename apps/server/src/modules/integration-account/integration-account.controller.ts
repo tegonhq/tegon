@@ -57,7 +57,7 @@ export class IntegrationAccountController {
     );
   }
 
-  @Get('accountId')
+  @Get('account_id')
   @UseGuards(new AuthGuard())
   async getIntegrationAccountByAccountId(
     @Query('accountId') accountId: string,

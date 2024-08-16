@@ -29,14 +29,11 @@ export class TriggerdevController {
     {
       accountId,
       userId: userIdFromParams,
-    }: { accountId?: string; userId?: string },
+      id,
+    }: { accountId?: string; userId?: string; id: string },
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    if (!userIdFromParams || !accountId) {
-      new BadRequestException('AccountId is not provided');
-    }
-
     const userId = userIdFromParams
       ? userIdFromParams
       : await this.triggerdevService.getUserId(accountId);

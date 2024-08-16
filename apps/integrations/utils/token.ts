@@ -12,15 +12,15 @@ export const getToken = () => {
 };
 
 export async function getTokenFromAPI({
-  userAccountId,
+  accountId,
   userId,
 }: {
-  userAccountId?: string;
+  accountId?: string;
   userId?: string;
 }) {
   const { data } = await axios.post(
     `${process.env.BACKEND_HOST}/v1/triggerdev/generate_jwt`,
-    { userAccountId, userId },
+    { accountId, userId },
     {
       headers: { 'x-api-key': process.env.TRIGGER_TOKEN },
     },

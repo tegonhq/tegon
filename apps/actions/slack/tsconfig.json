@@ -1,9 +1,36 @@
 {
-  "extends": "@tegonhq/typescript-config/nest.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Default",
   "compilerOptions": {
+    "target": "ES2022",
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "strictNullChecks": false,
+    "preserveConstEnums": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noFallthroughCasesInSwitch": true,
+    "useUnknownInCatchVariables": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "declaration": false,
+    "removeComments": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@born4rhell/sdk": ["./node_modules/@born4rhell/sdk"]
+    },
     "baseUrl": ".",
     "module": "commonjs",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "lib": ["ES2022"],
+    "forceConsistentCasingInFileNames": true
   },
   "exclude": ["node_modules"],
   "include": ["**/*.ts", "**/*.tsx", ".eslintrc.js"]

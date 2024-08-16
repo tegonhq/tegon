@@ -65,7 +65,7 @@ export class IntegrationDefinitionService {
 
     const spec = await this.triggerdevService.triggerTask(
       TriggerProjects.Integration,
-      `${integrationDefinition.name}-handler`,
+      integrationDefinition.name,
       payload,
     );
 

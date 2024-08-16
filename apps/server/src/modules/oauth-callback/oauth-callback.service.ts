@@ -219,7 +219,7 @@ export class OAuthCallbackService {
 
       this.triggerdevService.triggerTask(
         TriggerProjects.Integration,
-        `${integrationDefinition.name}-handler`,
+        integrationDefinition.name,
         payload,
       );
 
@@ -258,7 +258,7 @@ export class OAuthCallbackService {
 
     return await this.triggerdevService.triggerTask(
       TriggerProjects.Integration,
-      `${integrationDefinition.name}-handler`,
+      integrationDefinition.name,
       payload,
     );
   }
