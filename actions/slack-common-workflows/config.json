@@ -1,5 +1,5 @@
 {
-  "name": "slack",
+  "name": "slack-common-workflows",
   "triggers": [
     {
       "type": "on_create",
@@ -7,7 +7,7 @@
     },
     {
       "type": "external_webhook",
-      "entities": [ "Slack" ]
+      "entities": [ "slack" ]
     }
   ],
   "integrations": [ "slack" ]

@@ -24,7 +24,7 @@
     "removeComments": true,
     "esModuleInterop": true,
     "paths": {
-      "@born4rhell/sdk": ["./node_modules/@born4rhell/sdk"]
+      "@tegonhq/sdk": ["./node_modules/@tegonhq/sdk"]
     },
     "baseUrl": ".",
     "module": "commonjs",

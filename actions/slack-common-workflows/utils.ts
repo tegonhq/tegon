@@ -1,6 +1,7 @@
 import {
   AttachmentResponse,
   EventBody,
+  info,
   IntegrationAccount,
   Issue,
   JsonObject,
@@ -8,8 +9,8 @@ import {
   TiptapNode,
   UpdateLinkedIssueDto,
   Workflow,
-} from '@tegonhq/types';
-import { logger } from '@trigger.dev/sdk/v3';
+} from '@tegonhq/sdk';
+
 import axios from 'axios';
 
 import {
@@ -156,7 +157,7 @@ export async function createLinkIssueComment(
         { body: commentBody, sourceMetadata: commentSourceMetadata },
       )
     ).data || null;
-  logger.info('Issue comment created successfully', { issueComment });
+  info('Issue comment created successfully', { issueComment });
 
   linkIssueInput.source.syncedCommentId = issueComment.id;
   linkIssueInput.sourceData.messageTs = messageTs;
@@ -169,7 +170,7 @@ export async function createLinkIssueComment(
     },
   );
 
-  logger.info('Linked issue updated successfully');
+  info('Linked issue updated successfully');
 }
 
 export async function addBotToChannel(

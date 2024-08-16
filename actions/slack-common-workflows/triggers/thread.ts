@@ -1,9 +1,9 @@
 import {
   AttachmentResponse,
+  debug,
   IntegrationAccount,
   WebhookData,
-} from '@tegonhq/types';
-import { logger } from '@trigger.dev/sdk/v3';
+} from '@tegonhq/sdk';
 import axios from 'axios';
 
 import { SlackIntegrationSettings } from '../types';
@@ -45,7 +45,7 @@ export const slackThread = async (
   const threadId = `${event.channel}_${message.ts}`;
   const parentThreadId = `${event.channel}_${message.thread_ts}`;
 
-  logger.debug(`Handling Slack thread with ID: ${threadId}`);
+  debug(`Handling Slack thread with ID: ${threadId}`);
 
   const linkedIssue = (
     await axios.get(
@@ -55,7 +55,7 @@ export const slackThread = async (
 
   // If no linked issue is found, log and return undefined
   if (!linkedIssue) {
-    logger.debug(`No linked issue found for Slack issue ID: ${parentThreadId}`);
+    debug(`No linked issue found for Slack issue ID: ${parentThreadId}`);
     return undefined;
   }
 
@@ -100,7 +100,7 @@ export const slackThread = async (
 
   if (linkedComment) {
     // If a linked comment exists, update the existing comment
-    logger.debug(`Updating existing comment for thread ID: ${threadId}`);
+    debug(`Updating existing comment for thread ID: ${threadId}`);
 
     return (
       await axios.post(

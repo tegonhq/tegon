@@ -1,10 +1,10 @@
 import {
+  debug,
   EventBody,
   IntegrationAccount,
   LinkedIssueCreateActionPayload,
   UpdateLinkedIssueDto,
-} from '@tegonhq/types';
-import { AbortTaskRunError, logger } from '@trigger.dev/sdk/v3';
+} from '@tegonhq/sdk';
 import axios from 'axios';
 
 import { slackLinkRegex } from '../types';
@@ -30,7 +30,7 @@ export const linkIssueSync = async (
   const match = linkedIssue.url.match(slackLinkRegex);
 
   if (!match) {
-    throw new AbortTaskRunError("Link didn't match with Slack link regex");
+    return;
   }
 
   const [
@@ -82,7 +82,7 @@ export const linkIssueSync = async (
 
   // Create the issue identifier
   const issueIdentifier = `${teamIdentifier}-${issueNumber}`;
-  logger.debug(`Sending Slack message for linked issue: ${issueIdentifier}`);
+  debug(`Sending Slack message for linked issue: ${issueIdentifier}`);
 
   // Create the issue URL using the workspace slug and issue identifier
   const issueUrl = `${process.env.PUBLIC_FRONTEND_HOST}/${integrationAccount.workspace.slug}/issue/${issueIdentifier}`;
@@ -109,9 +109,7 @@ export const linkIssueSync = async (
     integrationAccount,
     messagePayload,
   );
-  logger.debug(
-    `Slack message sent successfully for linked issue: ${issueIdentifier}`,
-  );
+  debug(`Slack message sent successfully for linked issue: ${issueIdentifier}`);
 
   if (messageResponse.ok) {
     const sourceMetadata = {

@@ -24,7 +24,8 @@ export async function getTokenFromAPI({
     `${process.env.BACKEND_HOST}/v1/triggerdev/generate_jwt`,
     { accountId, userId, id },
     {
-      headers: { 'x-api-key': process.env.TRIGGER_TOKEN },
+      // eslint-disable-next-line turbo/no-undeclared-env-vars
+      headers: { 'x-api-key': process.env.EXCHANGE_TOKEN },
     },
   );
 

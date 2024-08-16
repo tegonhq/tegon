@@ -1,9 +1,11 @@
-import {
+import type {
   AttachmentResponse,
   IntegrationAccount,
   WebhookData,
-} from '@tegonhq/types';
-import { logger } from '@trigger.dev/sdk/v3';
+} from '@tegonhq/sdk';
+
+import { debug } from '@tegonhq/sdk';
+
 import axios from 'axios';
 
 import { slackIssueCreate } from './issue-create';
@@ -49,12 +51,12 @@ export const slackTriage = async (
 
   // If the reaction is not 'eyes' or the channel mapping doesn't exist, ignore the event
   if (reaction !== 'eyes' || !channelMapping) {
-    logger.debug(`Ignoring reaction event with reaction: ${reaction}`);
+    debug(`Ignoring reaction event with reaction: ${reaction}`);
     return undefined;
   }
 
   if (!channelMapping) {
-    logger.debug(`The channel is not connected`);
+    debug(`The channel is not connected`);
     return undefined;
   }
 
@@ -70,7 +72,7 @@ export const slackTriage = async (
     messagedById: slackUserId,
   };
 
-  logger.debug(`Session data: ${JSON.stringify(sessionData)}`);
+  debug(`Session data: ${JSON.stringify(sessionData)}`);
 
   // Get the Slack message using the integration account and session data
   const slackMessageResponse = await getSlackMessage(
@@ -102,7 +104,7 @@ export const slackTriage = async (
       slackUserId,
     );
 
-    logger.debug(
+    debug(
       `Thread already linked to an existing issue. Skipping issue creation.`,
     );
     return undefined;

@@ -384,7 +384,7 @@ importers:
         version: 7.118.0(encoding@0.1.13)(next@14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.89.0)
       '@tegonhq/services':
         specifier: workspace:*
-        version: link:../../packages/services copy
+        version: link:../../packages/services
       '@tegonhq/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -399,7 +399,7 @@ importers:
         version: 3.20.0(react@18.3.1)
       ai:
         specifier: ^3.2.37
-        version: 3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
+        version: 3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -592,43 +592,6 @@ importers:
         specifier: ^5.4.5
         version: 5.5.3
 
-  packages/services copy:
-    dependencies:
-      '@tegonhq/types':
-        specifier: workspace:*
-        version: link:../types
-      axios:
-        specifier: ^1.6.7
-        version: 1.7.2(debug@4.3.5)
-      superagent:
-        specifier: ^8.1.2
-        version: 8.1.2
-      zod:
-        specifier: 3.23.8
-        version: 3.23.8
-    devDependencies:
-      '@tegonhq/eslint-config':
-        specifier: workspace:*
-        version: link:../../tooling/eslint-config
-      '@tegonhq/typescript-config':
-        specifier: workspace:*
-        version: link:../../tooling/typescript-config
-      '@types/node':
-        specifier: ^20
-        version: 20.14.11
-      '@types/superagent':
-        specifier: ^8.1.4
-        version: 8.1.7
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
-      tsup:
-        specifier: ^8.0.1
-        version: 8.2.4(@swc/core@1.7.0)(jiti@1.21.6)(postcss@8.4.39)(typescript@5.5.3)(yaml@2.4.5)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.5.3
-
   packages/tegon-sdk:
     dependencies:
       '@trigger.dev/sdk':
@@ -667,7 +630,7 @@ importers:
     devDependencies:
       '@tegonhq/services':
         specifier: workspace:*
-        version: link:../services copy
+        version: link:../services
       '@tegonhq/types':
         specifier: workspace:*
         version: link:../types
@@ -812,7 +775,7 @@ importers:
         version: 2.5.4(@tiptap/core@2.5.4(@tiptap/pm@2.5.4))(@tiptap/pm@2.5.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ai:
         specifier: ^3.2.37
-        version: 3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
+        version: 3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -14690,7 +14653,7 @@ snapshots:
 
   '@types/jsonwebtoken@9.0.6':
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.1.0
 
   '@types/keyv@3.1.4':
     dependencies:
@@ -14747,7 +14710,7 @@ snapshots:
 
   '@types/mute-stream@0.0.4':
     dependencies:
-      '@types/node': 20.14.11
+      '@types/node': 22.1.0
 
   '@types/node-fetch@2.6.11':
     dependencies:
@@ -15327,7 +15290,7 @@ snapshots:
       - solid-js
       - vue
 
-  ai@3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8):
+  ai@3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8):
     dependencies:
       '@ai-sdk/provider': 0.0.14
       '@ai-sdk/provider-utils': 1.0.5(zod@3.23.8)
@@ -17005,7 +16968,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.15.0
       is-glob: 4.0.3
@@ -21024,7 +20987,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.14.11
+      '@types/node': 22.1.0
       long: 5.2.3
 
   proxy-addr@2.0.7:
