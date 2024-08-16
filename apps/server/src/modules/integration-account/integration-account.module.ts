@@ -3,6 +3,7 @@ import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
 import { IntegrationDefinitionService } from 'modules/integration-definition/integration-definition.service';
 import { TriggerdevModule } from 'modules/triggerdev/triggerdev.module';
+import { UsersService } from 'modules/users/users.service';
 
 import { IntegrationAccountController } from './integration-account.controller';
 import { IntegrationAccountService } from './integration-account.service';
@@ -14,6 +15,7 @@ import { IntegrationAccountService } from './integration-account.service';
     PrismaService,
     IntegrationAccountService,
     IntegrationDefinitionService,
+    UsersService,
   ],
   exports: [IntegrationAccountService],
 })

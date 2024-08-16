@@ -51,7 +51,6 @@ export class OAuthCallbackService {
     const integrationDefinition =
       await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
         integrationDefinitionId,
-        userId,
       );
 
     const spec = integrationDefinition.spec;
@@ -133,7 +132,6 @@ export class OAuthCallbackService {
     const integrationDefinition =
       await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
         sessionRecord.integrationDefinitionId,
-        sessionRecord.userId,
       );
 
     const template = (await getTemplate(
@@ -204,21 +202,19 @@ export class OAuthCallbackService {
       );
 
       const payload: IntegrationEventPayload = {
-        event: IntegrationPayloadEventType.IntegrationCreate,
-        payload: {
-          userId: sessionRecord.userId,
-          workspaceId: sessionRecord.workspaceId,
-          data: {
-            oauthResponse: tokensResponse,
-            oauthParams: params,
-            integrationDefinition,
-            personal: sessionRecord.personal,
-          },
+        event: IntegrationPayloadEventType.CREATE,
+        userId: sessionRecord.userId,
+        workspaceId: sessionRecord.workspaceId,
+        data: {
+          oauthResponse: tokensResponse,
+          oauthParams: params,
+          integrationDefinition,
+          personal: sessionRecord.personal,
         },
       };
 
       this.triggerdevService.triggerTask(
-        TriggerProjects.Integration,
+        TriggerProjects.Common,
         integrationDefinition.name,
         payload,
       );
@@ -240,24 +236,21 @@ export class OAuthCallbackService {
     const integrationDefinition =
       await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
         callbackData.integrationDefinitionId,
-        userId,
       );
 
     const payload: IntegrationEventPayload = {
-      event: IntegrationPayloadEventType.IntegrationCreate,
-      payload: {
-        userId,
-        workspaceId: callbackData.workspaceId,
-        data: {
-          oauthResponse: callbackData,
-          integrationDefinition,
-          personal: false,
-        },
+      event: IntegrationPayloadEventType.CREATE,
+      userId,
+      workspaceId: callbackData.workspaceId,
+      data: {
+        oauthResponse: callbackData,
+        integrationDefinition,
+        personal: false,
       },
     };
 
     return await this.triggerdevService.triggerTask(
-      TriggerProjects.Integration,
+      TriggerProjects.Common,
       integrationDefinition.name,
       payload,
     );

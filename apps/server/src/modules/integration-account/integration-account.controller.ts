@@ -47,7 +47,7 @@ export class IntegrationAccountController {
    * Get all integration accounts in a workspace
    */
   @Get()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getIntegrationAccounts(
     @Query()
     integrationAccountsRequestBody: IntegrationAccountsRequestBody,
@@ -58,7 +58,7 @@ export class IntegrationAccountController {
   }
 
   @Get('account_id')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getIntegrationAccountByAccountId(
     @Query('accountId') accountId: string,
   ): Promise<IntegrationAccount> {
@@ -71,7 +71,7 @@ export class IntegrationAccountController {
    * Get a integration accounts in a workspace
    */
   @Get(':integrationAccountId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getIntegrationAccount(
     @Param()
     integrationAccountIdRequestIdBody: IntegrationAccountIdDto,
@@ -85,7 +85,7 @@ export class IntegrationAccountController {
    * Delete a Integration account
    */
   @Delete(':integrationAccountId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteIntegrationAccount(
     @Param()
     integrationAccountIdRequestIdBody: IntegrationAccountIdDto,
@@ -99,7 +99,7 @@ export class IntegrationAccountController {
    * Update a integration account in workspace
    */
   @Post(':integrationAccountId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateIntegrationAccount(
     @Param()
     integrationAccountIdRequestIdBody: IntegrationAccountIdDto,
@@ -116,7 +116,7 @@ export class IntegrationAccountController {
    * Create integration account in a workspace
    */
   @Post()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createIntegrationAccount(
     @Body()
     createIntegrationAccountBody: CreateIntegrationAccountDto,

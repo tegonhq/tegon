@@ -1,12 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import Knex, { Knex as KnexT } from 'knex';
-import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
 
-import { encryptToken, hashToken, triggerTaskSync } from './triggerdev.utils';
+import {
+  encryptToken,
+  hashToken,
+  triggerTask,
+  triggerTaskSync,
+} from './triggerdev.utils';
 
 export const TriggerProjects = {
-  Integration: 'integration',
   Common: 'common',
 };
 
@@ -17,7 +20,7 @@ export class TriggerdevService {
   knex: KnexT;
   commonId: string;
 
-  constructor(private prisma: PrismaService) {
+  constructor() {
     this.knex = Knex({
       client: 'pg',
       connection: process.env.TRIGGER_DATABASE_URL,
@@ -35,24 +38,11 @@ export class TriggerdevService {
       slug: 'common',
     });
 
-    const integrtionProjectExists = await this.checkIfProjectExist({
-      slug: 'integration',
-    });
-
     this.createPersonalToken();
 
     if (!commonProjectExists) {
       this.logger.log(`Common project doesn't exist`);
       await this.createProject('Common', 'common', uuidv4().replace(/-/g, ''));
-    }
-
-    if (!integrtionProjectExists) {
-      this.logger.log(`Integration project doesn't exist`);
-      await this.createProject(
-        'Integration',
-        'integration',
-        uuidv4().replace(/-/g, ''),
-      );
     }
   }
 
@@ -153,13 +143,6 @@ export class TriggerdevService {
           .transacting(trx);
       });
 
-      await this.prisma.triggerProject.create({
-        data: {
-          projectId: id,
-          projectSecret: secretKey,
-          slug,
-        },
-      });
       return id;
     } catch (e) {
       this.logger.log(`Error creating project: ${e}`);
@@ -175,26 +158,37 @@ export class TriggerdevService {
     return runtime.apiKey;
   }
 
-  async getUserId(accountId: string) {
-    const integrationAccount = await this.prisma.integrationAccount.findFirst({
-      where: {
-        accountId,
-        deleted: null,
-      },
-    });
-
-    return integrationAccount.integratedById;
-  }
-
   async triggerTask(
     projectSlug: string,
     id: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload: any,
   ) {
-    const apiKey = await this.getProdRuntimeKey(projectSlug);
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, '');
+    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
     const response = await triggerTaskSync(id, payload, apiKey);
 
     return response;
+  }
+
+  async triggerTaskAsync(
+    projectSlug: string,
+    id: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload: any,
+  ) {
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, '');
+
+    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
+    const response = await triggerTask(id, payload, apiKey);
+
+    return response;
+  }
+
+  async getRequiredKeys(workspaceId: string) {
+    const projectslugWithoutHyphen = workspaceId.replace(/-/g, '');
+    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
+
+    return { triggerKey: apiKey };
   }
 }

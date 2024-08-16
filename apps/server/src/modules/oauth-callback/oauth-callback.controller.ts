@@ -29,7 +29,7 @@ export class OAuthCallbackController {
   constructor(private oAuthCallbackService: OAuthCallbackService) {}
 
   @Post()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getRedirectURL(
     @SessionDecorator() session: SessionContainer,
     @Body() body: OAuthBodyInterface,
@@ -39,7 +39,7 @@ export class OAuthCallbackController {
   }
 
   @Post('callback/sentry')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async sentryCallback(
     @SessionDecorator() session: SessionContainer,
     @Body() callbackBody: SentryCallbackBody,

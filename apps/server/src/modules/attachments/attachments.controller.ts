@@ -36,7 +36,7 @@ export class AttachmentController {
 
   @Post('upload')
   @UseInterceptors(FilesInterceptor('files'))
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async uploadFiles(
     @SessionDecorator() session: SessionContainer,
     @Query() attachmentQueryParams: AttachmentQueryParams,
@@ -74,7 +74,7 @@ export class AttachmentController {
   }
 
   @Delete(':workspaceId/:attachmentId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteAttachment(
     @Param() attachementRequestParams: AttachmentRequestParams,
   ) {

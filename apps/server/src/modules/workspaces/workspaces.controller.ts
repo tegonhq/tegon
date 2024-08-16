@@ -36,7 +36,7 @@ export class WorkspacesController {
   constructor(private workspacesService: WorkspacesService) {}
 
   @Post()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createWorkspace(
     @SessionDecorator() session: SessionContainer,
     @Body() workspaceData: CreateWorkspaceInput,
@@ -46,7 +46,7 @@ export class WorkspacesController {
   }
 
   @Get()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getAllWorkspaces(
     @SessionDecorator() session: SessionContainer,
   ): Promise<Workspace[]> {
@@ -55,7 +55,7 @@ export class WorkspacesController {
   }
 
   @Get('name/:workspaceName')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getWorkspaceByName(
     @Param('workspaceName') workspaceName: string,
   ): Promise<Workspace> {
@@ -69,7 +69,7 @@ export class WorkspacesController {
   }
 
   @Post('invite_action')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async inviteAction(
     @SessionDecorator() session: SessionContainer,
     @Body() inviteActionBody: InviteActionBody,
@@ -84,7 +84,7 @@ export class WorkspacesController {
   }
 
   @Get(':workspaceId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getWorkspace(
     @Param()
     workspaceId: WorkspaceRequestParamsDto,
@@ -93,7 +93,7 @@ export class WorkspacesController {
   }
 
   @Post(':workspaceId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateWorkspace(
     @Param()
     workspaceId: WorkspaceRequestParamsDto,
@@ -106,7 +106,7 @@ export class WorkspacesController {
   }
 
   @Delete(':workspaceId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteWorkspace(
     @Param()
     workspaceId: WorkspaceRequestParamsDto,
@@ -115,7 +115,7 @@ export class WorkspacesController {
   }
 
   @Post(':workspaceId/add_users')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async addUserToWorkspace(
     @Param() WorkspaceRequestParamsDto: WorkspaceRequestParamsDto,
     @Body() UserBody: UserBody,
@@ -127,7 +127,7 @@ export class WorkspacesController {
   }
 
   @Get(':workspaceId/invites')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async invitedUsers(
     @Param() WorkspaceRequestParamsDto: WorkspaceRequestParamsDto,
   ) {
@@ -137,7 +137,7 @@ export class WorkspacesController {
   }
 
   @Post(':workspaceId/invite_users')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async inviteUsers(
     @SessionDecorator() session: SessionContainer,
     @Param() workspaceIdRequestBody: WorkspaceRequestParamsDto,

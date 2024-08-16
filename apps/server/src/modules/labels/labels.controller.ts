@@ -30,13 +30,13 @@ export class LabelsController {
   constructor(private labelsService: LabelsService) {}
 
   @Post()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createLabel(@Body() labelData: CreateLabelDto): Promise<Label> {
     return await this.labelsService.createLabel(labelData);
   }
 
   @Get()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getAllLabels(
     @Query() requestParams: RequestIdParams,
   ): Promise<Label[]> {
@@ -44,7 +44,7 @@ export class LabelsController {
   }
 
   @Get(':labelId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getLabel(
     @Param()
     labelId: LabelRequestParamsDto,
@@ -53,7 +53,7 @@ export class LabelsController {
   }
 
   @Post(':labelId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateLabel(
     @Param()
     labelId: LabelRequestParamsDto,
@@ -63,7 +63,7 @@ export class LabelsController {
   }
 
   @Delete(':labelId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteLabel(
     @Param()
     labelId: LabelRequestParamsDto,

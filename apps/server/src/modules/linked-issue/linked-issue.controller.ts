@@ -14,8 +14,10 @@ import {
   LinkedIssueRequestParamsDto,
   UpdateLinkedIssueDto,
 } from '@tegonhq/types';
+import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
+import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 import { ApiResponse } from 'modules/issues/issues.interface';
 
 import LinkedIssueService from './linked-issue.service';
@@ -29,13 +31,13 @@ export class LinkedIssueController {
   constructor(private linkedIssueService: LinkedIssueService) {}
 
   @Get('source')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getLinkedIssueBySourceId(@Query('sourceId') sourceId: string) {
     return await this.linkedIssueService.getLinkedIssueBySourceId(sourceId);
   }
 
   @Get(':linkedIssueId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getLinkedIssue(
     @Param() linkedIssueIdParams: LinkedIssueRequestParamsDto,
   ): Promise<LinkedIssue> {
@@ -45,31 +47,40 @@ export class LinkedIssueController {
   }
 
   @Post(':linkedIssueId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateLinkedIssue(
+    @SessionDecorator() session: SessionContainer,
     @Param() linkedIssueIdParams: LinkedIssueRequestParamsDto,
     @Body() linkedIssueData: UpdateLinkedIssueDto,
   ): Promise<LinkedIssue | ApiResponse> {
+    const userId = session.getUserId();
+
     return await this.linkedIssueService.updateLinkIssue(
       linkedIssueIdParams,
       linkedIssueData,
+      userId,
     );
   }
 
   @Post('source/:sourceId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateLinkedIssueBySourceId(
+    @SessionDecorator() session: SessionContainer,
+
     @Param('sourceId') sourceId: string,
     @Body() linkedIssueData: UpdateLinkedIssueDto,
   ) {
+    const userId = session.getUserId();
+
     return await this.linkedIssueService.updateLinkIssueBySource(
       sourceId,
       linkedIssueData,
+      userId,
     );
   }
 
   @Delete(':linkedIssueId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteLinkedIssue(
     @Param() linkedIssueIdParams: LinkedIssueRequestParamsDto,
   ): Promise<LinkedIssue> {

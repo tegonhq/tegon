@@ -7,6 +7,7 @@ import { PrismaModule } from 'nestjs-prisma';
 import config from 'common/configs/config';
 import { loggingMiddleware } from 'common/middleware/logging.middleware';
 
+import { ActionModule } from 'modules/action/action.module';
 import { AttachmentModule } from 'modules/attachments/attachments.module';
 import { AuthModule } from 'modules/auth/auth.module';
 import { BullConfigModule } from 'modules/bull/bull.module';
@@ -85,6 +86,7 @@ import { AppService } from './app.service';
     AttachmentModule,
     ViewsModule,
     TriggerdevModule,
+    ActionModule,
 
     WebhookModule,
 
@@ -101,6 +103,7 @@ import { AppService } from './app.service';
   controllers: [AppController],
   providers: [
     AppService,
+
     // { provide: APP_INTERCEPTOR, useClass: SyncActionsInterceptor },
   ],
 })

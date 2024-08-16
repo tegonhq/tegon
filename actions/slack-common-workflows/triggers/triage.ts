@@ -1,12 +1,10 @@
 import type {
   AttachmentResponse,
+  EventBody,
   IntegrationAccount,
-  WebhookData,
 } from '@tegonhq/sdk';
 
 import { debug } from '@tegonhq/sdk';
-
-import axios from 'axios';
 
 import { slackIssueCreate } from './issue-create';
 import {
@@ -25,11 +23,9 @@ import {
 export const slackTriage = async (
   integrationAccount: IntegrationAccount,
   userId: string,
-  data: WebhookData,
+  eventBody: EventBody,
 ) => {
-  const {
-    eventBody: { event, team_id: slackTeamId },
-  } = data;
+  const { event, team_id: slackTeamId } = eventBody;
 
   const {
     item: { channel: channelId, ts: threadTs },
@@ -82,17 +78,12 @@ export const slackTriage = async (
 
   const mainTs = slackMessageResponse.messages[0].thread_ts || threadTs;
   const sourceId = `${channelId}_${mainTs}`;
-  let linkedIssue, workflowStates;
+
   // Check if the thread is already linked to an existing issue
-  await Promise.all([
-    axios.get(
-      `${process.env.BACKEND_HOST}/v1/linked_issues/source?sourceId=${sourceId}`,
-    ),
-    axios.get(`${process.env.BACKEND_HOST}/v1/${teamId}/workflows`, {}),
-  ]).then(([linkedIssueResponse, workflowStateResponse]) => {
-    linkedIssue = linkedIssueResponse.data || null;
-    workflowStates = workflowStateResponse.data || null;
-  });
+  const [linkedIssue, workflowStates] = await Promise.all([
+    getLinkedIssueBySource({sourceId})
+    getWorkflowsByTeam({teamId})
+  ])
 
   // If the thread is already linked to an issue, send an ephemeral message and return
   if (linkedIssue) {

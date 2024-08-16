@@ -4,7 +4,6 @@
   "description": "Tegon server",
   "author": "Tegon",
   "private": true,
-  "license": "MIT",
   "keywords": [
     "nestjs",
     "prisma",
@@ -90,6 +89,7 @@
     "cookie": "^0.6.0",
     "cron": "^3.1.7",
     "csv-writer": "^1.6.0",
+    "execa": "^9.3.0",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.1.0",
     "knex": "^3.1.0",

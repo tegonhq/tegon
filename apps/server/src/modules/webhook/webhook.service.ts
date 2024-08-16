@@ -1,27 +1,88 @@
 import { Injectable } from '@nestjs/common';
-import { ActionTypesEnum, EventBody, EventHeaders } from '@tegonhq/types';
+import {
+  ActionEntity,
+  ActionTypesEnum,
+  EventBody,
+  EventHeaders,
+  IntegrationPayloadEventType,
+} from '@tegonhq/types';
+import { PrismaService } from 'nestjs-prisma';
 
-import { triggerTaskSync } from 'modules/triggerdev/triggerdev.utils';
+import { generateKeyForUserId } from 'common/authentication';
 
+import { getIntegrationAccountsFromActions } from 'modules/action-event/action-event.utils';
+import {
+  TriggerdevService,
+  TriggerProjects,
+} from 'modules/triggerdev/triggerdev.service';
 @Injectable()
 export default class WebhookService {
-  constructor() {}
+  constructor(
+    private triggerDevService: TriggerdevService,
+    private prisma: PrismaService,
+  ) {}
 
   async handleEvents(
     sourceName: string,
     eventHeaders: EventHeaders,
     eventBody: EventBody,
   ) {
-    return await triggerTaskSync(
+    const { integrationAccountId } = await this.triggerDevService.triggerTask(
+      TriggerProjects.Common,
       sourceName,
       {
-        event: ActionTypesEnum.ExternalWebhook,
-        payload: {
-          eventBody,
-          eventHeaders,
-        },
+        event: IntegrationPayloadEventType.GET_IDENTIFIER,
+        data: { eventBody, eventHeaders },
       },
-      'tr_dev_PZTillNmi7MkO4MghcNQ',
     );
+
+    const integrationAccount = await this.prisma.integrationAccount.findUnique({
+      where: { id: integrationAccountId },
+      include: { workspace: true, integrationDefinition: true },
+    });
+
+    const workspaceId = integrationAccount.workspaceId;
+    const actionEntities = await this.prisma.actionEntity.findMany({
+      where: {
+        type: ActionTypesEnum.SOURCE_WEBHOOK,
+        entity: sourceName,
+        action: { workspaceId },
+        deleted: null,
+      },
+      include: { action: true },
+    });
+
+    const integrationAccountsMap = await getIntegrationAccountsFromActions(
+      this.prisma,
+      workspaceId,
+      actionEntities,
+    );
+
+    integrationAccountsMap[integrationAccount.integrationDefinition.name] =
+      integrationAccount;
+
+    // TODO (actons): Send all integration accounts based on the ask
+    actionEntities.map(async (actionEntity: ActionEntity) => {
+      const actionUser = await this.prisma.user.findFirst({
+        where: { username: actionEntity.action.name },
+      });
+      const accessToken = await generateKeyForUserId(actionUser.id);
+
+      this.triggerDevService.triggerTask(
+        workspaceId,
+        actionEntity.action.name,
+        {
+          event: ActionTypesEnum.SOURCE_WEBHOOK,
+          data: {
+            eventBody,
+            eventHeaders,
+            accessToken,
+            userId: actionUser.id,
+            integrationAccounts: integrationAccountsMap,
+          },
+        },
+      );
+    });
+    return { status: 200 };
   }
 }

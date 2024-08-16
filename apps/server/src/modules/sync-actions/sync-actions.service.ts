@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ModelName } from '@prisma/client';
-import { ModelNameEnum, SyncAction, SyncActionTypeEnum } from '@tegonhq/types';
+import { ModelNameEnum, SyncAction } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -20,15 +20,11 @@ export default class SyncActionsService {
     action: string,
     modelName: ModelNameEnum,
     modelId: string,
-    isDeleted: boolean,
   ) {
     const workspaceId = await getWorkspaceId(this.prisma, modelName, modelId);
     const sequenceId = convertLsnToInt(lsn);
-    let actionType = convertToActionType(action);
+    const actionType = convertToActionType(action);
 
-    if (isDeleted) {
-      actionType = SyncActionTypeEnum.D;
-    }
     const syncActionData = await this.prisma.syncAction.upsert({
       where: {
         modelId_action: {

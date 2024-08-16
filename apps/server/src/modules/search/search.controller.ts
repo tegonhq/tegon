@@ -15,7 +15,7 @@ export class SearchController {
   constructor(private searchService: SearchService) {}
 
   @Get()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async search(@Query() searchData: SearchInputData) {
     return await this.searchService.searchData(
       searchData.workspaceId,
@@ -26,7 +26,7 @@ export class SearchController {
   }
 
   @Get('similar_issues')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async similarIssue(@Query() similarIssueData: SimilarIssueData) {
     return await this.searchService.similarData(
       similarIssueData.workspaceId,

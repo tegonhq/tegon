@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { User } from '@tegonhq/types';
+import { CreatePatDto, User } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -36,7 +36,7 @@ export class UsersController {
   ) {}
 
   @Get()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getUser(
     @SessionDecorator() session: SessionContainer,
   ): Promise<UserWithInvites> {
@@ -47,20 +47,20 @@ export class UsersController {
   }
 
   @Post()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getUsersById(@Body() userIdsBody: UserIdsBody): Promise<PublicUser[]> {
     return await this.usersService.getUsersbyId(userIdsBody.userIds);
   }
 
   @Get('email')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getUserByEmail(@Query('email') email: string): Promise<User> {
     const user = await this.usersService.getUserByEmail(email);
     return user;
   }
 
   @Post('change_password')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async changePassword(
     @SessionDecorator() session: SessionContainer,
     @Body() passwordBody: Record<string, string>,
@@ -95,7 +95,7 @@ export class UsersController {
   }
 
   @Post(':userId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateUser(
     @Param() userIdBody: UserIdParams,
     @Body()
@@ -107,5 +107,28 @@ export class UsersController {
     );
 
     return user;
+  }
+
+  @Post('pat')
+  @UseGuards(AuthGuard)
+  async createPersonalAccessToken(
+    @SessionDecorator() session: SessionContainer,
+    @Body()
+    createPatDto: CreatePatDto,
+  ) {
+    const userId = session.getUserId();
+    const user = await this.usersService.createPersonalAcccessToken(
+      createPatDto.name,
+      userId,
+    );
+
+    return user;
+  }
+
+  @Get('pats')
+  @UseGuards(AuthGuard)
+  async getPats(@SessionDecorator() session: SessionContainer) {
+    const userId = session.getUserId();
+    return await this.usersService.getPats(userId);
   }
 }

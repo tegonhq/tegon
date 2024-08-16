@@ -25,7 +25,7 @@ export class PromptsController {
   constructor(private promptsService: PromptsService) {}
 
   @Get()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getAllPrompts(
     @Query('workspaceId') workspaceId: string,
   ): Promise<Prompt[]> {
@@ -33,7 +33,7 @@ export class PromptsController {
   }
 
   @Post()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createPrompt(
     @Query('workspaceId') workspaceId: string,
     @Body() promptInput: PromptInput,
@@ -42,13 +42,13 @@ export class PromptsController {
   }
 
   @Post(':promptId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getPrompt(@Param('promptId') promptId: string): Promise<Prompt> {
     return await this.promptsService.getPrompt(promptId);
   }
 
   @Post(':promptId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updatePrompt(
     @Param('promptId') promptId: string,
     @Body() promptInput: PromptInput,
@@ -57,7 +57,7 @@ export class PromptsController {
   }
 
   @Delete(':promptId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deletePrompt(@Param('promptId') promptId: string): Promise<Prompt> {
     return await this.promptsService.deletePrompt(promptId);
   }

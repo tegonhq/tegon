@@ -4,3 +4,5 @@ export * from './issue-relation';
 export * from './issues';
 export * from './labels';
 export * from './linked-issues';
+export * from './user';
+export * from './workflow';

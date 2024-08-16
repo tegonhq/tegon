@@ -8,10 +8,10 @@ import {
   Wal2JsonPlugin,
 } from 'pg-logical-replication';
 
+import ActionEventService from 'modules/action-event/action-event.service';
 import { SyncGateway } from 'modules/sync/sync.gateway';
 import SyncActionsService from 'modules/sync-actions/sync-actions.service';
 import { getWorkspaceId } from 'modules/sync-actions/sync-actions.utils';
-import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import {
   logChangeType,
@@ -32,7 +32,7 @@ export default class ReplicationService {
     private configService: ConfigService,
     private syncGateway: SyncGateway,
     private syncActionsService: SyncActionsService,
-    private triggerDevService: TriggerdevService,
+    private actionEventService: ActionEventService,
     private prisma: PrismaService,
   ) {
     this.client = new Client({
@@ -74,6 +74,7 @@ export default class ReplicationService {
   async createReplicationSlot() {
     try {
       await this.client.connect();
+      await this.setReplicaIdentityFull();
 
       await this.checkForSlot();
 
@@ -95,6 +96,56 @@ export default class ReplicationService {
     }
   }
 
+  async setReplicaIdentityFull() {
+    try {
+      await this.prisma.$executeRaw`ALTER TABLE "Issue" REPLICA IDENTITY FULL`;
+      await this.prisma
+        .$executeRaw`ALTER TABLE "IssueComment" REPLICA IDENTITY FULL`;
+      await this.prisma
+        .$executeRaw`ALTER TABLE "LinkedIssue" REPLICA IDENTITY FULL`;
+
+      this.logger.log('REPLICA IDENTITY FULL set for all specified tables.');
+    } catch (error) {
+      this.logger.error('Error setting REPLICA IDENTITY FULL:', error);
+    }
+  }
+
+  getChangedData(change: logChangeType) {
+    // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style, @typescript-eslint/no-explicit-any
+    const changedData: { [key: string]: any } = {};
+    const keyNames = change.oldkeys?.keynames || [];
+    const oldValues = change.oldkeys?.keyvalues || [];
+    const columnNames = change.columnnames || [];
+    const newValues = change.columnvalues || [];
+
+    // Create a map of old values by key name
+    // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style, @typescript-eslint/no-explicit-any
+    const oldValueMap: { [key: string]: any } = {};
+    keyNames.forEach((keyName, index) => {
+      oldValueMap[keyName] = oldValues[index];
+    });
+
+    // Compare each column to see if the value has changed
+    columnNames.forEach((columnName, index) => {
+      const oldValue = oldValueMap[columnName];
+      const newValue = newValues[index];
+
+      console.log(
+        oldValue,
+        newValue,
+        columnName,
+        oldValue !== undefined && oldValue !== newValue,
+      );
+
+      // Check if the old value and new value are different
+      if (oldValue !== undefined && oldValue !== newValue) {
+        changedData[columnName] = newValue;
+      }
+    });
+
+    return changedData;
+  }
+
   async setupReplication() {
     const dbSchema = this.configService.get('DB_SCHEMA');
     const clientConfig = {
@@ -105,7 +156,7 @@ export default class ReplicationService {
       port: this.configService.get('DB_PORT'),
     };
     const service = new LogicalReplicationService(clientConfig);
-    const plugin = new Wal2JsonPlugin();
+    const plugin = new Wal2JsonPlugin({});
     service
       .subscribe(plugin, REPLICATION_SLOT_NAME)
       .catch((e) => {
@@ -123,6 +174,8 @@ export default class ReplicationService {
             return;
           }
 
+          // Log or process the changed data
+
           const { columnvalues, columnnames } = change;
           const modelName = change.table as ModelNameEnum;
           const deletedIndex = columnnames?.indexOf('deleted');
@@ -134,10 +187,9 @@ export default class ReplicationService {
             const syncActionData =
               await this.syncActionsService.upsertSyncAction(
                 _lsn,
-                change.kind,
+                isDeleted ? 'delete' : change.kind,
                 modelName,
                 modelId,
-                isDeleted,
               );
 
             const recipientId =
@@ -151,26 +203,22 @@ export default class ReplicationService {
           }
 
           if (tablesToTrigger.has(modelName)) {
+            const changedData = this.getChangedData(change);
+
             const workspaceId = await getWorkspaceId(
               this.prisma,
               modelName,
               modelId,
             );
 
-            const actionApiKey = await this.triggerDevService.getProdRuntimeKey(
-              `proj_${workspaceId.replace(/-/g, '')}`,
-            );
-            await this.triggerDevService.triggerTask(
-              'common',
-              `${modelName}-trigger`,
-              {
-                action: change.kind,
-                modelName,
-                modelId,
-                isDeleted,
-                actionApiKey,
-              },
-            );
+            await this.actionEventService.createEvent({
+              modelName,
+              modelId,
+              eventType: isDeleted ? 'delete' : change.kind,
+              eventData: changedData,
+              workspaceId,
+              sequenceId: _lsn,
+            });
           }
         });
       } else {

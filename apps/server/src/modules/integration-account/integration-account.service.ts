@@ -7,7 +7,10 @@ import {
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-import { IntegrationAccountRequestBody } from './integration-account.interface';
+import {
+  IntegrationAccountRequestBody,
+  IntegrationAccountSelect,
+} from './integration-account.interface';
 
 @Injectable()
 export class IntegrationAccountService {
@@ -39,7 +42,7 @@ export class IntegrationAccountService {
         accountId: createIntegrationAccountBody.accountId,
         integratedBy: { connect: { id: userId } },
         isActive: true,
-        settings: createIntegrationAccountBody.settings,
+        settings,
       },
       include: {
         integrationDefinition: true,
@@ -57,9 +60,7 @@ export class IntegrationAccountService {
       where: {
         id: integrationAccountRequestIdBody.integrationAccountId,
       },
-      include: {
-        integrationDefinition: true,
-      },
+      select: IntegrationAccountSelect,
     });
   }
 
@@ -91,6 +92,7 @@ export class IntegrationAccountService {
         workspaceId: integrationAccountRequestBody.workspaceId,
         id: integrationAccountRequestBody.integrationAccountId,
       },
+      select: IntegrationAccountSelect,
     });
 
     return integrationAccount;
@@ -108,9 +110,7 @@ export class IntegrationAccountService {
           updatedAt: 'asc',
         },
       ],
-      include: {
-        integrationDefinition: true,
-      },
+      select: IntegrationAccountSelect,
     });
   }
 
@@ -126,13 +126,14 @@ export class IntegrationAccountService {
       where: {
         id: integrationAccountId,
       },
+      select: IntegrationAccountSelect,
     });
   }
 
   async getIntegrationAccountByAccountId(accountId: string) {
     return await this.prisma.integrationAccount.findFirst({
       where: { accountId, deleted: null },
-      include: { workspace: true, integrationDefinition: true },
+      select: IntegrationAccountSelect,
     });
   }
 }

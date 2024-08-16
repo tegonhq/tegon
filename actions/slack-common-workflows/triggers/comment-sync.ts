@@ -1,6 +1,5 @@
 import {
   IntegrationAccount,
-  IssueComment,
   IssueCommentCreateActionPayload,
 } from '@tegonhq/sdk';
 import axios from 'axios';
@@ -16,11 +15,7 @@ export const commentSync = async (
   const integrationDefinitionName =
     integrationAccount.integrationDefinition.name;
 
-  const issueComment: IssueComment = (
-    await axios.get(
-      `${process.env.BACKEND_HOST}/v1/issue_comments/${issueCommentId}`,
-    )
-  ).data;
+  const issueComment = await getIssueComment({ issueCommentId });
 
   if (issueComment.sourceMetadata) {
     return {
@@ -41,7 +36,7 @@ export const commentSync = async (
     string
   >;
 
-  const user = (await axios.get(`${process.env.BACKEND_HOST}/v1/users`)).data;
+  const user = await getUser();
 
   // Send a POST request to the Slack API to post the message
   const response = await axios.post(
@@ -77,20 +72,15 @@ export const commentSync = async (
     };
 
     // Create a linked comment in the database
-    return (
-      await axios.post(
-        `${process.env.BACKEND_HOST}/v1/issue_comments/linked_comment`,
-        {
-          url: threadId,
-          sourceId: threadId,
-          source: {
-            type: integrationDefinitionName,
-            integrationAccountId: integrationAccount.id,
-          },
-          commentId: issueComment.id,
-          sourceData,
-        },
-      )
-    ).data;
+    return await createLinkedIssueComment({
+      url: threadId,
+      sourceId: threadId,
+      source: {
+        type: integrationDefinitionName,
+        integrationAccountId: integrationAccount.id,
+      },
+      commentId: issueComment.id,
+      sourceData,
+    });
   }
 };

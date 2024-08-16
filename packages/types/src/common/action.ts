@@ -1,31 +1,13 @@
 export enum ActionTypesEnum {
-  OnCreate = 'OnCreate',
-  OnUpdate = 'OnUpdate',
-  OnDelete = 'OnDelete',
-  ExternalWebhook = 'ExternalWebhook',
+  ON_CREATE = 'on_create',
+  ON_UPDATE = 'on_update',
+  ON_DELETE = 'on_delete',
+  SOURCE_WEBHOOK = 'SOURCE_WEBHOOK',
 }
 
 export interface ActionPayload extends Record<string, any> {}
 
-export type ActionEventPayload =
-  | {
-      event: ActionTypesEnum.OnCreate;
-      payload: {
-        userId: string;
-        data: ActionPayload;
-      };
-    }
-  | {
-      event: ActionTypesEnum.OnUpdate;
-      payload: {
-        userId: string;
-        data: ActionPayload;
-      };
-    }
-  | {
-      event: ActionTypesEnum.ExternalWebhook;
-      payload: {
-        userId: string;
-        data: ActionPayload;
-      };
-    };
+export interface ActionEventPayload {
+  type: ActionTypesEnum;
+  data: ActionPayload;
+}

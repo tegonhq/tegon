@@ -32,7 +32,7 @@ export class TemplatesController {
   constructor(private templatesService: TemplatesService) {}
 
   @Post()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createTemplate(
     @SessionDecorator() session: SessionContainer,
     @Body() templateData: CreateTemplateInput,
@@ -42,7 +42,7 @@ export class TemplatesController {
   }
 
   @Get()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getAllTemplates(
     @Query() requestParams: RequestIdParams,
   ): Promise<Template[]> {
@@ -50,7 +50,7 @@ export class TemplatesController {
   }
 
   @Get(':templateId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getTemplate(
     @Param()
     templateId: TemplateRequestIdParams,
@@ -59,7 +59,7 @@ export class TemplatesController {
   }
 
   @Post(':templateId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateTemplate(
     @Param()
     templateId: TemplateRequestIdParams,
@@ -69,7 +69,7 @@ export class TemplatesController {
   }
 
   @Delete(':templateId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteLabel(
     @Param()
     templateId: TemplateRequestIdParams,

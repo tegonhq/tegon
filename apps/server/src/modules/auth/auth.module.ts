@@ -7,13 +7,14 @@ import {
 
 import { UsersModule } from 'modules/users/users.module';
 
+import { AuthGuard } from './auth.guard';
 import { AuthMiddleware } from './auth.middleware';
 import { SupertokensService } from './supertokens/supertokens.service';
 
 @Module({
-  providers: [SupertokensService],
-  exports: [SupertokensService],
-  controllers: [],
+  providers: [SupertokensService, AuthGuard],
+  exports: [SupertokensService, AuthGuard],
+  imports: [UsersModule],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

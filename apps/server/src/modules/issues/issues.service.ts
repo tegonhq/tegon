@@ -59,13 +59,18 @@ export default class IssuesService {
    */
   async createIssueAPI(
     issueData: CreateIssueDto,
-    userId?: string,
+    userId: string,
   ): Promise<Issue> {
     // Destructure issueData to separate parentId, subIssues, issueRelation, teamId, and other issue data
     const { issueRelation, teamId, linkIssueData, sourceMetadata } = issueData;
 
     // Fetch the workspace associated with the team
     const workspace = await getWorkspace(this.prisma, teamId);
+
+    const createdByInfo = {
+      updatedById: userId,
+      createdById: userId,
+    };
 
     // Create the issues in the database within a transaction
     const issues = await this.prisma.$transaction(async (prisma) => {
@@ -80,14 +85,18 @@ export default class IssuesService {
         return prisma.issue.create({
           data: {
             ...data,
+            ...createdByInfo,
             title: data.title,
             number: lastNumber,
             team: { connect: { id: issueData.teamId } },
-            ...(userId && { createdBy: { connect: { id: userId } } }),
-            ...(linkIssueData && { linkedIssue: { create: linkIssueData } }),
+            ...(linkIssueData && {
+              linkedIssue: {
+                create: { ...linkIssueData, ...createdByInfo },
+              },
+            }),
             ...(sourceMetadata && { sourceMetadata }),
           },
-          include: { team: true, createdBy: true },
+          include: { team: true },
         });
       };
 
@@ -104,6 +113,7 @@ export default class IssuesService {
           this.aiRequestsService,
           {
             ...otherData,
+
             ...(parentId ? { parentId } : { parentId: mainIssueId }),
           },
           workspace.id,
@@ -160,7 +170,7 @@ export default class IssuesService {
     teamRequestParams: TeamRequestParamsDto,
     issueData: UpdateIssueDto,
     issueParams: IssueRequestParamsDto,
-    userId?: string,
+    userId: string,
     linkIssuedata?: CreateLinkedIssueDto,
     linkMetaData?: Record<string, string>,
   ) {
@@ -177,6 +187,10 @@ export default class IssuesService {
       where: { id: issueParams.issueId },
     });
 
+    const updatedIssueInfo = {
+      updatedById: userId,
+    };
+
     // Prepare the updated issue data
     const updatedIssueData = {
       subscriberIds: getSubscriberIds(
@@ -185,14 +199,22 @@ export default class IssuesService {
         [...new Set([...currentIssue.subscriberIds, ...(subscriberIds || [])])],
         SubscribeType.SUBSCRIBE,
       ),
+      updatedById: userId,
       ...otherIssueData,
       ...(parentId ? { parent: { connect: { id: parentId } } } : { parentId }),
       ...(linkIssuedata && {
         linkedIssue: {
           upsert: {
             where: { url: linkIssuedata.url },
-            update: { sourceData: linkIssuedata.sourceData },
-            create: linkIssuedata,
+            update: {
+              sourceData: linkIssuedata.sourceData,
+              ...updatedIssueInfo,
+            },
+            create: {
+              ...linkIssuedata,
+              ...updatedIssueInfo,
+              createdById: userId,
+            },
           },
         },
       }),
@@ -428,7 +450,6 @@ export default class IssuesService {
     const issues = await this.prisma.issue.findMany({
       where: { team: { workspaceId: workspaceParams.workspaceId } },
       include: {
-        createdBy: true,
         parent: true,
         team: true,
       },
@@ -506,7 +527,7 @@ export default class IssuesService {
       priority: issue.priority,
       createdAt: issue.createdAt,
       updatedAt: issue.updatedAt,
-      createdBy: issue.createdBy ? `${issue.createdBy.fullname}` : '',
+      createdBy: issue.createdById,
       labels: issue.labelIds
         .map((labelId) => labelMap.get(labelId)?.name || '')
         .filter(Boolean)

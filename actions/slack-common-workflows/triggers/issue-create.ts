@@ -1,12 +1,10 @@
-import axios from 'axios';
-
 import { SlackCreateIssuePayload } from '../types';
 import {
   createLinkIssueComment,
   getIssueMessageModal,
   sendSlackMessage,
 } from '../utils';
-import { info } from '@tegonhq/sdk';
+import { createIssue, info } from '@tegonhq/sdk';
 
 export const slackIssueCreate = async (payload: SlackCreateIssuePayload) => {
   const { integrationAccount, sessionData, issueData } = payload;
@@ -16,13 +14,10 @@ export const slackIssueCreate = async (payload: SlackCreateIssuePayload) => {
 
   info('Creating issue with issueInput', { issueInput });
 
-  const createdIssue = (
-    await axios.post(
-      `${process.env.BACKEND_HOST}/v1/issues?teamId=${sessionData.teamId}`,
-
-      { ...issueInput },
-    )
-  ).data;
+  const createdIssue = await createIssue({
+    teamId: sessionData.teamId,
+    ...issueInput,
+  });
 
   const workspaceId = createdIssue.team.workspaceId;
 

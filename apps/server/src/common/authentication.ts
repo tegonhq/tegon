@@ -1,12 +1,18 @@
+import { randomBytes } from 'crypto';
+
 import { UnauthorizedException } from '@nestjs/common';
 import { verify, decode } from 'jsonwebtoken';
 import { JwksClient } from 'jwks-rsa';
 import { Error as STError } from 'supertokens-node';
+import supertokens from 'supertokens-node';
 import Session from 'supertokens-node/recipe/session';
 import { VerifySessionOptions } from 'supertokens-node/recipe/session';
+import { createNewSessionWithoutRequestResponse } from 'supertokens-node/recipe/session';
 import { verifySession } from 'supertokens-node/recipe/session/framework/express';
 
-async function getKey(jwt: string) {
+import { UsersService } from 'modules/users/users.service';
+
+export async function getKey(jwt: string) {
   const decoded = decode(jwt, { complete: true });
 
   const client = new JwksClient({
@@ -16,6 +22,27 @@ async function getKey(jwt: string) {
   const key = await client.getSigningKey(decoded.header.kid);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return key!.getPublicKey();
+}
+
+export async function hasValidPat(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  request: any,
+  usersService: UsersService,
+) {
+  let authHeaderValue = request.headers['authorization'];
+
+  authHeaderValue =
+    authHeaderValue === undefined
+      ? undefined
+      : authHeaderValue.split('Bearer ')[1];
+
+  if (authHeaderValue !== undefined) {
+    const jwt = usersService.getJwtFromPat(authHeaderValue);
+
+    if (jwt) {
+      request.headers['authorization'] = `Bearer ${jwt}`;
+    }
+  }
 }
 
 export async function hasValidHeader(
@@ -35,10 +62,6 @@ export async function hasValidHeader(
     }
 
     return false;
-  }
-
-  if (authHeaderValue === process.env.MASTER_TOKEN) {
-    return true;
   }
 
   try {
@@ -61,6 +84,7 @@ export async function isSessionValid(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response: any,
   verifyOptions: VerifySessionOptions,
+  usersService: UsersService,
 ): Promise<boolean> {
   let err = undefined;
 
@@ -75,6 +99,10 @@ export async function isSessionValid(
         err = res;
       });
     } else {
+      if (request.headers['authorization'].includes('tr_pat_')) {
+        hasValidPat(request, usersService);
+      }
+
       return hasValidHeader(request.headers['authorization']);
     }
 
@@ -95,4 +123,23 @@ export async function isSessionValid(
   }
 
   return true;
+}
+
+export async function generateKeyForUserId(userId: string) {
+  const session = await createNewSessionWithoutRequestResponse(
+    'public',
+    supertokens.convertToRecipeUserId(userId),
+  );
+
+  const accessToken = session.getAccessToken();
+  return accessToken;
+}
+
+export function generatePersonalAccessToken(): string {
+  const prefix = 'tg_pat_';
+  const randomString = randomBytes(24)
+    .toString('base64')
+    .replace(/[^a-zA-Z0-9]/g, '');
+
+  return `${prefix}${randomString}`;
 }

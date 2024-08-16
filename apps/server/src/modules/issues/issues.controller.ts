@@ -43,7 +43,7 @@ export class IssuesController {
   ) {}
 
   @Post()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createIssue(
     @SessionDecorator() session: SessionContainer,
     @Body() issueData: CreateIssueDto,
@@ -53,7 +53,7 @@ export class IssuesController {
   }
 
   @Post(':issueId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateIssue(
     @SessionDecorator() session: SessionContainer,
     @Param() issueParams: IssueRequestParamsDto,
@@ -70,7 +70,7 @@ export class IssuesController {
   }
 
   @Delete(':issueId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteIssue(
     @Param() issueParams: IssueRequestParamsDto,
     @Query() teamParams: TeamRequestParamsDto,
@@ -79,7 +79,7 @@ export class IssuesController {
   }
 
   @Post(':issueId/link')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async linkIssue(
     @SessionDecorator() session: SessionContainer,
     @Param() issueParams: IssueRequestParamsDto,
@@ -94,7 +94,7 @@ export class IssuesController {
   }
 
   @Post(':issueId/subscribe')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async subscribeIssue(
     @SessionDecorator() session: SessionContainer,
     @Param() issueParams: IssueRequestParamsDto,
@@ -109,7 +109,7 @@ export class IssuesController {
   }
 
   @Get('export')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async exportIssues(
     @Query() workspaceParams: WorkspaceRequestParamsDto,
     @Res() res: Response,
@@ -133,7 +133,7 @@ export class IssuesController {
   }
 
   @Post(':issueId/move')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async moveIssue(
     @SessionDecorator() session: SessionContainer,
     @Param() issueParams: IssueRequestParamsDto,

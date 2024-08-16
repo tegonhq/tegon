@@ -15,11 +15,15 @@ export type InviteStatus = (typeof InviteStatus)[keyof typeof InviteStatus];
 export const Role = {
   ADMIN: 'ADMIN',
   USER: 'USER',
+  BOT: 'BOT',
+  AGENT: 'AGENT',
 };
 
 export enum RoleEnum {
   ADMIN = 'ADMIN',
   USER = 'USER',
+  BOT = 'BOT',
+  AGENT = 'AGENT',
 }
 
 export type Role = (typeof Role)[keyof typeof Role];

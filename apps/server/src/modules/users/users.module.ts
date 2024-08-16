@@ -11,10 +11,10 @@ import { UsersService } from './users.service';
   imports: [PrismaModule],
   controllers: [UsersController],
   providers: [
-    UsersService,
     PrismaService,
     SupertokensService,
     WorkspacesService,
+    UsersService,
   ],
   exports: [UsersService],
 })

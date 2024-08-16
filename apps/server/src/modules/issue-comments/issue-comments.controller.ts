@@ -35,13 +35,13 @@ export class IssueCommentsController {
   constructor(private issueCommentsService: IssueCommentsService) {}
 
   @Get('linked_comment')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getLinkedComment(@Query('sourceId') sourceId: string) {
     return await this.issueCommentsService.getLinkedCommentBySource(sourceId);
   }
 
   @Post('linked_comment')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createLinkedComment(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Body() createLinkedCommentInput: any,
@@ -52,7 +52,7 @@ export class IssueCommentsController {
   }
 
   @Post()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createIssueComment(
     @SessionDecorator() session: SessionContainer,
     @Query() issueParams: CreateIssueCommentRequestParamsDto,
@@ -67,7 +67,7 @@ export class IssueCommentsController {
   }
 
   @Get(':issueCommentId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getIssueComment(
     @Param() issueCommentParams: IssueCommentRequestParamsDto,
   ): Promise<IssueComment> {
@@ -75,7 +75,7 @@ export class IssueCommentsController {
   }
 
   @Post(':issueCommentId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateIssueComment(
     @Param() issueCommentParams: IssueCommentRequestParamsDto,
     @Body() commentData: CreateIssueCommentDto,
@@ -87,7 +87,7 @@ export class IssueCommentsController {
   }
 
   @Delete(':issueCommentId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteIssueComment(
     @Param() issueCommentParams: IssueCommentRequestParamsDto,
   ): Promise<IssueComment> {
@@ -97,7 +97,7 @@ export class IssueCommentsController {
   }
 
   @Post(':issueCommentId/reaction')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createCommentReaction(
     @SessionDecorator() session: SessionContainer,
     @Param() issueCommentParams: IssueCommentRequestParamsDto,
@@ -112,7 +112,7 @@ export class IssueCommentsController {
   }
 
   @Delete(':issueCommentId/reaction/:reactionId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteCommentReaction(
     @Param() reactionParams: ReactionRequestParams,
   ): Promise<IssueComment> {

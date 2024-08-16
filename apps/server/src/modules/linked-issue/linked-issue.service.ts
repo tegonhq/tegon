@@ -39,12 +39,18 @@ export default class LinkedIssueService {
         `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
       );
     }
+
+    const createdByInfo = {
+      updatedById: userId,
+      createdById: userId,
+    };
+
     try {
       linkedIssue = await this.prisma.linkedIssue.create({
         data: {
+          ...createdByInfo,
           url: linkData.url,
           issueId: issueParams.issueId,
-          createdById: userId,
           source: { type: 'ExternalLink' },
           sourceData: {
             ...(linkData.title ? { title: linkData.title } : {}),
@@ -78,6 +84,7 @@ export default class LinkedIssueService {
   async updateLinkIssue(
     linkedIssueIdParams: LinkedIssueRequestParamsDto,
     linkedIssueData: UpdateLinkedIssueDto,
+    userId: string,
   ): Promise<ApiResponse | LinkedIssue> {
     // Find the linked issue by its ID
     const linkedIssue = await this.prisma.linkedIssue.findUnique({
@@ -124,6 +131,7 @@ export default class LinkedIssueService {
       where: { id: linkedIssueIdParams.linkedIssueId },
       data: {
         sourceData: finalSourceData,
+        updatedById: userId,
         ...(linkedIssueData.url && { url: linkedIssueData.url }),
         ...(linkedIssueData.source && { source: linkedIssueData.source }),
         ...(linkedIssueData.sourceId && { sourceId: linkedIssueData.sourceId }),
@@ -135,6 +143,7 @@ export default class LinkedIssueService {
   async updateLinkIssueBySource(
     sourceId: string,
     linkedIssueData: UpdateLinkedIssueDto,
+    userId: string,
   ) {
     const linkedIssue = await this.prisma.linkedIssue.findFirst({
       where: { sourceId, deleted: null },
@@ -147,6 +156,7 @@ export default class LinkedIssueService {
     return await this.updateLinkIssue(
       { linkedIssueId: linkedIssue.id },
       linkedIssueData,
+      userId,
     );
   }
 

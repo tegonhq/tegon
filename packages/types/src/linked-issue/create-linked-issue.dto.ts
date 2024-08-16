@@ -15,8 +15,4 @@ export class CreateLinkedIssueDto {
   @IsOptional()
   @IsObject()
   sourceData?: Record<string, string | number>;
-
-  @IsOptional()
-  @IsString()
-  createdById?: string;
 }

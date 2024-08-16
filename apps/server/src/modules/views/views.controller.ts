@@ -1,4 +1,3 @@
-import { View } from '@tegonhq/types';
 import {
   Body,
   Controller,
@@ -14,6 +13,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { View } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -49,7 +49,7 @@ export class ViewsController {
    * Get all views for the workspace
    */
   @Get()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getViews(
     @Query()
     viewsRequestBody: ViewsRequestBody,
@@ -61,7 +61,7 @@ export class ViewsController {
    * Get a view
    */
   @Get(':viewId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getViewById(
     @Param()
     viewRequestIdBody: ViewRequestIdBody,
@@ -73,7 +73,7 @@ export class ViewsController {
    * Delete a View
    */
   @Delete(':view')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteView(
     @Param()
     viewRequestIdBody: ViewRequestIdBody,
@@ -85,7 +85,7 @@ export class ViewsController {
    * Update a view in workspace
    */
   @Post(':viewId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateView(
     @Param()
     viewRequestIdBody: ViewRequestIdBody,
@@ -102,7 +102,7 @@ export class ViewsController {
    * Create view in a workspace
    */
   @Post()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createView(
     @Session() session: SessionContainer,
     @Body()

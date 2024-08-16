@@ -40,10 +40,15 @@ export default class IssueCommentsService {
   ): Promise<IssueComment> {
     const { linkCommentMetadata, ...otherCommentData } = commentData;
 
+    const createdByInfo = {
+      userId,
+      updatedById: userId,
+    };
+
     const issueComment = await this.prisma.issueComment.create({
       data: {
         ...otherCommentData,
-        userId,
+        ...createdByInfo,
         issueId: issueRequestParams.issueId,
         ...(linkCommentMetadata && {
           linkedComment: { create: linkCommentMetadata },

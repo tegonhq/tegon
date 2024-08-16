@@ -1,4 +1,4 @@
-import { ActionEventPayload, JsonObject, JsonValue } from '@tegonhq/types';
+import { ActionEventPayload, JsonObject } from '@tegonhq/types';
 
 // This is used to fetch integration Account and the user token
 // for all later sdk operations
@@ -8,10 +8,6 @@ export interface InitFunctionReturn {
   userId?: string;
 }
 
-export type InitFunction = (
-  payload: ActionEventPayload,
-) => Promise<InitFunctionReturn>;
+export type InitFunction = (payload: ActionEventPayload) => Promise<any>;
 
 export type RunFunction = (payload: ActionEventPayload) => Promise<JsonObject>;
-
-export type ScheduleRunFunction = () => Promise<JsonValue>;

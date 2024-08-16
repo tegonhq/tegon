@@ -19,3 +19,15 @@ export async function updateLinkedIssue({
 
   return response.data;
 }
+
+export async function updateLinkedIssueBySource({
+  sourceId,
+  ...otherParams
+}: UpdateLinkedIssueDto) {
+  const response = await axios.post(
+    `/api/v1/linked_issues/source/${sourceId}`,
+    otherParams,
+  );
+
+  return response.data;
+}
