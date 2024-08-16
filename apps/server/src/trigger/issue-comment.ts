@@ -1,60 +1,86 @@
-// import { PrismaClient } from '@prisma/client';
-// import {
-//   IntegrationPayloadEventType,
-//   IssueCommentSyncPayload,
-//   ModelNameEnum,
-// } from '@tegonhq/types';
-// import { task } from '@trigger.dev/sdk/v3';
+import { PrismaClient } from '@prisma/client';
+import {
+  ActionEntity,
+  ActionTypesEnum,
+  ModelNameEnum,
+  ReplicationPayload,
+} from '@tegonhq/types';
+import { task } from '@trigger.dev/sdk/v3';
 
-// import { triggerTask } from 'common/utils/trigger.utils';
+import { triggerTask } from 'modules/triggerdev/triggerdev.utils';
 
-// const prisma = new PrismaClient();
-// export const issueCommentTrigger = task({
-//   id: `${ModelNameEnum.IssueComment}-trigger`,
-//   // TODO(Manoj) Fix type for this payload
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   run: async (payload: any) => {
-//     const issueComment = await prisma.issueComment.findUnique({
-//       where: { id: payload.modelId },
-//       include: { parent: true },
-//     });
+import {
+  convertToActionType,
+  getIntegrationAccountsFromActions,
+} from './utils';
 
-//     const parentSourceMetadata = issueComment?.parent?.sourceMetadata as Record<
-//       string,
-//       string
-//     >;
+const prisma = new PrismaClient();
+export const issueCommentTrigger = task({
+  id: `${ModelNameEnum.IssueComment}-trigger`,
+  run: async (payload: ReplicationPayload) => {
+    const actionType = payload.isDeleted
+      ? ActionTypesEnum.OnDelete
+      : convertToActionType(payload.action);
 
-//     if (parentSourceMetadata) {
-//       const integrationAccount = await prisma.integrationAccount.findUnique({
-//         where: {
-//           id: parentSourceMetadata.id,
-//           deleted: null,
-//         },
-//         include: {
-//           integrationDefinition: true,
-//           workspace: true,
-//         },
-//       });
+    const issueComment = await prisma.issueComment.findUnique({
+      where: { id: payload.modelId },
+      include: { parent: true, issue: { include: { team: true } } },
+    });
 
-//       triggerTask(
-//         `${integrationAccount?.integrationDefinition.name.toLowerCase()}-handler`,
-//         {
-//           event: IntegrationPayloadEventType.CommentSync,
-//           payload: {
-//             userId: issueComment.userId,
-//             data: {
-//               modelName: ModelNameEnum.IssueComment,
-//               accountId: integrationAccount.accountId,
-//               issueComment,
-//               action: payload.isDeleted ? 'delete' : payload.action,
-//             } as IssueCommentSyncPayload,
-//           },
-//         },
-//       );
-//     }
+    const workspaceId = issueComment.issue.team.workspaceId;
 
-//     return {
-//       message: 'Hello, world!',
-//     };
-//   },
-// });
+    const actionEntities = await prisma.actionEntity.findMany({
+      where: {
+        type: actionType,
+        entity: ModelNameEnum.LinkedIssue,
+        deleted: null,
+        // action: { workspaceId },
+      },
+      include: {
+        action: true,
+      },
+    });
+
+    if (actionEntities.length < 1) {
+      return {
+        message: `Couldn't find any action for this entity and type: ${ModelNameEnum.LinkedIssue} ${actionType}`,
+      };
+    }
+
+    const integrationMap = await getIntegrationAccountsFromActions(
+      prisma,
+      workspaceId,
+      actionEntities,
+    );
+
+    const handleIds = await Promise.all(
+      actionEntities.map(async (actionEntity: ActionEntity) => {
+        const handle = await triggerTask(
+          `${actionEntity.action.name}-handler`,
+          {
+            event: actionType,
+            payload: {
+              userId: issueComment.userId,
+              data: {
+                type: ModelNameEnum.IssueComment,
+                issueCommentId: issueComment.id,
+                integrationAccounts: Object.fromEntries(
+                  actionEntity.action.integrations.map((integrationName) => [
+                    integrationName,
+                    integrationMap[integrationName],
+                  ]),
+                ),
+              },
+            },
+          },
+          payload.actionApiKey,
+        );
+        return handle.id;
+      }),
+    );
+
+    return {
+      message: `Triggered handler task with ids: ${handleIds}`,
+    };
+  },
+});

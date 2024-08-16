@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ActionTypeEnum, ModelNameEnum, SyncAction } from '@tegonhq/types';
+import { ModelName } from '@prisma/client';
+import { ModelNameEnum, SyncAction, SyncActionTypeEnum } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -26,7 +27,7 @@ export default class SyncActionsService {
     let actionType = convertToActionType(action);
 
     if (isDeleted) {
-      actionType = ActionTypeEnum.D;
+      actionType = SyncActionTypeEnum.D;
     }
     const syncActionData = await this.prisma.syncAction.upsert({
       where: {
@@ -41,7 +42,7 @@ export default class SyncActionsService {
       },
       create: {
         action: actionType,
-        modelName,
+        modelName: modelName as ModelName,
         modelId,
         workspaceId,
         sequenceId,
@@ -60,7 +61,7 @@ export default class SyncActionsService {
     let syncActions = await this.prisma.syncAction.findMany({
       where: {
         workspaceId,
-        modelName: { in: modelNames.split(',') as ModelNameEnum[] },
+        modelName: { in: modelNames.split(',') as ModelName[] },
       },
       orderBy: {
         sequenceId: 'asc',
@@ -98,7 +99,7 @@ export default class SyncActionsService {
       where: {
         workspaceId,
         sequenceId: { gt: lastSequenceId },
-        modelName: { in: modelNames.split(',') as ModelNameEnum[] },
+        modelName: { in: modelNames.split(',') as ModelName[] },
       },
       orderBy: {
         sequenceId: 'asc',

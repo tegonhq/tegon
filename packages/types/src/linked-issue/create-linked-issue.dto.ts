@@ -1,18 +1,19 @@
-import { IsJSON, IsOptional, IsString } from 'class-validator';
+import { IsObject, IsOptional, IsString } from 'class-validator';
 
 export class CreateLinkedIssueDto {
   @IsString()
   url: string;
 
+  @IsOptional()
   @IsString()
   sourceId: string;
 
   @IsOptional()
-  @IsJSON()
+  @IsObject()
   source?: Record<string, string | number>;
 
   @IsOptional()
-  @IsJSON()
+  @IsObject()
   sourceData?: Record<string, string | number>;
 
   @IsOptional()

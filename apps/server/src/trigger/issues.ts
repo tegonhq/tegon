@@ -1,51 +1,85 @@
-// import { PrismaClient } from '@prisma/client';
-// import {
-//   IntegrationAccount,
-//   IntegrationPayloadEventType,
-//   ModelNameEnum,
-// } from '@tegonhq/types';
-// import { task, tasks } from '@trigger.dev/sdk/v3';
+import { PrismaClient } from '@prisma/client';
+import {
+  ActionEntity,
+  ActionTypesEnum,
+  ModelNameEnum,
+  ReplicationPayload,
+} from '@tegonhq/types';
+import { task } from '@trigger.dev/sdk/v3';
 
-// const prisma = new PrismaClient();
-// export const issueTrigger = task({
-//   id: `${ModelNameEnum.Issue}-trigger`,
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   run: async (payload: any) => {
-//     if (payload.isDeleted) {
-//       return { message: 'Issue is deleted' };
-//     }
-//     const issue = await prisma.issue.findUnique({
-//       where: { id: payload.modelId },
-//       include: { linkedIssue: true, team: true },
-//     });
+import { triggerTask } from 'modules/triggerdev/triggerdev.utils';
 
-//     if (issue.isBidirectional) {
-//       if (issue.linkedIssue.length > 0) {
-//         // TODO(Manoj): Remove personal integration accounts
-//         const integrationAccounts = await prisma.integrationAccount.findMany({
-//           where: { workspaceId: issue.team.workspaceId, deleted: null },
-//           include: { integrationDefinition: true },
-//         });
-//         integrationAccounts.map((integrationAccount: IntegrationAccount) => {
-//           tasks.trigger(
-//             `${integrationAccount.integrationDefinition.name.toLowerCase()}-handler`,
-//             {
-//               integrationAccount,
-//               actionType: IntegrationPayloadEventType.IssueSync,
-//               payload: {
-//                 modelName: ModelNameEnum.Issue,
-//                 modelPayload: { issue },
-//               },
-//             },
-//           );
-//         });
+import {
+  convertToActionType,
+  getIntegrationAccountsFromActions,
+} from './utils';
 
-//         return { message: 'Creating a Issue in the source' };
-//       }
-//     }
+const prisma = new PrismaClient();
+export const issueTrigger = task({
+  id: `${ModelNameEnum.Issue}-trigger`,
+  run: async (payload: ReplicationPayload) => {
+    const actionType = payload.isDeleted
+      ? ActionTypesEnum.OnDelete
+      : convertToActionType(payload.action);
 
-//     return {
-//       message: 'Successfull',
-//     };
-//   },
-// });
+    const issue = await prisma.issue.findUnique({
+      where: { id: payload.modelId },
+      include: { linkedIssue: true, team: true },
+    });
+
+    const workspaceId = issue.team.workspaceId;
+
+    const actionEntities = await prisma.actionEntity.findMany({
+      where: {
+        type: actionType,
+        entity: ModelNameEnum.LinkedIssue,
+        deleted: null,
+      },
+      include: {
+        action: true,
+      },
+    });
+
+    if (actionEntities.length < 1) {
+      return {
+        message: `Couldn't find any action for this entity and type: ${ModelNameEnum.LinkedIssue} ${actionType}`,
+      };
+    }
+
+    const integrationMap = await getIntegrationAccountsFromActions(
+      prisma,
+      workspaceId,
+      actionEntities,
+    );
+
+    const handleIds = await Promise.all(
+      actionEntities.map(async (actionEntity: ActionEntity) => {
+        const handle = await triggerTask(
+          `${actionEntity.action.name}-handler`,
+          {
+            event: actionType,
+            payload: {
+              userId: issue.createdById,
+              data: {
+                type: ModelNameEnum.IssueComment,
+                issueId: issue.id,
+                integrationAccounts: Object.fromEntries(
+                  actionEntity.action.integrations.map((integrationName) => [
+                    integrationName,
+                    integrationMap[integrationName],
+                  ]),
+                ),
+              },
+            },
+          },
+          payload.actionApiKey,
+        );
+        return handle.id;
+      }),
+    );
+
+    return {
+      message: `Triggered handler task with ids: ${handleIds}`,
+    };
+  },
+});

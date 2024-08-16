@@ -1,5 +1,6 @@
-import { ActionEventPayload, JsonValue } from '@tegonhq/types';
 import { task as triggerTask } from '@trigger.dev/sdk/v3';
+
+import { ActionEventPayload, JsonValue } from '@tegonhq/types';
 import axios from 'axios';
 
 import { getToken, getTokenFromAPI, setToken } from './token';
@@ -13,6 +14,7 @@ axios.interceptors.request.use((axiosConfig) => {
       axiosConfig.headers.Authorization = `Bearer ${authToken}`;
     }
   }
+
   return axiosConfig;
 });
 
@@ -25,6 +27,7 @@ export function handler(name: string, run: RunFunction) {
           userId: eventPayload.payload.userId,
         });
         setToken(token);
+
         return { userId: authenticatedUserId };
       }
 

@@ -1,5 +1,5 @@
 {
-  "name": "slack-handler",
+  "name": "slack",
   "triggers": [
     {
       "type": "on_create",
@@ -8,6 +8,11 @@
     {
       "type": "external_webhook",
       "entities": ["Slack"]
+    },
+    {
+      "type": "on_schedule",
+      "entities": ["Slack"],
+      "cron": ""
     }
   ],
   "integrations": ["slack"]

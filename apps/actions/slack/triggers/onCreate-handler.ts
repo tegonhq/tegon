@@ -5,15 +5,18 @@ import { commentSync } from './comment-sync';
 import { linkIssueSync } from './link-issue-sync';
 
 export const onCreateHandler = async (actionPayload: ActionPayload) => {
-  const { integrationAccount, data } = actionPayload;
+  const {
+    data,
+    data: { integrationAccounts },
+  } = actionPayload;
 
   // Handle different event types
   switch (data.type) {
     case ModelNameEnum.IssueComment:
-      return await commentSync(integrationAccount, data);
+      return await commentSync(integrationAccounts, data);
 
     case ModelNameEnum.LinkedIssue:
-      return await linkIssueSync(integrationAccount, data);
+      return await linkIssueSync(integrationAccounts, data);
 
     default:
       logger.debug('Unhandled Slack event type:', data.type);

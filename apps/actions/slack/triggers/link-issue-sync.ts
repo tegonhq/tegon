@@ -7,8 +7,7 @@ import {
 import { AbortTaskRunError, logger } from '@trigger.dev/sdk/v3';
 import axios from 'axios';
 
-import { slackLinkRegex } from 'types';
-
+import { slackLinkRegex } from '../types';
 import {
   createLinkIssueComment,
   getSlackMessage,
@@ -16,9 +15,10 @@ import {
 } from '../utils';
 
 export const linkIssueSync = async (
-  integrationAccount: IntegrationAccount,
+  integrationAccounts: Record<string, IntegrationAccount>,
   payload: LinkedIssueCreateActionPayload,
 ) => {
+  const integrationAccount = integrationAccounts.slack;
   const { linkIssueId } = payload;
 
   let linkedIssue = (

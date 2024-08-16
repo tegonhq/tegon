@@ -1,5 +1,8 @@
-import { IssueComment } from './issue-comment.entity';
+import { IntegrationAccount } from '../integration-account';
+import { ModelNameEnum } from '../sync-action';
 
 export interface IssueCommentCreateActionPayload {
-  issueComment: IssueComment;
+  type: ModelNameEnum;
+  integrationAccounts: Record<string, IntegrationAccount>;
+  issueCommentId: string;
 }

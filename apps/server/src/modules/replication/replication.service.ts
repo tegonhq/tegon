@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ModelName, ModelNameEnum } from '@tegonhq/types';
-import { configure } from '@trigger.dev/sdk/v3';
+import { ModelNameEnum } from '@tegonhq/types';
+import { PrismaService } from 'nestjs-prisma';
 import { Client } from 'pg';
 import {
   LogicalReplicationService,
@@ -10,6 +10,8 @@ import {
 
 import { SyncGateway } from 'modules/sync/sync.gateway';
 import SyncActionsService from 'modules/sync-actions/sync-actions.service';
+import { getWorkspaceId } from 'modules/sync-actions/sync-actions.utils';
+import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import {
   logChangeType,
@@ -30,6 +32,8 @@ export default class ReplicationService {
     private configService: ConfigService,
     private syncGateway: SyncGateway,
     private syncActionsService: SyncActionsService,
+    private triggerDevService: TriggerdevService,
+    private prisma: PrismaService,
   ) {
     this.client = new Client({
       user: configService.get('POSTGRES_USER'),
@@ -37,9 +41,6 @@ export default class ReplicationService {
       database: configService.get('POSTGRES_DB'),
       password: configService.get('POSTGRES_PASSWORD'),
       port: configService.get('DB_PORT'),
-    });
-    configure({
-      secretKey: process.env['TRIGGER_SECRET_KEY'],
     });
   }
 
@@ -140,7 +141,7 @@ export default class ReplicationService {
               );
 
             const recipientId =
-              modelName === ModelName.Notification
+              modelName === ModelNameEnum.Notification
                 ? syncActionData.data.userId
                 : syncActionData.workspaceId;
 
@@ -150,12 +151,26 @@ export default class ReplicationService {
           }
 
           if (tablesToTrigger.has(modelName)) {
-            // tasks.trigger(`${modelName}-trigger`, {
-            //   action: change.kind,
-            //   modelName,
-            //   modelId,
-            //   isDeleted,
-            // });
+            const workspaceId = await getWorkspaceId(
+              this.prisma,
+              modelName,
+              modelId,
+            );
+
+            const actionApiKey = await this.triggerDevService.getProdRuntimeKey(
+              `proj_${workspaceId.replace(/-/g, '')}`,
+            );
+            await this.triggerDevService.triggerTask(
+              'common',
+              `${modelName}-trigger`,
+              {
+                action: change.kind,
+                modelName,
+                modelId,
+                isDeleted,
+                actionApiKey,
+              },
+            );
           }
         });
       } else {
