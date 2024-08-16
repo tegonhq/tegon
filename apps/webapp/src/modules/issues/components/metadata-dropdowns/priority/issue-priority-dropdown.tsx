@@ -59,7 +59,7 @@ export function IssuePriorityDropdown({
     if (variant === IssuePriorityDropdownVariant.LINK) {
       return (
         <Button
-          variant="ghost"
+          variant="link"
           role="combobox"
           aria-expanded={open}
           className={cn(

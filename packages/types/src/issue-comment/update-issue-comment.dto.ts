@@ -10,9 +10,9 @@ export class UpdateIssueCommentDto {
 
   @IsOptional()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  linkCommentMetadata: any;
+  linkCommentMetadata?: any;
 
   @IsOptional()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  sourceMetadata: any;
+  sourceMetadata?: any;
 }

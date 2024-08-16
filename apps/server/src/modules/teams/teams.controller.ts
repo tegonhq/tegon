@@ -34,7 +34,7 @@ export class TeamsController {
   constructor(private teamsService: TeamsService) {}
 
   @Get(':teamId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getTeam(
     @Param()
     teamId: TeamRequestParams,
@@ -43,7 +43,7 @@ export class TeamsController {
   }
 
   @Get('name/:teamName')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getTeamByName(
     @Param('teamName') teamName: string,
     @Query() workspaceParams: WorkspaceRequestParams,
@@ -55,7 +55,7 @@ export class TeamsController {
   }
 
   @Post()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createTeam(
     @SessionDecorator() session: SessionContainer,
     @Query() WorkspaceParams: WorkspaceRequestParams,
@@ -70,7 +70,7 @@ export class TeamsController {
   }
 
   @Post(':teamId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateTeam(
     @Param()
     teamRequestParams: TeamRequestParams,
@@ -80,7 +80,7 @@ export class TeamsController {
   }
 
   @Delete(':teamId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteTeam(
     @Param()
     teamRequestParams: TeamRequestParams,
@@ -89,7 +89,7 @@ export class TeamsController {
   }
 
   @Post(':teamId/preference')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async createUpdatePreference(
     @Param()
     teamRequestParams: TeamRequestParams,
@@ -102,7 +102,7 @@ export class TeamsController {
   }
 
   @Post(':teamId/add_member')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async addTeamMember(
     @Param() teamRequestParams: TeamRequestParams,
     @Query() workspaceRequestParams: WorkspaceRequestParams,
@@ -116,7 +116,7 @@ export class TeamsController {
   }
 
   @Get(':teamId/members')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getTeamMembers(
     @Param()
     teamRequestParams: TeamRequestParams,
@@ -125,7 +125,7 @@ export class TeamsController {
   }
 
   @Delete(':teamId/remove_member')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async removeTeamMemeber(
     @Param()
     teamRequestParams: TeamRequestParams,

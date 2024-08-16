@@ -28,7 +28,7 @@ export class WorkflowsController {
   constructor(private workflowsService: WorkflowsService) {}
 
   @Get()
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getAllWorkflows(
     @Param() teamId: TeamRequestIdBody,
   ): Promise<Workflow[]> {
@@ -36,7 +36,7 @@ export class WorkflowsController {
   }
 
   @Get(':workflowId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getWorkflow(
     @Param()
     workflowId: WorkflowRequestIdBody,
@@ -45,7 +45,7 @@ export class WorkflowsController {
   }
 
   @Post(':workflowId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateWorkflow(
     @Param()
     workflowId: WorkflowRequestIdBody,
@@ -55,7 +55,7 @@ export class WorkflowsController {
   }
 
   @Delete(':workflowId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteWorkflow(
     @Param()
     workflowId: WorkflowRequestIdBody,

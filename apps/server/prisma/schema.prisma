@@ -16,6 +16,8 @@ model Action {
 
   name         String
   integrations String[]
+
+  cron         String?
   workspace    Workspace?     @relation(fields: [workspaceId], references: [id])
   workspaceId  String?
   actionEntity ActionEntity[]
@@ -36,6 +38,27 @@ model ActionEntity {
   actionId String
 
   @@unique([type, entity, actionId])
+}
+
+model ActionEvent {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  eventType String
+  modelName String // Issue
+  modelId   String // Issue ID
+  eventData Json? // Update data change
+
+  sequenceId BigInt
+
+  processed    Boolean   @default(false)
+  processedAt  DateTime?
+  processedIds String[]
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
 }
 
 model Attachment {
@@ -155,10 +178,12 @@ model Issue {
   sourceMetadata    Json?
   isBidirectional   Boolean?
 
-  team          Team     @relation(fields: [teamId], references: [id])
-  teamId        String
-  createdBy     User?    @relation(fields: [createdById], references: [id])
-  createdById   String?
+  team   Team   @relation(fields: [teamId], references: [id])
+  teamId String
+
+  createdById String?
+  updatedById String
+
   subscriberIds String[]
   assigneeId    String?
   labelIds      String[]
@@ -186,8 +211,10 @@ model IssueComment {
   deleted   DateTime?
 
   body           String
-  userId         String?
   sourceMetadata Json?
+
+  userId      String?
+  updatedById String
 
   reactions     Reaction[]
   reactionsData Json[]
@@ -261,6 +288,20 @@ model IssueSuggestion {
   issue               Issue?
 }
 
+model PersonalAccessToken {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name   String
+  jwt    String
+  token  String
+  userId String
+
+  @@unique([name, userId, token])
+}
+
 model Label {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
@@ -311,6 +352,7 @@ model LinkedIssue {
   source      Json?
   sourceData  Json?
   createdById String?
+  updatedById String
 
   issue   Issue  @relation(fields: [issueId], references: [id])
   issueId String
@@ -439,21 +481,6 @@ model Template {
   teamId      String?
 }
 
-// this is mapping between the projects in trigger to tegon
-// we use common slug project to run all the internal trigger background jobs
-model TriggerProject {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  projectId     String
-  projectSecret String
-  slug          String
-  workspaceId   String?
-  status        Boolean
-}
-
 model User {
   id String @id @unique
 
@@ -468,7 +495,6 @@ model User {
 
   usersOnWorkspaces  UsersOnWorkspaces[]
   template           Template[]
-  createdBy          Issue[]
   integrationAccount IntegrationAccount[]
   attachment         Attachment[]
 }
@@ -549,6 +575,8 @@ model Workspace {
   aiRequests            AIRequest[]
   prompts               Prompt[]
   action                Action[]
+
+  ActionEvent ActionEvent[]
 }
 
 enum Preference {
@@ -559,6 +587,8 @@ enum Preference {
 enum Role {
   ADMIN
   USER
+  BOT
+  AGENT
 }
 
 enum Status {

@@ -75,7 +75,7 @@ export function IssueAssigneeDropdown({
     if (variant === IssueAssigneeDropdownVariant.LINK) {
       return (
         <Button
-          variant="ghost"
+          variant="link"
           role="combobox"
           aria-expanded={open}
           className={cn(

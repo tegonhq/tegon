@@ -9,13 +9,17 @@ export interface UpdateIssueCommentProps extends UpdateIssueCommentDto {
 export async function updateIssueComment({
   issueCommentId,
   body,
+  linkCommentMetadata,
+  sourceMetadata,
   parentId,
 }: UpdateIssueCommentProps) {
   const response = await axios.post(
-    `/api/v1/issue-comments/${issueCommentId}`,
+    `/api/v1/issue_comments/${issueCommentId}`,
     {
       body,
       parentId,
+      sourceMetadata,
+      linkCommentMetadata,
     },
   );
 

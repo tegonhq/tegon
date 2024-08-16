@@ -62,7 +62,7 @@ export const IssueLabelDropdown = observer(
 
             {value.length > 0 ? (
               <Button
-                variant="ghost"
+                variant="link"
                 role="combobox"
                 size="sm"
                 aria-expanded={open}
@@ -76,7 +76,7 @@ export const IssueLabelDropdown = observer(
               </Button>
             ) : (
               <Button
-                variant="ghost"
+                variant="link"
                 role="combobox"
                 aria-expanded={open}
                 className={cn(

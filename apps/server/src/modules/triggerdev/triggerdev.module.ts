@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
-import { TriggerdevController } from './triggerdev.controller';
+import { UsersService } from 'modules/users/users.service';
+
 import { TriggerdevService } from './triggerdev.service';
 
 @Module({
-  imports: [PrismaModule],
-  controllers: [TriggerdevController],
-  providers: [TriggerdevService, PrismaService],
+  imports: [],
+  controllers: [],
+  providers: [TriggerdevService, UsersService],
   exports: [TriggerdevService],
 })
 export class TriggerdevModule {}

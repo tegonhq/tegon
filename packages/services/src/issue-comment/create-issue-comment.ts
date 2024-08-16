@@ -9,11 +9,15 @@ export async function createIssueComment({
   issueId,
   body,
   parentId,
+  sourceMetadata,
+  linkCommentMetadata,
 }: CreateIssueCommentProps) {
   const response = await axios.post(
-    `/api/v1/issue-comments?issueId=${issueId}`,
+    `/api/v1/issue_comments?issueId=${issueId}`,
     {
       body,
+      sourceMetadata,
+      linkCommentMetadata,
       parentId,
     },
   );

@@ -2,7 +2,6 @@
   "name": "@tegonhq/services",
   "version": "0.0.0",
   "description": "Tegon API services",
-  "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "module": "./dist/index.mjs",

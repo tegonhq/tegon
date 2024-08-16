@@ -235,6 +235,8 @@ export async function getCreateIssueInput(
       workspaceId,
     ),
     team: { connect: { id: teamId } },
+    updatedById: userId,
+    createdById: userId,
     subscriberIds: getSubscriberIds(
       userId,
       issueData.assigneeId,

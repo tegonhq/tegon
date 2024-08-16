@@ -18,7 +18,7 @@ export class SyncActionsController {
   constructor(private syncActionsService: SyncActionsService) {}
 
   @Get('bootstrap')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getBootstrap(@Query() BootstrapQuery: BootstrapRequestQuery) {
     return await this.syncActionsService.getBootstrap(
       BootstrapQuery.modelNames,
@@ -28,7 +28,7 @@ export class SyncActionsController {
   }
 
   @Get('delta')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getDelta(@Query() deltaQuery: DeltaRequestQuery) {
     return await this.syncActionsService.getDelta(
       deltaQuery.modelNames,

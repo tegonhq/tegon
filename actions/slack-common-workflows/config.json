@@ -3,12 +3,12 @@
   "triggers": [
     {
       "type": "on_create",
-      "entities": [ "IssueComment", "LinkedIssue" ]
+      "entities": ["IssueComment", "LinkedIssue"]
     },
     {
-      "type": "external_webhook",
-      "entities": [ "slack" ]
+      "type": "source_webhook",
+      "entities": ["slack"]
     }
   ],
-  "integrations": [ "slack" ]
+  "integrations": ["slack"]
 }

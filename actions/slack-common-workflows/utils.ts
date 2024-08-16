@@ -1,5 +1,7 @@
 import {
   AttachmentResponse,
+  createIssueComment,
+  createLinkedIssue,
   EventBody,
   info,
   IntegrationAccount,
@@ -7,6 +9,7 @@ import {
   JsonObject,
   TiptapMarks,
   TiptapNode,
+  updateLinkedIssue,
   UpdateLinkedIssueDto,
   Workflow,
 } from '@tegonhq/sdk';
@@ -130,19 +133,25 @@ export async function createLinkIssueComment(
   linkIssueInput: UpdateLinkedIssueDto,
   channelId: string,
   issueId: string,
-  // TODO(Manoj): Fix this type
+  // TODO: Update this type to be more specific than `any`
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sourceMetadata: any,
 ) {
-  // Extract relevant data from the Slack message event
+  // Extract timestamp and thread information from the Slack message response
   const {
     ts: messageTs,
     thread_ts: parentTs,
     channel_type: channelType,
   } = messageResponse.message;
 
-  // Generate the comment body with the Slack channel name
-  const commentBody = `Slack thread in #${getChannelNameFromIntegrationAccount(integrationAccount, channelId)}`;
+  // Create a comment body that includes the Slack channel's name
+  const channelName = getChannelNameFromIntegrationAccount(
+    integrationAccount,
+    channelId,
+  );
+  const commentBody = `Slack thread in #${channelName}`;
+
+  // Merge provided metadata with message-specific details
   const commentSourceMetadata = {
     ...sourceMetadata,
     parentTs,
@@ -150,26 +159,39 @@ export async function createLinkIssueComment(
     channelType,
   };
 
-  const issueComment =
-    (
-      await axios.post(
-        `${process.env.BACKEND_HOST}/v1/issue_comments?issueId=${issueId}`,
-        { body: commentBody, sourceMetadata: commentSourceMetadata },
-      )
-    ).data || null;
+  // Post the comment to the backend and capture the response
+  const issueCommentResponse = await createIssueComment({
+    issueId,
+    body: commentBody,
+    sourceMetadata: commentSourceMetadata,
+  });
+
+  // Extract the comment data or default to null if response is empty
+  const issueComment = issueCommentResponse.data || null;
+
+  // Log the successful creation of the issue comment
   info('Issue comment created successfully', { issueComment });
 
+  // Update the linked issue input with the new comment ID and message timestamp
   linkIssueInput.source.syncedCommentId = issueComment.id;
   linkIssueInput.sourceData.messageTs = messageTs;
 
-  await axios.post(
-    `${process.env.BACKEND_HOST}/v1/linked_issues/source/${linkIssueInput.sourceId}`,
-    {
-      sourceData: linkIssueInput.sourceData,
-      source: linkIssueInput.source,
-    },
-  );
+  // Update the linked issue source with the new data
+  // await axios.post(
+  //   `${process.env.BACKEND_HOST}/v1/linked_issues/source/${linkIssueInput.sourceId}`,
+  //   {
+  //     sourceData: linkIssueInput.sourceData,
+  //     source: linkIssueInput.source,
+  //   },
+  // );
 
+  await updateLinkedIssueBySource({
+    sourceId: linkIssueInput.sourceId,
+    sourceData: linkIssueInput.sourceData,
+    source: linkIssueInput.source,
+  });
+
+  // Log the successful update of the linked issue
   info('Linked issue updated successfully');
 }
 

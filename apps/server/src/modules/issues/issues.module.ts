@@ -1,7 +1,7 @@
-import { IssueHistory } from '@tegonhq/types';
 import { HttpModule } from '@nestjs/axios';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
+import { IssueHistory } from '@tegonhq/types';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
@@ -9,6 +9,7 @@ import { IssueHistoryModule } from 'modules/issue-history/issue-history.module';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
 import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 import { NotificationsModule } from 'modules/notifications/notifications.module';
+import { UsersService } from 'modules/users/users.service';
 import { VectorModule } from 'modules/vector/vector.module';
 
 import { IssuesAIController } from './issues-ai.controller';
@@ -37,6 +38,7 @@ import IssuesService from './issues.service';
     IssuesProcessor,
     IssueRelationService,
     AIRequestsService,
+    UsersService,
     IssuesAIService,
   ],
   exports: [IssuesService, IssuesQueue],

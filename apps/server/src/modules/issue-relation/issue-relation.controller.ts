@@ -17,7 +17,7 @@ export class IssueRelationController {
   constructor(private issueRelation: IssuesRelationService) {}
 
   @Delete(':issueRelationId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteLabel(
     @SessionDecorator() session: SessionContainer,
     @Param()

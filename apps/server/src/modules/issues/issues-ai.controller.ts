@@ -31,7 +31,7 @@ export class IssuesAIController {
   constructor(private issuesAiService: IssuesAIService) {}
 
   @Post('suggestions')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async suggestions(
     @Query() teamRequestParams: TeamRequestParamsDto,
     @Body() suggestionsInput: AIInput,
@@ -43,7 +43,7 @@ export class IssuesAIController {
   }
 
   @Post('ai_filters')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async aiFilters(
     @Query() teamRequestParams: TeamRequestParamsDto,
     @Body() filterInput: FilterInput,
@@ -52,19 +52,19 @@ export class IssuesAIController {
   }
 
   @Post('ai_title')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async aiTitle(@Body() aiInput: AIInput) {
     return await this.issuesAiService.aiTitle(aiInput);
   }
 
   @Post('subissues/generate')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async generateSubIssues(@Body() issueInput: SubIssueInput) {
     return await this.issuesAiService.generateSubIssues(issueInput);
   }
 
   @Post('stream/description')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async generateDescriptionStream(
     @Body() descriptionInput: DescriptionInput,
     @Res({ passthrough: true }) response: Response,
@@ -73,7 +73,7 @@ export class IssuesAIController {
   }
 
   @Get(':issueId/summarize')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async summarizeIssue(@Param() issueParams: IssueRequestParamsDto) {
     return await this.issuesAiService.summarizeIssue(issueParams.issueId);
   }

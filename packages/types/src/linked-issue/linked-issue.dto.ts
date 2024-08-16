@@ -12,3 +12,8 @@ export class LinkIssueInput {
   type?: string;
   title?: string;
 }
+
+export class LinkedIssueSourceDto {
+  @IsString()
+  sourceId: string;
+}

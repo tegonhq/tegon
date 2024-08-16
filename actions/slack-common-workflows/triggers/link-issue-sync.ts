@@ -1,11 +1,12 @@
 import {
   debug,
   EventBody,
+  getLinkedIssueDetails,
   IntegrationAccount,
   LinkedIssueCreateActionPayload,
+  updateLinkedIssue,
   UpdateLinkedIssueDto,
 } from '@tegonhq/sdk';
-import axios from 'axios';
 
 import { slackLinkRegex } from '../types';
 import {
@@ -21,11 +22,7 @@ export const linkIssueSync = async (
   const integrationAccount = integrationAccounts.slack;
   const { linkIssueId } = payload;
 
-  let linkedIssue = (
-    await axios.get(
-      `${process.env.BACKEND_HOST}/v1/linked_issues/${linkIssueId}`,
-    )
-  ).data;
+  let linkedIssue = await getLinkedIssueDetails({ linkedIssueId: linkIssueId });
 
   const match = linkedIssue.url.match(slackLinkRegex);
 
@@ -68,12 +65,10 @@ export const linkIssueSync = async (
     },
   };
 
-  linkedIssue = (
-    await axios.post(
-      `${process.env.BACKEND_HOST}/v1/linked_issues/${linkIssueId}`,
-      linkIssueData,
-    )
-  ).data;
+  linkedIssue = await updateLinkedIssue({
+    linkedIssueId: linkIssueId,
+    ...linkIssueData,
+  });
 
   const {
     issue: { team, number: issueNumber, id: issueId },

@@ -8,7 +8,7 @@ export class IntegrationAccount {
   createdAt: Date;
   updatedAt: Date;
   deleted: Date | null;
-  integrationConfiguration: JsonValue;
+  integrationConfiguration?: JsonValue;
   accountId: string | null;
   settings: JsonValue | null;
   personal: boolean;

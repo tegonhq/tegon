@@ -1,10 +1,11 @@
 import {
   AttachmentResponse,
+  createIssueComment,
   debug,
+  EventBody,
   IntegrationAccount,
-  WebhookData,
+  updateIssueComment,
 } from '@tegonhq/sdk';
-import axios from 'axios';
 
 import { SlackIntegrationSettings } from '../types';
 import {
@@ -14,9 +15,8 @@ import {
 
 export const slackThread = async (
   integrationAccount: IntegrationAccount,
-  payload: WebhookData,
+  eventBody: EventBody,
 ) => {
-  const { eventBody } = payload;
   const event = eventBody.event;
 
   // Get the message from the event body based on the subtype
@@ -47,11 +47,9 @@ export const slackThread = async (
 
   debug(`Handling Slack thread with ID: ${threadId}`);
 
-  const linkedIssue = (
-    await axios.get(
-      `${process.env.BACKEND_HOST}/v1/linked_issues/source?sourceId=${parentThreadId}`,
-    )
-  ).data;
+  const linkedIssue = await getLinkedIssueBySource({
+    sourceId: parentThreadId,
+  });
 
   // If no linked issue is found, log and return undefined
   if (!linkedIssue) {
@@ -92,22 +90,15 @@ export const slackThread = async (
     attachmentUrls,
   );
 
-  let linkedComment = (
-    await axios.get(
-      `${process.env.BACKEND_HOST}/v1/issue_comments/linked_comment?sourceId=${threadId}`,
-    )
-  ).data;
-
+  let linkedComment = await getLinkedComment({ sourceId: threadId });
   if (linkedComment) {
     // If a linked comment exists, update the existing comment
     debug(`Updating existing comment for thread ID: ${threadId}`);
 
-    return (
-      await axios.post(
-        `${process.env.BACKEND_HOST}/v1/issue_comments/${linkedComment.comment.id}`,
-        { body: tiptapMessage },
-      )
-    ).data;
+    return await updateIssueComment({
+      body: tiptapMessage,
+      issueCommentId: linkedComment.comment.id,
+    });
   }
 
   linkedComment = {
@@ -120,15 +111,11 @@ export const slackThread = async (
     sourceData: sourceMetadata,
   };
 
-  return (
-    await axios.post(
-      `${process.env.BACKEND_HOST}/v1/issue_comments?issueId=${issueId}`,
-      {
-        body: tiptapMessage,
-        parentId,
-        sourceMetadata,
-        linkCommentMetadata: linkedComment,
-      },
-    )
-  ).data;
+  return createIssueComment({
+    issueId,
+    body: tiptapMessage,
+    parentId,
+    sourceMetadata,
+    linkCommentMetadata: linkedComment,
+  });
 };

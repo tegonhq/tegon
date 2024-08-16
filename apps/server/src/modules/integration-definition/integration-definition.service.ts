@@ -50,21 +50,17 @@ export class IntegrationDefinitionService {
 
   async getIntegrationDefinitionWithSpec(
     integrationDefinitionId: string,
-    userId: string,
   ): Promise<IntegrationDefinition> {
     const integrationDefinition = await this.getIntegrationDefinitionWithId({
       integrationDefinitionId,
     });
 
     const payload: IntegrationEventPayload = {
-      event: IntegrationPayloadEventType.IntegrationSpec,
-      payload: {
-        userId,
-      },
+      event: IntegrationPayloadEventType.SPEC,
     };
 
     const spec = await this.triggerdevService.triggerTask(
-      TriggerProjects.Integration,
+      TriggerProjects.Common,
       integrationDefinition.name,
       payload,
     );

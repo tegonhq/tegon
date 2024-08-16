@@ -8,10 +8,8 @@ import {
   IntegrationDefinition,
   WorkspaceRequestParamsDto,
 } from '@tegonhq/types';
-import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import {
   IntegrationDefinitionRequestIdBody,
@@ -56,18 +54,14 @@ export class IntegrationDefinitionController {
   //  * Get spec for integration definition
   //  */
   @Get(':integrationDefinitionId/spec')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async getIntegrationDefinitionSpec(
-    @SessionDecorator() session: SessionContainer,
     @Param()
     integrationDefinitionRequestIdBody: IntegrationDefinitionRequestIdBody,
   ) {
-    const userId = session.getUserId();
-
     const integrationDefinition =
       await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
         integrationDefinitionRequestIdBody.integrationDefinitionId,
-        userId,
       );
 
     return integrationDefinition.spec;

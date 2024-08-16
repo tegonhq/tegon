@@ -5,6 +5,11 @@ import { PrismaService } from 'nestjs-prisma';
 import supertokens from 'supertokens-node';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
+import {
+  generateKeyForUserId,
+  generatePersonalAccessToken,
+} from 'common/authentication';
+
 import { SupertokensService } from 'modules/auth/supertokens/supertokens.service';
 
 import {
@@ -22,14 +27,19 @@ export class UsersService {
     private mailerService: MailerService,
   ) {}
 
-  async upsertUser(id: string, email: string, fullname: string) {
+  async upsertUser(
+    id: string,
+    email: string,
+    fullname: string,
+    username?: string,
+  ) {
     return await this.prisma.user.upsert({
       where: { email },
       create: {
         id,
         email,
         fullname,
-        username: email.split('@')[0],
+        username: username ?? email.split('@')[0],
       },
       update: {},
     });
@@ -236,5 +246,39 @@ export class UsersService {
         return { ...invite, workspace };
       }),
     );
+  }
+
+  async createPersonalAcccessToken(name: string, userId: string) {
+    const jwt = await generateKeyForUserId(userId);
+    const token = generatePersonalAccessToken();
+
+    await this.prisma.personalAccessToken.create({
+      data: {
+        name,
+        userId,
+        token,
+        jwt,
+      },
+    });
+
+    return { name, token };
+  }
+
+  async getPats(userId: string) {
+    const pats = (
+      await this.prisma.personalAccessToken.findMany({
+        where: { userId },
+      })
+    ).map((pat) => ({ name: pat.name }));
+
+    return pats;
+  }
+
+  async getJwtFromPat(token: string) {
+    const pat = await this.prisma.personalAccessToken.findFirst({
+      where: { token },
+    });
+
+    return pat.jwt;
   }
 }

@@ -26,7 +26,7 @@ export class NotificationsController {
   constructor(private notificationsService: NotificationsService) {}
 
   @Post(':notificationId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async updateNotification(
     @Param()
     notificationRequestParams: NotificationIdRequestParams,
@@ -39,7 +39,7 @@ export class NotificationsController {
   }
 
   @Delete(':notificationId')
-  @UseGuards(new AuthGuard())
+  @UseGuards(AuthGuard)
   async deleteNotification(
     @Param()
     notificationRequestParams: NotificationIdRequestParams,

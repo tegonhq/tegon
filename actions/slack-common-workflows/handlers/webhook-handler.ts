@@ -1,14 +1,12 @@
-import { debug, log, WebhookData } from '@tegonhq/sdk';
-import axios from 'axios';
+import { debug, log, WebhookPayload } from '@tegonhq/sdk';
 
 import { slackThread } from '../triggers/thread';
 import { slackTriage } from '../triggers/triage';
 
 import { SlackIntegrationSettings } from '../types';
 
-export const webhookHandler = async (payload: WebhookData) => {
-  const { eventBody, eventHeaders } = payload.data;
-  const userId = payload.userId;
+export const webhookHandler = async (payload: WebhookPayload) => {
+  const { eventBody, eventHeaders, integrationAccounts, userId } = payload;
 
   // Check if the event is a URL verification challenge
   if (eventBody.type === 'url_verification') {
@@ -18,11 +16,7 @@ export const webhookHandler = async (payload: WebhookData) => {
 
   const { event, team_id: teamId } = eventBody;
 
-  const integrationAccount = (
-    await axios.get(
-      `${process.env.BACKEND_HOST}/v1/integration_account/accountId?accountId=${teamId}`,
-    )
-  ).data;
+  const integrationAccount = integrationAccounts.slack;
 
   // If no integration account is found, log and return undefined
   if (!integrationAccount) {
