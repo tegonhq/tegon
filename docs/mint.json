@@ -58,8 +58,7 @@
       "group": "Integrations",
       "pages": [
         "integrations/overview",
-        "integrations/github",
-        "integrations/slack"
+        "integrations/contribute"
       ]
     },
     {
