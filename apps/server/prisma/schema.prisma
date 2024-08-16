@@ -19,6 +19,8 @@ model Action {
   workspace    Workspace?     @relation(fields: [workspaceId], references: [id])
   workspaceId  String?
   actionEntity ActionEntity[]
+
+  createdById String
 }
 
 model ActionEntity {
@@ -449,6 +451,7 @@ model TriggerProject {
   projectSecret String
   slug          String
   workspaceId   String?
+  status        Boolean
 }
 
 model User {
@@ -546,17 +549,6 @@ model Workspace {
   aiRequests            AIRequest[]
   prompts               Prompt[]
   action                Action[]
-}
-
-model WorkspaceTriggerProject {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  triggerProjectId String
-  workspaceId      String
-  status           Boolean
 }
 
 enum Preference {

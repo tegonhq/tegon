@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { getSlackTeamInfo } from '../utils';
+import { getSlackTeamInfo } from './utils';
 
 export const integrationCreate = async (
   userId: string,

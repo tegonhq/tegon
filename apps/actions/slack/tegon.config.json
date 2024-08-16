@@ -1,0 +1,14 @@
+{
+  "name": "slack",
+  "triggers": [
+    {
+      "type": "on_create",
+      "entities": [ "IssueComment", "LinkedIssue" ]
+    },
+    {
+      "type": "external_webhook",
+      "entities": [ "Slack" ]
+    }
+  ],
+  "integrations": [ "slack" ]
+}

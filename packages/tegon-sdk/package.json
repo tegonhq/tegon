@@ -1,6 +1,6 @@
 {
-  "name": "@tegonhq/sdk",
-  "version": "0.1.0",
+  "name": "@born4rhell/sdk",
+  "version": "0.1.6",
   "description": "Tegon Node.JS SDK",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -23,13 +23,6 @@
     },
     "./package.json": "./package.json"
   },
-  "typesVersions": {
-    "*": {
-      "v3": [
-        "./dist/index.d.ts"
-      ]
-    }
-  },
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && npm run build:tsup",
@@ -37,7 +30,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@trigger.dev/sdk": "3.0.0-beta.50",
+    "axios": "^1.6.7",
     "chalk": "^5.2.0",
+    "configstore": "^7.0.0",
     "cronstrue": "^2.21.0",
     "debug": "^4.3.4",
     "evt": "^2.4.13",
@@ -47,9 +43,10 @@
     "zod": "3.22.3"
   },
   "devDependencies": {
-    "@tegonhq/types": "workspace:*",
     "@tegonhq/services": "workspace:*",
+    "@tegonhq/types": "workspace:*",
     "@tegonhq/typescript-config": "workspace:*",
+    "@types/configstore": "^6.0.2",
     "@types/debug": "^4.1.7",
     "@types/node": "18",
     "@types/slug": "^5.0.3",

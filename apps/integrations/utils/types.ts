@@ -1,14 +1,13 @@
 import { IntegrationEventPayload, JsonValue } from '@tegonhq/types';
 
 export interface InitFunctionReturn {
-  accountId: string;
-  userAccountId?: string;
+  accountId?: string;
   userId?: string;
 }
 
 export type InitFunction = (
   payload: IntegrationEventPayload,
-) => Promise<InitFunctionReturn>;
+) => Promise<InitFunctionReturn> | null;
 
 export type RunFunction = (
   payload: IntegrationEventPayload,

@@ -3,10 +3,8 @@ import {
   CreateIntegrationAccountDto,
   InputJsonValue,
   IntegrationAccountIdDto,
-  IntegrationPayloadEventType,
   UpdateIntegrationAccountDto,
 } from '@tegonhq/types';
-import { tasks } from '@trigger.dev/sdk/v3';
 import { PrismaService } from 'nestjs-prisma';
 
 import { IntegrationAccountRequestBody } from './integration-account.interface';
@@ -49,16 +47,6 @@ export class IntegrationAccountService {
       },
     });
 
-    tasks.trigger(
-      `${integrationAccount.integrationDefinition.name.toLowerCase()}-handler`,
-      {
-        integrationAccount,
-        accesstoken: '',
-        payload: { settingsData: settings },
-        actionType: IntegrationPayloadEventType.IntegrationCreate,
-      },
-    );
-
     return integrationAccount;
   }
 
@@ -91,15 +79,6 @@ export class IntegrationAccountService {
         workspace: true,
       },
     });
-
-    tasks.trigger(
-      `${integrationAccount.integrationDefinition.name.toLowerCase()}-internal`,
-      {
-        integrationAccount,
-        accesstoken: '',
-        actionType: IntegrationPayloadEventType.IntegrationDelete,
-      },
-    );
 
     return integrationAccount;
   }

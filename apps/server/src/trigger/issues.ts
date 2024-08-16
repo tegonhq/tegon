@@ -55,7 +55,7 @@ export const issueTrigger = task({
     const handleIds = await Promise.all(
       actionEntities.map(async (actionEntity: ActionEntity) => {
         const handle = await triggerTask(
-          `${actionEntity.action.name}-handler`,
+          actionEntity.action.name,
           {
             event: actionType,
             payload: {

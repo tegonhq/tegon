@@ -3,9 +3,22 @@ import {
   IntegrationPayloadEventType,
 } from '@tegonhq/types';
 
-import { integrationCreate } from './internal/integration-create';
+import { integrationCreate } from './integration-create';
 import { spec } from './spec';
 import { handler } from '../../utils/handler';
+
+/**
+ * This is used to fetch user token and integration account if exists
+ */
+async function init(eventPayload: IntegrationEventPayload) {
+  if (
+    eventPayload.event === IntegrationPayloadEventType.GetIntegrationAccount
+  ) {
+    return { accountId: eventPayload.payload.data.eventBody.team_id };
+  }
+
+  return undefined;
+}
 
 async function run(eventPayload: IntegrationEventPayload) {
   switch (eventPayload.event) {
@@ -26,4 +39,4 @@ async function run(eventPayload: IntegrationEventPayload) {
   }
 }
 
-export const slackHandler = handler('slack', run);
+export const slackHandler = handler('slack', run, init);

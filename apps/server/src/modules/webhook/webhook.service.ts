@@ -13,7 +13,7 @@ export default class WebhookService {
     eventBody: EventBody,
   ) {
     return await triggerTaskSync(
-      `${sourceName}-handler`,
+      sourceName,
       {
         event: ActionTypesEnum.ExternalWebhook,
         payload: {

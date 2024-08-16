@@ -31,6 +31,7 @@
     }
   },
   "scripts": {
+    "dev": "tsup --watch",
     "clean": "rimraf dist",
     "build": "npm run clean && npm run build:tsup",
     "build:tsup": "tsup --dts-resolve",

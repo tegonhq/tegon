@@ -2,10 +2,6 @@ export enum ActionTypesEnum {
   OnCreate = 'OnCreate',
   OnUpdate = 'OnUpdate',
   OnDelete = 'OnDelete',
-  OnAssign = 'OnAssign',
-  OnLabel = 'OnLabel',
-  OnPriority = 'OnPriority',
-  OnStatus = 'OnStatus',
   ExternalWebhook = 'ExternalWebhook',
 }
 

@@ -10,6 +10,9 @@ export type WebhookData = Record<string, any>;
 export interface IntegrationSpec extends CommonInternalPayload {}
 
 export enum IntegrationPayloadEventType {
+  // Get Integration Account
+  GetIntegrationAccount = 'GetIntegrationAccount',
+
   IntegrationSpec = 'IntegrationSpec',
 
   // Internal configuration
@@ -52,4 +55,8 @@ export type IntegrationEventPayload =
         workspaceId: string;
         data: WebhookData;
       };
+    }
+  | {
+      event: IntegrationPayloadEventType.GetIntegrationAccount;
+      payload: any;
     };
