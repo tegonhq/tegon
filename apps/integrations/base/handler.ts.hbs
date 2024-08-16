@@ -1,0 +1,43 @@
+import {
+  IntegrationEventPayload,
+  IntegrationPayloadEventType,
+} from '@tegonhq/types';
+
+import { spec } from './spec';
+import { handler } from '../utils/handler';
+
+/**
+ * This is used to fetch user token and integration account if exists
+ */
+async function init(eventPayload: IntegrationEventPayload) {
+  if (
+    eventPayload.event === IntegrationPayloadEventType.GetIntegrationAccount ||
+    eventPayload.event === IntegrationPayloadEventType.Webhook
+  ) {
+    // Return the accountId from the payload
+    return { accountId:  };
+  }
+
+  return undefined;
+}
+
+async function run(eventPayload: IntegrationEventPayload) {
+  switch (eventPayload.event) {
+    case IntegrationPayloadEventType.IntegrationSpec:
+      return spec();
+
+    // Event to handle when the integration account needs to be created
+    case IntegrationPayloadEventType.IntegrationCreate:
+      return
+
+    case IntegrationPayloadEventType.IntegrationDelete:
+      return
+
+    default:
+      return {
+        message: `The event payload type is ${eventPayload.event}`,
+      };
+  }
+}
+
+export const slackHandler = handler('slack', run, init);
