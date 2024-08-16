@@ -36,4 +36,5 @@ export const tablesToSendMessagesFor = new Map([
 export const tablesToTrigger = new Map([
   [ModelNameEnum.Issue, true],
   [ModelNameEnum.IssueComment, true],
+  [ModelNameEnum.LinkedIssue, true],
 ]);

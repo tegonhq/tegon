@@ -68,19 +68,28 @@ export const ModelName = {
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 
-export enum ActionTypeEnum {
+export enum SyncActionTypeEnum {
   I = 'I',
   U = 'U',
   D = 'D',
 }
 
-export const ActionType = {
+export const SyncActionType = {
   I: 'I',
   U: 'U',
   D: 'D',
 };
 
-export type ActionType = (typeof ActionType)[keyof typeof ActionType];
+export type SyncActionType =
+  (typeof SyncActionType)[keyof typeof SyncActionType];
+
+export interface ReplicationPayload {
+  action: string;
+  modelId: string;
+  modelName: string;
+  isDeleted: boolean;
+  actionApiKey: string;
+}
 
 export class SyncAction {
   id: string;
@@ -91,7 +100,7 @@ export class SyncAction {
   modelName: ModelName;
   modelId: string;
 
-  action: ActionType;
+  action: SyncActionType;
   sequenceId: bigint;
   workspace?: Workspace;
   workspaceId: string;

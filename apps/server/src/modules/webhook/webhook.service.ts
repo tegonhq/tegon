@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import {
-  EventBody,
-  EventHeaders,
-  IntegrationPayloadEventType,
-} from '@tegonhq/types';
+import { ActionTypesEnum, EventBody, EventHeaders } from '@tegonhq/types';
 
-import { pollTriggerRun, triggerTask } from 'common/utils/trigger.utils';
+import { triggerTaskSync } from 'modules/triggerdev/triggerdev.utils';
 
 @Injectable()
 export default class WebhookService {
@@ -16,13 +12,16 @@ export default class WebhookService {
     eventHeaders: EventHeaders,
     eventBody: EventBody,
   ) {
-    const handle = await triggerTask(`${sourceName}-handler`, {
-      event: IntegrationPayloadEventType.Webhook,
-      payload: {
-        data: { eventBody, eventHeaders },
+    return await triggerTaskSync(
+      `${sourceName}-handler`,
+      {
+        event: ActionTypesEnum.ExternalWebhook,
+        payload: {
+          eventBody,
+          eventHeaders,
+        },
       },
-    });
-    const run = await pollTriggerRun(handle.id);
-    return run.output;
+      'tr_dev_PZTillNmi7MkO4MghcNQ',
+    );
   }
 }

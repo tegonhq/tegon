@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { IntegrationEventPayload } from '@tegonhq/types';
 import Knex, { Knex as KnexT } from 'knex';
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
@@ -190,7 +189,8 @@ export class TriggerdevService {
   async triggerTask(
     projectSlug: string,
     id: string,
-    payload: IntegrationEventPayload,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload: any,
   ) {
     const apiKey = await this.getProdRuntimeKey(projectSlug);
     const response = await triggerTaskSync(id, payload, apiKey);

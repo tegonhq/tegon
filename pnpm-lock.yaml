@@ -24,6 +24,43 @@ importers:
         specifier: 3.23.8
         version: 3.23.8
 
+  apps/actions:
+    dependencies:
+      '@tegonhq/sdk':
+        specifier: workspace:*
+        version: link:../../packages/tegon-sdk
+      '@tegonhq/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@trigger.dev/sdk':
+        specifier: 3.0.0-beta.50
+        version: 3.0.0-beta.50(typescript@5.5.3)
+      axios:
+        specifier: ^1.6.7
+        version: 1.7.2(debug@4.3.5)
+      configstore:
+        specifier: ^7.0.0
+        version: 7.0.0
+    devDependencies:
+      '@tegonhq/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint-config
+      '@tegonhq/typescript-config':
+        specifier: workspace:*
+        version: link:../../tooling/typescript-config
+      '@types/configstore':
+        specifier: ^6.0.2
+        version: 6.0.2
+      '@types/jsonwebtoken':
+        specifier: ^9.0.6
+        version: 9.0.6
+      '@types/node':
+        specifier: ^22.1.0
+        version: 22.1.0
+      jsonwebtoken:
+        specifier: ^9.0.2
+        version: 9.0.2
+
   apps/integrations:
     dependencies:
       '@tegonhq/types':
@@ -62,7 +99,7 @@ importers:
     dependencies:
       '@ai-sdk/openai':
         specifier: ^0.0.40
-        version: 0.0.40(zod@3.23.8)
+        version: 0.0.40(zod@3.22.3)
       '@devoxa/prisma-relay-cursor-connection':
         specifier: 3.1.1
         version: 3.1.1(@prisma/client@5.17.0(prisma@5.17.0))
@@ -172,8 +209,8 @@ importers:
         specifier: ^2.4.0
         version: 2.5.4
       '@trigger.dev/sdk':
-        specifier: 3.0.0-beta.50
-        version: 3.0.0-beta.50(typescript@5.5.3)
+        specifier: 3.0.0-beta.53
+        version: 3.0.0-beta.53(typescript@5.5.3)
       '@types/multer':
         specifier: ^1.4.11
         version: 1.4.11
@@ -182,7 +219,7 @@ importers:
         version: 2.17.2
       ai:
         specifier: ^3.2.37
-        version: 3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
+        version: 3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.22.3)
       axios:
         specifier: ^1.6.7
         version: 1.7.2(debug@4.3.5)
@@ -230,7 +267,7 @@ importers:
         version: 0.5.6
       ollama-ai-provider:
         specifier: ^0.10.0
-        version: 0.10.0(zod@3.23.8)
+        version: 0.10.0(zod@3.22.3)
       openai:
         specifier: ^4.28.4
         version: 4.52.7(encoding@0.1.13)
@@ -554,40 +591,6 @@ importers:
       typescript:
         specifier: ^5.4.3
         version: 5.5.3
-
-  apps/workflows:
-    dependencies:
-      '@tegonhq/types':
-        specifier: workspace:*
-        version: link:../../packages/types
-      '@trigger.dev/sdk':
-        specifier: 3.0.0-beta.50
-        version: 3.0.0-beta.50(typescript@5.5.3)
-      axios:
-        specifier: ^1.6.7
-        version: 1.7.2(debug@4.3.5)
-      configstore:
-        specifier: ^7.0.0
-        version: 7.0.0
-    devDependencies:
-      '@tegonhq/eslint-config':
-        specifier: workspace:*
-        version: link:../../tooling/eslint-config
-      '@tegonhq/typescript-config':
-        specifier: workspace:*
-        version: link:../../tooling/typescript-config
-      '@types/configstore':
-        specifier: ^6.0.2
-        version: 6.0.2
-      '@types/jsonwebtoken':
-        specifier: ^9.0.6
-        version: 9.0.6
-      '@types/node':
-        specifier: ^22.1.0
-        version: 22.1.0
-      jsonwebtoken:
-        specifier: ^9.0.2
-        version: 9.0.2
 
   packages/cli:
     dependencies:
@@ -4085,12 +4088,24 @@ packages:
     resolution: {integrity: sha512-bBdOz17ZTQBpPAHMoSiA1vO/Xh9Ez77mumnvVKZtDuuHSPNmaJu5msdcWxn+Vre6tccb7JDBx9q+jyWz1Uc4eg==}
     engines: {node: '>=18.0.0'}
 
+  '@trigger.dev/core-backend@3.0.0-beta.53':
+    resolution: {integrity: sha512-+mtkIb2EZew79bKPLyXDKKW/H+3OqqxSwvNprZCWx5LB/i9tB8pAimzpzyGWcsC6vChSGYsbMSRjFoHti/K+Rw==}
+    engines: {node: '>=18.0.0'}
+
   '@trigger.dev/core@3.0.0-beta.50':
     resolution: {integrity: sha512-ZnWFQjs1QxfKSSh4LTpGGP9vbiolLtn7F6U6BJlADL/6gVfRYaOFonBWGBvgLXJdPRtUQ1wfE9+LkWF/fouPKA==}
     engines: {node: '>=18.0.0'}
 
+  '@trigger.dev/core@3.0.0-beta.53':
+    resolution: {integrity: sha512-xElTBEh1VXtIdPg3inVtGJaTKp/TnkpPNPjCpI0v7BjPa16XTpzSXI4V3Nzay/tNHjKsu0Uec9zslKZXeIi+Dw==}
+    engines: {node: '>=18.0.0'}
+
   '@trigger.dev/sdk@3.0.0-beta.50':
     resolution: {integrity: sha512-WPuk5sqERw9FvsEz4HqnfBhe+/jvw/qaE7Xvhx6lMfKUe0OuMo4+shD2TceHGrZ7WMeOwDAPqzDTOYFAJxhhaw==}
+    engines: {node: '>=18.0.0'}
+
+  '@trigger.dev/sdk@3.0.0-beta.53':
+    resolution: {integrity: sha512-wSAxIXH/YZxqv1dIul3k1KN0e6AoiUQLAFggfgZhFbsaV+FHIXVwQ7+DuKS7YtfqBZfao5MIwAsB815Qg7q6gQ==}
     engines: {node: '>=18.0.0'}
 
   '@tsconfig/node10@1.0.11':
@@ -11277,20 +11292,29 @@ packages:
 
 snapshots:
 
-  '@ai-sdk/openai@0.0.40(zod@3.23.8)':
+  '@ai-sdk/openai@0.0.40(zod@3.22.3)':
     dependencies:
       '@ai-sdk/provider': 0.0.14
-      '@ai-sdk/provider-utils': 1.0.5(zod@3.23.8)
-      zod: 3.23.8
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      zod: 3.22.3
 
-  '@ai-sdk/provider-utils@1.0.0(zod@3.23.8)':
+  '@ai-sdk/provider-utils@1.0.0(zod@3.22.3)':
     dependencies:
       '@ai-sdk/provider': 0.0.11
       eventsource-parser: 1.1.2
       nanoid: 3.3.6
       secure-json-parse: 2.7.0
     optionalDependencies:
-      zod: 3.23.8
+      zod: 3.22.3
+
+  '@ai-sdk/provider-utils@1.0.5(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider': 0.0.14
+      eventsource-parser: 1.1.2
+      nanoid: 3.3.6
+      secure-json-parse: 2.7.0
+    optionalDependencies:
+      zod: 3.22.3
 
   '@ai-sdk/provider-utils@1.0.5(zod@3.23.8)':
     dependencies:
@@ -11309,6 +11333,15 @@ snapshots:
     dependencies:
       json-schema: 0.4.0
 
+  '@ai-sdk/react@0.0.30(react@18.3.1)(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      '@ai-sdk/ui-utils': 0.0.20(zod@3.22.3)
+      swr: 2.2.5(react@18.3.1)
+    optionalDependencies:
+      react: 18.3.1
+      zod: 3.22.3
+
   '@ai-sdk/react@0.0.30(react@18.3.1)(zod@3.23.8)':
     dependencies:
       '@ai-sdk/provider-utils': 1.0.5(zod@3.23.8)
@@ -11318,10 +11351,27 @@ snapshots:
       react: 18.3.1
       zod: 3.23.8
 
+  '@ai-sdk/solid@0.0.23(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      '@ai-sdk/ui-utils': 0.0.20(zod@3.22.3)
+    transitivePeerDependencies:
+      - zod
+
   '@ai-sdk/solid@0.0.23(zod@3.23.8)':
     dependencies:
       '@ai-sdk/provider-utils': 1.0.5(zod@3.23.8)
       '@ai-sdk/ui-utils': 0.0.20(zod@3.23.8)
+    transitivePeerDependencies:
+      - zod
+
+  '@ai-sdk/svelte@0.0.24(svelte@4.2.18)(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      '@ai-sdk/ui-utils': 0.0.20(zod@3.22.3)
+      sswr: 2.1.0(svelte@4.2.18)
+    optionalDependencies:
+      svelte: 4.2.18
     transitivePeerDependencies:
       - zod
 
@@ -11335,12 +11385,29 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
+  '@ai-sdk/ui-utils@0.0.20(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      secure-json-parse: 2.7.0
+    optionalDependencies:
+      zod: 3.22.3
+
   '@ai-sdk/ui-utils@0.0.20(zod@3.23.8)':
     dependencies:
       '@ai-sdk/provider-utils': 1.0.5(zod@3.23.8)
       secure-json-parse: 2.7.0
     optionalDependencies:
       zod: 3.23.8
+
+  '@ai-sdk/vue@0.0.24(vue@3.4.34(typescript@5.5.3))(zod@3.22.3)':
+    dependencies:
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      '@ai-sdk/ui-utils': 0.0.20(zod@3.22.3)
+      swrv: 1.0.4(vue@3.4.34(typescript@5.5.3))
+    optionalDependencies:
+      vue: 3.4.34(typescript@5.5.3)
+    transitivePeerDependencies:
+      - zod
 
   '@ai-sdk/vue@0.0.24(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)':
     dependencies:
@@ -15012,7 +15079,37 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
 
+  '@trigger.dev/core-backend@3.0.0-beta.53':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+
   '@trigger.dev/core@3.0.0-beta.50':
+    dependencies:
+      '@google-cloud/precise-date': 4.0.0
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api-logs': 0.48.0
+      '@opentelemetry/exporter-logs-otlp-http': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/exporter-trace-otlp-http': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs': 0.49.1(@opentelemetry/api-logs@0.48.0)(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-node': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-node': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.25.1
+      humanize-duration: 3.32.1
+      socket.io-client: 4.7.5
+      superjson: 2.2.1
+      ulidx: 2.3.0
+      zod: 3.22.3
+      zod-error: 1.5.0
+      zod-validation-error: 1.5.0(zod@3.22.3)
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  '@trigger.dev/core@3.0.0-beta.53':
     dependencies:
       '@google-cloud/precise-date': 4.0.0
       '@opentelemetry/api': 1.9.0
@@ -15045,6 +15142,33 @@ snapshots:
       '@opentelemetry/semantic-conventions': 1.25.1
       '@trigger.dev/core': 3.0.0-beta.50
       '@trigger.dev/core-backend': 3.0.0-beta.50
+      chalk: 5.3.0
+      cronstrue: 2.50.0
+      debug: 4.3.5(supports-color@5.5.0)
+      evt: 2.5.7
+      get-caller-file: 2.0.5
+      git-remote-origin-url: 4.0.0
+      git-repo-info: 2.1.1
+      msw: 2.3.2(typescript@5.5.3)
+      slug: 6.1.0
+      terminal-link: 3.0.0
+      ulid: 2.3.0
+      uuid: 9.0.1
+      ws: 8.18.0
+      zod: 3.22.3
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - typescript
+      - utf-8-validate
+
+  '@trigger.dev/sdk@3.0.0-beta.53(typescript@5.5.3)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api-logs': 0.48.0
+      '@opentelemetry/semantic-conventions': 1.25.1
+      '@trigger.dev/core': 3.0.0-beta.53
+      '@trigger.dev/core-backend': 3.0.0-beta.53
       chalk: 5.3.0
       cronstrue: 2.50.0
       debug: 4.3.5(supports-color@5.5.0)
@@ -15237,7 +15361,7 @@ snapshots:
 
   '@types/jsonwebtoken@9.0.6':
     dependencies:
-      '@types/node': 22.1.0
+      '@types/node': 20.14.11
 
   '@types/keyv@3.1.4':
     dependencies:
@@ -15857,6 +15981,32 @@ snapshots:
     dependencies:
       clean-stack: 2.2.0
       indent-string: 4.0.0
+
+  ai@3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.22.3):
+    dependencies:
+      '@ai-sdk/provider': 0.0.14
+      '@ai-sdk/provider-utils': 1.0.5(zod@3.22.3)
+      '@ai-sdk/react': 0.0.30(react@18.3.1)(zod@3.22.3)
+      '@ai-sdk/solid': 0.0.23(zod@3.22.3)
+      '@ai-sdk/svelte': 0.0.24(svelte@4.2.18)(zod@3.22.3)
+      '@ai-sdk/ui-utils': 0.0.20(zod@3.22.3)
+      '@ai-sdk/vue': 0.0.24(vue@3.4.34(typescript@5.5.3))(zod@3.22.3)
+      '@opentelemetry/api': 1.9.0
+      eventsource-parser: 1.1.2
+      json-schema: 0.4.0
+      jsondiffpatch: 0.6.0
+      nanoid: 3.3.6
+      secure-json-parse: 2.7.0
+      zod-to-json-schema: 3.22.5(zod@3.22.3)
+    optionalDependencies:
+      openai: 4.52.7(encoding@0.1.13)
+      react: 18.3.1
+      sswr: 2.1.0(svelte@4.2.18)
+      svelte: 4.2.18
+      zod: 3.22.3
+    transitivePeerDependencies:
+      - solid-js
+      - vue
 
   ai@3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8):
     dependencies:
@@ -21135,13 +21285,13 @@ snapshots:
 
   obuf@1.1.2: {}
 
-  ollama-ai-provider@0.10.0(zod@3.23.8):
+  ollama-ai-provider@0.10.0(zod@3.22.3):
     dependencies:
       '@ai-sdk/provider': 0.0.11
-      '@ai-sdk/provider-utils': 1.0.0(zod@3.23.8)
+      '@ai-sdk/provider-utils': 1.0.0(zod@3.22.3)
       partial-json: 0.1.7
     optionalDependencies:
-      zod: 3.23.8
+      zod: 3.22.3
 
   ollama@0.5.6:
     dependencies:
@@ -24120,6 +24270,10 @@ snapshots:
   zod-error@1.5.0:
     dependencies:
       zod: 3.23.8
+
+  zod-to-json-schema@3.22.5(zod@3.22.3):
+    dependencies:
+      zod: 3.22.3
 
   zod-to-json-schema@3.22.5(zod@3.23.8):
     dependencies:

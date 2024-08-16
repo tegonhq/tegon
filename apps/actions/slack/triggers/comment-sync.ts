@@ -1,5 +1,6 @@
 import {
   IntegrationAccount,
+  IssueComment,
   IssueCommentCreateActionPayload,
 } from '@tegonhq/types';
 import { AbortTaskRunError } from '@trigger.dev/sdk/v3';
@@ -8,14 +9,33 @@ import axios from 'axios';
 import { convertTiptapJsonToSlackBlocks, getSlackHeaders } from '../utils';
 
 export const commentSync = async (
-  integrationAccount: IntegrationAccount,
+  integrationAccounts: Record<string, IntegrationAccount>,
   data: IssueCommentCreateActionPayload,
 ) => {
-  const { issueComment } = data;
+  const { issueCommentId } = data;
+  const { slack: integrationAccount } = integrationAccounts;
   const integrationDefinitionName =
     integrationAccount.integrationDefinition.name;
 
+  const issueComment: IssueComment = (
+    await axios.get(
+      `${process.env.BACKEND_HOST}/v1/issue_comments/${issueCommentId}`,
+    )
+  ).data;
+
+  if (issueComment.sourceMetadata) {
+    return {
+      message: `Ignoring comment created from source`,
+    };
+  }
+
   const parentIssueComment = issueComment.parent;
+  if (!parentIssueComment || !parentIssueComment.sourceMetadata) {
+    return {
+      message: 'Parent comment does not exist or has empty source metadata',
+    };
+  }
+
   // Extract the source metadata from the parent issue comment
   const parentSourceData = parentIssueComment.sourceMetadata as Record<
     string,

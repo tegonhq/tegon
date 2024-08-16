@@ -66,6 +66,14 @@ export class IssueCommentsController {
     );
   }
 
+  @Get(':issueCommentId')
+  @UseGuards(new AuthGuard())
+  async getIssueComment(
+    @Param() issueCommentParams: IssueCommentRequestParamsDto,
+  ): Promise<IssueComment> {
+    return await this.issueCommentsService.getIssueComment(issueCommentParams);
+  }
+
   @Post(':issueCommentId')
   @UseGuards(new AuthGuard())
   async updateIssueComment(

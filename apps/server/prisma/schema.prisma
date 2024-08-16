@@ -576,23 +576,37 @@ enum Status {
 }
 
 enum ModelName {
-  Workspace
-  Team
-  TeamPreference
+  Action
+  ActionEntity
+  Attachment
+  AIRequest
+  Emoji
+  IntegrationAccount
+  IntegrationDefinition
+  IntegrationDefinitionV2
+  Invite
   Issue
-  Label
-  Workflow
-  Template
   IssueComment
   IssueHistory
-  UsersOnWorkspaces
-  IntegrationDefinition
-  IntegrationAccount
-  LinkedIssue
   IssueRelation
-  Notification
-  View
   IssueSuggestion
+  Label
+  LinkedComment
+  LinkedIssue
+  Notification
+  Prompt
+  Reaction
+  SyncAction
+  Team
+  TeamPreference
+  Template
+  TriggerProject
+  User
+  UsersOnWorkspaces
+  View
+  Workflow
+  Workspace
+  WorkspaceTriggerProject
 }
 
 enum ActionType {

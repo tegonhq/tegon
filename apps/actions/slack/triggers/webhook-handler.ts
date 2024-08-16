@@ -1,20 +1,14 @@
-import { IntegrationAccount, WebhookData } from '@tegonhq/types';
+import { WebhookData } from '@tegonhq/types';
 import { logger } from '@trigger.dev/sdk/v3';
+import axios from 'axios';
 
 import { slackThread } from './thread';
 import { slackTriage } from './triage';
+import { getTokenFromAPI, setToken } from '../../utils/token';
 import { SlackIntegrationSettings } from '../types';
 
-export const webhookHandler = async ({
-  integrationAccount,
-  data,
-  userId,
-}: {
-  integrationAccount: IntegrationAccount;
-  data: WebhookData;
-  userId: string;
-}) => {
-  const { eventBody, eventHeaders } = data;
+export const webhookHandler = async (payload: WebhookData) => {
+  const { eventBody, eventHeaders } = payload;
 
   // Check if the event is a URL verification challenge
   if (eventBody.type === 'url_verification') {
@@ -24,10 +18,22 @@ export const webhookHandler = async ({
 
   const { event, team_id: teamId } = eventBody;
 
+  const { token, userId } = await getTokenFromAPI({
+    userAccountId: event.user?.slackUserId ?? teamId,
+  });
+
+  setToken(token);
+
+  const integrationAccount = (
+    await axios.get(
+      `${process.env.BACKEND_HOST}/v1/integration_account/accountId?accountId=${teamId}`,
+    )
+  ).data;
+
   // If no integration account is found, log and return undefined
   if (!integrationAccount) {
     logger.debug('No integration account found for team:', teamId);
-    return undefined;
+    return { message: `No integration account found for team: ${teamId}` };
   }
 
   const slackSettings =
@@ -38,7 +44,7 @@ export const webhookHandler = async ({
   // If the message is from the bot, ignore it
   if (isBotMessage) {
     logger.debug('Ignoring bot message');
-    return undefined;
+    return { message: `Ignoring bot message` };
   }
 
   logger.log('Processing Slack event:', event.type);

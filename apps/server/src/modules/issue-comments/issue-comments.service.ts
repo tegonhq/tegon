@@ -26,6 +26,13 @@ export default class IssueCommentsService {
     private issuesService: IssuesService,
   ) {}
 
+  async getIssueComment(issueCommentParams: IssueCommentRequestParamsDto) {
+    return await this.prisma.issueComment.findUnique({
+      where: { id: issueCommentParams.issueCommentId },
+      include: { parent: true, linkedComment: true },
+    });
+  }
+
   async createIssueComment(
     issueRequestParams: CreateIssueCommentRequestParamsDto,
     userId: string,
@@ -49,12 +56,6 @@ export default class IssueCommentsService {
     });
 
     this.issuesService.updateSubscribers(issueRequestParams.issueId, [userId]);
-
-    // this.issueCommentsQueue.addTwoWaySyncJob(
-    //   issueComment,
-    //   IssueCommentAction.CREATED,
-    //   userId,
-    // );
 
     this.notificationsQueue.addToNotification(
       NotificationEventFrom.NewComment,

@@ -1,5 +1,5 @@
 {
-  "name": "action",
+  "name": "slack",
   "version": "0.0.0",
   "description": "",
   "private": true,
@@ -10,6 +10,7 @@
   "packageManager": "pnpm@8.15.6",
   "dependencies": {
     "@tegonhq/types": "workspace:*",
+    "@tegonhq/sdk": "workspace:*",
     "@trigger.dev/sdk": "3.0.0-beta.50",
     "axios": "^1.6.7",
     "configstore": "^7.0.0"

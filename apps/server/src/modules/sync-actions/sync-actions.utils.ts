@@ -1,14 +1,14 @@
-import { ActionTypeEnum, ModelName, SyncAction } from '@tegonhq/types';
+import { SyncActionTypeEnum, ModelName, SyncAction } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-export function convertToActionType(action: string): ActionTypeEnum {
+export function convertToActionType(action: string): SyncActionTypeEnum {
   switch (action.toLowerCase()) {
     case 'insert':
-      return ActionTypeEnum.I;
+      return SyncActionTypeEnum.I;
     case 'update':
-      return ActionTypeEnum.U;
+      return SyncActionTypeEnum.U;
     case 'delete':
-      return ActionTypeEnum.D;
+      return SyncActionTypeEnum.D;
   }
 
   return null;

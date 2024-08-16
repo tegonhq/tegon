@@ -1,29 +1,21 @@
-import {
-  ActionEventPayload,
-  ActionTypesEnum,
-  IntegrationAccount,
-} from '@tegonhq/types';
+import { ActionEventPayload, ActionTypesEnum } from '@tegonhq/types';
 
 import { onCreateHandler } from './onCreate-handler';
 import { webhookHandler } from './webhook-handler';
 import { handler } from '../../utils/handler';
 
 async function run(eventPayload: ActionEventPayload) {
-  const event = eventPayload.event;
-  switch (event) {
+  const eventPayloadType = eventPayload.event;
+  switch (eventPayloadType) {
     case ActionTypesEnum.OnCreate:
       return onCreateHandler(eventPayload.payload);
 
     case ActionTypesEnum.ExternalWebhook:
-      return webhookHandler({
-        integrationAccount: {} as IntegrationAccount,
-        data: eventPayload.payload,
-        userId: eventPayload.payload.userId,
-      });
+      return webhookHandler(eventPayload.payload);
 
     default:
       return {
-        message: `The event payload type "${event}" is not recognized`,
+        message: `The event payload type "${eventPayloadType}" is not recognized`,
       };
   }
 }

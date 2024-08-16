@@ -1,4 +1,4 @@
-import { IsJSON, IsOptional, IsString } from 'class-validator';
+import { IsObject, IsOptional, IsString } from 'class-validator';
 
 export class UpdateLinkedIssueDto {
   @IsOptional()
@@ -14,11 +14,11 @@ export class UpdateLinkedIssueDto {
   title?: string;
 
   @IsOptional()
-  @IsJSON()
+  @IsObject()
   source?: Record<string, string | number>;
 
   @IsOptional()
-  @IsJSON()
+  @IsObject()
   sourceData?: Record<string, string | number>;
 
   @IsOptional()
