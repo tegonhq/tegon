@@ -37,5 +37,5 @@ export const config: TriggerConfig = {
     'when-exit',
     'dot-prop',
   ],
-  triggerDirectories: ['./triggers'],
+  triggerDirectories: ['./slack', '/sentry'],
 };

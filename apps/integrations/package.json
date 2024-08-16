@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "trigger-dev": "npx trigger.dev@beta dev -a http://localhost:3030 --skip-update-check --log-level debug",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "generate": "plop"
   },
   "packageManager": "pnpm@8.15.6",
   "dependencies": {
@@ -20,7 +21,12 @@
     "@types/configstore": "^6.0.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^22.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "capital-case": "^1.0.4",
+    "change-case": "^4.1.2",
+    "handlebars": "^4.7.7",
+    "plop": "^3.0.5",
+    "set-value": ">=4.0.1"
   },
   "exports": {
     "./utils": "./utils/index.ts"

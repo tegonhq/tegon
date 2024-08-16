@@ -5,7 +5,7 @@ import {
 
 import { integrationCreate } from './internal/integration-create';
 import { spec } from './spec';
-import { handler } from '../../utils/handler';
+import { handler } from '../utils/handler';
 
 async function run(eventPayload: IntegrationEventPayload) {
   switch (eventPayload.event) {
