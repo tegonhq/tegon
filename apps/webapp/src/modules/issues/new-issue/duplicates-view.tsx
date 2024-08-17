@@ -1,7 +1,4 @@
-import type { IssueType } from 'common/types';
-
 import { RiArrowDownSFill, RiArrowRightSFill } from '@remixicon/react';
-import { useGetDuplicateIssuesQuery } from 'services/search';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
@@ -15,7 +12,11 @@ import React from 'react';
 
 import { ModalIssueItem } from 'modules/issues/components/modals/modal-issue-item';
 
+import type { IssueType } from 'common/types';
+
 import { useCurrentWorkspace } from 'hooks/workspace';
+
+import { useGetDuplicateIssuesQuery } from 'services/search';
 
 interface DuplicateIssuesViewProps {
   description: string;

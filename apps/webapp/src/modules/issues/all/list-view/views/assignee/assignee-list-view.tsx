@@ -1,6 +1,6 @@
-import type { UsersOnWorkspaceType } from 'common/types';
-
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
+
+import type { UsersOnWorkspaceType } from 'common/types';
 
 import { AssigneeListSection, NoAssigneeView } from './assignee-list-section';
 

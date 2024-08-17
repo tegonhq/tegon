@@ -1,4 +1,3 @@
-import { useCreateIssueCommentMutation } from 'services/issues';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Editor,
@@ -9,6 +8,8 @@ import { SendLine } from '@tegonhq/ui/icons';
 import * as React from 'react';
 
 import { useIssueData } from 'hooks/issues';
+
+import { useCreateIssueCommentMutation } from 'services/issues';
 
 export function IssueComment() {
   const issueData = useIssueData();

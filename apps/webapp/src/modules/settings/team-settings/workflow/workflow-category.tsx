@@ -1,6 +1,5 @@
-import type { WorkflowCategoryEnum, WorkflowType } from 'common/types';
-
 import { capitalizeFirstLetter } from 'common/lib/common';
+import type { WorkflowCategoryEnum, WorkflowType } from 'common/types';
 
 import { WorkflowItem } from './workflow-item';
 

@@ -1,7 +1,3 @@
-import {
-  useSentryConnectMutation,
-  type SentryConnectParams,
-} from 'services/oauth';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { useToast } from '@tegonhq/ui/components/use-toast';
 import { useRouter } from 'next/router';
@@ -9,6 +5,11 @@ import React from 'react';
 import { SessionAuth } from 'supertokens-auth-react/recipe/session';
 
 import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
+
+import {
+  useSentryConnectMutation,
+  type SentryConnectParams,
+} from 'services/oauth';
 
 import { UserContext } from 'store/user-context';
 

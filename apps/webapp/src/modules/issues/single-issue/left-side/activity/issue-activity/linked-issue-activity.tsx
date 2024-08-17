@@ -1,13 +1,13 @@
-import type { User } from 'common/types';
-
 import { RiGithubFill, RiLink } from '@remixicon/react';
+import { AvatarText } from '@tegonhq/ui/components/avatar';
+import { Gmail, SentryIcon, SlackIcon } from '@tegonhq/ui/icons';
+
 import {
   Integration,
   LinkedSlackMessageType,
   type LinkedIssueType,
 } from 'common/types';
-import { AvatarText } from '@tegonhq/ui/components/avatar';
-import { Gmail, SentryIcon, SlackIcon } from '@tegonhq/ui/icons';
+import type { User } from 'common/types';
 
 import { useUsersData } from 'hooks/users';
 

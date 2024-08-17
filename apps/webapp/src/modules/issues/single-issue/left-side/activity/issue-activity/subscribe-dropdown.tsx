@@ -1,8 +1,8 @@
-import type { User } from 'common/types';
-
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
+
+import type { User } from 'common/types';
 
 import { useUsersData } from 'hooks/users';
 

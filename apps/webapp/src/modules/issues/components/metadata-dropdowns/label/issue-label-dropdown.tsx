@@ -1,5 +1,3 @@
-import type { LabelType } from 'common/types';
-
 import { RiAddLine } from '@remixicon/react';
 import { Badge, BadgeColor } from '@tegonhq/ui/components/badge';
 import { Button } from '@tegonhq/ui/components/button';
@@ -13,6 +11,8 @@ import { LabelLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
+
+import type { LabelType } from 'common/types';
 
 import { useTeamLabels } from 'hooks/labels/use-team-labels';
 

@@ -1,9 +1,9 @@
-import type { IssueType } from 'common/types';
-
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
 import { sort } from 'fast-sort';
 import { usePathname } from 'next/navigation';
 import React from 'react';
+
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
+import type { IssueType } from 'common/types';
 
 import {
   FilterTypeEnum,

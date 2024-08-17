@@ -1,9 +1,10 @@
-import { Priorities, type IssueHistoryType } from 'common/types';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 
 import { PriorityIcons } from 'modules/issues/components';
+
+import { Priorities, type IssueHistoryType } from 'common/types';
 
 interface PriorityActivityProps {
   issueHistory: IssueHistoryType;

@@ -1,5 +1,3 @@
-import type { TeamType } from 'common/types';
-
 import {
   Accordion,
   AccordionContent,
@@ -15,6 +13,8 @@ import {
 } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
+
+import type { TeamType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useCurrentWorkspace } from 'hooks/workspace';

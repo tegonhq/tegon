@@ -1,5 +1,4 @@
 import type { User } from 'common/types';
-
 import { Priorities } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';

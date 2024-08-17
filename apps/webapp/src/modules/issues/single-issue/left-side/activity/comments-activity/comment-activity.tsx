@@ -1,6 +1,7 @@
-import { Integration } from 'common/types';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
 import * as React from 'react';
+
+import { Integration } from 'common/types';
 
 import {
   GenericCommentActivity,

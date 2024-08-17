@@ -1,8 +1,7 @@
-import type { IssueType } from 'common/types';
-import type { WorkflowType } from 'common/types';
-
 import { groupBy } from 'common/lib/common';
 import { getWorkflowColor } from 'common/status-color';
+import type { IssueType } from 'common/types';
+import type { WorkflowType } from 'common/types';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 import { useContextStore } from 'store/global-context-provider';

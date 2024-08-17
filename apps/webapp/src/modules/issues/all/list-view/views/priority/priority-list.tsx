@@ -1,5 +1,6 @@
-import { Priorities } from 'common/types';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
+
+import { Priorities } from 'common/types';
 
 import { PriorityViewList } from './priority-view-list';
 

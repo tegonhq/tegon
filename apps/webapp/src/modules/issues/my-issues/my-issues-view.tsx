@@ -1,7 +1,7 @@
-import type { IssueType } from 'common/types';
-
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+
+import type { IssueType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';

@@ -1,12 +1,13 @@
 import type { Editor, Range } from '@tiptap/core';
 import type { UseFieldArrayReturn } from 'react-hook-form';
 
-import { useSubIssueGenerationMutation } from 'services/issues';
 import { suggestionItems } from '@tegonhq/ui/components/ui/editor/slash-command';
 import { ListEdit, SubIssue } from '@tegonhq/ui/icons';
 import React from 'react';
 
 import { useCurrentWorkspace } from 'hooks/workspace';
+
+import { useSubIssueGenerationMutation } from 'services/issues';
 
 export const useSuggestionItems = (
   subIssueOperations: Partial<UseFieldArrayReturn>,

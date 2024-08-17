@@ -1,4 +1,3 @@
-import { Priorities, type IssueType } from 'common/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
@@ -11,6 +10,8 @@ import React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
 import { PriorityIcons } from 'modules/issues/components';
+
+import { Priorities, type IssueType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 

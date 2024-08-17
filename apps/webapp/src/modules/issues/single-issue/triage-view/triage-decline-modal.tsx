@@ -1,8 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  useCreateIssueCommentMutation,
-  useUpdateIssueMutation,
-} from 'services/issues';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import {
@@ -26,6 +22,11 @@ import { z } from 'zod';
 
 import { useIssueData } from 'hooks/issues';
 import { useCurrentTeam } from 'hooks/teams';
+
+import {
+  useCreateIssueCommentMutation,
+  useUpdateIssueMutation,
+} from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';

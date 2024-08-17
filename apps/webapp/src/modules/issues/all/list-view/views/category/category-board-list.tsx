@@ -1,6 +1,3 @@
-import type { IssueType } from 'common/types';
-import type { WorkflowType } from 'common/types';
-
 import {
   Draggable,
   type DraggableProvided,
@@ -14,6 +11,8 @@ import React from 'react';
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
 import { getWorkflowColor } from 'common/status-color';
+import type { WorkflowType } from 'common/types';
+import type { IssueType } from 'common/types';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 import { useCurrentTeam } from 'hooks/teams';

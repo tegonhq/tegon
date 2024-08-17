@@ -1,9 +1,9 @@
-import type { User } from 'common/types';
-
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
 import { CommandGroup } from '@tegonhq/ui/components/command';
 import { AssigneeLine } from '@tegonhq/ui/icons';
+
+import type { User } from 'common/types';
 
 import { useScope } from 'hooks';
 

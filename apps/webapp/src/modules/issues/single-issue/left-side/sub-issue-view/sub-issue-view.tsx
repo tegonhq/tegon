@@ -1,5 +1,3 @@
-import type { IssueType } from 'common/types';
-
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
@@ -11,6 +9,8 @@ import * as React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
 import { NewIssue } from 'modules/issues/new-issue';
+
+import type { IssueType } from 'common/types';
 
 interface SubIssueViewProps {
   childIssues: IssueType[];

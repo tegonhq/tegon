@@ -1,7 +1,3 @@
-import type { User } from 'common/types';
-import type { IssueType } from 'common/types';
-import type { UsersOnWorkspaceType } from 'common/types';
-
 import {
   Draggable,
   type DraggableProvided,
@@ -15,6 +11,10 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
+
+import type { UsersOnWorkspaceType } from 'common/types';
+import type { IssueType } from 'common/types';
+import type { User } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';

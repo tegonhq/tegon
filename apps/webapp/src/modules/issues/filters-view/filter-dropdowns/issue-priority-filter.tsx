@@ -1,7 +1,8 @@
-import { Priorities } from 'common/types';
 import { observer } from 'mobx-react-lite';
 
 import { IssuePriorityDropdownContent } from 'modules/issues/components';
+
+import { Priorities } from 'common/types';
 
 import { FilterTypeEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';

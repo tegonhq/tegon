@@ -1,6 +1,3 @@
-import type { IssueType } from 'common/types';
-import type { LabelType } from 'common/types';
-
 import {
   Draggable,
   type DraggableProvided,
@@ -11,6 +8,9 @@ import { BoardColumn, BoardItem } from '@tegonhq/ui/components/board';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+
+import type { LabelType } from 'common/types';
+import type { IssueType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 

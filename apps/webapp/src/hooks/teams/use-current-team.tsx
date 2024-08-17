@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import type { TeamType } from 'common/types';
 
 import { computed } from 'mobx';
 import { useRouter } from 'next/router';
 import * as React from 'react';
+
+import type { TeamType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 

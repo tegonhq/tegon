@@ -1,12 +1,13 @@
-import type { User } from 'common/types';
-
-import { useUpdateIssueMutation } from 'services/issues';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
+import type { User } from 'common/types';
+
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
+
+import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 

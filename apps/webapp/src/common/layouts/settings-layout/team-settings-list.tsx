@@ -1,5 +1,3 @@
-import type { TeamType } from 'common/types';
-
 import { RiAddLine } from '@remixicon/react';
 import {
   Accordion,
@@ -15,6 +13,8 @@ import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+
+import type { TeamType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';

@@ -1,5 +1,3 @@
-import type { User } from 'common/types';
-
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import { Command, CommandInput } from '@tegonhq/ui/components/command';
@@ -12,6 +10,8 @@ import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 
 import { IssueAssigneeDropdownContent } from 'modules/issues/components';
+
+import type { User } from 'common/types';
 
 import { useUsersData } from 'hooks/users/use-users-data';
 

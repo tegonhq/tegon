@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateLinkedIssueMutation } from 'services/linked-issues';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Dialog,
@@ -22,6 +21,8 @@ import { z } from 'zod';
 import { LinkedIssueSubType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
+
+import { useCreateLinkedIssueMutation } from 'services/linked-issues';
 
 export const URLSchema = z.object({
   url: z.string().url(),

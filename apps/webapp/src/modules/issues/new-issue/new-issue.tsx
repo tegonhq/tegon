@@ -1,10 +1,4 @@
-import type { IssueType } from 'common/types';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  type CreateIssueParams,
-  useCreateIssueMutation,
-} from 'services/issues';
 import { Form } from '@tegonhq/ui/components/form';
 import {
   Accordion,
@@ -23,6 +17,12 @@ import { Key } from 'ts-key-enum';
 import { z } from 'zod';
 
 import { SCOPES } from 'common/scopes';
+import type { IssueType } from 'common/types';
+
+import {
+  type CreateIssueParams,
+  useCreateIssueMutation,
+} from 'services/issues';
 
 import { IssueCollapseView } from './issue-collapse-view';
 import { NewIssueForm } from './new-issue-form';

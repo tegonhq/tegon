@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useUpdateLinkedIssueMutation } from 'services/linked-issues';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Dialog,
@@ -17,6 +16,8 @@ import {
 import { Input } from '@tegonhq/ui/components/input';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { useUpdateLinkedIssueMutation } from 'services/linked-issues';
 
 export const URLSchema = z.object({
   url: z.string().url(),

@@ -1,8 +1,5 @@
-import type { IssueType } from 'common/types';
-import type { IssueRelationType } from 'common/types';
-
-import { useUpdateIssueMutation } from 'services/issues';
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
+import { Calendar } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
@@ -17,14 +14,18 @@ import {
   IssueStatusDropdownVariant,
 } from 'modules/issues/components';
 
+import type { IssueRelationType } from 'common/types';
+import type { IssueType } from 'common/types';
+
 import { useTeamWithId } from 'hooks/teams/use-current-team';
+
+import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { IssueLabels } from './issue-labels';
 import { IssueRelations, View } from './issue-relations';
 import { getRelationIssues } from './utils';
-import { Calendar } from '@tegonhq/ui/icons';
 
 interface IssueListItemProps {
   issueId: string;

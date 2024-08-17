@@ -62,13 +62,16 @@ export const RightSide = observer(() => {
     today.setHours(0, 0, 0, 0);
     return date < today;
   };
+
   const [dueDate, setDueDate] = React.useState<Date>(
     issue.dueDate ? new Date(issue.dueDate) : null,
   );
+
   useEffect(() => {
-    console.log(dueDate);
     dueDateChange(dueDate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dueDate]);
+
   return (
     <>
       <div className="grow p-6 flex flex-col gap-4">

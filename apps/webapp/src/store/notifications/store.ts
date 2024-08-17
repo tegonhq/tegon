@@ -1,5 +1,3 @@
-import type { NotificationType } from 'common/types';
-
 import { sort } from 'fast-sort';
 import {
   type IAnyStateTreeNode,
@@ -7,6 +5,8 @@ import {
   types,
   flow,
 } from 'mobx-state-tree';
+
+import type { NotificationType } from 'common/types';
 
 import { tegonDatabase } from 'store/database';
 

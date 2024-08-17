@@ -1,6 +1,3 @@
-import type { IssueType } from 'common/types';
-import type { LabelType } from 'common/types';
-
 import { BadgeColor } from '@tegonhq/ui/components/badge';
 import { Button } from '@tegonhq/ui/components/button';
 import {
@@ -13,6 +10,9 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
+
+import type { LabelType } from 'common/types';
+import type { IssueType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 

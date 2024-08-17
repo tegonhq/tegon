@@ -1,8 +1,8 @@
-import type { User } from 'common/types';
-import type { IssueHistoryType } from 'common/types';
-
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
+
+import type { User } from 'common/types';
+import type { IssueHistoryType } from 'common/types';
 
 import { LabelActivity } from './label-activity';
 import { PriorityActivity } from './priority-activity';

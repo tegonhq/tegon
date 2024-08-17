@@ -1,7 +1,4 @@
-import type { ViewType } from 'common/types';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateViewMutation } from 'services/views';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Dialog,
@@ -24,8 +21,12 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import type { ViewType } from 'common/types';
+
 import { useCurrentTeam } from 'hooks/teams';
 import { useCurrentWorkspace } from 'hooks/workspace';
+
+import { useCreateViewMutation } from 'services/views';
 
 import { useContextStore } from 'store/global-context-provider';
 

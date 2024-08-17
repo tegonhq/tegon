@@ -1,10 +1,4 @@
 import { RiGithubFill, RiLink, RiMoreFill } from '@remixicon/react';
-import { useDeleteLinkedIssueMutation } from 'services/linked-issues';
-import {
-  Integration,
-  LinkedSlackMessageType,
-  type LinkedIssueType,
-} from 'common/types';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,6 +19,14 @@ import {
 } from '@tegonhq/ui/components/dropdown-menu';
 import { DeleteLine, EditLine, SentryIcon, SlackIcon } from '@tegonhq/ui/icons';
 import React from 'react';
+
+import {
+  Integration,
+  LinkedSlackMessageType,
+  type LinkedIssueType,
+} from 'common/types';
+
+import { useDeleteLinkedIssueMutation } from 'services/linked-issues';
 
 import { EditLink } from './edit-link';
 import { SentryItem } from './sentry-item';
