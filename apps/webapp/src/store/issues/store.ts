@@ -1,11 +1,11 @@
-import type { IssueType } from 'common/types';
-
 import {
   type IAnyStateTreeNode,
   type Instance,
   types,
   flow,
 } from 'mobx-state-tree';
+
+import type { IssueType } from 'common/types';
 
 import { tegonDatabase } from 'store/database';
 

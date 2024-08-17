@@ -1,4 +1,3 @@
-import { useAITitleMutation } from 'services/issues';
 import {
   FormControl,
   FormField,
@@ -17,6 +16,8 @@ import { ArrowDownRight } from '@tegonhq/ui/icons';
 import { useWatch, type UseFormReturn } from 'react-hook-form';
 
 import { useCurrentWorkspace } from 'hooks/workspace';
+
+import { useAITitleMutation } from 'services/issues';
 
 import { useDescriptionChange } from './new-issue-utils';
 

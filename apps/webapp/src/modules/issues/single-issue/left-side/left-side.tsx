@@ -1,5 +1,3 @@
-import { useUpdateIssueMutation } from 'services/issues';
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
 import { Editor, EditorExtensions } from '@tegonhq/ui/components/editor/index';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { Separator } from '@tegonhq/ui/components/separator';
@@ -9,9 +7,13 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { useEditorSuggestionItems } from 'modules/issues/components/use-editor-suggestion-items';
 
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
+
 import { useIssueData } from 'hooks/issues';
 import { useTeamWithId } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
+
+import { useUpdateIssueMutation } from 'services/issues';
 
 import { Activity } from './activity';
 import { FilterSmall } from './filters-small';

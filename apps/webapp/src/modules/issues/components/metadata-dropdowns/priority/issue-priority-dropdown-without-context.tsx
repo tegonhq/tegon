@@ -1,7 +1,8 @@
-import { Priorities } from 'common/types';
 import { observer } from 'mobx-react-lite';
 
 import { IssuePriorityDropdownContent } from 'modules/issues/components';
+
+import { Priorities } from 'common/types';
 
 interface IssuePriorityDropdownWithoutContextProps {
   onChange?: (priority: number | number[]) => void;

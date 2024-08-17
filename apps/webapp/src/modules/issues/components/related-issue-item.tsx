@@ -1,18 +1,18 @@
-import type { IssueType } from 'common/types';
-import type { IssueRelationType } from 'common/types';
-
 import { RiCloseLine } from '@remixicon/react';
-import { useDeleteIssueRelationMutation } from 'services/issue-relation';
 import { Button } from '@tegonhq/ui/components/button';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 
 import { getWorkflowColor } from 'common/status-color';
+import type { IssueRelationType } from 'common/types';
+import type { IssueType } from 'common/types';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 import { useTeamWithId } from 'hooks/teams';
 import { useAllWorkflows } from 'hooks/workflows';
+
+import { useDeleteIssueRelationMutation } from 'services/issue-relation';
 
 interface RelatedIssueItemProps {
   issue: IssueType;

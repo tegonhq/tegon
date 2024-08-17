@@ -1,6 +1,3 @@
-import type { User } from 'common/types';
-import type { IssueType } from 'common/types';
-
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
@@ -14,6 +11,8 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
+import type { IssueType } from 'common/types';
+import type { User } from 'common/types';
 import { getUserData } from 'common/user-util';
 
 import { useCurrentTeam } from 'hooks/teams';

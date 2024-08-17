@@ -1,9 +1,10 @@
-import { type IssueType } from 'common/types';
-import { IssueRelationEnum, type IssueRelationType } from 'common/types';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { RelatedIssueItem } from 'modules/issues/components/related-issue-item';
+
+import { IssueRelationEnum, type IssueRelationType } from 'common/types';
+import { type IssueType } from 'common/types';
 
 import { useIssueData } from 'hooks/issues';
 

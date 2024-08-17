@@ -1,6 +1,3 @@
-import type { IssueType } from 'common/types';
-import type { WorkflowType } from 'common/types';
-
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
@@ -14,6 +11,8 @@ import React from 'react';
 import { IssueListItem } from 'modules/issues/components';
 
 import { getWorkflowColor } from 'common/status-color';
+import type { WorkflowType } from 'common/types';
+import type { IssueType } from 'common/types';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 import { useCurrentTeam } from 'hooks/teams';

@@ -1,6 +1,6 @@
-import type { User } from 'common/types';
-
 import { Button } from '@tegonhq/ui/components/button';
+
+import type { User } from 'common/types';
 
 import { useUsersData } from 'hooks/users';
 

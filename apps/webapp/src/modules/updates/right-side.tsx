@@ -1,7 +1,7 @@
-import type { NotificationType } from 'common/types';
-
 import { Inbox } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
+
+import type { NotificationType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 

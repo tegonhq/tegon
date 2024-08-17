@@ -4,8 +4,6 @@ import {
   RiMoreFill,
   RiSlackFill,
 } from '@remixicon/react';
-import { type IssueCommentType, type User } from 'common/types';
-import { Integration } from 'common/types';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import {
@@ -24,6 +22,9 @@ import { EditLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
+
+import { Integration } from 'common/types';
+import { type IssueCommentType, type User } from 'common/types';
 
 import { UserContext } from 'store/user-context';
 

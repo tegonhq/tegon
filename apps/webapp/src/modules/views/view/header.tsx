@@ -1,7 +1,4 @@
-import type { ViewType } from 'common/types';
-
 import { RiBookmarkFill, RiBookmarkLine, RiMoreFill } from '@remixicon/react';
-import { useUpdateViewMutation } from 'services/views';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -25,7 +22,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
+import type { ViewType } from 'common/types';
+
 import { useCurrentTeam } from 'hooks/teams';
+
+import { useUpdateViewMutation } from 'services/views';
 
 import { useContextStore } from 'store/global-context-provider';
 

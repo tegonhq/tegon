@@ -4,7 +4,6 @@ import {
   RiLink,
   RiSlackFill,
 } from '@remixicon/react';
-import { LinkedIssueSubType } from 'common/types';
 import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
@@ -13,6 +12,8 @@ import {
   DropdownMenuItem,
 } from '@tegonhq/ui/components/dropdown-menu';
 import * as React from 'react';
+
+import { LinkedIssueSubType } from 'common/types';
 
 import { DropdownItem } from './dropdown-item';
 

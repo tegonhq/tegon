@@ -1,9 +1,10 @@
-import type { TeamType, WorkflowType } from 'common/types';
 import type { UseFormReturn } from 'react-hook-form';
 
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
+
+import type { TeamType, WorkflowType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 

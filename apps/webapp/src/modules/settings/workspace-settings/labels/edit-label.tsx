@@ -1,9 +1,10 @@
-import type { LabelType } from 'common/types';
-
-import { useUpdateLabelMutation } from 'services/labels';
 import { Button } from '@tegonhq/ui/components/button';
 import { Input } from '@tegonhq/ui/components/input';
 import * as React from 'react';
+
+import type { LabelType } from 'common/types';
+
+import { useUpdateLabelMutation } from 'services/labels';
 
 interface NewLabelProps {
   onCancel: () => void;

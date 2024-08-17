@@ -1,13 +1,13 @@
-import type { WorkflowType } from 'common/types';
-
-import { useUpdateIssueMutation } from 'services/issues';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { getWorkflowColor } from 'common/status-color';
+import type { WorkflowType } from 'common/types';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 import { useCurrentTeam } from 'hooks/teams';
+
+import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 

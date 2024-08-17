@@ -1,8 +1,8 @@
-import type { NotificationType } from 'common/types';
-
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { sort } from 'fast-sort';
 import { observer } from 'mobx-react-lite';
+
+import type { NotificationType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 

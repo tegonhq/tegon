@@ -1,10 +1,6 @@
 import type { z } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  RequestForgotPasswordSchema,
-  useRequestForgotPasswordMutation,
-} from 'services/auth';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,
@@ -20,6 +16,11 @@ import { useForm } from 'react-hook-form';
 
 import { AuthLayout } from 'common/layouts/auth-layout';
 import { AuthGuard } from 'common/wrappers/auth-guard';
+
+import {
+  RequestForgotPasswordSchema,
+  useRequestForgotPasswordMutation,
+} from 'services/auth';
 
 export function RequestForgotPassword() {
   const form = useForm<z.infer<typeof RequestForgotPasswordSchema>>({

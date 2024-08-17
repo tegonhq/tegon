@@ -1,7 +1,4 @@
-import type { ViewType } from 'common/types';
-
 import { RiBookmarkFill, RiBookmarkLine } from '@remixicon/react';
-import { useUpdateViewMutation } from 'services/views';
 import { Button } from '@tegonhq/ui/components/button';
 import { cn } from '@tegonhq/ui/lib/utils';
 import dayjs from 'dayjs';
@@ -9,8 +6,12 @@ import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
+import type { ViewType } from 'common/types';
+
 import { useCurrentTeam } from 'hooks/teams';
 import { useUserData } from 'hooks/users';
+
+import { useUpdateViewMutation } from 'services/views';
 
 import { useContextStore } from 'store/global-context-provider';
 

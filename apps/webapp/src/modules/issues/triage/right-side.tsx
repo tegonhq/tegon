@@ -1,8 +1,8 @@
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
 import { TriageFill } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import { WorkflowColors } from 'common/status-color';
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';

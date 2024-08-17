@@ -1,11 +1,11 @@
-import type { User } from 'common/types';
-
 import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { MemberItem } from 'modules/settings/workspace-settings/members/member-item';
+
+import type { User } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';

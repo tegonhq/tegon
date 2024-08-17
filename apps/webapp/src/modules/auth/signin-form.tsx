@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SignInSchema, useSignInMutation } from 'services/auth';
 import { Button, buttonVariants } from '@tegonhq/ui/components/button';
 import {
   Form,
@@ -15,6 +14,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { SignInSchema, useSignInMutation } from 'services/auth';
 
 export function SignForm() {
   const router = useRouter();

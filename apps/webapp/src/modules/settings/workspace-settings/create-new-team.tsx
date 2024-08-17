@@ -1,7 +1,4 @@
-import type { TeamType } from 'common/types';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateTeamMutation } from 'services/team';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,
@@ -17,7 +14,11 @@ import { useToast } from '@tegonhq/ui/components/use-toast';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import type { TeamType } from 'common/types';
+
 import { useCurrentWorkspace } from 'hooks/workspace';
+
+import { useCreateTeamMutation } from 'services/team';
 
 import { SettingSection } from '../setting-section';
 

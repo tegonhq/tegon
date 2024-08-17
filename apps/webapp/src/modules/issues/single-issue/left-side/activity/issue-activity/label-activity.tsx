@@ -1,10 +1,10 @@
-import type { IssueHistoryType } from 'common/types';
-import type { LabelType } from 'common/types';
-
 import { Badge, BadgeColor } from '@tegonhq/ui/components/badge';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
 import { LabelLine } from '@tegonhq/ui/icons';
 import * as React from 'react';
+
+import type { LabelType } from 'common/types';
+import type { IssueHistoryType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 

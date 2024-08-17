@@ -1,12 +1,11 @@
-import type { IssueType } from 'common/types';
-import type { WorkflowType } from 'common/types';
-
 import { buttonVariants } from '@tegonhq/ui/components/button';
 import { cn } from '@tegonhq/ui/lib/utils';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import { getWorkflowColor } from 'common/status-color';
+import type { WorkflowType } from 'common/types';
+import type { IssueType } from 'common/types';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 import { useContextStore } from 'store/global-context-provider';

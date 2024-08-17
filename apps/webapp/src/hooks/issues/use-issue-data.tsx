@@ -1,6 +1,6 @@
-import type { IssueType } from 'common/types';
-
 import { useRouter } from 'next/router';
+
+import type { IssueType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 

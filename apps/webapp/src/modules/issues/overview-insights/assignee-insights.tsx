@@ -1,6 +1,3 @@
-import type { User } from 'common/types';
-import type { IssueType } from 'common/types';
-
 import {
   Avatar,
   AvatarImage,
@@ -12,6 +9,8 @@ import { cn } from '@tegonhq/ui/lib/utils';
 
 import { getTailwindColor } from 'common/color-utils';
 import { groupBy } from 'common/lib/common';
+import type { IssueType } from 'common/types';
+import type { User } from 'common/types';
 
 import { useUsersData } from 'hooks/users';
 

@@ -1,7 +1,7 @@
-import type { LabelType } from 'common/types';
-
 import { computed } from 'mobx';
 import * as React from 'react';
+
+import type { LabelType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 

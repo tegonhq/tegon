@@ -1,7 +1,3 @@
-import type { User } from 'common/types';
-import type { IssueType } from 'common/types';
-import type { UsersOnWorkspaceType } from 'common/types';
-
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import {
@@ -14,6 +10,10 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
+
+import type { UsersOnWorkspaceType } from 'common/types';
+import type { IssueType } from 'common/types';
+import type { User } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';

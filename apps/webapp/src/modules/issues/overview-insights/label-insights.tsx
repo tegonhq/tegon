@@ -1,9 +1,8 @@
-import type { IssueType } from 'common/types';
-import type { LabelType } from 'common/types';
-
 import { BadgeColor } from '@tegonhq/ui/components/badge';
 
 import { groupByKeyArray } from 'common/lib/common';
+import type { IssueType } from 'common/types';
+import type { LabelType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 

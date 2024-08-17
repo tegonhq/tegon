@@ -1,6 +1,3 @@
-import type { Invite } from 'common/types';
-
-import { useInviteActionMutation } from 'services/workspace';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import { useToast } from '@tegonhq/ui/components/use-toast';
@@ -9,7 +6,10 @@ import React from 'react';
 import { SessionAuth, signOut } from 'supertokens-auth-react/recipe/session';
 
 import { AuthLayout } from 'common/layouts/auth-layout';
+import type { Invite } from 'common/types';
 import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
+
+import { useInviteActionMutation } from 'services/workspace';
 
 import { UserContext } from 'store/user-context';
 

@@ -1,6 +1,3 @@
-import type { IssueType } from 'common/types';
-
-import { useGetSimilarIssuesQuery } from 'services/search';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Collapsible,
@@ -14,7 +11,11 @@ import React from 'react';
 
 import { ModalIssueItem } from 'modules/issues/components/modals/modal-issue-item';
 
+import type { IssueType } from 'common/types';
+
 import { useCurrentWorkspace } from 'hooks/workspace';
+
+import { useGetSimilarIssuesQuery } from 'services/search';
 
 interface SimilarIssuesViewProps {
   issueId: string;

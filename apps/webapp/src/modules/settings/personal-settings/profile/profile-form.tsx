@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useUpdateUserMutation, type UpdateUserParams } from 'services/users';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,
@@ -14,6 +13,8 @@ import { useToast } from '@tegonhq/ui/components/use-toast';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { useUpdateUserMutation, type UpdateUserParams } from 'services/users';
 
 import { UserContext } from 'store/user-context';
 

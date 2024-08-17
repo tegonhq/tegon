@@ -3,7 +3,6 @@ import {
   type DraggableProvided,
   type DraggableStateSnapshot,
 } from '@hello-pangea/dnd';
-import { Priorities, type IssueType } from 'common/types';
 import { BoardColumn, BoardItem } from '@tegonhq/ui/components/board';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { observer } from 'mobx-react-lite';
@@ -11,6 +10,8 @@ import React from 'react';
 
 import { PriorityIcons } from 'modules/issues/components';
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
+
+import { Priorities, type IssueType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 

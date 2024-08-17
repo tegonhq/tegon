@@ -1,5 +1,3 @@
-import type { TeamType } from 'common/types';
-
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DropdownMenu,
@@ -9,6 +7,8 @@ import {
 } from '@tegonhq/ui/components/dropdown-menu';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
 import * as React from 'react';
+
+import type { TeamType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 

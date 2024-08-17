@@ -1,6 +1,3 @@
-import type { IssueCommentType } from 'common/types';
-
-import { useUpdateIssueCommentMutation } from 'services/issues';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Editor,
@@ -8,6 +5,10 @@ import {
   suggestionItems,
 } from '@tegonhq/ui/components/editor/index';
 import React from 'react';
+
+import type { IssueCommentType } from 'common/types';
+
+import { useUpdateIssueCommentMutation } from 'services/issues';
 
 interface EditCommentProps {
   value: string;

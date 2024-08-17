@@ -1,6 +1,5 @@
-import { Priorities, type IssueType } from 'common/types';
-
 import { groupBy } from 'common/lib/common';
+import { Priorities, type IssueType } from 'common/types';
 
 import { PriorityIcons } from '../components';
 

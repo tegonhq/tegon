@@ -1,5 +1,4 @@
 import { RiLoader4Line } from '@remixicon/react';
-import { useAIFilterIssuesMutation } from 'services/issues';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Command,
@@ -15,6 +14,8 @@ import * as React from 'react';
 import { useCurrentTeam } from 'hooks/teams';
 import { useFiltersFromAI } from 'hooks/use-filters-from-ai';
 import { useCurrentWorkspace } from 'hooks/workspace';
+
+import { useAIFilterIssuesMutation } from 'services/issues';
 
 import { FilterTypeEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';

@@ -1,10 +1,10 @@
-import type { User } from 'common/types';
-import type { IssueSourceMetadataType, IssueType } from 'common/types';
-
 import { RiGithubFill } from '@remixicon/react';
-import { Integration } from 'common/types';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Gmail, SlackIcon } from '@tegonhq/ui/icons';
+
+import type { User } from 'common/types';
+import type { IssueSourceMetadataType, IssueType } from 'common/types';
+import { Integration } from 'common/types';
 
 export function getCreatedBy(issue: IssueType, user: User) {
   const sourceMetadata = issue.sourceMetadata

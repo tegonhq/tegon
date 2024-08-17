@@ -1,7 +1,7 @@
-import { type IssueType } from 'common/types';
 import { observer } from 'mobx-react-lite';
 
 import { getWorkflowColor } from 'common/status-color';
+import { type IssueType } from 'common/types';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 import { useTeamWithId } from 'hooks/teams';

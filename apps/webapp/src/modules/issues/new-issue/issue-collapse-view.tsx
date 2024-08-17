@@ -1,6 +1,3 @@
-import type { User } from 'common/types';
-import type { WorkflowType } from 'common/types';
-
 import { AvatarText } from '@tegonhq/ui/components/ui/avatar';
 import { Button } from '@tegonhq/ui/components/ui/button';
 import { ArrowDownRight, DeleteLine } from '@tegonhq/ui/icons';
@@ -14,6 +11,8 @@ import {
 } from 'react-hook-form';
 
 import { getWorkflowColor } from 'common/status-color';
+import type { WorkflowType } from 'common/types';
+import type { User } from 'common/types';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 import { useUsersData } from 'hooks/users';

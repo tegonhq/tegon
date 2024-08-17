@@ -1,6 +1,5 @@
-import type { WorkflowType } from 'common/types';
-
 import { getWorkflowColor } from 'common/status-color';
+import type { WorkflowType } from 'common/types';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
 
 interface WorkflowItemProps {

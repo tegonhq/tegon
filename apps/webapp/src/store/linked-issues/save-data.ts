@@ -1,4 +1,5 @@
 import type { LinkedIssuesStoreType } from './store';
+
 import type { SyncActionRecord } from 'common/types';
 
 import { tegonDatabase } from 'store/database';

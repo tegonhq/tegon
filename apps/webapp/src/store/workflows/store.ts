@@ -1,10 +1,11 @@
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
 import {
   type IAnyStateTreeNode,
   type Instance,
   types,
   flow,
 } from 'mobx-state-tree';
+
+import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
 
 import { tegonDatabase } from 'store/database';
 

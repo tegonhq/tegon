@@ -1,6 +1,6 @@
-import type { LabelType } from 'common/types';
-
 import { observer } from 'mobx-react-lite';
+
+import type { LabelType } from 'common/types';
 
 import { useTeamLabels } from 'hooks/labels';
 import { useCurrentTeam } from 'hooks/teams';

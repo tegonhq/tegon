@@ -1,7 +1,3 @@
-import type { IssueType } from 'common/types';
-import type { TeamType } from 'common/types';
-
-import { useMoveIssueToTeamMutation } from 'services/issues';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -16,6 +12,11 @@ import { TeamIcon } from '@tegonhq/ui/components/team-icon';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import React from 'react';
+
+import type { TeamType } from 'common/types';
+import type { IssueType } from 'common/types';
+
+import { useMoveIssueToTeamMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 

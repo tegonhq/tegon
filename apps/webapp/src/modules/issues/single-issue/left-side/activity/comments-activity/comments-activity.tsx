@@ -1,8 +1,8 @@
-import type { User } from 'common/types';
-import type { IssueCommentType } from 'common/types';
-
 import { Timeline } from '@tegonhq/ui/components/timeline';
 import { observer } from 'mobx-react-lite';
+
+import type { User } from 'common/types';
+import type { IssueCommentType } from 'common/types';
 
 import { useIssueData } from 'hooks/issues';
 import { useUsersData } from 'hooks/users';
