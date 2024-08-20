@@ -1,6 +1,6 @@
 import type { DraggableProvided } from '@hello-pangea/dnd';
 
-import { Calendar } from '@tegonhq/ui/icons';
+import { CalendarLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -112,8 +112,8 @@ export const BoardIssueItem = observer(
               variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
             />
             {issue.dueDate && (
-              <div className="inline-flex min-w-[70px] text-xs">
-                <Calendar size={18} /> &nbsp;
+              <div className="inline-flex min-w-[70px] text-xs gap-1">
+                <CalendarLine size={18} /> &nbsp;
                 {formatDateToDayMonth(issue.dueDate)}
               </div>
             )}

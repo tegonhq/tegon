@@ -105,17 +105,15 @@ export default class ActionEventService {
       actionEntity.action.name,
       {
         event: actionEvent.eventType,
-        data: {
-          type: actionEvent.modelName,
-          issueId: actionEvent.modelId,
-          accessToken,
-          integrationAccounts: Object.fromEntries(
-            actionEntity.action.integrations.map((integrationName) => [
-              integrationName,
-              integrationMap[integrationName],
-            ]),
-          ),
-        },
+        type: actionEvent.modelName,
+        modelId: actionEvent.modelId,
+        accessToken,
+        integrationAccounts: Object.fromEntries(
+          actionEntity.action.integrations.map((integrationName) => [
+            integrationName,
+            integrationMap[integrationName],
+          ]),
+        ),
       },
     );
 

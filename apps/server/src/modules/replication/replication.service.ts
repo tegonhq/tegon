@@ -130,13 +130,6 @@ export default class ReplicationService {
       const oldValue = oldValueMap[columnName];
       const newValue = newValues[index];
 
-      console.log(
-        oldValue,
-        newValue,
-        columnName,
-        oldValue !== undefined && oldValue !== newValue,
-      );
-
       // Check if the old value and new value are different
       if (oldValue !== undefined && oldValue !== newValue) {
         changedData[columnName] = newValue;

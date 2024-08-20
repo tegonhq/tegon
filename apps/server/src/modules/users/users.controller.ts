@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CreatePatDto, User } from '@tegonhq/types';
+import { CreatePatDto, GetUsersDto, PublicUser, User } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -16,10 +16,8 @@ import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 import { SupertokensService } from 'modules/auth/supertokens/supertokens.service';
 
 import {
-  PublicUser,
   UpdateUserBody,
   UserIdParams,
-  UserIdsBody,
   UserWithInvites,
 } from './user.interface';
 import { UsersService } from './users.service';
@@ -48,8 +46,8 @@ export class UsersController {
 
   @Post()
   @UseGuards(AuthGuard)
-  async getUsersById(@Body() userIdsBody: UserIdsBody): Promise<PublicUser[]> {
-    return await this.usersService.getUsersbyId(userIdsBody.userIds);
+  async getUsersById(@Body() getUsersDto: GetUsersDto): Promise<PublicUser[]> {
+    return await this.usersService.getUsersbyId(getUsersDto);
   }
 
   @Get('email')
@@ -94,21 +92,6 @@ export class UsersController {
     );
   }
 
-  @Post(':userId')
-  @UseGuards(AuthGuard)
-  async updateUser(
-    @Param() userIdBody: UserIdParams,
-    @Body()
-    updateUserBody: UpdateUserBody,
-  ): Promise<User> {
-    const user = await this.usersService.updateUser(
-      userIdBody.userId,
-      updateUserBody,
-    );
-
-    return user;
-  }
-
   @Post('pat')
   @UseGuards(AuthGuard)
   async createPersonalAccessToken(
@@ -130,5 +113,20 @@ export class UsersController {
   async getPats(@SessionDecorator() session: SessionContainer) {
     const userId = session.getUserId();
     return await this.usersService.getPats(userId);
+  }
+
+  @Post(':userId')
+  @UseGuards(AuthGuard)
+  async updateUser(
+    @Param() userIdBody: UserIdParams,
+    @Body()
+    updateUserBody: UpdateUserBody,
+  ): Promise<User> {
+    const user = await this.usersService.updateUser(
+      userIdBody.userId,
+      updateUserBody,
+    );
+
+    return user;
   }
 }

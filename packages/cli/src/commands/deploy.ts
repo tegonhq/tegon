@@ -3,11 +3,12 @@ import { commonOptions } from '../cli/common';
 import { getVersion } from '../utilities/getVersion';
 import path from 'path';
 import fs from 'node:fs';
-import { note, log } from '@clack/prompts';
+import { note, log, spinner } from '@clack/prompts';
 import { execa } from 'execa';
 import { printInitialBanner } from '../utilities/initialBanner';
 import { readJSONFileSync } from '../utilities/fileSystem';
 import axios from 'axios';
+import '../utilities/axios';
 
 export function configureDeployCommand(program: Command) {
   return commonOptions(
@@ -51,20 +52,40 @@ export function configureDeployCommand(program: Command) {
           `.trim();
 
           fs.writeFileSync(triggerIndexPath, triggerIndexContent);
-          createTriggerConfigFile(triggerDir, workspaceId);
+          createTriggerConfigFile(path.dirname(config.path), workspaceId);
 
-          log.info(`Deploying ${config.path}`);
+          const s = spinner();
+          s.start(`Deploying ${config.path}`);
 
-          await execa('npx', ['trigger.dev/@beta', 'deploy'], {
-            cwd: path.dirname(config.path),
-            env: { ...process.env, TRIGGER_ACCESS_TOKEN: triggerAccessToken },
-          });
+          await execa(
+            'npx',
+            ['trigger.dev@beta', 'deploy', '--self-hosted', '--skip-typecheck'],
+            {
+              cwd: path.dirname(config.path),
+              env: {
+                ...process.env,
+                TRIGGER_ACCESS_TOKEN: triggerAccessToken,
+                TRIGGER_API_URL:
+                  process.env.TRIGGER_HOST || 'https://trigger.tegon.ai',
+              },
+            },
+          );
 
-          log.info(`Deployment successful for ${config.path}`);
+          s.stop(`Deployment successful for ${config.path}`);
 
-          log.info('Creating resources...');
-          await resourceCreation(config, workspaceId);
-          log.info(`Resources created for ${config.path}`);
+          // Delete trigger.config.ts and trigger folder
+          const triggerConfigPath = path.join(
+            path.dirname(config.path),
+            'trigger.config.ts',
+          );
+          fs.unlinkSync(triggerConfigPath);
+          fs.rmSync(triggerDir, { recursive: true });
+
+          const resourceSpinner = spinner();
+
+          resourceSpinner.start('Creating resources...');
+          await resourceCreation(config.config, workspaceId);
+          resourceSpinner.stop(`Resources created for ${config.path}`);
         }
 
         log.success('Deployment succeeded.');
@@ -78,6 +99,7 @@ export function configureDeployCommand(program: Command) {
 async function getTriggerAccessToken(workspaceId: string): Promise<string> {
   try {
     const baseURL = process.env.BASE_HOST || 'https://app.tegon.ai/api';
+
     const response = await axios.get(`${baseURL}/v1/triggerdev`, {
       params: { workspaceId },
     });
@@ -85,7 +107,7 @@ async function getTriggerAccessToken(workspaceId: string): Promise<string> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       log.error(
-        'The token you passed is invalidm create a personal token in the app',
+        `The token you passed is invalid create a personal token in the app: ${error}`,
       );
     } else {
       log.error(`Unexpected error: ${error}`);
@@ -154,20 +176,10 @@ async function validateAndExportConfigs(
 async function resourceCreation(config: ConfigMap, workspaceId: string) {
   try {
     const baseURL = process.env.BASE_HOST || 'https://app.tegon.ai/api';
-    const response = await axios.post(
-      `${baseURL}/v1/action/create-resources`,
-      {
-        workspaceId,
-        config,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.TOKEN}`,
-        },
-      },
-    );
-
-    note('Resource creation response:', response.data);
+    await axios.post(`${baseURL}/v1/action/create-resource`, {
+      workspaceId,
+      config,
+    });
   } catch (error) {
     if (axios.isAxiosError(error)) {
       log.error(
@@ -176,6 +188,8 @@ async function resourceCreation(config: ConfigMap, workspaceId: string) {
     } else {
       log.error(`Unexpected error: ${error}`);
     }
+
+    process.exit(1);
   }
 }
 

@@ -1,7 +1,6 @@
 import {
   IsArray,
   IsBoolean,
-  IsDate,
   IsNumber,
   IsObject,
   IsOptional,
@@ -25,8 +24,8 @@ export class UpdateIssueDto {
   priority?: number;
 
   @IsOptional()
-  @IsDate()
-  dueDate?: Date;
+  @IsString()
+  dueDate?: string;
 
   @IsOptional()
   @IsNumber()

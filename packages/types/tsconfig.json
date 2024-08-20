@@ -12,5 +12,5 @@
     "declarationMap": false,
     "stripInternal": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

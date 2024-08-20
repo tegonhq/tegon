@@ -1,4 +1,4 @@
-import { IntegrationAccount, ModelNameEnum } from '@tegonhq/types';
+import { IntegrationAccount, ModelNameEnum } from '@tegonhq/sdk';
 
 export interface SlashCommandSessionRecord {
   slackTeamId?: string;
@@ -50,13 +50,6 @@ export const slackLinkRegex =
 
 export const twoWaySyncModels = new Map([[ModelNameEnum.IssueComment, true]]);
 
-export interface SlackChannel {
-  channelName: string;
-  channelId: string;
-  webhookUrl: string;
-  botJoined: boolean;
-}
-
 export interface SlackChannelMappings {
   teamId: string;
   channelId: string;
@@ -67,6 +60,5 @@ export interface SlackIntegrationSettings {
   teamDomain: string;
   teamUrl: string;
   botUserId: string;
-  channels: SlackChannel[];
   mappings: SlackChannelMappings[];
 }

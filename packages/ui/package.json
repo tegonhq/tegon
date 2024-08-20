@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "ui:add": "pnpm dlx shadcn-ui@latest add",
-    "ui:generate": "tailwindcss -i ./src/global.css -o ./dist/index.css --watch",
+    "generate": "tailwindcss -i ./src/global.css -o ./dist/index.css --watch",
     "lint": "eslint . --fix"
   },
   "peerDependencies": {

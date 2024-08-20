@@ -69,8 +69,6 @@ export function useTeamForNewIssue(defaultTeamId: string): {
     setTeam(teams.find((team: TeamType) => team.identifier === identifier));
   };
 
-  console.log(team);
-
   return { team, setTeam: setTeamWithIdentifier };
 }
 

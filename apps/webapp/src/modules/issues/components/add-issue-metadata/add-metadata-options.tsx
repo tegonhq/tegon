@@ -6,7 +6,7 @@ import {
   IssueAssigneeDropdownWithoutContext,
   IssueLabelDropdownWithoutContext,
   IssuePriorityDropdownWithoutContext,
-} from '../metadata-dropdowns';
+} from '../issue-metadata';
 
 export function DefaultPopoverContent({
   onSelect,

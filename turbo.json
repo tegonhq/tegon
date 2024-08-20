@@ -67,9 +67,6 @@
     "TRIGGER_TOKEN",
     "TRIGGER_ACCESS_TOKEN",
     "TRIGGER_API_URL",
-    "TRIGGER_INTEGRATION_SECRET_KEY",
-    "DEPLOY_REGISTRY_HOST",
-    "DEPLOY_REGISTRY_NAMESPACE",
 
     "GMAIL_CLIENT_ID",
     "GMAIL_CLIENT_SECRET",
@@ -87,12 +84,15 @@
       "dependsOn": [ "db:init-resources" ],
       "cache": false
     },
+    "generate": {
+      "cache": false
+    },
     "dev": {
-      "dependsOn": [ "db:init-resources", "ui:generate" ],
+      "dependsOn": [ "db:init-resources", "generate" ],
       "cache": false
     },
     "build": {
-      "dependsOn": [ "db:init-resources", "ui:generate" ],
+      "dependsOn": [ "db:init-resources", "generate" ],
       "outputs": [ "dist/**", ".next/**" ]
     },
     "lint": { },
@@ -108,9 +108,6 @@
       "cache": false
     },
     "db:init-resources": {
-      "cache": false
-    },
-    "ui:generate": {
       "cache": false
     }
   }

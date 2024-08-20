@@ -1,6 +1,20 @@
-import type { TriggerConfig } from '@trigger.dev/sdk/v3';
+import type {
+  ResolveEnvironmentVariablesFunction,
+  TriggerConfig,
+} from '@trigger.dev/sdk/v3';
 
 import { PrismaInstrumentation } from '@prisma/instrumentation';
+
+// This runs when you run the deploy command or the dev command
+export const resolveEnvVars: ResolveEnvironmentVariablesFunction = async ({
+  env,
+}) => {
+  return {
+    variables: {
+      DATABASE_URL: env.DATABASE_URL,
+    },
+  };
+};
 
 export const config: TriggerConfig = {
   project: 'proj_common',
@@ -16,7 +30,7 @@ export const config: TriggerConfig = {
     },
   },
   triggerDirectories: ['./src/trigger'],
-
+  dependenciesToBundle: ['@tegonhq/types'],
   instrumentations: [new PrismaInstrumentation()],
 
   additionalFiles: ['./prisma/schema.prisma'],

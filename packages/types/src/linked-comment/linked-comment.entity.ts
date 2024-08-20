@@ -8,7 +8,6 @@ export class LinkedComment {
   deleted: Date | null;
   url: string;
   sourceId: string;
-  source: JsonValue | null;
   sourceData: JsonValue | null;
   createdById: string | null;
   comment?: IssueComment;

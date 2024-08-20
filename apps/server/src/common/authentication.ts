@@ -30,19 +30,27 @@ export async function hasValidPat(
   usersService: UsersService,
 ) {
   let authHeaderValue = request.headers['authorization'];
-
   authHeaderValue =
     authHeaderValue === undefined
       ? undefined
       : authHeaderValue.split('Bearer ')[1];
 
   if (authHeaderValue !== undefined) {
-    const jwt = usersService.getJwtFromPat(authHeaderValue);
+    const jwt = await usersService.getJwtFromPat(authHeaderValue);
 
     if (jwt) {
-      request.headers['authorization'] = `Bearer ${jwt}`;
+      const publicKey = await getKey(jwt);
+      const data = verify(jwt, publicKey, {});
+
+      request.session = await createNewSessionWithoutRequestResponse(
+        'public',
+        supertokens.convertToRecipeUserId(data.sub as string),
+      );
+      return `Bearer ${jwt}`;
     }
   }
+
+  return undefined;
 }
 
 export async function hasValidHeader(
@@ -99,11 +107,14 @@ export async function isSessionValid(
         err = res;
       });
     } else {
-      if (request.headers['authorization'].includes('tr_pat_')) {
-        hasValidPat(request, usersService);
+      let authHeader = request.headers['authorization'];
+      if (authHeader.includes('tg_pat_')) {
+        authHeader = await hasValidPat(request, usersService);
+
+        request.headers['personal'] = true;
       }
 
-      return hasValidHeader(request.headers['authorization']);
+      return hasValidHeader(authHeader);
     }
 
     if (response.headersSent) {
@@ -117,6 +128,7 @@ export async function isSessionValid(
       throw err;
     }
   } catch (err) {
+    console.log(err);
     throw new UnauthorizedException({
       message: 'Unauthorised',
     });

@@ -10,9 +10,5 @@ export class CreateLinkedIssueDto {
 
   @IsOptional()
   @IsObject()
-  source?: Record<string, string | number>;
-
-  @IsOptional()
-  @IsObject()
   sourceData?: Record<string, string | number>;
 }

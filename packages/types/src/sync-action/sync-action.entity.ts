@@ -3,6 +3,7 @@ import { Workspace } from '../workspace';
 export enum ModelNameEnum {
   Action = 'Action',
   ActionEntity = 'ActionEntity',
+  ActionEvent = 'ActionEvent',
   Attachment = 'Attachment',
   AIRequest = 'AIRequest',
   Emoji = 'Emoji',
@@ -36,6 +37,7 @@ export enum ModelNameEnum {
 export const ModelName = {
   Action: 'Action',
   ActionEntity: 'ActionEntity',
+  ActionEvent: 'ActionEvent',
   Attachment: 'Attachment',
   AIRequest: 'AIRequest',
   Emoji: 'Emoji',

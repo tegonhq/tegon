@@ -6,6 +6,7 @@ import {
   EventHeaders,
   IntegrationPayloadEventType,
 } from '@tegonhq/types';
+import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
 
 import { generateKeyForUserId } from 'common/authentication';
@@ -15,6 +16,7 @@ import {
   TriggerdevService,
   TriggerProjects,
 } from 'modules/triggerdev/triggerdev.service';
+
 @Injectable()
 export default class WebhookService {
   constructor(
@@ -23,11 +25,19 @@ export default class WebhookService {
   ) {}
 
   async handleEvents(
+    response: Response,
     sourceName: string,
     eventHeaders: EventHeaders,
     eventBody: EventBody,
   ) {
-    const { integrationAccountId } = await this.triggerDevService.triggerTask(
+    if (sourceName === 'slack') {
+      if (eventBody.type === 'url_verification') {
+        return { challenge: eventBody.challenge };
+      }
+    }
+
+    response.send({ status: 200 });
+    const accountId = await this.triggerDevService.triggerTask(
       TriggerProjects.Common,
       sourceName,
       {
@@ -36,8 +46,8 @@ export default class WebhookService {
       },
     );
 
-    const integrationAccount = await this.prisma.integrationAccount.findUnique({
-      where: { id: integrationAccountId },
+    const integrationAccount = await this.prisma.integrationAccount.findFirst({
+      where: { accountId, deleted: null },
       include: { workspace: true, integrationDefinition: true },
     });
 
@@ -68,21 +78,20 @@ export default class WebhookService {
       });
       const accessToken = await generateKeyForUserId(actionUser.id);
 
-      this.triggerDevService.triggerTask(
+      this.triggerDevService.triggerTaskAsync(
         workspaceId,
         actionEntity.action.name,
         {
           event: ActionTypesEnum.SOURCE_WEBHOOK,
-          data: {
-            eventBody,
-            eventHeaders,
-            accessToken,
-            userId: actionUser.id,
-            integrationAccounts: integrationAccountsMap,
-          },
+          eventBody,
+          eventHeaders,
+          accessToken,
+          userId: actionUser.id,
+          integrationAccounts: integrationAccountsMap,
         },
       );
     });
+
     return { status: 200 };
   }
 }

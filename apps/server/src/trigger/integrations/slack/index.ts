@@ -13,7 +13,7 @@ async function run(eventPayload: IntegrationEventPayload) {
      * This is used to identify to which integration account the webhook belongs to
      */
     case IntegrationPayloadEventType.GET_IDENTIFIER:
-      return eventPayload.data.eventBody.id;
+      return eventPayload.data.eventBody.team_id;
 
     case IntegrationPayloadEventType.SPEC:
       return spec();

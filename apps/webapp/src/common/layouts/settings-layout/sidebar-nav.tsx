@@ -69,7 +69,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                   key={item.href}
                   href={`/${workspaceSlug}/settings/${item.href}`}
                   className={cn(
-                    buttonVariants({ variant: 'ghost' }),
+                    buttonVariants({ variant: 'link' }),
                     'flex items-center justify-start text-foreground bg-grayAlpha-100 w-fit',
                     !teamIdentifier &&
                       isActive(item) &&
@@ -96,7 +96,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
                   key={item.href}
                   href={`/${workspaceSlug}/settings/account/${item.href}`}
                   className={cn(
-                    buttonVariants({ variant: 'ghost' }),
+                    buttonVariants({ variant: 'link' }),
                     'flex items-center justify-start text-foreground bg-grayAlpha-100 w-fit',
 
                     settingsSection === item.href &&

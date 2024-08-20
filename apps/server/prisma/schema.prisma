@@ -331,7 +331,6 @@ model LinkedComment {
 
   url         String
   sourceId    String
-  source      Json?
   sourceData  Json?
   createdById String?
 
@@ -349,7 +348,6 @@ model LinkedIssue {
 
   url         String
   sourceId    String?
-  source      Json?
   sourceData  Json?
   createdById String?
   updatedById String

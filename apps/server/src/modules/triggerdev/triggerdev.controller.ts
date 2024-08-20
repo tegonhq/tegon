@@ -1,8 +1,10 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { WorkspaceRequestParamsDto } from '@tegonhq/types';
+import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
+import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import { TriggerdevService } from './triggerdev.service';
 
@@ -16,7 +18,14 @@ export class TriggerdevController {
 
   @Get()
   @UseGuards(AuthGuard)
-  async getRequiredKeys(@Query() requestParams: WorkspaceRequestParamsDto) {
-    return this.triggerdevService.getRequiredKeys(requestParams.workspaceId);
+  async getRequiredKeys(
+    @SessionDecorator() session: SessionContainer,
+    @Query() requestParams: WorkspaceRequestParamsDto,
+  ) {
+    const userId = session.getUserId();
+    return this.triggerdevService.getRequiredKeys(
+      requestParams.workspaceId,
+      userId,
+    );
   }
 }

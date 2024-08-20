@@ -1,4 +1,3 @@
-import { RiAddLine } from '@remixicon/react';
 import { Badge, BadgeColor } from '@tegonhq/ui/components/badge';
 import { Button } from '@tegonhq/ui/components/button';
 import { Command, CommandInput } from '@tegonhq/ui/components/command';
@@ -7,7 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
-import { LabelLine } from '@tegonhq/ui/icons';
+import { AddLine, LabelLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -71,7 +70,7 @@ export const IssueLabelDropdown = observer(
                 )}
               >
                 <div className="flex items-center">
-                  <RiAddLine size={14} className="mr-1" />
+                  <AddLine size={14} className="mr-1" />
                 </div>
               </Button>
             ) : (
@@ -80,7 +79,7 @@ export const IssueLabelDropdown = observer(
                 role="combobox"
                 aria-expanded={open}
                 className={cn(
-                  'flex items-center px-1 -ml-2 shadow-none justify-between text-sm font-normal focus-visible:ring-1 focus-visible:border-primary',
+                  'flex items-center bg-transparent px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary',
                 )}
               >
                 {labelTitle()}
@@ -128,7 +127,7 @@ export const IssueLabelDropdown = observer(
 
       return (
         <div className="flex items-center">
-          <RiAddLine size={16} />
+          <AddLine size={16} className="mr-2" />
           Add Label
         </div>
       );

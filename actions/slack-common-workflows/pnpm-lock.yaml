@@ -9,18 +9,15 @@ importers:
   .:
     dependencies:
       '@tegonhq/sdk':
-        specifier: ^0.1.0-beta.1
-        version: 0.1.0-beta.1(typescript@5.5.4)
+        specifier: ^0.1.0-beta.15
+        version: 0.1.0-beta.15(typescript@5.5.4)
+      '@trigger.dev/sdk':
+        specifier: 3.0.0-beta.55
+        version: 3.0.0-beta.55(typescript@5.5.4)
       axios:
         specifier: ^1.6.7
         version: 1.7.4(debug@4.3.6)
-      configstore:
-        specifier: ^7.0.0
-        version: 7.0.0
     devDependencies:
-      '@types/configstore':
-        specifier: ^6.0.2
-        version: 6.0.2
       '@types/jsonwebtoken':
         specifier: ^9.0.6
         version: 9.0.6
@@ -374,24 +371,33 @@ packages:
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
 
-  '@tegonhq/sdk@0.1.0-beta.1':
-    resolution: {integrity: sha512-0vUMni6ZwIEYivnukD1miTOMFkFzABL2amC8eUx7xRgwJKuwvhAR2xHXym6yUQbYFNn5vpbJR2x7PAo0iJlLSg==}
+  '@tegonhq/sdk@0.1.0-beta.15':
+    resolution: {integrity: sha512-GKbYUCDvdLM6rmhF7u884ULx3trWax3ytc68Qz+n27iCSAkL5Ba4QAFkf/QhYDcIZUOZ2ejGy6Dpdz1TYPOTNA==}
     engines: {node: '>=18.0.0'}
 
   '@trigger.dev/core-backend@3.0.0-beta.50':
     resolution: {integrity: sha512-bBdOz17ZTQBpPAHMoSiA1vO/Xh9Ez77mumnvVKZtDuuHSPNmaJu5msdcWxn+Vre6tccb7JDBx9q+jyWz1Uc4eg==}
     engines: {node: '>=18.0.0'}
 
+  '@trigger.dev/core-backend@3.0.0-beta.55':
+    resolution: {integrity: sha512-JLRaiawxVyG0fparYskiluPxWqzFXrqXKJFMKW6CgXklRCHMRjH5ezai62yUxAeKM8LX2BIOhOpeXB3z50Re1w==}
+    engines: {node: '>=18.0.0'}
+
   '@trigger.dev/core@3.0.0-beta.50':
     resolution: {integrity: sha512-ZnWFQjs1QxfKSSh4LTpGGP9vbiolLtn7F6U6BJlADL/6gVfRYaOFonBWGBvgLXJdPRtUQ1wfE9+LkWF/fouPKA==}
+    engines: {node: '>=18.0.0'}
+
+  '@trigger.dev/core@3.0.0-beta.55':
+    resolution: {integrity: sha512-MXfBnM3HvT+RyXwlIeQjUJ0lWKg5vFrPugwy5AbDaio/p8QLyRpEHIL8zcMU6rUxdjD7jVbZk3KTUnGRLRZ+tw==}
     engines: {node: '>=18.0.0'}
 
   '@trigger.dev/sdk@3.0.0-beta.50':
     resolution: {integrity: sha512-WPuk5sqERw9FvsEz4HqnfBhe+/jvw/qaE7Xvhx6lMfKUe0OuMo4+shD2TceHGrZ7WMeOwDAPqzDTOYFAJxhhaw==}
     engines: {node: '>=18.0.0'}
 
-  '@types/configstore@6.0.2':
-    resolution: {integrity: sha512-OS//b51j9uyR3zvwD04Kfs5kHpve2qalQ18JhY/ho3voGYUTPLEG90/ocfKPI48hyHH8T04f7KEEbK6Ue60oZQ==}
+  '@trigger.dev/sdk@3.0.0-beta.55':
+    resolution: {integrity: sha512-B4mS79S0esp5yRun/siDHIRfD8ZF8S6dadYayq0Irj2izFx50R3bUJ+BXh6gPx/4cF26NL7jcJMOwtW8P9PsFQ==}
+    engines: {node: '>=18.0.0'}
 
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
@@ -2096,7 +2102,7 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
-  '@tegonhq/sdk@0.1.0-beta.1(typescript@5.5.4)':
+  '@tegonhq/sdk@0.1.0-beta.15(typescript@5.5.4)':
     dependencies:
       '@trigger.dev/sdk': 3.0.0-beta.50(typescript@5.5.4)
       axios: 1.7.4(debug@4.3.6)
@@ -2119,7 +2125,37 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
 
+  '@trigger.dev/core-backend@3.0.0-beta.55':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+
   '@trigger.dev/core@3.0.0-beta.50':
+    dependencies:
+      '@google-cloud/precise-date': 4.0.0
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api-logs': 0.48.0
+      '@opentelemetry/exporter-logs-otlp-http': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/exporter-trace-otlp-http': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs': 0.49.1(@opentelemetry/api-logs@0.48.0)(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-node': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-node': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.25.1
+      humanize-duration: 3.32.1
+      socket.io-client: 4.7.5
+      superjson: 2.2.1
+      ulidx: 2.4.0
+      zod: 3.22.3
+      zod-error: 1.5.0
+      zod-validation-error: 1.5.0(zod@3.22.3)
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  '@trigger.dev/core@3.0.0-beta.55':
     dependencies:
       '@google-cloud/precise-date': 4.0.0
       '@opentelemetry/api': 1.9.0
@@ -2172,7 +2208,32 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@types/configstore@6.0.2': {}
+  '@trigger.dev/sdk@3.0.0-beta.55(typescript@5.5.4)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api-logs': 0.48.0
+      '@opentelemetry/semantic-conventions': 1.25.1
+      '@trigger.dev/core': 3.0.0-beta.55
+      '@trigger.dev/core-backend': 3.0.0-beta.55
+      chalk: 5.3.0
+      cronstrue: 2.50.0
+      debug: 4.3.6
+      evt: 2.5.7
+      get-caller-file: 2.0.5
+      git-remote-origin-url: 4.0.0
+      git-repo-info: 2.1.1
+      msw: 2.3.5(typescript@5.5.4)
+      slug: 6.1.0
+      terminal-link: 3.0.0
+      ulid: 2.3.0
+      uuid: 9.0.1
+      ws: 8.18.0
+      zod: 3.22.3
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - typescript
+      - utf-8-validate
 
   '@types/cookie@0.6.0': {}
 

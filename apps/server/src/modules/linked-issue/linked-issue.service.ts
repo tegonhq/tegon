@@ -11,7 +11,6 @@ import {
   LinkIssueInput,
   UpdateLinkedIssueDto,
 } from '@tegonhq/types';
-import { tasks } from '@trigger.dev/sdk/v3';
 import { PrismaService } from 'nestjs-prisma';
 
 import { ApiResponse } from 'modules/issues/issues.interface';
@@ -27,7 +26,7 @@ export default class LinkedIssueService {
     issueParams: IssueRequestParamsDto,
     userId: string,
   ): Promise<ApiResponse | LinkedIssue> {
-    let linkedIssue = await this.prisma.linkedIssue.findFirst({
+    const linkedIssue = await this.prisma.linkedIssue.findFirst({
       where: { url: linkData.url, deleted: null },
       include: { issue: { include: { team: true } } },
     });
@@ -46,22 +45,17 @@ export default class LinkedIssueService {
     };
 
     try {
-      linkedIssue = await this.prisma.linkedIssue.create({
+      return await this.prisma.linkedIssue.create({
         data: {
           ...createdByInfo,
           url: linkData.url,
           issueId: issueParams.issueId,
-          source: { type: 'ExternalLink' },
           sourceData: {
             ...(linkData.title ? { title: linkData.title } : {}),
           },
         },
         include: { issue: { include: { team: true } } },
       });
-
-      tasks.trigger('link-issue', { linkedIssue });
-
-      return linkedIssue;
     } catch (error) {
       throw new InternalServerErrorException('Failed to create linked issue');
     }
@@ -133,7 +127,6 @@ export default class LinkedIssueService {
         sourceData: finalSourceData,
         updatedById: userId,
         ...(linkedIssueData.url && { url: linkedIssueData.url }),
-        ...(linkedIssueData.source && { source: linkedIssueData.source }),
         ...(linkedIssueData.sourceId && { sourceId: linkedIssueData.sourceId }),
       },
       include: { issue: { include: { team: true } } },

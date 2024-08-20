@@ -1,7 +1,6 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsDate,
   IsNumber,
   IsObject,
   IsOptional,
@@ -34,8 +33,8 @@ export class CreateIssueDto {
   priority?: number;
 
   @IsOptional()
-  @IsDate()
-  dueDate?: Date;
+  @IsString()
+  dueDate?: string;
 
   @IsOptional()
   @IsNumber()

@@ -4,7 +4,11 @@ import type {
   IntegrationAccount,
 } from '@tegonhq/sdk';
 
-import { debug } from '@tegonhq/sdk';
+import {
+  logger,
+  getLinkedIssueBySource,
+  getWorkflowsByTeam,
+} from '@tegonhq/sdk';
 
 import { slackIssueCreate } from './issue-create';
 import {
@@ -47,12 +51,12 @@ export const slackTriage = async (
 
   // If the reaction is not 'eyes' or the channel mapping doesn't exist, ignore the event
   if (reaction !== 'eyes' || !channelMapping) {
-    debug(`Ignoring reaction event with reaction: ${reaction}`);
+    logger.debug(`Ignoring reaction event with reaction: ${reaction}`);
     return undefined;
   }
 
   if (!channelMapping) {
-    debug(`The channel is not connected`);
+    logger.debug(`The channel is not connected`);
     return undefined;
   }
 
@@ -68,7 +72,7 @@ export const slackTriage = async (
     messagedById: slackUserId,
   };
 
-  debug(`Session data: ${JSON.stringify(sessionData)}`);
+  logger.debug(`Session data: ${JSON.stringify(sessionData)}`);
 
   // Get the Slack message using the integration account and session data
   const slackMessageResponse = await getSlackMessage(
@@ -81,9 +85,9 @@ export const slackTriage = async (
 
   // Check if the thread is already linked to an existing issue
   const [linkedIssue, workflowStates] = await Promise.all([
-    getLinkedIssueBySource({sourceId})
-    getWorkflowsByTeam({teamId})
-  ])
+    getLinkedIssueBySource({ sourceId }),
+    getWorkflowsByTeam({ teamId }),
+  ]);
 
   // If the thread is already linked to an issue, send an ephemeral message and return
   if (linkedIssue) {
@@ -95,7 +99,7 @@ export const slackTriage = async (
       slackUserId,
     );
 
-    debug(
+    logger.debug(
       `Thread already linked to an existing issue. Skipping issue creation.`,
     );
     return undefined;
@@ -141,12 +145,8 @@ export const slackTriage = async (
   const linkIssueData = {
     url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${mainTs.replace('.', '')}`,
     sourceId,
-    source: {
-      type: integrationAccount.integrationDefinition.name,
-      subType: 'Thread',
-      integrationAccountId: integrationAccount.id,
-    },
     sourceData: {
+      type: integrationAccount.integrationDefinition.name,
       channelId: sessionData.channelId,
       parentTs: mainTs,
       slackTeamDomain: sessionData.slackTeamDomain,

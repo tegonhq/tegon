@@ -1,5 +1,6 @@
 import { Attachment } from '../attachment';
 import { IntegrationAccount } from '../integration-account';
+import { Role } from '../invite';
 import { Issue } from '../issue';
 import { Template } from '../template';
 import { UsersOnWorkspaces } from '../users-on-workspaces';
@@ -18,4 +19,12 @@ export class User {
   createdBy?: Issue[];
   integrationAccount?: IntegrationAccount[];
   attachment?: Attachment[];
+}
+
+export class PublicUser {
+  id: string;
+  username: string;
+  fullname: string;
+  email: string;
+  role: Role;
 }
