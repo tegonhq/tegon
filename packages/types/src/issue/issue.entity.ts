@@ -5,7 +5,6 @@ import { IssueRelation } from '../issue-relation';
 import { IssueSuggestion } from '../issue-suggestion';
 import { LinkedIssue } from '../linked-issue';
 import { Team } from '../team';
-import { User } from '../user';
 
 export class Issue {
   id: string;
@@ -24,8 +23,8 @@ export class Issue {
   isBidirectional: boolean | null;
   team?: Team;
   teamId: string;
-  createdBy?: User | null;
   createdById: string | null;
+  updatedById: string;
   subscriberIds: string[];
   assigneeId: string | null;
   labelIds: string[];

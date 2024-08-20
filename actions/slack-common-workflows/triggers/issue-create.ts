@@ -4,7 +4,7 @@ import {
   getIssueMessageModal,
   sendSlackMessage,
 } from '../utils';
-import { createIssue, info } from '@tegonhq/sdk';
+import { createIssue, logger } from '@tegonhq/sdk';
 
 export const slackIssueCreate = async (payload: SlackCreateIssuePayload) => {
   const { integrationAccount, sessionData, issueData } = payload;
@@ -12,7 +12,7 @@ export const slackIssueCreate = async (payload: SlackCreateIssuePayload) => {
   // Extract issueInput, sourceMetadata, and userId from issueData
   const { issueInput, sourceMetadata } = issueData;
 
-  info('Creating issue with issueInput', { issueInput });
+  logger.info('Creating issue with issueInput', { issueInput });
 
   const createdIssue = await createIssue({
     teamId: sessionData.teamId,
@@ -21,7 +21,7 @@ export const slackIssueCreate = async (payload: SlackCreateIssuePayload) => {
 
   const workspaceId = createdIssue.team.workspaceId;
 
-  info('Issue created successfully', { id: createdIssue.id });
+  logger.info('Issue created successfully', { id: createdIssue.id });
   // Prepare the payload for sending a Slack message
   const messagePayload = {
     channel: sessionData.channelId,
@@ -30,7 +30,7 @@ export const slackIssueCreate = async (payload: SlackCreateIssuePayload) => {
     ...(sessionData.threadTs ? { thread_ts: sessionData.threadTs } : {}),
   };
 
-  info('Sending Slack message with payload', { messagePayload });
+  logger.info('Sending Slack message with payload', { messagePayload });
 
   // Send the Slack message
   const messageResponse = await sendSlackMessage(
@@ -39,7 +39,7 @@ export const slackIssueCreate = async (payload: SlackCreateIssuePayload) => {
   );
 
   if (messageResponse.ok) {
-    info('Slack message sent successfully', { messageResponse });
+    logger.info('Slack message sent successfully', { messageResponse });
 
     // Create a comment thread for this Slack thread and Update link issue with synced comment
     await createLinkIssueComment(

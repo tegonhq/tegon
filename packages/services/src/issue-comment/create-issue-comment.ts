@@ -7,19 +7,11 @@ export class CreateIssueCommentProps extends CreateIssueCommentDto {
 
 export async function createIssueComment({
   issueId,
-  body,
-  parentId,
-  sourceMetadata,
-  linkCommentMetadata,
+  ...data
 }: CreateIssueCommentProps) {
   const response = await axios.post(
     `/api/v1/issue_comments?issueId=${issueId}`,
-    {
-      body,
-      sourceMetadata,
-      linkCommentMetadata,
-      parentId,
-    },
+    data,
   );
 
   return response.data;

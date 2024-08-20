@@ -1,25 +1,35 @@
 import {
-  IntegrationAccount,
-  IssueCommentCreateActionPayload,
+  getIssueComment,
+  getUsers,
+  createLinkedIssueComment,
+  ActionEventPayload,
+  RoleEnum,
 } from '@tegonhq/sdk';
 import axios from 'axios';
 
 import { convertTiptapJsonToSlackBlocks, getSlackHeaders } from '../utils';
 
-export const commentSync = async (
-  integrationAccounts: Record<string, IntegrationAccount>,
-  data: IssueCommentCreateActionPayload,
-) => {
-  const { issueCommentId } = data;
-  const { slack: integrationAccount } = integrationAccounts;
+export const commentSync = async (actionPayload: ActionEventPayload) => {
+  const {
+    integrationAccounts: { slack: integrationAccount },
+    modelId: issueCommentId,
+  } = actionPayload;
+
   const integrationDefinitionName =
     integrationAccount.integrationDefinition.name;
 
   const issueComment = await getIssueComment({ issueCommentId });
 
-  if (issueComment.sourceMetadata) {
+  const userRole = (
+    await getUsers({
+      userIds: [issueComment.updatedById],
+      workspaceId: integrationAccount.workspaceId,
+    })
+  )[0].role;
+
+  if (userRole === RoleEnum.BOT) {
     return {
-      message: `Ignoring comment created from source`,
+      message: `Ignoring comment created from Bot`,
     };
   }
 
@@ -36,7 +46,7 @@ export const commentSync = async (
     string
   >;
 
-  const user = await getUser();
+  const user = (await getUsers({ userIds: [issueComment.userId] }))[0];
 
   // Send a POST request to the Slack API to post the message
   const response = await axios.post(
@@ -75,10 +85,6 @@ export const commentSync = async (
     return await createLinkedIssueComment({
       url: threadId,
       sourceId: threadId,
-      source: {
-        type: integrationDefinitionName,
-        integrationAccountId: integrationAccount.id,
-      },
       commentId: issueComment.id,
       sourceData,
     });

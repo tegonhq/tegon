@@ -1,17 +1,9 @@
-import { Button } from '@tegonhq/ui/components/button';
-import { Calendar } from '@tegonhq/ui/components/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@tegonhq/ui/components/popover';
 import { cn } from '@tegonhq/ui/lib/utils';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import {
+  DueDate,
   IssueAssigneeDropdown,
   IssueAssigneeDropdownVariant,
   IssueLabelDropdown,
@@ -56,21 +48,6 @@ export const RightSide = observer(() => {
   const dueDateChange = (dueDate: Date) => {
     updateIssue({ id: issue.id, dueDate, teamId: issue.teamId });
   };
-
-  const disablePastDates = (date: Date) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return date < today;
-  };
-
-  const [dueDate, setDueDate] = React.useState<Date>(
-    issue.dueDate ? new Date(issue.dueDate) : null,
-  );
-
-  useEffect(() => {
-    dueDateChange(dueDate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dueDate]);
 
   return (
     <>
@@ -119,28 +96,7 @@ export const RightSide = observer(() => {
         </div>
         <div className={cn('flex flex-col justify-start items-start gap-1')}>
           <div className="text-xs text-left">Due Date</div>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={'outline'}
-                className={cn(
-                  'w-[240px] justify-start text-left font-normal',
-                  !dueDate && 'text-muted-foreground',
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {dueDate ? format(dueDate, 'PPP') : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={dueDate}
-                onSelect={setDueDate}
-                disabled={disablePastDates}
-              />
-            </PopoverContent>
-          </Popover>
+          <DueDate dueDate={issue.dueDate} dueDateChange={dueDateChange} />
         </div>
       </div>
     </>

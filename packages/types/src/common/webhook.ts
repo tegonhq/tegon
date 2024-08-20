@@ -11,5 +11,4 @@ export interface WebhookPayload {
   eventHeaders: EventHeaders;
   integrationAccounts: Record<string, IntegrationAccount>;
   userId: string;
-  accesstoken: string;
 }

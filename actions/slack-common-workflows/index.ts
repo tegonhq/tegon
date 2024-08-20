@@ -4,22 +4,21 @@ import { onCreateHandler } from './handlers/on-create-handler';
 import { webhookHandler } from './handlers/webhook-handler';
 
 export async function run(eventPayload: ActionEventPayload) {
-  const event = eventPayload.type;
-  switch (event) {
+  switch (eventPayload.event) {
     case ActionTypesEnum.ON_CREATE:
-      return onCreateHandler(eventPayload.data);
+      return onCreateHandler(eventPayload);
 
     case ActionTypesEnum.SOURCE_WEBHOOK:
       return webhookHandler({
-        eventBody: eventPayload.data.eventBody,
-        eventHeaders: eventPayload.data.eventHeaders,
-        integrationAccounts: eventPayload.data.integrationAccounts,
-        userId: eventPayload.data.userId,
+        eventBody: eventPayload.eventBody,
+        eventHeaders: eventPayload.eventHeaders,
+        integrationAccounts: eventPayload.integrationAccounts,
+        userId: eventPayload.userId,
       });
 
     default:
       return {
-        message: `The event payload type "${event}" is not recognized`,
+        message: `The event payload type "${eventPayload.event}" is not recognized`,
       };
   }
 }

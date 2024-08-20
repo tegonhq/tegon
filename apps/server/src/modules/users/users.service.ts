@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { User } from '@tegonhq/types';
+import { Prisma } from '@prisma/client';
+import { GetUsersDto, PublicUser, User } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 import supertokens from 'supertokens-node';
 import { SessionContainer } from 'supertokens-node/recipe/session';
@@ -13,7 +14,6 @@ import {
 import { SupertokensService } from 'modules/auth/supertokens/supertokens.service';
 
 import {
-  PublicUser,
   UpdateUserBody,
   userSerializer,
   UserWithInvites,
@@ -64,18 +64,32 @@ export class UsersService {
     return { ...serializeUser, invites };
   }
 
-  async getUsersbyId(ids: string[]): Promise<PublicUser[]> {
-    return await this.prisma.user.findMany({
-      where: {
-        id: { in: ids },
-      },
-      select: {
-        id: true,
-        username: true,
-        fullname: true,
-        email: true,
+  async getUsersbyId(getUsersDto: GetUsersDto): Promise<PublicUser[]> {
+    const where: Prisma.UserWhereInput = {
+      id: { in: getUsersDto.userIds },
+    };
+
+    if (getUsersDto.workspaceId) {
+      where.usersOnWorkspaces = {
+        some: { workspaceId: getUsersDto.workspaceId },
+      };
+    }
+
+    const users = await this.prisma.user.findMany({
+      where,
+      include: {
+        usersOnWorkspaces: true,
       },
     });
+
+    return users.map((user) => ({
+      id: user.id,
+      username: user.username,
+      fullname: user.fullname,
+      email: user.email,
+      // This default takes the first workspace
+      role: user.usersOnWorkspaces[0].role,
+    }));
   }
 
   async getUserByEmail(email: string): Promise<User> {

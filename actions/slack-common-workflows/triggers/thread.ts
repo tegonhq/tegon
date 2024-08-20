@@ -1,10 +1,12 @@
 import {
   AttachmentResponse,
   createIssueComment,
-  debug,
+  logger,
   EventBody,
   IntegrationAccount,
   updateIssueComment,
+  getLinkedComment,
+  getLinkedIssueBySource,
 } from '@tegonhq/sdk';
 
 import { SlackIntegrationSettings } from '../types';
@@ -45,7 +47,7 @@ export const slackThread = async (
   const threadId = `${event.channel}_${message.ts}`;
   const parentThreadId = `${event.channel}_${message.thread_ts}`;
 
-  debug(`Handling Slack thread with ID: ${threadId}`);
+  logger.debug(`Handling Slack thread with ID: ${threadId}`);
 
   const linkedIssue = await getLinkedIssueBySource({
     sourceId: parentThreadId,
@@ -53,14 +55,14 @@ export const slackThread = async (
 
   // If no linked issue is found, log and return undefined
   if (!linkedIssue) {
-    debug(`No linked issue found for Slack issue ID: ${parentThreadId}`);
+    logger.debug(`No linked issue found for Slack issue ID: ${parentThreadId}`);
     return undefined;
   }
 
   // Extract issue ID and synced comment ID from the linked issue
-  const { issueId, source: linkedIssueSource } = linkedIssue;
-  const parentId = (linkedIssueSource as Record<string, string>)
-    .syncedCommentId;
+  const { issueId, sourceData: linkedIssueSource } = linkedIssue;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const parentId = (linkedIssueSource as Record<string, any>).syncedCommentId;
 
   let displayName;
   if (message.user) {
@@ -93,7 +95,7 @@ export const slackThread = async (
   let linkedComment = await getLinkedComment({ sourceId: threadId });
   if (linkedComment) {
     // If a linked comment exists, update the existing comment
-    debug(`Updating existing comment for thread ID: ${threadId}`);
+    logger.debug(`Updating existing comment for thread ID: ${threadId}`);
 
     return await updateIssueComment({
       body: tiptapMessage,
@@ -104,10 +106,6 @@ export const slackThread = async (
   linkedComment = {
     url: threadId,
     sourceId: threadId,
-    source: {
-      type: integrationAccount.integrationDefinition.name,
-      integrationAccountId: integrationAccount.id,
-    },
     sourceData: sourceMetadata,
   };
 

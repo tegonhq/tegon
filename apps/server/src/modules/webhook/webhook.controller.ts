@@ -1,6 +1,7 @@
-import { Body, Controller, Post, Headers, Param } from '@nestjs/common';
+import { Body, Controller, Post, Headers, Param, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { EventBody, EventHeaders } from '@tegonhq/types';
+import { Response } from 'express';
 
 import WebhookService from './webhook.service';
 
@@ -17,11 +18,14 @@ export class WebhookController {
     @Headers() eventHeaders: EventHeaders,
     @Param('sourceName') sourceName: string,
     @Body() eventBody: EventBody,
+    @Res() response: Response,
   ) {
-    return await this.webhookService.handleEvents(
+    const eventResponse = await this.webhookService.handleEvents(
+      response,
       sourceName,
       eventHeaders,
       eventBody,
     );
+    return eventResponse;
   }
 }

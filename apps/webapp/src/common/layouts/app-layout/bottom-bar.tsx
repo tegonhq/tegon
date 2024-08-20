@@ -26,7 +26,7 @@ export function BottomBar() {
   return (
     <div className="w-full flex justify-between px-6 py-4">
       <Button
-        variant="ghost"
+        variant="link"
         onClick={() => {
           window.open('https://docs.tegon.ai', '_blank');
         }}
@@ -35,7 +35,7 @@ export function BottomBar() {
       </Button>
 
       <Button
-        variant="ghost"
+        variant="link"
         isActive
         className="px-3"
         onClick={() => {
@@ -46,7 +46,7 @@ export function BottomBar() {
       </Button>
 
       <Button
-        variant="ghost"
+        variant="link"
         onClick={() => {
           setSearch(true);
         }}

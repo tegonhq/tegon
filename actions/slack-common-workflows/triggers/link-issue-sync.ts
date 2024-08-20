@@ -1,11 +1,12 @@
 import {
-  debug,
+  logger,
   EventBody,
-  getLinkedIssueDetails,
-  IntegrationAccount,
-  LinkedIssueCreateActionPayload,
+  getLinkedIssue,
   updateLinkedIssue,
   UpdateLinkedIssueDto,
+  ActionEventPayload,
+  getUsers,
+  RoleEnum,
 } from '@tegonhq/sdk';
 
 import { slackLinkRegex } from '../types';
@@ -15,19 +16,31 @@ import {
   sendSlackMessage,
 } from '../utils';
 
-export const linkIssueSync = async (
-  integrationAccounts: Record<string, IntegrationAccount>,
-  payload: LinkedIssueCreateActionPayload,
-) => {
-  const integrationAccount = integrationAccounts.slack;
-  const { linkIssueId } = payload;
+export const linkIssueSync = async (actionPayload: ActionEventPayload) => {
+  const {
+    integrationAccounts: { slack: integrationAccount },
+    modelId: linkIssueId,
+  } = actionPayload;
 
-  let linkedIssue = await getLinkedIssueDetails({ linkedIssueId: linkIssueId });
+  let linkedIssue = await getLinkedIssue({ linkedIssueId: linkIssueId });
+
+  const userRole = (
+    await getUsers({
+      userIds: [linkedIssue.updatedById],
+      workspaceId: integrationAccount.workspaceId,
+    })
+  )[0].role;
+
+  if (userRole === RoleEnum.BOT) {
+    return {
+      message: `Ignoring comment created from Bot`,
+    };
+  }
 
   const match = linkedIssue.url.match(slackLinkRegex);
 
   if (!match) {
-    return;
+    return { message: 'URL not matched with slack regex' };
   }
 
   const [
@@ -52,10 +65,6 @@ export const linkIssueSync = async (
 
   const linkIssueData: UpdateLinkedIssueDto = {
     sourceId: `${channelId}_${parentTs || messageTs}`,
-    source: {
-      type: 'Slack',
-      integrationAccountId: integrationAccount.id,
-    },
     sourceData: {
       channelId,
       messageTs,
@@ -77,10 +86,10 @@ export const linkIssueSync = async (
 
   // Create the issue identifier
   const issueIdentifier = `${teamIdentifier}-${issueNumber}`;
-  debug(`Sending Slack message for linked issue: ${issueIdentifier}`);
+  logger.debug(`Sending Slack message for linked issue: ${issueIdentifier}`);
 
   // Create the issue URL using the workspace slug and issue identifier
-  const issueUrl = `${process.env.PUBLIC_FRONTEND_HOST}/${integrationAccount.workspace.slug}/issue/${issueIdentifier}`;
+  const issueUrl = `https://app.tegon.ai/${integrationAccount.workspace.slug}/issue/${issueIdentifier}`;
 
   // Create the message payload with the issue URL and thread details
   const messagePayload: EventBody = {
@@ -104,7 +113,9 @@ export const linkIssueSync = async (
     integrationAccount,
     messagePayload,
   );
-  debug(`Slack message sent successfully for linked issue: ${issueIdentifier}`);
+  logger.debug(
+    `Slack message sent successfully for linked issue: ${issueIdentifier}`,
+  );
 
   if (messageResponse.ok) {
     const sourceMetadata = {

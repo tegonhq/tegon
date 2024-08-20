@@ -86,7 +86,7 @@ export const TeamSettingsList = observer(() => {
 
         <Link
           className={cn(
-            buttonVariants({ variant: 'ghost' }),
+            buttonVariants({ variant: 'link' }),
             'flex items-center justify-start my-2 w-full gap-2 px-0',
           )}
           href={`/${workspaceSlug}/settings/new_team`}

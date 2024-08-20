@@ -34,10 +34,13 @@ importers:
   actions/slack-common-workflows:
     dependencies:
       '@tegonhq/sdk':
-        specifier: ^0.1.0-beta.1
-        version: 0.1.0-beta.2(typescript@5.5.3)
+        specifier: ^0.1.0-beta.12
+        version: 0.1.0-beta.13(typescript@5.5.3)
+      '@trigger.dev/sdk':
+        specifier: 3.0.0-beta.55
+        version: 3.0.0-beta.55(typescript@5.5.3)
       axios:
-        specifier: ^1.7.2
+        specifier: ^1.6.7
         version: 1.7.2(debug@4.3.5)
       configstore:
         specifier: ^7.0.0
@@ -194,8 +197,8 @@ importers:
         specifier: ^2.4.0
         version: 2.5.4
       '@trigger.dev/sdk':
-        specifier: 3.0.0-beta.53
-        version: 3.0.0-beta.53(typescript@5.5.3)
+        specifier: 3.0.0-beta.54
+        version: 3.0.0-beta.54(typescript@5.5.3)
       '@types/multer':
         specifier: ^1.4.11
         version: 1.4.11
@@ -410,6 +413,9 @@ importers:
       '@tegonhq/services':
         specifier: workspace:*
         version: link:../../packages/services
+      '@tegonhq/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@tegonhq/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -3872,8 +3878,8 @@ packages:
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
     engines: {node: '>=10'}
 
-  '@tegonhq/sdk@0.1.0-beta.2':
-    resolution: {integrity: sha512-eaBvR7hMcviDK1pfUpIsCH/j/nY71egQiu/q5UCV0ggkR75g3gOMseesFQGpGSOEMHkEXHAjar2uFHZ6Pc4YBg==}
+  '@tegonhq/sdk@0.1.0-beta.13':
+    resolution: {integrity: sha512-jBzrqTLI+RsLQxmZTmprLSyrVe3Fb773VgmPxOQZv/KKf1kjyXf/N1SDEgRs5j25h92pNo2ppn41hkLDNSa8yA==}
     engines: {node: '>=18.0.0'}
 
   '@tiptap/core@2.5.4':
@@ -4098,24 +4104,36 @@ packages:
     resolution: {integrity: sha512-bBdOz17ZTQBpPAHMoSiA1vO/Xh9Ez77mumnvVKZtDuuHSPNmaJu5msdcWxn+Vre6tccb7JDBx9q+jyWz1Uc4eg==}
     engines: {node: '>=18.0.0'}
 
-  '@trigger.dev/core-backend@3.0.0-beta.53':
-    resolution: {integrity: sha512-+mtkIb2EZew79bKPLyXDKKW/H+3OqqxSwvNprZCWx5LB/i9tB8pAimzpzyGWcsC6vChSGYsbMSRjFoHti/K+Rw==}
+  '@trigger.dev/core-backend@3.0.0-beta.54':
+    resolution: {integrity: sha512-oyfv7hRxy0vSPfHBpQRuCJcokIrS0xQZI2EAAtliOKuV/JAKjD3pleDUpadbMvB/5GNJ6/fiE+/i3qRNdOQJ7Q==}
+    engines: {node: '>=18.0.0'}
+
+  '@trigger.dev/core-backend@3.0.0-beta.55':
+    resolution: {integrity: sha512-JLRaiawxVyG0fparYskiluPxWqzFXrqXKJFMKW6CgXklRCHMRjH5ezai62yUxAeKM8LX2BIOhOpeXB3z50Re1w==}
     engines: {node: '>=18.0.0'}
 
   '@trigger.dev/core@3.0.0-beta.50':
     resolution: {integrity: sha512-ZnWFQjs1QxfKSSh4LTpGGP9vbiolLtn7F6U6BJlADL/6gVfRYaOFonBWGBvgLXJdPRtUQ1wfE9+LkWF/fouPKA==}
     engines: {node: '>=18.0.0'}
 
-  '@trigger.dev/core@3.0.0-beta.53':
-    resolution: {integrity: sha512-xElTBEh1VXtIdPg3inVtGJaTKp/TnkpPNPjCpI0v7BjPa16XTpzSXI4V3Nzay/tNHjKsu0Uec9zslKZXeIi+Dw==}
+  '@trigger.dev/core@3.0.0-beta.54':
+    resolution: {integrity: sha512-ItTaNzkNg3zdsIx98Ob56H5BkhUyp07+iBcB0Cx9gbuPbBc6CKszP2edEo/LhH3zSUTOaRcVwdNYm2FiAkxvPA==}
+    engines: {node: '>=18.0.0'}
+
+  '@trigger.dev/core@3.0.0-beta.55':
+    resolution: {integrity: sha512-MXfBnM3HvT+RyXwlIeQjUJ0lWKg5vFrPugwy5AbDaio/p8QLyRpEHIL8zcMU6rUxdjD7jVbZk3KTUnGRLRZ+tw==}
     engines: {node: '>=18.0.0'}
 
   '@trigger.dev/sdk@3.0.0-beta.50':
     resolution: {integrity: sha512-WPuk5sqERw9FvsEz4HqnfBhe+/jvw/qaE7Xvhx6lMfKUe0OuMo4+shD2TceHGrZ7WMeOwDAPqzDTOYFAJxhhaw==}
     engines: {node: '>=18.0.0'}
 
-  '@trigger.dev/sdk@3.0.0-beta.53':
-    resolution: {integrity: sha512-wSAxIXH/YZxqv1dIul3k1KN0e6AoiUQLAFggfgZhFbsaV+FHIXVwQ7+DuKS7YtfqBZfao5MIwAsB815Qg7q6gQ==}
+  '@trigger.dev/sdk@3.0.0-beta.54':
+    resolution: {integrity: sha512-9zu9KmKyJkPLlc5jsKPZJt/89b/KqHLDMLlY0oGnnE/LVMAyOyfOvwDsw33hZ+69ShRPNACn1LqwSqy79+dFpw==}
+    engines: {node: '>=18.0.0'}
+
+  '@trigger.dev/sdk@3.0.0-beta.55':
+    resolution: {integrity: sha512-B4mS79S0esp5yRun/siDHIRfD8ZF8S6dadYayq0Irj2izFx50R3bUJ+BXh6gPx/4cF26NL7jcJMOwtW8P9PsFQ==}
     engines: {node: '>=18.0.0'}
 
   '@tsconfig/node10@1.0.11':
@@ -14869,7 +14887,7 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@tegonhq/sdk@0.1.0-beta.2(typescript@5.5.3)':
+  '@tegonhq/sdk@0.1.0-beta.13(typescript@5.5.3)':
     dependencies:
       '@trigger.dev/sdk': 3.0.0-beta.50(typescript@5.5.3)
       axios: 1.7.2(debug@4.3.5)
@@ -15117,7 +15135,11 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
 
-  '@trigger.dev/core-backend@3.0.0-beta.53':
+  '@trigger.dev/core-backend@3.0.0-beta.54':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+
+  '@trigger.dev/core-backend@3.0.0-beta.55':
     dependencies:
       '@opentelemetry/api': 1.9.0
 
@@ -15147,7 +15169,33 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@trigger.dev/core@3.0.0-beta.53':
+  '@trigger.dev/core@3.0.0-beta.54':
+    dependencies:
+      '@google-cloud/precise-date': 4.0.0
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api-logs': 0.48.0
+      '@opentelemetry/exporter-logs-otlp-http': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/exporter-trace-otlp-http': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs': 0.49.1(@opentelemetry/api-logs@0.48.0)(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-node': 0.49.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-node': 1.25.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.25.1
+      humanize-duration: 3.32.1
+      socket.io-client: 4.7.5
+      superjson: 2.2.1
+      ulidx: 2.3.0
+      zod: 3.22.3
+      zod-error: 1.5.0
+      zod-validation-error: 1.5.0(zod@3.22.3)
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  '@trigger.dev/core@3.0.0-beta.55':
     dependencies:
       '@google-cloud/precise-date': 4.0.0
       '@opentelemetry/api': 1.9.0
@@ -15200,16 +15248,43 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@trigger.dev/sdk@3.0.0-beta.53(typescript@5.5.3)':
+  '@trigger.dev/sdk@3.0.0-beta.54(typescript@5.5.3)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/api-logs': 0.48.0
       '@opentelemetry/semantic-conventions': 1.25.1
-      '@trigger.dev/core': 3.0.0-beta.53
-      '@trigger.dev/core-backend': 3.0.0-beta.53
+      '@trigger.dev/core': 3.0.0-beta.54
+      '@trigger.dev/core-backend': 3.0.0-beta.54
       chalk: 5.3.0
       cronstrue: 2.50.0
       debug: 4.3.5(supports-color@5.5.0)
+      evt: 2.5.7
+      get-caller-file: 2.0.5
+      git-remote-origin-url: 4.0.0
+      git-repo-info: 2.1.1
+      msw: 2.3.2(typescript@5.5.3)
+      slug: 6.1.0
+      terminal-link: 3.0.0
+      ulid: 2.3.0
+      uuid: 9.0.1
+      ws: 8.18.0
+      zod: 3.22.3
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - typescript
+      - utf-8-validate
+
+  '@trigger.dev/sdk@3.0.0-beta.55(typescript@5.5.3)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api-logs': 0.48.0
+      '@opentelemetry/semantic-conventions': 1.25.1
+      '@trigger.dev/core': 3.0.0-beta.55
+      '@trigger.dev/core-backend': 3.0.0-beta.55
+      chalk: 5.3.0
+      cronstrue: 2.50.0
+      debug: 4.3.5
       evt: 2.5.7
       get-caller-file: 2.0.5
       git-remote-origin-url: 4.0.0

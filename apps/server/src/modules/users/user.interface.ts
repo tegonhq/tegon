@@ -41,8 +41,9 @@ export function userSerializer(user: User) {
     initialSetupComplete: user.initialSetupComplete,
     anonymousDataCollection: user.anonymousDataCollection,
 
-    workspaces: user.usersOnWorkspaces.map(
-      (uWorkspace) => uWorkspace.workspace,
-    ),
+    workspaces: user.usersOnWorkspaces.map((uWorkspace) => ({
+      ...uWorkspace.workspace,
+      role: uWorkspace.role,
+    })),
   };
 }

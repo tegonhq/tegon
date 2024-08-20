@@ -160,7 +160,7 @@ export function NewIssueForm({
             <Button
               variant="ghost"
               type="button"
-              isLoading={isLoading}
+              disabled={isLoading}
               onClick={onClose}
             >
               Cancel

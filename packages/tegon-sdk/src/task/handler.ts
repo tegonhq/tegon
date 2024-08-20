@@ -11,6 +11,12 @@ declare global {
 
 // Intercept axios requests and add token to the request
 axios.interceptors.request.use((axiosConfig) => {
+  if (axiosConfig.url.startsWith('/api')) {
+    axiosConfig.url = process.env.BASE_HOST
+      ? `${process.env.BASE_HOST}${axiosConfig.url}`
+      : `http://host.docker.internal:3000${axiosConfig.url}`;
+  }
+
   if (!axiosConfig.headers.Authorization) {
     if (global.accessToken) {
       axiosConfig.headers.Authorization = `Bearer ${global.accessToken}`;
@@ -26,18 +32,20 @@ export function handler(name: string, run: RunFunction, init?: InitFunction) {
   return triggerTask({
     id,
     init: async (eventPayload: ActionEventPayload) => {
-      if (eventPayload.data.accessToken) {
-        global.accessToken = eventPayload.data.accessToken;
+      if (eventPayload.accessToken) {
+        global.accessToken = eventPayload.accessToken;
       }
 
-      delete eventPayload.data.accessToken;
-      return await init(eventPayload);
+      delete eventPayload.accessToken;
+      if (init) {
+        return await init(eventPayload);
+      }
     },
     run: async (
       eventPayload: ActionEventPayload,
       { init },
     ): Promise<JsonObject> => {
-      delete eventPayload.data.accessToken;
+      delete eventPayload.accessToken;
 
       return await run({
         ...(init ? init : {}),

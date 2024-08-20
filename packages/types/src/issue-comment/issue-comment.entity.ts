@@ -10,6 +10,7 @@ export class IssueComment {
   deleted: Date | null;
   body: string;
   userId: string | null;
+  updatedById: string;
   sourceMetadata: JsonValue | null;
   reactions?: Reaction[];
   reactionsData: JsonValue[];

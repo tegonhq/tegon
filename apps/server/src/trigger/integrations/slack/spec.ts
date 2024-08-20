@@ -1,5 +1,7 @@
 export function spec() {
   return {
+    name: 'Slack',
+    description: 'Create issues from Slack messages and sync threads',
     workspace_auth: {
       OAuth2: {
         token_url: 'https://slack.com/api/oauth.v2.access',
@@ -30,13 +32,6 @@ export function spec() {
           'channels:write.invites',
           'team:read',
         ],
-      },
-    },
-    personal_auth: {
-      OAuth2: {
-        token_url: 'https://slack.com/api/oauth.v2.access.personal',
-        authorization_url: 'https://slack.com/oauth/v2/authorize.personal',
-        scopes: ['chat:write', 'im:history', 'im:write', 'reactions:read'],
       },
     },
   };

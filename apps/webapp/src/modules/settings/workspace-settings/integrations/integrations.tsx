@@ -1,5 +1,6 @@
 import { RiGithubFill } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
+import { Loader } from '@tegonhq/ui/components/loader';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { SentryIcon, SlackIcon } from '@tegonhq/ui/icons';
 import { useRouter } from 'next/router';
@@ -10,6 +11,8 @@ import { SettingSection } from 'modules/settings/setting-section';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { useCurrentWorkspace } from 'hooks/workspace';
+
+import { useGetIntegrationDefinitions } from 'services/integration-definition';
 
 interface IntegrationCardProps {
   name: string;
@@ -52,6 +55,13 @@ function IntegrationCard({
 }
 
 export function Integrations() {
+  const currentWorkspace = useCurrentWorkspace();
+  const { data, isLoading } = useGetIntegrationDefinitions(currentWorkspace.id);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <SettingSection
       title="Integrations"

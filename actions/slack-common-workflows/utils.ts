@@ -1,28 +1,21 @@
 import {
   AttachmentResponse,
   createIssueComment,
-  createLinkedIssue,
   EventBody,
-  info,
   IntegrationAccount,
   Issue,
   JsonObject,
+  logger,
   TiptapMarks,
   TiptapNode,
-  updateLinkedIssue,
+  updateLinkedIssueBySource,
   UpdateLinkedIssueDto,
   Workflow,
 } from '@tegonhq/sdk';
 
 import axios from 'axios';
 
-import {
-  SlackBlock,
-  SlackChannel,
-  SlackElement,
-  SlackIntegrationSettings,
-  SlashCommandSessionRecord,
-} from './types';
+import { SlackBlock, SlackElement, SlashCommandSessionRecord } from './types';
 
 export function getSlackHeaders(integrationAccount: IntegrationAccount) {
   const integrationConfig =
@@ -113,18 +106,16 @@ export function getStateId(action: string, workflowStates: Workflow[]) {
   return undefined;
 }
 
-export function getChannelNameFromIntegrationAccount(
+export async function getChannelNameFromIntegrationAccount(
   integrationAccount: IntegrationAccount,
   channelId: string,
 ) {
-  const slackSettings =
-    integrationAccount.settings as unknown as SlackIntegrationSettings;
-
-  const slackChannels = slackSettings.channels.find(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (channel: SlackChannel) => channel.channelId === channelId,
+  const response = await axios.get(
+    `https://slack.com/api/conversations.info?channel=${channelId}`,
+    getSlackHeaders(integrationAccount),
   );
-  return slackChannels ? slackChannels.channelName : '';
+
+  return response.data.channel.name;
 }
 
 export async function createLinkIssueComment(
@@ -160,39 +151,27 @@ export async function createLinkIssueComment(
   };
 
   // Post the comment to the backend and capture the response
-  const issueCommentResponse = await createIssueComment({
+  const issueComment = await createIssueComment({
     issueId,
     body: commentBody,
     sourceMetadata: commentSourceMetadata,
   });
 
-  // Extract the comment data or default to null if response is empty
-  const issueComment = issueCommentResponse.data || null;
-
   // Log the successful creation of the issue comment
-  info('Issue comment created successfully', { issueComment });
+  logger.info('Issue comment created successfully', { issueComment });
 
   // Update the linked issue input with the new comment ID and message timestamp
-  linkIssueInput.source.syncedCommentId = issueComment.id;
   linkIssueInput.sourceData.messageTs = messageTs;
+  linkIssueInput.sourceData.syncedCommentId = issueComment.id;
 
   // Update the linked issue source with the new data
-  // await axios.post(
-  //   `${process.env.BACKEND_HOST}/v1/linked_issues/source/${linkIssueInput.sourceId}`,
-  //   {
-  //     sourceData: linkIssueInput.sourceData,
-  //     source: linkIssueInput.source,
-  //   },
-  // );
-
   await updateLinkedIssueBySource({
     sourceId: linkIssueInput.sourceId,
     sourceData: linkIssueInput.sourceData,
-    source: linkIssueInput.source,
   });
 
   // Log the successful update of the linked issue
-  info('Linked issue updated successfully');
+  logger.info('Linked issue updated successfully');
 }
 
 export async function addBotToChannel(
@@ -424,7 +403,7 @@ export async function getIssueMessageModal(
   const issueIdentifier = `${issue.team.identifier}-${issue.number}`;
 
   // Construct the issue URL using the workspace slug and issue identifier
-  const issueUrl = `${process.env.PUBLIC_FRONTEND_HOST}/${workspaceSlug}/issue/${issueIdentifier}`;
+  const issueUrl = `https://app.tegon.ai/${workspaceSlug}/issue/${issueIdentifier}`;
 
   // Generate the issue title by combining the issue identifier and title
   const issueTitle = `${issueIdentifier} ${issue.title}`;

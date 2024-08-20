@@ -15,7 +15,7 @@ export const LayoutSwitch = observer(() => {
   return (
     <div className="flex bg-grayAlpha-200 rounded p-0.5 h-7 items-center">
       <Button
-        variant="ghost"
+        variant="link"
         isActive={applicationStore.displaySettings.view === ViewEnum.list}
         onClick={() => updateView(ViewEnum.list)}
         className="rounded-sm py-1 px-2 h-6"
@@ -24,7 +24,7 @@ export const LayoutSwitch = observer(() => {
       </Button>
       <Button
         onClick={() => updateView(ViewEnum.board)}
-        variant="ghost"
+        variant="link"
         isActive={applicationStore.displaySettings.view === ViewEnum.board}
         className="rounded-sm py-1 px-2 h-6"
       >

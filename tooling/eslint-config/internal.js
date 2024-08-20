@@ -93,7 +93,7 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": "warn",
   },
   parser: "@typescript-eslint/parser",
-  ignorePatterns: [],
+  ignorePatterns: ["dist", "node_modules"],
   overrides: [
     {
       files: ["scripts/**/*"],

@@ -1,5 +1,5 @@
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
-import { Calendar } from '@tegonhq/ui/icons';
+import { CalendarLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
@@ -177,14 +177,18 @@ export const IssueListItem = observer(
                     <span className="flex items-center justify-start shrink min-w-[0px]">
                       <span className="text-left">{issue.title}</span>
                     </span>
-                    <IssueLabels labelIds={issue.labelIds} />
-                  </div>
-                  {issue.dueDate && (
-                    <div className="inline-flex min-w-[70px] text-xs">
-                      <Calendar /> &nbsp;
-                      {formatDateToDayMonth(issue.dueDate)}
+
+                    <div className="flex items-center gap-2">
+                      {issue.dueDate && (
+                        <div className="inline-flex min-w-[70px] text-xs gap-1 items-center">
+                          <CalendarLine /> &nbsp;
+                          {formatDateToDayMonth(issue.dueDate)}
+                        </div>
+                      )}
+                      <IssueLabels labelIds={issue.labelIds} />
                     </div>
-                  )}
+                  </div>
+
                   <div className="flex shrink-0 items-center gap-8">
                     <div className="w-[80px]">
                       <IssuePriorityDropdown

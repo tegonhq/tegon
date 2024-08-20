@@ -10,6 +10,7 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
+    "@tegonhq/types": "workspace:*",
     "@hello-pangea/dnd": "^16.6.0",
     "@hookform/resolvers": "3.9.0",
     "@remixicon/react": "^4.2.0",

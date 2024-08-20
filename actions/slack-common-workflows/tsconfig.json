@@ -33,5 +33,10 @@
     "forceConsistentCasingInFileNames": true
   },
   "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.tsx", ".eslintrc.js"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".eslintrc.js",
+    "trigger.config.ts"
+  ]
 }

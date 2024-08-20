@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import Knex, { Knex as KnexT } from 'knex';
+import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
 
 import {
@@ -20,7 +22,10 @@ export class TriggerdevService {
   knex: KnexT;
   commonId: string;
 
-  constructor() {
+  constructor(
+    private prisma: PrismaService,
+    private configService: ConfigService,
+  ) {
     this.knex = Knex({
       client: 'pg',
       connection: process.env.TRIGGER_DATABASE_URL,
@@ -89,7 +94,7 @@ export class TriggerdevService {
       const response = await this.knex('RuntimeEnvironment')
         .where({
           projectId,
-          slug: 'dev',
+          slug: 'prod',
         })
         .select('id', 'slug', 'apiKey');
 
@@ -111,6 +116,7 @@ export class TriggerdevService {
   async createProject(name: string, slug: string, secretKey?: string) {
     try {
       const id = uuidv4().replace(/-/g, '');
+      slug = slug.replace(/-/g, '');
       const secret = secretKey ? secretKey : id;
       await this.knex.transaction(async (trx) => {
         await this.knex('Project')
@@ -185,10 +191,34 @@ export class TriggerdevService {
     return response;
   }
 
-  async getRequiredKeys(workspaceId: string) {
-    const projectslugWithoutHyphen = workspaceId.replace(/-/g, '');
-    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
+  async getRequiredKeys(workspaceId: string, userId: string) {
+    const usersOnWorkspace = await this.prisma.usersOnWorkspaces.findFirst({
+      where: {
+        workspaceId,
+        userId,
+      },
+      include: {
+        workspace: true,
+      },
+    });
 
-    return { triggerKey: apiKey };
+    if (usersOnWorkspace) {
+      const projectExist = await this.checkIfProjectExist({
+        slug: usersOnWorkspace.workspace.id.replace(/-/g, ''),
+      });
+
+      if (!projectExist) {
+        await this.createProject(
+          usersOnWorkspace.workspace.name,
+          usersOnWorkspace.workspace.id,
+          uuidv4().replace(/-/g, ''),
+        );
+      }
+
+      const token = this.configService.get('TRIGGER_ACCESS_TOKEN');
+      return { triggerKey: token };
+    }
+
+    return undefined;
   }
 }

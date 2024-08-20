@@ -1,15 +1,14 @@
 import {
+  LinkedIssue,
   LinkedIssueRequestParamsDto,
   LinkedIssueSourceDto,
 } from '@tegonhq/types';
 import axios from 'axios';
 
-export async function getLinkedIssueDetails({
+export async function getLinkedIssue({
   linkedIssueId,
-}: LinkedIssueRequestParamsDto) {
-  const response = await axios.get(
-    `/api/v1/linked_issues/${linkedIssueId}/details`,
-  );
+}: LinkedIssueRequestParamsDto): Promise<LinkedIssue> {
+  const response = await axios.get(`/api/v1/linked_issues/${linkedIssueId}`);
 
   return response.data;
 }

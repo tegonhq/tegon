@@ -8,9 +8,9 @@ export class LinkedIssue {
   deleted: Date | null;
   url: string;
   sourceId: string | null;
-  source: JsonValue | null;
   sourceData: JsonValue | null;
   createdById: string | null;
+  updatedById: string;
   issue?: Issue;
   issueId: string;
 }
