@@ -1,4 +1,4 @@
-import type { Invite } from '@tegonhq/types';
+import type { Invite } from 'common/types';
 
 import { useMutation } from 'react-query';
 

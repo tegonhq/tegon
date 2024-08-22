@@ -1,4 +1,4 @@
-import type { WorkspaceType } from '@tegonhq/types';
+import type { WorkspaceType } from 'common/types';
 
 import { useMutation } from 'react-query';
 

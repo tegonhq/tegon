@@ -77,9 +77,9 @@ export const TriageOtherCategory = observer(
               <div
                 key={issue.id}
                 className={cn(
-                  'ml-4 p-3 py-0 mr-4 hover:bg-grayAlpha-200 rounded',
+                  'ml-4 p-2 py-0 mr-4 hover:bg-grayAlpha-300 rounded mb-1',
                   issueId === `${currentTeam.identifier}-${issue.number}` &&
-                    'bg-grayAlpha-200',
+                    'bg-grayAlpha-300',
                 )}
                 onClick={() => {
                   push(
@@ -90,7 +90,7 @@ export const TriageOtherCategory = observer(
                 <div
                   className={cn(
                     'flex flex-col gap-1 py-2',
-                    !noBorder && 'border-b',
+                    !noBorder && 'border-b border-border',
                   )}
                 >
                   <div className="flex justify-between text-sm">

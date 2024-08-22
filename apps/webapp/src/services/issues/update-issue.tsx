@@ -1,4 +1,4 @@
-import type { IssueType, IssueRelationEnum } from '@tegonhq/types';
+import type { IssueType, IssueRelationEnum } from 'common/types';
 
 import { useMutation } from 'react-query';
 

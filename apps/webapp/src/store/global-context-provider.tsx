@@ -15,6 +15,7 @@ import { TeamsStore } from './teams';
 import { ViewsStore } from './views';
 import { WorkflowsStore } from './workflows';
 import { WorkspaceStore } from './workspace';
+import { ActionsStore } from './action';
 
 const StoreContextModel = types.model({
   commentsStore: CommentsStore,
@@ -30,6 +31,7 @@ const StoreContextModel = types.model({
   issueRelationsStore: IssueRelationsStore,
   notificationsStore: NotificationsStore,
   viewsStore: ViewsStore,
+  actionsStore: ActionsStore,
   issueSuggestionsStore: IssueSuggestionsStore,
 });
 
@@ -85,6 +87,10 @@ export const storeContextStore = StoreContextModel.create({
   },
   issueSuggestionsStore: {
     teamId: undefined,
+  },
+  actionsStore: {
+    workspaceId: undefined,
+    actions: [],
   },
 });
 

@@ -200,8 +200,6 @@ export function getFilters(
     });
   }
 
-  console.log(completedFilter);
-
   if (
     completedFilter &&
     (completedFilter !== TimeBasedFilterEnum.All ||

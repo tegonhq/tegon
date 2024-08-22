@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import {
   encryptToken,
+  getRun,
+  getRuns,
   hashToken,
   triggerTask,
   triggerTaskSync,
@@ -220,5 +222,25 @@ export class TriggerdevService {
     }
 
     return undefined;
+  }
+
+  async getRunsForTask(projectSlug: string, taskId: string) {
+    console.log(projectSlug);
+    const projectslugWithoutHyphen = 'adaacd28b23a453197ec61fbd97fac86';
+
+    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
+
+    const run = await this.getRun(projectSlug, 'run_xfzvx3u45cmk6br9gg33m');
+    console.log(run.attempts[0].error);
+    return await getRuns(taskId, apiKey);
+  }
+
+  async getRun(projectSlug: string, runId: string) {
+    console.log(projectSlug);
+    const projectslugWithoutHyphen = 'adaacd28b23a453197ec61fbd97fac86';
+
+    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
+
+    return await getRun(runId, apiKey);
   }
 }

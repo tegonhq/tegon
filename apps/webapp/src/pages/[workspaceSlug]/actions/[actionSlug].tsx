@@ -1,3 +1,3 @@
-import { Action } from 'modules/actions';
+import { Actions } from 'modules/actions';
 
-export default Action;
+export default Actions;

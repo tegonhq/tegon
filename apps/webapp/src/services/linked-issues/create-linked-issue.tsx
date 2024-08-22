@@ -1,4 +1,4 @@
-import type { LinkedIssueSubType, LinkedIssueType } from '@tegonhq/types';
+import type { LinkedIssueSubType, LinkedIssueType } from 'common/types';
 
 import { useMutation } from 'react-query';
 

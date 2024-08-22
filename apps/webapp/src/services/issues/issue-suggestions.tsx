@@ -1,4 +1,4 @@
-import type { LabelType, User } from '@tegonhq/types';
+import type { LabelType, User } from 'common/types';
 
 import { useMutation } from 'react-query';
 

@@ -1,4 +1,4 @@
-import type { SubscribeType } from '@tegonhq/types';
+import type { SubscribeType } from 'common/types';
 
 import { useMutation } from 'react-query';
 

@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash.clonedeep';
+import clone from 'lodash.clone';
 import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 
 import { DisplaySettingsModel, FiltersModel } from './models';
@@ -44,9 +44,14 @@ export const ApplicationStore: IAnyStateTreeNode = types
   })
   .actions((self) => ({
     updateFilters(updateBody: UpdateBody) {
-      self.filters = FiltersModel.create(
-        cloneDeep({ ...self.filters, ...updateBody }),
-      );
+      const currentFilters = { ...self.filters };
+      const toUpdateBody = { ...updateBody };
+      const mergedAttributes = clone({
+        ...currentFilters,
+        ...toUpdateBody,
+      });
+
+      self.filters = FiltersModel.create(mergedAttributes);
 
       localStorage.setItem(
         `filters/${self.identifier}`,

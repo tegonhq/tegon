@@ -1,4 +1,4 @@
-import type { IntegrationAccountType, Settings } from '@tegonhq/types';
+import type { IntegrationAccountType, Settings } from 'common/types';
 
 import { useMutation } from 'react-query';
 

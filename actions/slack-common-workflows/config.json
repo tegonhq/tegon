@@ -1,5 +1,6 @@
 {
-  "name": "slack-common-workflows",
+  "slug": "slack-common-workflows",
+  "name": "Slack common workflows",
   "triggers": [
     {
       "type": "on_create",
@@ -10,6 +11,5 @@
       "entities": [ "slack" ]
     }
   ],
-  "integrations": [ "slack" ],
-  "inputs": [ { } ]
+  "integrations": [ "slack" ]
 }

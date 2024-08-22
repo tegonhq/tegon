@@ -119,7 +119,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
           {view.isBookmarked ? (
             <RiBookmarkFill
               size={16}
-              className="text-yellow-600 hover:text-foreground group-hover:text-foreground"
+              className="text-amber-600 hover:text-foreground group-hover:text-foreground"
             />
           ) : (
             <RiBookmarkLine size={16} />

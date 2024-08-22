@@ -1,4 +1,4 @@
-import type { User } from '@tegonhq/types';
+import type { User } from 'common/types';
 
 import { useMutation } from 'react-query';
 

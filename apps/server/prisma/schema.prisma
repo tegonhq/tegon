@@ -15,6 +15,7 @@ model Action {
   deleted   DateTime?
 
   name         String
+  slug         String
   integrations String[]
 
   status  ActionStatus
@@ -606,6 +607,8 @@ enum Status {
 }
 
 enum ActionStatus {
+  DEPLOYING
+  ERRORED
   INSTALLED
   NEEDS_CONFIGURATION
   ACTIVE

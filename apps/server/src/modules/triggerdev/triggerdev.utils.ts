@@ -29,6 +29,43 @@ export function hashToken(token: string): string {
   return hash.digest('hex');
 }
 
+export async function getRuns(taskId: string, apiKey: string) {
+  const url = `${process.env['TRIGGER_API_URL']}/api/v1/runs`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+      params: {
+        'filter.taskIdentifier': [taskId],
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getRun(runId: string, apiKey: string) {
+  const url = `${process.env['TRIGGER_API_URL']}/api/v3/runs/${runId}`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
 export async function triggerTask(
   taskId: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

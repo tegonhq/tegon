@@ -3,3 +3,10 @@ export function toProperCase(text: string) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
+
+export function convertToTitleCase(input: string): string {
+  return input
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}

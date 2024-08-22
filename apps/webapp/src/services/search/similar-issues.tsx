@@ -1,4 +1,4 @@
-import type { IssueType } from '@tegonhq/types';
+import type { IssueType } from 'common/types';
 
 import { type UseQueryResult, useQuery } from 'react-query';
 

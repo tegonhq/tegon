@@ -1,5 +1,13 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { CreateActionDto } from '@tegonhq/types';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { CreateActionDto, WorkspaceRequestParamsDto } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -28,9 +36,24 @@ export class ActionController {
     );
   }
 
+  @Get('runs/:slug')
+  async getRunsForSlug(@Param() slugDto: { slug: string }) {
+    return await this.actionService.getRunsForSlug(slugDto.slug);
+  }
+
+  @Get('source')
+  async getExternalActions() {
+    return await this.actionService.getExternalActions();
+  }
+
+  @Get('source/:slug')
+  async getExternalActionWithSlug(@Param() slugDto: { slug: string }) {
+    return await this.actionService.getExternalActionWithSlug(slugDto.slug);
+  }
+
   @Get()
-  async getActions() {
-    return await this.actionService.getActions();
+  async getActions(@Query() workspaceIdDto: WorkspaceRequestParamsDto) {
+    return await this.actionService.getActions(workspaceIdDto.workspaceId);
   }
 
   @Get(':slug')

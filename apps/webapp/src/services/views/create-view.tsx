@@ -1,4 +1,4 @@
-import type { ViewType, FiltersModelType } from '@tegonhq/types';
+import type { ViewType, FiltersModelType } from 'common/types';
 
 import { useMutation } from 'react-query';
 
