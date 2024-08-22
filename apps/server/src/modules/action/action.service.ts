@@ -88,7 +88,7 @@ export default class ActionService {
     userId: string,
     workspaceId: string,
     config: ActionConfig,
-    version: string
+    version: string,
   ) {
     let action = await prisma.action.findFirst({
       where: { name, workspaceId },
@@ -101,7 +101,9 @@ export default class ActionService {
           integrations: integrations ? integrations : [],
           createdById: userId,
           workspaceId,
-          status: ActionStatusEnum.INSTALLED,
+          status: config.inputs
+            ? ActionStatusEnum.NEEDS_CONFIGURATION
+            : ActionStatusEnum.ACTIVE,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           config: config as any,
           version,
@@ -128,10 +130,12 @@ export default class ActionService {
     actionId: string,
     entities: Array<{ type: string; entity: string }>,
   ) {
+    // Delete the current action entities
     await prisma.actionEntity.deleteMany({
       where: { actionId },
     });
 
+    // Create new action entities
     await prisma.actionEntity.createMany({
       data: entities.map((entity) => ({
         ...entity,
