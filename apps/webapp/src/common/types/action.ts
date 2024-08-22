@@ -1,4 +1,4 @@
-import type { ActionStatus } from '@tegonhq/types';
+import type { ActionStatusEnum } from '@tegonhq/types';
 
 export interface ActionType {
   id: string;
@@ -6,7 +6,7 @@ export interface ActionType {
   updatedAt: string;
   config: string;
   data?: string;
-  status: ActionStatus;
+  status: ActionStatusEnum;
   version: string;
   slug: string;
   name: string;

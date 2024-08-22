@@ -5,6 +5,7 @@
   "scripts": {
     "ui:add": "pnpm dlx shadcn-ui@latest add",
     "generate": "tailwindcss -i ./src/global.css -o ./dist/index.css --watch",
+    "build": "tailwindcss -i ./src/global.css -o ./dist/index.css",
     "lint": "eslint . --fix"
   },
   "peerDependencies": {

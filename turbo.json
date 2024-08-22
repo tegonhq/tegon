@@ -81,27 +81,27 @@
   "ui": "tui",
   "tasks": {
     "start-prod": {
-      "dependsOn": ["db:init-resources"],
+      "dependsOn": [ "db:init-resources" ],
       "cache": false
     },
     "generate": {
       "cache": false
     },
     "dev": {
-      "dependsOn": ["db:init-resources", "generate"],
+      "dependsOn": [ "db:init-resources", "^generate" ],
       "cache": false
     },
     "build": {
-      "dependsOn": ["db:init-resources", "generate"],
-      "outputs": ["dist/**", ".next/**"]
+      "dependsOn": [ "^build" ],
+      "outputs": [ "dist/**", ".next/**" ]
     },
-    "lint": {},
+    "lint": { },
     "create-resources": {
       "interactive": true,
       "cache": false
     },
     "deploy-trigger-tasks": {
-      "env": ["TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL"],
+      "env": [ "TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL" ],
       "cache": false
     },
     "trigger-dev": {

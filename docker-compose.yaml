@@ -1,17 +1,17 @@
 version: "3"
 
 services:
-  webapp:
-    container_name: webapp
-    build:
-      context: .
-      dockerfile: ./apps/webapp/Dockerfile
-    image: tegonhq/tegon-webapp:0.2.0-alpha
-    restart: always
-    ports:
-      - 3000:3000
-    networks:
-      - tegon
+  # webapp:
+  #   container_name: webapp
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/webapp/Dockerfile
+  #   image: tegonhq/tegon-webapp:0.2.0-alpha
+  #   restart: always
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - tegon
 
   server:
     container_name: server

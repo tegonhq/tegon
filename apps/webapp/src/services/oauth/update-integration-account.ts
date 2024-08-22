@@ -1,11 +1,10 @@
 import { useMutation } from 'react-query';
 
-import type { IntegrationAccountType, Settings } from 'common/types';
+import type { IntegrationAccountType } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 
 export interface UpdateIntegrationAccountParams {
-  settings: Settings;
   integrationAccountId: string;
 }
 
