@@ -10,8 +10,8 @@
     "dev": "dotenv -- turbo run dev --parallel",
     "build": "dotenv -- turbo run build",
     "lint": "turbo run lint",
+    "generate": "turbo run generate",
     "start": "turbo run start-prod",
-    "db:init-resources": "turbo run db:generate",
     "create-resources": "dotenv -- turbo run create-resources --filter=server",
     "trigger-dev": "dotenv -- turbo run trigger-dev",
     "deploy-trigger-tasks": "dotenv -- turbo run deploy-trigger-tasks --filter=server --"

@@ -18,7 +18,7 @@
     "url": "https://github.com/tegonhq/server.git/issues"
   },
   "scripts": {
-    "build": "nest build",
+    "build": "prisma generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "dev": "nest start --watch",
@@ -32,7 +32,7 @@
     "migrate:status": "prisma migrate status --preview-feature",
     "migrate:resolve": "prisma migrate resolve --preview-feature",
     "prisma:studio": "prisma studio",
-    "db:generate": "prisma generate",
+    "generate": "prisma generate",
     "db:init-resources": "pnpm run migrate:dev && pnpm run db:generate",
     "create-resources": "node scripts/createUserWorkspaceTeam",
     "deploy-trigger-tasks": "npx trigger.dev@beta deploy --self-hosted",

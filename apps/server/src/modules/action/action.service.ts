@@ -258,6 +258,9 @@ export default class ActionService {
     return await this.triggerdev.getRunsForTask(action.workspaceId, slug);
   }
 
+
+
+
   getSingleRun() {
     // Get single run details
   }

@@ -239,4 +239,70 @@ export class TriggerdevService {
 
     return await getRun(runId, apiKey);
   }
+
+  async getLogForRunId(runId: string): Promise<string> {
+    // Fetch run events from the database using Knex
+    const runEvents = await this.knex('run_events')
+      .where('run_id', runId)
+      .orderBy('start_time', 'asc');
+
+    // Format the run events into a log string
+    const logEntries = runEvents.map(this.formatRunEvent);
+    const logString = logEntries.join('\n');
+
+    return logString;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  formatRunEvent(event: any): string {
+    const entries = [];
+    const parts: string[] = [];
+
+    parts.push(new Date(event.start_time).toISOString());
+
+    if (event.task_slug) {
+      parts.push(event.task_slug);
+    }
+
+    parts.push(event.level);
+    parts.push(event.message);
+
+    if (event.level === 'TRACE') {
+      parts.push(
+        `(${this.formatDurationMilliseconds(event.duration / 1_000_000)})`,
+      );
+    }
+
+    entries.push(parts.join(' '));
+
+    if (event.sub_events) {
+      for (const subEvent of event.sub_events) {
+        if (subEvent.name === 'exception') {
+          const subEventParts: string[] = [];
+
+          subEventParts.push(new Date(subEvent.time).toISOString());
+
+          if (event.task_slug) {
+            subEventParts.push(event.task_slug);
+          }
+
+          subEventParts.push(subEvent.name);
+          subEventParts.push(subEvent.properties.exception.message);
+
+          if (subEvent.properties.exception.stack) {
+            subEventParts.push(subEvent.properties.exception.stack);
+          }
+
+          entries.push(subEventParts.join(' '));
+        }
+      }
+    }
+
+    return entries.join('\n');
+  }
+
+  formatDurationMilliseconds(durationNanoseconds: number): string {
+    const durationMilliseconds = durationNanoseconds / 1_000_000;
+    return `${durationMilliseconds.toFixed(2)}ms`;
+  }
 }
