@@ -6,10 +6,10 @@ export interface DisplaySettingsModelType {
   view: ViewEnum;
   grouping: GroupingEnum;
   ordering: OrderingEnum;
+  completedFilter: TimeBasedFilterEnum;
   showSubIssues: boolean;
   showEmptyGroups: boolean;
   showTriageIssues: boolean;
-  showCompletedIssues: boolean;
 }
 
 export interface UpdateDisplaySettingsBody
@@ -30,6 +30,10 @@ export interface FilterModelType {
 
 export interface FilterModelBooleanType {
   filterType: FilterTypeEnum;
+}
+
+export interface FilterModelTimeBasedType {
+  filterType: TimeBasedFilterEnum;
 }
 
 export interface FilterModelBooleanType {
@@ -56,6 +60,13 @@ export enum GroupingEnum {
   label = 'label',
   status = 'status',
   priority = 'priority',
+}
+
+export enum TimeBasedFilterEnum {
+  All = 'All',
+  PastDay = 'Past day',
+  PastWeek = 'Past week',
+  None = 'None',
 }
 
 export enum OrderingEnum {

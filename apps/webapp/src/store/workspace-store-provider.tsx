@@ -14,7 +14,6 @@ export const WorkspaceStoreInit = observer(
       teamsStore,
       labelsStore,
       integrationAccountsStore,
-      integrationDefinitionsStore,
       issuesStore,
       workflowsStore,
 
@@ -43,7 +42,6 @@ export const WorkspaceStoreInit = observer(
       await workspaceStore.load(currentWorkspace.id);
       await labelsStore.load();
       await teamsStore.load();
-      await integrationDefinitionsStore.load();
       await integrationAccountsStore.load();
       await issuesStore.load();
       await workflowsStore.load();

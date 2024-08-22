@@ -8,13 +8,6 @@ export function spec() {
         scopes: ['repo'],
       },
     },
-    personal_auth: {
-      OAuth2: {
-        token_url: 'https://github.com/login/oauth/access_token',
-        authorization_url: 'https://github.com/login/oauth/authorize',
-        scopes: [] as string[],
-      },
-    },
     other_data: { app_id: '863429' },
   };
 }

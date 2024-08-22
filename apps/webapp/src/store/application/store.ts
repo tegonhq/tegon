@@ -10,6 +10,7 @@ import {
   ViewEnum,
   GroupingEnum,
   OrderingEnum,
+  TimeBasedFilterEnum,
 } from './types';
 
 export const defaultApplicationStoreValue: {
@@ -23,9 +24,9 @@ export const defaultApplicationStoreValue: {
     view: ViewEnum.list,
     grouping: GroupingEnum.status,
     ordering: OrderingEnum.updated_at,
+    completedFilter: TimeBasedFilterEnum.All,
     showSubIssues: true,
     showEmptyGroups: true,
-    showCompletedIssues: true,
     showTriageIssues: false,
   },
   sidebarCollapsed: false,

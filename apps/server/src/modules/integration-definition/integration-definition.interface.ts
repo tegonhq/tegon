@@ -1,14 +1,6 @@
 import { Spec, WorkspaceRequestParamsDto } from '@tegonhq/types';
 import { IsObject, IsOptional, IsString } from 'class-validator';
 
-export class IntegrationDefinitionRequestIdBody {
-  /**
-   * A unique identifier for Integration Definition
-   */
-  @IsString()
-  integrationDefinitionId: string;
-}
-
 export class IntegrationDefinitionSpec {
   spec: Spec;
 }

@@ -6,7 +6,7 @@ import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
 
-import { ViewEnum } from 'store/application';
+import { TimeBasedFilterEnum, ViewEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
 import { CategoryBoard } from './category-board';
@@ -16,7 +16,7 @@ export const CategoryView = observer(() => {
   const currentTeam = useCurrentTeam();
   const {
     applicationStore: {
-      displaySettings: { showCompletedIssues, showTriageIssues, view },
+      displaySettings: { completedFilter, showTriageIssues, view },
     },
   } = useContextStore();
 
@@ -63,7 +63,7 @@ export const CategoryView = observer(() => {
         workflow.category === WorkflowCategoryEnum.COMPLETED ||
         workflow.category === WorkflowCategoryEnum.CANCELED
       ) {
-        return showCompletedIssues;
+        return completedFilter !== TimeBasedFilterEnum.None;
       }
 
       return true;

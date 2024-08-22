@@ -39,6 +39,10 @@ export const ACCOUNT_LINKS: LinkItem[] = [
     title: 'Preferences',
     href: 'preferences',
   },
+  {
+    title: 'API',
+    href: 'api',
+  },
 ];
 
 export const TEAM_LINKS: LinkItem[] = [

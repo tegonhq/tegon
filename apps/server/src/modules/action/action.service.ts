@@ -1,58 +1,20 @@
-import { execSync } from 'child_process';
-
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { RoleEnum } from '@tegonhq/types';
+import {
+  RoleEnum,
+  CreateActionDto,
+  ActionTrigger,
+  ActionConfig,
+} from '@tegonhq/types';
+import axios from 'axios';
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
-
-import { generateKeyForUserId } from 'common/authentication';
-
-import {
-  ActionCreateResource,
-  ActionDeployDto,
-  Trigger,
-} from './action.interface';
-import { createTempDir } from './action.utils';
 
 @Injectable()
 export default class ActionService {
   constructor(private prisma: PrismaService) {}
 
-  async deploy(userId: string, actionBody: ActionDeployDto) {
-    const { githubRepoUrl, workspaceId } = actionBody;
-    const tempDirPath = await createTempDir();
-    const token = await generateKeyForUserId(userId);
-
-    // First command: Initialize the project with `tegon` CLI
-    execSync(`npx @tegon/cli init -r ${githubRepoUrl} -d ${tempDirPath}`, {
-      stdio: 'inherit',
-    });
-
-    // Extract folder name from the GitHub repo URL
-    const repoName = githubRepoUrl
-      .split('/')
-      .pop()
-      .replace(/\.git$/, '');
-    const projectDirPath = `${tempDirPath}/${repoName}`;
-
-    // Change into the directory where the project was cloned
-    process.chdir(projectDirPath);
-
-    // Second command: Deploy the project with `tegon` CLI
-    execSync(`npx @tegon/cli deploy`, {
-      env: {
-        TOKEN: token,
-        WORKSPACE_ID: workspaceId,
-      },
-      stdio: 'inherit',
-    });
-  }
-
-  async createResource(
-    actionCreateResource: ActionCreateResource,
-    userId: string,
-  ) {
+  async createResource(actionCreateResource: CreateActionDto, userId: string) {
     const config = actionCreateResource.config;
     const workspaceId = actionCreateResource.workspaceId;
 
@@ -70,6 +32,7 @@ export default class ActionService {
         config.integrations,
         userId,
         workspaceId,
+        config,
       );
       await this.recreateActionEntities(prisma, action.id, entities);
     });
@@ -107,7 +70,7 @@ export default class ActionService {
     });
   }
 
-  private mapTriggersToEntities(triggers: Trigger[]) {
+  private mapTriggersToEntities(triggers: ActionTrigger[]) {
     return triggers.flatMap((trigger) =>
       trigger.entities.map((entity) => ({
         type: trigger.type,
@@ -122,6 +85,7 @@ export default class ActionService {
     integrations: string[],
     userId: string,
     workspaceId: string,
+    config: ActionConfig,
   ) {
     let action = await prisma.action.findFirst({
       where: { name, workspaceId },
@@ -134,6 +98,8 @@ export default class ActionService {
           integrations: integrations ? integrations : [],
           createdById: userId,
           workspaceId,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          config: config as any,
         },
       });
     } else {
@@ -142,6 +108,8 @@ export default class ActionService {
           id: action.id,
         },
         data: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          config: config as any,
           integrations: integrations ? integrations : [],
         },
       });
@@ -181,6 +149,21 @@ export default class ActionService {
         where: { id: action.id },
       });
     }
+  }
+
+  async getActions() {
+    const actionsUrl =
+      'https://raw.githubusercontent.com/tegonhq/tegon/main/actions.json';
+    const response = await axios.get(actionsUrl);
+    return response.data;
+  }
+
+  async getActionConfig(slug: string) {
+    const actionsDir =
+      'https://raw.githubusercontent.com/tegonhq/tegon/main/actions';
+    const configUrl = `${actionsDir}/${slug}/config.json`;
+    const response = await axios.get(configUrl);
+    return response.data;
   }
 
   async getProjectRuns() {

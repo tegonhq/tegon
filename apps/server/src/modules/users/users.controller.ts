@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -8,7 +9,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CreatePatDto, GetUsersDto, PublicUser, User } from '@tegonhq/types';
+import {
+  CreatePatDto,
+  GetUsersDto,
+  PatIdDto,
+  PublicUser,
+  User,
+} from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -113,6 +120,12 @@ export class UsersController {
   async getPats(@SessionDecorator() session: SessionContainer) {
     const userId = session.getUserId();
     return await this.usersService.getPats(userId);
+  }
+
+  @Delete('pats/:patId')
+  @UseGuards(AuthGuard)
+  async deletePat(@Param() patIdDto: PatIdDto) {
+    return await this.usersService.deletePat(patIdDto.patId);
   }
 
   @Post(':userId')

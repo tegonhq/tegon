@@ -281,16 +281,25 @@ export class UsersService {
   async getPats(userId: string) {
     const pats = (
       await this.prisma.personalAccessToken.findMany({
-        where: { userId },
+        where: { userId, deleted: null },
       })
-    ).map((pat) => ({ name: pat.name }));
+    ).map((pat) => ({ name: pat.name, id: pat.id }));
 
     return pats;
   }
 
+  async deletePat(patId: string) {
+    await this.prisma.personalAccessToken.update({
+      where: { id: patId },
+      data: {
+        deleted: new Date(),
+      },
+    });
+  }
+
   async getJwtFromPat(token: string) {
     const pat = await this.prisma.personalAccessToken.findFirst({
-      where: { token },
+      where: { token, deleted: null },
     });
 
     return pat.jwt;

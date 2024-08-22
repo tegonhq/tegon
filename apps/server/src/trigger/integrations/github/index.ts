@@ -9,11 +9,11 @@ import { spec } from './spec';
 
 async function run(eventPayload: IntegrationEventPayload) {
   switch (eventPayload.event) {
-    case IntegrationPayloadEventType.CREATE:
+    case IntegrationPayloadEventType.SPEC:
       return spec();
 
     // Used to save settings data
-    case IntegrationPayloadEventType.DELETE:
+    case IntegrationPayloadEventType.CREATE:
       return await integrationCreate(
         eventPayload.payload.userId,
         eventPayload.payload.workspaceId,

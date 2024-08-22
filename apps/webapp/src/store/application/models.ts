@@ -34,8 +34,8 @@ export const DisplaySettingsModel = types.model({
     'created_at',
     'updated_at',
   ]),
+  completedFilter: types.enumeration(['All', 'Past day', 'Past week', 'None']),
   showSubIssues: types.boolean,
   showEmptyGroups: types.boolean,
   showTriageIssues: types.boolean,
-  showCompletedIssues: types.boolean,
 });

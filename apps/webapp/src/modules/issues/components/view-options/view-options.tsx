@@ -9,6 +9,7 @@ import { observer } from 'mobx-react-lite';
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { CompletedFilter } from './completed-filter';
 import { ViewOptionItem } from './view-option-item';
 
 export const ViewOptions = observer(() => {
@@ -22,10 +23,19 @@ export const ViewOptions = observer(() => {
             <SettingsLine size={20} />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-72 p-0" align="end">
+        <PopoverContent className="w-52 p-0" align="end">
           <div className="w-full">
-            <div className="flex flex-col gap-2 p-3">
-              <h4 className="text-sm">Display settings</h4>
+            <div className="flex flex-col p-3 pb-2">
+              <h4 className="text-sm text-muted-foreground">
+                Completed filter
+              </h4>
+              <CompletedFilter />
+            </div>
+            <div className="flex flex-col gap-2 p-3 pt-0">
+              <h4 className="text-sm text-muted-foreground">
+                Display settings
+              </h4>
+
               <ViewOptionItem
                 text="Show sub-issues"
                 id="showSubIssues"
@@ -44,17 +54,6 @@ export const ViewOptions = observer(() => {
                 onCheckedChange={(value: boolean) =>
                   applicationStore.updateDisplaySettings({
                     showTriageIssues: value,
-                  })
-                }
-              />
-
-              <ViewOptionItem
-                text="Show completed issues"
-                id="showCompletedIssues"
-                checked={applicationStore.displaySettings.showCompletedIssues}
-                onCheckedChange={(value: boolean) =>
-                  applicationStore.updateDisplaySettings({
-                    showCompletedIssues: value,
                   })
                 }
               />
