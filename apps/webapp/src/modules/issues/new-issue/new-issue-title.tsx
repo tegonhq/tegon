@@ -1,16 +1,16 @@
+import { Button } from '@tegonhq/ui/components/button';
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
 } from '@tegonhq/ui/components/form';
-import { Button } from '@tegonhq/ui/components/ui/button';
-import { Textarea } from '@tegonhq/ui/components/ui/textarea';
+import { Textarea } from '@tegonhq/ui/components/textarea';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@tegonhq/ui/components/ui/tooltip';
+} from '@tegonhq/ui/components/tooltip';
 import { AI } from '@tegonhq/ui/icons';
 import { ArrowDownRight } from '@tegonhq/ui/icons';
 import { useWatch, type UseFormReturn } from 'react-hook-form';

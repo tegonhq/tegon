@@ -1,6 +1,6 @@
-import type { LinkedIssueSubType, LinkedIssueType } from 'common/types';
-
 import { useMutation } from 'react-query';
+
+import type { LinkedIssueSubType, LinkedIssueType } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 

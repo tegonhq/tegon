@@ -1,6 +1,7 @@
 import { types, type Instance } from 'mobx-state-tree';
 import React from 'react';
 
+import { ActionsStore } from './action';
 import { ApplicationStore, defaultApplicationStoreValue } from './application';
 import { CommentsStore } from './comments';
 import { IntegrationAccountsStore } from './integration-accounts';
@@ -15,7 +16,6 @@ import { TeamsStore } from './teams';
 import { ViewsStore } from './views';
 import { WorkflowsStore } from './workflows';
 import { WorkspaceStore } from './workspace';
-import { ActionsStore } from './action';
 
 const StoreContextModel = types.model({
   commentsStore: CommentsStore,

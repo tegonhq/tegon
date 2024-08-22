@@ -1,5 +1,6 @@
 import { CheckLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
+
 import { TimeBasedFilterEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 

@@ -23,7 +23,7 @@ export async function saveActionData(
         slug: record.data.slug,
 
         integrations: record.data.integrations,
-        data: JSON.stringify({}),
+        data: JSON.stringify(record.data.data),
         cron: record.data.cron,
         config: JSON.stringify(record.data.config),
       };

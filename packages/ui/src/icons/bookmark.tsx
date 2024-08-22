@@ -1,10 +1,6 @@
 import type { IconProps } from './types';
 
-interface BookmarkProps extends IconProps {
-  fill?: boolean;
-}
-
-export function BookMark({ size = 18, className, color, fill }: BookmarkProps) {
+export function BookMark({ size = 18, className, color }: IconProps) {
   const cColor = color ? color : 'currentColor';
 
   return (

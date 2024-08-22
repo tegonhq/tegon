@@ -1,6 +1,6 @@
-import type { WorkspaceType } from 'common/types';
-
 import { useMutation } from 'react-query';
+
+import type { WorkspaceType } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 

@@ -6,11 +6,14 @@ import {
   ActionTrigger,
   ActionConfig,
   ActionStatusEnum,
+  UpdateActionInputsDto,
+  JsonObject,
 } from '@tegonhq/types';
 import axios from 'axios';
-import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
+
+import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 @Injectable()
 export default class ActionService {
@@ -18,6 +21,30 @@ export default class ActionService {
     private prisma: PrismaService,
     private triggerdev: TriggerdevService,
   ) {}
+
+  async updateActionInputs(updateBodyDto: UpdateActionInputsDto, slug: string) {
+    const action = await this.prisma.action.findFirst({
+      where: {
+        slug,
+      },
+    });
+
+    const currentData = action.data ? action.data : {};
+
+    const updateData = {
+      ...(currentData as JsonObject),
+      inputs: updateBodyDto.inputs,
+    } as JsonObject;
+
+    return await this.prisma.action.update({
+      where: {
+        id: action.id,
+      },
+      data: {
+        data: updateData,
+      },
+    });
+  }
 
   async createResource(actionCreateResource: CreateActionDto, userId: string) {
     const config = actionCreateResource.config;

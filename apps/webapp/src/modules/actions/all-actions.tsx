@@ -1,8 +1,11 @@
 import { observer } from 'mobx-react-lite';
-import { useContextStore } from 'store/global-context-provider';
-import { Action } from './components/action';
-import type { ActionType } from 'common/types';
 import { useParams } from 'next/navigation';
+
+import type { ActionType } from 'common/types';
+
+import { useContextStore } from 'store/global-context-provider';
+
+import { Action } from './components/action';
 
 export const AllActions = observer(() => {
   const { actionSlug } = useParams();

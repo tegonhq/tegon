@@ -1,13 +1,16 @@
 // import { useParams } from 'next/navigation';
 
-import { AvatarText } from '@tegonhq/ui/components/avatar';
+import type { ActionStatusEnum } from '@tegonhq/types';
+
 import { cn } from '@tegonhq/ui/lib/utils';
-import type { ActionType } from 'common/types';
-import { useUserData } from 'hooks/users';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import ReactTimeAgo from 'react-time-ago';
+
 import { convertToTitleCase } from 'common/common-utils';
+import type { ActionType } from 'common/types';
+
+import { StatusMapping } from '../utils';
 
 interface ActionProps {
   action: ActionType;
@@ -16,15 +19,11 @@ interface ActionProps {
 
 export function Action({ action, noBorder }: ActionProps) {
   const { actionSlug } = useParams();
-  const { userData, isLoading } = useUserData(action.createdById);
+
   const {
     query: { workspaceSlug },
     push,
   } = useRouter();
-
-  if (isLoading) {
-    return null;
-  }
 
   return (
     <div
@@ -49,16 +48,11 @@ export function Action({ action, noBorder }: ActionProps) {
           </div>
         </div>
 
-        <div className="flex justify-between text-sm">
-          {userData && (
-            <div className="flex items-center gap-1">
-              <AvatarText
-                text={userData?.fullname}
-                className="h-5 w-5 text-[9px] mr-2"
-              />
-              {userData.fullname}
-            </div>
-          )}
+        <div className="flex gap-2 items-center text-sm">
+          <div className="flex items-center gap-1">
+            {StatusMapping[action.status as ActionStatusEnum]}
+          </div>
+
           <div className="text-muted-foreground text-xs">
             <ReactTimeAgo date={new Date(action.updatedAt)} />
           </div>

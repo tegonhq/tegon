@@ -1,6 +1,6 @@
-import type { IntegrationAccountType } from 'common/types';
-
 import { useMutation } from 'react-query';
+
+import type { IntegrationAccountType } from 'common/types';
 
 import { ajaxDelete } from 'services/utils';
 

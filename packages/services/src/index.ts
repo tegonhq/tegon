@@ -6,3 +6,4 @@ export * from './labels';
 export * from './linked-issues';
 export * from './user';
 export * from './workflow';
+export * from './action';

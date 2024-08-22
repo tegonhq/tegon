@@ -1,7 +1,8 @@
+import type { ActionSource } from './get-all-actions';
+
 import { type UseQueryResult, useQuery } from 'react-query';
 
 import { type XHRErrorResponse, ajaxGet } from 'services/utils';
-import type { ActionSource } from './get-all-actions';
 
 /**
  * Query Key for Get user.

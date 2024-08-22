@@ -11,5 +11,34 @@
       "entities": [ "slack" ]
     }
   ],
-  "integrations": [ "slack" ]
+  "integrations": [ "slack" ],
+  "inputs": {
+    "type": "object",
+    "properties": {
+      "channelTeamMappings": {
+        "type": "array",
+        "title": "Channel to Team Mappings",
+        "description": "Map each channel to a team",
+        "items": {
+          "type": "object",
+          "properties": {
+            "channelId": {
+              "type": "string",
+              "title": "Channel ID",
+              "validation": {
+                "required": true
+              }
+            },
+            "teamId": {
+              "type": "string",
+              "title": "Team ID",
+              "validation": {
+                "required": true
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

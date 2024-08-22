@@ -15,6 +15,8 @@ export function getRunsForAction(slug: string) {
 
 export function useGetRunsForActionQuery(
   slug: string,
+  // TODO (harshith): add types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): UseQueryResult<any[], XHRErrorResponse> {
   return useQuery([GetRunsForAction], () => getRunsForAction(slug), {
     retry: 1,

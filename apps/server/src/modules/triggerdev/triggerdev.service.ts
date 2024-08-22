@@ -225,19 +225,15 @@ export class TriggerdevService {
   }
 
   async getRunsForTask(projectSlug: string, taskId: string) {
-    console.log(projectSlug);
-    const projectslugWithoutHyphen = 'adaacd28b23a453197ec61fbd97fac86';
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, '');
 
     const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
 
-    const run = await this.getRun(projectSlug, 'run_xfzvx3u45cmk6br9gg33m');
-    console.log(run.attempts[0].error);
     return await getRuns(taskId, apiKey);
   }
 
   async getRun(projectSlug: string, runId: string) {
-    console.log(projectSlug);
-    const projectslugWithoutHyphen = 'adaacd28b23a453197ec61fbd97fac86';
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, '');
 
     const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
 

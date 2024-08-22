@@ -7,7 +7,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CreateActionDto, WorkspaceRequestParamsDto } from '@tegonhq/types';
+import {
+  ActionSlugDto,
+  CreateActionDto,
+  UpdateActionInputsDto,
+  WorkspaceRequestParamsDto,
+} from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -59,5 +64,16 @@ export class ActionController {
   @Get(':slug')
   async getActionConfig(@Param() slugDto: { slug: string }) {
     return await this.actionService.getActionConfig(slugDto.slug);
+  }
+
+  @Post(':slug/inputs')
+  async updateActionInputs(
+    @Body() updateBodyDto: UpdateActionInputsDto,
+    @Param() actionSlugDto: ActionSlugDto,
+  ) {
+    return await this.actionService.updateActionInputs(
+      updateBodyDto,
+      actionSlugDto.slug,
+    );
   }
 }

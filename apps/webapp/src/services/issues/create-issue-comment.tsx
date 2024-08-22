@@ -1,6 +1,6 @@
-import type { IssueCommentType } from 'common/types';
-
 import { useMutation } from 'react-query';
+
+import type { IssueCommentType } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 
@@ -16,7 +16,7 @@ export function createIssueComment({
   parentId,
 }: CreateIssueCommentParams) {
   return ajaxPost({
-    url: `/api/v1/issue-comments?issueId=${issueId}`,
+    url: `/api/v1/issue_comments?issueId=${issueId}`,
     data: { body, parentId },
   });
 }

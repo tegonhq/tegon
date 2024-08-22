@@ -1,6 +1,6 @@
-import type { User } from 'common/types';
-
 import { useMutation } from 'react-query';
+
+import type { User } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 
