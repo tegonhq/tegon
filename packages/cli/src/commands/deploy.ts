@@ -53,9 +53,12 @@ export function configureDeployCommand(program: Command) {
 
           fs.writeFileSync(triggerIndexPath, triggerIndexContent);
           createTriggerConfigFile(path.dirname(config.path), workspaceId);
-
+          const packageJsonPath = path.join(path.dirname(config.path), 'package.json');
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+          const version = packageJson.version;
+          
           const s = spinner();
-          s.start(`Deploying ${config.path}`);
+          s.start(`Deploying ${config.path} (v${version})`);
 
           await execa(
             'npx',
@@ -84,7 +87,7 @@ export function configureDeployCommand(program: Command) {
           const resourceSpinner = spinner();
 
           resourceSpinner.start('Creating resources...');
-          await resourceCreation(config.config, workspaceId);
+          await resourceCreation(config.config, workspaceId, version);
           resourceSpinner.stop(`Resources created for ${config.path}`);
         }
 
@@ -173,12 +176,13 @@ async function validateAndExportConfigs(
   return validConfigs;
 }
 
-async function resourceCreation(config: ConfigMap, workspaceId: string) {
+async function resourceCreation(config: ConfigMap, workspaceId: string, version: string) {
   try {
     const baseURL = process.env.BASE_HOST || 'https://app.tegon.ai/api';
     await axios.post(`${baseURL}/v1/action/create-resource`, {
       workspaceId,
       config,
+      version,
     });
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -17,6 +17,9 @@ model Action {
   name         String
   integrations String[]
 
+  status  ActionStatus
+  version String
+
   // We store the config of the action
   config Json
 
@@ -598,6 +601,13 @@ enum Role {
 
 enum Status {
   INVITED
+  ACTIVE
+  SUSPENDED
+}
+
+enum ActionStatus {
+  INSTALLED
+  NEEDS_CONFIGURATION
   ACTIVE
   SUSPENDED
 }
