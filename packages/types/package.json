@@ -35,5 +35,7 @@
     "types": "./dist/index.d.ts"
   },
   "dependencies": {
-    "class-validator": "0.14.1" }
+    "class-validator": "0.14.1",
+    "ai": "^3.2.37"
+  }
 }

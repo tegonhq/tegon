@@ -8,6 +8,7 @@ import config from 'common/configs/config';
 import { loggingMiddleware } from 'common/middleware/logging.middleware';
 
 import { ActionModule } from 'modules/action/action.module';
+import { AIRequestsModule } from 'modules/ai-requests/ai-requests.module';
 import { AttachmentModule } from 'modules/attachments/attachments.module';
 import { AuthModule } from 'modules/auth/auth.module';
 import { BullConfigModule } from 'modules/bull/bull.module';
@@ -87,6 +88,7 @@ import { AppService } from './app.service';
     ViewsModule,
     TriggerdevModule,
     ActionModule,
+    AIRequestsModule,
 
     WebhookModule,
 

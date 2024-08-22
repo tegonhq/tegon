@@ -773,6 +773,9 @@ importers:
 
   packages/types:
     dependencies:
+      ai:
+        specifier: ^3.2.37
+        version: 3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
       class-validator:
         specifier: 0.14.1
         version: 0.14.1

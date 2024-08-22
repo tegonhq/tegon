@@ -1,6 +1,10 @@
 import {
   CreateIssueDto,
   CreateLinkedIssueDto,
+  FilterKey,
+  FilterTypeEnum,
+  FilterValue,
+  GetIssuesByFilterDTO,
   Issue,
   WorkflowCategory,
 } from '@tegonhq/types';
@@ -12,7 +16,7 @@ import { NotificationEventFrom } from 'modules/notifications/notifications.inter
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
 import { getIssueTitle } from './issues-ai.utils';
-import { SubscribeType } from './issues.interface';
+import { filterKeyReplacers, SubscribeType } from './issues.interface';
 import { IssuesQueue } from './issues.queue';
 
 export async function getIssueDiff(
@@ -246,4 +250,82 @@ export async function getCreateIssueInput(
     number: 0, // We're just initializing the number here, overwriting this while creating issue
     ...(parentId && { parent: { connect: { id: parentId } } }),
   };
+}
+
+export function getFilterWhere(getIssuesByFilter: GetIssuesByFilterDTO) {
+  const { filters: filterData, workspaceId } = getIssuesByFilter;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const where: Record<string, any> = { team: { workspaceId } };
+
+  for (const [filterKey, filterValue] of Object.entries(
+    filterData as Record<FilterKey, FilterValue>,
+  )) {
+    const replacedFilterKey =
+      filterKeyReplacers[filterKey as FilterKey] || filterKey;
+    console.log(filterKeyReplacers);
+    console.log(filterKey, filterValue, replacedFilterKey);
+
+    switch (filterValue.filterType) {
+      case FilterTypeEnum.INCLUDES:
+        where[replacedFilterKey] = {
+          hasSome: filterValue.value,
+        };
+        break;
+      case FilterTypeEnum.EXCLUDES:
+        console.log(filterValue.value);
+        where['NOT'] = {
+          ...where['NOT'],
+          [replacedFilterKey]: {
+            hasSome: filterValue.value,
+          },
+        };
+        break;
+      case FilterTypeEnum.IS:
+        if (filterValue.value) {
+          where[replacedFilterKey] = {
+            in: filterValue.value,
+          };
+          break;
+        }
+        if (replacedFilterKey === 'parent') {
+          where['subIssue'] = { some: {} };
+        } else if (replacedFilterKey === 'subIssue') {
+          where['parent'] = { isNot: null };
+        } else {
+          where['issueRelations'] = { some: { type: replacedFilterKey } };
+        }
+
+        break;
+      case FilterTypeEnum.IS_NOT:
+        where[replacedFilterKey] = {
+          notIn: filterValue.value,
+        };
+
+        if (replacedFilterKey === 'parent') {
+          where['subIssue'] = { some: {} };
+        } else if (replacedFilterKey === 'subIssue') {
+          where['NOT'] = {
+            ...where['NOT'],
+            subIssue: { some: {} },
+          };
+        } else {
+          where['issueRelations'] = { some: { type: replacedFilterKey } };
+        }
+        break;
+
+      case FilterTypeEnum.GT:
+      case FilterTypeEnum.LT:
+      case FilterTypeEnum.LTE:
+      case FilterTypeEnum.GTE:
+        where[replacedFilterKey] = {
+          [filterValue.filterType.toLowerCase()]: filterValue.value,
+        };
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  return where;
 }
