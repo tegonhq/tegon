@@ -13,7 +13,6 @@ COPY --chown=node:node .gitignore .gitignore
 COPY --from=pruner --chown=node:node /app/out/json/ .
 COPY --from=pruner --chown=node:node /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=pruner --chown=node:node /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
-
 ## Dev deps
 FROM base AS dev-deps
 WORKDIR /app
@@ -29,6 +28,9 @@ WORKDIR /app
 RUN corepack enable
 ENV NODE_ENV production
 RUN pnpm install --prod --no-frozen-lockfile
+COPY --from=pruner --chown=node:node /app/apps/server/prisma/schema.prisma /app/apps/server/prisma/schema.prisma
+ENV NPM_CONFIG_IGNORE_WORKSPACE_ROOT_CHECK true
+# RUN pnpx prisma@5.4.1 generate --schema /app/apps/server/prisma/schema.prisma
 
 ## Builder (builds the server)
 FROM base AS builder
@@ -39,6 +41,7 @@ RUN corepack enable
 COPY --from=pruner --chown=node:node /app/out/full/ .
 COPY --from=dev-deps --chown=node:node /app/ .
 COPY --chown=node:node turbo.json turbo.json
+COPY --from=pruner --chown=node:node /app/apps/server/prisma/schema.prisma /app/apps/server/prisma/schema.prisma
 RUN pnpm run build --filter=server...
 
 # Runner

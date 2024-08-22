@@ -85,6 +85,7 @@
       "cache": false
     },
     "generate": {
+      "dependsOn": [ "^generate" ],
       "cache": false
     },
     "dev": {
@@ -105,9 +106,6 @@
       "cache": false
     },
     "trigger-dev": {
-      "cache": false
-    },
-    "db:init-resources": {
       "cache": false
     }
   }
