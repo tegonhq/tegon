@@ -6,12 +6,14 @@ import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
 import type { IssueType } from 'common/types';
 
 import {
+  TimeBasedFilterEnum,
   FilterTypeEnum,
   OrderingEnum,
   type ApplicationStoreType,
   type DisplaySettingsModelType,
   type FilterModelBooleanType,
   type FilterModelType,
+  type FilterModelTimeBasedType,
 } from 'store/application';
 import {
   useContextStore,
@@ -26,7 +28,11 @@ interface FilterBooleanType extends FilterModelBooleanType {
   key: string;
 }
 
-type FilterType = FilterNormalType | FilterBooleanType;
+interface FilterTimeBasedType extends FilterModelTimeBasedType {
+  key: string;
+}
+
+type FilterType = FilterNormalType | FilterBooleanType | FilterTimeBasedType;
 
 export function filterIssue(issue: IssueType, filter: FilterType) {
   // TODO: Fix the type later
@@ -50,6 +56,27 @@ export function filterIssue(issue: IssueType, filter: FilterType) {
     default:
       return true; // No filter, return all issues
   }
+}
+
+export function filterTimeBasedIssue(issue: IssueType, filter: FilterType) {
+  // TODO: Fix the type later
+  const { key, filterType } = filter as FilterTimeBasedType;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fieldValue = (issue as any)[key];
+
+  // Handle time-based filters
+  if (filterType in TimeBasedFilterEnum) {
+    const now = new Date().getTime();
+
+    switch (filterType) {
+      case TimeBasedFilterEnum.PastDay:
+        return new Date(fieldValue).getTime() >= now - 24 * 60 * 60 * 1000; // Last 24 hours
+      case TimeBasedFilterEnum.PastWeek:
+        return new Date(fieldValue).getTime() >= now - 7 * 24 * 60 * 60 * 1000; // Last 7 days
+    }
+  }
+
+  return true;
 }
 
 export function filterIssues(
@@ -76,6 +103,10 @@ export function filterIssues(
 
         case 'isBlocking': {
           return issueRelationsStore.isBlocking(issue.id);
+        }
+
+        case 'updatedAt': {
+          return filterTimeBasedIssue(issue, filter);
         }
 
         default:
@@ -124,7 +155,7 @@ export function getFilters(
   pathname: string,
 ) {
   const { status, assignee, label, priority } = applicationStore.filters;
-  const { showSubIssues, showCompletedIssues, showTriageIssues } =
+  const { showSubIssues, completedFilter, showTriageIssues } =
     applicationStore.displaySettings;
 
   const filters: FilterType[] = [];
@@ -169,7 +200,20 @@ export function getFilters(
     });
   }
 
-  if (!showCompletedIssues) {
+  console.log(completedFilter);
+
+  if (
+    completedFilter &&
+    (completedFilter !== TimeBasedFilterEnum.All ||
+      completedFilter === TimeBasedFilterEnum.None)
+  ) {
+    filters.push({
+      key: 'updatedAt',
+      filterType: completedFilter,
+    });
+  }
+
+  if (completedFilter && completedFilter === TimeBasedFilterEnum.None) {
     const filteredWorkflows = workflows.filter(
       (workflow) =>
         workflow.category === WorkflowCategoryEnum.COMPLETED ||

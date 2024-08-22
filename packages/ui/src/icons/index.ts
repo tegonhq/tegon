@@ -49,6 +49,7 @@ export * from './bold-line';
 export * from './italic-line';
 export * from './strike-line';
 export * from './underline-line';
+export * from './actions';
 
 export * from './team-line';
 export * from './issues-fill';

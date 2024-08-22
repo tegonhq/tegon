@@ -1,10 +1,10 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { CreateActionDto } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
-import { ActionCreateResource, ActionDeployDto } from './action.interface';
 import ActionService from './action.service';
 
 @Controller({
@@ -14,22 +14,11 @@ import ActionService from './action.service';
 export class ActionController {
   constructor(private actionService: ActionService) {}
 
-  @Post('deploy')
-  @UseGuards(AuthGuard)
-  async deploy(
-    @SessionDecorator() session: SessionContainer,
-    @Body() actionDeploy: ActionDeployDto,
-  ) {
-    const userId = session.getUserId();
-
-    return await this.actionService.deploy(userId, actionDeploy);
-  }
-
   @Post('create-resource')
   @UseGuards(AuthGuard)
   async createResource(
     @SessionDecorator() session: SessionContainer,
-    @Body() actionCreateResource: ActionCreateResource,
+    @Body() actionCreateResource: CreateActionDto,
   ) {
     const userId = session.getUserId();
 
@@ -37,5 +26,15 @@ export class ActionController {
       actionCreateResource,
       userId,
     );
+  }
+
+  @Get()
+  async getActions() {
+    return await this.actionService.getActions();
+  }
+
+  @Get(':slug')
+  async getActionConfig(@Param() slugDto: { slug: string }) {
+    return await this.actionService.getActionConfig(slugDto.slug);
   }
 }

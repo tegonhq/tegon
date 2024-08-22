@@ -35,6 +35,7 @@ export const Labels = observer(() => {
               <Button
                 disabled={showNewLabelCreation}
                 variant="secondary"
+                size="lg"
                 onClick={() => {
                   setNewLabelCreation(true);
                 }}

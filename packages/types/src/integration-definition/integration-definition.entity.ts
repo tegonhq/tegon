@@ -31,6 +31,7 @@ export class IntegrationDefinition {
   updatedAt: Date;
   deleted: Date | null;
   name: string;
+  description: string;
   icon: string;
   spec?: Spec;
   clientId: string;

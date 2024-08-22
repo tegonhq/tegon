@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   IntegrationDefinition,
+  IntegrationDefinitionIdDto,
   IntegrationEventPayload,
   IntegrationPayloadEventType,
 } from '@tegonhq/types';
@@ -11,10 +12,7 @@ import {
   TriggerProjects,
 } from 'modules/triggerdev/triggerdev.service';
 
-import {
-  IntegrationDefinitionRequestIdBody,
-  IntegrationDefinitionUpdateBody,
-} from './integration-definition.interface';
+import { IntegrationDefinitionUpdateBody } from './integration-definition.interface';
 
 @Injectable()
 export class IntegrationDefinitionService {
@@ -41,7 +39,7 @@ export class IntegrationDefinitionService {
   }
 
   async getIntegrationDefinitionWithId(
-    integrationDefinitionRequestIdBody: IntegrationDefinitionRequestIdBody,
+    integrationDefinitionRequestIdBody: IntegrationDefinitionIdDto,
   ): Promise<IntegrationDefinition> {
     return await this.prisma.integrationDefinitionV2.findUnique({
       where: { id: integrationDefinitionRequestIdBody.integrationDefinitionId },

@@ -9,7 +9,6 @@ export interface DisplaySettingsModelType {
   showSubIssues: boolean;
   showEmptyGroups: boolean;
   showTriageIssues: boolean;
-  showCompletedIssues: boolean;
 }
 
 export interface UpdateDisplaySettingsBody

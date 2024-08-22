@@ -1,6 +1,6 @@
 import type { ImperativePanelHandle } from '@tegonhq/ui/components/resizable';
 
-import { Inbox, SettingsLine } from '@tegonhq/ui/icons';
+import { Actions, Inbox, SettingsLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import * as React from 'react';
@@ -66,11 +66,15 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
                   href: `/${workspaceSlug}/inbox`,
                   count: notificationsStore.unReadCount,
                 },
-
                 {
                   title: 'Settings',
                   icon: SettingsLine,
                   href: `/${workspaceSlug}/settings/overview`,
+                },
+                {
+                  title: 'Actions',
+                  icon: Actions,
+                  href: `/${workspaceSlug}/actions`,
                 },
               ]}
             />

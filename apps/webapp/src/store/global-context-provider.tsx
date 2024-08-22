@@ -4,7 +4,6 @@ import React from 'react';
 import { ApplicationStore, defaultApplicationStoreValue } from './application';
 import { CommentsStore } from './comments';
 import { IntegrationAccountsStore } from './integration-accounts';
-import { IntegrationDefinitionsStore } from './integration-definitions';
 import { IssueHistoryStore } from './issue-history';
 import { IssueRelationsStore } from './issue-relation';
 import { IssueSuggestionsStore } from './issue-suggestions';
@@ -27,7 +26,6 @@ const StoreContextModel = types.model({
   workspaceStore: WorkspaceStore,
   applicationStore: ApplicationStore,
   integrationAccountsStore: IntegrationAccountsStore,
-  integrationDefinitionsStore: IntegrationDefinitionsStore,
   linkedIssuesStore: LinkedIssuesStore,
   issueRelationsStore: IssueRelationsStore,
   notificationsStore: NotificationsStore,
@@ -66,10 +64,6 @@ export const storeContextStore = StoreContextModel.create({
     identifier: '',
     displaySettings: defaultApplicationStoreValue.displaySettings,
     sidebarCollapsed: false,
-  },
-  integrationDefinitionsStore: {
-    integrationDefinitions: [],
-    workspaceId: undefined,
   },
   integrationAccountsStore: {
     integrationAccounts: [],

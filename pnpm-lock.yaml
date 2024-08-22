@@ -31,58 +31,6 @@ importers:
         specifier: 3.23.8
         version: 3.23.8
 
-  actions/slack-common-workflows:
-    dependencies:
-      '@tegonhq/sdk':
-        specifier: ^0.1.0-beta.12
-        version: 0.1.0-beta.13(typescript@5.5.3)
-      '@trigger.dev/sdk':
-        specifier: 3.0.0-beta.55
-        version: 3.0.0-beta.55(typescript@5.5.3)
-      axios:
-        specifier: ^1.6.7
-        version: 1.7.2(debug@4.3.5)
-      configstore:
-        specifier: ^7.0.0
-        version: 7.0.0
-    devDependencies:
-      '@types/configstore':
-        specifier: ^6.0.2
-        version: 6.0.2
-      '@types/jsonwebtoken':
-        specifier: ^9.0.6
-        version: 9.0.6
-      '@types/node':
-        specifier: ^22.1.0
-        version: 22.1.0
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^7.1.0
-        version: 7.16.1(@typescript-eslint/parser@7.16.1(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3)
-      '@typescript-eslint/parser':
-        specifier: ^7.1.0
-        version: 7.16.1(eslint@8.57.0)(typescript@5.5.3)
-      eslint-config-prettier:
-        specifier: ^9.1.0
-        version: 9.1.0(eslint@8.57.0)
-      eslint-plugin-import:
-        specifier: ^2.29.1
-        version: 2.29.1(@typescript-eslint/parser@7.16.1(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)
-      eslint-plugin-only-warn:
-        specifier: ^1.1.0
-        version: 1.1.0
-      eslint-plugin-prettier:
-        specifier: ^5.1.3
-        version: 5.2.1(@types/eslint@8.56.10)(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.3.3)
-      eslint-plugin-unused-imports:
-        specifier: ^3.0.0
-        version: 3.2.0(@typescript-eslint/eslint-plugin@7.16.1(@typescript-eslint/parser@7.16.1(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)
-      jsonwebtoken:
-        specifier: ^9.0.2
-        version: 9.0.2
-      typescript:
-        specifier: ^5.3.3
-        version: 5.5.3
-
   apps/server:
     dependencies:
       '@ai-sdk/openai':
@@ -197,8 +145,8 @@ importers:
         specifier: ^2.4.0
         version: 2.5.4
       '@trigger.dev/sdk':
-        specifier: 3.0.0-beta.54
-        version: 3.0.0-beta.54(typescript@5.5.3)
+        specifier: 3.0.0-beta.55
+        version: 3.0.0-beta.55(typescript@5.5.3)
       '@types/multer':
         specifier: ^1.4.11
         version: 1.4.11
@@ -371,6 +319,9 @@ importers:
       jest:
         specifier: 29.7.0
         version: 29.7.0(@types/node@20.14.11)(ts-node@10.9.2(@swc/core@1.7.0(@swc/helpers@0.5.12))(@types/node@20.14.11)(typescript@5.5.3))
+      libphonenumber-js:
+        specifier: ^1.11.7
+        version: 1.11.7
       prettier:
         specifier: ^3.2.4
         version: 3.3.3
@@ -430,7 +381,7 @@ importers:
         version: 3.20.0(react@18.3.1)
       ai:
         specifier: ^3.2.37
-        version: 3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
+        version: 3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -924,7 +875,7 @@ importers:
         version: 2.5.4(@tiptap/core@2.5.4(@tiptap/pm@2.5.4))(@tiptap/pm@2.5.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ai:
         specifier: ^3.2.37
-        version: 3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
+        version: 3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -3878,10 +3829,6 @@ packages:
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
     engines: {node: '>=10'}
 
-  '@tegonhq/sdk@0.1.0-beta.13':
-    resolution: {integrity: sha512-jBzrqTLI+RsLQxmZTmprLSyrVe3Fb773VgmPxOQZv/KKf1kjyXf/N1SDEgRs5j25h92pNo2ppn41hkLDNSa8yA==}
-    engines: {node: '>=18.0.0'}
-
   '@tiptap/core@2.5.4':
     resolution: {integrity: sha512-Zs/hShr4+W02+0nOlpmr5cS2YjDRLqd+XMt+jsiQH0QNr3s1Lc82pfF6C3CjgLEZtdUzImZrW2ABtLlpvbogaA==}
     peerDependencies:
@@ -4104,10 +4051,6 @@ packages:
     resolution: {integrity: sha512-bBdOz17ZTQBpPAHMoSiA1vO/Xh9Ez77mumnvVKZtDuuHSPNmaJu5msdcWxn+Vre6tccb7JDBx9q+jyWz1Uc4eg==}
     engines: {node: '>=18.0.0'}
 
-  '@trigger.dev/core-backend@3.0.0-beta.54':
-    resolution: {integrity: sha512-oyfv7hRxy0vSPfHBpQRuCJcokIrS0xQZI2EAAtliOKuV/JAKjD3pleDUpadbMvB/5GNJ6/fiE+/i3qRNdOQJ7Q==}
-    engines: {node: '>=18.0.0'}
-
   '@trigger.dev/core-backend@3.0.0-beta.55':
     resolution: {integrity: sha512-JLRaiawxVyG0fparYskiluPxWqzFXrqXKJFMKW6CgXklRCHMRjH5ezai62yUxAeKM8LX2BIOhOpeXB3z50Re1w==}
     engines: {node: '>=18.0.0'}
@@ -4116,20 +4059,12 @@ packages:
     resolution: {integrity: sha512-ZnWFQjs1QxfKSSh4LTpGGP9vbiolLtn7F6U6BJlADL/6gVfRYaOFonBWGBvgLXJdPRtUQ1wfE9+LkWF/fouPKA==}
     engines: {node: '>=18.0.0'}
 
-  '@trigger.dev/core@3.0.0-beta.54':
-    resolution: {integrity: sha512-ItTaNzkNg3zdsIx98Ob56H5BkhUyp07+iBcB0Cx9gbuPbBc6CKszP2edEo/LhH3zSUTOaRcVwdNYm2FiAkxvPA==}
-    engines: {node: '>=18.0.0'}
-
   '@trigger.dev/core@3.0.0-beta.55':
     resolution: {integrity: sha512-MXfBnM3HvT+RyXwlIeQjUJ0lWKg5vFrPugwy5AbDaio/p8QLyRpEHIL8zcMU6rUxdjD7jVbZk3KTUnGRLRZ+tw==}
     engines: {node: '>=18.0.0'}
 
   '@trigger.dev/sdk@3.0.0-beta.50':
     resolution: {integrity: sha512-WPuk5sqERw9FvsEz4HqnfBhe+/jvw/qaE7Xvhx6lMfKUe0OuMo4+shD2TceHGrZ7WMeOwDAPqzDTOYFAJxhhaw==}
-    engines: {node: '>=18.0.0'}
-
-  '@trigger.dev/sdk@3.0.0-beta.54':
-    resolution: {integrity: sha512-9zu9KmKyJkPLlc5jsKPZJt/89b/KqHLDMLlY0oGnnE/LVMAyOyfOvwDsw33hZ+69ShRPNACn1LqwSqy79+dFpw==}
     engines: {node: '>=18.0.0'}
 
   '@trigger.dev/sdk@3.0.0-beta.55':
@@ -7822,8 +7757,8 @@ packages:
   libmime@5.3.5:
     resolution: {integrity: sha512-nSlR1yRZ43L3cZCiWEw7ali3jY29Hz9CQQ96Oy+sSspYnIP5N54ucOPHqooBsXzwrX1pwn13VUE05q4WmzfaLg==}
 
-  libphonenumber-js@1.11.4:
-    resolution: {integrity: sha512-F/R50HQuWWYcmU/esP5jrH5LiWYaN7DpN0a/99U8+mnGGtnx8kmRE+649dQh3v+CowXXZc8vpkf5AmYkO0AQ7Q==}
+  libphonenumber-js@1.11.7:
+    resolution: {integrity: sha512-x2xON4/Qg2bRIS11KIN9yCNYUjhtiEjNyptjX0mX+pyKHecxuJVLIpfX1lq9ZD6CrC/rB+y4GBi18c6CEcUR+A==}
 
   libqp@2.0.1:
     resolution: {integrity: sha512-Ka0eC5LkF3IPNQHJmYBWljJsw0UvM6j+QdKRbWyCdTmYwvIDE6a7bCm0UkTAL/K+3KXK5qXT/ClcInU01OpdLg==}
@@ -12472,7 +12407,7 @@ snapshots:
   '@eslint/eslintrc@2.1.4':
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
       espree: 9.6.1
       globals: 13.24.0
       ignore: 5.3.1
@@ -12591,7 +12526,7 @@ snapshots:
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -14887,25 +14822,6 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@tegonhq/sdk@0.1.0-beta.13(typescript@5.5.3)':
-    dependencies:
-      '@trigger.dev/sdk': 3.0.0-beta.50(typescript@5.5.3)
-      axios: 1.7.2(debug@4.3.5)
-      chalk: 5.3.0
-      configstore: 7.0.0
-      cronstrue: 2.50.0
-      debug: 4.3.5
-      evt: 2.5.7
-      slug: 6.1.0
-      terminal-link: 3.0.0
-      uuid: 9.0.1
-      zod: 3.22.3
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - typescript
-      - utf-8-validate
-
   '@tiptap/core@2.5.4(@tiptap/pm@2.5.4)':
     dependencies:
       '@tiptap/pm': 2.5.4
@@ -15135,41 +15051,11 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
 
-  '@trigger.dev/core-backend@3.0.0-beta.54':
-    dependencies:
-      '@opentelemetry/api': 1.9.0
-
   '@trigger.dev/core-backend@3.0.0-beta.55':
     dependencies:
       '@opentelemetry/api': 1.9.0
 
   '@trigger.dev/core@3.0.0-beta.50':
-    dependencies:
-      '@google-cloud/precise-date': 4.0.0
-      '@opentelemetry/api': 1.9.0
-      '@opentelemetry/api-logs': 0.48.0
-      '@opentelemetry/exporter-logs-otlp-http': 0.49.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/exporter-trace-otlp-http': 0.49.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/instrumentation': 0.49.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/resources': 1.25.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-logs': 0.49.1(@opentelemetry/api-logs@0.48.0)(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-node': 0.49.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-trace-base': 1.25.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-trace-node': 1.25.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.25.1
-      humanize-duration: 3.32.1
-      socket.io-client: 4.7.5
-      superjson: 2.2.1
-      ulidx: 2.3.0
-      zod: 3.22.3
-      zod-error: 1.5.0
-      zod-validation-error: 1.5.0(zod@3.22.3)
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
-  '@trigger.dev/core@3.0.0-beta.54':
     dependencies:
       '@google-cloud/precise-date': 4.0.0
       '@opentelemetry/api': 1.9.0
@@ -15230,33 +15116,6 @@ snapshots:
       '@trigger.dev/core-backend': 3.0.0-beta.50
       chalk: 5.3.0
       cronstrue: 2.50.0
-      debug: 4.3.5
-      evt: 2.5.7
-      get-caller-file: 2.0.5
-      git-remote-origin-url: 4.0.0
-      git-repo-info: 2.1.1
-      msw: 2.3.2(typescript@5.5.3)
-      slug: 6.1.0
-      terminal-link: 3.0.0
-      ulid: 2.3.0
-      uuid: 9.0.1
-      ws: 8.18.0
-      zod: 3.22.3
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - typescript
-      - utf-8-validate
-
-  '@trigger.dev/sdk@3.0.0-beta.54(typescript@5.5.3)':
-    dependencies:
-      '@opentelemetry/api': 1.9.0
-      '@opentelemetry/api-logs': 0.48.0
-      '@opentelemetry/semantic-conventions': 1.25.1
-      '@trigger.dev/core': 3.0.0-beta.54
-      '@trigger.dev/core-backend': 3.0.0-beta.54
-      chalk: 5.3.0
-      cronstrue: 2.50.0
       debug: 4.3.5(supports-color@5.5.0)
       evt: 2.5.7
       get-caller-file: 2.0.5
@@ -15284,7 +15143,7 @@ snapshots:
       '@trigger.dev/core-backend': 3.0.0-beta.55
       chalk: 5.3.0
       cronstrue: 2.50.0
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
       evt: 2.5.7
       get-caller-file: 2.0.5
       git-remote-origin-url: 4.0.0
@@ -15716,7 +15575,7 @@ snapshots:
       '@typescript-eslint/types': 7.16.1
       '@typescript-eslint/typescript-estree': 7.16.1(typescript@5.5.3)
       '@typescript-eslint/visitor-keys': 7.16.1
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
       eslint: 8.57.0
     optionalDependencies:
       typescript: 5.5.3
@@ -15754,7 +15613,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 7.16.1(typescript@5.5.3)
       '@typescript-eslint/utils': 7.16.1(eslint@8.57.0)(typescript@5.5.3)
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
       eslint: 8.57.0
       ts-api-utils: 1.3.0(typescript@5.5.3)
     optionalDependencies:
@@ -15801,7 +15660,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 7.16.1
       '@typescript-eslint/visitor-keys': 7.16.1
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.5
@@ -16121,7 +15980,7 @@ snapshots:
       - solid-js
       - vue
 
-  ai@3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8):
+  ai@3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8):
     dependencies:
       '@ai-sdk/provider': 0.0.14
       '@ai-sdk/provider-utils': 1.0.5(zod@3.23.8)
@@ -16825,7 +16684,7 @@ snapshots:
   class-validator@0.14.1:
     dependencies:
       '@types/validator': 13.12.0
-      libphonenumber-js: 1.11.4
+      libphonenumber-js: 1.11.7
       validator: 13.12.0
 
   class-variance-authority@0.7.0:
@@ -17250,10 +17109,6 @@ snapshots:
     dependencies:
       ms: 2.1.2
 
-  debug@4.3.5:
-    dependencies:
-      ms: 2.1.2
-
   debug@4.3.5(supports-color@5.5.0):
     dependencies:
       ms: 2.1.2
@@ -17536,7 +17391,7 @@ snapshots:
   engine.io-client@6.5.4:
     dependencies:
       '@socket.io/component-emitter': 3.1.2
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
       engine.io-parser: 5.2.3
       ws: 8.17.1
       xmlhttprequest-ssl: 2.0.0
@@ -17883,7 +17738,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.15.0
       is-glob: 4.0.3
@@ -18082,7 +17937,7 @@ snapshots:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
@@ -18435,7 +18290,7 @@ snapshots:
 
   follow-redirects@1.15.6(debug@4.3.5):
     optionalDependencies:
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
 
   for-each@0.3.3:
     dependencies:
@@ -20007,7 +19862,7 @@ snapshots:
       libqp: 2.1.0
     optional: true
 
-  libphonenumber-js@1.11.4: {}
+  libphonenumber-js@1.11.7: {}
 
   libqp@2.0.1:
     optional: true
@@ -22575,7 +22430,7 @@ snapshots:
 
   require-in-the-middle@7.3.0:
     dependencies:
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
       module-details-from-path: 1.0.3
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -22944,7 +22799,7 @@ snapshots:
   socket.io-client@4.7.5:
     dependencies:
       '@socket.io/component-emitter': 3.1.2
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
       engine.io-client: 6.5.4
       socket.io-parser: 4.2.4
     transitivePeerDependencies:
@@ -22955,7 +22810,7 @@ snapshots:
   socket.io-parser@4.2.4:
     dependencies:
       '@socket.io/component-emitter': 3.1.2
-      debug: 4.3.5
+      debug: 4.3.5(supports-color@5.5.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -23266,7 +23121,7 @@ snapshots:
       debug: 4.3.5(supports-color@5.5.0)
       inflation: 2.1.0
       jose: 4.15.9
-      libphonenumber-js: 1.11.4
+      libphonenumber-js: 1.11.7
       nodemailer: 6.9.14
       pkce-challenge: 3.1.0
       psl: 1.8.0

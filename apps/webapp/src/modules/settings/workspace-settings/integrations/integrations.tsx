@@ -1,13 +1,12 @@
-import { RiGithubFill } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
-import { SentryIcon, SlackIcon } from '@tegonhq/ui/icons';
 import { useRouter } from 'next/router';
 
 import { Header } from 'modules/settings/header';
 import { SettingSection } from 'modules/settings/setting-section';
 
+import { getIcon, toProperCase, type IconType } from 'common';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { useCurrentWorkspace } from 'hooks/workspace';
@@ -18,18 +17,19 @@ interface IntegrationCardProps {
   name: string;
   description: string;
   href: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Icon: any;
+
+  icon: string;
 }
 
 function IntegrationCard({
   name,
   description,
   href,
-  Icon,
+  icon,
 }: IntegrationCardProps) {
   const { push } = useRouter();
   const currentWorkspace = useCurrentWorkspace();
+  const Icon = getIcon(icon as IconType);
 
   return (
     <div
@@ -56,7 +56,9 @@ function IntegrationCard({
 
 export function Integrations() {
   const currentWorkspace = useCurrentWorkspace();
-  const { data, isLoading } = useGetIntegrationDefinitions(currentWorkspace.id);
+  const { data: integrations, isLoading } = useGetIntegrationDefinitions(
+    currentWorkspace.id,
+  );
 
   if (isLoading) {
     return <Loader />;
@@ -68,24 +70,15 @@ export function Integrations() {
       description="Manage your workspace integrations"
     >
       <div className="flex flex-col gap-2">
-        <IntegrationCard
-          name="Github"
-          description="Automate your pull request and commit workflows and keep issues synced both ways"
-          href="github"
-          Icon={RiGithubFill}
-        />
-        <IntegrationCard
-          name="Slack"
-          description="Create issues from Slack messages and sync threads"
-          href="slack"
-          Icon={SlackIcon}
-        />
-        <IntegrationCard
-          name="Sentry"
-          description="Connect sentry issues with the tegon issues"
-          href="sentry"
-          Icon={SentryIcon}
-        />
+        {integrations.map((integration) => (
+          <IntegrationCard
+            key={integration.id}
+            name={toProperCase(integration.name)}
+            description={integration.description}
+            href={integration.id}
+            icon={integration.icon}
+          />
+        ))}
       </div>
     </SettingSection>
   );

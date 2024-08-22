@@ -17,6 +17,12 @@ model Action {
   name         String
   integrations String[]
 
+  // We store the config of the action
+  config Json
+
+  // This is used to store inputs or some data needed for the action 
+  data Json?
+
   cron         String?
   workspace    Workspace?     @relation(fields: [workspaceId], references: [id])
   workspaceId  String?
@@ -136,6 +142,7 @@ model IntegrationDefinitionV2 {
   deleted   DateTime?
 
   name         String     @unique
+  description  String
   icon         String
   clientId     String
   clientSecret String

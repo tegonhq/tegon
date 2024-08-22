@@ -12,6 +12,7 @@ export const resolveEnvVars: ResolveEnvironmentVariablesFunction = async ({
   return {
     variables: {
       DATABASE_URL: env.DATABASE_URL,
+      GITHUB_APP_PEM: env.GITHUB_APP_PEM,
     },
   };
 };

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiTags,
@@ -6,15 +14,13 @@ import {
 } from '@nestjs/swagger';
 import {
   IntegrationDefinition,
+  IntegrationDefinitionIdDto,
   WorkspaceRequestParamsDto,
 } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
-import {
-  IntegrationDefinitionRequestIdBody,
-  IntegrationDefinitionUpdateBody,
-} from './integration-definition.interface';
+import { IntegrationDefinitionUpdateBody } from './integration-definition.interface';
 import { IntegrationDefinitionService } from './integration-definition.service';
 
 @Controller({
@@ -41,12 +47,27 @@ export class IntegrationDefinitionController {
    * Get all integration definitions in a workspace
    */
   @Get()
+  @UseGuards(AuthGuard)
   async getIntegrationDefinitionsByWorkspace(
-    @Param()
+    @Query()
     workspaceDto: WorkspaceRequestParamsDto,
   ) {
     return await this.integrationDefinitionService.getIntegrationDefinitions(
       workspaceDto.workspaceId,
+    );
+  }
+
+  // /**
+  //  * Get integration definition
+  //  */
+  @Get(':integrationDefinitionId')
+  @UseGuards(AuthGuard)
+  async getIntegrationDefinition(
+    @Param()
+    integrationDefinitionRequestIdBody: IntegrationDefinitionIdDto,
+  ) {
+    return await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
+      integrationDefinitionRequestIdBody.integrationDefinitionId,
     );
   }
 
@@ -57,7 +78,7 @@ export class IntegrationDefinitionController {
   @UseGuards(AuthGuard)
   async getIntegrationDefinitionSpec(
     @Param()
-    integrationDefinitionRequestIdBody: IntegrationDefinitionRequestIdBody,
+    integrationDefinitionRequestIdBody: IntegrationDefinitionIdDto,
   ) {
     const integrationDefinition =
       await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
@@ -73,7 +94,7 @@ export class IntegrationDefinitionController {
   @Post(':integrationDefinitionId')
   async updateIntegrationDefinition(
     @Param()
-    integrationDefinitionRequestIdBody: IntegrationDefinitionRequestIdBody,
+    integrationDefinitionRequestIdBody: IntegrationDefinitionIdDto,
     @Body()
     integrationDefinitionUpdateBody: IntegrationDefinitionUpdateBody,
   ): Promise<IntegrationDefinition> {
@@ -89,7 +110,7 @@ export class IntegrationDefinitionController {
   @Get(':integrationDefinitionId')
   async getIntegrationDefinitionWithId(
     @Param()
-    integrationDefinitionRequestIdBody: IntegrationDefinitionRequestIdBody,
+    integrationDefinitionRequestIdBody: IntegrationDefinitionIdDto,
   ): Promise<IntegrationDefinition> {
     return await this.integrationDefinitionService.getIntegrationDefinitionWithId(
       integrationDefinitionRequestIdBody,
