@@ -27,6 +27,23 @@ export interface ActionConfig {
   inputs: any;
 }
 
+export const ActionStatus = {
+  INSTALLED: 'INSTALLED',
+  NEEDS_CONFIGURATION: 'NEEDS_CONFIGURATION',
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+};
+
+export enum ActionStatusEnum {
+  INSTALLED = 'INSTALLED',
+  NEEDS_CONFIGURATION = 'NEEDS_CONFIGURATION',
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+}
+
+export type ActionStatus = (typeof ActionStatus)[keyof typeof ActionStatus];
+
+
 export class Action {
   id: string;
   createdAt: Date;
@@ -35,6 +52,9 @@ export class Action {
 
   config: JsonValue;
   data?: any;
+
+  status: ActionStatus;
+  version: string;
 
   name: string;
   integrations: string[];

@@ -5,6 +5,7 @@ import {
   CreateActionDto,
   ActionTrigger,
   ActionConfig,
+  ActionStatusEnum,
 } from '@tegonhq/types';
 import axios from 'axios';
 import { PrismaService } from 'nestjs-prisma';
@@ -33,6 +34,7 @@ export default class ActionService {
         userId,
         workspaceId,
         config,
+        actionCreateResource.version,
       );
       await this.recreateActionEntities(prisma, action.id, entities);
     });
@@ -86,6 +88,7 @@ export default class ActionService {
     userId: string,
     workspaceId: string,
     config: ActionConfig,
+    version: string
   ) {
     let action = await prisma.action.findFirst({
       where: { name, workspaceId },
@@ -98,8 +101,10 @@ export default class ActionService {
           integrations: integrations ? integrations : [],
           createdById: userId,
           workspaceId,
+          status: ActionStatusEnum.INSTALLED,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           config: config as any,
+          version,
         },
       });
     } else {
