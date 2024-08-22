@@ -49,7 +49,7 @@ export function ViewItem({ view }: ViewItemProps) {
             }}
           >
             {view.isBookmarked ? (
-              <BookMark size={14} fill className="text-amber-600" />
+              <BookMark size={14} className="text-amber-600" />
             ) : (
               <BookMark size={14} />
             )}
