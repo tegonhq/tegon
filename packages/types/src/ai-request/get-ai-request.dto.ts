@@ -1,6 +1,6 @@
 import { CoreMessage } from 'ai';
 
-export interface requestInputBody {
+export interface GetAIRequestDTO {
   messages: CoreMessage[];
   model: string;
   workspaceId: string;

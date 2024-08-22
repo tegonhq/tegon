@@ -98,7 +98,7 @@ const config = {
           50: 'oklch(var(--grayAlpha-50))',
           100: 'oklch(var(--grayAlpha-100))',
           200: 'oklch(var(--grayAlpha-200))',
-          300: 'voklch(ar(--grayAlpha-300))',
+          300: 'oklch(var(--grayAlpha-300))',
           400: 'oklch(var(--grayAlpha-400))',
           500: 'oklch(var(--grayAlpha-500))',
           600: 'oklch(var(--grayAlpha-600))',

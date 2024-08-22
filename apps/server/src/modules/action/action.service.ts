@@ -6,14 +6,45 @@ import {
   ActionTrigger,
   ActionConfig,
   ActionStatusEnum,
+  UpdateActionInputsDto,
+  JsonObject,
 } from '@tegonhq/types';
 import axios from 'axios';
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
 
+import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
+
 @Injectable()
 export default class ActionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private triggerdev: TriggerdevService,
+  ) {}
+
+  async updateActionInputs(updateBodyDto: UpdateActionInputsDto, slug: string) {
+    const action = await this.prisma.action.findFirst({
+      where: {
+        slug,
+      },
+    });
+
+    const currentData = action.data ? action.data : {};
+
+    const updateData = {
+      ...(currentData as JsonObject),
+      inputs: updateBodyDto.inputs,
+    } as JsonObject;
+
+    return await this.prisma.action.update({
+      where: {
+        id: action.id,
+      },
+      data: {
+        data: updateData,
+      },
+    });
+  }
 
   async createResource(actionCreateResource: CreateActionDto, userId: string) {
     const config = actionCreateResource.config;
@@ -29,8 +60,6 @@ export default class ActionService {
       const entities = this.mapTriggersToEntities(config.triggers);
       const action = await this.findOrCreateAction(
         prisma,
-        config.name,
-        config.integrations,
         userId,
         workspaceId,
         config,
@@ -83,25 +112,26 @@ export default class ActionService {
 
   private async findOrCreateAction(
     prisma: Partial<PrismaClient>,
-    name: string,
-    integrations: string[],
     userId: string,
     workspaceId: string,
     config: ActionConfig,
-    version: string
+    version: string,
   ) {
     let action = await prisma.action.findFirst({
-      where: { name, workspaceId },
+      where: { name: config.name, workspaceId },
     });
 
     if (!action) {
       action = await prisma.action.create({
         data: {
-          name,
-          integrations: integrations ? integrations : [],
+          name: config.name,
+          slug: config.slug,
+          integrations: config.integrations ? config.integrations : [],
           createdById: userId,
           workspaceId,
-          status: ActionStatusEnum.INSTALLED,
+          status: config.inputs
+            ? ActionStatusEnum.NEEDS_CONFIGURATION
+            : ActionStatusEnum.ACTIVE,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           config: config as any,
           version,
@@ -115,7 +145,7 @@ export default class ActionService {
         data: {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           config: config as any,
-          integrations: integrations ? integrations : [],
+          integrations: config.integrations ? config.integrations : [],
         },
       });
     }
@@ -128,10 +158,12 @@ export default class ActionService {
     actionId: string,
     entities: Array<{ type: string; entity: string }>,
   ) {
+    // Delete the current action entities
     await prisma.actionEntity.deleteMany({
       where: { actionId },
     });
 
+    // Create new action entities
     await prisma.actionEntity.createMany({
       data: entities.map((entity) => ({
         ...entity,
@@ -156,11 +188,44 @@ export default class ActionService {
     }
   }
 
-  async getActions() {
+  async getActions(workspaceId: string) {
+    const actions = await this.prisma.action.findMany({
+      where: {
+        workspaceId,
+      },
+    });
+
+    return actions;
+  }
+
+  async getExternalActions() {
     const actionsUrl =
-      'https://raw.githubusercontent.com/tegonhq/tegon/main/actions.json';
+      'https://raw.githubusercontent.com/tegonhq/tegon/main/actions/actions.json';
     const response = await axios.get(actionsUrl);
-    return response.data;
+    const actions = response.data;
+    return await Promise.all(
+      actions.map(async (action: { slug: string }) => {
+        const config = await this.getActionConfig(action.slug);
+        return {
+          ...action,
+          config,
+        };
+      }),
+    );
+  }
+
+  async getExternalActionWithSlug(slug: string) {
+    const actionsUrl =
+      'https://raw.githubusercontent.com/tegonhq/tegon/main/actions/actions.json';
+    const response = await axios.get(actionsUrl);
+    const actions = response.data;
+    const action = actions.find(
+      (action: { slug: string }) => action.slug === slug,
+    );
+
+    const description = await this.getActionReadme(slug);
+
+    return { ...action, guide: description };
   }
 
   async getActionConfig(slug: string) {
@@ -171,8 +236,26 @@ export default class ActionService {
     return response.data;
   }
 
-  async getProjectRuns() {
-    // Get project runs from trigger.dev
+  async getActionReadme(slug: string) {
+    try {
+      const actionsDir =
+        'https://raw.githubusercontent.com/tegonhq/tegon/main/actions';
+      const configUrl = `${actionsDir}/${slug}/README.md`;
+      const response = await axios.get(configUrl);
+      return response.data;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  async getRunsForSlug(slug: string) {
+    const action = await this.prisma.action.findFirst({
+      where: {
+        slug,
+      },
+    });
+
+    return await this.triggerdev.getRunsForTask(action.workspaceId, slug);
   }
 
   getSingleRun() {

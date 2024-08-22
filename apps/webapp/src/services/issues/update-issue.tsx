@@ -1,6 +1,6 @@
-import type { IssueType, IssueRelationEnum } from '@tegonhq/types';
-
 import { useMutation } from 'react-query';
+
+import type { IssueType, IssueRelationEnum } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 

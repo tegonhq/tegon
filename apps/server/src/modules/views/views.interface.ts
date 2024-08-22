@@ -1,3 +1,4 @@
+import { FilterTypeEnum } from '@tegonhq/types';
 import { Type } from 'class-transformer';
 import {
   IsArray,
@@ -14,15 +15,6 @@ import {
 export interface ViewsRequestBody {
   workspaceId: string;
 }
-
-export enum FilterTypeEnum {
-  IS = 'IS',
-  IS_NOT = 'IS_NOT',
-  INCLUDES = 'INCLUDES',
-  EXCLUDES = 'EXCLUDES',
-  UNDEFINED = 'UNDEFINED',
-}
-
 export class FilterModelType {
   @IsArray()
   @Type(() => String)

@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import {
   encryptToken,
+  getRun,
+  getRuns,
   hashToken,
   triggerTask,
   triggerTaskSync,
@@ -220,5 +222,21 @@ export class TriggerdevService {
     }
 
     return undefined;
+  }
+
+  async getRunsForTask(projectSlug: string, taskId: string) {
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, '');
+
+    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
+
+    return await getRuns(taskId, apiKey);
+  }
+
+  async getRun(projectSlug: string, runId: string) {
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, '');
+
+    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
+
+    return await getRun(runId, apiKey);
   }
 }

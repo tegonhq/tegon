@@ -1,7 +1,7 @@
-import type { IntegrationDefinition } from '@tegonhq/types';
-
 import { getIntegrationDefinitions } from '@tegonhq/services';
 import { type UseQueryResult, useQuery } from 'react-query';
+
+import type { IntegrationDefinition } from 'common/types';
 
 import { type XHRErrorResponse } from 'services/utils';
 

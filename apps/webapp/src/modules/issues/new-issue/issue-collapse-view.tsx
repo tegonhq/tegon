@@ -1,5 +1,5 @@
-import { AvatarText } from '@tegonhq/ui/components/ui/avatar';
-import { Button } from '@tegonhq/ui/components/ui/button';
+import { AvatarText } from '@tegonhq/ui/components/avatar';
+import { Button } from '@tegonhq/ui/components/button';
 import { ArrowDownRight, DeleteLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';

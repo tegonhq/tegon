@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   ActionEntity,
+  ActionStatusEnum,
   ActionTypesEnum,
   EventBody,
   EventHeaders,
@@ -56,7 +57,7 @@ export default class WebhookService {
       where: {
         type: ActionTypesEnum.SOURCE_WEBHOOK,
         entity: sourceName,
-        action: { workspaceId },
+        action: { workspaceId, status: ActionStatusEnum.ACTIVE },
         deleted: null,
       },
       include: { action: true },
@@ -83,6 +84,7 @@ export default class WebhookService {
         actionEntity.action.name,
         {
           event: ActionTypesEnum.SOURCE_WEBHOOK,
+          action: actionEntity.action,
           eventBody,
           eventHeaders,
           accessToken,

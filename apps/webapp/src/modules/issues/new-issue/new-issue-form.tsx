@@ -1,7 +1,7 @@
+import { Button } from '@tegonhq/ui/components/button';
 import { Editor, EditorExtensions } from '@tegonhq/ui/components/editor/index';
 import { FormControl, FormField, FormItem } from '@tegonhq/ui/components/form';
 import { Loader } from '@tegonhq/ui/components/loader';
-import { Button } from '@tegonhq/ui/components/ui/button';
 import { DeleteLine } from '@tegonhq/ui/icons';
 import React from 'react';
 import {

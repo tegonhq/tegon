@@ -17,7 +17,9 @@ export const ViewList = observer(({ view }: ViewListProps) => {
   const pathname = usePathname();
 
   React.useEffect(() => {
-    const filters = view.filters;
+    // This is done to avoid MST collisions
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const filters = (view as any).toJSON().filters;
     if (pathname === applicationStore.identifier) {
       applicationStore.updateFilters(filters);
     }

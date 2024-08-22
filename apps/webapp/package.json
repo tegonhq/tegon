@@ -10,12 +10,12 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
-    "@tegonhq/types": "workspace:*",
     "@hello-pangea/dnd": "^16.6.0",
     "@hookform/resolvers": "3.9.0",
     "@remixicon/react": "^4.2.0",
     "@sentry/nextjs": "^7.105.0",
     "@tegonhq/services": "workspace:*",
+    "@tegonhq/types": "workspace:*",
     "@tegonhq/ui": "workspace:*",
     "@tiptap/core": "^2.3.0",
     "@tiptap/react": "^2.5.4",
@@ -32,6 +32,7 @@
     "geist": "^1.3.0",
     "http-proxy": "^1.18.1",
     "javascript-time-ago": "^2.5.9",
+    "lodash.clone": "^4.5.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lucide-react": "^0.316.0",
@@ -58,6 +59,7 @@
   "devDependencies": {
     "@tegonhq/eslint-config": "workspace:*",
     "@tegonhq/typescript-config": "workspace:*",
+    "@types/lodash.clone": "^4.5.9",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/lodash.isequal": "^4.5.8",
     "@types/node": "^20.11.5",

@@ -20,6 +20,7 @@ import {
   TeamRequestParamsDto,
   UpdateIssueDto,
   WorkspaceRequestParamsDto,
+  GetIssuesByFilterDTO,
 } from '@tegonhq/types';
 import { Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
@@ -50,6 +51,14 @@ export class IssuesController {
   ) {
     const userId = session.getUserId();
     return await this.issuesService.createIssueAPI(issueData, userId);
+  }
+
+  @Post('filter')
+  @UseGuards(AuthGuard)
+  async getIssuesByFilter(
+    @Body() filterData: GetIssuesByFilterDTO,
+  ): Promise<Issue[]> {
+    return await this.issuesService.getIssuesByFilter(filterData);
   }
 
   @Post(':issueId')
@@ -108,6 +117,21 @@ export class IssuesController {
     );
   }
 
+  @Post(':issueId/move')
+  @UseGuards(AuthGuard)
+  async moveIssue(
+    @SessionDecorator() session: SessionContainer,
+    @Param() issueParams: IssueRequestParamsDto,
+    @Body() moveData: TeamRequestParamsDto,
+  ) {
+    const userId = session.getUserId();
+    return await this.issuesService.moveIssue(
+      userId,
+      issueParams.issueId,
+      moveData.teamId,
+    );
+  }
+
   @Get('export')
   @UseGuards(AuthGuard)
   async exportIssues(
@@ -130,20 +154,5 @@ export class IssuesController {
     });
 
     csvStream.pipe(res);
-  }
-
-  @Post(':issueId/move')
-  @UseGuards(AuthGuard)
-  async moveIssue(
-    @SessionDecorator() session: SessionContainer,
-    @Param() issueParams: IssueRequestParamsDto,
-    @Body() moveData: TeamRequestParamsDto,
-  ) {
-    const userId = session.getUserId();
-    return await this.issuesService.moveIssue(
-      userId,
-      issueParams.issueId,
-      moveData.teamId,
-    );
   }
 }

@@ -1,4 +1,4 @@
 node_modules
 .triggers
 .trigger
-trigger.conf.ts
+trigger.config.ts

@@ -1,6 +1,6 @@
-import type { ViewType, FiltersModelType } from '@tegonhq/types';
-
 import { useMutation } from 'react-query';
+
+import type { ViewType, FiltersModelType } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 

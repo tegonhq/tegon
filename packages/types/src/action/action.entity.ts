@@ -22,6 +22,8 @@ export type ActionTrigger = OnCreateUpdateDeleteTrigger | SourceWebhookTrigger;
 
 export interface ActionConfig {
   name: string;
+  slug: string;
+  description?: string;
   triggers: ActionTrigger[];
   integrations: string[];
   inputs: any;
@@ -32,6 +34,8 @@ export const ActionStatus = {
   NEEDS_CONFIGURATION: 'NEEDS_CONFIGURATION',
   ACTIVE: 'ACTIVE',
   SUSPENDED: 'SUSPENDED',
+  DEPLOYING: 'DEPLOYING',
+  ERRORED: 'ERRORED',
 };
 
 export enum ActionStatusEnum {
@@ -39,10 +43,11 @@ export enum ActionStatusEnum {
   NEEDS_CONFIGURATION = 'NEEDS_CONFIGURATION',
   ACTIVE = 'ACTIVE',
   SUSPENDED = 'SUSPENDED',
+  DEPLOYING = 'DEPLOYING',
+  ERRORED = 'ERRORED',
 }
 
 export type ActionStatus = (typeof ActionStatus)[keyof typeof ActionStatus];
-
 
 export class Action {
   id: string;
@@ -57,9 +62,14 @@ export class Action {
   version: string;
 
   name: string;
+  slug: string;
   integrations: string[];
+
+  cron?: string;
 
   workspace?: Workspace;
   workspaceId: string;
   actionEntity?: ActionEntity[];
+
+  createdById: string;
 }

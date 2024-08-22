@@ -1,14 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form } from '@tegonhq/ui/components/form';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@tegonhq/ui/components/ui/accordion';
-import { Dialog, DialogContent } from '@tegonhq/ui/components/ui/dialog';
-import { Separator } from '@tegonhq/ui/components/ui/separator';
-import { useToast } from '@tegonhq/ui/components/ui/use-toast';
+} from '@tegonhq/ui/components/accordion';
+import { Dialog, DialogContent } from '@tegonhq/ui/components/dialog';
+import { Form } from '@tegonhq/ui/components/form';
+import { Separator } from '@tegonhq/ui/components/separator';
+import { useToast } from '@tegonhq/ui/components/use-toast';
 import { cn } from '@tegonhq/ui/lib/utils';
 import React from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';

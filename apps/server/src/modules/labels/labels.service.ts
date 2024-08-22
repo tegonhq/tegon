@@ -28,11 +28,10 @@ export default class LabelsService {
 
   async getAllLabels(requestIdParams: RequestIdParams): Promise<Label[]> {
     const whereClause = {
-      ...(requestIdParams.workspaceId && {
-        workspaceId: requestIdParams.workspaceId,
-        teamId: null,
-      }),
-      ...(requestIdParams.teamId && { teamId: requestIdParams.teamId }),
+      OR: [
+        { workspaceId: requestIdParams.workspaceId },
+        { teamId: requestIdParams.teamId },
+      ],
     };
 
     return await this.prisma.label.findMany({

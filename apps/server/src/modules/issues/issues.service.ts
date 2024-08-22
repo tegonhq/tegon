@@ -10,6 +10,7 @@ import {
   UpdateIssueDto,
   WorkflowCategoryEnum,
   WorkspaceRequestParamsDto,
+  GetIssuesByFilterDTO,
 } from '@tegonhq/types';
 import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
@@ -28,6 +29,7 @@ import { IssuesQueue } from './issues.queue';
 import {
   getCreateIssueInput,
   getEquivalentStateIds,
+  getFilterWhere,
   getIssueDiff,
   getLastIssueNumber,
   getSubscriberIds,
@@ -264,7 +266,8 @@ export default class IssuesService {
     }
 
     // Add the updated issue to the vector
-    this.issuesQueue.addIssueToVector(updatedIssue);
+
+    // this.issuesQueue.addIssueToVector(updatedIssue);
 
     // Find the current and updated issue states
     const [currentIssueState, updatedIssueState] = await Promise.all([
@@ -647,5 +650,16 @@ export default class IssuesService {
       });
     });
     return updatedIssue;
+  }
+
+  async getIssuesByFilter(
+    getIssuesByFilterData: GetIssuesByFilterDTO,
+  ): Promise<Issue[]> {
+    const where = getFilterWhere(getIssuesByFilterData);
+
+    console.log(`where: ${JSON.stringify(where)}`);
+    return this.prisma.issue.findMany({
+      where: where as Prisma.IssueWhereInput,
+    });
   }
 }

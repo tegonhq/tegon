@@ -1,6 +1,6 @@
-import type { NotificationType } from '@tegonhq/types';
-
 import { useMutation } from 'react-query';
+
+import type { NotificationType } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 

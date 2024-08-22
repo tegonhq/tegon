@@ -1,6 +1,4 @@
 import { LLMModelsEnum, RoleEnum, WorkspaceStatusEnum } from '@tegonhq/types';
-import { IsOptional, IsString } from 'class-validator';
-
 import {
   filterPrompt,
   issueDescriptionPrompt,
@@ -9,7 +7,8 @@ import {
   issueTitlePrompt,
   subIssuesPrompt,
   viewNameDescriptionPrompt,
-} from 'modules/prompts/prompts.interface';
+} from '@tegonhq/types';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateWorkspaceInput {
   @IsString()

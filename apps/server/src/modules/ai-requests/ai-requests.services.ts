@@ -1,13 +1,10 @@
 import { openai } from '@ai-sdk/openai';
 import { Injectable, Logger } from '@nestjs/common';
+import { GetAIRequestDTO } from '@tegonhq/types';
 import { streamText, generateText, CoreMessage, CoreUserMessage } from 'ai';
 import { PrismaService } from 'nestjs-prisma';
 import { Ollama } from 'ollama';
 import { createOllama } from 'ollama-ai-provider';
-
-import { requestInputBody } from './ai-requests.interface';
-
-import {} from '@tegonhq/types';
 
 interface StreamResponse {
   textStream: AsyncIterable<string> & ReadableStream<string>;
@@ -26,17 +23,15 @@ export default class AIRequestsService {
     }
   }
 
-  async getLLMRequest(reqBody: requestInputBody): Promise<string> {
+  async getLLMRequest(reqBody: GetAIRequestDTO): Promise<string> {
     return (await this.LLMRequestStream(reqBody, false)) as string;
   }
 
-  async getLLMRequestStream(
-    reqBody: requestInputBody,
-  ): Promise<StreamResponse> {
+  async getLLMRequestStream(reqBody: GetAIRequestDTO): Promise<StreamResponse> {
     return (await this.LLMRequestStream(reqBody, true)) as StreamResponse;
   }
 
-  async LLMRequestStream(reqBody: requestInputBody, stream: boolean = true) {
+  async LLMRequestStream(reqBody: GetAIRequestDTO, stream: boolean = true) {
     const messages = reqBody.messages;
     const userMessages = reqBody.messages.filter(
       (message: CoreMessage) => message.role === 'user',

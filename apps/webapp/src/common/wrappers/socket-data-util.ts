@@ -1,5 +1,6 @@
 import type { SyncActionRecord } from 'common/types';
 
+import { saveActionData } from 'store/action';
 import { saveCommentsData } from 'store/comments';
 import { saveIntegrationAccountData } from 'store/integration-accounts';
 import { saveIssueHistoryData } from 'store/issue-history';
@@ -108,6 +109,10 @@ export async function saveSocketData(
             [record],
             MODEL_STORE_MAP[MODELS.IssueSuggestion],
           );
+        }
+
+        case MODELS.Action: {
+          return await saveActionData([record], MODEL_STORE_MAP[MODELS.Action]);
         }
       }
     }),

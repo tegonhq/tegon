@@ -1,6 +1,6 @@
-import type { Invite } from '@tegonhq/types';
-
 import { useMutation } from 'react-query';
+
+import type { Invite } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 

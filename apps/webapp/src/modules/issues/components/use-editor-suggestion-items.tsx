@@ -1,6 +1,6 @@
 import type { Editor, Range } from '@tiptap/core';
 
-import { suggestionItems } from '@tegonhq/ui/components/ui/editor/slash-command';
+import { suggestionItems } from '@tegonhq/ui/components/editor/slash-command';
 import { ListEdit } from '@tegonhq/ui/icons';
 import React from 'react';
 

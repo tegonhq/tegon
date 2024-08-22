@@ -1,6 +1,6 @@
-import type { IntegrationAccountType, Settings } from '@tegonhq/types';
-
 import { useMutation } from 'react-query';
+
+import type { IntegrationAccountType, Settings } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 

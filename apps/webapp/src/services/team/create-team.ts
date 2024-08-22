@@ -1,6 +1,6 @@
-import type { TeamType } from '@tegonhq/types';
-
 import { useMutation } from 'react-query';
+
+import type { TeamType } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 

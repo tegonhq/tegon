@@ -1,6 +1,6 @@
-import type { IssueType } from '@tegonhq/types';
-
 import { type UseQueryResult, useQuery } from 'react-query';
+
+import type { IssueType } from 'common/types';
 
 import { type XHRErrorResponse, ajaxGet } from 'services/utils';
 

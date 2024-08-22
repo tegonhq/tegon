@@ -1,6 +1,6 @@
-import type { BootstrapResponse } from '@tegonhq/types';
-
 import { type UseQueryResult, useQuery } from 'react-query';
+
+import type { BootstrapResponse } from 'common/types';
 
 import { type XHRErrorResponse, ajaxGet } from 'services/utils';
 

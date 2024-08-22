@@ -1,6 +1,6 @@
-import type { LabelType } from '@tegonhq/types';
-
 import { useMutation } from 'react-query';
+
+import type { LabelType } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 

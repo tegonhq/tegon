@@ -101,12 +101,16 @@ const starterKit = StarterKit.configure({
   },
   codeBlock: {
     HTMLAttributes: {
-      class: cx('rounded-sm bg-background-2 border p-5 font-mono font-medium'),
+      class: cx(
+        'rounded-sm bg-grayAlpha-100 text-[#BF4594] border px-1.5 py-1 font-mono font-medium',
+      ),
     },
   },
   code: {
     HTMLAttributes: {
-      class: cx('rounded-md bg-background-2 px-1.5 py-1 font-mono font-medium'),
+      class: cx(
+        'rounded-md bg-grayAlpha-100 text-[#BF4594] px-1.5 py-1 font-mono font-medium',
+      ),
       spellcheck: 'false',
     },
   },

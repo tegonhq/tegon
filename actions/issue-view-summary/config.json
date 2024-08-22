@@ -1,0 +1,6 @@
+{
+  "name": "issue-view-summary",
+  "triggers": [],
+  "schedule": "true",
+  "integrations": ["slack"]
+}

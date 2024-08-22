@@ -2,7 +2,7 @@
 
 import Dexie from 'dexie';
 
-import type { IntegrationAccountType } from 'common/types';
+import type { ActionType, IntegrationAccountType } from 'common/types';
 import type {
   IssueType,
   IssueHistoryType,
@@ -20,6 +20,7 @@ import type { UsersOnWorkspaceType, WorkspaceType } from 'common/types';
 import { MODELS } from './models';
 
 export class TegonDatabase extends Dexie {
+  actions: Dexie.Table<ActionType, string>;
   workspaces: Dexie.Table<WorkspaceType, string>;
   labels: Dexie.Table<LabelType, string>;
   teams: Dexie.Table<TeamType, string>;
@@ -38,7 +39,7 @@ export class TegonDatabase extends Dexie {
   constructor() {
     super('TegonDatabase');
 
-    this.version(9).stores({
+    this.version(11).stores({
       [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug',
       [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',
@@ -65,6 +66,8 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,workspaceId,name,description,filters,isBookmarked,teamId',
       [MODELS.IssueSuggestion]:
         'id,createdAt,updatedAt,issueId,suggestedLabelIds,suggestedAssigneeId',
+      [MODELS.Action]:
+        'id,createdAt,updatedAt,workspaceId,config,data,status,version,name,integrations,cron,createdById,slug',
     });
 
     this.workspaces = this.table(MODELS.Workspace);
@@ -81,6 +84,7 @@ export class TegonDatabase extends Dexie {
     this.notifications = this.table(MODELS.Notification);
     this.views = this.table(MODELS.View);
     this.issueSuggestions = this.table(MODELS.IssueSuggestion);
+    this.actions = this.table(MODELS.Action);
   }
 }
 

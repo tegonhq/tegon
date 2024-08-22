@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import {
   ActionEntity,
   ActionEvent,
+  ActionStatusEnum,
   ActionTypesEnum,
   IntegrationAccount,
 } from '@tegonhq/types';
@@ -108,6 +109,7 @@ export default class ActionEventService {
         type: actionEvent.modelName,
         modelId: actionEvent.modelId,
         accessToken,
+        action: actionEntity.action,
         integrationAccounts: Object.fromEntries(
           actionEntity.action.integrations.map((integrationName) => [
             integrationName,
@@ -126,7 +128,10 @@ export default class ActionEventService {
         type: actionEvent.eventType,
         entity: actionEvent.modelName,
         deleted: null,
-        action: { workspaceId: actionEvent.workspaceId },
+        action: {
+          workspaceId: actionEvent.workspaceId,
+          status: ActionStatusEnum.ACTIVE,
+        },
       },
       include: {
         action: true,

@@ -1,6 +1,6 @@
-import type { SubscribeType } from '@tegonhq/types';
-
 import { useMutation } from 'react-query';
+
+import type { SubscribeType } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 
