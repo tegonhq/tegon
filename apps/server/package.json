@@ -22,7 +22,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "dev": "nest start --watch",
-    "start-prod": "pnpm run migrate:deploy && pnpm run db:generate && node dist/src/main",
+    "start-prod": "pnpm run migrate:deploy && pnpm run generate && node dist/src/main",
     "start:debug": "nest start --debug --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "migrate:dev": "prisma migrate dev --preview-feature",
@@ -33,7 +33,7 @@
     "migrate:resolve": "prisma migrate resolve --preview-feature",
     "prisma:studio": "prisma studio",
     "generate": "prisma generate",
-    "db:init-resources": "pnpm run migrate:dev && pnpm run db:generate",
+    "db:init-resources": "pnpm run migrate:dev && pnpm run generate",
     "create-resources": "node scripts/createUserWorkspaceTeam",
     "deploy-trigger-tasks": "npx trigger.dev@beta deploy --self-hosted",
     "trigger-dev": "npx trigger.dev@beta dev -a http://localhost:3030"

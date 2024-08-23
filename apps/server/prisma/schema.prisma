@@ -193,7 +193,7 @@ model Issue {
   teamId String
 
   createdById String?
-  updatedById String
+  updatedById String?
 
   subscriberIds String[]
   assigneeId    String?
@@ -225,7 +225,7 @@ model IssueComment {
   sourceMetadata Json?
 
   userId      String?
-  updatedById String
+  updatedById String?
 
   reactions     Reaction[]
   reactionsData Json[]
@@ -361,7 +361,7 @@ model LinkedIssue {
   sourceId    String?
   sourceData  Json?
   createdById String?
-  updatedById String
+  updatedById String?
 
   issue   Issue  @relation(fields: [issueId], references: [id])
   issueId String
