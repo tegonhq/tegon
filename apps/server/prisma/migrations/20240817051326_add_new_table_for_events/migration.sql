@@ -26,13 +26,13 @@ ALTER TABLE "Issue" DROP CONSTRAINT "Issue_createdById_fkey";
 ALTER TABLE "Action" ADD COLUMN     "createdById" TEXT NOT NULL;
 
 -- AlterTable
-ALTER TABLE "Issue" ADD COLUMN     "updatedById" TEXT NOT NULL;
+ALTER TABLE "Issue" ADD COLUMN     "updatedById" TEXT;
 
 -- AlterTable
-ALTER TABLE "IssueComment" ADD COLUMN     "updatedById" TEXT NOT NULL;
+ALTER TABLE "IssueComment" ADD COLUMN     "updatedById" TEXT;
 
 -- AlterTable
-ALTER TABLE "LinkedIssue" ADD COLUMN     "updatedById" TEXT NOT NULL;
+ALTER TABLE "LinkedIssue" ADD COLUMN     "updatedById" TEXT;
 
 -- AlterTable
 ALTER TABLE "TriggerProject" ADD COLUMN     "status" BOOLEAN NOT NULL DEFAULT true;
