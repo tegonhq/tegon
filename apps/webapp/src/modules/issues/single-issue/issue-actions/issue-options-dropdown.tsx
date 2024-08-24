@@ -49,7 +49,6 @@ export function IssueOptionsDropdown() {
           <DropdownMenuItem onClick={() => setMoveIssueDialog(true)}>
             <DropdownItem Icon={ArrowForwardLine} title="Move to team" />
           </DropdownMenuItem>
-          {/* <LinkedIssueItems setDialogOpen={setDialogOpen} /> */}
 
           <RelatedDropdownItems setRelatedModal={setRelatedModal} />
           <DropdownMenuSeparator />

@@ -16,13 +16,9 @@ import { UserContext } from 'store/user-context';
 
 interface ReplyCommentProps {
   issueCommentId: string;
-  badgeContent?: React.ReactNode;
 }
 
-export function ReplyComment({
-  issueCommentId,
-  badgeContent,
-}: ReplyCommentProps) {
+export function ReplyComment({ issueCommentId }: ReplyCommentProps) {
   const currentUser = React.useContext(UserContext);
   const issueData = useIssueData();
   const [commentValue, setCommentValue] = React.useState('');
@@ -39,7 +35,7 @@ export function ReplyComment({
   };
 
   return (
-    <div className="flex items-start w-full border-t px-3 py-2 pb-0">
+    <div className="flex items-start w-full border-t border-border px-3 py-2 pb-0">
       <AvatarText text={currentUser.fullname} className="text-[9px]" />
 
       <div className="w-full relative">
@@ -54,17 +50,16 @@ export function ReplyComment({
             !commentValue && setShowReplyButton(false);
           }}
           onChange={(e) => setCommentValue(e)}
-          className="w-full bg-transparent px-3 py-2 pt-0"
+          className="w-full bg-transparent px-3 py-2 pt-0 grow"
         >
           <EditorExtensions suggestionItems={suggestionItems} />
         </Editor>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-end items-center">
           {showReplyButton && (
             <>
-              <div>{badgeContent}</div>
               <Button
                 variant="ghost"
-                className="my-2 transition-all duration-500 ease-in-out"
+                className="transition-all duration-500 ease-in-out my-2"
                 type="submit"
                 onClick={onSubmit}
               >

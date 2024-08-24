@@ -23,7 +23,7 @@ export function useGetExternalActionDataQuery(
     () => getExternalActionData(actionSlug),
     {
       retry: 1,
-      staleTime: 1,
+      staleTime: 10000,
       refetchOnWindowFocus: false, // Frequency of Change would be Low
     },
   );

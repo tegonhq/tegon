@@ -28,7 +28,7 @@ export const LeftSide = observer(() => {
   const { isLoading: loading, data: latestAction } =
     useGetExternalActionDataQuery(actionSlug as string);
 
-  const actionConfig = action.config ?? JSON.parse(action.config);
+  const actionConfig = action.config;
 
   if (loading) {
     return null;

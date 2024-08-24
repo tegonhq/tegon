@@ -18,7 +18,7 @@ export function useGetIntegrationDefinitions(
     () => getIntegrationDefinitions({ workspaceId }),
     {
       retry: 1,
-      staleTime: 1,
+      staleTime: 100000,
       refetchOnWindowFocus: false, // Frequency of Change would be Low
     },
   );

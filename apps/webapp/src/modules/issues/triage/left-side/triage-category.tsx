@@ -52,7 +52,7 @@ export const TriageCategory = observer(
           <CollapsibleTrigger asChild>
             <Button
               size="lg"
-              className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100 px-2"
+              className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100 px-4"
               variant="ghost"
             >
               <div>
@@ -107,7 +107,7 @@ export const TriageCategory = observer(
                   </div>
 
                   <div className="flex justify-between text-sm">
-                    {getCreatedBy(issue, userData)}
+                    {getCreatedBy(userData)}
                     <div className="text-muted-foreground text-xs">
                       <ReactTimeAgo date={new Date(issue.updatedAt)} />
                     </div>

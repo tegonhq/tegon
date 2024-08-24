@@ -8,7 +8,7 @@ import { AddLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
-import { LinkedIssueSubType, type LinkedIssueType } from 'common/types';
+import { type LinkedIssueType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -82,7 +82,6 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
         open={dialogOpen}
         title="Add link to issue"
         placeholder="https://"
-        type={LinkedIssueSubType.ExternalLink}
         askTitleInForm
       />
     </>
