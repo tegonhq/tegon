@@ -23,14 +23,14 @@
           "type": "object",
           "properties": {
             "channelId": {
-              "type": "string",
+              "type": "text",
               "title": "Channel ID",
               "validation": {
                 "required": true
               }
             },
             "teamId": {
-              "type": "string",
+              "type": "text",
               "title": "Team ID",
               "validation": {
                 "required": true

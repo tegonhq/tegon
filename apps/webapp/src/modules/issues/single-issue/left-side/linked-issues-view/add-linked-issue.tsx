@@ -18,8 +18,6 @@ import { Input } from '@tegonhq/ui/components/input';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { LinkedIssueSubType } from 'common/types';
-
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useCreateLinkedIssueMutation } from 'services/linked-issues';
@@ -32,7 +30,6 @@ export const URLSchema = z.object({
 interface AddLinkedIssueProps {
   issueId: string;
   placeholder: string;
-  type: LinkedIssueSubType;
   title: string;
   description?: string;
   askTitleInForm: boolean;
@@ -47,7 +44,6 @@ export function AddLinkedIssue({
   title,
   description,
   askTitleInForm,
-  type,
   placeholder,
 }: AddLinkedIssueProps) {
   const currentTeam = useCurrentTeam();
@@ -72,7 +68,6 @@ export function AddLinkedIssue({
     createLinkedIssue({
       url: values.url,
       title: values.title,
-      type,
       issueId,
       teamId: currentTeam.id,
     });

@@ -1,13 +1,12 @@
 import { useMutation } from 'react-query';
 
-import type { LinkedIssueSubType, LinkedIssueType } from 'common/types';
+import type { LinkedIssueType } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 
 export interface CreateLinkedIssueParams {
   title?: string;
   url: string;
-  type: LinkedIssueSubType;
   issueId: string;
   teamId: string;
 }

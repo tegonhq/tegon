@@ -32,7 +32,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
   } = query;
 
   function isActive(item: LinkItem) {
-    if (pathname.includes('integrations')) {
+    if (pathname.includes('integrations') || pathname.includes('actions')) {
       return pathname.includes(item.href);
     }
 

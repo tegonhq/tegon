@@ -1,9 +1,4 @@
-import {
-  RiAccountBoxFill,
-  RiGithubFill,
-  RiMoreFill,
-  RiSlackFill,
-} from '@remixicon/react';
+import { RiAccountBoxFill, RiMoreFill } from '@remixicon/react';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import {
@@ -23,7 +18,6 @@ import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
-import { Integration } from 'common/types';
 import { type IssueCommentType, type User } from 'common/types';
 
 import { UserContext } from 'store/user-context';
@@ -41,18 +35,7 @@ export interface GenericCommentActivityProps {
   hasMore?: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getIcon(sourceMetadata: any) {
-  if (sourceMetadata) {
-    if (sourceMetadata.type === Integration.Github) {
-      return <RiGithubFill size={18} className="text-foreground" />;
-    }
-
-    if (sourceMetadata.type === Integration.Slack) {
-      return <RiSlackFill size={18} className="text-foreground" />;
-    }
-  }
-
+function getIcon() {
   return <RiAccountBoxFill size={18} className="text-foreground" />;
 }
 
@@ -77,7 +60,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         <AvatarText text={user?.fullname} className="text-[9px] mr-2" />
       ) : (
         <div className="h-5 w-5 flex items-center justify-center mr-2 rounded-sm">
-          {getIcon(sourceMetadata)}
+          {getIcon()}
         </div>
       )}
       <div

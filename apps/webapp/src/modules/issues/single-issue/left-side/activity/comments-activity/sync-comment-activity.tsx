@@ -1,11 +1,10 @@
-import { RiSlackFill } from '@remixicon/react';
 import { TimelineItem } from '@tegonhq/ui/components/timeline';
-import { SlackIcon } from '@tegonhq/ui/icons';
+import { LinkLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
-import { LinkedSlackMessageType, type LinkedIssueType } from 'common/types';
+import { type LinkedIssueType } from 'common/types';
 import { type IssueCommentType } from 'common/types';
 import type { User } from 'common/types';
 
@@ -24,29 +23,23 @@ interface CommentActivityProps {
   hasMore?: boolean;
 }
 
-export function SlackCommentActivity({
+export function SyncCommentActivity({
   comment,
   childComments,
-  hasMore,
   allowReply = false,
+  hasMore,
   getUserData,
 }: CommentActivityProps) {
   const { linkedIssuesStore } = useContextStore();
   const linkedIssue = linkedIssuesStore.linkedIssues.find(
     (linkedIssue: LinkedIssueType) => {
-      const source = JSON.parse(linkedIssue.source);
+      const source = JSON.parse(linkedIssue.sourceData);
 
-      return (
-        linkedIssue.issueId === comment.issueId &&
-        source &&
-        source.subType === LinkedSlackMessageType.Thread
-      );
+      return source.syncedCommentId === comment.id;
     },
   );
 
-  if (!linkedIssue) {
-    return null;
-  }
+  const linkedSourceData = JSON.parse(linkedIssue.sourceData);
 
   return (
     <TimelineItem
@@ -55,7 +48,7 @@ export function SlackCommentActivity({
       hasMore={hasMore}
     >
       <div className="flex items-start text-muted-foreground ">
-        <SlackIcon size={20} className="text-foreground mr-4" />
+        <LinkLine size={20} className="text-foreground mr-4" />
 
         <div
           className={cn(
@@ -63,23 +56,12 @@ export function SlackCommentActivity({
             !comment.parentId && 'bg-grayAlpha-100',
           )}
         >
-          <div
-            className={cn(
-              'flex gap-2 justify-between',
-              !comment.parentId && 'p-3',
-            )}
-          >
-            <div>
-              <span className="text-foreground font-medium flex items-center gap-1">
-                <SlackIcon size={16} className="mr-2" /> Slack
-              </span>
-              <span className="text-muted-foreground"> thread connected </span>
-            </div>
-
+          <div className={cn('flex gap-2', !comment.parentId && 'p-3')}>
+            <a href={linkedIssue.url}>{linkedSourceData.title}</a>
             <span>
               <ReactTimeAgo
                 date={new Date(comment.updatedAt)}
-                className="text-muted-foreground font-mono text-xs"
+                className="text-muted-foreground text-xs"
               />
             </span>
           </div>
@@ -108,17 +90,7 @@ export function SlackCommentActivity({
             </div>
           )}
 
-          {allowReply && (
-            <ReplyComment
-              issueCommentId={comment.id}
-              badgeContent={
-                <div className="rounded flex items-center gap-1 p-1 px-2 bg-grayAlpha-100">
-                  <RiSlackFill size={16} /> Comments are also posted on slack
-                  thread
-                </div>
-              }
-            />
-          )}
+          {allowReply && <ReplyComment issueCommentId={comment.id} />}
         </div>
       </div>
     </TimelineItem>

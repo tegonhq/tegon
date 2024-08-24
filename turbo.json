@@ -89,7 +89,7 @@
       "cache": false
     },
     "dev": {
-      "dependsOn": [ "db:init-resources", "^generate" ],
+      "dependsOn": [ "^generate" ],
       "cache": false
     },
     "build": {

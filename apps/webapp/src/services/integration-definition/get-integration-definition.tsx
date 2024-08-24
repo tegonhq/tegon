@@ -18,7 +18,7 @@ export function useGetIntegrationDefinition(
     () => getIntegrationDefinition({ integrationDefinitionId }),
     {
       retry: 1,
-      staleTime: 1,
+      staleTime: 1000000,
       refetchOnWindowFocus: false, // Frequency of Change would be Low
     },
   );

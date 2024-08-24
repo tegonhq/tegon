@@ -400,7 +400,7 @@ export default class IssuesAIService {
       {
         labelNames,
         assigneeNames,
-        workflowNames,
+        workflowNames, 
       },
       workspace.id,
     );

@@ -1,3 +1,4 @@
+import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Timeline, TimelineItem } from '@tegonhq/ui/components/timeline';
 import { observer } from 'mobx-react-lite';
 
@@ -12,7 +13,7 @@ import { useContextStore } from 'store/global-context-provider';
 
 import { ActivityItem } from './activity-item';
 import { LinkedIssueActivity } from './linked-issue-activity';
-import { getUserDetails, getUserIcon } from './user-activity-utils';
+import { getUserDetails } from './user-activity-utils';
 
 enum ActivityType {
   Comment = 'Comment',
@@ -74,7 +75,10 @@ export const IssueActivity = observer(() => {
       <Timeline>
         <TimelineItem hasMore={false} date={issue.createdAt}>
           <div className="flex items-center text-muted-foreground">
-            {getUserIcon(issueCreatedUser, issueSourceMetadata?.type)}
+            <AvatarText
+              text={issueCreatedUser.fullname}
+              className="mr-4 text-[9px]"
+            />
 
             <div className="flex items-center">
               <span className="text-foreground mr-2 font-medium">
