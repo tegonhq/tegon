@@ -146,6 +146,7 @@ model IntegrationDefinitionV2 {
   deleted   DateTime?
 
   name         String     @unique
+  slug         String
   description  String
   icon         String
   clientId     String

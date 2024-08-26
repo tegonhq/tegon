@@ -79,12 +79,3 @@ export const generateDefaultValues = (schema: FormSchema) => {
 
   return defaultValues;
 };
-
-export const StatusMapping = {
-  [ActionStatusEnum.ACTIVE]: 'Active',
-  [ActionStatusEnum.INSTALLED]: 'Installed',
-  [ActionStatusEnum.NEEDS_CONFIGURATION]: 'Needs configuration',
-  [ActionStatusEnum.SUSPENDED]: 'Suspended',
-  [ActionStatusEnum.DEPLOYING]: 'Deploying',
-  [ActionStatusEnum.ERRORED]: 'Errored',
-};

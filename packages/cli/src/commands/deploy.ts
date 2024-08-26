@@ -3,7 +3,7 @@ import { commonOptions } from '../cli/common';
 import { getVersion } from '../utilities/getVersion';
 import path from 'path';
 import fs from 'node:fs';
-import { note, log, spinner } from '@clack/prompts';
+import { note, log, spinner, text } from '@clack/prompts';
 import { execa } from 'execa';
 import { printInitialBanner } from '../utilities/initialBanner';
 import { readJSONFileSync } from '../utilities/fileSystem';
@@ -42,7 +42,7 @@ export function configureDeployCommand(program: Command) {
             fs.mkdirSync(triggerDir, { recursive: true });
           }
 
-          const handlerName = `handler${config.config.name.replace(/-/g, '_')}`;
+          const handlerName = `handler${config.config.name.replace(/-/g, '_').replace(/ /g, '')}`;
           const triggerIndexPath = path.join(triggerDir, 'index.ts');
           const triggerIndexContent = `
             import { run } from '../index';
@@ -53,14 +53,19 @@ export function configureDeployCommand(program: Command) {
 
           fs.writeFileSync(triggerIndexPath, triggerIndexContent);
           createTriggerConfigFile(path.dirname(config.path), workspaceId);
-          const packageJsonPath = path.join(path.dirname(config.path), 'package.json');
-        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+          const packageJsonPath = path.join(
+            path.dirname(config.path),
+            'package.json',
+          );
+          const packageJson = JSON.parse(
+            fs.readFileSync(packageJsonPath, 'utf-8'),
+          );
           const version = packageJson.version;
-          
+
           const s = spinner();
           s.start(`Deploying ${config.path} (v${version})`);
 
-          await execa(
+          const deployProcess = execa(
             'npx',
             ['trigger.dev@beta', 'deploy', '--self-hosted', '--skip-typecheck'],
             {
@@ -73,6 +78,17 @@ export function configureDeployCommand(program: Command) {
               },
             },
           );
+
+          const handleProcessOutput = (data: Buffer) => {
+            s.message(
+              `Deploying ${config.path} (v${version}) - ${data.toString()}`,
+            );
+          };
+
+          deployProcess.stderr?.on('data', handleProcessOutput);
+          deployProcess.stdout?.on('data', handleProcessOutput);
+
+          await deployProcess;
 
           s.stop(`Deployment successful for ${config.path}`);
 
@@ -176,7 +192,11 @@ async function validateAndExportConfigs(
   return validConfigs;
 }
 
-async function resourceCreation(config: ConfigMap, workspaceId: string, version: string) {
+async function resourceCreation(
+  config: ConfigMap,
+  workspaceId: string,
+  version: string,
+) {
   try {
     const baseURL = process.env.BASE_HOST || 'https://app.tegon.ai/api';
     await axios.post(`${baseURL}/v1/action/create-resource`, {

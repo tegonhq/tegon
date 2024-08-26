@@ -44,7 +44,7 @@ export const Configuration = ({ schema }: { schema: FormSchema }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 bg-background-3 rounded p-3">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

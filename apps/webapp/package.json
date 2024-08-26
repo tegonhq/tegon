@@ -14,6 +14,7 @@
     "@hookform/resolvers": "3.9.0",
     "@remixicon/react": "^4.2.0",
     "@sentry/nextjs": "^7.105.0",
+    "@tanstack/react-table": "^8.20.5",
     "@tegonhq/services": "workspace:*",
     "@tegonhq/types": "workspace:*",
     "@tegonhq/ui": "workspace:*",

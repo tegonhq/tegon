@@ -14,7 +14,8 @@
     "start": "turbo run start-prod",
     "create-resources": "dotenv -- turbo run create-resources --filter=server",
     "trigger-dev": "dotenv -- turbo run trigger-dev",
-    "deploy-trigger-tasks": "dotenv -- turbo run deploy-trigger-tasks --filter=server --"
+    "deploy-trigger-tasks": "dotenv -- turbo run deploy-trigger-tasks --filter=server --",
+    "prisma:studio": "turbo run prisma:studio --filter=server"
   },
   "devDependencies": {
     "dotenv-cli": "^7.4.2",

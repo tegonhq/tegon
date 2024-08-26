@@ -12,6 +12,14 @@ import { tegonDatabase } from 'store/database';
 
 import { ActionsArray } from './models';
 
+function configToJson(config: string) {
+  try {
+    return JSON.parse(config);
+  } catch (e) {
+    return {};
+  }
+}
+
 export const ActionsStore: IAnyStateTreeNode = types
   .model({
     actions: ActionsArray,
@@ -51,7 +59,13 @@ export const ActionsStore: IAnyStateTreeNode = types
   })
   .views((self) => ({
     getAction(slug: string) {
-      return self.actions.find((action) => action.slug === slug);
+      const action = self.actions.find((action) => action.slug === slug);
+
+      if (action) {
+        return { ...action, config: configToJson(action.config) };
+      }
+
+      return action;
     },
   }));
 
