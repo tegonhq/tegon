@@ -17,7 +17,7 @@ export async function getIntegrationAccountsFromActions(
   const integrationAccounts = await prisma.integrationAccount.findMany({
     where: {
       integrationDefinition: {
-        name: {
+        slug: {
           in: uniqueIntegrations,
         },
       },
@@ -30,7 +30,7 @@ export async function getIntegrationAccountsFromActions(
   return integrationAccounts.reduce(
     (acc, curr: IntegrationAccount) => ({
       ...acc,
-      [curr.integrationDefinition.name]: curr,
+      [curr.integrationDefinition.slug]: curr,
     }),
     {},
   );

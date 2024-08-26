@@ -23,8 +23,7 @@ import {
   getTemplate,
 } from './oauth-callback.utils';
 
-// const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/api/v1/oauth/callback`;
-const CALLBACK_URL = `https://0e62-2406-7400-63-8b32-685c-e2e9-550e-57b5.ngrok-free.app/v1/oauth/callback`;
+const CALLBACK_URL = `${process.env.PUBLIC_FRONTEND_HOST}/api/v1/oauth/callback`;
 
 @Injectable()
 export class OAuthCallbackService {
@@ -216,9 +215,7 @@ export class OAuthCallbackService {
 
       await this.triggerdevService.triggerTask(
         TriggerProjects.Common,
-        // TODO: integration slug
-
-        integrationDefinition.name,
+        integrationDefinition.slug,
         payload,
       );
 

@@ -28,6 +28,8 @@ export const slackTriage = async (
   integrationAccount: IntegrationAccount,
   userId: string,
   eventBody: EventBody,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  action: any,
 ) => {
   const { event, team_id: slackTeamId } = eventBody;
 
@@ -40,11 +42,10 @@ export const slackTriage = async (
   // Extract Slack settings from the integration account
   const slackSettings =
     integrationAccount.settings as unknown as SlackIntegrationSettings;
-  const { teamDomain: slackTeamDomain, mappings: channelMappings } =
-    slackSettings;
+  const { teamDomain: slackTeamDomain } = slackSettings;
 
   // Find the channel mapping for the given channel ID
-  const channelMapping = channelMappings.find(
+  const channelMapping = action.data.inputs.channelTeamMappings.find(
     ({ channelId: mappedChannelId }: { channelId: string }) =>
       mappedChannelId === channelId,
   );

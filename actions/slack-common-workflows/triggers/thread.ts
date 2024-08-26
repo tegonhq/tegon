@@ -9,7 +9,6 @@ import {
   getLinkedIssueBySource,
 } from '@tegonhq/sdk';
 
-import { SlackIntegrationSettings } from '../types';
 import {
   convertSlackMessageToTiptapJson,
   getExternalSlackUser,
@@ -18,6 +17,8 @@ import {
 export const slackThread = async (
   integrationAccount: IntegrationAccount,
   eventBody: EventBody,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  action: any,
 ) => {
   const event = eventBody.event;
 
@@ -28,12 +29,8 @@ export const slackThread = async (
     return undefined;
   }
 
-  // Find the channel mapping in the integration account settings
-  const slackSettings =
-    integrationAccount.settings as unknown as SlackIntegrationSettings;
-
   // Find the channel mapping for the given channel ID
-  const channelMapping = slackSettings.mappings.find(
+  const channelMapping = action.data.inputs.channelTeamMappings.find(
     ({ channelId: mappedChannelId }: { channelId: string }) =>
       mappedChannelId === event.channel,
   );

@@ -25,14 +25,12 @@ export const viewSummary = async (actionPayload: ActionEventPayload) => {
   } = actionPayload;
 
   const { cron: actionCron, data: actionInput } = action;
-  // Find the channel mapping in the integration account settings
-  const slackSettings = integrationAccount.settings;
 
   const view = (await axios.get(`http://localhost:3000/api/v1/views/${viewId}`))
     .data;
 
   // Find the channel mapping for the given channel ID
-  const channelMapping = slackSettings.mappings.find(
+  const channelMapping = actionInput.input.channelTeamMappings.find(
     ({ teamId: mappedTeamId }: { teamId: string }) =>
       mappedTeamId === view.teamId,
   );
