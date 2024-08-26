@@ -27,7 +27,7 @@ export const Configuration = ({ schema }: { schema: FormSchema }) => {
   const { actionsStore } = useContextStore();
 
   const action = actionsStore.getAction(actionSlug);
-  const inputs = getData(action).inputs;
+  const inputs = getData(action)?.inputs;
 
   const { mutate: updateActionInputs } = useUpdateActionInputsMutation({});
   // const zodSchema = generateZodSchema(schema);

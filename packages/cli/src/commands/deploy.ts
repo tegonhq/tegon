@@ -1,4 +1,3 @@
-import { Command } from 'commander';
 import { commonOptions } from '../cli/common';
 import { getVersion } from '../utilities/getVersion';
 import path from 'path';
@@ -9,6 +8,7 @@ import { printInitialBanner } from '../utilities/initialBanner';
 import { readJSONFileSync } from '../utilities/fileSystem';
 import axios from 'axios';
 import '../utilities/axios';
+import { Command } from 'commander';
 
 export function configureDeployCommand(program: Command) {
   return commonOptions(
@@ -25,10 +25,10 @@ export function configureDeployCommand(program: Command) {
       try {
         const triggerAccessToken = await getTriggerAccessToken(workspaceId);
 
-        const cwd = process.cwd();
-        const configPaths = checkConfigFiles(cwd);
+        const cwd = process.cwd(); // Get the current working directory
+        const configPaths = checkConfigFiles(cwd); // Check for config.json files in the current directory and subdirectories
 
-        const validConfigs = await validateAndExportConfigs(configPaths, cwd);
+        const validConfigs = await validateAndExportConfigs(configPaths, cwd); // Validate and export the found config files
         note(`Valid configs found: ${validConfigs.length}`);
 
         if (configPaths.length === 0) {
@@ -36,8 +36,11 @@ export function configureDeployCommand(program: Command) {
           process.exit(1);
         }
 
+        // Loop through each valid config
         for (const config of validConfigs) {
-          const triggerDir = path.join(path.dirname(config.path), 'trigger');
+          const triggerDir = path.join(path.dirname(config.path), 'trigger'); // Create a 'trigger' directory for the config
+
+          // Create the 'trigger' directory if it doesn't exist
           if (!fs.existsSync(triggerDir)) {
             fs.mkdirSync(triggerDir, { recursive: true });
           }
@@ -48,11 +51,13 @@ export function configureDeployCommand(program: Command) {
             import { run } from '../index';
             import { handler } from '@tegonhq/sdk';
 
-            export const ${handlerName} = handler('${config.config.name}', run);
+            export const ${handlerName} = handler('${config.config.slug}', run);
           `.trim();
 
+          // Write the trigger index file
           fs.writeFileSync(triggerIndexPath, triggerIndexContent);
-          createTriggerConfigFile(path.dirname(config.path), workspaceId);
+          createTriggerConfigFile(path.dirname(config.path), workspaceId); // Create the trigger.config.ts file
+
           const packageJsonPath = path.join(
             path.dirname(config.path),
             'package.json',
@@ -65,6 +70,7 @@ export function configureDeployCommand(program: Command) {
           const s = spinner();
           s.start(`Deploying ${config.path} (v${version})`);
 
+          // Deploy the action using trigger.dev
           const deployProcess = execa(
             'npx',
             ['trigger.dev@beta', 'deploy', '--self-hosted', '--skip-typecheck'],
@@ -103,7 +109,7 @@ export function configureDeployCommand(program: Command) {
           const resourceSpinner = spinner();
 
           resourceSpinner.start('Creating resources...');
-          await resourceCreation(config.config, workspaceId, version);
+          await resourceCreation(config.config, workspaceId, version); // Create resources for the deployed action
           resourceSpinner.stop(`Resources created for ${config.path}`);
         }
 
@@ -115,6 +121,7 @@ export function configureDeployCommand(program: Command) {
     });
 }
 
+// Get the trigger access token for the given workspace ID
 async function getTriggerAccessToken(workspaceId: string): Promise<string> {
   try {
     const baseURL = process.env.BASE_HOST || 'https://app.tegon.ai/api';
@@ -166,6 +173,7 @@ interface ConfigMap {
   config: any;
 }
 
+// Validate and export the found config files
 async function validateAndExportConfigs(
   configPaths: string[],
   cwd: string,
@@ -192,6 +200,7 @@ async function validateAndExportConfigs(
   return validConfigs;
 }
 
+// Create resources for the deployed action
 async function resourceCreation(
   config: ConfigMap,
   workspaceId: string,

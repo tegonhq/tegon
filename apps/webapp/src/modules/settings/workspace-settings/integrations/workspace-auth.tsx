@@ -2,8 +2,6 @@ import type { IntegrationDefinition } from '@tegonhq/types';
 
 import { Button } from '@tegonhq/ui/components/button';
 
-import { toProperCase } from 'common';
-
 import { useCurrentWorkspace } from 'hooks/workspace';
 
 import {
@@ -40,7 +38,7 @@ export function WorkspaceAuth({ integrationDefinition }: WorkspaceAuthProps) {
           <>
             <p className="font-medium"> Connected organization account</p>
             <p className="text-muted-foreground">
-              Your organization {toProperCase(integrationDefinition.name)}{' '}
+              Your organization {integrationDefinition.name}
               account is connected
             </p>
           </>
@@ -48,8 +46,8 @@ export function WorkspaceAuth({ integrationDefinition }: WorkspaceAuthProps) {
           <>
             <p className="font-medium"> Connect organization account</p>
             <p className="text-muted-foreground">
-              Connect your {toProperCase(integrationDefinition.name)} account to
-              use the integration
+              Connect your {integrationDefinition.name} account to use the
+              integration
             </p>
           </>
         )}

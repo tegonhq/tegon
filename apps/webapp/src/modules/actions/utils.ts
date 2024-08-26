@@ -1,4 +1,3 @@
-import { ActionStatusEnum } from '@tegonhq/types';
 import { z } from 'zod';
 
 import { InputTypeEnum, type FormSchema } from './components/types';
@@ -53,7 +52,6 @@ export const generateZodSchema = (schema: FormSchema) => {
     shape[key] = fieldSchema;
   }
 
-  console.log(shape);
   return z.object(shape);
 };
 

@@ -5,9 +5,9 @@ import type { ActionType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 
-import { Action } from './components/action';
+import { ActionItem } from './components/action-item';
 
-export const AllActions = observer(() => {
+export const AllActionsList = observer(() => {
   const { actionSlug } = useParams();
   const { actionsStore } = useContextStore();
   const actions = actionsStore.actions;
@@ -21,7 +21,7 @@ export const AllActions = observer(() => {
           : false;
 
         return (
-          <Action
+          <ActionItem
             action={action}
             key={action.id}
             noBorder={nextActive || active}

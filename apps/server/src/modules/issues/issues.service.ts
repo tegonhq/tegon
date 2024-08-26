@@ -657,7 +657,6 @@ export default class IssuesService {
   ): Promise<Issue[]> {
     const where = getFilterWhere(getIssuesByFilterData);
 
-    console.log(`where: ${JSON.stringify(where)}`);
     return this.prisma.issue.findMany({
       where: where as Prisma.IssueWhereInput,
     });

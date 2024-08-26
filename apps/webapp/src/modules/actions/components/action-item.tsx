@@ -16,7 +16,7 @@ interface ActionProps {
   noBorder: boolean;
 }
 
-export function Action({ action, noBorder }: ActionProps) {
+export function ActionItem({ action, noBorder }: ActionProps) {
   const { actionSlug } = useParams();
 
   const {

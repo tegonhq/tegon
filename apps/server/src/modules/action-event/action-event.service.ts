@@ -4,17 +4,14 @@ import {
   ActionEvent,
   ActionStatusEnum,
   ActionTypesEnum,
-  IntegrationAccount,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
-
-import { generateKeyForUserId } from 'common/authentication';
 
 import { convertLsnToInt } from 'modules/sync-actions/sync-actions.utils';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { CreateActionEvent } from './action-event.interface';
-import { getIntegrationAccountsFromActions } from './action-event.utils';
+import { prepareTriggerPayload } from './action-event.utils';
 
 const SUPPORTED_MODELS = ['Issue', 'IssueComment', 'LinkedIssue'];
 
@@ -74,32 +71,18 @@ export default class ActionEventService {
       this.logger.log('No actions to trigger');
     }
 
-    const integrationMap = await getIntegrationAccountsFromActions(
-      this.prisma,
-      actionEvent.workspaceId,
-      actionEntities,
-    );
-
     return await Promise.all(
       actionEntities.map(async (actionEntity: ActionEntity) => {
-        return await this.triggerAction(
-          actionEvent,
-          actionEntity,
-          integrationMap,
-        );
+        return await this.triggerAction(actionEvent, actionEntity);
       }),
     );
   }
 
-  async triggerAction(
-    actionEvent: ActionEvent,
-    actionEntity: ActionEntity,
-    integrationMap: Record<string, IntegrationAccount>,
-  ) {
-    const actionUser = await this.prisma.user.findFirst({
-      where: { username: actionEntity.action.name },
-    });
-    const accessToken = await generateKeyForUserId(actionUser.id);
+  async triggerAction(actionEvent: ActionEvent, actionEntity: ActionEntity) {
+    const addedTaskInfo = await prepareTriggerPayload(
+      this.prisma,
+      actionEntity.action.id,
+    );
 
     const triggerHandle = await this.triggerdevService.triggerTaskAsync(
       actionEvent.workspaceId,
@@ -108,15 +91,9 @@ export default class ActionEventService {
         event: actionEvent.eventType,
         type: actionEvent.modelName,
         modelId: actionEvent.modelId,
-        accessToken,
-        action: actionEntity.action,
-        integrationAccounts: Object.fromEntries(
-          actionEntity.action.integrations.map((integrationName) => [
-            integrationName,
-            integrationMap[integrationName],
-          ]),
-        ),
+        ...addedTaskInfo,
       },
+      { lockToVersion: actionEntity.action.triggerVersion },
     );
 
     return triggerHandle.id;

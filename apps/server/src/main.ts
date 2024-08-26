@@ -1,7 +1,6 @@
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import supertokens from 'supertokens-node';
 
@@ -40,16 +39,6 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const corsConfig = configService.get<CorsConfig>('cors');
-
-  // Swagger API
-  const options = new DocumentBuilder()
-    .setTitle('Tegon server')
-    .setDescription('Tegon server API configuration')
-    .setVersion('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, options);
-
-  SwaggerModule.setup('', app, document);
 
   // Versioning
   app.enableVersioning({

@@ -262,7 +262,11 @@ export class UsersService {
     );
   }
 
-  async createPersonalAcccessToken(name: string, userId: string) {
+  async createPersonalAcccessToken(
+    name: string,
+    userId: string,
+    type = 'user',
+  ) {
     const jwt = await generateKeyForUserId(userId);
     const token = generatePersonalAccessToken();
 
@@ -272,6 +276,7 @@ export class UsersService {
         userId,
         token,
         jwt,
+        type,
       },
     });
 
@@ -281,7 +286,7 @@ export class UsersService {
   async getPats(userId: string) {
     const pats = (
       await this.prisma.personalAccessToken.findMany({
-        where: { userId, deleted: null },
+        where: { userId, type: 'user', deleted: null },
       })
     ).map((pat) => ({ name: pat.name, id: pat.id }));
 

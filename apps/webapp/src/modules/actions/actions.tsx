@@ -11,7 +11,7 @@ import { Header } from 'modules/settings/header';
 
 import { AppLayout } from 'common/layouts/app-layout';
 
-import { AllActions } from './all-actions';
+import { AllActionsList } from './all-actions-list';
 import { Empty } from './empty';
 import { SingleActionWrapper } from './single-action';
 
@@ -33,7 +33,7 @@ export function Actions() {
             <div className="flex flex-col h-full">
               <h2 className="text-lg pl-6 pt-6 font-medium pb-2">Actions</h2>
               <ScrollArea className="h-full">
-                <AllActions />
+                <AllActionsList />
               </ScrollArea>
             </div>
           </ResizablePanel>

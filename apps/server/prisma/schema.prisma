@@ -21,6 +21,8 @@ model Action {
   status  ActionStatus
   version String
 
+  triggerVersion String
+
   // We store the config of the action
   config Json
 
@@ -310,6 +312,7 @@ model PersonalAccessToken {
   jwt    String
   token  String
   userId String
+  type   String @default("user")
 
   @@unique([name, userId, token])
 }

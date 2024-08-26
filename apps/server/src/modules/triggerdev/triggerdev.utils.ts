@@ -30,15 +30,12 @@ export function hashToken(token: string): string {
 }
 
 export async function getRuns(taskId: string, apiKey: string) {
-  const url = `${process.env['TRIGGER_API_URL']}/api/v1/runs`;
+  const url = `${process.env['TRIGGER_API_URL']}/api/v1/runs?filter[taskIdentifier]=${taskId}`;
 
   try {
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
-      },
-      params: {
-        'filter.taskIdentifier': [taskId],
       },
     });
 
@@ -71,13 +68,14 @@ export async function triggerTask(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: Record<string, any>,
   apiKey: string,
+  options?: Record<string, string>,
 ) {
   const url = `${process.env['TRIGGER_API_URL']}/api/v1/tasks/${taskId}/trigger`;
 
   try {
     const response = await axios.post(
       url,
-      { payload },
+      { payload, options },
       {
         headers: {
           Authorization: `Bearer ${apiKey}`,
@@ -143,8 +141,9 @@ export async function triggerTaskSync(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: Record<string, any>,
   apiKey: string,
+  options?: Record<string, string>,
 ) {
-  const handle = await triggerTask(taskId, payload, apiKey);
+  const handle = await triggerTask(taskId, payload, apiKey, options);
   const run = await pollTriggerRun(handle.id, apiKey);
   return run.output;
 }

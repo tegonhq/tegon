@@ -59,6 +59,8 @@ export class Action {
   data?: any;
 
   status: ActionStatus;
+
+  triggerVersion: string;
   version: string;
 
   name: string;
