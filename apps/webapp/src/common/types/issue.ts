@@ -1,8 +1,7 @@
 import type { IssueRelationEnum } from './issue-relation';
-import type { Integration } from './linked-issue';
 
 export interface IssueSourceMetadataType {
-  type: Integration;
+  type: string;
   id: string;
   userDisplayName: string;
 }

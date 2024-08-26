@@ -8,7 +8,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { Team, TeamPreference, UsersOnWorkspaces } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
@@ -29,7 +28,6 @@ import TeamsService from './teams.service';
   version: '1',
   path: 'teams',
 })
-@ApiTags('Teams')
 export class TeamsController {
   constructor(private teamsService: TeamsService) {}
 

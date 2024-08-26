@@ -7,7 +7,6 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -24,7 +23,6 @@ import { OAuthCallbackService } from './oauth-callback.service';
   version: '1',
   path: 'oauth',
 })
-@ApiTags('OAuth Utils')
 export class OAuthCallbackController {
   constructor(private oAuthCallbackService: OAuthCallbackService) {}
 

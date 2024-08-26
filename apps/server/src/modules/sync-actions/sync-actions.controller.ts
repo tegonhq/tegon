@@ -1,5 +1,4 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
@@ -13,7 +12,6 @@ import SyncActionsService from './sync-actions.service';
   version: '1',
   path: 'sync_actions',
 })
-@ApiTags('Sync Actions')
 export class SyncActionsController {
   constructor(private syncActionsService: SyncActionsService) {}
 

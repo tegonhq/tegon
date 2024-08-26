@@ -7,7 +7,6 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { Workflow } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -23,7 +22,6 @@ import WorkflowsService from './workflows.service';
   version: '1',
   path: ':teamId/workflows',
 })
-@ApiTags('Workflows')
 export class WorkflowsController {
   constructor(private workflowsService: WorkflowsService) {}
 

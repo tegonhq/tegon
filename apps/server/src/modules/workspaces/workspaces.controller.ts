@@ -7,7 +7,6 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import {
   UsersOnWorkspaces,
   Workspace,
@@ -31,7 +30,6 @@ import WorkspacesService from './workspaces.service';
   version: '1',
   path: 'workspaces',
 })
-@ApiTags('Workspaces')
 export class WorkspacesController {
   constructor(private workspacesService: WorkspacesService) {}
 

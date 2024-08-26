@@ -9,11 +9,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import {
   CreateIntegrationAccountDto,
   IntegrationAccount,
   IntegrationAccountIdDto,
@@ -28,17 +23,6 @@ import { IntegrationAccountService } from './integration-account.service';
 @Controller({
   version: '1',
   path: 'integration_account',
-})
-@ApiTags('Integration Account')
-@ApiBadRequestResponse({
-  status: 400,
-  type: 'string',
-  description: 'Bad Request',
-})
-@ApiUnauthorizedResponse({
-  status: 401,
-  type: 'string',
-  description: 'Not authorised',
 })
 export class IntegrationAccountController {
   constructor(private integrationAccountService: IntegrationAccountService) {}

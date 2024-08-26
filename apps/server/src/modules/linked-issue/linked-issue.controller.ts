@@ -8,7 +8,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import {
   LinkedIssue,
   LinkedIssueRequestParamsDto,
@@ -26,7 +25,6 @@ import LinkedIssueService from './linked-issue.service';
   version: '1',
   path: 'linked_issues',
 })
-@ApiTags('Linked Issue')
 export class LinkedIssueController {
   constructor(private linkedIssueService: LinkedIssueService) {}
 

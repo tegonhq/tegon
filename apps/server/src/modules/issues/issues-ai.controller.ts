@@ -8,7 +8,6 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { IssueRequestParamsDto, TeamRequestParamsDto } from '@tegonhq/types';
 import { Response } from 'express';
 
@@ -26,7 +25,6 @@ import {
   version: '1',
   path: 'issues/ai',
 })
-@ApiTags('Issues-AI')
 export class IssuesAIController {
   constructor(private issuesAiService: IssuesAIService) {}
 

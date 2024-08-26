@@ -8,7 +8,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { Prompt } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -20,7 +19,6 @@ import PromptsService from './prompts.service';
   version: '1',
   path: 'prompts',
 })
-@ApiTags('Prompts')
 export class PromptsController {
   constructor(private promptsService: PromptsService) {}
 

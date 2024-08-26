@@ -8,11 +8,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
 import { View } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
@@ -30,17 +25,6 @@ import { ViewsService } from './views.service';
 @Controller({
   version: '1',
   path: 'views',
-})
-@ApiTags('Views')
-@ApiBadRequestResponse({
-  status: 400,
-  type: 'string',
-  description: 'Bad Request',
-})
-@ApiUnauthorizedResponse({
-  status: 401,
-  type: 'string',
-  description: 'Not authorised',
 })
 export class ViewsController {
   constructor(private viewsService: ViewsService) {}
