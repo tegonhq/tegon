@@ -21,7 +21,7 @@ export interface ActionSource {
 
 export function getAllActions() {
   return ajaxGet({
-    url: '/api/v1/action/source',
+    url: '/api/v1/action/external',
   });
 }
 

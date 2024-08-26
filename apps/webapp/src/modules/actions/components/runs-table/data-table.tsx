@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import {
@@ -15,15 +16,17 @@ import {
   TableRow,
 } from '@tegonhq/ui/components/table';
 
-interface DataTableProps<TData, TValue> {
-  columns: Array<ColumnDef<TData, TValue>>;
-  data: TData[];
+import { ExpandedRow } from './expanded-row';
+
+interface DataTableProps<TriggerRun, TValue> {
+  columns: Array<ColumnDef<TriggerRun, TValue>>;
+  data: TriggerRun[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TriggerRun, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TriggerRun, TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -53,18 +56,31 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="py-3">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+            table.getRowModel().rows.map((row) => {
+              return (
+                <>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="py-2">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+
+                  {row.getIsExpanded() && (
+                    <TableRow>
+                      <ExpandedRow row={row as any} />
+                    </TableRow>
+                  )}
+                </>
+              );
+            })
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">

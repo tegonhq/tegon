@@ -262,8 +262,6 @@ export function getFilterWhere(getIssuesByFilter: GetIssuesByFilterDTO) {
   )) {
     const replacedFilterKey =
       filterKeyReplacers[filterKey as FilterKey] || filterKey;
-    console.log(filterKeyReplacers);
-    console.log(filterKey, filterValue, replacedFilterKey);
 
     switch (filterValue.filterType) {
       case FilterTypeEnum.INCLUDES:
@@ -272,7 +270,6 @@ export function getFilterWhere(getIssuesByFilter: GetIssuesByFilterDTO) {
         };
         break;
       case FilterTypeEnum.EXCLUDES:
-        console.log(filterValue.value);
         where['NOT'] = {
           ...where['NOT'],
           [replacedFilterKey]: {

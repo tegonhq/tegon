@@ -19,8 +19,6 @@ interface FormControllerProps {
 }
 
 export function FormField({ name, control, config }: FormControllerProps) {
-  console.log(name, control, config);
-
   switch (config.type) {
     case InputTypeEnum.Text: {
       return (

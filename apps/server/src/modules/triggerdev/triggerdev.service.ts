@@ -1,9 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Knex, { Knex as KnexT } from 'knex';
+import Knex, { Knex as KnexT } from 'knex'; // Import Knex for database operations
 import { PrismaService } from 'nestjs-prisma';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'; // Import uuid for generating unique identifiers
 
+import { formatRunEvent, prepareEvent } from './trigger.utils'; // Import utility functions for formatting run events
 import {
   encryptToken,
   getRun,
@@ -11,300 +12,279 @@ import {
   hashToken,
   triggerTask,
   triggerTaskSync,
-} from './triggerdev.utils';
+} from './triggerdev.utils'; // Import utility functions for triggering tasks and handling runs
 
 export const TriggerProjects = {
-  Common: 'common',
+  Common: 'common', // Define a constant for the common project
 };
 
 @Injectable()
 export class TriggerdevService {
-  private readonly logger: Logger = new Logger('TriggerService');
+  private readonly logger: Logger = new Logger('TriggerService'); // Logger instance for logging
 
-  knex: KnexT;
-  commonId: string;
+  knex: KnexT; // Knex instance for database operations
+  commonId: string; // ID of the common project
 
   constructor(
-    private prisma: PrismaService,
-    private configService: ConfigService,
+    private prisma: PrismaService, // Prisma service for database operations
+    private configService: ConfigService, // Config service for accessing environment variables
   ) {
     this.knex = Knex({
-      client: 'pg',
-      connection: process.env.TRIGGER_DATABASE_URL,
+      client: 'pg', // Use PostgreSQL as the database client
+      connection: process.env.TRIGGER_DATABASE_URL, // Database connection URL from environment variable
     });
-    this.commonId = process.env.TRIGGER_COMMON_ID;
+    this.commonId = process.env.TRIGGER_COMMON_ID; // ID of the common project from environment variable
   }
 
   afterInit() {
-    this.logger.log('Trigger service Module initiated');
+    this.logger.log('Trigger service Module initiated'); // Log a message after initialization
   }
 
-  // This project is used to run internal backgrounds jobs
+  // This project is used to run internal background jobs
   async initCommonProject() {
     const commonProjectExists = await this.checkIfProjectExist({
-      slug: 'common',
+      slug: 'common', // Check if a project with the slug 'common' exists
     });
 
-    this.createPersonalToken();
+    this.createPersonalToken(); // Create a personal access token
 
     if (!commonProjectExists) {
-      this.logger.log(`Common project doesn't exist`);
-      await this.createProject('Common', 'common', uuidv4().replace(/-/g, ''));
+      this.logger.log(`Common project doesn't exist`); // Log a message if the common project doesn't exist
+      await this.createProject('Common', 'common', uuidv4().replace(/-/g, '')); // Create the common project
     }
   }
 
   // Create personal token taking from the .env
-  // Used to deloy the tegon backgrounds
+  // Used to deploy the tegon backgrounds
   async createPersonalToken() {
-    const id = uuidv4().replace(/-/g, '');
+    const id = uuidv4().replace(/-/g, ''); // Generate a unique ID for the personal access token
 
     const response = await this.knex('PersonalAccessToken')
       .where({
-        userId: this.commonId,
+        userId: this.commonId, // Filter by the common project user ID
       })
-      .select('id');
+      .select('id'); // Select the ID column
 
     if (response.length > 0) {
-      return;
+      return; // Return if a personal access token already exists
     }
 
     await this.knex('PersonalAccessToken').insert({
-      id,
-      name: 'cli',
-      userId: this.commonId,
-      updatedAt: new Date(),
-      obfuscatedToken: process.env.TRIGGER_ACCESS_TOKEN,
-      hashedToken: hashToken(process.env.TRIGGER_ACCESS_TOKEN),
-      encryptedToken: encryptToken(process.env.TRIGGER_ACCESS_TOKEN),
+      id, // ID of the personal access token
+      name: 'cli', // Name of the personal access token
+      userId: this.commonId, // User ID associated with the personal access token
+      updatedAt: new Date(), // Updated timestamp
+      obfuscatedToken: process.env.TRIGGER_ACCESS_TOKEN, // Obfuscated token from environment variable
+      hashedToken: hashToken(process.env.TRIGGER_ACCESS_TOKEN), // Hashed token using the hashToken utility function
+      encryptedToken: encryptToken(process.env.TRIGGER_ACCESS_TOKEN), // Encrypted token using the encryptToken utility function
     });
   }
 
+  // Get a project by name, slug, or ID
   async getProject(whereClause: { name?: string; slug?: string; id?: string }) {
     try {
       const response = await this.knex('Project')
-        .where(whereClause)
-        .select('id', 'name', 'slug');
+        .where(whereClause) // Filter projects based on the provided whereClause
+        .select('id', 'name', 'slug'); // Select the ID, name, and slug columns
 
-      return response[0];
+      return response[0]; // Return the first project matching the whereClause
     } catch (e) {
-      return undefined;
+      return undefined; // Return undefined if an error occurs
     }
   }
 
+  // Get the latest version for a given task slug
+  async getLatestVersionForTask(slug: string): Promise<string | undefined> {
+    const latestWorker = await this.knex('BackgroundWorkerTask')
+      .where('slug', slug) // Filter by the task slug
+      .join(
+        'BackgroundWorker', // Join with the BackgroundWorker table
+        'BackgroundWorkerTask.workerId', // Join condition
+        'BackgroundWorker.id',
+      )
+      .orderBy('BackgroundWorker.updatedAt', 'desc') // Order by the updated timestamp in descending order
+      .first('BackgroundWorker.version'); // Select the first row's version column
+
+    return latestWorker?.version; // Return the latest version or undefined if not found
+  }
+
+  // Get the production runtime environment for a given project ID
   async getProdRuntimeForProject(projectId: string) {
     try {
       const response = await this.knex('RuntimeEnvironment')
         .where({
-          projectId,
-          slug: 'prod',
+          projectId, // Filter by the project ID
+          slug: 'prod', // Filter by the 'prod' slug
         })
-        .select('id', 'slug', 'apiKey');
+        .select('id', 'slug', 'apiKey'); // Select the ID, slug, and API key columns
 
-      return response[0];
+      return response[0]; // Return the first runtime environment matching the criteria
     } catch (e) {
-      return undefined;
+      return undefined; // Return undefined if an error occurs
     }
   }
 
+  // Check if a project exists based on the provided whereClause
   async checkIfProjectExist(whereClause: {
     name?: string;
     slug?: string;
     id?: string;
   }): Promise<boolean> {
-    const project = await this.getProject(whereClause);
-    return !!project;
+    const project = await this.getProject(whereClause); // Get the project based on the whereClause
+    return !!project; // Return true if a project exists, false otherwise
   }
 
+  // Create a new project with the given name, slug, and optional secret key
   async createProject(name: string, slug: string, secretKey?: string) {
     try {
-      const id = uuidv4().replace(/-/g, '');
-      slug = slug.replace(/-/g, '');
-      const secret = secretKey ? secretKey : id;
+      const id = uuidv4().replace(/-/g, ''); // Generate a unique ID for the project
+      slug = slug.replace(/-/g, ''); // Remove hyphens from the slug
+      const secret = secretKey ? secretKey : id; // Use the provided secret key or the project ID as the secret
+
       await this.knex.transaction(async (trx) => {
         await this.knex('Project')
           .insert({
-            id,
-            name,
-            organizationId: this.commonId,
-            slug,
-            externalRef: `proj_${slug}`,
-            version: 'V3',
-            updatedAt: new Date(),
+            id, // Project ID
+            name, // Project name
+            organizationId: this.commonId, // Organization ID (common project ID)
+            slug, // Project slug
+            externalRef: `proj_${slug}`, // External reference for the project
+            version: 'V3', // Project version
+            updatedAt: new Date(), // Updated timestamp
           })
-          .transacting(trx);
+          .transacting(trx); // Use the transaction
 
         await this.knex('RuntimeEnvironment')
           .insert(
             ['dev', 'prod'].map((env: string) => ({
-              id: uuidv4(),
-              slug: env,
-              apiKey: `tr_${env}_${secret}`,
-              organizationId: this.commonId,
-              orgMemberId: this.commonId,
-              projectId: id,
-              type: env === 'prod' ? 'PRODUCTION' : 'DEVELOPMENT',
-              pkApiKey: `tr_pk_${env}${secret}`,
-              shortcode: env,
-              updatedAt: new Date(),
+              id: uuidv4(), // Generate a unique ID for the runtime environment
+              slug: env, // Slug for the runtime environment (dev or prod)
+              apiKey: `tr_${env}_${secret}`, // API key for the runtime environment
+              organizationId: this.commonId, // Organization ID (common project ID)
+              orgMemberId: this.commonId, // Organization member ID (common project ID)
+              projectId: id, // Project ID
+              type: env === 'prod' ? 'PRODUCTION' : 'DEVELOPMENT', // Type of the runtime environment (production or development)
+              pkApiKey: `tr_pk_${env}${secret}`, // Primary key API key for the runtime environment
+              shortcode: env, // Shortcode for the runtime environment (dev or prod)
+              updatedAt: new Date(), // Updated timestamp
             })),
           )
-          .transacting(trx);
+          .transacting(trx); // Use the transaction
       });
 
-      return id;
+      return id; // Return the project ID
     } catch (e) {
-      this.logger.log(`Error creating project: ${e}`);
+      this.logger.log(`Error creating project: ${e}`); // Log an error if project creation fails
 
-      return undefined;
+      return undefined; // Return undefined if an error occurs
     }
   }
 
+  // Get the production runtime API key for a given project slug
   async getProdRuntimeKey(projectSlug: string) {
-    const project = await this.getProject({ slug: projectSlug });
-    const runtime = await this.getProdRuntimeForProject(project.id);
+    const project = await this.getProject({ slug: projectSlug }); // Get the project by slug
+    const runtime = await this.getProdRuntimeForProject(project.id); // Get the production runtime environment for the project
 
-    return runtime.apiKey;
+    return runtime.apiKey; // Return the API key for the production runtime environment
   }
 
+  // Trigger a task synchronously for a given project slug, task ID, and payload
   async triggerTask(
     projectSlug: string,
     id: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload: any,
+    payload: any, // eslint-disable-line @typescript-eslint/no-explicit-any
   ) {
-    const projectslugWithoutHyphen = projectSlug.replace(/-/g, '');
-    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
-    const response = await triggerTaskSync(id, payload, apiKey);
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
+    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen); // Get the production runtime API key
+    const response = await triggerTaskSync(id, payload, apiKey); // Trigger the task synchronously
 
-    return response;
+    return response; // Return the response from the triggered task
   }
 
+  // Trigger a task asynchronously for a given project slug, task ID, payload, and options
   async triggerTaskAsync(
     projectSlug: string,
     id: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload: any,
+    payload: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    options?: Record<string, string>,
   ) {
-    const projectslugWithoutHyphen = projectSlug.replace(/-/g, '');
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
 
-    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
-    const response = await triggerTask(id, payload, apiKey);
+    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen); // Get the production runtime API key
+    const response = await triggerTask(id, payload, apiKey, options); // Trigger the task asynchronously
 
-    return response;
+    return response; // Return the response from the triggered task
   }
 
+  // Get the required keys (trigger key) for a given workspace ID and user ID
   async getRequiredKeys(workspaceId: string, userId: string) {
     const usersOnWorkspace = await this.prisma.usersOnWorkspaces.findFirst({
       where: {
-        workspaceId,
-        userId,
+        workspaceId, // Filter by the workspace ID
+        userId, // Filter by the user ID
       },
       include: {
-        workspace: true,
+        workspace: true, // Include the workspace data
       },
     });
 
     if (usersOnWorkspace) {
       const projectExist = await this.checkIfProjectExist({
-        slug: usersOnWorkspace.workspace.id.replace(/-/g, ''),
+        slug: usersOnWorkspace.workspace.id.replace(/-/g, ''), // Check if a project exists for the workspace
       });
 
       if (!projectExist) {
         await this.createProject(
-          usersOnWorkspace.workspace.name,
-          usersOnWorkspace.workspace.id,
-          uuidv4().replace(/-/g, ''),
+          usersOnWorkspace.workspace.name, // Project name
+          usersOnWorkspace.workspace.id, // Project slug
+          uuidv4().replace(/-/g, ''), // Generate a secret key
         );
       }
 
-      const token = this.configService.get('TRIGGER_ACCESS_TOKEN');
-      return { triggerKey: token };
+      const token = this.configService.get('TRIGGER_ACCESS_TOKEN'); // Get the trigger access token from the config service
+      return { triggerKey: token }; // Return the trigger key
     }
 
-    return undefined;
+    return undefined; // Return undefined if the user is not on the workspace
   }
 
+  // Get runs for a given project slug and task ID
   async getRunsForTask(projectSlug: string, taskId: string) {
-    const projectslugWithoutHyphen = projectSlug.replace(/-/g, '');
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
 
-    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
+    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen); // Get the production runtime API key
 
-    return await getRuns(taskId, apiKey);
+    return await getRuns(taskId, apiKey); // Get the runs for the task
   }
 
+  // Get a run for a given project slug and run ID
   async getRun(projectSlug: string, runId: string) {
-    const projectslugWithoutHyphen = projectSlug.replace(/-/g, '');
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
 
-    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
-    const run = await getRun(runId, apiKey);
-    const logs = await this.getLogsForRunId(runId);
+    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen); // Get the production runtime API key
+    const run = await getRun(runId, apiKey); // Get the run data
+    const logs = await this.getLogsForRunId(runId); // Get the logs for the run
 
-    return { ...run, logs };
+    return { ...run, logs }; // Return the run data with logs
   }
 
+  // Get logs for a given run ID
   async getLogsForRunId(runId: string): Promise<string> {
     // Fetch run events from the database using Knex
-    const runEvents = await this.knex('run_events')
-      .where('run_id', runId)
-      .orderBy('start_time', 'asc');
+    const runEvents = await this.knex('TaskEvent')
+      .where('runId', runId) // Filter by the run ID
+      .orderBy('startTime', 'asc'); // Order by the start time in ascending order
+
+    const preparedEvents = [];
+
+    for (const event of runEvents) {
+      preparedEvents.push(prepareEvent(event)); // Prepare the event data
+    }
 
     // Format the run events into a log string
-    const logEntries = runEvents.map(this.formatRunEvent);
-    const logString = logEntries.join('\n');
+    const logEntries = preparedEvents.map(formatRunEvent); // Format the prepared events
+    const logString = logEntries.join('\n'); // Join the log entries with newlines
 
-    return logString;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  formatRunEvent(event: any): string {
-    const entries = [];
-    const parts: string[] = [];
-
-    parts.push(new Date(event.start_time).toISOString());
-
-    if (event.task_slug) {
-      parts.push(event.task_slug);
-    }
-
-    parts.push(event.level);
-    parts.push(event.message);
-
-    if (event.level === 'TRACE') {
-      parts.push(
-        `(${this.formatDurationMilliseconds(event.duration / 1_000_000)})`,
-      );
-    }
-
-    entries.push(parts.join(' '));
-
-    if (event.sub_events) {
-      for (const subEvent of event.sub_events) {
-        if (subEvent.name === 'exception') {
-          const subEventParts: string[] = [];
-
-          subEventParts.push(new Date(subEvent.time).toISOString());
-
-          if (event.task_slug) {
-            subEventParts.push(event.task_slug);
-          }
-
-          subEventParts.push(subEvent.name);
-          subEventParts.push(subEvent.properties.exception.message);
-
-          if (subEvent.properties.exception.stack) {
-            subEventParts.push(subEvent.properties.exception.stack);
-          }
-
-          entries.push(subEventParts.join(' '));
-        }
-      }
-    }
-
-    return entries.join('\n');
-  }
-
-  formatDurationMilliseconds(durationNanoseconds: number): string {
-    const durationMilliseconds = durationNanoseconds / 1_000_000;
-    return `${durationMilliseconds.toFixed(2)}ms`;
+    return logString; // Return the log string
   }
 }

@@ -62,8 +62,16 @@ const config = {
           foreground: 'hsl(var(--secondary-foreground))',
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
+          DEFAULT: 'oklch(var(--destructive) / <alpha-value>)',
+          foreground: 'oklch(var(--destructive-foreground) / <alpha-value>)',
+        },
+        warning: {
+          DEFAULT: 'oklch(var(--warning) / <alpha-value>)',
+          foreground: 'oklch(var(--warning-foreground) / <alpha-value>)',
+        },
+        success: {
+          DEFAULT: 'oklch(var(--success) / <alpha-value>)',
+          foreground: 'oklch(var(--success-foreground) / <alpha-value>)',
         },
         muted: {
           DEFAULT: 'oklch(var(--muted))',

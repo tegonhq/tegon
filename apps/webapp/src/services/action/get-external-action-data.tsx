@@ -11,7 +11,7 @@ const GetExternalActionData = 'getExternalActionData';
 
 export function getExternalActionData(actionSlug: string) {
   return ajaxGet({
-    url: `/api/v1/action/source/${actionSlug}`,
+    url: `/api/v1/action/external/${actionSlug}`,
   });
 }
 

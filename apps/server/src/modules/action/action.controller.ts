@@ -19,6 +19,11 @@ import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import ActionService from './action.service';
+import {
+  getActionConfig,
+  getExternalActions,
+  getExternalActionWithSlug,
+} from './action.utils';
 
 @Controller({
   version: '1',
@@ -41,30 +46,43 @@ export class ActionController {
     );
   }
 
-  @Get(':slug/runs')
-  async getRunsForSlug(@Param() slugDto: { slug: string }) {
-    return await this.actionService.getRunsForSlug(slugDto.slug);
+  @Get('external')
+  async getExternalActions() {
+    return await getExternalActions();
   }
 
-  @Get(':slug/runs/:runId')
-  async getRunForSlug(@Param() slugDto: { slug: string; runId: string }) {
-    return await this.actionService.getRunForSlug(slugDto.slug, slugDto.runId);
+  @Get('external/:slug')
+  async getExternalActionWithSlug(@Param() slugDto: { slug: string }) {
+    return await getExternalActionWithSlug(slugDto.slug);
+  }
+
+  @Get(':slug/runs')
+  async getRunsForSlug(
+    @Param() slugDto: { slug: string },
+    @Query() runIdParams: { runId: string; workspaceId: string },
+  ) {
+    if (runIdParams.runId) {
+      return await this.actionService.getRunForSlug(
+        runIdParams.workspaceId,
+        slugDto.slug,
+        runIdParams.runId,
+      );
+    }
+
+    return await this.actionService.getRunsForSlug(
+      runIdParams.workspaceId,
+      slugDto.slug,
+    );
   }
 
   @Post(':slug/run')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async run(@Param() slugDto: { slug: string }, @Body() payload: any) {
-    return await this.actionService.run(slugDto.slug, payload);
-  }
-
-  @Get('source')
-  async getExternalActions() {
-    return await this.actionService.getExternalActions();
-  }
-
-  @Get('source/:slug')
-  async getExternalActionWithSlug(@Param() slugDto: { slug: string }) {
-    return await this.actionService.getExternalActionWithSlug(slugDto.slug);
+  async run(@Param() slugDto: { slug: string }, @Body() runBody: any) {
+    return await this.actionService.run(
+      runBody.workpspaceId,
+      slugDto.slug,
+      runBody.payload,
+    );
   }
 
   @Get()
@@ -74,7 +92,7 @@ export class ActionController {
 
   @Get(':slug')
   async getActionConfig(@Param() slugDto: { slug: string }) {
-    return await this.actionService.getActionConfig(slugDto.slug);
+    return await getActionConfig(slugDto.slug);
   }
 
   @Post(':slug/inputs')

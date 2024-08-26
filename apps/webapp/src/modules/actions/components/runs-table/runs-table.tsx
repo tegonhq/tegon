@@ -1,6 +1,8 @@
 import type { ActionType } from 'common/types';
 
-import { useGetRunsForActionQuery } from 'services/action';
+import { useCurrentWorkspace } from 'hooks/workspace';
+
+import { useGetRunsForActionQuery, type TriggerRun } from 'services/action';
 
 import { columns } from './columns';
 import { DataTable } from './data-table';
@@ -10,17 +12,18 @@ interface RunsTable {
 }
 
 export function RunsTable({ action }: RunsTable) {
-  const { isLoading, data: runsData } = useGetRunsForActionQuery(action.slug);
+  const workspace = useCurrentWorkspace();
+  const { isLoading, data: runsData } = useGetRunsForActionQuery(
+    action.slug,
+    workspace.id,
+  );
 
   if (isLoading) {
     return null;
   }
 
-  const runs = runsData?.data ?? [];
+  const runs =
+    runsData?.data.map((run: TriggerRun) => ({ ...run, action })) ?? [];
 
-  return (
-    <div>
-      <DataTable columns={columns} data={runs} />
-    </div>
-  );
+  return <DataTable columns={columns} data={runs} />;
 }

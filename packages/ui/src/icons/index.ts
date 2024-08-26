@@ -52,6 +52,9 @@ export * from './underline-line';
 export * from './actions';
 export * from './bookmark';
 export * from './loader';
+export * from './check-circle';
+export * from './cross-circle';
+export * from './warning';
 
 export * from './team-line';
 export * from './issues-fill';

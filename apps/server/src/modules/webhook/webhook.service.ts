@@ -38,7 +38,7 @@ export default class WebhookService {
     }
 
     response.send({ status: 200 });
-    console.log(eventBody);
+
     const accountId = await this.triggerDevService.triggerTask(
       TriggerProjects.Common,
       sourceName,
@@ -64,10 +64,18 @@ export default class WebhookService {
       include: { action: true },
     });
 
+    const uniqueIntegrations = [
+      ...new Set(
+        actionEntities.flatMap(
+          (actionEntity: ActionEntity) => actionEntity.action.integrations,
+        ),
+      ),
+    ];
+
     const integrationAccountsMap = await getIntegrationAccountsFromActions(
       this.prisma,
       workspaceId,
-      actionEntities,
+      uniqueIntegrations,
     );
 
     integrationAccountsMap[integrationAccount.integrationDefinition.slug] =
@@ -92,6 +100,7 @@ export default class WebhookService {
           userId: actionUser.id,
           integrationAccounts: integrationAccountsMap,
         },
+        { lockToVersion: actionEntity.action.triggerVersion },
       );
     });
 
