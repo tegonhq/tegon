@@ -5,7 +5,10 @@ import {
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
 import { Textarea } from '@tegonhq/ui/components/textarea';
+import { useToast } from '@tegonhq/ui/components/use-toast';
 import React from 'react';
+
+import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { useRunActionMutation } from 'services/action';
 
@@ -15,11 +18,24 @@ interface RunActionPopoverProps {
 
 export function RunActionPopover({ slug }: RunActionPopoverProps) {
   const [payload, setPayload] = React.useState('');
+  const workspace = useCurrentWorkspace();
   const [open, setOpen] = React.useState(false);
-  const { mutate: runAction } = useRunActionMutation({});
+  const { toast } = useToast();
+  const { mutate: runAction } = useRunActionMutation({
+    onSuccess: () => {
+      toast({
+        title: 'Action status',
+        description: 'Action has been triggered',
+      });
+    },
+  });
 
   const onRun = () => {
-    runAction({ slug, payload: JSON.parse(payload) });
+    runAction({
+      slug,
+      payload: JSON.parse(payload),
+      workspaceId: workspace.id,
+    });
     setOpen(false);
   };
 

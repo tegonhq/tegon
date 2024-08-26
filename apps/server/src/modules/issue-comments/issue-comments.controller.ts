@@ -8,7 +8,6 @@ import {
   UseGuards,
   Get,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import {
   CreateIssueCommentDto,
   CreateIssueCommentRequestParamsDto,
@@ -30,7 +29,6 @@ import IssueCommentsService from './issue-comments.service';
   version: '1',
   path: 'issue_comments',
 })
-@ApiTags('issue-comments')
 export class IssueCommentsController {
   constructor(private issueCommentsService: IssueCommentsService) {}
 

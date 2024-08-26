@@ -8,7 +8,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import {
   CreatePatDto,
   GetUsersDto,
@@ -33,7 +32,6 @@ import { UsersService } from './users.service';
   version: '1',
   path: 'users',
 })
-@ApiTags('Users')
 export class UsersController {
   constructor(
     private usersService: UsersService,

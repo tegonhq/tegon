@@ -8,7 +8,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { Template } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
@@ -27,7 +26,6 @@ import TemplatesService from './templates.service';
   version: '1',
   path: 'templates',
 })
-@ApiTags('Templates')
 export class TemplatesController {
   constructor(private templatesService: TemplatesService) {}
 

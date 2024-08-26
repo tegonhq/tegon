@@ -11,7 +11,6 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import {
   CreateIssueDto,
   CreateLinkedIssueDto,
@@ -36,7 +35,6 @@ import IssuesService from './issues.service';
   version: '1',
   path: 'issues',
 })
-@ApiTags('Issues')
 export class IssuesController {
   constructor(
     private issuesService: IssuesService,

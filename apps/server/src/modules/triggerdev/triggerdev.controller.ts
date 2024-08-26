@@ -1,5 +1,4 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { WorkspaceRequestParamsDto } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
@@ -12,7 +11,6 @@ import { TriggerdevService } from './triggerdev.service';
   version: '1',
   path: 'triggerdev',
 })
-@ApiTags('Triggerdev')
 export class TriggerdevController {
   constructor(private triggerdevService: TriggerdevService) {}
 

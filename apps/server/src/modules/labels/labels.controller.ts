@@ -8,7 +8,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import {
   CreateLabelDto,
   Label,
@@ -25,7 +24,6 @@ import LabelsService from './labels.service';
   version: '1',
   path: 'labels',
 })
-@ApiTags('Labels')
 export class LabelsController {
   constructor(private labelsService: LabelsService) {}
 

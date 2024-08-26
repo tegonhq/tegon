@@ -1,5 +1,4 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
@@ -10,7 +9,6 @@ import SearchService from './search.service';
   version: '1',
   path: 'search',
 })
-@ApiTags('Search')
 export class SearchController {
   constructor(private searchService: SearchService) {}
 

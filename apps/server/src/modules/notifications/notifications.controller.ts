@@ -6,7 +6,6 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { Notification } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -21,7 +20,6 @@ import NotificationsService from './notifications.service';
   version: '1',
   path: 'notifications',
 })
-@ApiTags('Notifications')
 export class NotificationsController {
   constructor(private notificationsService: NotificationsService) {}
 

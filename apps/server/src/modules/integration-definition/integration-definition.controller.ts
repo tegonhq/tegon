@@ -8,11 +8,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
-  ApiTags,
-  ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import {
   IntegrationDefinition,
   IntegrationDefinitionIdDto,
   WorkspaceRequestParamsDto,
@@ -26,17 +21,6 @@ import { IntegrationDefinitionService } from './integration-definition.service';
 @Controller({
   version: '1',
   path: 'integration_definition',
-})
-@ApiTags('Integration Definition')
-@ApiBadRequestResponse({
-  status: 400,
-  type: 'string',
-  description: 'Bad Request',
-})
-@ApiUnauthorizedResponse({
-  status: 401,
-  type: 'string',
-  description: 'Not authorised',
 })
 export class IntegrationDefinitionController {
   constructor(

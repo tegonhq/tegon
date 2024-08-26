@@ -1,5 +1,4 @@
 import { Controller, Delete, Param, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { IssueRelation, IssueRelationIdRequestDto } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
@@ -12,7 +11,6 @@ import IssuesRelationService from './issue-relation.service';
   version: '1',
   path: 'issue_relation',
 })
-@ApiTags('Issue Relation')
 export class IssueRelationController {
   constructor(private issueRelation: IssuesRelationService) {}
 
