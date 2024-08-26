@@ -216,6 +216,8 @@ export class OAuthCallbackService {
 
       await this.triggerdevService.triggerTask(
         TriggerProjects.Common,
+        // TODO: integration slug
+
         integrationDefinition.name,
         payload,
       );

@@ -236,11 +236,13 @@ export class TriggerdevService {
     const projectslugWithoutHyphen = projectSlug.replace(/-/g, '');
 
     const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen);
+    const run = await getRun(runId, apiKey);
+    const logs = await this.getLogsForRunId(runId);
 
-    return await getRun(runId, apiKey);
+    return { ...run, logs };
   }
 
-  async getLogForRunId(runId: string): Promise<string> {
+  async getLogsForRunId(runId: string): Promise<string> {
     // Fetch run events from the database using Knex
     const runEvents = await this.knex('run_events')
       .where('run_id', runId)

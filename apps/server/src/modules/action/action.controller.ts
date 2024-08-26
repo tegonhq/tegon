@@ -41,9 +41,20 @@ export class ActionController {
     );
   }
 
-  @Get('runs/:slug')
+  @Get(':slug/runs')
   async getRunsForSlug(@Param() slugDto: { slug: string }) {
     return await this.actionService.getRunsForSlug(slugDto.slug);
+  }
+
+  @Get(':slug/runs/:runId')
+  async getRunForSlug(@Param() slugDto: { slug: string; runId: string }) {
+    return await this.actionService.getRunForSlug(slugDto.slug, slugDto.runId);
+  }
+
+  @Post(':slug/run')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async run(@Param() slugDto: { slug: string }, @Body() payload: any) {
+    return await this.actionService.run(slugDto.slug, payload);
   }
 
   @Get('source')

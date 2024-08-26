@@ -146,6 +146,7 @@ export default class ActionService {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           config: config as any,
           integrations: config.integrations ? config.integrations : [],
+          status: ActionStatusEnum.ACTIVE,
         },
       });
     }
@@ -223,9 +224,11 @@ export default class ActionService {
       (action: { slug: string }) => action.slug === slug,
     );
 
+    const config = await this.getActionConfig(action.slug);
+
     const description = await this.getActionReadme(slug);
 
-    return { ...action, guide: description };
+    return { ...action, guide: description, config };
   }
 
   async getActionConfig(slug: string) {
@@ -258,10 +261,28 @@ export default class ActionService {
     return await this.triggerdev.getRunsForTask(action.workspaceId, slug);
   }
 
+  async getRunForSlug(slug: string, runId: string) {
+    const action = await this.prisma.action.findFirst({
+      where: {
+        slug,
+      },
+    });
 
+    return await this.triggerdev.getRun(action.workspaceId, runId);
+  }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async run(slug: string, payload: any) {
+    const action = await this.prisma.action.findFirst({
+      where: {
+        slug,
+      },
+    });
 
-  getSingleRun() {
-    // Get single run details
+    await this.triggerdev.triggerTaskAsync(
+      action.workspaceId,
+      action.slug,
+      payload,
+    );
   }
 }

@@ -361,6 +361,9 @@ importers:
       '@sentry/nextjs':
         specifier: ^7.105.0
         version: 7.118.0(encoding@0.1.13)(next@14.1.0(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.89.0)
+      '@tanstack/react-table':
+        specifier: ^8.20.5
+        version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tegonhq/services':
         specifier: workspace:*
         version: link:../../packages/services
@@ -381,7 +384,7 @@ importers:
         version: 3.20.0(react@18.3.1)
       ai:
         specifier: ^3.2.37
-        version: 3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
+        version: 3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -775,7 +778,7 @@ importers:
     dependencies:
       ai:
         specifier: ^3.2.37
-        version: 3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
+        version: 3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
       class-validator:
         specifier: 0.14.1
         version: 0.14.1
@@ -867,6 +870,9 @@ importers:
       '@remixicon/react':
         specifier: ^4.2.0
         version: 4.2.0(react@18.3.1)
+      '@tanstack/react-table':
+        specifier: ^8.20.5
+        version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tiptap/core':
         specifier: ^2.3.0
         version: 2.5.4(@tiptap/pm@2.5.4)
@@ -884,7 +890,7 @@ importers:
         version: 2.5.4(@tiptap/core@2.5.4(@tiptap/pm@2.5.4))(@tiptap/pm@2.5.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ai:
         specifier: ^3.2.37
-        version: 3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
+        version: 3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -3837,6 +3843,17 @@ packages:
   '@szmarczak/http-timer@4.0.6':
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
     engines: {node: '>=10'}
+
+  '@tanstack/react-table@8.20.5':
+    resolution: {integrity: sha512-WEHopKw3znbUZ61s9i0+i9g8drmDo6asTWbrQh8Us63DAk/M0FkmIqERew6P71HI75ksZ2Pxyuf4vvKh9rAkiA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+
+  '@tanstack/table-core@8.20.5':
+    resolution: {integrity: sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg==}
+    engines: {node: '>=12'}
 
   '@tiptap/core@2.5.4':
     resolution: {integrity: sha512-Zs/hShr4+W02+0nOlpmr5cS2YjDRLqd+XMt+jsiQH0QNr3s1Lc82pfF6C3CjgLEZtdUzImZrW2ABtLlpvbogaA==}
@@ -14837,6 +14854,14 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
+  '@tanstack/react-table@8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/table-core': 8.20.5
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@tanstack/table-core@8.20.5': {}
+
   '@tiptap/core@2.5.4(@tiptap/pm@2.5.4)':
     dependencies:
       '@tiptap/pm': 2.5.4
@@ -15999,7 +16024,7 @@ snapshots:
       - solid-js
       - vue
 
-  ai@3.2.37(openai@4.52.7)(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8):
+  ai@3.2.37(openai@4.52.7(encoding@0.1.13))(react@18.3.1)(sswr@2.1.0(svelte@4.2.18))(svelte@4.2.18)(vue@3.4.34(typescript@5.5.3))(zod@3.23.8):
     dependencies:
       '@ai-sdk/provider': 0.0.14
       '@ai-sdk/provider-utils': 1.0.5(zod@3.23.8)

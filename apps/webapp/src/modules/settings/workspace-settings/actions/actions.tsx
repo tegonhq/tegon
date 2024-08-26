@@ -14,7 +14,6 @@ import { SettingsLayout } from 'common/layouts/settings-layout';
 import { useGetAllActionsQuery, type ActionSource } from 'services/action';
 
 import { ActionCard } from './action-card';
-import { InstalledActions } from './installed-actions';
 
 export function Actions() {
   const { data: allActions, isLoading } = useGetAllActionsQuery();
@@ -22,8 +21,6 @@ export function Actions() {
   if (isLoading) {
     return null;
   }
-
-  console.log(allActions);
 
   return (
     <div>
@@ -37,12 +34,6 @@ export function Actions() {
             <CardDescription>Create from scratch</CardDescription>
           </CardHeader>
         </Card>
-      </div>
-
-      <div className="mt-4">
-        <h2 className="text-md mb-4"> Installed actions</h2>
-
-        <InstalledActions />
       </div>
 
       <div className="mt-4">

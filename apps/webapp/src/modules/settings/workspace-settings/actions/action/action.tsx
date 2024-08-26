@@ -12,7 +12,6 @@ import {
   TabsTrigger,
 } from '@tegonhq/ui/components/tabs';
 import { cn } from '@tegonhq/ui/lib/utils';
-import { observer } from 'mobx-react-lite';
 import { useParams } from 'next/navigation';
 
 import { Header } from 'modules/settings/header';
@@ -24,13 +23,26 @@ import { useGetExternalActionDataQuery } from 'services/action';
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { Metadata } from './components/metadata';
 import { Configuration } from './configuration';
 
-export const Action = observer(() => {
-  const { actionSlug } = useParams();
+export const Action = () => {
+  const { actionSlug } = useParams<{ actionSlug: string }>();
   const { actionsStore } = useContextStore();
   const action = actionsStore.getAction(actionSlug);
-  const { data: latestAction } = useGetExternalActionDataQuery(action.slug);
+
+  const { data: latestAction, isLoading } =
+    useGetExternalActionDataQuery(actionSlug);
+
+  const metadata = (
+    <div className="mt-3 flex gap-2">
+      <Metadata />
+    </div>
+  );
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <>
@@ -38,24 +50,25 @@ export const Action = observer(() => {
       <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
         <div className="w-full p-6">
           <SettingSection
-            title={action.name}
+            title={latestAction.name}
             description={latestAction?.description}
+            metadata={metadata}
           >
-            <Tabs defaultValue="description">
+            <Tabs defaultValue="overview">
               <TabsList className="bg-transparent flex gap-2 justify-start px-0">
-                {action.config.inputs && (
-                  <>
-                    <TabsTrigger
-                      value="description"
-                      className={cn(
-                        buttonVariants({
-                          variant: 'secondary',
-                        }),
-                      )}
-                    >
-                      Description
-                    </TabsTrigger>
+                <>
+                  <TabsTrigger
+                    value="overview"
+                    className={cn(
+                      buttonVariants({
+                        variant: 'secondary',
+                      }),
+                    )}
+                  >
+                    Overview
+                  </TabsTrigger>
 
+                  {action && action.config.inputs && (
                     <TabsTrigger
                       value="configuration"
                       className={cn(
@@ -66,15 +79,15 @@ export const Action = observer(() => {
                     >
                       Configuration
                     </TabsTrigger>
-                  </>
-                )}
+                  )}
+                </>
               </TabsList>
               <TabsContent value="overview">
                 <div className="flex gap-2">
                   <div>
                     <Editor
                       className="new-issue-editor min-h-[200px] text-base"
-                      value={latestAction.guide}
+                      value={latestAction?.guide}
                       editable={false}
                       editorClassName="min-h-[300px]"
                       extensions={[]}
@@ -84,7 +97,7 @@ export const Action = observer(() => {
                   </div>
                 </div>
               </TabsContent>
-              {action.config?.inputs && (
+              {action && action.config?.inputs && (
                 <TabsContent value="configuration">
                   <Configuration schema={action.config?.inputs} />
                 </TabsContent>
@@ -95,21 +108,9 @@ export const Action = observer(() => {
       </ScrollArea>
     </>
   );
-});
-
-export const ActionWrapper = () => {
-  const { actionSlug } = useParams();
-  const { actionsStore } = useContextStore();
-  const action = actionsStore.getAction(actionSlug);
-
-  if (!action) {
-    return <h2> No action found </h2>;
-  }
-
-  return <Action />;
 };
 
-ActionWrapper.getLayout = function getLayout(page: React.ReactElement) {
+Action.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <SettingsLayout>
       <div className="h-[100vh] flex flex-col w-full">{page}</div>

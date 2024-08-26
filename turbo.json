@@ -89,7 +89,7 @@
       "cache": false
     },
     "dev": {
-      "dependsOn": [ "^generate" ],
+      "dependsOn": [ "generate" ],
       "cache": false
     },
     "build": {
@@ -107,6 +107,9 @@
     },
     "trigger-dev": {
       "cache": false
+    },
+    "prisma:studio": {
+      "env": [ "DATABASE_URL" ]
     }
   }
 }

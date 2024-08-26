@@ -1,7 +1,7 @@
-import { RiLoader4Line } from '@remixicon/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
+import { Loader as LoaderI } from '../../icons';
 import { cn } from '../../lib/utils';
 
 const loaderVariants = cva(
@@ -39,7 +39,7 @@ const Loader = React.forwardRef<HTMLButtonElement, LoaderProps>(
           variant === 'horizontal' ? 'items-center gap-1' : 'flex-col gap-2',
         )}
       >
-        <RiLoader4Line size={18} className="animate-spin" />
+        <LoaderI size={18} className="animate-spin" />
         {text && <p className="text-sm text-muted-foreground">{text}</p>}
       </div>
     );
