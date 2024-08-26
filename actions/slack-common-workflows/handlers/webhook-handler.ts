@@ -1,12 +1,12 @@
-import { logger, WebhookPayload } from '@tegonhq/sdk';
+import { ActionEventPayload, logger } from '@tegonhq/sdk';
 
 import { slackThread } from '../triggers/thread';
 import { slackTriage } from '../triggers/triage';
 
 import { SlackIntegrationSettings } from '../types';
 
-export const webhookHandler = async (payload: WebhookPayload) => {
-  const { eventBody, integrationAccounts, userId } = payload;
+export const webhookHandler = async (payload: ActionEventPayload) => {
+  const { eventBody, integrationAccounts, userId, action } = payload;
 
   // Check if the event is a URL verification challenge
   if (eventBody.type === 'url_verification') {
@@ -41,10 +41,10 @@ export const webhookHandler = async (payload: WebhookPayload) => {
   switch (event.type) {
     case 'message':
       // Handle thread messages
-      return await slackThread(integrationAccount, eventBody);
+      return await slackThread(integrationAccount, eventBody, action);
     case 'reaction_added':
       // Handle message reactions)
-      return await slackTriage(integrationAccount, userId, eventBody);
+      return await slackTriage(integrationAccount, userId, eventBody, action);
     default:
       logger.debug('Unhandled Slack event type:', event.type);
       return undefined;

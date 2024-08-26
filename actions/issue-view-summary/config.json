@@ -1,5 +1,6 @@
 {
-  "name": "issue-view-summary",
+  "name": "Issue View Summary",
+  "slug": "issue-view-summary",
   "triggers": [],
   "schedule": "true",
   "integrations": ["slack"]

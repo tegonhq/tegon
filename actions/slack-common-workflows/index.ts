@@ -9,12 +9,7 @@ export async function run(eventPayload: ActionEventPayload) {
       return onCreateHandler(eventPayload);
 
     case ActionTypesEnum.SOURCE_WEBHOOK:
-      return webhookHandler({
-        eventBody: eventPayload.eventBody,
-        eventHeaders: eventPayload.eventHeaders,
-        integrationAccounts: eventPayload.integrationAccounts,
-        userId: eventPayload.userId,
-      });
+      return webhookHandler(eventPayload);
 
     default:
       return {

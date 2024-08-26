@@ -4,14 +4,14 @@
   "triggers": [
     {
       "type": "on_create",
-      "entities": [ "IssueComment", "LinkedIssue" ]
+      "entities": ["IssueComment", "LinkedIssue"]
     },
     {
       "type": "source_webhook",
-      "entities": [ "slack" ]
+      "entities": ["slack"]
     }
   ],
-  "integrations": [ "slack" ],
+  "integrations": ["slack"],
   "inputs": {
     "type": "object",
     "properties": {

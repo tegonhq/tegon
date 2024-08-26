@@ -59,8 +59,7 @@ export class IntegrationDefinitionService {
 
     const spec = await this.triggerdevService.triggerTask(
       TriggerProjects.Common,
-      // TODO: integration slug
-      integrationDefinition.name,
+      integrationDefinition.slug,
       payload,
     );
 

@@ -38,6 +38,7 @@ export default class WebhookService {
     }
 
     response.send({ status: 200 });
+    console.log(eventBody);
     const accountId = await this.triggerDevService.triggerTask(
       TriggerProjects.Common,
       sourceName,
@@ -69,8 +70,7 @@ export default class WebhookService {
       actionEntities,
     );
 
-    // TODO: integration slug
-    integrationAccountsMap[integrationAccount.integrationDefinition.name] =
+    integrationAccountsMap[integrationAccount.integrationDefinition.slug] =
       integrationAccount;
 
     // TODO (actons): Send all integration accounts based on the ask
