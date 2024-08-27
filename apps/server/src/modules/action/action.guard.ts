@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 
 import WorkspacesService from 'modules/workspaces/workspaces.service';
 @Injectable()
-export class ActionGaurd implements CanActivate {
+export class ActionGuard implements CanActivate {
   constructor(private workspaceService: WorkspacesService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

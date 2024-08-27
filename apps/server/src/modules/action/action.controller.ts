@@ -18,7 +18,7 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
-import { ActionGaurd } from './action.gaurd';
+import { ActionGuard } from './action.guard';
 import ActionService from './action.service';
 import {
   getActionConfig,
@@ -31,11 +31,11 @@ import {
   path: 'action',
 })
 @UseGuards(AuthGuard)
+@UseGuards(ActionGuard)
 export class ActionController {
   constructor(private actionService: ActionService) {}
 
   @Post('create-resource')
-  @UseGuards(ActionGaurd)
   async createResource(
     @SessionDecorator() session: SessionContainer,
     @Body() actionCreateResource: CreateActionDto,
