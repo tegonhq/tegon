@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { MailerService } from '@nestjs-modules/mailer';
 import supertokens, { deleteUser } from 'supertokens-node';
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
 
@@ -8,7 +9,10 @@ import { recipeList } from './supertokens.config';
 
 @Injectable()
 export class SupertokensService {
-  constructor(private usersService: UsersService) {
+  constructor(
+    private usersService: UsersService,
+    private mailerService: MailerService,
+  ) {
     supertokens.init({
       appInfo: {
         appName: 'Tegon',
@@ -20,7 +24,7 @@ export class SupertokensService {
       supertokens: {
         connectionURI: process.env.SUPERTOKEN_CONNECTION_URI,
       },
-      recipeList: recipeList(this.usersService),
+      recipeList: recipeList(this.usersService, this.mailerService),
     });
   }
 

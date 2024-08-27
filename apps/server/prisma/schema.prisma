@@ -572,9 +572,10 @@ model Workspace {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name String
-  slug String  @unique
-  icon String?
+  name         String
+  slug         String  @unique
+  icon         String?
+  actionAccess Boolean @default(false)
 
   actionsEnabled Boolean
 

@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  title: Tegon
+  description: AI First Project Management Tool
+  version: 1.0.0
+
+servers:
+  - url: https://app.tegon.ai
+
+paths:
+  /api/v1/action/{slug}/run:
+    post:
+      summary: Run an action
+      description: Runs an action with the specified slug and payload
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunAction'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/v1/action/{slug}/inputs:
+    post:
+      summary: Update action inputs
+      description: Updates the inputs of an action with the specified slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateActionInputsDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+
+components:
+  schemas:
+    RunAction:
+      type: object
+      properties:
+        workspaceId:
+          type: string
+        payload:
+          type: object
+      required:
+        - workspaceId
+        - payload
+
+    UpdateActionInputsDto:
+      type: object
+      properties:
+        inputs:
+          type: object
+          # Define the inputs schema if applicable
+      required:
+        - inputs
+  parameters:
+    # Define reusable parameters
+
+  responses:
+    # Define reusable responses
+
+  securitySchemes:
+    # Define security schemes
+
+security:
+  # Define global security requirements

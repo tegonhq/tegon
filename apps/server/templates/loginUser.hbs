@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Login to Your Account</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #cacaca;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #e8e8e8;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #000000;
+    }
+    p {
+      font-size: 14px;
+      color: #3e3e3e;
+      line-height: 1.5;
+    }
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #447aee;
+      color: #e8e8e8;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .button:hover {
+      background-color: #004a98;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p>Hey {{userName}}!</p>
+    <p>To log in to your account, please click the button below:</p>
+    <div class="button-container">
+      <a href="{{loginUrl}}" class="button">Login</a>
+    </div>
+    <p>If you did not request this login link, please ignore this email.</p>
+    <p>Best regards,<br>Tegon Team</p>
+  </div>
+</body>
+</html>
