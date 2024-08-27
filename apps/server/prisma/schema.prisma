@@ -576,6 +576,8 @@ model Workspace {
   slug String  @unique
   icon String?
 
+  actionsEnabled Boolean
+
   usersOnWorkspaces     UsersOnWorkspaces[]
   team                  Team[]
   label                 Label[]
