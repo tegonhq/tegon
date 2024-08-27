@@ -577,7 +577,7 @@ model Workspace {
   icon         String?
   actionAccess Boolean @default(false)
 
-  actionsEnabled Boolean
+  actionsEnabled Boolean @default(false)
 
   usersOnWorkspaces     UsersOnWorkspaces[]
   team                  Team[]

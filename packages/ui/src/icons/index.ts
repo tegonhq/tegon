@@ -55,6 +55,7 @@ export * from './loader';
 export * from './check-circle';
 export * from './cross-circle';
 export * from './warning';
+export * from './arrow-left';
 
 export * from './team-line';
 export * from './issues-fill';
