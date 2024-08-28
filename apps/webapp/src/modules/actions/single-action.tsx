@@ -5,7 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@tegonhq/ui/components/tooltip';
-import { Button } from '@tegonhq/ui/components/ui/button';
+import { Button } from '@tegonhq/ui/components/button';
 import { Warning } from '@tegonhq/ui/icons';
 import { useParams } from 'next/navigation';
 

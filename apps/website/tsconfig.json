@@ -9,5 +9,5 @@
     ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "src/pages/api/**.js"]
+  "exclude": ["node_modules"]
 }

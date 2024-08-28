@@ -7,8 +7,8 @@
   "author": "Tegon <support@tegon.ai>",
   "private": true,
   "scripts": {
-    "dev-website": "dotenv -- turbo run dev --filter=apps/website",
-    "dev": "dotenv -- turbo run dev --parallel --filter=!apps/website",
+    "dev-website": "dotenv -- turbo run dev --filter=website",
+    "dev": "dotenv -- turbo run dev --parallel --filter=!website",
     "build": "dotenv -- turbo run build",
     "lint": "turbo run lint",
     "generate": "turbo run generate",
