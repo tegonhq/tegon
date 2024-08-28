@@ -14,6 +14,8 @@ import {
 } from '@tegonhq/sdk';
 
 import axios from 'axios';
+import fs from 'fs';
+import FormData from 'form-data';
 
 import { SlackBlock, SlackElement, SlashCommandSessionRecord } from './types';
 
@@ -199,6 +201,49 @@ export async function getSlackTeamInfo(slackTeamId: string, apiKey: string) {
   );
 
   return response.data;
+}
+
+/**
+ * Retrieves the files buffer from Slack.
+ * @param integrationAccount The integration account with relations.
+ * @param files The array of files from the Slack event body.
+ * @returns Formdata with files.
+ */
+export async function getFilesBuffer(
+  integrationAccount: IntegrationAccount,
+  files: EventBody[],
+) {
+  const formData = new FormData();
+
+  // Retrieve the files buffer for each file
+  await Promise.all(
+    files.map(async (file) => {
+      const response = await axios.get(file.url_private, {
+        ...getSlackHeaders(integrationAccount),
+        responseType: 'stream',
+      });
+
+      const tempFilePath = `/tmp/${file.name}`;
+      const writeStream = fs.createWriteStream(tempFilePath);
+
+      await new Promise((resolve, reject) => {
+        response.data.pipe(writeStream);
+        writeStream.on('finish', resolve);
+        writeStream.on('error', reject);
+      });
+
+      formData.append('files', fs.createReadStream(tempFilePath));
+
+      return tempFilePath;
+    }),
+  );
+
+  // Clean up the temporary files after the request is complete
+  // tempFilePaths.forEach((filePath) => {
+  //   fs.unlinkSync(filePath);
+  // });
+
+  return formData;
 }
 
 /// ******************* Tip tap utils *******************//////

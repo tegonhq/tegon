@@ -10,3 +10,13 @@ export function convertToTitleCase(input: string): string {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
+
+export function getTiptapJSON(input: string) {
+  try {
+    const parsedInput = JSON.parse(input);
+
+    return JSON.stringify(parsedInput.json);
+  } catch (e) {
+    return undefined;
+  }
+}

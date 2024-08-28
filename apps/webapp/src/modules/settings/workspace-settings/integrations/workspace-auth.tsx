@@ -38,7 +38,10 @@ export function WorkspaceAuth({ integrationDefinition }: WorkspaceAuthProps) {
           <>
             <p className="font-medium"> Connected organization account</p>
             <p className="text-muted-foreground">
-              Your organization {integrationDefinition.name}
+              Your organization{' '}
+              <span className="mx-1 font-medium">
+                {integrationDefinition.name}
+              </span>
               account is connected
             </p>
           </>

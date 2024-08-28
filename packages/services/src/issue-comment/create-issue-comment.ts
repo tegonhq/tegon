@@ -1,4 +1,4 @@
-import { CreateIssueCommentDto } from '@tegonhq/types';
+import { CreateIssueCommentDto, IssueComment } from '@tegonhq/types';
 import axios from 'axios';
 
 export class CreateIssueCommentProps extends CreateIssueCommentDto {
@@ -8,7 +8,7 @@ export class CreateIssueCommentProps extends CreateIssueCommentDto {
 export async function createIssueComment({
   issueId,
   ...data
-}: CreateIssueCommentProps) {
+}: CreateIssueCommentProps): Promise<IssueComment> {
   const response = await axios.post(
     `/api/v1/issue_comments?issueId=${issueId}`,
     data,

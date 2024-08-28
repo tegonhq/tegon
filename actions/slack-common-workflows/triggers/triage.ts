@@ -8,6 +8,7 @@ import {
   logger,
   getLinkedIssueBySource,
   getWorkflowsByTeam,
+  uploadAttachment,
 } from '@tegonhq/sdk';
 
 import { slackIssueCreate } from './issue-create';
@@ -19,6 +20,7 @@ import {
 import {
   convertSlackMessageToTiptapJson,
   getExternalSlackUser,
+  getFilesBuffer,
   getSlackMessage,
   getStateId,
   sendEphemeralMessage,
@@ -87,10 +89,11 @@ export const slackTriage = async (
   // Check if the thread is already linked to an existing issue
   const [linkedIssue, workflowStates] = await Promise.all([
     getLinkedIssueBySource({ sourceId }),
+    // (await axios.get(`/api/v1/linked_issues/source?sourceId=${sourceId}`)).data,
     getWorkflowsByTeam({ teamId }),
   ]);
 
-  // If the thread is already linked to an issue, send an ephemeral message and return
+  // // If the thread is already linked to an issue, send an ephemeral message and return
   if (linkedIssue) {
     await sendEphemeralMessage(
       integrationAccount,
@@ -128,14 +131,28 @@ export const slackTriage = async (
   // Create source metadata object
   const sourceMetadata = {
     id: integrationAccount.id,
-    type: integrationAccount.integrationDefinition.name,
+    type: integrationAccount.integrationDefinition.slug,
     subType: 'Thread',
     channelId: sessionData.channelId,
     userDisplayName: slackUsername,
   };
 
-  const attachmentUrls: AttachmentResponse[] = [];
+  let attachmentUrls: AttachmentResponse[] = [];
   // add Attachments
+  if (slackMessageResponse.messages[0].files) {
+    // Get the files buffer from Slack using the integration account and message files
+    const filesFormData = await getFilesBuffer(
+      integrationAccount,
+      slackMessageResponse.messages[0].files,
+    );
+    filesFormData.append('sourceMetadata', JSON.stringify(sourceMetadata));
+
+    // Upload the files to GCP and get the attachment URLs
+    attachmentUrls = await uploadAttachment(
+      integrationAccount.workspaceId,
+      filesFormData,
+    );
+  }
 
   // Convert the Slack message blocks to Tiptap JSON format, including the attachment URLs
   const description = convertSlackMessageToTiptapJson(
@@ -147,10 +164,12 @@ export const slackTriage = async (
     url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${mainTs.replace('.', '')}`,
     sourceId,
     sourceData: {
-      type: integrationAccount.integrationDefinition.name,
+      type: integrationAccount.integrationDefinition.slug,
       channelId: sessionData.channelId,
       parentTs: mainTs,
+      title: `Slack message from: ${slackUsername}`,
       slackTeamDomain: sessionData.slackTeamDomain,
+      userDisplayName: slackUsername,
     },
     createdById: userId,
   };

@@ -1,14 +1,10 @@
 import { openai } from '@ai-sdk/openai';
 import { Injectable, Logger } from '@nestjs/common';
-import { GetAIRequestDTO } from '@tegonhq/types';
+import { GetAIRequestDTO, AIStreamResponse } from '@tegonhq/types';
 import { streamText, generateText, CoreMessage, CoreUserMessage } from 'ai';
 import { PrismaService } from 'nestjs-prisma';
 import { Ollama } from 'ollama';
 import { createOllama } from 'ollama-ai-provider';
-
-interface StreamResponse {
-  textStream: AsyncIterable<string> & ReadableStream<string>;
-}
 
 @Injectable()
 export default class AIRequestsService {
@@ -27,8 +23,10 @@ export default class AIRequestsService {
     return (await this.LLMRequestStream(reqBody, false)) as string;
   }
 
-  async getLLMRequestStream(reqBody: GetAIRequestDTO): Promise<StreamResponse> {
-    return (await this.LLMRequestStream(reqBody, true)) as StreamResponse;
+  async getLLMRequestStream(
+    reqBody: GetAIRequestDTO,
+  ): Promise<AIStreamResponse> {
+    return (await this.LLMRequestStream(reqBody, true)) as AIStreamResponse;
   }
 
   async LLMRequestStream(reqBody: GetAIRequestDTO, stream: boolean = true) {

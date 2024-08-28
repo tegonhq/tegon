@@ -1,6 +1,7 @@
 import type {
   CreateLinkedIssueDto,
   IssueRequestParamsDto,
+  LinkedIssue,
   TeamRequestParamsDto,
 } from '@tegonhq/types';
 
@@ -14,7 +15,7 @@ export async function createLinkedIssue({
   issueId,
   teamId,
   ...otherParams
-}: CreateLinkedIssueParams) {
+}: CreateLinkedIssueParams): Promise<LinkedIssue> {
   const response = await axios.post(
     `/api/v1/issues/${issueId}/link?teamId=${teamId}`,
     otherParams,

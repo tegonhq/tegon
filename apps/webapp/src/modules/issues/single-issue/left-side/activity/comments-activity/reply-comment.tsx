@@ -8,6 +8,8 @@ import {
 import { SendLine } from '@tegonhq/ui/icons';
 import * as React from 'react';
 
+import { getTiptapJSON } from 'common';
+
 import { useIssueData } from 'hooks/issues';
 
 import { useCreateIssueCommentMutation } from 'services/issues';
@@ -26,12 +28,15 @@ export function ReplyComment({ issueCommentId }: ReplyCommentProps) {
   const [showReplyButton, setShowReplyButton] = React.useState(false);
 
   const onSubmit = () => {
-    createIssueComment({
-      body: commentValue,
-      issueId: issueData.id,
-      parentId: issueCommentId,
-    });
-    setCommentValue('');
+    if (commentValue !== '') {
+      const parseCommentValue = getTiptapJSON(commentValue);
+      createIssueComment({
+        body: parseCommentValue,
+        issueId: issueData.id,
+        parentId: issueCommentId,
+      });
+    }
+    setCommentValue(undefined);
   };
 
   return (
@@ -50,7 +55,7 @@ export function ReplyComment({ issueCommentId }: ReplyCommentProps) {
             !commentValue && setShowReplyButton(false);
           }}
           onChange={(e) => setCommentValue(e)}
-          className="w-full bg-transparent px-3 py-2 pt-0 grow"
+          className="w-full bg-transparent px-3 py-2 pt-0 grow text-foreground"
         >
           <EditorExtensions suggestionItems={suggestionItems} />
         </Editor>

@@ -18,6 +18,7 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
+import { ActionGuard } from './action.guard';
 import ActionService from './action.service';
 import {
   getActionConfig,
@@ -29,11 +30,12 @@ import {
   version: '1',
   path: 'action',
 })
+@UseGuards(AuthGuard)
 export class ActionController {
   constructor(private actionService: ActionService) {}
 
   @Post('create-resource')
-  @UseGuards(AuthGuard)
+  @UseGuards(ActionGuard)
   async createResource(
     @SessionDecorator() session: SessionContainer,
     @Body() actionCreateResource: CreateActionDto,
@@ -57,6 +59,7 @@ export class ActionController {
   }
 
   @Get(':slug/runs')
+  @UseGuards(ActionGuard)
   async getRunsForSlug(
     @Param() slugDto: { slug: string },
     @Query() runIdParams: { runId: string; workspaceId: string },
@@ -76,6 +79,7 @@ export class ActionController {
   }
 
   @Post(':slug/run')
+  @UseGuards(ActionGuard)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async run(@Param() slugDto: { slug: string }, @Body() runBody: any) {
     return await this.actionService.run(
@@ -86,6 +90,7 @@ export class ActionController {
   }
 
   @Get()
+  @UseGuards(ActionGuard)
   async getActions(@Query() workspaceIdDto: WorkspaceRequestParamsDto) {
     return await this.actionService.getActions(workspaceIdDto.workspaceId);
   }

@@ -8,12 +8,12 @@ import { Priorities, type IssueHistoryType } from 'common/types';
 
 interface PriorityActivityProps {
   issueHistory: IssueHistoryType;
-  username: string;
+  fullname: string;
   showTime?: boolean;
 }
 export function PriorityActivity({
   issueHistory,
-  username,
+  fullname,
   showTime = false,
 }: PriorityActivityProps) {
   const priorityText = Priorities[issueHistory.toPriority];
@@ -35,7 +35,7 @@ export function PriorityActivity({
         />
 
         <div className="flex items-center">
-          <span className="text-foreground mr-2 font-medium">{username}</span>
+          <span className="text-foreground mr-2 font-medium">{fullname}</span>
           set priority to
           <span className="text-foreground mx-2 font-medium">
             {priorityText}

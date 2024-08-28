@@ -1,5 +1,5 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { GetAIRequestDTO } from '@tegonhq/types';
+import { AIStreamResponse, GetAIRequestDTO } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
@@ -14,13 +14,17 @@ export class AIRequestsController {
 
   @Post()
   @UseGuards(AuthGuard)
-  async getLLMRequest(@Body() aiRequestInput: GetAIRequestDTO) {
+  async getLLMRequest(
+    @Body() aiRequestInput: GetAIRequestDTO,
+  ): Promise<string> {
     return await this.aiRequestsService.getLLMRequest(aiRequestInput);
   }
 
   @Post('stream')
   @UseGuards(AuthGuard)
-  async getLLMRequestStream(@Body() aiRequestInput: GetAIRequestDTO) {
+  async getLLMRequestStream(
+    @Body() aiRequestInput: GetAIRequestDTO,
+  ): Promise<AIStreamResponse> {
     return await this.aiRequestsService.getLLMRequestStream(aiRequestInput);
   }
 }

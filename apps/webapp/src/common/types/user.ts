@@ -3,6 +3,7 @@ interface Workspace {
   slug: string;
   icon: string;
   id: string;
+  actionsEnabled: boolean;
 }
 
 export interface Invite {

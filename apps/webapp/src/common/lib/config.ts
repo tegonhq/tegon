@@ -1,7 +1,7 @@
 import getConfig from 'next/config';
 import Router from 'next/router';
+import Passwordless from 'supertokens-auth-react/recipe/passwordless';
 import SessionReact from 'supertokens-auth-react/recipe/session';
-import ThirdPartyEmailPasswordReact from 'supertokens-auth-react/recipe/thirdpartyemailpassword';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -11,12 +11,17 @@ export const frontendConfig = () => {
     apiDomain: publicRuntimeConfig.NEXT_PUBLIC_BASE_HOST,
     websiteDomain: publicRuntimeConfig.NEXT_PUBLIC_BASE_HOST,
     apiBasePath: '/api/auth',
-    websiteBasePath: '/auth/signin',
+    websiteBasePath: '/auth',
   };
 
   return {
     appInfo,
-    recipeList: [ThirdPartyEmailPasswordReact.init(), SessionReact.init()],
+    recipeList: [
+      Passwordless.init({
+        contactMethod: 'EMAIL',
+      }),
+      SessionReact.init(),
+    ],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     windowHandler: (oI: any) => {
       return {

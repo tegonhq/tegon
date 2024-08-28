@@ -67,7 +67,7 @@ export const WorkspaceDropdown = observer(() => {
           onClick={async () => {
             await signOut();
 
-            replace('/auth/signin');
+            replace('/auth');
           }}
         >
           Log out

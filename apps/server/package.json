@@ -34,7 +34,6 @@
     "prisma:studio": "prisma studio",
     "generate": "prisma generate",
     "db:init-resources": "pnpm run migrate:dev && pnpm run generate",
-    "create-resources": "node scripts/createUserWorkspaceTeam",
     "deploy-trigger-tasks": "npx trigger.dev@beta deploy --self-hosted",
     "trigger-dev": "npx trigger.dev@beta dev -a http://localhost:3030"
   },
@@ -99,6 +98,7 @@
     "openai": "^4.28.4",
     "passport": "0.7.0",
     "passport-jwt": "4.0.1",
+    "passwordless": "link:supertokens-node/recipe/passwordless",
     "pg": "^8.12.0",
     "pg-logical-replication": "^2.0.3",
     "prisma": "5.17.0",

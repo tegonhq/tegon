@@ -10,6 +10,7 @@ import { GlobalShortcuts, IssueShortcutDialogs } from 'modules/shortcuts';
 import { AllProviders } from 'common/wrappers/all-providers';
 
 import { useCurrentTeam } from 'hooks/teams';
+import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -25,6 +26,7 @@ interface LayoutProps {
 
 export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   const { applicationStore, notificationsStore } = useContextStore();
+  const workspace = useCurrentWorkspace();
 
   const {
     query: { workspaceSlug },
@@ -40,6 +42,16 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
       }
     }
   }, [applicationStore.sidebarCollapsed]);
+
+  const actionsLink = workspace.actionsEnabled
+    ? [
+        {
+          title: 'Actions',
+          icon: Actions,
+          href: `/${workspaceSlug}/actions`,
+        },
+      ]
+    : [];
 
   return (
     <>
@@ -71,11 +83,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
                   icon: SettingsLine,
                   href: `/${workspaceSlug}/settings/overview`,
                 },
-                {
-                  title: 'Actions',
-                  icon: Actions,
-                  href: `/${workspaceSlug}/actions`,
-                },
+                ...actionsLink,
               ]}
             />
             <TeamList />

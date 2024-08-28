@@ -33,7 +33,8 @@ export default class WebhookService {
   ) {
     if (sourceName === 'slack') {
       if (eventBody.type === 'url_verification') {
-        return { challenge: eventBody.challenge };
+        response.send({ challenge: eventBody.challenge });
+        return null;
       }
     }
 
@@ -84,13 +85,13 @@ export default class WebhookService {
     // TODO (actons): Send all integration accounts based on the ask
     actionEntities.map(async (actionEntity: ActionEntity) => {
       const actionUser = await this.prisma.user.findFirst({
-        where: { username: actionEntity.action.name },
+        where: { username: actionEntity.action.slug },
       });
       const accessToken = await generateKeyForUserId(actionUser.id);
 
       this.triggerDevService.triggerTaskAsync(
         workspaceId,
-        actionEntity.action.name,
+        actionEntity.action.slug,
         {
           event: ActionTypesEnum.SOURCE_WEBHOOK,
           action: actionEntity.action,

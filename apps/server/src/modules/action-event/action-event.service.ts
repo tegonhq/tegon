@@ -86,7 +86,7 @@ export default class ActionEventService {
 
     const triggerHandle = await this.triggerdevService.triggerTaskAsync(
       actionEvent.workspaceId,
-      actionEntity.action.name,
+      actionEntity.action.slug,
       {
         event: actionEvent.eventType,
         type: actionEvent.modelName,

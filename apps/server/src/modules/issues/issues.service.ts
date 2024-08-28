@@ -551,7 +551,11 @@ export default class IssuesService {
     );
   }
 
-  async moveIssue(userId: string, issueId: string, teamId: string) {
+  async moveIssue(
+    userId: string,
+    issueId: string,
+    teamId: string,
+  ): Promise<Issue> {
     const currentIssue = await this.prisma.issue.findUnique({
       where: { id: issueId },
       include: { subIssue: true, team: true },

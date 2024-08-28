@@ -22,6 +22,20 @@ export class CreateWorkspaceInput {
   icon: string;
 }
 
+export class CreateInitialResourcesDto {
+  @IsString()
+  workspaceName: string;
+
+  @IsString()
+  fullname: string;
+
+  @IsString()
+  teamName: string;
+
+  @IsString()
+  teamIdentifier: string;
+}
+
 export class UpdateWorkspaceInput {
   @IsOptional()
   @IsString()

@@ -6,14 +6,13 @@ export function getUserDetails(
   user?: User,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
-  if (user) {
-    return user;
-  }
-
-  const name = sourceMetadata?.userDisplayName ?? sourceMetadata.type;
+  const name =
+    sourceMetadata && sourceMetadata.userDisplayName
+      ? ` (${sourceMetadata?.userDisplayName})`
+      : '';
 
   return {
-    fullname: name,
-    username: name,
+    fullname: `${user.fullname}${name}`,
+    username: user.username,
   };
 }

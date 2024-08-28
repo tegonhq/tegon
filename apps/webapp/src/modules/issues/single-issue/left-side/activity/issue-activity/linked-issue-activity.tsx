@@ -50,7 +50,7 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
         <span className="text-foreground mr-2 font-medium">
           {
             getUserDetails(sourceData, getUserData(linkedIssue.createdById))
-              .username
+              .fullname
           }
         </span>
         <span className="text-muted-foreground">linked</span>

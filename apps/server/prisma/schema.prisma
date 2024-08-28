@@ -173,6 +173,8 @@ model Invite {
   status      InviteStatus
   teamIds     String[]
   role        Role
+
+  @@unique([emailId, workspaceId])
 }
 
 model Issue {
@@ -572,9 +574,11 @@ model Workspace {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name String
-  slug String  @unique
-  icon String?
+  name         String
+  slug         String  @unique
+  icon         String?
+
+  actionsEnabled Boolean @default(false)
 
   usersOnWorkspaces     UsersOnWorkspaces[]
   team                  Team[]

@@ -19,7 +19,7 @@ export async function getIntegrationAccountByAccountId({
   accountId,
 }: AccountIdDto): Promise<IntegrationAccount[]> {
   const response = await axios.get(
-    `/v1/integration_account/accountId?accountId=${accountId}`,
+    `api/v1/integration_account/accountId?accountId=${accountId}`,
   );
 
   return response.data;

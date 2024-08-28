@@ -33,7 +33,7 @@ export function Invites() {
     if (context?.workspaces.length > 0) {
       router.replace(`/${context.workspaces[0].slug}`);
     } else if (context?.invites.length === 0) {
-      router.replace(`/waitlist`);
+      router.replace(`/onboarding`);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,7 +93,7 @@ export function Invites() {
           onClick={async () => {
             await signOut();
 
-            router.replace('/auth/signin');
+            router.replace('/auth');
           }}
         >
           Log out

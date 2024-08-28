@@ -7,11 +7,13 @@ import {
   updateIssueComment,
   getLinkedComment,
   getLinkedIssueBySource,
+  uploadAttachment,
 } from '@tegonhq/sdk';
 
 import {
   convertSlackMessageToTiptapJson,
   getExternalSlackUser,
+  getFilesBuffer,
 } from '../utils';
 
 export const slackThread = async (
@@ -77,19 +79,32 @@ export const slackThread = async (
     parentTs: message.thread_ts,
     channelId: event.channel,
     channelType: event.channel_type,
-    type: integrationAccount.integrationDefinition.name,
+    type: integrationAccount.integrationDefinition.slug,
     id: integrationAccount.id,
     userDisplayName: message.username ? message.username : displayName,
   };
 
-  const attachmentUrls: AttachmentResponse[] = [];
+  let attachmentUrls: AttachmentResponse[] = [];
+  if (message.files) {
+    // Get the files buffer from Slack using the integration account and message files
+    const filesFormData = await getFilesBuffer(
+      integrationAccount,
+      message.files,
+    );
+
+    // Upload the files to GCP and get the attachment URLs
+    attachmentUrls = await uploadAttachment(
+      integrationAccount.workspaceId,
+      filesFormData,
+    );
+  }
 
   const tiptapMessage = convertSlackMessageToTiptapJson(
     message.blocks,
     attachmentUrls,
   );
 
-  let linkedComment = await getLinkedComment({ sourceId: threadId });
+  const linkedComment = await getLinkedComment({ sourceId: threadId });
   if (linkedComment) {
     // If a linked comment exists, update the existing comment
     logger.debug(`Updating existing comment for thread ID: ${threadId}`);
@@ -100,7 +115,7 @@ export const slackThread = async (
     });
   }
 
-  linkedComment = {
+  const linkedCommentMetadata = {
     url: threadId,
     sourceId: threadId,
     sourceData: sourceMetadata,
@@ -111,6 +126,6 @@ export const slackThread = async (
     body: tiptapMessage,
     parentId,
     sourceMetadata,
-    linkCommentMetadata: linkedComment,
+    linkCommentMetadata: linkedCommentMetadata,
   });
 };

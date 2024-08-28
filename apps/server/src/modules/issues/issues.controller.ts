@@ -20,6 +20,7 @@ import {
   UpdateIssueDto,
   WorkspaceRequestParamsDto,
   GetIssuesByFilterDTO,
+  LinkedIssue,
 } from '@tegonhq/types';
 import { Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
@@ -46,7 +47,7 @@ export class IssuesController {
   async createIssue(
     @SessionDecorator() session: SessionContainer,
     @Body() issueData: CreateIssueDto,
-  ) {
+  ): Promise<Issue> {
     const userId = session.getUserId();
     return await this.issuesService.createIssueAPI(issueData, userId);
   }
@@ -91,7 +92,7 @@ export class IssuesController {
     @SessionDecorator() session: SessionContainer,
     @Param() issueParams: IssueRequestParamsDto,
     @Body() linkData: CreateLinkedIssueDto,
-  ) {
+  ): Promise<LinkedIssue | ApiResponse> {
     const userId = session.getUserId();
     return await this.linkedIssueService.createLinkIssue(
       linkData,
@@ -121,7 +122,7 @@ export class IssuesController {
     @SessionDecorator() session: SessionContainer,
     @Param() issueParams: IssueRequestParamsDto,
     @Body() moveData: TeamRequestParamsDto,
-  ) {
+  ): Promise<Issue> {
     const userId = session.getUserId();
     return await this.issuesService.moveIssue(
       userId,

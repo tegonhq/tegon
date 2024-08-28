@@ -11,7 +11,7 @@ export async function getIntegrationAccountsFromActions(
   const integrationAccounts = await prisma.integrationAccount.findMany({
     where: {
       integrationDefinition: {
-        name: {
+        slug: {
           in: integrations,
         },
       },

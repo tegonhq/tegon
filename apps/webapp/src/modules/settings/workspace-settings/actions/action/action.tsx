@@ -18,6 +18,7 @@ import { Header } from 'modules/settings/header';
 import { SettingSection } from 'modules/settings/setting-section';
 
 import { SettingsLayout } from 'common/layouts/settings-layout';
+import { ActionAccessGuard } from 'common/wrappers/action-access-guard';
 
 import { useGetExternalActionDataQuery } from 'services/action';
 
@@ -113,7 +114,9 @@ export const Action = () => {
 Action.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <SettingsLayout>
-      <div className="h-[100vh] flex flex-col w-full">{page}</div>
+      <div className="h-[100vh] flex flex-col w-full">
+        <ActionAccessGuard>{page}</ActionAccessGuard>
+      </div>
     </SettingsLayout>
   );
 };

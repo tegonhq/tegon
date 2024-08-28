@@ -1,0 +1,13 @@
+{
+  "extends": "@tegonhq/typescript-config/next.json",
+  "compilerOptions": {
+    "baseUrl": "src",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

@@ -18,7 +18,7 @@ import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import {
-  CreateWorkspaceInput,
+  CreateInitialResourcesDto,
   InviteActionBody,
   InviteUsersBody,
   UpdateWorkspaceInput,
@@ -33,14 +33,17 @@ import WorkspacesService from './workspaces.service';
 export class WorkspacesController {
   constructor(private workspacesService: WorkspacesService) {}
 
-  @Post()
+  @Post('onboarding')
   @UseGuards(AuthGuard)
-  async createWorkspace(
+  async createIntialResources(
     @SessionDecorator() session: SessionContainer,
-    @Body() workspaceData: CreateWorkspaceInput,
+    @Body() workspaceData: CreateInitialResourcesDto,
   ): Promise<Workspace> {
     const userId = session.getUserId();
-    return await this.workspacesService.createWorkspace(userId, workspaceData);
+    return await this.workspacesService.createInitialResources(
+      userId,
+      workspaceData,
+    );
   }
 
   @Get()
@@ -58,12 +61,6 @@ export class WorkspacesController {
     @Param('workspaceName') workspaceName: string,
   ): Promise<Workspace> {
     return await this.workspacesService.getWorkspaceByName(workspaceName);
-  }
-
-  @Post('seed_workspaces')
-  async seedWorkspaces() {
-    await this.workspacesService.seedWorkspaces();
-    return { status: 200 };
   }
 
   @Post('invite_action')

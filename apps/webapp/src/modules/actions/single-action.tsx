@@ -1,3 +1,5 @@
+import { ActionStatusEnum } from '@tegonhq/types';
+import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import {
@@ -5,7 +7,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@tegonhq/ui/components/tooltip';
-import { Button } from '@tegonhq/ui/components/ui/button';
 import { Warning } from '@tegonhq/ui/icons';
 import { useParams } from 'next/navigation';
 
@@ -35,16 +36,18 @@ export function SingleAction() {
         <ScrollArea className="grow flex flex-col p-6 h-full gap-2">
           <div className="flex gap-1 items-center">
             <h2 className="text-xl">{convertToTitleCase(action.name)}</h2>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="link">
-                  <Warning size={20} className="text-warning" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                This action is not configured. You can configure in settings.
-              </TooltipContent>
-            </Tooltip>
+            {action.status === ActionStatusEnum.NEEDS_CONFIGURATION && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="link">
+                    <Warning size={20} className="text-warning" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  This action is not configured. You can configure in settings.
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
           <p className=" text-muted-foreground">{latestAction?.description}</p>
 

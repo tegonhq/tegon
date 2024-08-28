@@ -19,7 +19,7 @@ export function useTriageGroups() {
   );
 
   const issues = sort(
-    issuesStore.getIssuesForState(triageWorkflow.id, currentTeam.id, false),
+    issuesStore.getIssuesForState(triageWorkflow.id, currentTeam.id, true),
   ).desc((issue: IssueType) => new Date(issue.updatedAt)) as IssueType[];
 
   return React.useMemo(() => {

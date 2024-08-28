@@ -23,7 +23,7 @@ export default function Home() {
 
     // Check if they have invites
     else {
-      router.replace(`/waitlist`);
+      router.replace(`/onboarding`);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

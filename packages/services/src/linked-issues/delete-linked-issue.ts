@@ -1,3 +1,4 @@
+import { LinkedIssue } from '@tegonhq/types';
 import axios from 'axios';
 
 export interface DeleteLinkedIssueParams {
@@ -6,7 +7,7 @@ export interface DeleteLinkedIssueParams {
 
 export async function deleteLinkedIssue({
   linkedIssueId,
-}: DeleteLinkedIssueParams) {
+}: DeleteLinkedIssueParams): Promise<LinkedIssue> {
   const response = await axios.delete(`/api/v1/linked_issues/${linkedIssueId}`);
 
   return response.data;
