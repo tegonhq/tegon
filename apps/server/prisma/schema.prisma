@@ -575,7 +575,6 @@ model Workspace {
   name         String
   slug         String  @unique
   icon         String?
-  actionAccess Boolean @default(false)
 
   actionsEnabled Boolean @default(false)
 

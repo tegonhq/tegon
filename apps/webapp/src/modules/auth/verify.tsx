@@ -1,5 +1,6 @@
 import { Loader } from '@tegonhq/ui/components/loader';
 import { useToast } from '@tegonhq/ui/components/use-toast';
+import { AuthGuard } from 'common/wrappers/auth-guard';
 import { useRouter } from 'next/router';
 import React from 'react';
 import {
@@ -74,8 +75,12 @@ export function Verify() {
   }, []);
 
   return (
-    <div className="flex">
+    <div className="flex justify-center items-center">
       <Loader text="Verifying token" />
     </div>
   );
 }
+
+Verify.getLayout = function getLayout(page: React.ReactElement) {
+  return <AuthGuard>{page}</AuthGuard>;
+};

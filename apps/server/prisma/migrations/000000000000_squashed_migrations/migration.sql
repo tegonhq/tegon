@@ -529,7 +529,6 @@ CREATE TABLE "Workspace" (
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "icon" TEXT,
-    "actionAccess" BOOLEAN NOT NULL DEFAULT false,
     "actionsEnabled" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Workspace_pkey" PRIMARY KEY ("id")

@@ -10,7 +10,7 @@ module.exports = {
     return [
       {
         source: '/',
-        destination: '/auth/signin',
+        destination: '/auth',
         permanent: true,
       },
     ];

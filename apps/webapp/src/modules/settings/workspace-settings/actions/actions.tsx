@@ -10,6 +10,7 @@ import { AddLine } from '@tegonhq/ui/icons';
 import { Header } from 'modules/settings/header';
 
 import { SettingsLayout } from 'common/layouts/settings-layout';
+import { ActionAccessGuard } from 'common/wrappers/action-access-guard';
 
 import { useGetAllActionsQuery, type ActionSource } from 'services/action';
 
@@ -55,7 +56,9 @@ Actions.getLayout = function getLayout(page: React.ReactElement) {
       <div className="h-[100vh] flex flex-col w-full">
         <Header title="Actions" />
         <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
-          <div className="w-full p-6">{page} </div>
+          <div className="w-full p-6">
+            <ActionAccessGuard>{page} </ActionAccessGuard>
+          </div>
         </ScrollArea>
       </div>
     </SettingsLayout>

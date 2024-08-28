@@ -1,5 +1,3 @@
-import { RiDiscordFill, RiMailFill } from '@remixicon/react';
-import { SlackIcon } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 
 export function Actions() {

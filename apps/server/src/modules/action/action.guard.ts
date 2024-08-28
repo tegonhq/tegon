@@ -14,6 +14,6 @@ export class ActionGuard implements CanActivate {
     }
 
     const workspace = await this.workspaceService.getWorkspace({ workspaceId });
-    return workspace.actionAccess;
+    return workspace.actionsEnabled;
   }
 }

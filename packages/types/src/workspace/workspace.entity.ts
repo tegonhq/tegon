@@ -17,7 +17,7 @@ export class Workspace {
   name: string;
   slug: string;
   icon: string | null;
-  actionAccess: boolean;
+  actionsEnabled: boolean;
   usersOnWorkspaces?: UsersOnWorkspaces[];
   team?: Team[];
   label?: Label[];

@@ -11,7 +11,7 @@ export const frontendConfig = () => {
     apiDomain: publicRuntimeConfig.NEXT_PUBLIC_BASE_HOST,
     websiteDomain: publicRuntimeConfig.NEXT_PUBLIC_BASE_HOST,
     apiBasePath: '/api/auth',
-    websiteBasePath: '/auth/signin',
+    websiteBasePath: '/auth',
   };
 
   return {

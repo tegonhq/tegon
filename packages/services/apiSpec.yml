@@ -905,7 +905,7 @@ components:
         icon:
           type: string
           nullable: true
-        actionAccess:
+        actionsEnabled:
           type: boolean
         usersOnWorkspaces:
           type: array

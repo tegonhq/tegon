@@ -23,7 +23,7 @@
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://app.tegon.ai/auth/signin"
+    "url": "https://app.tegon.ai/auth"
   },
 
   "anchors": [
