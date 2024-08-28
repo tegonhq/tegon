@@ -26,7 +26,7 @@ export const recipeList = (
         override: (originalImplementation) => {
           return {
             ...originalImplementation,
-            async getContent({
+            async sendEmail({
               email,
               urlWithLinkCode,
               codeLifetime,
@@ -36,8 +36,9 @@ export const recipeList = (
                 subject: 'Login for Tegon',
                 template: 'loginUser',
                 context: {
+                  userName: email.split('@')[0],
                   magicLink: urlWithLinkCode,
-                  codeLifetime,
+                  linkExpiresIn: Math.floor(codeLifetime / 60000),
                 },
               });
             },
