@@ -39,7 +39,6 @@
   "devDependencies": {
     "@tegonhq/eslint-config": "workspace:*",
     "@tegonhq/typescript-config": "workspace:*",
-    "@types/node": "^20",
     "@types/superagent": "^8.1.4",
     "rimraf": "^3.0.2",
     "tsup": "^8.0.1",

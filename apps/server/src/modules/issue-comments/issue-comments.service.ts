@@ -4,6 +4,7 @@ import {
   CreateIssueCommentRequestParamsDto,
   IssueComment,
   IssueCommentRequestParamsDto,
+  LinkedComment,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -221,15 +222,17 @@ export default class IssueCommentsService {
     });
   }
 
-  async getLinkedCommentBySource(sourceId: string) {
+  async getLinkedCommentBySource(sourceId: string): Promise<LinkedComment> {
     return this.prisma.linkedComment.findFirst({
       where: { sourceId },
       include: { comment: true },
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async createLinkedComment(createLinkedCommentInput: any) {
+  async createLinkedComment(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    createLinkedCommentInput: any,
+  ): Promise<LinkedComment> {
     return this.prisma.linkedComment.create({
       data: createLinkedCommentInput,
     });

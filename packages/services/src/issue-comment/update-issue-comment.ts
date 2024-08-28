@@ -1,4 +1,4 @@
-import type { UpdateIssueCommentDto } from '@tegonhq/types';
+import type { IssueComment, UpdateIssueCommentDto } from '@tegonhq/types';
 
 import axios from 'axios';
 
@@ -9,7 +9,7 @@ export interface UpdateIssueCommentProps extends UpdateIssueCommentDto {
 export async function updateIssueComment({
   issueCommentId,
   ...data
-}: UpdateIssueCommentProps) {
+}: UpdateIssueCommentProps): Promise<IssueComment> {
   const response = await axios.post(
     `/api/v1/issue_comments/${issueCommentId}`,
     data,

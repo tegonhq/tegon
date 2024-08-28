@@ -13,6 +13,7 @@ import {
   CreateIssueCommentRequestParamsDto,
   IssueComment,
   IssueCommentRequestParamsDto,
+  LinkedComment,
 } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
@@ -34,7 +35,9 @@ export class IssueCommentsController {
 
   @Get('linked_comment')
   @UseGuards(AuthGuard)
-  async getLinkedComment(@Query('sourceId') sourceId: string) {
+  async getLinkedComment(
+    @Query('sourceId') sourceId: string,
+  ): Promise<LinkedComment> {
     return await this.issueCommentsService.getLinkedCommentBySource(sourceId);
   }
 
@@ -43,7 +46,7 @@ export class IssueCommentsController {
   async createLinkedComment(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Body() createLinkedCommentInput: any,
-  ) {
+  ): Promise<LinkedComment> {
     return await this.issueCommentsService.createLinkedComment(
       createLinkedCommentInput,
     );

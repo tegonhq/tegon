@@ -1,4 +1,5 @@
 import type {
+  Issue,
   IssueRequestParamsDto,
   TeamRequestParamsDto,
 } from '@tegonhq/types';
@@ -11,7 +12,7 @@ export type MoveIssueToTeamParams = IssueRequestParamsDto &
 export async function moveIssueToTeam({
   issueId,
   teamId,
-}: MoveIssueToTeamParams) {
+}: MoveIssueToTeamParams): Promise<Issue> {
   const response = await axios.post(`/api/v1/issues/${issueId}/move`, {
     teamId,
   });
