@@ -80,7 +80,7 @@ export function AddMemberDialog({ setDialogOpen }: AddMemberDialogProps) {
         <DialogHeader className="pb-0">
           <DialogTitle className="font-normal flex flex-col gap-1">
             <div className="flex gap-1 items-center">Add member</div>
-            <div className="text-muted-foreground text-base leading-5 max-w-[300px]">
+            <div className="text-muted-foreground text-left text-base leading-5 max-w-[300px]">
               Invite member to the workspace
             </div>
           </DialogTitle>

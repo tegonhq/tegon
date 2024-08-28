@@ -34,7 +34,6 @@
     "prisma:studio": "prisma studio",
     "generate": "prisma generate",
     "db:init-resources": "pnpm run migrate:dev && pnpm run generate",
-    "create-resources": "node scripts/createUserWorkspaceTeam",
     "deploy-trigger-tasks": "npx trigger.dev@beta deploy --self-hosted",
     "trigger-dev": "npx trigger.dev@beta dev -a http://localhost:3030"
   },

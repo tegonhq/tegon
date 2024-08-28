@@ -207,8 +207,14 @@ export default class WorkspacesService {
     for (const e of emails) {
       const email = e.trim();
       try {
-        const invite = await this.prisma.invite.create({
-          data: {
+        await this.prisma.invite.upsert({
+          where: {
+            emailId_workspaceId: {
+              emailId: email,
+              workspaceId,
+            },
+          },
+          create: {
             emailId: email,
             fullName: email.split('@')[0],
             workspaceId,
@@ -217,6 +223,9 @@ export default class WorkspacesService {
             status: InviteStatusEnum.INVITED,
             teamIds,
             role,
+          },
+          update: {
+            sentAt: new Date().toISOString(),
           },
         });
 
@@ -227,7 +236,7 @@ export default class WorkspacesService {
           context: {
             workspaceName: workspace.name,
             inviterName: iniviter.fullname,
-            invitationUrl: `${process.env.PUBLIC_FRONTEND_HOST}/auth/signup?token=${invite.id}&email=${email}`,
+            invitationUrl: `${process.env.PUBLIC_FRONTEND_HOST}/auth`,
           },
         });
         this.logger.log('Invite Email sent to user');

@@ -31,11 +31,11 @@ import {
   path: 'action',
 })
 @UseGuards(AuthGuard)
-@UseGuards(ActionGuard)
 export class ActionController {
   constructor(private actionService: ActionService) {}
 
   @Post('create-resource')
+  @UseGuards(ActionGuard)
   async createResource(
     @SessionDecorator() session: SessionContainer,
     @Body() actionCreateResource: CreateActionDto,
@@ -59,6 +59,7 @@ export class ActionController {
   }
 
   @Get(':slug/runs')
+  @UseGuards(ActionGuard)
   async getRunsForSlug(
     @Param() slugDto: { slug: string },
     @Query() runIdParams: { runId: string; workspaceId: string },
@@ -78,6 +79,7 @@ export class ActionController {
   }
 
   @Post(':slug/run')
+  @UseGuards(ActionGuard)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async run(@Param() slugDto: { slug: string }, @Body() runBody: any) {
     return await this.actionService.run(
@@ -88,6 +90,7 @@ export class ActionController {
   }
 
   @Get()
+  @UseGuards(ActionGuard)
   async getActions(@Query() workspaceIdDto: WorkspaceRequestParamsDto) {
     return await this.actionService.getActions(workspaceIdDto.workspaceId);
   }

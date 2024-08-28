@@ -23,8 +23,8 @@ export function Action({ action, noBorder }: ActionProps) {
     <div
       key={action.id}
       className={cn(
-        'ml-4 p-2 py-0 mr-4 hover:bg-grayAlpha-300 rounded',
-        actionSlug === action.slug && 'bg-grayAlpha-300',
+        'ml-4 p-2 py-0 mr-4 hover:bg-grayAlpha-200 rounded',
+        actionSlug === action.slug && 'bg-grayAlpha-200',
       )}
       onClick={() => {
         push(`/${workspaceSlug}/actions/${action.slug}`);

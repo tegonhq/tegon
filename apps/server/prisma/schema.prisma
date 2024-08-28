@@ -173,6 +173,8 @@ model Invite {
   status      InviteStatus
   teamIds     String[]
   role        Role
+
+  @@unique([emailId, workspaceId])
 }
 
 model Issue {
