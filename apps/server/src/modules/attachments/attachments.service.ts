@@ -8,7 +8,6 @@ import { AttachmentResponse, AttachmentStatusEnum } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { AttachmentRequestParams, ExternalFile } from './attachments.interface';
-
 @Injectable()
 export class AttachmentService {
   private storage: Storage;

@@ -12,7 +12,9 @@ import {
 import {
   convertSlackMessageToTiptapJson,
   getExternalSlackUser,
+  getFilesBuffer,
 } from '../utils';
+import axios from 'axios';
 
 export const slackThread = async (
   integrationAccount: IntegrationAccount,
@@ -82,7 +84,25 @@ export const slackThread = async (
     userDisplayName: message.username ? message.username : displayName,
   };
 
-  const attachmentUrls: AttachmentResponse[] = [];
+  let attachmentUrls: AttachmentResponse[] = [];
+  if (message.files) {
+    // Get the files buffer from Slack using the integration account and message files
+    const filesFormData = await getFilesBuffer(
+      integrationAccount,
+      message.files,
+    );
+
+    // Upload the files to GCP and get the attachment URLs
+    // attachmentUrls = await uploadAttachments(integrationAccount.workspaceId, filesFormData)
+
+    attachmentUrls = await axios.post(
+      `/api/v1/attachment/upload?workspaceId=${integrationAccount.workspaceId}`,
+      filesFormData,
+      {
+        headers: { ...filesFormData.getHeaders() },
+      },
+    );
+  }
 
   const tiptapMessage = convertSlackMessageToTiptapJson(
     message.blocks,

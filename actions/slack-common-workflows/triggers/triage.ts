@@ -19,10 +19,12 @@ import {
 import {
   convertSlackMessageToTiptapJson,
   getExternalSlackUser,
+  getFilesBuffer,
   getSlackMessage,
   getStateId,
   sendEphemeralMessage,
 } from '../utils';
+import axios from 'axios';
 
 export const slackTriage = async (
   integrationAccount: IntegrationAccount,
@@ -87,24 +89,25 @@ export const slackTriage = async (
   // Check if the thread is already linked to an existing issue
   const [linkedIssue, workflowStates] = await Promise.all([
     getLinkedIssueBySource({ sourceId }),
+    // (await axios.get(`/api/v1/linked_issues/source?sourceId=${sourceId}`)).data,
     getWorkflowsByTeam({ teamId }),
   ]);
 
-  // If the thread is already linked to an issue, send an ephemeral message and return
-  if (linkedIssue) {
-    await sendEphemeralMessage(
-      integrationAccount,
-      channelId,
-      `This thread is already linked with an existing Issue. so we can't create a new Issue`,
-      mainTs,
-      slackUserId,
-    );
+  // // If the thread is already linked to an issue, send an ephemeral message and return
+  // if (linkedIssue) {
+  //   await sendEphemeralMessage(
+  //     integrationAccount,
+  //     channelId,
+  //     `This thread is already linked with an existing Issue. so we can't create a new Issue`,
+  //     mainTs,
+  //     slackUserId,
+  //   );
 
-    logger.debug(
-      `Thread already linked to an existing issue. Skipping issue creation.`,
-    );
-    return undefined;
-  }
+  //   logger.debug(
+  //     `Thread already linked to an existing issue. Skipping issue creation.`,
+  //   );
+  //   return undefined;
+  // }
 
   const stateId = getStateId('opened', workflowStates);
 
@@ -134,14 +137,49 @@ export const slackTriage = async (
     userDisplayName: slackUsername,
   };
 
-  const attachmentUrls: AttachmentResponse[] = [];
+  let attachmentUrls: AttachmentResponse[] = [];
   // add Attachments
+  if (slackMessageResponse.messages[0].files) {
+    // Get the files buffer from Slack using the integration account and message files
+    const filesFormData = await getFilesBuffer(
+      integrationAccount,
+      slackMessageResponse.messages[0].files,
+    );
+    filesFormData.append('sourceMetadata', JSON.stringify(sourceMetadata));
+
+    // Upload the files to GCP and get the attachment URLs
+    // attachmentUrls = await uploadAttachments(integrationAccount.workspaceId, filesFormData)
+
+    attachmentUrls = await axios.post(
+      `/api/v1/attachment/upload?workspaceId=${integrationAccount.workspaceId}`,
+      filesFormData,
+      {
+        headers: { ...filesFormData.getHeaders() },
+      },
+    );
+  }
 
   // Convert the Slack message blocks to Tiptap JSON format, including the attachment URLs
   const description = convertSlackMessageToTiptapJson(
     slackMessageResponse.messages[0].blocks,
     attachmentUrls,
   );
+
+  // If the thread is already linked to an issue, send an ephemeral message and return
+  if (linkedIssue) {
+    await sendEphemeralMessage(
+      integrationAccount,
+      channelId,
+      `This thread is already linked with an existing Issue. so we can't create a new Issue`,
+      mainTs,
+      slackUserId,
+    );
+
+    logger.debug(
+      `Thread already linked to an existing issue. Skipping issue creation.`,
+    );
+    return undefined;
+  }
 
   const linkIssueData = {
     url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${mainTs.replace('.', '')}`,
