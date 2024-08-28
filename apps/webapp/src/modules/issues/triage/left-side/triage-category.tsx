@@ -83,7 +83,7 @@ export const TriageCategory = observer(
               <div
                 key={issue.id}
                 className={cn(
-                  'ml-4 p-2 py-0 mr-4 hover:bg-grayAlpha-200 rounded mb-1',
+                  'ml-4 p-3 py-1 mr-4 hover:bg-grayAlpha-200 rounded mb-1',
                   issueId === `${currentTeam.identifier}-${issue.number}` &&
                     'bg-grayAlpha-200',
                 )}

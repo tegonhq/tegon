@@ -7,6 +7,7 @@ import {
   updateIssueComment,
   getLinkedComment,
   getLinkedIssueBySource,
+  uploadAttachment,
 } from '@tegonhq/sdk';
 
 import {
@@ -14,7 +15,6 @@ import {
   getExternalSlackUser,
   getFilesBuffer,
 } from '../utils';
-import axios from 'axios';
 
 export const slackThread = async (
   integrationAccount: IntegrationAccount,
@@ -79,7 +79,7 @@ export const slackThread = async (
     parentTs: message.thread_ts,
     channelId: event.channel,
     channelType: event.channel_type,
-    type: integrationAccount.integrationDefinition.name,
+    type: integrationAccount.integrationDefinition.slug,
     id: integrationAccount.id,
     userDisplayName: message.username ? message.username : displayName,
   };
@@ -93,14 +93,9 @@ export const slackThread = async (
     );
 
     // Upload the files to GCP and get the attachment URLs
-    // attachmentUrls = await uploadAttachments(integrationAccount.workspaceId, filesFormData)
-
-    attachmentUrls = await axios.post(
-      `/api/v1/attachment/upload?workspaceId=${integrationAccount.workspaceId}`,
+    attachmentUrls = await uploadAttachment(
+      integrationAccount.workspaceId,
       filesFormData,
-      {
-        headers: { ...filesFormData.getHeaders() },
-      },
     );
   }
 
@@ -109,7 +104,7 @@ export const slackThread = async (
     attachmentUrls,
   );
 
-  let linkedComment = await getLinkedComment({ sourceId: threadId });
+  const linkedComment = await getLinkedComment({ sourceId: threadId });
   if (linkedComment) {
     // If a linked comment exists, update the existing comment
     logger.debug(`Updating existing comment for thread ID: ${threadId}`);
@@ -120,7 +115,7 @@ export const slackThread = async (
     });
   }
 
-  linkedComment = {
+  const linkedCommentMetadata = {
     url: threadId,
     sourceId: threadId,
     sourceData: sourceMetadata,
@@ -131,6 +126,6 @@ export const slackThread = async (
     body: tiptapMessage,
     parentId,
     sourceMetadata,
-    linkCommentMetadata: linkedComment,
+    linkCommentMetadata: linkedCommentMetadata,
   });
 };

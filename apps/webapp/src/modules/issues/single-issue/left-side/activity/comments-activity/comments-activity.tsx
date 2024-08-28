@@ -1,4 +1,5 @@
 import { Timeline } from '@tegonhq/ui/components/timeline';
+import { sort } from 'fast-sort';
 import { observer } from 'mobx-react-lite';
 
 import type { User } from 'common/types';
@@ -16,7 +17,10 @@ export const CommentsActivity = observer(() => {
   const issue = useIssueData();
   const { commentsStore } = useContextStore();
 
-  const comments = commentsStore.getComments(issue.id);
+  const comments = sort(commentsStore.getComments(issue.id)).asc(
+    (comment: IssueCommentType) => new Date(comment.createdAt),
+  ) as IssueCommentType[];
+
   const { usersData, isLoading } = useUsersData(issue.teamId);
 
   function getUserData(userId: string) {

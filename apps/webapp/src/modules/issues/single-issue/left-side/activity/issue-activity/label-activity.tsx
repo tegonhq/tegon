@@ -11,13 +11,13 @@ import { useContextStore } from 'store/global-context-provider';
 interface LabelActivityProps {
   issueHistory: IssueHistoryType;
   added: boolean;
-  username: string;
+  fullname: string;
   showTime?: boolean;
 }
 export function LabelActivity({
   added,
   issueHistory,
-  username,
+  fullname,
   showTime = false,
 }: LabelActivityProps) {
   const { labelsStore } = useContextStore();
@@ -38,7 +38,7 @@ export function LabelActivity({
           <LabelLine size={20} className="mr-4" />
 
           <div className="flex items-center">
-            <span className="mr-2 font-medium text-foreground">{username}</span>
+            <span className="mr-2 font-medium text-foreground">{fullname}</span>
             added label
           </div>
 
@@ -67,7 +67,7 @@ export function LabelActivity({
         <LabelLine size={20} className="mr-4" />
 
         <div className="flex items-center">
-          <span className="mr-2 font-medium text-foreground">{username}</span>
+          <span className="mr-2 font-medium text-foreground">{fullname}</span>
           removed label
         </div>
 

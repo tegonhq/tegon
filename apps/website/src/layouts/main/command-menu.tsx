@@ -2,7 +2,6 @@
 
 import {
   CircleIcon,
-  FileIcon,
   LaptopIcon,
   MoonIcon,
   SunIcon,

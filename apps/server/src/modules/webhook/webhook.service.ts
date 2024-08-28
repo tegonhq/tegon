@@ -33,7 +33,8 @@ export default class WebhookService {
   ) {
     if (sourceName === 'slack') {
       if (eventBody.type === 'url_verification') {
-        return { challenge: eventBody.challenge };
+        response.send({ challenge: eventBody.challenge });
+        return null;
       }
     }
 

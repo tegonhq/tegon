@@ -53,20 +53,20 @@ function getIcon(status: Status) {
   }
 }
 
-function getSecondsBetweenDates(createdAt: string, finishedAt: string): number {
+function getSecondsBetweenDates(createdAt: string, finishedAt: string): string {
   // Parse the date strings into Date objects
   const createdDate = new Date(createdAt);
   const finishedDate = new Date(finishedAt);
 
   // Ensure that the parsed dates are valid
   if (isNaN(createdDate.getTime()) || isNaN(finishedDate.getTime())) {
-    throw new Error('Invalid date strings');
+    return 'recent';
   }
 
   // Calculate the difference in seconds between the two dates
   const seconds = differenceInSeconds(finishedDate, createdDate);
 
-  return seconds;
+  return `${seconds}s`;
 }
 
 export const columns: Array<ColumnDef<TriggerRun>> = [
@@ -120,7 +120,6 @@ export const columns: Array<ColumnDef<TriggerRun>> = [
             row.original.startedAt ?? row.original.createdAt,
             row.original.finishedAt,
           )}
-          s
         </div>
       );
     },

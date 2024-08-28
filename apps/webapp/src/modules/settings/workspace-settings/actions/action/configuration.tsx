@@ -2,6 +2,7 @@ import type { FieldConfig, FormSchema } from './components/types';
 
 import { Button } from '@tegonhq/ui/components/button';
 import { Form } from '@tegonhq/ui/components/form';
+import { useToast } from '@tegonhq/ui/components/use-toast';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -24,12 +25,22 @@ const getData = (action: ActionType) => {
 
 export const Configuration = ({ schema }: { schema: FormSchema }) => {
   const { actionSlug } = useParams();
+  const { toast } = useToast();
   const { actionsStore } = useContextStore();
 
   const action = actionsStore.getAction(actionSlug);
   const inputs = getData(action)?.inputs;
 
-  const { mutate: updateActionInputs } = useUpdateActionInputsMutation({});
+  const { mutate: updateActionInputs, isLoading } =
+    useUpdateActionInputsMutation({
+      onSuccess: () => {
+        toast({
+          variant: 'success',
+          title: 'Action updated!',
+          description: 'Updated the action settings successfully',
+        });
+      },
+    });
   // const zodSchema = generateZodSchema(schema);
   const form = useForm({
     defaultValues: inputs,
@@ -60,7 +71,12 @@ export const Configuration = ({ schema }: { schema: FormSchema }) => {
             </div>
           ))}
           <div className="flex justify-end mt-4">
-            <Button type="submit" variant="secondary" size="lg">
+            <Button
+              type="submit"
+              variant="secondary"
+              size="lg"
+              isLoading={isLoading}
+            >
               Save configuration
             </Button>
           </div>

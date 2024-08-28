@@ -11,11 +11,11 @@ import { useTeamWorkflows } from 'hooks/workflows';
 
 interface StatusActivityProps {
   issueHistory: IssueHistoryType;
-  username: string;
+  fullname: string;
   showTime?: boolean;
 }
 export const StatusActivity = observer(
-  ({ issueHistory, username, showTime = false }: StatusActivityProps) => {
+  ({ issueHistory, fullname, showTime = false }: StatusActivityProps) => {
     const currentTeam = useCurrentTeam();
     const workflows = useTeamWorkflows(currentTeam.identifier);
 
@@ -46,7 +46,7 @@ export const StatusActivity = observer(
             {fromWorkflow ? (
               <>
                 <span className="text-foreground mr-2 font-medium">
-                  {username}
+                  {fullname}
                 </span>
                 changed status from
                 <span className="text-foreground mx-2 font-medium">
@@ -57,7 +57,7 @@ export const StatusActivity = observer(
             ) : (
               <>
                 <span className="text-foreground mr-2 font-medium">
-                  {username}
+                  {fullname}
                 </span>
                 changed status
                 <span className="ml-1"> to </span>

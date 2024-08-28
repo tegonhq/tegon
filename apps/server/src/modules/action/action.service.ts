@@ -141,12 +141,18 @@ export default class ActionService {
     userId: string,
     workspaceId: string,
   ) {
+    const teamIds = (
+      await prisma.team.findMany({
+        where: { workspaceId },
+      })
+    ).map((team) => team.id);
+
     await prisma.usersOnWorkspaces.upsert({
       where: {
         userId_workspaceId: { workspaceId, userId },
       },
       update: { role: RoleEnum.BOT },
-      create: { workspaceId, userId, role: RoleEnum.BOT },
+      create: { workspaceId, userId, role: RoleEnum.BOT, teamIds },
     });
   }
 

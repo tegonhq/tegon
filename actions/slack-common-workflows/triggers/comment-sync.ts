@@ -15,8 +15,8 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
     modelId: issueCommentId,
   } = actionPayload;
 
-  const integrationDefinitionName =
-    integrationAccount.integrationDefinition.name;
+  const integrationDefinitionSlug =
+    integrationAccount.integrationDefinition.slug;
 
   const issueComment = await getIssueComment({ issueCommentId });
 
@@ -77,7 +77,7 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
       parentTs: message.thread_ts,
       channelId: messageData.channel,
       channelType: messageData.channel_type,
-      type: integrationDefinitionName,
+      type: integrationDefinitionSlug,
       userDisplayName: message.username ? message.username : message.user,
     };
 
@@ -89,4 +89,6 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
       sourceData,
     });
   }
+
+  return null;
 };

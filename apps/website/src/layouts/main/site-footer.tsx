@@ -4,10 +4,11 @@ import { buttonVariants } from '@tegonhq/ui/components/button';
 import { Separator } from '@tegonhq/ui/components/ui/separator';
 import { BookLine, CodingLine, SlackIcon } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
-import { siteConfig } from 'config/site';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
+
+import { siteConfig } from 'config/site';
 
 import { ModeToggle } from './mode-toggle';
 

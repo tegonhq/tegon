@@ -110,7 +110,11 @@ export const Editor = ({
 }: EditorProps) => {
   function getInitialValue() {
     try {
-      return value ? JSON.parse(value).json : undefined;
+      const parsedValue = JSON.parse(value);
+      if (parsedValue) {
+        return parsedValue.json ?? parsedValue;
+      }
+      return undefined;
     } catch (e) {
       // Do this because sometimes you will just have text
       return value;

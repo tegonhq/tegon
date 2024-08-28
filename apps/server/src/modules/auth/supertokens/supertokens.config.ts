@@ -62,7 +62,6 @@ export const recipeList = (
                     response.createdNewRecipeUser &&
                     response.user.loginMethods.length === 1
                   ) {
-                    console.log(id);
                     await usersService.upsertUser(
                       id,
                       email,

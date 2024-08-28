@@ -67,13 +67,14 @@ export function SyncCommentActivity({
           </div>
 
           {childComments.length > 0 && (
-            <div className="text-muted-foreground w-full border-t p-3 pb-0">
+            <div className="text-muted-foreground w-full border-t border-border p-3 pb-0">
               {childComments.map(
                 (subComment: IssueCommentType, index: number) => (
                   <div
                     key={subComment.id}
                     className={cn(
-                      index < childComments.length - 1 && 'border-b mb-4',
+                      index < childComments.length - 1 &&
+                        'border-b border-border mb-4',
                     )}
                   >
                     <GenericCommentActivity

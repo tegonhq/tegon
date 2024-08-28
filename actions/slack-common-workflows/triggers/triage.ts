@@ -8,6 +8,7 @@ import {
   logger,
   getLinkedIssueBySource,
   getWorkflowsByTeam,
+  uploadAttachment,
 } from '@tegonhq/sdk';
 
 import { slackIssueCreate } from './issue-create';
@@ -24,7 +25,6 @@ import {
   getStateId,
   sendEphemeralMessage,
 } from '../utils';
-import axios from 'axios';
 
 export const slackTriage = async (
   integrationAccount: IntegrationAccount,
@@ -94,20 +94,20 @@ export const slackTriage = async (
   ]);
 
   // // If the thread is already linked to an issue, send an ephemeral message and return
-  // if (linkedIssue) {
-  //   await sendEphemeralMessage(
-  //     integrationAccount,
-  //     channelId,
-  //     `This thread is already linked with an existing Issue. so we can't create a new Issue`,
-  //     mainTs,
-  //     slackUserId,
-  //   );
+  if (linkedIssue) {
+    await sendEphemeralMessage(
+      integrationAccount,
+      channelId,
+      `This thread is already linked with an existing Issue. so we can't create a new Issue`,
+      mainTs,
+      slackUserId,
+    );
 
-  //   logger.debug(
-  //     `Thread already linked to an existing issue. Skipping issue creation.`,
-  //   );
-  //   return undefined;
-  // }
+    logger.debug(
+      `Thread already linked to an existing issue. Skipping issue creation.`,
+    );
+    return undefined;
+  }
 
   const stateId = getStateId('opened', workflowStates);
 
@@ -131,7 +131,7 @@ export const slackTriage = async (
   // Create source metadata object
   const sourceMetadata = {
     id: integrationAccount.id,
-    type: integrationAccount.integrationDefinition.name,
+    type: integrationAccount.integrationDefinition.slug,
     subType: 'Thread',
     channelId: sessionData.channelId,
     userDisplayName: slackUsername,
@@ -148,14 +148,9 @@ export const slackTriage = async (
     filesFormData.append('sourceMetadata', JSON.stringify(sourceMetadata));
 
     // Upload the files to GCP and get the attachment URLs
-    // attachmentUrls = await uploadAttachments(integrationAccount.workspaceId, filesFormData)
-
-    attachmentUrls = await axios.post(
-      `/api/v1/attachment/upload?workspaceId=${integrationAccount.workspaceId}`,
+    attachmentUrls = await uploadAttachment(
+      integrationAccount.workspaceId,
       filesFormData,
-      {
-        headers: { ...filesFormData.getHeaders() },
-      },
     );
   }
 
@@ -165,30 +160,16 @@ export const slackTriage = async (
     attachmentUrls,
   );
 
-  // If the thread is already linked to an issue, send an ephemeral message and return
-  if (linkedIssue) {
-    await sendEphemeralMessage(
-      integrationAccount,
-      channelId,
-      `This thread is already linked with an existing Issue. so we can't create a new Issue`,
-      mainTs,
-      slackUserId,
-    );
-
-    logger.debug(
-      `Thread already linked to an existing issue. Skipping issue creation.`,
-    );
-    return undefined;
-  }
-
   const linkIssueData = {
     url: `https://${sessionData.slackTeamDomain}.slack.com/archives/${sessionData.channelId}/p${mainTs.replace('.', '')}`,
     sourceId,
     sourceData: {
-      type: integrationAccount.integrationDefinition.name,
+      type: integrationAccount.integrationDefinition.slug,
       channelId: sessionData.channelId,
       parentTs: mainTs,
+      title: `Slack message from: ${slackUsername}`,
       slackTeamDomain: sessionData.slackTeamDomain,
+      userDisplayName: slackUsername,
     },
     createdById: userId,
   };

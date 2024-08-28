@@ -82,7 +82,7 @@ export const IssueActivity = observer(() => {
 
             <div className="flex items-center">
               <span className="text-foreground mr-2 font-medium">
-                {issueCreatedUser.username}
+                {issueCreatedUser.fullname}
               </span>
               created the issue
             </div>

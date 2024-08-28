@@ -7,6 +7,8 @@ import {
 import { SendLine } from '@tegonhq/ui/icons';
 import * as React from 'react';
 
+import { getTiptapJSON } from 'common';
+
 import { useIssueData } from 'hooks/issues';
 
 import { useCreateIssueCommentMutation } from 'services/issues';
@@ -18,12 +20,14 @@ export function IssueComment() {
 
   const onSubmit = () => {
     if (commentValue !== '') {
+      const parseCommentValue = getTiptapJSON(commentValue);
+
       createIssueComment({
-        body: commentValue,
+        body: parseCommentValue,
         issueId: issueData.id,
       });
     }
-    setCommentValue('');
+    setCommentValue(undefined);
   };
 
   return (

@@ -8,9 +8,10 @@ import {
   SheetTrigger,
 } from '@tegonhq/ui/components/sheet';
 import { cn } from '@tegonhq/ui/lib/utils';
-import { siteConfig } from 'config/site';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
+
+import { siteConfig } from 'config/site';
 
 import { docsConfig } from './docs';
 

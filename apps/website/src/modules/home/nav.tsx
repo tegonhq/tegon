@@ -1,7 +1,7 @@
 'use client';
 
-import { ScrollArea, ScrollBar } from '@tegonhq/ui/components/scroll-area';
 import { Button } from '@tegonhq/ui/components/button';
+import { ScrollArea, ScrollBar } from '@tegonhq/ui/components/scroll-area';
 import { Actions, AI, IssuesLine, TriageFill } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 

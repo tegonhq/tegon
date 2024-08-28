@@ -22,7 +22,7 @@ export function ExpandedRow({ row }: ExpandedRowProps) {
   );
 
   return (
-    <TableCell colSpan={3}>
+    <TableCell colSpan={5}>
       <div className="w-full">
         {isLoading ? (
           <Loader text="Loading logs..." />

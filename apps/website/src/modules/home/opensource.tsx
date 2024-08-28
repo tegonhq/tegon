@@ -3,9 +3,10 @@ import { RiGithubFill } from '@remixicon/react';
 import { buttonVariants } from '@tegonhq/ui/components/button';
 import { CodingLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
-import { siteConfig } from 'config/site';
 import Link from 'next/link';
 import React from 'react';
+
+import { siteConfig } from 'config/site';
 import { formatNumber } from 'utils';
 
 export function Opensource() {

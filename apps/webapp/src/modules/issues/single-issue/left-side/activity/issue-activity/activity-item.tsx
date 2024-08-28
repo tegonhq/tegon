@@ -31,7 +31,7 @@ export const ActivityItem = observer(
       if (issueHistory.removedLabelIds.length > 0) {
         localItems.push(
           <LabelActivity
-            username={user.username}
+            fullname={user.fullname}
             issueHistory={issueHistory}
             added={false}
             showTime={setShowTime}
@@ -45,7 +45,7 @@ export const ActivityItem = observer(
       if (issueHistory.addedLabelIds.length > 0) {
         localItems.push(
           <LabelActivity
-            username={user.username}
+            fullname={user.fullname}
             issueHistory={issueHistory}
             added
             showTime={setShowTime}
@@ -60,7 +60,7 @@ export const ActivityItem = observer(
       if (issueHistory.toPriority) {
         localItems.push(
           <PriorityActivity
-            username={user.username}
+            fullname={user.fullname}
             issueHistory={issueHistory}
             showTime={setShowTime}
             key={index}
@@ -74,7 +74,7 @@ export const ActivityItem = observer(
       if (issueHistory.toStateId) {
         localItems.push(
           <StatusActivity
-            username={user.username}
+            fullname={user.fullname}
             issueHistory={issueHistory}
             showTime={setShowTime}
             key={index}
@@ -88,7 +88,7 @@ export const ActivityItem = observer(
       if (issueHistory.relationChanges) {
         localItems.push(
           <RelatedActivity
-            username={user.username}
+            fullname={user.fullname}
             issueHistory={issueHistory}
             showTime={setShowTime}
             key={index}

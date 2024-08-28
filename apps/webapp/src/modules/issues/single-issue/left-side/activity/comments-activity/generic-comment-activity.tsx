@@ -24,6 +24,7 @@ import { UserContext } from 'store/user-context';
 
 import { EditComment } from './edit-comment';
 import { ReplyComment } from './reply-comment';
+import { getUserDetails } from '../issue-activity/user-activity-utils';
 
 export interface GenericCommentActivityProps {
   comment: IssueCommentType;
@@ -77,7 +78,9 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         >
           <div className="flex gap-2">
             {user ? (
-              <span className="font-medium">{user?.username}</span>
+              <span className="font-medium">
+                {getUserDetails(sourceMetadata, user).fullname}
+              </span>
             ) : (
               <span className="font-medium">
                 {sourceMetadata.userDisplayName} via {sourceMetadata.type}
@@ -142,7 +145,8 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
                 <div
                   key={subComment.id}
                   className={cn(
-                    index < childComments.length - 1 && 'border-b mb-4',
+                    index < childComments.length - 1 &&
+                      'border-b border-border mb-4',
                   )}
                 >
                   <GenericCommentActivity

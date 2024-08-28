@@ -7,7 +7,6 @@ export const LinkedIssue = types.model({
 
   url: types.string,
   sourceId: types.union(types.string, types.null),
-  source: types.string,
   sourceData: types.string,
   issueId: types.string,
   createdById: types.union(types.string, types.undefined, types.null),

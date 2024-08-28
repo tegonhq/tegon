@@ -1,12 +1,13 @@
 import { Loader } from '@tegonhq/ui/components/loader';
 import { useToast } from '@tegonhq/ui/components/use-toast';
-import { AuthGuard } from 'common/wrappers/auth-guard';
 import { useRouter } from 'next/router';
 import React from 'react';
 import {
   consumeCode,
   clearLoginAttemptInfo,
 } from 'supertokens-web-js/recipe/passwordless';
+
+import { AuthGuard } from 'common/wrappers/auth-guard';
 
 export function Verify() {
   const router = useRouter();
