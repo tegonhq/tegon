@@ -25,7 +25,6 @@
     "FRONTEND_HOST",
     "BACKEND_HOST",
     "BACKEND_URL",
-    "PUBLIC_FRONTEND_HOST",
     "PUBLIC_ATTACHMENT_URL",
     "BASE_HOST",
 
@@ -81,35 +80,35 @@
   "ui": "tui",
   "tasks": {
     "start-prod": {
-      "dependsOn": ["db:init-resources"],
+      "dependsOn": [ "db:init-resources" ],
       "cache": false
     },
     "generate": {
-      "dependsOn": ["^generate"],
+      "dependsOn": [ "^generate" ],
       "cache": false
     },
     "dev": {
-      "dependsOn": ["generate"],
+      "dependsOn": [ "generate" ],
       "cache": false
     },
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "dependsOn": [ "^build" ],
+      "outputs": [ "dist/**", ".next/**" ]
     },
-    "lint": {},
+    "lint": { },
     "create-resources": {
       "interactive": true,
       "cache": false
     },
     "deploy-trigger-tasks": {
-      "env": ["TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL"],
+      "env": [ "TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL" ],
       "cache": false
     },
     "trigger-dev": {
       "cache": false
     },
     "prisma:studio": {
-      "env": ["DATABASE_URL"]
+      "env": [ "DATABASE_URL" ]
     }
   }
 }

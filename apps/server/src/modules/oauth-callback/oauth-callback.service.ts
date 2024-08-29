@@ -23,7 +23,7 @@ import {
   getTemplate,
 } from './oauth-callback.utils';
 
-const CALLBACK_URL = `https://0d81-2406-b400-d4-169f-68a7-67c9-83d6-91cf.ngrok-free.app/api/v1/oauth/callback`;
+const CALLBACK_URL = `${process.env.FRONTEND_HOST}/api/v1/oauth/callback`;
 
 @Injectable()
 export class OAuthCallbackService {
