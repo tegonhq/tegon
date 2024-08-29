@@ -17,14 +17,16 @@ export function Invites() {
   const context = React.useContext(UserContext);
   const { toast } = useToast();
   const router = useRouter();
+
   const { mutate: inviteAction, isLoading } = useInviteActionMutation({
     onSuccess: (data: Invite) => {
       if (data.status === 'ACCEPTED') {
-        router.replace('/');
         toast({
           title: 'Invitation accepted',
           description: 'Current invitation for the workspace has been accepted',
         });
+
+        window.location.reload();
       }
     },
   });

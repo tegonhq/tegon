@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import supertokens, { deleteUser } from 'supertokens-node';
-import EmailPassword from 'supertokens-node/recipe/emailpassword';
 
 import { UsersService } from 'modules/users/users.service';
 
@@ -26,10 +25,6 @@ export class SupertokensService {
       },
       recipeList: recipeList(this.usersService, this.mailerService),
     });
-  }
-
-  getEmailPasswordRecipe() {
-    return EmailPassword;
   }
 
   async deleteUserForId(userId: string) {

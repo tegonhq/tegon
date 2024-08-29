@@ -11,6 +11,8 @@ import {
 import { PrismaService } from 'nestjs-prisma';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
+import { createMagicLink } from 'common/utils/login';
+
 import { workflowSeedData } from 'modules/teams/teams.interface';
 import { UsersService } from 'modules/users/users.service';
 
@@ -229,6 +231,8 @@ export default class WorkspacesService {
           },
         });
 
+        const magicLink = await createMagicLink(email);
+
         await this.mailerService.sendMail({
           to: email,
           subject: `Invite to ${workspace.name}`,
@@ -236,7 +240,7 @@ export default class WorkspacesService {
           context: {
             workspaceName: workspace.name,
             inviterName: iniviter.fullname,
-            invitationUrl: `${process.env.FRONTEND_HOST}/auth`,
+            invitationUrl: magicLink,
           },
         });
         this.logger.log('Invite Email sent to user');

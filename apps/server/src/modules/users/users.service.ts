@@ -1,17 +1,12 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { GetUsersDto, PublicUser, User } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
-import supertokens from 'supertokens-node';
-import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import {
   generateKeyForUserId,
   generatePersonalAccessToken,
 } from 'common/authentication';
-
-import { SupertokensService } from 'modules/auth/supertokens/supertokens.service';
 
 import {
   UpdateUserBody,
@@ -21,11 +16,7 @@ import {
 
 @Injectable()
 export class UsersService {
-  private readonly logger: Logger = new Logger('UserService');
-  constructor(
-    private prisma: PrismaService,
-    private mailerService: MailerService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async upsertUser(
     id: string,
@@ -125,125 +116,6 @@ export class UsersService {
       },
     });
     return userSerializer(user);
-  }
-
-  async changePassword(
-    supertokensService: SupertokensService,
-    userId: string,
-    session: SessionContainer,
-    passwordBody: Record<string, string>,
-  ) {
-    const oldPassword = passwordBody.oldPassword;
-    const newPassword = passwordBody.newPassword;
-
-    const userInfo = await supertokens.getUser(userId);
-
-    if (userInfo === undefined) {
-      throw new BadRequestException('User not found');
-    }
-
-    const loginMethod = userInfo.loginMethods.find(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (lM: any) =>
-        lM.recipeUserId.getAsString() ===
-          session.getRecipeUserId().getAsString() &&
-        lM.recipeId === 'emailpassword',
-    );
-
-    if (loginMethod === undefined) {
-      throw new BadRequestException(`You've signed up with different method`);
-    }
-    const email = loginMethod.email;
-
-    const EmailPassword = supertokensService.getEmailPasswordRecipe();
-
-    const isPasswordValid = await EmailPassword.signIn(
-      session!.getTenantId(),
-      email,
-      oldPassword,
-    );
-
-    if (isPasswordValid.status !== 'OK') {
-      throw new BadRequestException(`Your current password didn't match`);
-    }
-
-    // update the user's password using updateEmailOrPassword
-    const response = await EmailPassword.updateEmailOrPassword({
-      recipeUserId: session.getRecipeUserId(),
-      password: newPassword,
-      tenantIdForPasswordPolicy: session.getTenantId(),
-    });
-
-    if (response.status === 'PASSWORD_POLICY_VIOLATED_ERROR') {
-      // TODO: handle incorrect password error
-      throw new BadRequestException(
-        `Your new password didn't match with the policy`,
-      );
-    }
-
-    return { message: 'Successful' };
-  }
-
-  async sendPasswordResetEmail(
-    supertokensService: SupertokensService,
-    email: string,
-  ) {
-    const EmailPassword = supertokensService.getEmailPasswordRecipe();
-
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
-
-    const response = await EmailPassword.createResetPasswordLink(
-      undefined,
-      user.id,
-      email,
-    );
-
-    if (response.status === 'OK') {
-      await this.mailerService.sendMail({
-        to: user.email,
-        subject: 'Password Reset',
-        template: 'resetPassword',
-        context: {
-          username: user.fullname,
-          resetUrl: response.link,
-        },
-      });
-      this.logger.log('Reset Email sent to user');
-    }
-
-    return response;
-  }
-
-  async resetPassword(
-    supertokensService: SupertokensService,
-    token: string,
-    newPassword: string,
-  ) {
-    const EmailPassword = supertokensService.getEmailPasswordRecipe();
-
-    const response = await EmailPassword.resetPasswordUsingToken(
-      undefined,
-      token,
-      newPassword,
-    );
-
-    if (response.status === 'PASSWORD_POLICY_VIOLATED_ERROR') {
-      throw new BadRequestException(
-        `Your new password didn't match with the policy`,
-      );
-    } else if (response.status === 'RESET_PASSWORD_INVALID_TOKEN_ERROR') {
-      throw new BadRequestException(`Invalid reset password token`);
-    } else if (response.status === 'OK') {
-      return { message: 'Successful' };
-    }
-
-    throw new BadRequestException(response.status);
   }
 
   async getInvitesForUser(email: string) {
