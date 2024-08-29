@@ -236,7 +236,7 @@ export default class WorkspacesService {
           context: {
             workspaceName: workspace.name,
             inviterName: iniviter.fullname,
-            invitationUrl: `${process.env.PUBLIC_FRONTEND_HOST}/auth`,
+            invitationUrl: `${process.env.FRONTEND_HOST}/auth`,
           },
         });
         this.logger.log('Invite Email sent to user');

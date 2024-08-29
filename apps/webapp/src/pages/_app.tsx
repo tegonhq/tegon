@@ -12,18 +12,21 @@ import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import posthog from 'posthog-js';
+import { PostHogProvider } from 'posthog-js/react';
 import React from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Hydrate, QueryClientProvider } from 'react-query';
 import { SuperTokensWrapper } from 'supertokens-auth-react';
 
-import { initSuperTokens } from 'common/init-config';
+import { initPosthog, initSuperTokens } from 'common/init-config';
 import { useGetQueryClient } from 'common/lib/react-query-client';
 import { SCOPES } from 'common/scopes';
 
 import { StoreContext, storeContextStore } from 'store/global-context-provider';
 
 initSuperTokens();
+initPosthog();
 
 TimeAgo.addDefaultLocale(en);
 
@@ -40,34 +43,36 @@ export const MyApp: NextComponentType<
 
   return (
     <SuperTokensWrapper>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="light"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <HotkeysProvider initiallyActiveScopes={[SCOPES.Global]}>
-          <TooltipProvider delayDuration={1000}>
-            <StoreContext.Provider value={storeContextStore}>
-              <QueryClientProvider client={queryClientRef.current}>
-                <Hydrate state={dehydratedState}>
-                  <div
-                    className={cn(
-                      'min-h-screen font-sans antialiased flex',
-                      GeistSans.variable,
-                      GeistMono.variable,
-                    )}
-                  >
-                    {getLayout(<Component {...pageProps} />)}
-                  </div>
+      <PostHogProvider client={posthog}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <HotkeysProvider initiallyActiveScopes={[SCOPES.Global]}>
+            <TooltipProvider delayDuration={1000}>
+              <StoreContext.Provider value={storeContextStore}>
+                <QueryClientProvider client={queryClientRef.current}>
+                  <Hydrate state={dehydratedState}>
+                    <div
+                      className={cn(
+                        'min-h-screen font-sans antialiased flex',
+                        GeistSans.variable,
+                        GeistMono.variable,
+                      )}
+                    >
+                      {getLayout(<Component {...pageProps} />)}
+                    </div>
 
-                  <Toaster />
-                </Hydrate>
-              </QueryClientProvider>
-            </StoreContext.Provider>
-          </TooltipProvider>
-        </HotkeysProvider>
-      </ThemeProvider>
+                    <Toaster />
+                  </Hydrate>
+                </QueryClientProvider>
+              </StoreContext.Provider>
+            </TooltipProvider>
+          </HotkeysProvider>
+        </ThemeProvider>
+      </PostHogProvider>
     </SuperTokensWrapper>
   );
 };
