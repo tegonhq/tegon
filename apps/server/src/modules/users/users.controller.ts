@@ -19,7 +19,6 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
-import { SupertokensService } from 'modules/auth/supertokens/supertokens.service';
 
 import {
   UpdateUserBody,
@@ -33,10 +32,7 @@ import { UsersService } from './users.service';
   path: 'users',
 })
 export class UsersController {
-  constructor(
-    private usersService: UsersService,
-    private supertokensService: SupertokensService,
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   @Get()
   @UseGuards(AuthGuard)
@@ -60,41 +56,6 @@ export class UsersController {
   async getUserByEmail(@Query('email') email: string): Promise<User> {
     const user = await this.usersService.getUserByEmail(email);
     return user;
-  }
-
-  @Post('change_password')
-  @UseGuards(AuthGuard)
-  async changePassword(
-    @SessionDecorator() session: SessionContainer,
-    @Body() passwordBody: Record<string, string>,
-  ) {
-    const userId = session.getUserId();
-    return await this.usersService.changePassword(
-      this.supertokensService,
-      userId,
-      session,
-      passwordBody,
-    );
-  }
-
-  @Post('forgot_password')
-  async sendPasswordResetEmail(@Body() forgotBody: Record<string, string>) {
-    return await this.usersService.sendPasswordResetEmail(
-      this.supertokensService,
-      forgotBody.email,
-    );
-  }
-
-  @Post('forgot_password/:token')
-  async resetPassword(
-    @Param('token') token: string,
-    @Body('newPassword') newPassword: string,
-  ) {
-    return this.usersService.resetPassword(
-      this.supertokensService,
-      token,
-      newPassword,
-    );
   }
 
   @Post('pat')
