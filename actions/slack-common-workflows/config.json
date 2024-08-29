@@ -1,17 +1,17 @@
 {
-  "slug": "slack-common-workflows",
-  "name": "Slack common workflows",
+  "slug": "slack",
+  "name": "Slack",
   "triggers": [
     {
       "type": "on_create",
-      "entities": ["IssueComment", "LinkedIssue"]
+      "entities": [ "IssueComment", "LinkedIssue" ]
     },
     {
       "type": "source_webhook",
-      "entities": ["slack"]
+      "entities": [ "slack" ]
     }
   ],
-  "integrations": ["slack"],
+  "integrations": [ "slack" ],
   "inputs": {
     "type": "object",
     "properties": {

@@ -1,6 +1,6 @@
 [ {
-    "slug": "slack-common-workflows",
-    "name": "Slack common workflows",
+    "slug": "slack",
+    "name": "Slack",
     "description": "Create issues from Slack messages and sync threads",
     "version": "0.1.0",
     "icon": "slack"

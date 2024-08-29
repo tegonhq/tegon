@@ -73,7 +73,13 @@ export function configureDeployCommand(program: Command) {
           // Deploy the action using trigger.dev
           const deployProcess = execa(
             'npx',
-            ['trigger.dev@beta', 'deploy', '--self-hosted', '--skip-typecheck'],
+            [
+              'trigger.dev@beta',
+              'deploy',
+              '--self-hosted',
+              '--push',
+              '--skip-typecheck',
+            ],
             {
               cwd: path.dirname(config.path),
               env: {
