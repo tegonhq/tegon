@@ -19,10 +19,10 @@ import {
 } from 'services/workspace';
 
 export const OnboardingSchema = z.object({
-  fullname: z.string(),
-  workspaceName: z.string(),
-  teamName: z.string(),
-  teamIdentifier: z.string(),
+  fullname: z.string().min(5),
+  workspaceName: z.string().min(5),
+  teamName: z.string().min(5),
+  teamIdentifier: z.string().min(1),
 });
 
 export function OnboardingForm() {
