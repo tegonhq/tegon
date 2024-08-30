@@ -7,6 +7,7 @@ import {
   LogicalReplicationService,
   Wal2JsonPlugin,
 } from 'pg-logical-replication';
+import { v4 as uuidv4 } from 'uuid';
 
 import ActionEventService from 'modules/action-event/action-event.service';
 import { SyncGateway } from 'modules/sync/sync.gateway';
@@ -20,13 +21,13 @@ import {
   tablesToTrigger,
 } from './replication.interface';
 
-const REPLICATION_SLOT_NAME = 'tegon_replication_slot';
 const REPLICATION_SLOT_PLUGIN = 'wal2json';
 
 @Injectable()
 export default class ReplicationService {
   client: Client;
   private readonly logger: Logger = new Logger('ReplicationService');
+  private replicationSlotName = `tegon_replication_slot_${uuidv4().replace(/-/g, '')}`;
 
   constructor(
     private configService: ConfigService,
@@ -45,13 +46,50 @@ export default class ReplicationService {
   }
 
   async init() {
+    await this.client.connect();
+
+    await this.deleteOrphanedSlots();
     await this.createReplicationSlot();
     await this.setupReplication();
   }
 
-  async deleteSlot() {
+  async deleteOrphanedSlots() {
     try {
-      const deleteReplicationSlotQuery = `SELECT pg_drop_replication_slot('${REPLICATION_SLOT_NAME}')`;
+      // Query to find all inactive replication slots
+      const findInactiveSlotsQuery = `
+        SELECT slot_name 
+        FROM pg_replication_slots 
+        WHERE active = false;
+      `;
+
+      const result = await this.client.query(findInactiveSlotsQuery);
+
+      // Loop through and delete each inactive slot
+      for (const row of result.rows) {
+        const slotName = row.slot_name;
+        try {
+          await this.deleteSlot(slotName);
+          this.logger.log(
+            `Orphaned replication slot ${slotName} deleted successfully.`,
+          );
+        } catch (err) {
+          this.logger.error(
+            `Error deleting replication slot ${slotName}:`,
+            err,
+          );
+        }
+      }
+    } catch (err) {
+      this.logger.error(
+        'Error finding or deleting orphaned replication slots:',
+        err,
+      );
+    }
+  }
+
+  async deleteSlot(name: string) {
+    try {
+      const deleteReplicationSlotQuery = `SELECT pg_drop_replication_slot('${name}')`;
 
       await this.client.query(deleteReplicationSlotQuery);
     } catch (err) {
@@ -61,26 +99,25 @@ export default class ReplicationService {
 
   async checkForSlot() {
     const checkReplicationSlotQuery = `
-    SELECT * FROM pg_replication_slots WHERE slot_name = '${REPLICATION_SLOT_NAME}'
+    SELECT * FROM pg_replication_slots WHERE slot_name = '${this.replicationSlotName}'
   `;
 
     const checkSlotResult = await this.client.query(checkReplicationSlotQuery);
 
     if (checkSlotResult.rows.length > 0) {
-      await this.deleteSlot();
+      await this.deleteSlot(this.replicationSlotName);
     }
   }
 
   async createReplicationSlot() {
     try {
-      await this.client.connect();
       await this.setReplicaIdentityFull();
 
       await this.checkForSlot();
 
       const createReplicationSlotQuery = `
         SELECT * FROM pg_create_logical_replication_slot(
-          '${REPLICATION_SLOT_NAME}',
+          '${this.replicationSlotName}',
           '${REPLICATION_SLOT_PLUGIN}'
         )
       `;
@@ -151,7 +188,7 @@ export default class ReplicationService {
     const service = new LogicalReplicationService(clientConfig);
     const plugin = new Wal2JsonPlugin({});
     service
-      .subscribe(plugin, REPLICATION_SLOT_NAME)
+      .subscribe(plugin, this.replicationSlotName)
       .catch((e) => {
         this.logger.error(e);
       })
