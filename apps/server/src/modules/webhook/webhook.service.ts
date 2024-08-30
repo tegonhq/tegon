@@ -54,6 +54,10 @@ export default class WebhookService {
       include: { workspace: true, integrationDefinition: true },
     });
 
+    if (!integrationAccount) {
+      return null;
+    }
+
     const workspaceId = integrationAccount.workspaceId;
     const actionEntities = await this.prisma.actionEntity.findMany({
       where: {

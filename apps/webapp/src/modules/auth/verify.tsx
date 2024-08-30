@@ -9,6 +9,8 @@ import {
 
 import { AuthGuard } from 'common/wrappers/auth-guard';
 
+import { tegonDatabase } from 'store/database';
+
 export function Verify() {
   const router = useRouter();
   const {
@@ -76,7 +78,7 @@ export function Verify() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center w-full">
       <Loader text="Verifying token" />
     </div>
   );

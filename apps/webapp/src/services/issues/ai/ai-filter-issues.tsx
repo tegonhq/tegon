@@ -16,7 +16,7 @@ export function aiFilterIssues({
   ...otherParams
 }: AIFilterIssuesParams) {
   return ajaxPost({
-    url: `/api/v1/issues/ai_filters?teamId=${teamId}`,
+    url: `/api/v1/issues/ai/ai_filters?teamId=${teamId}`,
     data: otherParams,
   });
 }

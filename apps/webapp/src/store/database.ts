@@ -37,9 +37,9 @@ export class TegonDatabase extends Dexie {
   issueSuggestions: Dexie.Table<IssueSuggestionType, string>;
 
   constructor() {
-    super('TegonDatabase');
+    super('Tegon');
 
-    this.version(11).stores({
+    this.version(1).stores({
       [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug',
       [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',

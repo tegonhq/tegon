@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import jwt from 'supertokens-node/lib/build/recipe/jwt';
 import { TypePasswordlessEmailDeliveryInput } from 'supertokens-node/lib/build/recipe/passwordless/types';
@@ -6,6 +7,19 @@ import Session from 'supertokens-node/recipe/session';
 import UserRoles from 'supertokens-node/recipe/userroles';
 
 import { UsersService } from 'modules/users/users.service';
+
+function logEmail(logger: Logger, email: string, link: string) {
+  const message = `##### sendEmail to ${email}, subject: Login email
+
+Log in to Tegon.ai
+
+Click here to log in with this magic link:
+${link}`;
+
+  if (process.env.NODE_ENV !== 'production') {
+    logger.log(message);
+  }
+}
 
 export const recipeList = (
   usersService: UsersService,
@@ -29,6 +43,9 @@ export const recipeList = (
               urlWithLinkCode,
               codeLifetime,
             }: TypePasswordlessEmailDeliveryInput) {
+              const logger = new Logger('Supertokens');
+              logEmail(logger, email, urlWithLinkCode);
+
               mailerService.sendMail({
                 to: email,
                 subject: 'Login for Tegon',
