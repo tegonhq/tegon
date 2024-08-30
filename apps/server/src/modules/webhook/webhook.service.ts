@@ -94,7 +94,7 @@ export default class WebhookService {
           user: { username: actionEntity.action.slug },
         },
       });
-      const accessToken = await generateKeyForUserId(actionUser.id);
+      const accessToken = await generateKeyForUserId(actionUser.userId);
 
       this.triggerDevService.triggerTaskAsync(
         workspaceId,
