@@ -34,17 +34,17 @@ export const prepareTriggerPayload = async (
   prisma: PrismaService,
   actionId: string,
 ) => {
-  const action = await prisma.action.findFirst({
+  const action = await prisma.action.findUnique({
     where: {
       id: actionId,
     },
   });
 
-  const actionUser = await prisma.user.findFirst({
-    where: { username: action.slug },
+  const actionUser = await prisma.usersOnWorkspaces.findFirst({
+    where: { workspaceId: action.workspaceId, user: { username: action.slug } },
   });
 
-  const accessToken = await generateKeyForUserId(actionUser.id);
+  const accessToken = await generateKeyForUserId(actionUser.userId);
 
   const integrationMap = await getIntegrationAccountsFromActions(
     prisma,

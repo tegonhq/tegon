@@ -88,8 +88,11 @@ export default class WebhookService {
 
     // TODO (actons): Send all integration accounts based on the ask
     actionEntities.map(async (actionEntity: ActionEntity) => {
-      const actionUser = await this.prisma.user.findFirst({
-        where: { username: actionEntity.action.slug },
+      const actionUser = await this.prisma.usersOnWorkspaces.findFirst({
+        where: {
+          workspaceId: actionEntity.action.workspaceId,
+          user: { username: actionEntity.action.slug },
+        },
       });
       const accessToken = await generateKeyForUserId(actionUser.id);
 
