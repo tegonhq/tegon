@@ -85,10 +85,6 @@ const config = {
           DEFAULT: 'oklch(var(--popover) / <alpha-value>)',
           foreground: 'oklch(var(--popover-foreground) / <alpha-value>)',
         },
-        card: {
-          DEFAULT: 'hsl(var(--card) / <alpha-value>)',
-          foreground: 'hsl(var(--card-foreground) / <alpha-value>)',
-        },
         gray: {
           50: 'var(--gray-50)',
           100: 'var(--gray-100)',

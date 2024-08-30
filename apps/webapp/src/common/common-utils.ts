@@ -13,10 +13,8 @@ export function convertToTitleCase(input: string): string {
 
 export function getTiptapJSON(input: string) {
   try {
-    const parsedInput = JSON.parse(input);
-
-    return JSON.stringify(parsedInput.json);
+    return JSON.parse(input);
   } catch (e) {
-    return undefined;
+    return {};
   }
 }

@@ -29,12 +29,14 @@ export function ReplyComment({ issueCommentId }: ReplyCommentProps) {
 
   const onSubmit = () => {
     if (commentValue !== '') {
-      const parseCommentValue = getTiptapJSON(commentValue);
-      createIssueComment({
-        body: parseCommentValue,
-        issueId: issueData.id,
-        parentId: issueCommentId,
-      });
+      const { json, text } = getTiptapJSON(commentValue);
+      if (text) {
+        createIssueComment({
+          body: JSON.stringify(json),
+          issueId: issueData.id,
+          parentId: issueCommentId,
+        });
+      }
     }
     setCommentValue(undefined);
   };

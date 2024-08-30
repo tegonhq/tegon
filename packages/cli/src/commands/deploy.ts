@@ -235,7 +235,19 @@ async function resourceCreation(
 // Utility function to create trigger.conf.json
 const createTriggerConfigFile = (dir: string, workspaceId: string) => {
   const triggerConfigPath = path.join(dir, 'trigger.config.ts');
-  const triggerConfigContent = `export const config = {
+  const triggerConfigContent = `
+  export const resolveEnvVars: ResolveEnvironmentVariablesFunction = async ({
+  env,
+}) => {
+  return {
+    variables: {
+      BASE_HOST: ${process.env.BASE_HOST},
+    },
+  };
+};
+  
+  
+  export const config = {
   project: 'proj_${workspaceId.replace(/-/g, '')}',
   retries: {
     enabledInDev: true,

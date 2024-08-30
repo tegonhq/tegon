@@ -91,7 +91,7 @@ export const IssueLabelDropdown = observer(
 
       return (
         <Button
-          variant="ghost"
+          variant="link"
           role="combobox"
           aria-expanded={open}
           className={cn(

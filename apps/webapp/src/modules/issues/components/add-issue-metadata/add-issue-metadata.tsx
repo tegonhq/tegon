@@ -36,6 +36,7 @@ export function AddIssueMetadata({
   });
 
   const [open, setOpen] = React.useState(false);
+  const [input, setInput] = React.useState('');
   const [filter, setFilter] = React.useState<CommandInterface>(undefined);
 
   const ContentComponent = filter
@@ -77,7 +78,10 @@ export function AddIssueMetadata({
       </PopoverTrigger>
       <PopoverContent className="w-72 p-0" align="start">
         <Command>
-          <CommandInput placeholder="Metadata..." />
+          <CommandInput
+            placeholder="Metadata..."
+            onValueChange={(value: string) => setInput(value)}
+          />
 
           {filter ? (
             <ContentComponent
@@ -85,6 +89,7 @@ export function AddIssueMetadata({
                 setFilter(undefined);
                 setOpen(false);
               }}
+              input={input}
               teamIdentifier={teamIdentifier}
               onChange={(value) => {
                 onChange(filter.id, value);

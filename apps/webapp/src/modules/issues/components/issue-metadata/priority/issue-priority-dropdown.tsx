@@ -76,7 +76,7 @@ export function IssuePriorityDropdown({
 
     return (
       <Button
-        variant="ghost"
+        variant="link"
         role="combobox"
         aria-expanded={open}
         className="flex items-center justify-between focus-visible:ring-1 focus-visible:border-primary"

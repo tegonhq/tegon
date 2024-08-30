@@ -1,3 +1,5 @@
+import type { Role } from '@tegonhq/types';
+
 interface Workspace {
   name: string;
   slug: string;
@@ -20,4 +22,5 @@ export interface User {
   username: string;
   workspaces: Workspace[];
   invites: Invite[];
+  role: Role;
 }
