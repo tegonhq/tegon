@@ -57,6 +57,37 @@ export function NewIssueMetadata({
         )}
       />
 
+      <FormField
+        control={form.control}
+        name={inputName('labelIds')}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <IssueLabelDropdown
+                value={field.value}
+                onChange={field.onChange}
+                teamIdentifier={teamIdentifier}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name={inputName('assigneeId')}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <IssueAssigneeDropdown
+                value={field.value}
+                onChange={field.onChange}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+
       {toShow('priority') && (
         <FormField
           control={form.control}
@@ -65,41 +96,6 @@ export function NewIssueMetadata({
             <FormItem>
               <FormControl>
                 <IssuePriorityDropdown
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-      )}
-
-      {toShow('labelIds') && (
-        <FormField
-          control={form.control}
-          name={inputName('labelIds')}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <IssueLabelDropdown
-                  value={field.value}
-                  onChange={field.onChange}
-                  teamIdentifier={teamIdentifier}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-      )}
-
-      {toShow('assigneeId') && (
-        <FormField
-          control={form.control}
-          name={inputName('assigneeId')}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <IssueAssigneeDropdown
                   value={field.value}
                   onChange={field.onChange}
                 />

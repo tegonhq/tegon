@@ -20,13 +20,15 @@ export function IssueComment() {
 
   const onSubmit = () => {
     if (commentValue !== '') {
-      const parseCommentValue = getTiptapJSON(commentValue);
-
-      createIssueComment({
-        body: parseCommentValue,
-        issueId: issueData.id,
-      });
+      const { json, text } = getTiptapJSON(commentValue);
+      if (text) {
+        createIssueComment({
+          body: JSON.stringify(json),
+          issueId: issueData.id,
+        });
+      }
     }
+
     setCommentValue(undefined);
   };
 
@@ -35,7 +37,10 @@ export function IssueComment() {
       <div className="w-full relative">
         <Editor
           value={commentValue}
-          onChange={(e) => setCommentValue(e)}
+          onChange={(e) => {
+            console.log(e);
+            setCommentValue(e);
+          }}
           placeholder="Leave your comment..."
           onSubmit={onSubmit}
           className="w-full min-h-[44px] mb-0 p-2 border-border border"

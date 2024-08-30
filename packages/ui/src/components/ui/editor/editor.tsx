@@ -108,6 +108,8 @@ export const Editor = ({
   extensions = [],
   editable = true,
 }: EditorProps) => {
+  const [editor, setEditor] = React.useState<EditorT>();
+
   function getInitialValue() {
     try {
       const parsedValue = JSON.parse(value);
@@ -120,6 +122,13 @@ export const Editor = ({
       return value;
     }
   }
+
+  React.useEffect(() => {
+    if (value === undefined && editor) {
+      editor.commands.clearContent(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   const debouncedUpdates = useDebouncedCallback(
     async (editor: EditorInstance) => {
@@ -160,6 +169,8 @@ export const Editor = ({
             className,
           )}
           onCreate={({ editor }) => {
+            setEditor(editor);
+
             if (onCreate) {
               onCreate(editor);
             }
