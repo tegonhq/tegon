@@ -1,6 +1,6 @@
 {
   "name": "tegon",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Tegon is an open-source, AI-first alternative to Jira, Linear",
   "main": "index.js",
   "repository": "https://github.com/tegonhq/tegon.git",
