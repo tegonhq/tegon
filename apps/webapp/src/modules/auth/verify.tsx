@@ -9,8 +9,6 @@ import {
 
 import { AuthGuard } from 'common/wrappers/auth-guard';
 
-import { tegonDatabase } from 'store/database';
-
 export function Verify() {
   const router = useRouter();
   const {
