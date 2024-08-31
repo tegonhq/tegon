@@ -1,21 +1,22 @@
 import { openai } from '@ai-sdk/openai';
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { GetAIRequestDTO, AIStreamResponse } from '@tegonhq/types';
 import { streamText, generateText, CoreMessage, CoreUserMessage } from 'ai';
 import { PrismaService } from 'nestjs-prisma';
 import { Ollama } from 'ollama';
-import { createOllama } from 'ollama-ai-provider';
+import { ollama } from 'ollama-ai-provider';
 
 @Injectable()
 export default class AIRequestsService {
   private readonly logger: Logger = new Logger('RequestsService');
-  private readonly ollama;
-  constructor(private prisma: PrismaService) {
-    if (!process.env['OPENAI_API_KEY']) {
+  constructor(
+    private prisma: PrismaService,
+    private configService: ConfigService,
+  ) {
+    if (!configService.get('OPENAI_API_KEY')) {
       const ollama = new Ollama({ host: process.env['OLLAMA_HOST'] });
       ollama.pull({ model: process.env['LOCAL_MODEL'] });
-
-      this.ollama = createOllama({ baseURL: process.env['OLLAMA_HOST'] });
     }
   }
 
@@ -67,6 +68,10 @@ export default class AIRequestsService {
     let modelInstance;
     let finalModel;
 
+    if (!this.configService.get('OPENAI_API_KEY')) {
+      model = null;
+    }
+
     switch (model) {
       case 'gpt-3.5-turbo':
       case 'gpt-4-turbo':
@@ -78,7 +83,7 @@ export default class AIRequestsService {
       default:
         finalModel = process.env.LOCAL_MODEL;
         this.logger.log(`Sending request to ollama with model: ${model}`);
-        modelInstance = this.ollama(finalModel);
+        modelInstance = ollama(finalModel);
     }
 
     if (stream) {

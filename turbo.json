@@ -109,6 +109,9 @@
     },
     "prisma:studio": {
       "env": [ "DATABASE_URL" ]
+    },
+    "migrate": {
+      "env": [ "DATABASE_URL" ]
     }
   }
 }
