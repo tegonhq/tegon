@@ -1,0 +1,45 @@
+---
+title: Overview & Authentication
+sidebarTitle: Overview & Authentication
+description: Using the Tegon API
+---
+
+## Installation
+
+The API is available to run CRUD operations on Tegon.
+
+<CodeGroup>
+
+```bash npm
+npm i @tegonhq/sdk@0.1.3
+```
+
+```bash pnpm
+pnpm add @tegonhq/sdk@0.1.3
+```
+
+```bash yarn
+yarn add @tegonhq/sdk@0.1.3
+```
+
+</CodeGroup>
+
+## Usage
+
+```ts
+import { configure, createIssue } from "@tegonhq/sdk";
+
+configure({
+  // this is the default and if the `TEGON_TOKEN` environment variable is set, can omit calling configure
+  token: <token>>,
+});
+
+async function main() {
+  const runs = await createIssue({
+    title: "Issue title",
+    description: "Issue description",
+  });
+}
+
+main().catch(console.error);
+```
