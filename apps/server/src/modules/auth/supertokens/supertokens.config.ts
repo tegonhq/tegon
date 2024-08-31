@@ -14,7 +14,7 @@ function logEmail(logger: Logger, email: string, link: string) {
 Log in to Tegon.ai
 
 Click here to log in with this magic link:
-${link}`;
+${link}\n\n`;
 
   if (process.env.NODE_ENV !== 'production') {
     logger.log(message);

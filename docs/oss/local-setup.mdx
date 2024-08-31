@@ -30,29 +30,12 @@ cp .env.example .env
 5. Depending on the contribution (server or frontend) you can comment that service or change the port. 
 
 
-## Server setup
+## Local setup for webapp and server
 
-1. Now go to server folder in the tegon folder
-
-```bash
-cd ../tegon/server
-pnpm
-```
-
-2. Create a `.env` file inside server folder by copying the content from `.env.example` and change values according to your need.
+1. Create a `.env` file inside server folder by copying the content from `.env.example` and change values according to your need.
 
 ```bash
-pnpm migrate:dev
-pnpm start:dev
-```
-
-## Frontend setup
-
-1. Now you can move to frontend
-
-```bash
-cd ../webapp
-pnpm 
+pnpm migrate
 pnpm dev
 ```
 
