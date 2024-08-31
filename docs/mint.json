@@ -5,6 +5,9 @@
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg"
   },
+  "openapi": [ "/openapi.yml" ],
+  "theme": "quill",
+  "layout": "sidenav",
   "favicon": "/favicon.svg",
   "colors": {
     "primary": "#5484ef",
@@ -13,29 +16,44 @@
     "anchors": {
       "from": "#5484ef",
       "to": "#5484ef"
+    },
+    "background": {
+      "light": "#fff",
+      "dark": "#191919"
     }
+  },
+  "rounded": "default",
+  "api": {
+    "playground": {
+      "mode": "simple"
+    },
+    "maintainOrder": true
+  },
+  "feedback": {
+    "suggestEdit": true,
+    "raiseIssue": true,
+    "thumbsRating": true
   },
   "topbarLinks": [
     {
-      "name": "Support",
-      "url": "mailto:harshith@tegon.ai"
+      "name": "Dashboard",
+      "url": "https://app.tegon.ai"
+    },
+    {
+      "name": "Slack",
+      "url": "https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA"
     }
   ],
   "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://app.tegon.ai/auth"
+    "type": "github",
+    "url": "https://github.com/tegonhq/tegon"
   },
 
   "anchors": [
     {
-      "name": "Github",
-      "icon": "github",
-      "url": "https://github.com/tegonhq/tegon"
-    },
-    {
-      "name": "Slack",
-      "icon": "slack",
-      "url": "https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA"
+      "name": "Guides",
+      "icon": "book",
+      "url": "guides"
     }
   ],
   "navigation": [
@@ -47,11 +65,11 @@
       ]
     },
     {
-      "group": "User Guide",
+      "group": "Guide",
       "pages": [
-        "user-guide/issues",
-        "user-guide/triage",
-        "user-guide/views"
+        "guides/issues",
+        "guides/triage",
+        "guides/views"
       ]
     },
     {
@@ -59,6 +77,16 @@
       "pages": [
         "integrations/overview",
         "integrations/contribute"
+      ]
+    },
+    {
+      "group": "API reference",
+      "pages": [
+        "api-reference/overview",
+        {
+          "group": "Issue API",
+          "pages": [ "api-reference/issue/create", "api-reference/issue/update" ]
+        }
       ]
     },
     {
