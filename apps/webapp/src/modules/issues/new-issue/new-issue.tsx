@@ -140,11 +140,12 @@ export function NewIssue({ open, setOpen, parentId }: NewIssueProps) {
                                 remove,
                               }}
                             />
+                            <Separator />
                           </div>
                         )}
+                        <Separator />
                       </AccordionTrigger>
                       <AccordionContent className="flex flex-col h-full overflow-hidden">
-                        <Separator />
                         <NewIssueForm
                           key={field.id}
                           isSubIssue={index > 0}
