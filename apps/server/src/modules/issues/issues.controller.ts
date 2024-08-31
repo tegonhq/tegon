@@ -154,4 +154,10 @@ export class IssuesController {
 
     csvStream.pipe(res);
   }
+
+  @Get(':issueId')
+  @UseGuards(AuthGuard)
+  async getIssue(@Param() issueParams: IssueRequestParamsDto): Promise<Issue> {
+    return await this.issuesService.getIssueById(issueParams);
+  }
 }
