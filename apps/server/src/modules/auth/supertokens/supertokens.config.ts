@@ -46,16 +46,20 @@ export const recipeList = (
               const logger = new Logger('Supertokens');
               logEmail(logger, email, urlWithLinkCode);
 
-              mailerService.sendMail({
-                to: email,
-                subject: 'Login for Tegon',
-                template: 'loginUser',
-                context: {
-                  userName: email.split('@')[0],
-                  magicLink: urlWithLinkCode,
-                  linkExpiresIn: Math.floor(codeLifetime / 60000),
-                },
-              });
+              try {
+                mailerService.sendMail({
+                  to: email,
+                  subject: 'Login for Tegon',
+                  template: 'loginUser',
+                  context: {
+                    userName: email.split('@')[0],
+                    magicLink: urlWithLinkCode,
+                    linkExpiresIn: Math.floor(codeLifetime / 60000),
+                  },
+                });
+              } catch (err) {
+                logger.error(err);
+              }
             },
           };
         },
