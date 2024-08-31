@@ -47,7 +47,7 @@ export const recipeList = (
               logEmail(logger, email, urlWithLinkCode);
 
               try {
-                mailerService.sendMail({
+                await mailerService.sendMail({
                   to: email,
                   subject: 'Login for Tegon',
                   template: 'loginUser',
