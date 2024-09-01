@@ -236,7 +236,13 @@ async function resourceCreation(
 const createTriggerConfigFile = (dir: string, workspaceId: string) => {
   const triggerConfigPath = path.join(dir, 'trigger.config.ts');
   const triggerConfigContent = `
+<<<<<<< HEAD
   export const resolveEnvVars: ResolveEnvironmentVariablesFunction = async ({}) => {
+=======
+  export const resolveEnvVars = async ({
+  env,
+}) => {
+>>>>>>> 8d95e80d (Fix: deploy command is failing)
   return {
     variables: {
       BASE_HOST: '${process.env.BASE_HOST}',

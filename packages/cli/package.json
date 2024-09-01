@@ -1,6 +1,6 @@
 {
   "name": "@tegonhq/cli",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A Command-Line Deploying actions",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
