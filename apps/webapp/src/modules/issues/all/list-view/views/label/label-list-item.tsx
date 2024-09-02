@@ -26,9 +26,11 @@ interface LabelListItemProps {
 
 export const LabelListItem = observer(({ label }: LabelListItemProps) => {
   const { issuesStore, applicationStore } = useContextStore();
+  const currentTeam = useCurrentTeam();
   const [isOpen, setIsOpen] = React.useState(true);
   const issues = issuesStore.getIssuesForLabel(
     label.id,
+    currentTeam.id,
     applicationStore.displaySettings.showSubIssues,
   );
   const computedIssues = useFilterIssues(issues);
@@ -53,14 +55,20 @@ export const LabelListItem = observer(({ label }: LabelListItemProps) => {
             variant="ghost"
             size="lg"
           >
-            <BadgeColor
-              style={{ backgroundColor: label.color }}
-              className="w-2 h-2 group-hover:hidden"
-            />
-            <div className="hidden group-hover:block">
-              {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+            <div className="h-5 w-5 flex items-center justify-center">
+              <BadgeColor
+                style={{ backgroundColor: label.color }}
+                className="w-2 h-2 group-hover:hidden"
+              />
+              <div className="hidden group-hover:block">
+                {isOpen ? (
+                  <ChevronDown size={20} />
+                ) : (
+                  <ChevronRight size={20} />
+                )}
+              </div>
             </div>
-            <h3 className="pl-2">{label.name}</h3>
+            <h3 className="pl-1">{label.name}</h3>
           </Button>
         </CollapsibleTrigger>
 
@@ -109,14 +117,20 @@ export const NoLabelList = observer(() => {
             variant="ghost"
             size="lg"
           >
-            <BadgeColor
-              style={{ backgroundColor: '#838383' }}
-              className="w-2 h-2 group-hover:hidden"
-            />
-            <div className="hidden group-hover:block">
-              {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+            <div className="h-5 w-5 flex items-center justify-center">
+              <BadgeColor
+                style={{ backgroundColor: '#838383' }}
+                className="w-2 h-2 group-hover:hidden"
+              />
+              <div className="hidden group-hover:block">
+                {isOpen ? (
+                  <ChevronDown size={20} />
+                ) : (
+                  <ChevronRight size={20} />
+                )}
+              </div>
             </div>
-            <h3 className="pl-2">No Label</h3>
+            <h3 className="pl-1">No Label</h3>
           </Button>
         </CollapsibleTrigger>
 

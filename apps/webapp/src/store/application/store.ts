@@ -44,12 +44,14 @@ export const ApplicationStore: IAnyStateTreeNode = types
   })
   .actions((self) => ({
     updateFilters(updateBody: UpdateBody) {
-      const currentFilters = { ...self.filters };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const currentFilters = (self.filters as any).toJSON();
+
       const toUpdateBody = { ...updateBody };
-      const mergedAttributes = clone({
+      const mergedAttributes = {
         ...currentFilters,
         ...toUpdateBody,
-      });
+      };
 
       self.filters = FiltersModel.create(mergedAttributes);
 
