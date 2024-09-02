@@ -1,6 +1,6 @@
 {
-  "slug": "bug-suggestions",
-  "name": "Bug Suggestions",
+  "slug": "bug-enricher",
+  "name": "Bug Enricher",
   "triggers": [
     {
       "type": "on_create",
