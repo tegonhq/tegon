@@ -13,7 +13,7 @@ import {
 } from '../utils';
 import { PARTIAL_SOLUTION_PROMPT } from '../utils';
 
-export const bugSuggestion = async (actionPayload: ActionEventPayload) => {
+export const bugEnricher = async (actionPayload: ActionEventPayload) => {
   const { modelId: issueId, action } = actionPayload;
 
   const { data: actionInput } = action;

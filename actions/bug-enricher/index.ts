@@ -1,5 +1,5 @@
 import { ActionEventPayload } from '@tegonhq/sdk';
-import { bugSuggestion } from 'triggers/bug-suggestions';
+import { bugEnricher } from 'triggers/bug-enricher';
 export async function run(eventPayload: ActionEventPayload) {
-  return await bugSuggestion(eventPayload);
+  return await bugEnricher(eventPayload);
 }
