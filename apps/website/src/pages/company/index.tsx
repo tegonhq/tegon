@@ -16,9 +16,16 @@ export default function Company() {
           developers.
         </PageHeaderDescription>
       </PageHeader>
+      <div className="flex items-center justify-center w-full">
+        <img
+          src="/photo.jpg"
+          className="w-full border max-w-[500px] rounded"
+          alt={''}
+        />
+      </div>
 
-      <div className="flex flex-col gap-4 mb-6">
-        <div className="flex flex-col gap-1 text-lg">
+      <div className="flex flex-col gap-4 my-6">
+        <div className="flex flex-col gap-1 text-md">
           <p>
             We&apos;re Harshith, Manoj, and Manik - friends, co-founders, and
             passionate open-source believers. For the past 5 years, we&apos;ve
@@ -31,15 +38,7 @@ export default function Company() {
         </div>
       </div>
 
-      <div className="flex items-center justify-center w-full">
-        <img
-          src="/photo.jpg"
-          className="w-full border max-w-[500px] rounded"
-          alt={''}
-        />
-      </div>
-
-      <div className="flex flex-col gap-4 mt-6 text-lg">
+      <div className="flex flex-col gap-4 mt-6 text-md">
         <div className="flex flex-col gap-1">
           <h3 className="font-medium">Why Project Management?</h3>
 
