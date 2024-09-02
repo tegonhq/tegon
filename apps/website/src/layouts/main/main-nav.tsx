@@ -30,7 +30,8 @@ export function MainNav() {
       </Link>
       <nav className="flex items-center gap-4 lg:gap-6">
         <a
-          href="https://docs.tegon.ai"
+          href="https://docs.tegon.ai/actions/overview"
+          target="_blank"
           className={cn(
             'flex items-center',
             buttonVariants({ variant: 'ghost' }),
@@ -40,6 +41,7 @@ export function MainNav() {
         </a>
         <a
           href="https://docs.tegon.ai"
+          target="_blank"
           className={cn(
             'flex items-center',
             buttonVariants({ variant: 'ghost' }),
@@ -49,6 +51,7 @@ export function MainNav() {
         </a>
         <a
           href="https://github.com/tegonhq/tegon/releases"
+          target="_blank"
           className={cn(
             'flex items-center',
             buttonVariants({ variant: 'ghost' }),
@@ -56,15 +59,16 @@ export function MainNav() {
         >
           Releases
         </a>
-        <a
+        <Link
           href="/company"
+          target="_blank"
           className={cn(
             'flex items-center',
             buttonVariants({ variant: 'ghost' }),
           )}
         >
           Our story
-        </a>
+        </Link>
       </nav>
     </div>
   );
