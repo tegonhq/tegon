@@ -61,7 +61,7 @@ export const CategoryViewList = observer(
               style={{ backgroundColor: getWorkflowColor(workflow).background }}
               variant="ghost"
             >
-              <CategoryIcon size={20} className="group-hover:hidden" />
+              <CategoryIcon size={20} className="h-5 w-5 group-hover:hidden" />
               <div className="hidden group-hover:block">
                 {isOpen ? (
                   <ChevronDown size={20} />

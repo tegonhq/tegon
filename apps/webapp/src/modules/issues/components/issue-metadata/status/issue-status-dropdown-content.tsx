@@ -1,9 +1,11 @@
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
-import { CommandGroup, CommandItem } from '@tegonhq/ui/components/command';
+import { CommandGroup } from '@tegonhq/ui/components/command';
 
 import { getWorkflowColor } from 'common/status-color';
 import type { WorkflowType } from 'common/types';
 import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+
+import { DropdownItem } from '../dropdown-item';
 
 interface IssueStatusDropdownContentProps {
   workflows: WorkflowType[];
@@ -36,24 +38,19 @@ export function IssueStatusDropdownContent({
 
   return (
     <CommandGroup>
-      {workflows.map((workflow) => {
+      {workflows.map((workflow, index) => {
         const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];
 
         return (
-          <CommandItem
+          <DropdownItem
             key={workflow.name}
+            id={workflow.id}
             value={workflow.name}
-            onSelect={(currentValue) => {
-              const workflow = workflows.find(
-                (workflow: WorkflowType) =>
-                  workflow.name.toLowerCase() === currentValue,
-              );
-
+            index={index + 1}
+            onSelect={(currentValue: string) => {
               if (!multiple) {
+                onChange && onChange(currentValue);
                 onClose();
-                onChange && onChange(workflow.id);
-              } else {
-                onValueChange(true, workflow.id);
               }
             }}
           >
@@ -76,7 +73,7 @@ export function IssueStatusDropdownContent({
                 {workflow.name}
               </label>
             </div>
-          </CommandItem>
+          </DropdownItem>
         );
       })}
     </CommandGroup>

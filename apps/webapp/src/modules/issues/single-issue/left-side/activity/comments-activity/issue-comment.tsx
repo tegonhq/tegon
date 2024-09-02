@@ -38,7 +38,6 @@ export function IssueComment() {
         <Editor
           value={commentValue}
           onChange={(e) => {
-            console.log(e);
             setCommentValue(e);
           }}
           placeholder="Leave your comment..."

@@ -28,7 +28,7 @@ export function IssuePriorityDropdown({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            variant="ghost"
+            variant="link"
             role="combobox"
             size="sm"
             aria-expanded={open}
