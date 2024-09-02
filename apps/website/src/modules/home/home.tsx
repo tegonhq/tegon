@@ -28,7 +28,13 @@ export function Home() {
         </PageHeaderDescription>
 
         <PageActions>
-          <Button size="xl" className="text-md">
+          <Button
+            size="xl"
+            className="text-md"
+            onClick={() => {
+              window.location.href = 'https://app.tegon.ai';
+            }}
+          >
             Get started for free
           </Button>
         </PageActions>
