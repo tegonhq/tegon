@@ -1,4 +1,3 @@
-import clone from 'lodash.clone';
 import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 
 import { DisplaySettingsModel, FiltersModel } from './models';
