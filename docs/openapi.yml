@@ -31,6 +31,14 @@ paths:
             application/json:
               schema:
                 type: object
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Action        
 
   /api/v1/action/{slug}/inputs:
     post:
@@ -55,6 +63,14 @@ paths:
             application/json:
               schema:
                 type: object
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Action          
 
   /api/v1/ai_requests:
     post:
@@ -73,6 +89,14 @@ paths:
             application/json:
               schema:
                 type: string
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Ai_requests        
 
   /api/v1/ai_requests/stream:
     post:
@@ -91,6 +115,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AIStreamResponse"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Ai_requests         
 
   /api/v1/integration_account/{integrationAccountId}:
     get:
@@ -110,6 +142,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/IntegrationAccount"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Integration_account           
 
   /api/v1/integration_account/accountId:
     get:
@@ -129,6 +169,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/IntegrationAccount"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Integration_account           
 
   /api/v1/integration_definition/{integrationDefinitionId}:
     get:
@@ -146,6 +194,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/IntegrationDefinition"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Integration_definition        
 
   /api/v1/integration_definition:
     get:
@@ -172,7 +228,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Integration definition
+        - Integration_definition
 
   /api/v1/issue_comments:
     post:
@@ -195,6 +251,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/IssueComment"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Issue_comments        
 
   /api/v1/issue_comments/linked_comment:
     post:
@@ -211,23 +275,39 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LinkedComment"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Issue_comments         
 
-  /api/v1/issue_comments/linked_comment/:
-    get:
-      summary: Get linked comment
-      parameters:
-        - in: query
-          name: sourceId
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/LinkedComment"
+  # /api/v1/issue_comments/linked_comment:
+  #   get:
+  #     summary: Get linked comment
+  #     parameters:
+  #       - in: query
+  #         name: sourceId
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       "200":
+  #         description: Successful response
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/LinkedComment"
+  #       "400":
+  #         description: Invalid request parameters
+  #       "401":
+  #         description: Unauthorized
+  #       "422":
+  #         description: Unprocessable Entity
+  #     tags:
+  #       - Issue_comments       
 
   /api/v1/issue_comments/{issueCommentId}:
     get:
@@ -245,6 +325,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/IssueComment"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Issue_comments 
 
     post:
       summary: Update issue comment
@@ -267,6 +355,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/IssueComment"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Issue_comments        
 
   /api/v1/issue_relation/{issueRelationId}:
     delete:
@@ -284,6 +380,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/IssueRelation"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Issue_relation
+        
 
   /api/v1/issues:
     post:
@@ -343,6 +448,8 @@ paths:
           description: Unauthorized
         "422":
           description: Unprocessable Entity
+      tags:
+        - Issue  
 
     delete:
       summary: Delete issue
@@ -364,6 +471,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Issue"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Issue          
 
   /api/v1/issues/filter:
     post:
@@ -383,6 +498,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Issue"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Issue           
 
   /api/v1/issues/{issueId}/move:
     post:
@@ -406,6 +529,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Issue"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Issue           
+        
 
   /api/v1/labels:
     get:
@@ -430,6 +562,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Label"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Labels           
 
     post:
       summary: Create label
@@ -446,6 +586,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Label"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Labels           
 
   /api/v1/labels/{labelId}:
     post:
@@ -469,6 +617,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Label"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Labels         
 
     delete:
       summary: Delete label
@@ -485,6 +641,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Label"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Labels          
 
   /api/v1/issues/{issueId}/link:
     post:
@@ -513,6 +677,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LinkedIssue"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Issue        
 
   /api/v1/linked_issues/{linkedIssueId}:
     get:
@@ -530,6 +702,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LinkedIssue"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Linked_issue         
 
     post:
       summary: Update linked issue by ID
@@ -552,6 +732,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LinkedIssue"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Linked_issue            
 
     delete:
       summary: Delete linked issue
@@ -568,6 +756,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LinkedIssue"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Linked_issue            
+        
 
   /api/v1/linked_issues/source:
     get:
@@ -585,6 +782,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LinkedIssue"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Linked_issue         
 
   /api/v1/linked_issues/source/{sourceId}:
     get:
@@ -604,6 +809,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Pat"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Linked_issue           
 
     post:
       summary: Update linked issue by source ID
@@ -626,6 +839,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LinkedIssue"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Linked_issue         
 
   /api/v1/users/pat:
     post:
@@ -643,6 +864,14 @@ paths:
             application/json:
               schema:
                 type: object
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Users         
 
   /api/v1/users/pats/{patId}:
     delete:
@@ -660,6 +889,14 @@ paths:
             application/json:
               schema:
                 type: object
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Users         
 
   /api/v1/users:
     get:
@@ -671,6 +908,14 @@ paths:
             application/json:
               schema:
                 type: object
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Users        
 
     post:
       summary: Get users
@@ -689,6 +934,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PublicUser"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Users          
 
   /api/v1/views/{viewId}:
     get:
@@ -706,6 +959,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/View"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Users        
 
   /api/v1/{teamId}/workflows:
     get:
@@ -725,6 +986,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Workflow"
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+      tags:
+        - Teams          
 
 components:
   schemas:
