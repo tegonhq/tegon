@@ -38,7 +38,6 @@ export default class TeamsService {
 
   async createTeam(
     workspaceRequestParams: WorkspaceRequestParams,
-    userId: string,
     teamData: CreateTeamInput,
   ): Promise<Team> {
     const team = await this.prisma.team.create({
@@ -49,10 +48,21 @@ export default class TeamsService {
       },
     });
 
-    await this.addTeamMember(
-      team.id,
-      workspaceRequestParams.workspaceId,
-      userId,
+    const users = await this.prisma.usersOnWorkspaces.findMany({
+      where: {
+        workspaceId: workspaceRequestParams.workspaceId,
+        status: 'ACTIVE',
+      },
+    });
+
+    await Promise.all(
+      users.map(async (user) => {
+        await this.addTeamMember(
+          team.id,
+          workspaceRequestParams.workspaceId,
+          user.userId,
+        );
+      }),
     );
 
     return team;

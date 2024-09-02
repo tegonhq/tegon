@@ -9,10 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Team, TeamPreference, UsersOnWorkspaces } from '@tegonhq/types';
-import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 
 import {
   UpdateTeamInput,
@@ -55,16 +53,10 @@ export class TeamsController {
   @Post()
   @UseGuards(AuthGuard)
   async createTeam(
-    @SessionDecorator() session: SessionContainer,
     @Query() WorkspaceParams: WorkspaceRequestParams,
     @Body() teamData: CreateTeamInput,
   ): Promise<Team> {
-    const userId = session.getUserId();
-    return await this.teamsService.createTeam(
-      WorkspaceParams,
-      userId,
-      teamData,
-    );
+    return await this.teamsService.createTeam(WorkspaceParams, teamData);
   }
 
   @Post(':teamId')
