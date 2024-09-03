@@ -193,10 +193,11 @@ export class TriggerdevService {
     projectSlug: string,
     id: string,
     payload: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    options?: Record<string, string>,
   ) {
     const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
     const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen); // Get the production runtime API key
-    const response = await triggerTaskSync(id, payload, apiKey); // Trigger the task synchronously
+    const response = await triggerTaskSync(id, payload, apiKey, options); // Trigger the task synchronously
 
     return response; // Return the response from the triggered task
   }

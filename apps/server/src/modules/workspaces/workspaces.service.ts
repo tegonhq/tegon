@@ -131,6 +131,24 @@ export default class WorkspacesService {
     });
   }
 
+  async getWorkspaceBySlug(slug: string): Promise<Workspace> {
+    return await this.prisma.workspace.findFirst({
+      where: {
+        name: {
+          equals: slug,
+          mode: 'insensitive',
+        },
+      },
+      include: {
+        usersOnWorkspaces: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+  }
+
   async getAllWorkspaces(userId: string): Promise<Workspace[]> {
     return await this.prisma.workspace.findMany({
       where: {

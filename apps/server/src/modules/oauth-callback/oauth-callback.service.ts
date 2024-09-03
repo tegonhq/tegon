@@ -3,6 +3,7 @@ import {
   IntegrationEventPayload,
   IntegrationPayloadEventType,
 } from '@tegonhq/types';
+import { PrismaService } from 'nestjs-prisma';
 import * as simpleOauth2 from 'simple-oauth2';
 
 import { IntegrationDefinitionService } from 'modules/integration-definition/integration-definition.service';
@@ -34,6 +35,7 @@ export class OAuthCallbackService {
   constructor(
     private integrationDefinitionService: IntegrationDefinitionService,
     private triggerdevService: TriggerdevService,
+    private prisma: PrismaService,
   ) {}
 
   async getRedirectURL(
@@ -62,50 +64,50 @@ export class OAuthCallbackService {
     const scopesString = specificScopes || externalConfig.scopes.join(',');
     const additionalAuthParams = template.authorization_params || {};
 
-    try {
-      const simpleOAuthClient = new simpleOauth2.AuthorizationCode(
-        getSimpleOAuth2ClientConfig(
-          {
-            client_id: integrationDefinition.clientId,
-            client_secret: integrationDefinition.clientSecret,
-            scopes: scopesString,
-          },
-          template,
-          externalConfig,
-        ),
-      );
+    // try {
+    const simpleOAuthClient = new simpleOauth2.AuthorizationCode(
+      getSimpleOAuth2ClientConfig(
+        {
+          client_id: integrationDefinition.clientId,
+          client_secret: integrationDefinition.clientSecret,
+          scopes: scopesString,
+        },
+        template,
+        externalConfig,
+      ),
+    );
 
-      const uniqueId = Date.now().toString(36);
-      this.session[uniqueId] = {
-        integrationDefinitionId: integrationDefinition.id,
-        redirectURL,
-        workspaceId,
-        config: externalConfig,
-        userId,
-        personal,
-      };
+    const uniqueId = Date.now().toString(36);
+    this.session[uniqueId] = {
+      integrationDefinitionId: integrationDefinition.id,
+      redirectURL,
+      workspaceId,
+      config: externalConfig,
+      userId,
+      personal,
+    };
 
-      const scopes = [
-        ...scopesString.split(','),
-        ...(template.default_scopes || []),
-      ];
+    const scopes = [
+      ...scopesString.split(','),
+      ...(template.default_scopes || []),
+    ];
 
-      const authorizationUri = simpleOAuthClient.authorizeURL({
-        redirect_uri: CALLBACK_URL,
-        scope: scopes.join(template.scope_separator || ' '),
-        state: uniqueId,
-        ...additionalAuthParams,
-      });
+    const authorizationUri = simpleOAuthClient.authorizeURL({
+      redirect_uri: CALLBACK_URL,
+      scope: scopes.join(template.scope_separator || ' '),
+      state: uniqueId,
+      ...additionalAuthParams,
+    });
 
-      this.logger.debug(
-        `OAuth 2.0 for ${integrationDefinition.name} - redirecting to: ${authorizationUri}`,
-      );
+    this.logger.debug(
+      `OAuth 2.0 for ${integrationDefinition.name} - redirecting to: ${authorizationUri}`,
+    );
 
-      return { status: 200, redirectURL: authorizationUri };
-    } catch (e) {
-      this.logger.warn(e);
-      throw new BadRequestException({ error: e.message });
-    }
+    return { status: 200, redirectURL: authorizationUri };
+    // } catch (e) {
+    //   this.logger.warn(e);
+    //   throw new BadRequestException({ error: e.message });
+    // }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -253,6 +255,68 @@ export class OAuthCallbackService {
       TriggerProjects.Common,
       integrationDefinition.name,
       payload,
+    );
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async emailCallbackHandler(params: CallbackParams, res: any) {
+    if (!params.state) {
+      throw new BadRequestException({
+        error: 'No state found',
+      });
+    }
+
+    const sessionRecord = this.session[params.state];
+
+    /**
+     * Delete the session once it's used
+     */
+    delete this.session[params.state];
+
+    if (!sessionRecord) {
+      throw new BadRequestException({
+        error: 'No session found',
+      });
+    }
+    const integrationDefinition =
+      await this.integrationDefinitionService.getIntegrationDefinitionWithId({
+        integrationDefinitionId: sessionRecord.integrationDefinitionId,
+      });
+
+    const workspace = await this.prisma.workspace.findUnique({
+      where: { id: sessionRecord.workspaceId },
+    });
+
+    const payload: IntegrationEventPayload = {
+      event: IntegrationPayloadEventType.CREATE,
+      userId: sessionRecord.userId,
+      workspaceId: sessionRecord.workspaceId,
+      data: {
+        oauthResponse: {
+          refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+          redirectUrl: process.env.GMAIL_REDIRECT_URI,
+        },
+        integrationDefinition,
+        personal: sessionRecord.personal,
+        workspace,
+      },
+    };
+
+    await this.triggerdevService.triggerTask(
+      TriggerProjects.Common,
+      integrationDefinition.slug,
+      payload,
+    );
+
+    const accountIdentifier = sessionRecord.accountIdentifier
+      ? `&accountIdentifier=${sessionRecord.accountIdentifier}`
+      : '';
+    const integrationKeys = sessionRecord.integrationKeys
+      ? `&integrationKeys=${sessionRecord.integrationKeys}`
+      : '';
+
+    res.redirect(
+      `${sessionRecord.redirectURL}?success=true&integrationName=${integrationDefinition.name}${accountIdentifier}${integrationKeys}`,
     );
   }
 }

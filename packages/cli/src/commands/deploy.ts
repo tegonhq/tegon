@@ -130,9 +130,9 @@ export function configureDeployCommand(program: Command) {
 // Get the trigger access token for the given workspace ID
 async function getTriggerAccessToken(workspaceId: string): Promise<string> {
   try {
-    const baseURL = process.env.BASE_HOST || 'https://app.tegon.ai/api';
+    const baseURL = process.env.BASE_HOST || 'https://app.tegon.ai';
 
-    const response = await axios.get(`${baseURL}/v1/triggerdev`, {
+    const response = await axios.get(`${baseURL}/api/v1/triggerdev`, {
       params: { workspaceId },
     });
     return response.data.triggerKey;
@@ -213,8 +213,8 @@ async function resourceCreation(
   version: string,
 ) {
   try {
-    const baseURL = process.env.BASE_HOST || 'https://app.tegon.ai/api';
-    await axios.post(`${baseURL}/v1/action/create-resource`, {
+    const baseURL = process.env.BASE_HOST || 'https://app.tegon.ai';
+    await axios.post(`${baseURL}/api/v1/action/create-resource`, {
       workspaceId,
       config,
       version,

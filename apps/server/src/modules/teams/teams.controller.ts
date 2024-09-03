@@ -8,7 +8,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { Team, TeamPreference, UsersOnWorkspaces } from '@tegonhq/types';
+import {
+  Team,
+  TeamPreference,
+  UsersOnWorkspaces,
+  WorkspaceRequestParamsDto,
+} from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
@@ -28,6 +33,15 @@ import TeamsService from './teams.service';
 })
 export class TeamsController {
   constructor(private teamsService: TeamsService) {}
+
+  @Get()
+  @UseGuards(AuthGuard)
+  async getTeams(
+    @Query()
+    workspaceRequestParams: WorkspaceRequestParamsDto,
+  ): Promise<Team[]> {
+    return await this.teamsService.getTeams(workspaceRequestParams);
+  }
 
   @Get(':teamId')
   @UseGuards(AuthGuard)
