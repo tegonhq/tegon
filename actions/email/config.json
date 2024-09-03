@@ -1,13 +1,14 @@
 {
   "slug": "email",
   "name": "Email",
+  "description": "Create issues from email",
   "triggers": [
     {
       "type": "source_webhook",
-      "entities": ["email"]
+      "entities": [ "email" ]
     }
   ],
-  "integrations": ["email"],
+  "integrations": [ "email" ],
   "inputs": {
     "type": "object",
     "properties": {
@@ -31,7 +32,7 @@
               "validation": {
                 "required": true
               },
-              "options": []
+              "options": [ ]
             }
           }
         }

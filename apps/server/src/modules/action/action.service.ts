@@ -194,6 +194,7 @@ export default class ActionService {
         data: {
           name: config.name,
           slug: config.slug,
+          description: config.description,
           integrations: config.integrations ? config.integrations : [],
           createdById: userId,
           workspaceId,

@@ -51,7 +51,7 @@ export const Action = () => {
       <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
         <div className="w-full p-6">
           <SettingSection
-            title={latestAction.name}
+            title={action.name}
             description={latestAction?.description}
             metadata={metadata}
           >

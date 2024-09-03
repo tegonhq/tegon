@@ -1,6 +1,7 @@
 {
   "slug": "slack",
   "name": "Slack",
+  "description": "Create issues from Slack messages and sync threads",
   "triggers": [
     {
       "type": "on_create",

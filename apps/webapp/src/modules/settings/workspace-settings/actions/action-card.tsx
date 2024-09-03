@@ -12,28 +12,19 @@ import { useCurrentWorkspace } from 'hooks/workspace';
 
 import type { ActionSource } from 'services/action';
 
-import { useContextStore } from 'store/global-context-provider';
-
 interface ActionCardProps {
   action: ActionSource;
 }
 
 export function ActionCard({ action }: ActionCardProps) {
   const workspace = useCurrentWorkspace();
-  const { actionsStore } = useContextStore();
-  const storeAction = actionsStore.getAction(action.slug);
 
   return (
     <Link href={`/${workspace.slug}/settings/actions/${action.slug}`}>
       <Card>
         <CardHeader>
           <CardTitle className="flex gap-2 items-center">
-            {action.name}{' '}
-            {storeAction && (
-              <Badge variant="secondary" className="flex items-center">
-                Installed
-              </Badge>
-            )}
+            {action.name}
           </CardTitle>
           <CardDescription>{action.description}</CardDescription>
         </CardHeader>

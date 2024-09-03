@@ -103,7 +103,13 @@ export class OAuthCallbackService {
       `OAuth 2.0 for ${integrationDefinition.name} - redirecting to: ${authorizationUri}`,
     );
 
-    return { status: 200, redirectURL: authorizationUri };
+    return {
+      status: 200,
+      redirectURL: authorizationUri.replace(
+        'https://app.tegon.ai',
+        'http://localhost:3000',
+      ),
+    };
     // } catch (e) {
     //   this.logger.warn(e);
     //   throw new BadRequestException({ error: e.message });
