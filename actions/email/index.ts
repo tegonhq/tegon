@@ -1,12 +1,12 @@
 import { ActionEventPayload, ActionTypesEnum } from '@tegonhq/sdk';
 
 import { onEventHandler } from './handlers/on-event-handler';
-import { getConfig } from 'handlers/get-config';
+import { getInputs } from 'handlers/get-inputs';
 
 export async function run(eventPayload: ActionEventPayload) {
   switch (eventPayload.event) {
     case ActionTypesEnum.GET_INPUTS:
-      return getConfig(eventPayload);
+      return getInputs(eventPayload);
 
     case ActionTypesEnum.SOURCE_WEBHOOK:
       return onEventHandler(eventPayload);

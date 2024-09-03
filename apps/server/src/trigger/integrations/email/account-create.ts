@@ -7,10 +7,11 @@ export const integrationCreate = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any,
 ) => {
-  const { oauthResponse, integrationDefinition, workspace } = data;
+  const { integrationDefinition, workspace } = data;
+  const definitionConfig = integrationDefinition.config;
   const integrationConfiguration = {
-    refreshToken: oauthResponse.refreshToken,
-    redirectUrl: oauthResponse.redirectUrl,
+    refreshToken: definitionConfig.refreshToken,
+    redirectUrl: definitionConfig.redirectUrl,
   };
 
   const accountId = workspace.slug;

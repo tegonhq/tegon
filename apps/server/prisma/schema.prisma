@@ -15,7 +15,7 @@ model Action {
   deleted   DateTime?
 
   name         String
-  description  String
+  description  String?
   slug         String
   integrations String[]
 

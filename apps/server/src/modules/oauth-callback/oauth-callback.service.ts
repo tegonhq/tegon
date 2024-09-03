@@ -64,56 +64,53 @@ export class OAuthCallbackService {
     const scopesString = specificScopes || externalConfig.scopes.join(',');
     const additionalAuthParams = template.authorization_params || {};
 
-    // try {
-    const simpleOAuthClient = new simpleOauth2.AuthorizationCode(
-      getSimpleOAuth2ClientConfig(
-        {
-          client_id: integrationDefinition.clientId,
-          client_secret: integrationDefinition.clientSecret,
-          scopes: scopesString,
-        },
-        template,
-        externalConfig,
-      ),
-    );
+    try {
+      const simpleOAuthClient = new simpleOauth2.AuthorizationCode(
+        getSimpleOAuth2ClientConfig(
+          {
+            client_id: integrationDefinition.clientId,
+            client_secret: integrationDefinition.clientSecret,
+            scopes: scopesString,
+          },
+          template,
+          externalConfig,
+        ),
+      );
 
-    const uniqueId = Date.now().toString(36);
-    this.session[uniqueId] = {
-      integrationDefinitionId: integrationDefinition.id,
-      redirectURL,
-      workspaceId,
-      config: externalConfig,
-      userId,
-      personal,
-    };
+      const uniqueId = Date.now().toString(36);
+      this.session[uniqueId] = {
+        integrationDefinitionId: integrationDefinition.id,
+        redirectURL,
+        workspaceId,
+        config: externalConfig,
+        userId,
+        personal,
+      };
 
-    const scopes = [
-      ...scopesString.split(','),
-      ...(template.default_scopes || []),
-    ];
+      const scopes = [
+        ...scopesString.split(','),
+        ...(template.default_scopes || []),
+      ];
 
-    const authorizationUri = simpleOAuthClient.authorizeURL({
-      redirect_uri: CALLBACK_URL,
-      scope: scopes.join(template.scope_separator || ' '),
-      state: uniqueId,
-      ...additionalAuthParams,
-    });
+      const authorizationUri = simpleOAuthClient.authorizeURL({
+        redirect_uri: CALLBACK_URL,
+        scope: scopes.join(template.scope_separator || ' '),
+        state: uniqueId,
+        ...additionalAuthParams,
+      });
 
-    this.logger.debug(
-      `OAuth 2.0 for ${integrationDefinition.name} - redirecting to: ${authorizationUri}`,
-    );
+      this.logger.debug(
+        `OAuth 2.0 for ${integrationDefinition.name} - redirecting to: ${authorizationUri}`,
+      );
 
-    return {
-      status: 200,
-      redirectURL: authorizationUri.replace(
-        'https://app.tegon.ai',
-        'http://localhost:3000',
-      ),
-    };
-    // } catch (e) {
-    //   this.logger.warn(e);
-    //   throw new BadRequestException({ error: e.message });
-    // }
+      return {
+        status: 200,
+        redirectURL: authorizationUri,
+      };
+    } catch (e) {
+      this.logger.warn(e);
+      throw new BadRequestException({ error: e.message });
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -298,10 +295,6 @@ export class OAuthCallbackService {
       userId: sessionRecord.userId,
       workspaceId: sessionRecord.workspaceId,
       data: {
-        oauthResponse: {
-          refreshToken: process.env.GMAIL_REFRESH_TOKEN,
-          redirectUrl: process.env.GMAIL_REDIRECT_URI,
-        },
         integrationDefinition,
         personal: sessionRecord.personal,
         workspace,

@@ -216,6 +216,7 @@ export default class ActionService {
           name: action.name,
           integrations: config.integrations ? config.integrations : [],
           status: ActionStatusEnum.ACTIVE,
+          triggerVersion: latestVersion,
         },
       });
     }

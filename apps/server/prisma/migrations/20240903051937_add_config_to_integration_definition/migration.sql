@@ -5,7 +5,7 @@
 
 */
 -- AlterTable
-ALTER TABLE "Action" ADD COLUMN     "description" TEXT NOT NULL;
+ALTER TABLE "Action" ADD COLUMN     "description" TEXT;
 
 -- AlterTable
 ALTER TABLE "IntegrationDefinitionV2" ADD COLUMN     "config" JSONB;

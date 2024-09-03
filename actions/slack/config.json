@@ -5,41 +5,12 @@
   "triggers": [
     {
       "type": "on_create",
-      "entities": [ "IssueComment", "LinkedIssue" ]
+      "entities": ["IssueComment", "LinkedIssue"]
     },
     {
       "type": "source_webhook",
-      "entities": [ "slack" ]
+      "entities": ["slack"]
     }
   ],
-  "integrations": [ "slack" ],
-  "inputs": {
-    "type": "object",
-    "properties": {
-      "channelTeamMappings": {
-        "type": "array",
-        "title": "Channel to Team Mappings",
-        "description": "Map each channel to a team",
-        "items": {
-          "type": "object",
-          "properties": {
-            "channelId": {
-              "type": "text",
-              "title": "Channel ID",
-              "validation": {
-                "required": true
-              }
-            },
-            "teamId": {
-              "type": "text",
-              "title": "Team ID",
-              "validation": {
-                "required": true
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+  "integrations": ["slack"]
 }

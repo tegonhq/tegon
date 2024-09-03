@@ -3,6 +3,7 @@ import {
   createIssue,
   EventBody,
   getLinkedIssueBySource,
+  getTeamById,
   getWorkflowsByTeam,
   IntegrationAccount,
   logger,
@@ -68,8 +69,7 @@ export const emailTriage = async (
     logger.log(`No team Id found for email address: ${deliveredTo}`);
     return undefined;
   }
-  //   const team = await getTeamById({teamId})
-  const team = (await axios.get(`/api/v1/teams/${teamId}`)).data;
+  const team = await getTeamById({ teamId });
   if (!team) {
     logger.log(`No team found for teamId: ${teamId}`);
     return undefined;

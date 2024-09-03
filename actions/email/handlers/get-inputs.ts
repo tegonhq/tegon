@@ -1,6 +1,6 @@
 import { ActionEventPayload, getTeams, Team } from '@tegonhq/sdk';
 
-export const getConfig = async (payload: ActionEventPayload) => {
+export const getInputs = async (payload: ActionEventPayload) => {
   const { workspaceId } = payload;
 
   // Fetch teams from the API

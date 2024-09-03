@@ -7,17 +7,5 @@
       "entities": ["Issue"]
     }
   ],
-  "integrations": [],
-  "inputs": {
-    "type": "object",
-    "properties": {
-      "techStack": {
-        "type": "text",
-        "title": "Tech stack used in this project",
-        "validation": {
-          "required": true
-        }
-      }
-    }
-  }
+  "integrations": []
 }

@@ -18,11 +18,9 @@ export const bugEnricher = async (actionPayload: ActionEventPayload) => {
 
   const { data: actionInput } = action;
 
-  //   const issue = await getIssueById({ issueId });
+  // const issue = await getIssueById({ issueId });
 
-  const issue = (
-    await axios.get(`http://localhost:3000/api/v1/issues/${issueId}`)
-  ).data;
+  const issue = (await axios.get(`/api/v1/issues/${issueId}`)).data;
 
   if (issue.labelIds.lengthr === 0) {
     return null;
@@ -61,9 +59,8 @@ export const bugEnricher = async (actionPayload: ActionEventPayload) => {
   };
 
   // const aiResponse = await getAIRequest(requestData);
-  const aiResponse = (
-    await axios.post(`http://localhost:3000/api/v1/ai_requests`, requestData)
-  ).data;
+  const aiResponse = (await axios.post(`/api/v1/ai_requests`, requestData))
+    .data;
 
   const pattern = /\[OUTPUT\]\s*([\s\S]*)/;
   const match = aiResponse.match(pattern);

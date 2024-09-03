@@ -6,7 +6,5 @@ export const onEventHandler = async (payload: ActionEventPayload) => {
 
   const integrationAccount = integrationAccounts.email;
 
-  await emailTriage(eventBody, integrationAccount, action);
-
-  return { status: 200 };
+  return await emailTriage(eventBody, integrationAccount, action);
 };

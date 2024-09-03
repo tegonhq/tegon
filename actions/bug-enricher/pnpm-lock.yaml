@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@tegonhq/sdk':
-        specifier: ^0.1.3
-        version: 0.1.3(typescript@5.5.4)
+        specifier: ^0.1.5
+        version: 0.1.5(typescript@5.5.4)
       '@trigger.dev/sdk':
         specifier: 3.0.0-beta.56
         version: 3.0.0-beta.56(typescript@5.5.4)
@@ -379,8 +379,8 @@ packages:
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
 
-  '@tegonhq/sdk@0.1.3':
-    resolution: {integrity: sha512-2PMrE2rdPO2Qc9C6Oey9pPxJ/44nJUR375ur4+7rE7bajfwwGSjA9VvTzJM8tucA79gJFd/uI1qsuFqCdhukoA==}
+  '@tegonhq/sdk@0.1.5':
+    resolution: {integrity: sha512-ww8kDympNa/tqrRyiifaANjvy7Sros3T5y0b5/Pb+rOrWcwE+n8KOAfJR7yQyc5QfXomQ9W73uIFiQZ8LUWBgQ==}
     engines: {node: '>=18.0.0'}
 
   '@trigger.dev/core-backend@3.0.0-beta.50':
@@ -2131,7 +2131,7 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
-  '@tegonhq/sdk@0.1.3(typescript@5.5.4)':
+  '@tegonhq/sdk@0.1.5(typescript@5.5.4)':
     dependencies:
       '@trigger.dev/sdk': 3.0.0-beta.50(typescript@5.5.4)
       axios: 1.7.4(debug@4.3.6)
