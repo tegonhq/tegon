@@ -10,6 +10,7 @@ import ReplicationService from 'modules/replication/replication.service';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { AppModule } from './app.module';
+import { LoggerService } from 'modules/logger/logger.service';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (BigInt.prototype as any).toJSON = function () {
@@ -17,7 +18,9 @@ import { AppModule } from './app.module';
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new LoggerService('Tegon'),
+  });
 
   // Validation
   app.useGlobalPipes(new ValidationPipe({}));
