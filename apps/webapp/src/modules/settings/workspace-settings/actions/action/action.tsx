@@ -20,8 +20,6 @@ import { SettingSection } from 'modules/settings/setting-section';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 import { ActionAccessGuard } from 'common/wrappers/action-access-guard';
 
-import { useCurrentWorkspace } from 'hooks/workspace';
-
 import { useGetExternalActionDataQuery } from 'services/action';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -33,7 +31,6 @@ export const Action = () => {
   const { actionSlug } = useParams<{ actionSlug: string }>();
   const { actionsStore } = useContextStore();
   const action = actionsStore.getAction(actionSlug);
-  const workspace = useCurrentWorkspace();
 
   const { data: latestAction, isLoading } =
     useGetExternalActionDataQuery(actionSlug);

@@ -76,9 +76,14 @@ export function FormField({ name, control, config }: FormControllerProps) {
                 <FormDescription>{config.description}</FormDescription>
               )}
               <FormControl>
-                <Select {...field}>
-                  <SelectTrigger className="h-7 py-1 flex gap-1 items-center">
-                    <SelectValue placeholder={config.title} />
+                <Select
+                  onValueChange={(value: string) => {
+                    field.onChange(value);
+                  }}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="flex gap-1 items-center">
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
