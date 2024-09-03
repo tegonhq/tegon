@@ -96,7 +96,7 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
       });
     } else {
       setFilter(value as KeyType);
-      focus();
+      inputRef.current.focus();
     }
   };
 
@@ -109,6 +109,8 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
 
   const onChange = (value: string[] | number[], filterType: FilterTypeEnum) => {
     clearTimeoutValue();
+    inputRef.current.focus();
+
     if (value.length === 0) {
       return applicationStore.deleteFilter(filter);
     }

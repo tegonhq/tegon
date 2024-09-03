@@ -37,18 +37,12 @@ export function IssueStatusDropdown({
     return workflow;
   };
 
-  // const getWorkflowIcon = (workflowName: WorkflowType['name']) => {
-  //   const WorkflowIcon = WORKFLOW_CATEGORY_ICONS[workflowName];
-
-  //   return <WorkflowIcon />;
-  // };
-
   return (
     <div>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            variant="ghost"
+            variant="link"
             role="combobox"
             size="sm"
             aria-expanded={open}

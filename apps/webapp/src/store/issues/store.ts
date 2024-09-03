@@ -63,11 +63,13 @@ export const IssuesStore: IAnyStateTreeNode = types
       }
 
       return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
+        const isTeamIssues = teamId ? issue.teamId === teamId : true;
+
         if (!showSubIssues) {
-          return !issue.assigneeId && !issue.parentId;
+          return !issue.assigneeId && !issue.parentId && isTeamIssues;
         }
 
-        return !issue.assigneeId;
+        return !issue.assigneeId && isTeamIssues;
       });
     },
     getIssuesForTeam(teamId: string) {
@@ -89,19 +91,28 @@ export const IssuesStore: IAnyStateTreeNode = types
         return issue.priority === priority && isTeamIssues && isSubIssue;
       });
     },
-    getIssuesForLabel(labelId: string | undefined, showSubIssues: boolean) {
+    getIssuesForLabel(
+      labelId: string | undefined,
+      teamId: string,
+      showSubIssues: boolean,
+    ) {
       if (!labelId) {
-        return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
-          showSubIssues
-            ? issue.labelIds.length === 0
-            : issue.labelIds.length === 0 && !issue.parentId,
+        return Array.from(self.issuesMap.values()).filter(
+          (issue: IssueType) => {
+            const isSubIssue = showSubIssues ? !issue.parentId : true;
+            const isTeamIssues = teamId ? issue.teamId === teamId : true;
+
+            return issue.labelIds.length === 0 && isSubIssue && isTeamIssues;
+          },
         );
       }
 
       return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
         showSubIssues
-          ? issue.labelIds.includes(labelId)
-          : issue.labelIds.includes(labelId) && !issue.parentId,
+          ? issue.labelIds.includes(labelId) && issue.teamId === teamId
+          : issue.labelIds.includes(labelId) &&
+            issue.teamId === teamId &&
+            !issue.parentId,
       );
     },
     getIssuesForNoLabel(showSubIssues: boolean, teamId: string) {

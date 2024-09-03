@@ -41,7 +41,7 @@ export function IssuePriorityDropdown({
     if (variant === IssuePriorityDropdownVariant.NO_BACKGROUND) {
       return (
         <Button
-          variant="ghost"
+          variant="link"
           role="combobox"
           size="sm"
           aria-expanded={open}

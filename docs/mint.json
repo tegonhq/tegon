@@ -85,8 +85,45 @@
         "api-reference/overview",
         {
           "group": "Issue API",
-          "pages": [ "api-reference/issue/create", "api-reference/issue/update" ]
+          "pages": [ "api-reference/issue/create", "api-reference/issue/update","api-reference/issue/delete","api-reference/issue/getIssue","api-reference/issue/move"]
+        },
+        {
+          "group":"Action API",
+          "pages":["api-reference/action/action_slug_run","api-reference/action/action_slug_inputs"]
+        },
+        {
+          "group":"AI Requests",
+          "pages":["api-reference/ai_requests/create","api-reference/ai_requests/stream"]
+        },
+        {
+          "group": "Issue Comments",
+          "pages": ["api-reference/issue_comments/create","api-reference/issue_comments/linked_comment","api-reference/issue_comments/getlinkedcomment","api-reference/issue_comments/getissuecommentId","api-reference/issue_comments/updateissuecommentId"]
+        },
+        {
+          "group": "Issue Relation",
+          "pages": ["api-reference/issue_relation/delete"]
+        },
+        {
+          "group": "Labels",
+          "pages": ["api-reference/labels/getlabels","api-reference/labels/createlabel","api-reference/labels/updatelabel","api-reference/labels/deletelabel"]
+        },
+        {
+          "group": "Linked Issue",
+          "pages": ["api-reference/linked_issue/createlinkedissue","api-reference/linked_issue/getlinkedissue","api-reference/linked_issue/updatelinkedissue","api-reference/linked_issue/deletelinkedissue","api-reference/linked_issue/getbysource","api-reference/linked_issue/getPATs","api-reference/linked_issue/postbysourceId" ]
+        },
+        {
+          "group": "Users",
+          "pages": ["api-reference/users/createPAT","api-reference/users/deletePAT","api-reference/users/getuser","api-reference/users/postuser"]
+        },
+        {
+          "group": "Views",
+          "pages": ["api-reference/views/getview"]
+        },
+        {
+          "group": "Teams",
+          "pages": ["api-reference/teams/get"]
         }
+        
       ]
     },
     {

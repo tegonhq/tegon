@@ -1,4 +1,3 @@
-import clone from 'lodash.clone';
 import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 
 import { DisplaySettingsModel, FiltersModel } from './models';
@@ -44,12 +43,14 @@ export const ApplicationStore: IAnyStateTreeNode = types
   })
   .actions((self) => ({
     updateFilters(updateBody: UpdateBody) {
-      const currentFilters = { ...self.filters };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const currentFilters = (self.filters as any).toJSON();
+
       const toUpdateBody = { ...updateBody };
-      const mergedAttributes = clone({
+      const mergedAttributes = {
         ...currentFilters,
         ...toUpdateBody,
-      });
+      };
 
       self.filters = FiltersModel.create(mergedAttributes);
 

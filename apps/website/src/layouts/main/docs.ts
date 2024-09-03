@@ -25,19 +25,19 @@ export const docsConfig: DocsConfig = {
   mainNav: [
     {
       title: 'Actions',
-      href: '/actions',
+      href: 'https://docs.tegon.ai/actions/overview',
     },
     {
       title: 'Documentation',
-      href: '/docs',
+      href: 'https://docs.tegon.ai',
     },
     {
       title: 'Releases',
-      href: '/releases',
+      href: 'https://github.com/tegonhq/tegon/releases',
     },
     {
       title: 'Company',
-      href: '/company',
+      href: 'https://tegon.ai/company',
     },
   ],
   sidebarNav: [],

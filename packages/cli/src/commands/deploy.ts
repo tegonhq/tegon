@@ -236,12 +236,10 @@ async function resourceCreation(
 const createTriggerConfigFile = (dir: string, workspaceId: string) => {
   const triggerConfigPath = path.join(dir, 'trigger.config.ts');
   const triggerConfigContent = `
-  export const resolveEnvVars: ResolveEnvironmentVariablesFunction = async ({
-  env,
-}) => {
+  export const resolveEnvVars = async () => {
   return {
     variables: {
-      BASE_HOST: ${process.env.BASE_HOST},
+      BASE_HOST: '${process.env.BASE_HOST}',
     },
   };
 };

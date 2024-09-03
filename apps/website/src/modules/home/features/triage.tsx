@@ -9,7 +9,7 @@ export function Triage() {
           'text-balance max-w-2xl text-xl font-medium text-foreground',
         )}
       >
-        Have omni-channel bug reporting system
+        Triage: omni-channel bug reporting system
       </h4>
 
       <div className="relative grid justify-center grid-cols-1 sm:grid-cols-12 divide-x-0 pt-0 grid-rows-[1fr_auto] divide-y divide-grid-dimmed lg:divide-x lg:divide-y-0">
@@ -18,7 +18,8 @@ export function Triage() {
             <div className="flex h-full max-w-lg flex-1 flex-col justify-start md:max-w-full">
               <h3 className="text-md">Central hub for bugs</h3>
               <p className="text-muted-foreground">
-                Automatically create bugs from various external sources.
+                Automatically create and manage bugs from 8+ external sources
+                (Slack, Email, Discord, Zendesk etc.) directly in Triage.
               </p>
             </div>
 
@@ -34,13 +35,14 @@ export function Triage() {
             </div>
           </div>
         </div>
-        <div className="col-span-1"></div>
+        <div className="col-span-1 my-6"></div>
         <div className="grid col-span-1 sm:col-span-12 lg:col-span-3">
           <div className="relative flex flex-col overflow-hidden">
             <div className="flex h-full max-w-lg flex-1 flex-col justify-start md:max-w-full">
-              <h3 className="text-md">Automatic grouping</h3>
+              <h3 className="text-md">Automatic Bug Grouping</h3>
               <p className="text-muted-foreground">
-                Automatically create bugs from various external sources.
+                Automatically categorize bugs based on labels ensuring a more
+                organized and efficient view of the bugs.
               </p>
             </div>
 
@@ -56,14 +58,15 @@ export function Triage() {
             </div>
           </div>
         </div>
-        <div className="col-span-1"></div>
+        <div className="col-span-1 my-6"></div>
 
         <div className="grid col-span-1 sm:col-span-12 lg:col-span-3">
           <div className="relative flex flex-col overflow-hidden">
             <div className="flex h-full max-w-lg flex-1 flex-col justify-start md:max-w-full">
-              <h3 className="text-md">AI suggestions</h3>
+              <h3 className="text-md">AI Suggestions</h3>
               <p className="text-muted-foreground">
-                Automatically create bugs from various external sources.
+                Use AI to automatically suggest metadata in bugs and route them
+                to appropriate destinations, streamlining the triage process.
               </p>
 
               <div className="flex gap-2"></div>

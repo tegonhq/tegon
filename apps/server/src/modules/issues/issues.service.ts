@@ -50,6 +50,15 @@ export default class IssuesService {
     private aiRequestsService: AIRequestsService,
   ) {}
 
+  async getIssueById(issueParams: IssueRequestParamsDto): Promise<Issue> {
+    return this.prisma.issue.findUnique({
+      where: { id: issueParams.issueId },
+      include: {
+        team: true,
+      },
+    });
+  }
+
   /**
    * Creates a new issue using the provided issue data and performs related operations.
    * @param teamRequestParams The team request parameters.
@@ -663,6 +672,9 @@ export default class IssuesService {
 
     return this.prisma.issue.findMany({
       where: where as Prisma.IssueWhereInput,
+      include: {
+        team: true,
+      },
     });
   }
 }
