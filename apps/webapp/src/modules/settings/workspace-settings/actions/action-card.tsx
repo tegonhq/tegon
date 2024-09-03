@@ -28,7 +28,7 @@ export function ActionCard({ action }: ActionCardProps) {
           </CardTitle>
           <CardDescription>{action.description}</CardDescription>
         </CardHeader>
-        {action.config.integrations && (
+        {/* {action.config.integrations && (
           <CardFooter className="flex justify-start">
             {action.config.integrations.map((integration: string) => (
               <Badge
@@ -40,7 +40,7 @@ export function ActionCard({ action }: ActionCardProps) {
               </Badge>
             ))}
           </CardFooter>
-        )}
+        )} */}
       </Card>
     </Link>
   );

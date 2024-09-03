@@ -41,11 +41,9 @@ export async function getExternalActionWithSlug(slug: string) {
     (action: { slug: string }) => action.slug === slug,
   );
 
-  const config = await getActionConfig(action?.slug);
-
   const description = await getActionReadme(slug);
 
-  return { ...action, guide: description, config };
+  return { ...action, guide: description };
 }
 
 export async function getActionConfig(slug: string) {

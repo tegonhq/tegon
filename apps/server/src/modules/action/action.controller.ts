@@ -78,13 +78,13 @@ export class ActionController {
     );
   }
 
-  @Get(':slug/config')
+  @Get(':slug/inputs')
   @UseGuards(ActionGuard)
-  async getConfigForSlug(
+  async getInputsForSlug(
     @Param() slugDto: { slug: string },
     @Query() configParams: { workspaceId: string },
   ) {
-    return await this.actionService.getConfig(
+    return await this.actionService.getInputsForSlug(
       slugDto.slug,
       configParams.workspaceId,
     );

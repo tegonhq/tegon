@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@tegonhq/sdk':
-        specifier: ^0.1.4
-        version: 0.1.4(typescript@5.5.4)
+        specifier: ^0.1.5
+        version: 0.1.5(typescript@5.5.4)
       '@tiptap/extension-blockquote':
         specifier: ^2.4.0
         version: 2.6.6(@tiptap/core@2.6.6(@tiptap/pm@2.6.6))
@@ -436,8 +436,8 @@ packages:
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
 
-  '@tegonhq/sdk@0.1.4':
-    resolution: {integrity: sha512-QU9rCljzFSePwR/G8JAD/noe5ErtXLTRwLuD/7lpUuEogPJ3X8KdTPgBy5a9KbCoGjVWXDcaA7ieoZbJrr24RA==}
+  '@tegonhq/sdk@0.1.5':
+    resolution: {integrity: sha512-ww8kDympNa/tqrRyiifaANjvy7Sros3T5y0b5/Pb+rOrWcwE+n8KOAfJR7yQyc5QfXomQ9W73uIFiQZ8LUWBgQ==}
     engines: {node: '>=18.0.0'}
 
   '@tiptap/core@2.6.6':
@@ -2393,7 +2393,7 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
-  '@tegonhq/sdk@0.1.4(typescript@5.5.4)':
+  '@tegonhq/sdk@0.1.5(typescript@5.5.4)':
     dependencies:
       '@trigger.dev/sdk': 3.0.0-beta.50(typescript@5.5.4)
       axios: 1.7.5(debug@4.3.6)

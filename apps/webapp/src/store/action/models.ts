@@ -6,6 +6,7 @@ export const Action = types.model({
   updatedAt: types.string,
 
   name: types.string,
+  description: types.string,
   slug: types.string,
   config: types.string,
   version: types.string,

@@ -2,6 +2,7 @@ export enum InputTypeEnum {
   Text = 'text',
   Number = 'number',
   Array = 'array',
+  Select = 'select',
 }
 
 export interface ValidationConfig {
@@ -30,6 +31,11 @@ export interface NumberFieldConfig extends BaseFieldConfig {
   type: InputTypeEnum.Number;
 }
 
+export interface SelectFieldConfig extends BaseFieldConfig {
+  type: InputTypeEnum.Select;
+  options: Array<{ label: string; value: string }>;
+}
+
 export interface ArrayFieldConfig extends BaseFieldConfig {
   type: InputTypeEnum.Array;
   items: {
@@ -41,7 +47,8 @@ export interface ArrayFieldConfig extends BaseFieldConfig {
 export type FieldConfig =
   | TextFieldConfig
   | NumberFieldConfig
-  | ArrayFieldConfig;
+  | ArrayFieldConfig
+  | SelectFieldConfig;
 
 export interface FormSchema {
   title: string;

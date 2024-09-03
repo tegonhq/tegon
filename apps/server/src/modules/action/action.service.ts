@@ -8,13 +8,10 @@ import {
   ActionStatusEnum,
   UpdateActionInputsDto,
   JsonObject,
-  IntegrationAccount,
   ActionTypesEnum,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
-
-import { generateKeyForUserId } from 'common/authentication';
 
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
@@ -331,7 +328,7 @@ export default class ActionService {
     );
   }
 
-  async getConfig(slug: string, workspaceId: string) {
+  async getInputsForSlug(slug: string, workspaceId: string) {
     // Find the action by slug and workspace
     const action = await this.prisma.action.findFirst({
       where: {
@@ -340,40 +337,15 @@ export default class ActionService {
       },
     });
 
-    const integrationAccounts: Record<string, IntegrationAccount> = {};
-
-    for (const integrationSlug of action.integrations) {
-      const integrationAccount = await this.prisma.integrationAccount.findFirst(
-        {
-          where: {
-            integrationDefinition: { slug: integrationSlug },
-            workspaceId,
-            deleted: null,
-          },
-        },
-      );
-
-      if (integrationAccount) {
-        integrationAccounts[integrationSlug] = integrationAccount;
-      }
-    }
-    const actionUser = await this.prisma.usersOnWorkspaces.findFirst({
-      where: {
-        workspaceId: action.workspaceId,
-        user: { username: action.slug },
-      },
-    });
-    const accessToken = await generateKeyForUserId(actionUser.userId);
+    const triggerPayload = await prepareTriggerPayload(this.prisma, action.id);
 
     return await this.triggerdev.triggerTask(
       action.workspaceId,
       action.slug,
       {
-        event: ActionTypesEnum.GET_CONFIG,
-        accessToken,
+        event: ActionTypesEnum.GET_INPUTS,
         workspaceId,
-        userId: actionUser.id,
-        integrationAccounts,
+        ...triggerPayload,
       },
       { locktoVersion: action.triggerVersion },
     );

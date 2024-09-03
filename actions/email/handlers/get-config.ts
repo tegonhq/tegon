@@ -1,13 +1,10 @@
-import { ActionEventPayload, Team } from '@tegonhq/sdk';
-import axios from 'axios';
-import config from 'config.json';
+import { ActionEventPayload, getTeams, Team } from '@tegonhq/sdk';
+
 export const getConfig = async (payload: ActionEventPayload) => {
   const { workspaceId } = payload;
 
   // Fetch teams from the API
-  //   const teams = await getTeams({ workspaceId });
-  const teams = (await axios.get(`/api/v1/teams?workspaceId=${workspaceId}`))
-    .data;
+  const teams = await getTeams({ workspaceId });
 
   // Create a map of teams with label and value properties
   const teamOptions = teams.map((team: Team) => ({
@@ -15,9 +12,34 @@ export const getConfig = async (payload: ActionEventPayload) => {
     value: team.id,
   }));
 
-  // Update the config with the team options
-  config.inputs.properties.teamMappings.items.properties.teamId.options =
-    teamOptions;
-
-  return config;
+  return {
+    type: 'object',
+    properties: {
+      teamMappings: {
+        type: 'array',
+        title: 'Id to Team Mappings',
+        description: 'Map a unique Id to a team',
+        items: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'text',
+              title: 'Unique Id',
+              validation: {
+                required: true,
+              },
+            },
+            teamId: {
+              type: 'select',
+              title: 'Team ID',
+              validation: {
+                required: true,
+              },
+              options: teamOptions,
+            },
+          },
+        },
+      },
+    },
+  };
 };

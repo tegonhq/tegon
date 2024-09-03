@@ -5,7 +5,7 @@ import { getConfig } from 'handlers/get-config';
 
 export async function run(eventPayload: ActionEventPayload) {
   switch (eventPayload.event) {
-    case ActionTypesEnum.GET_CONFIG:
+    case ActionTypesEnum.GET_INPUTS:
       return getConfig(eventPayload);
 
     case ActionTypesEnum.SOURCE_WEBHOOK:

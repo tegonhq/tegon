@@ -10,6 +10,7 @@ export interface ActionType {
   version: string;
   slug: string;
   name: string;
+  description: string;
   integrations: string[];
   cron?: string;
   workspaceId: string;

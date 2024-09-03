@@ -20,6 +20,8 @@ import { SettingSection } from 'modules/settings/setting-section';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 import { ActionAccessGuard } from 'common/wrappers/action-access-guard';
 
+import { useCurrentWorkspace } from 'hooks/workspace';
+
 import { useGetExternalActionDataQuery } from 'services/action';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -31,6 +33,7 @@ export const Action = () => {
   const { actionSlug } = useParams<{ actionSlug: string }>();
   const { actionsStore } = useContextStore();
   const action = actionsStore.getAction(actionSlug);
+  const workspace = useCurrentWorkspace();
 
   const { data: latestAction, isLoading } =
     useGetExternalActionDataQuery(actionSlug);
@@ -52,7 +55,7 @@ export const Action = () => {
         <div className="w-full p-6">
           <SettingSection
             title={action.name}
-            description={latestAction?.description}
+            description={action.description}
             metadata={metadata}
           >
             <Tabs defaultValue="overview">
@@ -69,18 +72,16 @@ export const Action = () => {
                     Overview
                   </TabsTrigger>
 
-                  {action && action.config.inputs && (
-                    <TabsTrigger
-                      value="configuration"
-                      className={cn(
-                        buttonVariants({
-                          variant: 'secondary',
-                        }),
-                      )}
-                    >
-                      Configuration
-                    </TabsTrigger>
-                  )}
+                  <TabsTrigger
+                    value="configuration"
+                    className={cn(
+                      buttonVariants({
+                        variant: 'secondary',
+                      }),
+                    )}
+                  >
+                    Configuration
+                  </TabsTrigger>
                 </>
               </TabsList>
               <TabsContent value="overview">
@@ -98,11 +99,10 @@ export const Action = () => {
                   </div>
                 </div>
               </TabsContent>
-              {action && action.config?.inputs && (
-                <TabsContent value="configuration">
-                  <Configuration schema={action.config?.inputs} />
-                </TabsContent>
-              )}
+
+              <TabsContent value="configuration">
+                <Configuration />
+              </TabsContent>
             </Tabs>
           </SettingSection>
         </div>

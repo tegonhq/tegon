@@ -8,35 +8,5 @@
       "entities": [ "email" ]
     }
   ],
-  "integrations": [ "email" ],
-  "inputs": {
-    "type": "object",
-    "properties": {
-      "teamMappings": {
-        "type": "array",
-        "title": "Id to Team Mappings",
-        "description": "Map a unique Id to a team",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "text",
-              "title": "Unique Id",
-              "validation": {
-                "required": true
-              }
-            },
-            "teamId": {
-              "type": "select",
-              "title": "Team ID",
-              "validation": {
-                "required": true
-              },
-              "options": [ ]
-            }
-          }
-        }
-      }
-    }
-  }
+  "integrations": [ "email" ]
 }

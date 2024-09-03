@@ -20,6 +20,7 @@ export async function saveActionData(
         status: record.data.status,
         version: record.data.version,
         name: record.data.name,
+        description: record.data.description,
         slug: record.data.slug,
 
         integrations: record.data.integrations,

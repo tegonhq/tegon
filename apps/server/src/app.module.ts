@@ -1,5 +1,7 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { PrismaModule } from 'nestjs-prisma';
@@ -41,6 +43,15 @@ import { AppService } from './app.service';
 
 @Module({
   imports: [
+    CacheModule.register({
+      isGlobal: true,
+    }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 10,
+      },
+    ]),
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
     ConfigModule.forRoot({ envFilePath: '.env' }),
     PrismaModule.forRoot({
