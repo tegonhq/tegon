@@ -6,6 +6,8 @@ import {
   Param,
   Post,
   Query,
+  Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -15,6 +17,7 @@ import {
   PublicUser,
   User,
 } from '@tegonhq/types';
+import { Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -100,5 +103,16 @@ export class UsersController {
     );
 
     return user;
+  }
+
+  @Get('impersonate/:userId')
+  @UseGuards(AuthGuard)
+  async impersonate(
+    @Param() userIdBody: UserIdParams,
+    @Query() { key }: { key: string },
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    return this.usersService.impersonate(key, userIdBody.userId, res, req);
   }
 }
