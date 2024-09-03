@@ -18,7 +18,7 @@ export class LoggerService {
   private logFileName: string = 'combined.log';
 
   constructor(private readonly context?: string) {
-    // Set log level to only print log which are having higher or equal level the input level.
+    // Set log level to only print log which are having higher or equal level then input level.
     this.logLevel = this.loggerConfigs.level ?? 'info';
 
     // Common format for console and file logs
