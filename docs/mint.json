@@ -48,12 +48,39 @@
     "type": "github",
     "url": "https://github.com/tegonhq/tegon"
   },
-
+  "redirects": [
+    {
+      "source": "/fundamentals/actions",
+      "destination": "/actions/overview"
+    },
+    {
+      "source": "/fundamentals/issues",
+      "destination": "/guides/issues"
+    },
+    {
+      "source": "/fundamentals/triage",
+      "destination": "/guides/triage"
+    },
+    {
+      "source": "/fundamentals/cycles",
+      "destination": "/guides/cycles"
+    }
+  ],
   "anchors": [
     {
-      "name": "Guides",
+      "name": "User Guides",
       "icon": "book",
       "url": "guides"
+    },
+    {
+      "name": "API",
+      "icon": "brackets-curly",
+      "url": "api-reference"
+    },
+    {
+      "name": "Actions",
+      "icon": "code",
+      "url": "actions"
     }
   ],
   "navigation": [
@@ -61,23 +88,42 @@
       "group": "Get Started",
       "pages": [
         "introduction",
-        "quickstart"
+        "quickstart",
+        "changelog"
       ]
     },
     {
-      "group": "Guide",
+      "group": "User Guides",
       "pages": [
         "guides/issues",
         "guides/triage",
-        "guides/views"
+        "guides/views",
+        "guides/cycles"
       ]
     },
     {
-      "group": "Integrations",
+      "group": "Fundamentals",
       "pages": [
-        "integrations/overview",
-        "integrations/contribute"
+        "fundamentals/issues",
+        "fundamentals/triage",
+        "fundamentals/cycles",
+        "fundamentals/actions"
       ]
+    },
+
+    {
+      "group": "Actions",
+      "pages": [
+        "actions/overview",
+        "actions/regular-triggers",
+        "actions/integration-based-triggers",
+        "actions/scheduled-triggers",
+        "actions/config"
+      ]
+    },
+    {
+      "group": "Deployment",
+      "pages": [ "actions/deployment/deploying-actions" ]
     },
     {
       "group": "API reference",
@@ -85,49 +131,49 @@
         "api-reference/overview",
         {
           "group": "Issue API",
-          "pages": [ "api-reference/issue/create", "api-reference/issue/update","api-reference/issue/delete","api-reference/issue/getIssue","api-reference/issue/move"]
+          "pages": [ "api-reference/issue/create", "api-reference/issue/update", "api-reference/issue/delete", "api-reference/issue/getIssue", "api-reference/issue/move" ]
         },
         {
-          "group":"Action API",
-          "pages":["api-reference/action/action_slug_run","api-reference/action/action_slug_inputs"]
+          "group": "Action API",
+          "pages": [ "api-reference/action/action_slug_run", "api-reference/action/action_slug_inputs" ]
         },
         {
-          "group":"AI Requests",
-          "pages":["api-reference/ai_requests/create","api-reference/ai_requests/stream"]
+          "group": "AI Requests",
+          "pages": [ "api-reference/ai_requests/create", "api-reference/ai_requests/stream" ]
         },
         {
           "group": "Issue Comments",
-          "pages": ["api-reference/issue_comments/create","api-reference/issue_comments/linked_comment","api-reference/issue_comments/getlinkedcomment","api-reference/issue_comments/getissuecommentId","api-reference/issue_comments/updateissuecommentId"]
+          "pages": [ "api-reference/issue_comments/create", "api-reference/issue_comments/linked_comment", "api-reference/issue_comments/getlinkedcomment", "api-reference/issue_comments/getissuecommentId", "api-reference/issue_comments/updateissuecommentId" ]
         },
         {
           "group": "Issue Relation",
-          "pages": ["api-reference/issue_relation/delete"]
+          "pages": [ "api-reference/issue_relation/delete" ]
         },
         {
           "group": "Labels",
-          "pages": ["api-reference/labels/getlabels","api-reference/labels/createlabel","api-reference/labels/updatelabel","api-reference/labels/deletelabel"]
+          "pages": [ "api-reference/labels/getlabels", "api-reference/labels/createlabel", "api-reference/labels/updatelabel", "api-reference/labels/deletelabel" ]
         },
         {
           "group": "Linked Issue",
-          "pages": ["api-reference/linked_issue/createlinkedissue","api-reference/linked_issue/getlinkedissue","api-reference/linked_issue/updatelinkedissue","api-reference/linked_issue/deletelinkedissue","api-reference/linked_issue/getbysource","api-reference/linked_issue/getPATs","api-reference/linked_issue/postbysourceId" ]
+          "pages": [ "api-reference/linked_issue/createlinkedissue", "api-reference/linked_issue/getlinkedissue", "api-reference/linked_issue/updatelinkedissue", "api-reference/linked_issue/deletelinkedissue", "api-reference/linked_issue/getbysource", "api-reference/linked_issue/getPATs", "api-reference/linked_issue/postbysourceId" ]
         },
         {
           "group": "Users",
-          "pages": ["api-reference/users/createPAT","api-reference/users/deletePAT","api-reference/users/getuser","api-reference/users/postuser"]
+          "pages": [ "api-reference/users/createPAT", "api-reference/users/deletePAT", "api-reference/users/getuser", "api-reference/users/postuser" ]
         },
         {
           "group": "Views",
-          "pages": ["api-reference/views/getview"]
+          "pages": [ "api-reference/views/getview" ]
         },
         {
           "group": "Teams",
-          "pages": ["api-reference/teams/get"]
+          "pages": [ "api-reference/teams/get" ]
         }
-        
+
       ]
     },
     {
-      "group": "Tegon Open Source (OSS)",
+      "group": "Open source",
       "pages": [
         "oss/local-setup",
         "oss/self-deployment"

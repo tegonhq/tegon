@@ -52,7 +52,7 @@ export function Home() {
       </section>
 
       <section className="rounded bg-background flex justify-center mt-16 gap-2 items-center">
-        <div> Backend by</div>
+        <div> Backed by</div>
         <Image
           src="/yc.png"
           width={120}

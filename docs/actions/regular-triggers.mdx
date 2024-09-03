@@ -1,0 +1,114 @@
+---
+title: 'Regular triggers'
+sidebarTitle: "Regular triggers"
+---
+
+Run a trigger on any Tegon event. 
+
+## Example task
+
+#### A task that does an OpenAI call to find solution for a bug
+
+This trigger which call OpenAI to search for possible solution when a issue is created and tagged as `bug`. First let's write create a new folder.
+
+```bash 
+mkdir bug-resolution
+```
+
+1. Now let's create a config to tell Tegon to trigger the function when issue is created.
+
+```json bug-resolution/config.json
+{
+  "slug": "bug-resolver",
+  "name": "Bug Resolver",
+  "triggers": [
+    {
+      "type": "on_create",
+      "entities": ["Issue"]
+    }
+  ],
+  "integrations": []
+}
+
+```
+
+2. Then we can write the handler to take the payload of the issue and send to OpenAI
+
+```ts bug-resolution/index.ts
+import { ActionEventPayload } from '@tegonhq/sdk';
+import {
+  ActionEventPayload,
+  createIssueComment,
+  getLabels,
+  Label,
+  getIssueById,
+  getAIRequest,
+} from '@tegonhq/sdk';
+import axios from 'axios';
+
+export async function run(eventPayload: ActionEventPayload) {
+  const { modelId: issueId, action } = actionPayload;
+  const { data: actionInput } = action;
+
+  const issue = await getIssueById({ issueId });
+
+  // Get all labels for the workspace
+  const labels = await getLabels({
+    workspaceId: issue.team.workspaceId,
+    teamId: issue.teamId,
+  });
+
+  // Map the labels of the issue with all labels
+  const labelMap = Object.fromEntries(
+    labels.map((label: Label) => [label.id, label.name]),
+  );
+
+  // Check if bug label is assigned to issue
+  const hasBugLabel = issue.labelIds.some(
+    (labelId: string) => labelMap[labelId].toLowerCase() === 'bug',
+  );
+
+  if (!hasBugLabel) {
+    return null;
+  }
+
+  const requestData = {
+    messages: [
+      { role: 'system', content: PARTIAL_SOLUTION_PROMPT },
+      {
+        role: 'user',
+        content: `[INPUT] bug_description: ${issue.description}`,
+      },
+    ],
+    llmModel: LLMMappings.GPT35TURBO,
+    model: 'BugSuggestion',
+    workspaceId: issue.team.workspaceId,
+  };
+
+  const aiResponse = await getAIRequest(requestData);
+
+  const pattern = /\[OUTPUT\]\s*([\s\S]*)/;
+  const match = aiResponse.match(pattern);
+  let response;
+  [, response] = match;
+
+  const tiptapJson = await convertMarkdownToTiptapJson(response);
+
+  return await createIssueComment({
+    issueId,
+    body: tiptapJson,
+  });
+}
+
+```
+
+
+You can check the prompt [here](https://github.com/tegonhq/tegon/blob/main/actions/bug-enricher/utils.ts).
+
+3. Finally you can deploy the action to your workspace.
+
+```bash
+TOKEN=<your-pat> npx @tegonhq/cli deploy --workspace-id="<workspace-id>"
+```
+
+<Tip>You can find the whole code for this example trigger [here](https://github.com/tegonhq/tegon/tree/main/actions/bug-enricher)</Tip>

@@ -3,15 +3,19 @@ title: "Local Setup"
 description: "Run tegon in local for development"
 ---
 
-## Instructions
+###  Cloning the docker Repository
 
-1. Install Docker on your workstation (see instructions). Make sure you're on the latest version of docker-compose.
+To streamline your setup, we recommend using our Docker repository, which comes pre-configured with essential services like Supertokens, Typesense, Redis, and PostgreSQL. 
+This setup also includes the server and webapp, making it easier to manage everything in one place.
 
-2. Run the following commands in your terminal:
+#### Steps:
+
+1. **Install Docker:** Make sure Docker is installed on your workstation, and ensure you're using the latest version of Docker Compose. [See instructions here](https://docs.docker.com/get-docker/).
+
+2. **Clone the Docker Repository:**
 
 ```bash
 git clone https://github.com/tegonhq/docker.git
-git clone https://github.com/tegonhq/tegon.git
 cd docker
 ```
 
@@ -21,18 +25,39 @@ cd docker
 cp .env.example .env
 ```
 
-4. Run the start script and follow the prompts, We handle 2 major steps in start script setting up trigger.dev and setting up tegon for you. 
+4. Run the start script
 
 ```bash
 ./start.sh
 ```
 
-5. Depending on the contribution (server or frontend) you can comment that service or change the port. 
+
+<Note>
+If you plan to work on the server or frontend locally, you can comment out the corresponding services in the Docker setup or adjust the ports as needed.
+</Note>
 
 
-## Local setup for webapp and server
+###  Cloning the Tegon Repository
 
-1. Create a `.env` file inside server folder by copying the content from `.env.example` and change values according to your need.
+Once Docker is set up, you can proceed with cloning the Tegon repository to start development.
+
+#### Steps:
+
+1. Clone the Tegon Repository:
+
+```bash
+git clone https://github.com/tegonhq/tegon.git
+cd tegon
+```
+
+2. Create a `.env` file
+
+```bash
+cp .env.example .env
+```
+
+
+3. Run Migrations and Start Development Server:
 
 ```bash
 pnpm migrate

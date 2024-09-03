@@ -1,0 +1,80 @@
+---
+title: 'Config'
+sidebarTitle: "config.json"
+---
+
+Let’s take a look at a basic config.json file. This file is used to configure your action and how it gets triggered.
+
+### Example config.json
+
+```json
+{
+  "slug": "slack",
+  "name": "Slack",
+  "triggers": [
+    {
+      "type": "on_create",
+      "entities": [ "IssueComment", "LinkedIssue" ]
+    },
+    {
+      "type": "source_webhook",
+      "entities": [ "slack" ]
+    }
+  ],
+  "integrations": [ "slack" ]
+}
+```
+
+
+## `config.json` Documentation
+
+The `config.json` file is used to configure actions in Tegon. Each action has a unique set of properties that define how it behaves, when it is triggered, and which integrations it interacts with. Below is an explanation of the fields used in the configuration file:
+
+### Fields Overview
+
+#### `slug`
+- **Type:** `string`
+- **Description:** A unique identifier for each action. This is used internally by Tegon to trigger the corresponding action when specific conditions are met.
+- **Example:** `"slug": "slack"`
+
+#### `name`
+- **Type:** `string`
+- **Description:** The display name of the action. This name is shown in various places within Tegon where the action has made changes, such as when an issue is created or commented on.
+- **Example:** `"name": "Slack"`
+
+### `triggers`
+
+The `triggers` field defines the conditions under which the action is executed. This is a list of objects, each specifying a type of trigger and the entities it applies to.
+
+#### `type`
+- **Type:** `string`
+- **Description:** The type of trigger that activates the action. The available types are:
+  - `on_create`: Triggered when an entity is created.
+  - `on_update`: Triggered when an entity is updated.
+  - `on_delete`: Triggered when an entity is deleted.
+  - `source_webhook`: Used when the action should be triggered by an external event, typically received from an integration like Slack or GitHub.
+- **Example:**
+  ```json
+  {
+    "type": "on_create"
+  }
+
+#### `entities`
+- **Type:** array of strings
+- **Description:** Specifies the entities that the trigger applies to. Entities represent different objects or records within Tegon, such as issues or comments. Common entities include:
+  - `Issue`: Refers to an issue in the project management system.
+  - `IssueComment`: Refers to a comment made on an issue.
+  - `LinkedIssue`: Refers to an when a url is linked to an issue.
+
+Entities when used `source_webhook` as type are integrations
+
+### `integrations`
+
+The integrations field lists the external systems that the action interacts with. These are the integrations that the action will require access to in order to perform its tasks.
+- **Type:** `array of string`
+- **Description:** Specifies which integrations the action will utilize. For example, if the action is meant to post updates to Slack, slack would be listed here.
+- **Example:**
+  ```json
+  {
+    "integrations": [ "slack" ]
+  }
