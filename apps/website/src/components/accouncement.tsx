@@ -8,6 +8,9 @@ export function Announcement() {
     <Button
       variant="secondary"
       className="inline-flex items-center font-medium"
+      onClick={() => {
+        window.location.href = 'https://docs.tegon.ai/actions/overview';
+      }}
     >
       <Actions className="h-4 w-4" />
       <Separator className="mx-2 h-4" orientation="vertical" />

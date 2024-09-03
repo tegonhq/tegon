@@ -3,10 +3,9 @@ import { RiGithubFill } from '@remixicon/react';
 import { buttonVariants } from '@tegonhq/ui/components/button';
 import { SlackIcon } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
+import { siteConfig } from 'config/site';
 import { useState } from 'react';
 import React from 'react';
-
-import { siteConfig } from 'config/site';
 import { formatNumber } from 'utils';
 
 import { MainNav } from './main-nav';
