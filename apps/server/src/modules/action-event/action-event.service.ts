@@ -81,6 +81,7 @@ export default class ActionEventService {
   async triggerAction(actionEvent: ActionEvent, actionEntity: ActionEntity) {
     const addedTaskInfo = await prepareTriggerPayload(
       this.prisma,
+      this.triggerdevService,
       actionEntity.action.id,
     );
 

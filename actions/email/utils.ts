@@ -1,4 +1,4 @@
-import { IntegrationAccount, Workflow } from '@tegonhq/sdk';
+import { IntegrationAccount, JsonObject, Workflow } from '@tegonhq/sdk';
 import axios from 'axios';
 import { GmailAttachment, GmailHeaders } from 'types';
 
@@ -26,33 +26,14 @@ import FormData from 'form-data';
 export async function getHeaders(
   integrationAccount: IntegrationAccount,
 ): Promise<GmailHeaders> {
-  const accessToken = await getGMailAccessToken(integrationAccount);
+  const integrationConfig =
+    integrationAccount.integrationConfiguration as JsonObject;
   return {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${integrationConfig.token}`,
     },
   };
-}
-
-export async function getGMailAccessToken(
-  integrationAccount: IntegrationAccount,
-) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const integrationConfig = integrationAccount.integrationConfiguration as any;
-  const accessResponse = await axios.post(
-    'https://oauth2.googleapis.com/token',
-    {
-      client_id: integrationAccount.integrationDefinition.clientId,
-      client_secret: integrationAccount.integrationDefinition.clientSecret,
-      grant_type: 'refresh_token',
-      refresh_token: integrationConfig.refreshToken,
-      redirect_uri: integrationConfig.redirectUrl,
-    },
-    { headers: {} },
-  );
-
-  return accessResponse.data.access_token;
 }
 
 export async function getUniqueId(deliveredTo: string) {

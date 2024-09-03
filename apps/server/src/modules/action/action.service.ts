@@ -315,7 +315,11 @@ export default class ActionService {
     });
 
     // Prepare the trigger payload
-    const addedTaskInfo = await prepareTriggerPayload(this.prisma, action.id);
+    const addedTaskInfo = await prepareTriggerPayload(
+      this.prisma,
+      this.triggerdev,
+      action.id,
+    );
 
     // Trigger the task asynchronously with the payload and added task info
     await this.triggerdev.triggerTaskAsync(
@@ -338,7 +342,11 @@ export default class ActionService {
       },
     });
 
-    const triggerPayload = await prepareTriggerPayload(this.prisma, action.id);
+    const triggerPayload = await prepareTriggerPayload(
+      this.prisma,
+      this.triggerdev,
+      action.id,
+    );
 
     return await this.triggerdev.triggerTask(
       action.workspaceId,

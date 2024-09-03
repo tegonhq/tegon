@@ -25,7 +25,7 @@ export function getSlackHeaders(integrationAccount: IntegrationAccount) {
   return {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      Authorization: `Bearer ${integrationConfig.api_key}`,
+      Authorization: `Bearer ${integrationConfig.token}`,
     },
   };
 }

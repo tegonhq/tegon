@@ -10,9 +10,8 @@ import {
 import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
 
-import { generateKeyForUserId } from 'common/authentication';
 
-import { getIntegrationAccountsFromActions } from 'modules/action-event/action-event.utils';
+import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
 import {
   TriggerdevService,
   TriggerProjects,
@@ -69,44 +68,16 @@ export default class WebhookService {
       include: { action: true },
     });
 
-    const uniqueIntegrations = [
-      ...new Set(
-        actionEntities.flatMap(
-          (actionEntity: ActionEntity) => actionEntity.action.integrations,
-        ),
-      ),
-    ];
-
-    const integrationAccountsMap = await getIntegrationAccountsFromActions(
-      this.prisma,
-      workspaceId,
-      uniqueIntegrations,
-    );
-
-    integrationAccountsMap[integrationAccount.integrationDefinition.slug] =
-      integrationAccount;
-
     // TODO (actons): Send all integration accounts based on the ask
     actionEntities.map(async (actionEntity: ActionEntity) => {
-      const actionUser = await this.prisma.usersOnWorkspaces.findFirst({
-        where: {
-          workspaceId: actionEntity.action.workspaceId,
-          user: { username: actionEntity.action.slug },
-        },
-      });
-      const accessToken = await generateKeyForUserId(actionUser.userId);
-
       this.triggerDevService.triggerTaskAsync(
         workspaceId,
         actionEntity.action.slug,
         {
           event: ActionTypesEnum.SOURCE_WEBHOOK,
-          action: actionEntity.action,
           eventBody,
           eventHeaders,
-          accessToken,
-          userId: actionUser.id,
-          integrationAccounts: integrationAccountsMap,
+          ...(await prepareTriggerPayload(this.prisma, this.triggerDevService, actionEntity.action.id))
         },
         { lockToVersion: actionEntity.action.triggerVersion },
       );

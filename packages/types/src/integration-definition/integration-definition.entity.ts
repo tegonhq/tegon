@@ -1,4 +1,4 @@
-import { JsonObject } from '../common';
+import { JsonObject, JsonValue } from '../common';
 import { IntegrationAccount } from '../integration-account';
 import { Workspace } from '../workspace';
 
@@ -37,6 +37,22 @@ export class IntegrationDefinition {
   spec?: Spec;
   clientId: string;
   clientSecret: string;
+  workspace?: Workspace;
+  workspaceId?: string;
+  IntegrationAccount?: IntegrationAccount[];
+}
+
+export class PublicIntegrationDefinition {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deleted: Date | null;
+  name: string;
+  slug: string;
+  description: string;
+  icon: string;
+  config?: JsonValue;
+  spec?: Spec;
   workspace?: Workspace;
   workspaceId?: string;
   IntegrationAccount?: IntegrationAccount[];
