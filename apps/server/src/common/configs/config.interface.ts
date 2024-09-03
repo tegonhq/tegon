@@ -1,6 +1,12 @@
 export interface Config {
   cors: CorsConfig;
   superToken: SuperTokenConfig;
+  log: LogConfigs;
+}
+
+export interface LogConfigs {
+  level: string;
+  createLogFile?: boolean;
 }
 
 export interface AppInfoConfig {

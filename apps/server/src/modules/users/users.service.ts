@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { GetUsersDto, PublicUser, User } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
@@ -13,9 +13,12 @@ import {
   userSerializer,
   UserWithInvites,
 } from './user.interface';
+import { LoggerService } from 'modules/logger/logger.service';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new LoggerService(UsersService.name);
+
   constructor(private prisma: PrismaService) {}
 
   async upsertUser(
@@ -24,19 +27,37 @@ export class UsersService {
     fullname: string,
     username?: string,
   ) {
-    return await this.prisma.user.upsert({
-      where: { email },
-      create: {
-        id,
-        email,
-        fullname,
-        username: username ?? email.split('@')[0],
-      },
-      update: {},
-    });
+    try {
+      return await this.prisma.user.upsert({
+        where: { email },
+        create: {
+          id,
+          email,
+          fullname,
+          username: username ?? email.split('@')[0],
+        },
+        update: {},
+      });
+    } catch (error) {
+      this.logger.error({
+        message: `Error while upserting the user with id: ${id}`,
+        where: `UsersService.upsertUser`,
+        error,
+      });
+      throw new InternalServerErrorException(
+        error,
+        `Error while upserting the user with id: ${id}`,
+      );
+    }
   }
 
   async getUser(id: string): Promise<UserWithInvites> {
+    this.logger.debug({
+      message: `fetching user with id ${id}`,
+      payload: { id },
+      where: `UsersService.getUser`,
+    });
+
     const user = await this.prisma.user.findUnique({
       where: {
         id,

@@ -1,7 +1,7 @@
-import { Logger, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { Logger, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from 'nestjs-prisma';
 
 import config from 'common/configs/config';
@@ -24,8 +24,8 @@ import { NotificationsModule } from 'modules/notifications/notifications.module'
 import { OAuthCallbackModule } from 'modules/oauth-callback/oauth-callback.module';
 import { ReplicationModule } from 'modules/replication/replication.module';
 import { SearchModule } from 'modules/search/search.module';
-import { SyncModule } from 'modules/sync/sync.module';
 import { SyncActionsModule } from 'modules/sync-actions/sync-actions.module';
+import { SyncModule } from 'modules/sync/sync.module';
 import { TeamsModule } from 'modules/teams/teams.module';
 import { TemplatesModule } from 'modules/templates/templates.module';
 import { TriggerdevModule } from 'modules/triggerdev/triggerdev.module';
@@ -35,12 +35,14 @@ import { WebhookModule } from 'modules/webhook/webhook.module';
 import { WorkflowsModule } from 'modules/workflows/workflows.module';
 import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
+import { ALSModule } from 'modules/als/als.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
+    ConfigModule.forRoot({ envFilePath: '.env' }),
     PrismaModule.forRoot({
       isGlobal: true,
       prismaServiceOptions: {
@@ -71,6 +73,7 @@ import { AppService } from './app.service';
     }),
 
     AuthModule.forRoot(),
+    ALSModule,
     UsersModule,
     WorkspacesModule,
     TeamsModule,
