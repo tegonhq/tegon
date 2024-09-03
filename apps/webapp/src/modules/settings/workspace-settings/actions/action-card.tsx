@@ -1,8 +1,6 @@
-import { Badge } from '@tegonhq/ui/components/badge';
 import {
   Card,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@tegonhq/ui/components/card';

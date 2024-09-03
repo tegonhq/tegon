@@ -54,6 +54,16 @@ export class UsersController {
     return await this.usersService.getUsersbyId(getUsersDto);
   }
 
+  @Post('impersonate')
+  @UseGuards(AuthGuard)
+  async impersonate(
+    @Body() { key, userId }: { key: string; userId: string },
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    return this.usersService.impersonate(key, userId, res, req);
+  }
+
   @Get('email')
   @UseGuards(AuthGuard)
   async getUserByEmail(@Query('email') email: string): Promise<User> {
@@ -103,16 +113,5 @@ export class UsersController {
     );
 
     return user;
-  }
-
-  @Get('impersonate/:userId')
-  @UseGuards(AuthGuard)
-  async impersonate(
-    @Param() userIdBody: UserIdParams,
-    @Query() { key }: { key: string },
-    @Res() res: Response,
-    @Req() req: Request,
-  ) {
-    return this.usersService.impersonate(key, userIdBody.userId, res, req);
   }
 }
