@@ -9,6 +9,7 @@ import { loggingMiddleware } from 'common/middleware/logging.middleware';
 
 import { ActionModule } from 'modules/action/action.module';
 import { AIRequestsModule } from 'modules/ai-requests/ai-requests.module';
+import { ALSModule } from 'modules/als/als.module';
 import { AttachmentModule } from 'modules/attachments/attachments.module';
 import { AuthModule } from 'modules/auth/auth.module';
 import { BullConfigModule } from 'modules/bull/bull.module';
@@ -41,6 +42,7 @@ import { AppService } from './app.service';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
+    ConfigModule.forRoot({ envFilePath: '.env' }),
     PrismaModule.forRoot({
       isGlobal: true,
       prismaServiceOptions: {
@@ -71,6 +73,7 @@ import { AppService } from './app.service';
     }),
 
     AuthModule.forRoot(),
+    ALSModule,
     UsersModule,
     WorkspacesModule,
     TeamsModule,

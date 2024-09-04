@@ -1,11 +1,10 @@
-import { Check, TextQuote, TrashIcon } from 'lucide-react';
-import { useEditor } from 'novel';
-
 import {
   CommandGroup,
   CommandItem,
   CommandSeparator,
 } from '@tegonhq/ui/components/command';
+import { Check, TextQuote, TrashIcon } from 'lucide-react';
+import { useEditor } from 'novel';
 
 const AICompletionCommands = ({
   completion,

@@ -6,6 +6,7 @@ import supertokens from 'supertokens-node';
 
 import type { CorsConfig } from 'common/configs/config.interface';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import ReplicationService from 'modules/replication/replication.service';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
@@ -17,7 +18,9 @@ import { AppModule } from './app.module';
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new LoggerService('Tegon'),
+  });
 
   // Validation
   app.useGlobalPipes(new ValidationPipe({}));

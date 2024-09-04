@@ -2,18 +2,17 @@
 // as the slash command is not working when used inside a modal
 import type { Editor } from '@tiptap/core';
 
+import {
+  Command,
+  CommandInput,
+  CommandList,
+} from '@tegonhq/ui/components/command';
 import { ReactRenderer } from '@tiptap/react';
 import { Provider } from 'jotai';
 import { useSetAtom, useAtom } from 'jotai';
 import React from 'react';
 import tippy from 'tippy.js';
 import tunnel from 'tunnel-rat';
-
-import {
-  Command,
-  CommandInput,
-  CommandList,
-} from '@tegonhq/ui/components/command';
 
 import { queryAtom, rangeAtom } from './atoms';
 import { novelStore } from './store';

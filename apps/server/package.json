@@ -81,6 +81,7 @@
     "axios": "^1.6.7",
     "bcrypt": "5.1.1",
     "bull": "^4.12.2",
+    "chalk": "^4.1.2",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.1",
     "cohere-ai": "^7.10.6",
@@ -91,6 +92,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.1.0",
     "knex": "^3.1.0",
+    "nest-winston": "^1.9.7",
     "nestjs-prisma": "0.22.0",
     "nodemailer": "^6.9.13",
     "ollama": "^0.5.6",
@@ -109,7 +111,8 @@
     "socket.io": "^4.7.5",
     "supertokens-node": "^16.7.1",
     "typesense": "^1.7.2",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "winston": "^3.14.2"
   },
   "devDependencies": {
     "@nestjs/cli": "10.3.0",
