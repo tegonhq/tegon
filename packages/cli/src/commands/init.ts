@@ -2,39 +2,53 @@ import { Command } from 'commander';
 import { commonOptions } from '../cli/common';
 import { getVersion } from '../utilities/getVersion';
 import path from 'path';
-import { note, log } from '@clack/prompts';
-import { execa } from 'execa';
+import { spinner, intro, outro } from '@clack/prompts';
 import { printInitialBanner } from '../utilities/initialBanner';
+import degit from 'degit';
+import fs from 'node:fs';
 
 export function configureInitCommand(program: Command) {
   return commonOptions(
     program
-      .command('deploy')
-      .description('deploy tegon actions to tegon servers')
-      .requiredOption(
-        '-r, --repo <url>',
-        'GitHub repository URL',
-        'https://github.com/user/repo',
-      )
+      .command('init')
+      .description('Init a tegon action')
       .option(
-        '-d, --destination <path>',
-        'Destination path to clone repository',
-        '.',
+        '-a, --action <name>',
+        'Name of the action folder to initialize',
+        'base',
       ),
   )
     .version(getVersion(), '-v, --version', 'Display the version number')
     .action(async (options) => {
       await printInitialBanner(false);
-      const repoUrl = options.repo;
-      const destinationPath = path.resolve(process.cwd(), options.destination);
 
-      note(`Cloning repository from ${repoUrl} to ${destinationPath}`);
+      const { action } = options;
+      const repoUrl = `tegonhq/tegon/actions/${action}`;
+      const actionFolderPath = path.join(process.cwd(), action);
+
+      // Start loading prompt
+      intro(`Initializing with action: ${action}`);
+      const fetchSpinner = spinner();
 
       try {
-        await execa('npx', ['degit', repoUrl, destinationPath]);
-        log.info('Repository successfully cloned.');
-      } catch (error: any) {
-        log.error(`Error cloning repository: ${error.message}`);
+        // Check if the action folder already exists locally
+        if (fs.existsSync(actionFolderPath)) {
+          fetchSpinner.stop('Action folder already exists locally.');
+          outro('Initialization aborted.');
+          return;
+        }
+
+        fetchSpinner.start('Fetching the action folder...');
+
+        // Use degit to fetch the specific folder from the repository
+        const emitter = degit(repoUrl);
+        await emitter.clone('.');
+
+        fetchSpinner.stop('Action folder successfully downloaded.');
+        outro('Project initialized.');
+      } catch (error) {
+        fetchSpinner.stop('Failed to fetch the action folder.');
+        console.error(error);
       }
     });
 }

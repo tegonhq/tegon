@@ -34,11 +34,11 @@
     "raiseIssue": true,
     "thumbsRating": true
   },
-  "topbarCtaButton": {
-    "name": "Sign in",
-    "url": "https://app.tegon.ai"
-  },
   "topbarLinks": [
+    {
+      "name": "Sign in",
+      "url": "https://app.tegon.ai/auth"
+    },
     {
       "name": "Slack",
       "url": "https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA"
@@ -68,11 +68,6 @@
   ],
   "anchors": [
     {
-      "name": "User Guides",
-      "icon": "book",
-      "url": "guides"
-    },
-    {
       "name": "API",
       "icon": "brackets-curly",
       "url": "api-reference"
@@ -93,15 +88,6 @@
       ]
     },
     {
-      "group": "User Guides",
-      "pages": [
-        "guides/issues",
-        "guides/triage",
-        "guides/views",
-        "guides/cycles"
-      ]
-    },
-    {
       "group": "Fundamentals",
       "pages": [
         "fundamentals/issues",
@@ -112,19 +98,18 @@
     },
 
     {
-      "group": "Actions",
+      "group": "Getting started",
       "pages": [
         "actions/overview",
         "actions/config",
-        {
-          "group": "Use Cases",
-          "pages": [ "actions/usecases/usecases-overview", "actions/usecases/bug-enricher", "actions/usecases/issue-view-summary", "actions/usecases/slack-actions", "actions/usecases/email-actions"  ]
-        },
         "actions/regular-actions",
         "actions/integration-based-actions",
-        "actions/scheduled-actions",
-        
+        "actions/scheduled-actions"
       ]
+    },
+    {
+      "group": "Actions",
+      "pages": [ "actions/marketplace/overview", "actions/marketplace/bug-enricher", "actions/marketplace/issue-view-summary", "actions/marketplace/slack-actions", "actions/marketplace/email-actions" ]
     },
     {
       "group": "Deployment",
