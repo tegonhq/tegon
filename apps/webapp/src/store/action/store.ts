@@ -58,6 +58,9 @@ export const ActionsStore: IAnyStateTreeNode = types
     return { update, deleteById, load };
   })
   .views((self) => ({
+    get allActions() {
+      return self.actions;
+    },
     getAction(slug: string) {
       const action = self.actions.find((action) => action.slug === slug);
 

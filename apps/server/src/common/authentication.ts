@@ -108,7 +108,7 @@ export async function isSessionValid(
       });
     } else {
       let authHeader = request.headers['authorization'];
-      if (authHeader.includes('tg_pat_')) {
+      if (authHeader && authHeader.includes('tg_pat_')) {
         authHeader = await hasValidPat(request, usersService);
 
         request.headers['personal'] = true;

@@ -15,6 +15,8 @@ export enum IntegrationPayloadEventType {
 
   // When the extension gets a external webhook
   SOURCE_WEBHOOK = 'source_webhook',
+
+  GET_TOKEN = 'get_token',
 }
 
 export interface IntegrationEventPayload {

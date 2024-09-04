@@ -51,8 +51,8 @@ export const Action = () => {
       <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
         <div className="w-full p-6">
           <SettingSection
-            title={latestAction.name}
-            description={latestAction?.description}
+            title={action.name}
+            description={action.description}
             metadata={metadata}
           >
             <Tabs defaultValue="overview">
@@ -69,18 +69,16 @@ export const Action = () => {
                     Overview
                   </TabsTrigger>
 
-                  {action && action.config.inputs && (
-                    <TabsTrigger
-                      value="configuration"
-                      className={cn(
-                        buttonVariants({
-                          variant: 'secondary',
-                        }),
-                      )}
-                    >
-                      Configuration
-                    </TabsTrigger>
-                  )}
+                  <TabsTrigger
+                    value="configuration"
+                    className={cn(
+                      buttonVariants({
+                        variant: 'secondary',
+                      }),
+                    )}
+                  >
+                    Configuration
+                  </TabsTrigger>
                 </>
               </TabsList>
               <TabsContent value="overview">
@@ -98,11 +96,10 @@ export const Action = () => {
                   </div>
                 </div>
               </TabsContent>
-              {action && action.config?.inputs && (
-                <TabsContent value="configuration">
-                  <Configuration schema={action.config?.inputs} />
-                </TabsContent>
-              )}
+
+              <TabsContent value="configuration">
+                <Configuration />
+              </TabsContent>
             </Tabs>
           </SettingSection>
         </div>

@@ -20,8 +20,8 @@ import {
 
 export const OnboardingSchema = z.object({
   fullname: z.string().min(5),
-  workspaceName: z.string().min(5),
-  teamName: z.string().min(5),
+  workspaceName: z.string().min(3),
+  teamName: z.string().min(3),
   teamIdentifier: z.string().min(1),
 });
 

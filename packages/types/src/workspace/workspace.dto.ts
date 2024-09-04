@@ -4,3 +4,8 @@ export class WorkspaceRequestParamsDto {
   @IsString()
   workspaceId: string;
 }
+
+export class WorkspaceSlugParamsDTO {
+  @IsString()
+  slug: string;
+}

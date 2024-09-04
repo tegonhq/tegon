@@ -3,6 +3,7 @@ import {
   IntegrationEventPayload,
   IntegrationPayloadEventType,
 } from '@tegonhq/types';
+import { PrismaService } from 'nestjs-prisma';
 import * as simpleOauth2 from 'simple-oauth2';
 
 import { IntegrationDefinitionService } from 'modules/integration-definition/integration-definition.service';
@@ -34,6 +35,7 @@ export class OAuthCallbackService {
   constructor(
     private integrationDefinitionService: IntegrationDefinitionService,
     private triggerdevService: TriggerdevService,
+    private prisma: PrismaService,
   ) {}
 
   async getRedirectURL(
@@ -101,7 +103,10 @@ export class OAuthCallbackService {
         `OAuth 2.0 for ${integrationDefinition.name} - redirecting to: ${authorizationUri}`,
       );
 
-      return { status: 200, redirectURL: authorizationUri };
+      return {
+        status: 200,
+        redirectURL: authorizationUri,
+      };
     } catch (e) {
       this.logger.warn(e);
       throw new BadRequestException({ error: e.message });
@@ -253,6 +258,64 @@ export class OAuthCallbackService {
       TriggerProjects.Common,
       integrationDefinition.name,
       payload,
+    );
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async emailCallbackHandler(params: CallbackParams, res: any) {
+    if (!params.state) {
+      throw new BadRequestException({
+        error: 'No state found',
+      });
+    }
+
+    const sessionRecord = this.session[params.state];
+
+    /**
+     * Delete the session once it's used
+     */
+    delete this.session[params.state];
+
+    if (!sessionRecord) {
+      throw new BadRequestException({
+        error: 'No session found',
+      });
+    }
+    const integrationDefinition =
+      await this.integrationDefinitionService.getIntegrationDefinitionWithId({
+        integrationDefinitionId: sessionRecord.integrationDefinitionId,
+      });
+
+    const workspace = await this.prisma.workspace.findUnique({
+      where: { id: sessionRecord.workspaceId },
+    });
+
+    const payload: IntegrationEventPayload = {
+      event: IntegrationPayloadEventType.CREATE,
+      userId: sessionRecord.userId,
+      workspaceId: sessionRecord.workspaceId,
+      data: {
+        integrationDefinition,
+        personal: sessionRecord.personal,
+        workspace,
+      },
+    };
+
+    await this.triggerdevService.triggerTask(
+      TriggerProjects.Common,
+      integrationDefinition.slug,
+      payload,
+    );
+
+    const accountIdentifier = sessionRecord.accountIdentifier
+      ? `&accountIdentifier=${sessionRecord.accountIdentifier}`
+      : '';
+    const integrationKeys = sessionRecord.integrationKeys
+      ? `&integrationKeys=${sessionRecord.integrationKeys}`
+      : '';
+
+    res.redirect(
+      `${sessionRecord.redirectURL}?success=true&integrationName=${integrationDefinition.name}${accountIdentifier}${integrationKeys}`,
     );
   }
 }

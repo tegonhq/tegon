@@ -63,6 +63,14 @@ export class WorkspacesController {
     return await this.workspacesService.getWorkspaceByName(workspaceName);
   }
 
+  @Get('slug/:workspaceSlug')
+  @UseGuards(AuthGuard)
+  async getWorkspaceBySlug(
+    @Param('workspaceSlug') workspaceSlug: string,
+  ): Promise<Workspace> {
+    return await this.workspacesService.getWorkspaceBySlug(workspaceSlug);
+  }
+
   @Post('invite_action')
   @UseGuards(AuthGuard)
   async inviteAction(

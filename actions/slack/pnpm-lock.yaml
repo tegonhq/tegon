@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       '@tegonhq/sdk':
-        specifier: ^0.1.3
-        version: 0.1.3(typescript@5.5.4)
+        specifier: ^0.1.5
+        version: 0.1.5(typescript@5.5.4)
       '@trigger.dev/sdk':
-        specifier: 3.0.0-beta.55
-        version: 3.0.0-beta.55(typescript@5.5.4)
+        specifier: 3.0.0-beta.56
+        version: 3.0.0-beta.56(typescript@5.5.4)
       axios:
         specifier: ^1.6.7
         version: 1.7.5(debug@4.3.6)
@@ -128,6 +128,14 @@ packages:
 
   '@js-sdsl/ordered-map@4.4.2':
     resolution: {integrity: sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw==}
+
+  '@mswjs/cookies@1.1.1':
+    resolution: {integrity: sha512-W68qOHEjx1iD+4VjQudlx26CPIoxmIAtK4ZCexU0/UJBG6jYhcuyzKJx+Iw8uhBIGd9eba64XgWVgo20it1qwA==}
+    engines: {node: '>=18'}
+
+  '@mswjs/interceptors@0.25.16':
+    resolution: {integrity: sha512-8QC8JyKztvoGAdPgyZy49c9vSHHAZjHagwl4RY9E8carULk8ym3iTaiawrT1YoLF/qb449h48f71XDPgkUSOUg==}
+    engines: {node: '>=18'}
 
   '@mswjs/interceptors@0.29.1':
     resolution: {integrity: sha512-3rDakgJZ77+RiQUuSK69t1F0m8BQKA8Vh5DCS5V0DWvNY67zob2JhhQrhCO0AKLGINTRSFd1tBaHcJTkhefoSw==}
@@ -374,32 +382,32 @@ packages:
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
 
-  '@tegonhq/sdk@0.1.3':
-    resolution: {integrity: sha512-2PMrE2rdPO2Qc9C6Oey9pPxJ/44nJUR375ur4+7rE7bajfwwGSjA9VvTzJM8tucA79gJFd/uI1qsuFqCdhukoA==}
+  '@tegonhq/sdk@0.1.5':
+    resolution: {integrity: sha512-ww8kDympNa/tqrRyiifaANjvy7Sros3T5y0b5/Pb+rOrWcwE+n8KOAfJR7yQyc5QfXomQ9W73uIFiQZ8LUWBgQ==}
     engines: {node: '>=18.0.0'}
 
   '@trigger.dev/core-backend@3.0.0-beta.50':
     resolution: {integrity: sha512-bBdOz17ZTQBpPAHMoSiA1vO/Xh9Ez77mumnvVKZtDuuHSPNmaJu5msdcWxn+Vre6tccb7JDBx9q+jyWz1Uc4eg==}
     engines: {node: '>=18.0.0'}
 
-  '@trigger.dev/core-backend@3.0.0-beta.55':
-    resolution: {integrity: sha512-JLRaiawxVyG0fparYskiluPxWqzFXrqXKJFMKW6CgXklRCHMRjH5ezai62yUxAeKM8LX2BIOhOpeXB3z50Re1w==}
+  '@trigger.dev/core-backend@3.0.0-beta.56':
+    resolution: {integrity: sha512-8GmYTgUmljFIWGUzZy+Mh/uuaxgzs0GCHjZgwnigChG3znmz46InwQH7HW9Gxo+6A3aSss05NZUzVKrnFCY1bQ==}
     engines: {node: '>=18.0.0'}
 
   '@trigger.dev/core@3.0.0-beta.50':
     resolution: {integrity: sha512-ZnWFQjs1QxfKSSh4LTpGGP9vbiolLtn7F6U6BJlADL/6gVfRYaOFonBWGBvgLXJdPRtUQ1wfE9+LkWF/fouPKA==}
     engines: {node: '>=18.0.0'}
 
-  '@trigger.dev/core@3.0.0-beta.55':
-    resolution: {integrity: sha512-MXfBnM3HvT+RyXwlIeQjUJ0lWKg5vFrPugwy5AbDaio/p8QLyRpEHIL8zcMU6rUxdjD7jVbZk3KTUnGRLRZ+tw==}
+  '@trigger.dev/core@3.0.0-beta.56':
+    resolution: {integrity: sha512-b4ZeH1k5sy4NISWgkZGmVxspe2r5vFpZ+KdNpYxiobQ/ameM/979OYXNRceeimWKuEdEEp1SMcMJNfZ0Pt5L1A==}
     engines: {node: '>=18.0.0'}
 
   '@trigger.dev/sdk@3.0.0-beta.50':
     resolution: {integrity: sha512-WPuk5sqERw9FvsEz4HqnfBhe+/jvw/qaE7Xvhx6lMfKUe0OuMo4+shD2TceHGrZ7WMeOwDAPqzDTOYFAJxhhaw==}
     engines: {node: '>=18.0.0'}
 
-  '@trigger.dev/sdk@3.0.0-beta.55':
-    resolution: {integrity: sha512-B4mS79S0esp5yRun/siDHIRfD8ZF8S6dadYayq0Irj2izFx50R3bUJ+BXh6gPx/4cF26NL7jcJMOwtW8P9PsFQ==}
+  '@trigger.dev/sdk@3.0.0-beta.56':
+    resolution: {integrity: sha512-RdIoO0u8SyNPiNiU8lYelKgpIUox37wVH5bLO99T5sFetnF/v9ncYPqS+6QPmkHVMEoS0HdXnZ5XKuS3oFs8nQ==}
     engines: {node: '>=18.0.0'}
 
   '@types/cookie@0.6.0':
@@ -988,6 +996,10 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
+  graphql@16.9.0:
+    resolution: {integrity: sha512-GGTKBX4SD7Wdb8mqeDLni2oaRGYQWjWHGKPQ24ZMnUtKfcsVoiv4uX8+LJr1K6U5VW2Lu1BwJnj7uiori0YtRw==}
+    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
+
   has-bigints@1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
 
@@ -1248,6 +1260,16 @@ packages:
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
+
+  msw@2.2.1:
+    resolution: {integrity: sha512-DCsZAQwan+2onEcpD86fiEnCKW4IvYzqcwDq/2TIoeNrmBqNp/mJW4wHQyxcoYrRPwgujin7wDFflqiSO1iT/w==}
+    engines: {node: '>=18'}
+    hasBin: true
+    peerDependencies:
+      typescript: '>= 4.7.x <= 5.3.x'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   msw@2.4.0:
     resolution: {integrity: sha512-NqAjbDvJ66J/VS9KqLmY8ZF6ceQpYRy+s2yJYLl+3vUdNa4C7zouXVDl1TLast/o9gLzPMTrfaTJkeR7qJ41ew==}
@@ -1821,6 +1843,17 @@ snapshots:
 
   '@js-sdsl/ordered-map@4.4.2': {}
 
+  '@mswjs/cookies@1.1.1': {}
+
+  '@mswjs/interceptors@0.25.16':
+    dependencies:
+      '@open-draft/deferred-promise': 2.2.0
+      '@open-draft/logger': 0.3.0
+      '@open-draft/until': 2.1.0
+      is-node-process: 1.2.0
+      outvariant: 1.4.3
+      strict-event-emitter: 0.5.1
+
   '@mswjs/interceptors@0.29.1':
     dependencies:
       '@open-draft/deferred-promise': 2.2.0
@@ -2104,7 +2137,7 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
-  '@tegonhq/sdk@0.1.3(typescript@5.5.4)':
+  '@tegonhq/sdk@0.1.5(typescript@5.5.4)':
     dependencies:
       '@trigger.dev/sdk': 3.0.0-beta.50(typescript@5.5.4)
       axios: 1.7.5(debug@4.3.6)
@@ -2128,7 +2161,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
 
-  '@trigger.dev/core-backend@3.0.0-beta.55':
+  '@trigger.dev/core-backend@3.0.0-beta.56':
     dependencies:
       '@opentelemetry/api': 1.9.0
 
@@ -2158,7 +2191,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@trigger.dev/core@3.0.0-beta.55':
+  '@trigger.dev/core@3.0.0-beta.56':
     dependencies:
       '@google-cloud/precise-date': 4.0.0
       '@opentelemetry/api': 1.9.0
@@ -2212,13 +2245,13 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@trigger.dev/sdk@3.0.0-beta.55(typescript@5.5.4)':
+  '@trigger.dev/sdk@3.0.0-beta.56(typescript@5.5.4)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/api-logs': 0.48.0
       '@opentelemetry/semantic-conventions': 1.27.0
-      '@trigger.dev/core': 3.0.0-beta.55
-      '@trigger.dev/core-backend': 3.0.0-beta.55
+      '@trigger.dev/core': 3.0.0-beta.56
+      '@trigger.dev/core-backend': 3.0.0-beta.56
       chalk: 5.3.0
       cronstrue: 2.50.0
       debug: 4.3.6
@@ -2226,7 +2259,7 @@ snapshots:
       get-caller-file: 2.0.5
       git-remote-origin-url: 4.0.0
       git-repo-info: 2.1.1
-      msw: 2.4.0(typescript@5.5.4)
+      msw: 2.2.1(typescript@5.5.4)
       slug: 6.1.0
       terminal-link: 3.0.0
       ulid: 2.3.0
@@ -2235,7 +2268,6 @@ snapshots:
       zod: 3.22.3
     transitivePeerDependencies:
       - bufferutil
-      - graphql
       - supports-color
       - typescript
       - utf-8-validate
@@ -2965,6 +2997,8 @@ snapshots:
 
   graphemer@1.4.0: {}
 
+  graphql@16.9.0: {}
+
   has-bigints@1.0.2: {}
 
   has-flag@4.0.0: {}
@@ -3202,6 +3236,28 @@ snapshots:
   ms@2.1.2: {}
 
   ms@2.1.3: {}
+
+  msw@2.2.1(typescript@5.5.4):
+    dependencies:
+      '@bundled-es-modules/cookie': 2.0.0
+      '@bundled-es-modules/statuses': 1.0.1
+      '@inquirer/confirm': 3.1.22
+      '@mswjs/cookies': 1.1.1
+      '@mswjs/interceptors': 0.25.16
+      '@open-draft/until': 2.1.0
+      '@types/cookie': 0.6.0
+      '@types/statuses': 2.0.5
+      chalk: 4.1.2
+      graphql: 16.9.0
+      headers-polyfill: 4.0.3
+      is-node-process: 1.2.0
+      outvariant: 1.4.3
+      path-to-regexp: 6.2.2
+      strict-event-emitter: 0.5.1
+      type-fest: 4.26.0
+      yargs: 17.7.2
+    optionalDependencies:
+      typescript: 5.5.4
 
   msw@2.4.0(typescript@5.5.4):
     dependencies:

@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Team, UsersOnWorkspaces } from '@tegonhq/types';
+import {
+  Team,
+  UsersOnWorkspaces,
+  WorkspaceRequestParamsDto,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
@@ -20,6 +24,17 @@ export default class TeamsService {
     return await this.prisma.team.findUnique({
       where: {
         id: TeamRequestParams.teamId,
+      },
+    });
+  }
+
+  async getTeams(
+    workspaceRequestParams: WorkspaceRequestParamsDto,
+  ): Promise<Team[]> {
+    return await this.prisma.team.findMany({
+      where: {
+        workspaceId: workspaceRequestParams.workspaceId,
+        deleted: null,
       },
     });
   }

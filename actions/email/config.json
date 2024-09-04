@@ -1,0 +1,12 @@
+{
+  "slug": "email",
+  "name": "Email",
+  "description": "Create issues from email",
+  "triggers": [
+    {
+      "type": "source_webhook",
+      "entities": [ "email" ]
+    }
+  ],
+  "integrations": [ "email" ]
+}

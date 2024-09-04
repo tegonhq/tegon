@@ -49,6 +49,19 @@ export class OAuthCallbackController {
     );
   }
 
+  @Get('callback/email')
+  @UseGuards(AuthGuard)
+  async emailCallback(
+    @Query() queryParams: CallbackParams,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    @Res() res: any,
+  ) {
+    return await this.oAuthCallbackService.emailCallbackHandler(
+      queryParams,
+      res,
+    );
+  }
+
   @Get('callback')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async callback(@Query() queryParams: CallbackParams, @Res() res: any) {

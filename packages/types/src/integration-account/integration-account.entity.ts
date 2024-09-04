@@ -1,5 +1,8 @@
 import { JsonValue } from '../common';
-import { IntegrationDefinition } from '../integration-definition';
+import {
+  IntegrationDefinition,
+  PublicIntegrationDefinition,
+} from '../integration-definition';
 import { User } from '../user';
 import { Workspace } from '../workspace';
 
@@ -15,7 +18,7 @@ export class IntegrationAccount {
   isActive: boolean;
   integratedBy?: User;
   integratedById: string;
-  integrationDefinition?: IntegrationDefinition;
+  integrationDefinition?: IntegrationDefinition | PublicIntegrationDefinition;
   integrationDefinitionId: string;
   workspace?: Workspace;
   workspaceId: string;

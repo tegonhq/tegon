@@ -12,7 +12,7 @@ export const Metadata = observer(() => {
     <div className="grow flex flex-col gap-4">
       <div className="min-w-[80px] flex flex-col gap-1">
         <div className="flex gap-1">
-          {latestAction.config.integrations.map((integration: string) => (
+          {latestAction?.config?.integrations.map((integration: string) => (
             <Badge
               variant="secondary"
               key={integration}

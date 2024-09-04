@@ -8,6 +8,7 @@ import {
   ActionStatusEnum,
   UpdateActionInputsDto,
   JsonObject,
+  ActionTypesEnum,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
@@ -190,6 +191,7 @@ export default class ActionService {
         data: {
           name: config.name,
           slug: config.slug,
+          description: config.description,
           integrations: config.integrations ? config.integrations : [],
           createdById: userId,
           workspaceId,
@@ -214,6 +216,7 @@ export default class ActionService {
           name: action.name,
           integrations: config.integrations ? config.integrations : [],
           status: ActionStatusEnum.ACTIVE,
+          triggerVersion: latestVersion,
         },
       });
     }
@@ -312,7 +315,11 @@ export default class ActionService {
     });
 
     // Prepare the trigger payload
-    const addedTaskInfo = await prepareTriggerPayload(this.prisma, action.id);
+    const addedTaskInfo = await prepareTriggerPayload(
+      this.prisma,
+      this.triggerdev,
+      action.id,
+    );
 
     // Trigger the task asynchronously with the payload and added task info
     await this.triggerdev.triggerTaskAsync(
@@ -323,6 +330,33 @@ export default class ActionService {
         ...addedTaskInfo,
       },
       { lockToVersion: action.triggerVersion },
+    );
+  }
+
+  async getInputsForSlug(slug: string, workspaceId: string) {
+    // Find the action by slug and workspace
+    const action = await this.prisma.action.findFirst({
+      where: {
+        slug,
+        workspaceId,
+      },
+    });
+
+    const triggerPayload = await prepareTriggerPayload(
+      this.prisma,
+      this.triggerdev,
+      action.id,
+    );
+
+    return await this.triggerdev.triggerTask(
+      action.workspaceId,
+      action.slug,
+      {
+        event: ActionTypesEnum.GET_INPUTS,
+        workspaceId,
+        ...triggerPayload,
+      },
+      { locktoVersion: action.triggerVersion },
     );
   }
 }

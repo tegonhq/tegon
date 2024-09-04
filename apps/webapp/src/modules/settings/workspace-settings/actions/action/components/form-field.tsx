@@ -7,10 +7,22 @@ import {
   FormMessage,
 } from '@tegonhq/ui/components/form';
 import { Input } from '@tegonhq/ui/components/input';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@tegonhq/ui/components/select';
 import { type Control } from 'react-hook-form';
 
 import { Array } from './inputs/array';
-import { InputTypeEnum, type FieldConfig } from './types';
+import {
+  InputTypeEnum,
+  type ArrayFieldConfig,
+  type FieldConfig,
+} from './types';
 
 interface FormControllerProps {
   name: string;
@@ -20,24 +32,12 @@ interface FormControllerProps {
 
 export function FormField({ name, control, config }: FormControllerProps) {
   switch (config.type) {
-    case InputTypeEnum.Text: {
+    case InputTypeEnum.Array: {
       return (
-        <FormFieldC
-          control={control}
+        <Array
           name={name}
-          render={({ field }) => (
-            <FormItem className="my-3">
-              <FormLabel>{config.title}</FormLabel>
-              {config.description && (
-                <FormDescription>{config.description}</FormDescription>
-              )}
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
+          control={control}
+          config={config as ArrayFieldConfig}
         />
       );
     }
@@ -63,7 +63,65 @@ export function FormField({ name, control, config }: FormControllerProps) {
         />
       );
     }
+
+    case InputTypeEnum.Select: {
+      return (
+        <FormFieldC
+          control={control}
+          name={name}
+          render={({ field }) => (
+            <FormItem className="my-3">
+              <FormLabel>{config.title}</FormLabel>
+              {config.description && (
+                <FormDescription>{config.description}</FormDescription>
+              )}
+              <FormControl>
+                <Select
+                  onValueChange={(value: string) => {
+                    field.onChange(value);
+                  }}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="flex gap-1 items-center">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {config.options.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      );
+    }
   }
 
-  return <Array name={name} control={control} config={config} />;
+  return (
+    <FormFieldC
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className="my-3">
+          <FormLabel>{config.title}</FormLabel>
+          {config.description && (
+            <FormDescription>{config.description}</FormDescription>
+          )}
+          <FormControl>
+            <Input {...field} />
+          </FormControl>
+
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
 }

@@ -12,16 +12,15 @@ import { Header } from 'modules/settings/header';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 import { ActionAccessGuard } from 'common/wrappers/action-access-guard';
 
-import { useGetAllActionsQuery, type ActionSource } from 'services/action';
+import { type ActionSource } from 'services/action';
+
+import { useContextStore } from 'store/global-context-provider';
 
 import { ActionCard } from './action-card';
 
 export function Actions() {
-  const { data: allActions, isLoading } = useGetAllActionsQuery();
-
-  if (isLoading) {
-    return null;
-  }
+  const { actionsStore } = useContextStore();
+  const actions = actionsStore.allActions;
 
   return (
     <div>
@@ -37,11 +36,11 @@ export function Actions() {
         </Card>
       </div>
 
-      <div className="mt-4">
-        <h2 className="text-md mb-4"> All actions</h2>
+      <div className="mt-6">
+        <h2 className="text-md mb-4"> Installed actions</h2>
 
         <div className="grid grid-cols-4 gap-4">
-          {allActions.map((action: ActionSource) => (
+          {actions.map((action: ActionSource) => (
             <ActionCard key={action.slug} action={action} />
           ))}
         </div>

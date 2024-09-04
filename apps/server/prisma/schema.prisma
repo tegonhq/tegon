@@ -15,6 +15,7 @@ model Action {
   deleted   DateTime?
 
   name         String
+  description  String?
   slug         String
   integrations String[]
 
@@ -151,8 +152,9 @@ model IntegrationDefinitionV2 {
   slug         String
   description  String
   icon         String
-  clientId     String
-  clientSecret String
+  clientId     String 
+  clientSecret String 
+  config       Json?
   workspace    Workspace? @relation(references: [id], fields: [workspaceId])
   workspaceId  String?
 

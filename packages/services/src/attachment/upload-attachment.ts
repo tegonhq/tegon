@@ -8,9 +8,6 @@ export async function uploadAttachment(
   const response = await axios.post(
     `/api/v1/attachment/upload?workspaceId=${workspaceId}`,
     formData,
-    {
-      headers: { ...formData.getHeaders() },
-    },
   );
 
   return response.data;

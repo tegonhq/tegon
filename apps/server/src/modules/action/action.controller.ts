@@ -78,6 +78,18 @@ export class ActionController {
     );
   }
 
+  @Get(':slug/inputs')
+  @UseGuards(ActionGuard)
+  async getInputsForSlug(
+    @Param() slugDto: { slug: string },
+    @Query() configParams: { workspaceId: string },
+  ) {
+    return await this.actionService.getInputsForSlug(
+      slugDto.slug,
+      configParams.workspaceId,
+    );
+  }
+
   @Post(':slug/run')
   @UseGuards(ActionGuard)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

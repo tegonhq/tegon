@@ -1,7 +1,16 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Prisma } from '@prisma/client';
 import { GetUsersDto, PublicUser, User } from '@tegonhq/types';
+import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
+import supertokens from 'supertokens-node';
+import Session from 'supertokens-node/recipe/session';
 
 import {
   generateKeyForUserId,
@@ -20,7 +29,10 @@ import {
 export class UsersService {
   private readonly logger = new LoggerService(UsersService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private config: ConfigService,
+  ) {}
 
   async upsertUser(
     id: string,
@@ -202,5 +214,30 @@ export class UsersService {
     });
 
     return pat.jwt;
+  }
+
+  async impersonate(key: string, userId: string, res: Response, req: Request) {
+    if (key !== this.config.get('POSTGRES_PASSWORD')) {
+      throw new BadRequestException('Wrong URL');
+    }
+
+    const user = this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await Session.createNewSession(
+      req,
+      res,
+      'public',
+      supertokens.convertToRecipeUserId(userId),
+    );
+
+    res.send({ status: 200, message: 'impersonate' });
   }
 }
