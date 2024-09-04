@@ -1,21 +1,23 @@
 ---
-title: 'Regular triggers'
-sidebarTitle: "Regular triggers"
+title: 'Regular Actions'
+sidebarTitle: "Regular Actions"
 ---
 
-Run a trigger on any Tegon event. 
+Below is an example to help you understand how you can create a regular action on any Tegon event. 
 
-## Example task
+## Example Task
 
-#### A task that does an OpenAI call to find solution for a bug
+#### Bug Enricher
 
-This trigger which call OpenAI to search for possible solution when a issue is created and tagged as `bug`. First let's write create a new folder.
+Whenever an issue is created in Tegon and labeled as `bug` then create an action which call OpenAI to search for possible solution and put the solution as a comment of that issue. 
+
+Step 1 -  Create a new folder for this action
 
 ```bash 
 mkdir bug-resolution
 ```
 
-1. Now let's create a config to tell Tegon to trigger the function when issue is created.
+Step 2 - Now let's create a config to tell Tegon to trigger the function when an issue is created.
 
 ```json bug-resolution/config.json
 {

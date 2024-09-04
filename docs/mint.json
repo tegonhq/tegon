@@ -34,11 +34,11 @@
     "raiseIssue": true,
     "thumbsRating": true
   },
+  "topbarCtaButton": {
+    "name": "Sign in",
+    "url": "https://app.tegon.ai"
+  },
   "topbarLinks": [
-    {
-      "name": "Dashboard",
-      "url": "https://app.tegon.ai"
-    },
     {
       "name": "Slack",
       "url": "https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA"
@@ -115,10 +115,15 @@
       "group": "Actions",
       "pages": [
         "actions/overview",
-        "actions/regular-triggers",
-        "actions/integration-based-triggers",
-        "actions/scheduled-triggers",
-        "actions/config"
+        "actions/config",
+        {
+          "group": "Use Cases",
+          "pages": [ "actions/usecases/usecases-overview", "actions/usecases/bug-enricher", "actions/usecases/issue-view-summary", "actions/usecases/slack-actions", "actions/usecases/email-actions"  ]
+        },
+        "actions/regular-actions",
+        "actions/integration-based-actions",
+        "actions/scheduled-actions",
+        
       ]
     },
     {
