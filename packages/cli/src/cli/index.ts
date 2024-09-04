@@ -3,6 +3,7 @@ import { Command } from 'commander';
 import { COMMAND_NAME } from '../consts';
 import { getVersion } from '../utilities/getVersion';
 import { configureDeployCommand } from '../commands/deploy';
+import { configureInitCommand } from '../commands/init';
 
 export const program = new Command();
 
@@ -12,3 +13,4 @@ program
   .version(getVersion(), '-v, --version', 'Display the version number');
 
 configureDeployCommand(program);
+configureInitCommand(program);
