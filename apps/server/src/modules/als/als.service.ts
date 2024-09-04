@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
 import { AsyncLocalStorage } from 'async_hooks';
 
+import { Injectable } from '@nestjs/common';
+
 // Global instance of AsyncLocalStorage such that it can be shared across the service
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ASYNC_LOCAL_STORAGE = new AsyncLocalStorage<Map<string, any>>();
 
 @Injectable()
@@ -13,6 +15,7 @@ export class ALSService {
    * @param context  async local storage default context
    * @param callback callback function which will use the context
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   run(context: Map<string, any>, callback: () => void) {
     ALSService.asyncLocalStorage.run(context, callback);
   }

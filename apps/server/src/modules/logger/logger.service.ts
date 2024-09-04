@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { WinstonModuleOptions } from 'nest-winston';
 import winston, { Logger as WinstonLogger, createLogger } from 'winston';
+
+import config from 'common/configs/config';
+import { LogConfigs } from 'common/configs/config.interface';
+
+import { ALS_SERVICE_INSTANCE } from 'modules/als/als.service';
+
 import {
   GetPrintFormatInput,
   GetPrintFormatPayload,
   LogInput,
   LoggerPrintFormat,
 } from './logger.interface';
-import { ALS_SERVICE_INSTANCE } from 'modules/als/als.service';
-import config from 'common/configs/config';
-import { LogConfigs } from 'common/configs/config.interface';
 
 @Injectable()
 export class LoggerService {

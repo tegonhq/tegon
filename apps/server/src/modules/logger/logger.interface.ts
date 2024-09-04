@@ -2,6 +2,7 @@ import winston from 'winston';
 
 export interface LogInput {
   message: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: Record<string, any>;
   where?: string;
   error?: Error;
@@ -19,8 +20,9 @@ export interface LoggerPrintFormat {
   timestamp: string; // log timestamp
   lvl: string; // log level
   ctx: string; // logger context
-  msg: string; //message
+  msg: string; // message
   wId: string; // workspace id
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: Record<string, any>; // payload
   opName?: string; // operation or endpoint name from where the request was initiated
   reqId?: string; // request id

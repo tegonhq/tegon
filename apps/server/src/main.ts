@@ -6,11 +6,11 @@ import supertokens from 'supertokens-node';
 
 import type { CorsConfig } from 'common/configs/config.interface';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import ReplicationService from 'modules/replication/replication.service';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { AppModule } from './app.module';
-import { LoggerService } from 'modules/logger/logger.service';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (BigInt.prototype as any).toJSON = function () {

@@ -1,7 +1,3 @@
-import { Check, Trash } from 'lucide-react';
-import { useEditor } from 'novel';
-import { useEffect, useRef } from 'react';
-
 import { Button } from '@tegonhq/ui/components/button';
 import { Input } from '@tegonhq/ui/components/input';
 import {
@@ -9,6 +5,10 @@ import {
   Popover,
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
+import { Check, Trash } from 'lucide-react';
+import { useEditor } from 'novel';
+import { useEffect, useRef } from 'react';
+
 import { LinkLine } from '@tegonhq/ui/icons';
 
 export function isValidUrl(url: string) {

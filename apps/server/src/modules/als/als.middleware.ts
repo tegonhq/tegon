@@ -1,8 +1,8 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-
 import { Request, Response, NextFunction } from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import Session from 'supertokens-node/recipe/session';
+import { v4 as uuidv4 } from 'uuid';
+
 import { ALSService } from './als.service';
 
 @Injectable()
@@ -21,6 +21,7 @@ export class ALSMiddleware implements NestMiddleware {
       sessionRequired: false,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const store: Map<string, any> = new Map();
 
     store.set('opName', req.baseUrl);

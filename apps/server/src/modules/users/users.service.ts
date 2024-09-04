@@ -8,12 +8,13 @@ import {
   generatePersonalAccessToken,
 } from 'common/authentication';
 
+import { LoggerService } from 'modules/logger/logger.service';
+
 import {
   UpdateUserBody,
   userSerializer,
   UserWithInvites,
 } from './user.interface';
-import { LoggerService } from 'modules/logger/logger.service';
 
 @Injectable()
 export class UsersService {

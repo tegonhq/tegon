@@ -4,6 +4,9 @@
     "VERSION",
     "NODE_ENV",
 
+    "LOG_LEVEL",
+    "CREATE_LOG_FILE",
+
     "POSTGRES_USER",
     "POSTGRES_PASSWORD",
     "POSTGRES_DB",

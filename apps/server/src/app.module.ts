@@ -1,7 +1,7 @@
-import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { PrismaModule } from 'nestjs-prisma';
 
 import config from 'common/configs/config';
@@ -9,6 +9,7 @@ import { loggingMiddleware } from 'common/middleware/logging.middleware';
 
 import { ActionModule } from 'modules/action/action.module';
 import { AIRequestsModule } from 'modules/ai-requests/ai-requests.module';
+import { ALSModule } from 'modules/als/als.module';
 import { AttachmentModule } from 'modules/attachments/attachments.module';
 import { AuthModule } from 'modules/auth/auth.module';
 import { BullConfigModule } from 'modules/bull/bull.module';
@@ -24,8 +25,8 @@ import { NotificationsModule } from 'modules/notifications/notifications.module'
 import { OAuthCallbackModule } from 'modules/oauth-callback/oauth-callback.module';
 import { ReplicationModule } from 'modules/replication/replication.module';
 import { SearchModule } from 'modules/search/search.module';
-import { SyncActionsModule } from 'modules/sync-actions/sync-actions.module';
 import { SyncModule } from 'modules/sync/sync.module';
+import { SyncActionsModule } from 'modules/sync-actions/sync-actions.module';
 import { TeamsModule } from 'modules/teams/teams.module';
 import { TemplatesModule } from 'modules/templates/templates.module';
 import { TriggerdevModule } from 'modules/triggerdev/triggerdev.module';
@@ -35,7 +36,6 @@ import { WebhookModule } from 'modules/webhook/webhook.module';
 import { WorkflowsModule } from 'modules/workflows/workflows.module';
 import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
-import { ALSModule } from 'modules/als/als.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
