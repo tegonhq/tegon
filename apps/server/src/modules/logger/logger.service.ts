@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import chalk from 'chalk';
 import { WinstonModuleOptions } from 'nest-winston';
 import winston, { Logger as WinstonLogger, createLogger } from 'winston';
 
@@ -89,7 +90,7 @@ export class LoggerService {
 
       const loggerPrintFormat: LoggerPrintFormat = {
         timestamp,
-        lvl: level,
+        lvl: level.toUpperCase(),
         ctx: this.context,
         msg: message,
         wId: workspaceId,
@@ -107,11 +108,31 @@ export class LoggerService {
         loggerPrintFormat.payload = metadata?.payload;
       }
 
-      // if console format the early return. no need to print extra info in console.
+      // if console format, return an array structure
       if (isConsoleFormat) {
-        return JSON.stringify(loggerPrintFormat);
+        const consoleFormat = [
+          chalk.green(loggerPrintFormat.timestamp),
+          chalk.green(loggerPrintFormat.lvl),
+          chalk.blue(loggerPrintFormat.ctx),
+          chalk.cyan(loggerPrintFormat.msg),
+        ];
+
+        if (loggerPrintFormat.error) {
+          consoleFormat.push(
+            chalk.red(JSON.stringify(loggerPrintFormat.error)),
+          );
+        }
+
+        if (loggerPrintFormat.payload) {
+          consoleFormat.push(
+            chalk.yellow(JSON.stringify(loggerPrintFormat.payload)),
+          );
+        }
+
+        return consoleFormat.join(' ');
       }
 
+      // for file logs, return a JSON structure
       const requestId = ALS_SERVICE_INSTANCE.get<string>('requestId');
       if (requestId) {
         loggerPrintFormat.reqId = requestId;
