@@ -7,15 +7,15 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Workflow } from '@tegonhq/types';
+import {
+  CreateWorkflowDTO,
+  UpdateWorkflowDTO,
+  Workflow,
+  WorkflowRequestParamsDto,
+} from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
-import {
-  UpdateWorkflowInput,
-  WorkflowRequestIdBody,
-  TeamRequestIdBody,
-} from './workflows.interface';
 import WorkflowsService from './workflows.service';
 
 @Controller({
@@ -28,36 +28,51 @@ export class WorkflowsController {
   @Get()
   @UseGuards(AuthGuard)
   async getAllWorkflows(
-    @Param() teamId: TeamRequestIdBody,
+    @Param() workflowRequestParams: WorkflowRequestParamsDto,
   ): Promise<Workflow[]> {
-    return await this.workflowsService.getAllWorkflows(teamId);
+    return await this.workflowsService.getAllWorkflows(workflowRequestParams);
+  }
+
+  @Post()
+  @UseGuards(AuthGuard)
+  async createWorkflow(
+    @Param() workflowRequestParams: WorkflowRequestParamsDto,
+    @Body() workflowData: CreateWorkflowDTO,
+  ): Promise<Workflow> {
+    return await this.workflowsService.createWorkflow(
+      workflowRequestParams,
+      workflowData,
+    );
   }
 
   @Get(':workflowId')
   @UseGuards(AuthGuard)
   async getWorkflow(
     @Param()
-    workflowId: WorkflowRequestIdBody,
+    workflowRequestParams: WorkflowRequestParamsDto,
   ): Promise<Workflow> {
-    return await this.workflowsService.getWorkflow(workflowId);
+    return await this.workflowsService.getWorkflow(workflowRequestParams);
   }
 
   @Post(':workflowId')
   @UseGuards(AuthGuard)
   async updateWorkflow(
     @Param()
-    workflowId: WorkflowRequestIdBody,
-    @Body() workflowData: UpdateWorkflowInput,
+    workflowRequestParams: WorkflowRequestParamsDto,
+    @Body() workflowData: UpdateWorkflowDTO,
   ): Promise<Workflow> {
-    return await this.workflowsService.updateWorkflow(workflowId, workflowData);
+    return await this.workflowsService.updateWorkflow(
+      workflowRequestParams,
+      workflowData,
+    );
   }
 
   @Delete(':workflowId')
   @UseGuards(AuthGuard)
   async deleteWorkflow(
     @Param()
-    workflowId: WorkflowRequestIdBody,
+    workflowRequestParams: WorkflowRequestParamsDto,
   ): Promise<Workflow> {
-    return await this.workflowsService.deleteWorkflow(workflowId);
+    return await this.workflowsService.deleteWorkflow(workflowRequestParams);
   }
 }

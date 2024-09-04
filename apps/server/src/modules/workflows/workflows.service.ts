@@ -1,57 +1,134 @@
-import { Injectable } from '@nestjs/common';
-import { Workflow } from '@tegonhq/types';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import {
+  CreateWorkflowDTO,
+  TeamRequestParamsDto,
+  UpdateWorkflowDTO,
+  Workflow,
+  WorkflowRequestParamsDto,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-import {
-  TeamRequestIdBody,
-  UpdateWorkflowInput,
-  WorkflowRequestIdBody,
-} from './workflows.interface';
+import { LoggerService } from 'modules/logger/logger.service';
 
 @Injectable()
 export default class WorkflowsService {
   constructor(private prisma: PrismaService) {}
+  private readonly logger = new LoggerService(WorkflowsService.name);
 
   async getAllWorkflows(
-    teamRequestIdBody: TeamRequestIdBody,
+    workflowRequestParams: WorkflowRequestParamsDto,
   ): Promise<Workflow[]> {
+    this.logger.debug({
+      message: `Fetching all workflows for team ${workflowRequestParams.teamId}`,
+      where: `WorkflowsService.getAllWorkflows`,
+    });
+
     return await this.prisma.workflow.findMany({
       where: {
-        teamId: teamRequestIdBody.teamId,
+        teamId: workflowRequestParams.teamId,
       },
     });
   }
 
   async getWorkflow(
-    WorkflowRequestIdBody: WorkflowRequestIdBody,
+    workflowRequestParams: WorkflowRequestParamsDto,
   ): Promise<Workflow> {
+    this.logger.debug({
+      message: `Fetching workflow with id ${workflowRequestParams.workflowId}`,
+      where: `WorkflowsService.getWorkflow`,
+    });
+
     return await this.prisma.workflow.findUnique({
       where: {
-        id: WorkflowRequestIdBody.workflowId,
+        id: workflowRequestParams.workflowId,
       },
     });
+  }
+
+  async createWorkflow(
+    workflowRequestParams: TeamRequestParamsDto,
+    workflowData: CreateWorkflowDTO,
+  ): Promise<Workflow> {
+    this.logger.debug({
+      message: `Creating new workflow for team ${workflowRequestParams.teamId}`,
+      payload: { teamId: workflowRequestParams.teamId, workflowData },
+      where: `WorkflowsService.createWorkflow`,
+    });
+
+    try {
+      return await this.prisma.workflow.create({
+        data: { teamId: workflowRequestParams.teamId, ...workflowData },
+      });
+    } catch (error) {
+      this.logger.error({
+        message: `Error while creating workflow`,
+        where: `WorkflowsService.createWorkflow`,
+        error,
+        payload: workflowData,
+      });
+      if (error.name === 'PrismaClientKnownRequestError') {
+        throw new BadRequestException(
+          'A workflow state with this name and type already exists for this team',
+        );
+      }
+      throw new InternalServerErrorException(
+        error,
+        `Error while creating workflow`,
+      );
+    }
   }
 
   async updateWorkflow(
-    workflowRequestIdBody: WorkflowRequestIdBody,
-    workflowData: UpdateWorkflowInput,
+    workflowRequestParams: WorkflowRequestParamsDto,
+    workflowData: UpdateWorkflowDTO,
   ): Promise<Workflow> {
-    return await this.prisma.workflow.update({
-      data: {
-        ...workflowData,
-      },
-      where: {
-        id: workflowRequestIdBody.workflowId,
-      },
+    this.logger.debug({
+      message: `Updating workflow with id ${workflowRequestParams.workflowId}`,
+      payload: { workflowId: workflowRequestParams.workflowId, workflowData },
+      where: `WorkflowsService.updateWorkflow`,
     });
+
+    try {
+      return await this.prisma.workflow.update({
+        data: workflowData,
+        where: {
+          id: workflowRequestParams.workflowId,
+        },
+      });
+    } catch (error) {
+      this.logger.error({
+        message: `Error while updating workflow`,
+        where: `WorkflowsService.updateWorkflow`,
+        error,
+        payload: workflowData,
+      });
+      if (error.name === 'PrismaClientKnownRequestError') {
+        throw new BadRequestException(
+          'A workflow state with this name and type already exists for this team',
+        );
+      }
+      throw new InternalServerErrorException(
+        error,
+        `Error while creating workflow`,
+      );
+    }
   }
 
   async deleteWorkflow(
-    workflowRequestIdBody: WorkflowRequestIdBody,
+    workflowRequestParams: WorkflowRequestParamsDto,
   ): Promise<Workflow> {
+    this.logger.debug({
+      message: `Deleting workflow with id ${workflowRequestParams.workflowId}`,
+      where: `WorkflowsService.deleteWorkflow`,
+    });
+
     return await this.prisma.workflow.update({
       where: {
-        id: workflowRequestIdBody.workflowId,
+        id: workflowRequestParams.workflowId,
       },
       data: {
         deleted: new Date().toISOString(),

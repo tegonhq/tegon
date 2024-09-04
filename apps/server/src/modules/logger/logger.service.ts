@@ -112,7 +112,9 @@ export class LoggerService {
       if (isConsoleFormat) {
         const consoleFormat = [
           chalk.green(loggerPrintFormat.timestamp),
-          chalk.green(loggerPrintFormat.lvl),
+          loggerPrintFormat.lvl === 'ERROR'
+            ? chalk.red(loggerPrintFormat.lvl)
+            : chalk.green(loggerPrintFormat.lvl),
           chalk.blue(loggerPrintFormat.ctx),
           chalk.cyan(loggerPrintFormat.msg),
         ];
