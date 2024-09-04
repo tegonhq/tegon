@@ -3,8 +3,9 @@ import {
   createIssueComment,
   getLabels,
   Label,
+  getIssueById,
+  getAIRequest,
 } from '@tegonhq/sdk';
-import axios from 'axios';
 
 import {
   convertMarkdownToTiptapJson,
@@ -14,18 +15,13 @@ import {
 import { PARTIAL_SOLUTION_PROMPT } from '../utils';
 
 export const bugEnricher = async (actionPayload: ActionEventPayload) => {
-  const { modelId: issueId, action } = actionPayload;
+  const { modelId: issueId } = actionPayload;
 
-  const { data: actionInput } = action;
+  const issue = await getIssueById({ issueId });
 
-  // const issue = await getIssueById({ issueId });
-
-  const issue = (await axios.get(`/api/v1/issues/${issueId}`)).data;
-
-  if (issue.labelIds.lengthr === 0) {
+  if (issue.labelIds.length === 0) {
     return null;
   }
-  const techStack = actionInput.inputs.techStack;
 
   const labels = await getLabels({
     workspaceId: issue.team.workspaceId,
@@ -49,8 +45,7 @@ export const bugEnricher = async (actionPayload: ActionEventPayload) => {
       { role: 'system', content: PARTIAL_SOLUTION_PROMPT },
       {
         role: 'user',
-        content: `[INPUT] bug_description: ${convertTiptapJsonToText(issue.description)}
-  tech_stack: ${techStack}`,
+        content: `[INPUT] bug_description: ${convertTiptapJsonToText(issue.description)}`,
       },
     ],
     llmModel: LLMMappings.GPT35TURBO,
@@ -58,9 +53,7 @@ export const bugEnricher = async (actionPayload: ActionEventPayload) => {
     workspaceId: issue.team.workspaceId,
   };
 
-  // const aiResponse = await getAIRequest(requestData);
-  const aiResponse = (await axios.post(`/api/v1/ai_requests`, requestData))
-    .data;
+  const aiResponse = await getAIRequest(requestData);
 
   const pattern = /\[OUTPUT\]\s*([\s\S]*)/;
   const match = aiResponse.match(pattern);
@@ -73,7 +66,7 @@ export const bugEnricher = async (actionPayload: ActionEventPayload) => {
   }
 
   if (response) {
-    const tiptapJson = await convertMarkdownToTiptapJson(response);
+    const tiptapJson = convertMarkdownToTiptapJson(response);
 
     return await createIssueComment({
       issueId,

@@ -10,7 +10,6 @@ import {
 import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
 
-
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
 import {
   TriggerdevService,
@@ -77,7 +76,11 @@ export default class WebhookService {
           event: ActionTypesEnum.SOURCE_WEBHOOK,
           eventBody,
           eventHeaders,
-          ...(await prepareTriggerPayload(this.prisma, this.triggerDevService, actionEntity.action.id))
+          ...(await prepareTriggerPayload(
+            this.prisma,
+            this.triggerDevService,
+            actionEntity.action.id,
+          )),
         },
         { lockToVersion: actionEntity.action.triggerVersion },
       );

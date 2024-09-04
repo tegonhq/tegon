@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -26,6 +27,8 @@ import {
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new LoggerService(UsersService.name);
+
   constructor(
     private prisma: PrismaService,
     private config: ConfigService,

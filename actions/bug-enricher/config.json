@@ -1,11 +1,12 @@
 {
   "slug": "bug-enricher",
   "name": "Bug Enricher",
+  "description": "Put the resolution from openAI",
   "triggers": [
     {
       "type": "on_create",
-      "entities": ["Issue"]
+      "entities": [ "Issue" ]
     }
   ],
-  "integrations": []
+  "integrations": [ ]
 }

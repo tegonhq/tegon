@@ -14,9 +14,9 @@ export async function getIssuesByFilter(
   return response.data;
 }
 
-export async function getIssuesById({
+export async function getIssueById({
   issueId,
-}: IssueRequestParamsDto): Promise<Issue[]> {
+}: IssueRequestParamsDto): Promise<Issue> {
   const response = await axios.get(`/api/v1/issues/${issueId}`);
 
   return response.data;
