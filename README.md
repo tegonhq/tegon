@@ -6,7 +6,7 @@
   </a>
 </p>
 
-<h2 align="center" >The AI-First issue tracking tool for engineering teams </h3>
+<h2 align="center" >The dev-first issue tracking tool. Open-source, customisable and lightweight. </h3>
 
 <p align="center"><a href="https://www.tegon.ai"> Website</a> · <a href="https://docs.tegon.ai/introduction"> Documentation</a> ·  <a href="https://join.slack.com/t/tegoncommunity/shared_invite/zt-2jvar8p1x-9wqFTL9PP5ICImb76qcjEA"> Join our Slack</a>
 <br />
@@ -22,38 +22,40 @@
 </p>
 <br>
           
-Issue Tracking is important for fast-paced teams, enabling them to organize list of tasks, collaborate, and track progress effectively. However, existing tools often introduce the following challenges:
+Issue tracking isn't just another software—it's a critical category in B2B solutions. However, existing tools often fall short. They either become bloated by trying to cater to every company's unique processes or are too simplistic, failing to handle complex use cases effectively.
 
-- Manual efforts in task management, such as task triaging and backlog maintenance, can be time-consuming.
-- Engineers often waste time navigating multiple platforms to gather task context, rather than accessing details within the task itself.
-- Issue tracking tools serve as a task database, directing engineers on what to work on but not aiding in faster task completion.
-- Existing tools don't effectively assist Engineering Managers in real-time task, feature, or bug prioritisation.
+Current issue tracking tools function primarily as systems of record, lacking the deeper integration of context and actions that truly drive productivity.
+
+At Tegon, our goal is to build an issue tracking tool that serves as a system of record, context, and action. Beyond just tracking progress, Tegon will provide full context on ongoing work through seamless integration with other tools, and act as a system of actions to elevate organizational productivity.
 
 <br>
 
-# Demo
-Go to [demo.tegon.ai](https://demo.tegon.ai/) and login with the following credentials
-```
-email: elon@xyz.com
-password: XfFNw6GwVJVQv6PA
-```
-See also:  
-🚀 [Self-hosting](https://docs.tegon.ai/oss/self-deployment)  
+# Quickstart
+
+🚀 [Self-hosting](https://docs.tegon.ai/oss/self-deployment) 
+
 🖥️ [Local Setup](https://docs.tegon.ai/oss/local-setup)
 
-Demo Video:
+# Demo Video:
 https://www.loom.com/share/b664b01e9b064a02be5791c12b77a107?sid=d4146365-1597-4ff5-88fd-a07b08ddb9f4
-<br>
 
-<br>
 
 # Tegon Cloud
 
-We offer a managed cloud version of Tegon that allows you to run Tegon without having to manage the infrastructure. It is currently in private beta.
-If you're interested in using Tegon Cloud, please book a [demo call](https://calendly.com/manik-tegon/30min).
-<br>
+We offer a managed cloud version of Tegon that allows you to run Tegon without having to manage the infrastructure. 
+If you'd like to try it out,
+1. Navigate to [app.tegon.ai](https://app.tegon.ai/)
+2. Create an account
+3. Kick off by creating your first issue
 
-<br>
+# Tegon Actions
+Tegon Actions is a powerful framework designed to automate repetitive tasks in issue tracking, streamlining your workflow. With Tegon Actions, you can effortlessly automate workflows like:
+ - Automatically assigning labels when issues are created
+ - Generating sub-issues for PR reviews as soon as a PR is opened
+ - Creating issues directly from Slack with the 👀 emoji
+ - Sending weekly summaries and changelogs of completed issues on Slack
+
+Check out the [Actions Docs](https://docs.tegon.ai/actions/overview) for more information.
 
 # What You Can Do With Tegon
 We're currently in the development phase of Tegon's alpha version. Please expect some breaking changes.  
