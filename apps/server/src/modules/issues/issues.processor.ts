@@ -1,9 +1,9 @@
 import { Process, Processor } from '@nestjs/bull';
-import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
 
 import { VectorService } from 'modules/vector/vector.service';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import IssuesAIService from './issues-ai.service';
 import { IssueWithRelations } from './issues.interface';
 
@@ -13,12 +13,15 @@ export class IssuesProcessor {
     private vectorService: VectorService,
     private issuesAiservice: IssuesAIService,
   ) {}
-  private readonly logger: Logger = new Logger('IssueProcessor');
+  private readonly logger: LoggerService = new LoggerService('IssueProcessor');
 
   @Process('addIssueToVector')
   async handleIssueToVector(job: Job<{ issue: IssueWithRelations }>) {
     const { issue } = job.data;
-    this.logger.log(`Adding issue to Vector ${issue.id}`);
+    this.logger.info({
+      message: `Adding issue to Vector ${issue.id}`,
+      where: `IssuesProcessor.handleIssueToVector`,
+    });
     await this.vectorService.createIssueEmbedding(issue);
   }
 
@@ -27,24 +30,34 @@ export class IssuesProcessor {
     job: Job<{ issue: IssueWithRelations; isDeleted: boolean }>,
   ) {
     const { issue, isDeleted } = job.data;
-    this.logger.log(`Handling triage for issue ${issue.id}`);
+    this.logger.info({
+      message: `Handling triage for issue ${issue.id}`,
+      where: `IssuesProcessor.handleIssueToVector`,
+    });
 
     if (isDeleted) {
-      this.logger.log(
-        `Issue ${issue.id} moved out of Triage, removing suggestions`,
-      );
+      this.logger.info({
+        message: `Issue ${issue.id} moved out of Triage, removing suggestions`,
+        where: `IssuesProcessor.handleIssueToVector`,
+      });
       return await this.issuesAiservice.deleteIssueSuggestion(issue.id);
     }
 
     await this.vectorService.createIssueEmbedding(issue);
 
-    this.logger.log(`Finding similar issues for issue ${issue.id}`);
+    this.logger.info({
+      message: `Finding similar issues for issue ${issue.id}`,
+      where: `IssuesProcessor.handleIssueToVector`,
+    });
     await this.issuesAiservice.similarIssueSuggestion(
       issue.team.workspaceId,
       issue.id,
     );
 
-    this.logger.log(`Generating issue suggestions for issue ${issue.id}`);
+    this.logger.info({
+      message: `Generating issue suggestions for issue ${issue.id}`,
+      where: `IssuesProcessor.handleIssueToVector`,
+    });
     return await this.issuesAiservice.issueSuggestions(issue);
   }
 }

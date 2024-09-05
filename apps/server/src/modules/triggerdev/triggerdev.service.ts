@@ -1,9 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Knex, { Knex as KnexT } from 'knex'; // Import Knex for database operations
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid for generating unique identifiers
 
+import { LoggerService } from 'modules/logger/logger.service';
 import { formatRunEvent, prepareEvent } from './trigger.utils'; // Import utility functions for formatting run events
 import {
   encryptToken,
@@ -20,7 +21,7 @@ export const TriggerProjects = {
 
 @Injectable()
 export class TriggerdevService {
-  private readonly logger: Logger = new Logger('TriggerService'); // Logger instance for logging
+  private readonly logger: LoggerService = new LoggerService('TriggerService'); // Logger instance for logging
 
   knex: KnexT; // Knex instance for database operations
   commonId: string; // ID of the common project
@@ -37,7 +38,10 @@ export class TriggerdevService {
   }
 
   afterInit() {
-    this.logger.log('Trigger service Module initiated'); // Log a message after initialization
+    this.logger.info({
+      message: 'Trigger service Module initiated',
+      where: `TriggerdevService.afterInit`,
+    }); // Log a message after initialization
   }
 
   // This project is used to run internal background jobs
@@ -49,7 +53,10 @@ export class TriggerdevService {
     this.createPersonalToken(); // Create a personal access token
 
     if (!commonProjectExists) {
-      this.logger.log(`Common project doesn't exist`); // Log a message if the common project doesn't exist
+      this.logger.info({
+        message: `Common project doesn't exist`,
+        where: `TriggerdevService.initCommonProject`,
+      }); // Log a message if the common project doesn't exist
       await this.createProject('Common', 'common', uuidv4().replace(/-/g, '')); // Create the common project
     }
   }
@@ -173,8 +180,12 @@ export class TriggerdevService {
       });
 
       return id; // Return the project ID
-    } catch (e) {
-      this.logger.log(`Error creating project: ${e}`); // Log an error if project creation fails
+    } catch (error) {
+      this.logger.error({
+        message: `Error creating project`,
+        where: `TriggerdevService.createProject`,
+        error,
+      }); // Log an error if project creation fails
 
       return undefined; // Return undefined if an error occurs
     }

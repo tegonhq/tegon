@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   IntegrationEventPayload,
   IntegrationPayloadEventType,
@@ -12,12 +12,13 @@ import {
   TriggerProjects,
 } from 'modules/triggerdev/triggerdev.service';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import {
-  OAuthBodyInterface,
   CallbackParams,
+  OAuthBodyInterface,
   ProviderTemplateOAuth2,
-  SessionRecord,
   SentryCallbackBody,
+  SessionRecord,
 } from './oauth-callback.interface';
 import {
   getSimpleOAuth2ClientConfig,
@@ -30,7 +31,7 @@ const CALLBACK_URL = `${process.env.FRONTEND_HOST}/api/v1/oauth/callback`;
 export class OAuthCallbackService {
   // TODO(Manoj): Move this to Redis once we have multiple servers
   session: Record<string, SessionRecord> = {};
-  private readonly logger = new Logger(OAuthCallbackService.name);
+  private readonly logger = new LoggerService(OAuthCallbackService.name);
 
   constructor(
     private integrationDefinitionService: IntegrationDefinitionService,
@@ -46,9 +47,10 @@ export class OAuthCallbackService {
     const { integrationDefinitionId, workspaceId, redirectURL, personal } =
       oAuthBody;
 
-    this.logger.log(
-      `We got OAuth request for ${workspaceId}: ${integrationDefinitionId}`,
-    );
+    this.logger.info({
+      message: `We got OAuth request for ${workspaceId}: ${integrationDefinitionId}`,
+      where: `OAuthCallbackService.getRedirectURL`,
+    });
 
     const integrationDefinition =
       await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
@@ -99,9 +101,10 @@ export class OAuthCallbackService {
         ...additionalAuthParams,
       });
 
-      this.logger.debug(
-        `OAuth 2.0 for ${integrationDefinition.name} - redirecting to: ${authorizationUri}`,
-      );
+      this.logger.debug({
+        message: `OAuth 2.0 for ${integrationDefinition.name} - redirecting to: ${authorizationUri}`,
+        where: `OAuthCallbackService.getRedirectURL`,
+      });
 
       return {
         status: 200,

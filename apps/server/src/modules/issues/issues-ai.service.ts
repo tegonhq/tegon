@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   CreateIssueDto,
   CreateIssueRelationDto,
@@ -15,6 +15,7 @@ import IssueRelationService from 'modules/issue-relation/issue-relation.service'
 import { LLMMappings } from 'modules/prompts/prompts.interface';
 import { VectorService } from 'modules/vector/vector.service';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import {
   getAiFilter,
   getIssueTitle,
@@ -32,7 +33,7 @@ import { getWorkspace } from './issues.utils';
 
 @Injectable()
 export default class IssuesAIService {
-  private readonly logger: Logger = new Logger('IssueAIService');
+  private readonly logger: LoggerService = new LoggerService('IssueAIService');
 
   constructor(
     private prisma: PrismaService,
@@ -124,9 +125,10 @@ export default class IssuesAIService {
   async issueSuggestions(issue: IssueWithRelations) {
     // If the issue already has labels, return undefined
     if (issue.labelIds.length >= 1) {
-      this.logger.log(
-        `Issue ${issue.id} already has labels, skipping suggestions.`,
-      );
+      this.logger.info({
+        message: `Issue ${issue.id} already has labels, skipping suggestions.`,
+        where: `IssuesAIService.issueSuggestions`,
+      });
       return undefined;
     }
 
@@ -152,9 +154,10 @@ export default class IssuesAIService {
       }),
     ]);
 
-    this.logger.log(
-      `Fetched ${labels.length} labels and ${similarIssues.length} similar issues for issue ${issue.id}.`,
-    );
+    this.logger.info({
+      message: `Fetched ${labels.length} labels and ${similarIssues.length} similar issues for issue ${issue.id}.`,
+      where: `IssuesAIService.issueSuggestions`,
+    });
 
     let labelIds: string[];
 
@@ -163,14 +166,16 @@ export default class IssuesAIService {
       labelIds = similarIssues.flatMap(
         (similarIssue) => similarIssue.issue.labelIds,
       );
-      this.logger.log(
-        `Using label IDs from ${similarIssues.length} similar issues for issue ${issue.id}.`,
-      );
+      this.logger.info({
+        message: `Using label IDs from ${similarIssues.length} similar issues for issue ${issue.id}.`,
+        where: `IssuesAIService.issueSuggestions`,
+      });
     } else {
       // Otherwise, get suggested labels from OpenAI based on the issue description
-      this.logger.log(
-        `Fetching suggested labels from OpenAI for issue ${issue.id}.`,
-      );
+      this.logger.info({
+        message: `Fetching suggested labels from OpenAI for issue ${issue.id}.`,
+        where: `IssuesAIService.issueSuggestions`,
+      });
       const gptLabels = await getSuggestedLabels(
         this.prisma,
         this.aiRequestsService,
@@ -209,9 +214,10 @@ export default class IssuesAIService {
       },
     });
 
-    this.logger.log(
-      `Upserted issue suggestion for issue ${issue.id} with ${suggestion.suggestedLabelIds.length} suggested labels.`,
-    );
+    this.logger.info({
+      message: `Upserted issue suggestion for issue ${issue.id} with ${suggestion.suggestedLabelIds.length} suggested labels.`,
+      where: `IssuesAIService.issueSuggestions`,
+    });
 
     // Return the upserted issue suggestion
     return suggestion;
@@ -367,7 +373,10 @@ export default class IssuesAIService {
 
     // Extract label names from the retrieved labels
     const labelNames = labels.map((label) => label.name);
-    this.logger.debug(`Retrieved label names: ${labelNames}`);
+    this.logger.debug({
+      message: `Retrieved label names: ${labelNames}`,
+      where: `IssuesAIService.aiFilters`,
+    });
 
     // Retrieve assignees based on the team ID
     const assignee = await this.prisma.usersOnWorkspaces.findMany({
@@ -377,7 +386,10 @@ export default class IssuesAIService {
 
     // Extract assignee names from the retrieved assignees
     const assigneeNames = assignee.map((assignee) => assignee.user.fullname);
-    this.logger.debug(`Retrieved assignee names: ${assigneeNames}`);
+    this.logger.debug({
+      message: `Retrieved assignee names: ${assigneeNames}`,
+      where: `IssuesAIService.aiFilters`,
+    });
 
     // Retrieve workflows based on the team ID
     const workflow = await this.prisma.workflow.findMany({
@@ -386,11 +398,17 @@ export default class IssuesAIService {
 
     // Extract workflow names from the retrieved workflows
     const workflowNames = workflow.map((workflow) => workflow.name);
-    this.logger.debug(`Retrieved workflow names: ${workflowNames}`);
+    this.logger.debug({
+      message: `Retrieved workflow names: ${workflowNames}`,
+      where: `IssuesAIService.aiFilters`,
+    });
 
     // Retrieve the workspace based on the team ID
     const workspace = await getWorkspace(this.prisma, teamRequestParams.teamId);
-    this.logger.debug(`Retrieved workspace: ${workspace.name}`);
+    this.logger.debug({
+      message: `Retrieved workspace: ${workspace.name}`,
+      where: `IssuesAIService.aiFilters`,
+    });
 
     // Call the getAiFilter function with the necessary parameters
     const aiFilter = await getAiFilter(
@@ -420,9 +438,10 @@ export default class IssuesAIService {
     const subIssuePrompt = await this.prisma.prompt.findFirst({
       where: { name: 'SubIssues', workspaceId: subIssueInput.workspaceId },
     });
-    this.logger.debug(
-      `Retrieved sub-issue prompt: ${JSON.stringify(subIssuePrompt)}`,
-    );
+    this.logger.debug({
+      message: `Retrieved sub-issue prompt: ${JSON.stringify(subIssuePrompt)}`,
+      where: `IssuesAIService.generateSubIssues`,
+    });
 
     // Set default label names
     let labelNames: string[] = ['Frontend', 'Backend'];
@@ -436,7 +455,10 @@ export default class IssuesAIService {
         })
       ).map((label) => label.name);
     }
-    this.logger.debug(`Label names for sub-issues: ${labelNames}`);
+    this.logger.debug({
+      message: `Label names for sub-issues: ${labelNames}`,
+      where: `IssuesAIService.generateSubIssues`,
+    });
 
     // Generate sub-issues using the AI request service
     const subissues = await this.aiRequestsService.getLLMRequest({
@@ -453,7 +475,10 @@ export default class IssuesAIService {
       model: 'SubIssues',
       workspaceId: subIssueInput.workspaceId,
     });
-    this.logger.debug(`Generated sub-issues: ${subissues}`);
+    this.logger.debug({
+      message: `Generated sub-issues: ${subissues}`,
+      where: `IssuesAIService.generateSubIssues`,
+    });
 
     // Extract sub-issue titles using regex
     const regex = /sub_issues:\s*\[(.*?)\]/s;
@@ -462,14 +487,18 @@ export default class IssuesAIService {
     if (match && match[1]) {
       const subIssueTitles = JSON.parse(`[${match[1]}]`);
 
-      this.logger.debug(`Extracted sub-issue titles: ${subIssueTitles}`);
+      this.logger.debug({
+        message: `Extracted sub-issue titles: ${subIssueTitles}`,
+        where: `IssuesAIService.generateSubIssues`,
+      });
 
       return subIssueTitles;
     }
 
-    this.logger.debug(
-      `No sub-issues found in the generated content: ${subissues}`,
-    );
+    this.logger.debug({
+      message: `No sub-issues found in the generated content: ${subissues}`,
+      where: `IssuesAIService.generateSubIssues`,
+    });
     return [];
   }
 

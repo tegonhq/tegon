@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   ActionEntity,
   ActionEvent,
@@ -12,12 +12,15 @@ import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { CreateActionEvent } from './action-event.interface';
 import { prepareTriggerPayload } from './action-event.utils';
+import { LoggerService } from 'modules/logger/logger.service';
 
 const SUPPORTED_MODELS = ['Issue', 'IssueComment', 'LinkedIssue'];
 
 @Injectable()
 export default class ActionEventService {
-  private readonly logger: Logger = new Logger('ActionEventService');
+  private readonly logger: LoggerService = new LoggerService(
+    'ActionEventService',
+  );
 
   constructor(
     private prisma: PrismaService,
@@ -68,7 +71,11 @@ export default class ActionEventService {
     const actionEntities = await this.getActionEntities(actionEvent);
 
     if (actionEntities.length === 0) {
-      this.logger.log('No actions to trigger');
+      this.logger.info({
+        message: 'No actions to trigger',
+        payload: { actionEntities },
+        where: `ActionEventService.triggerActions`,
+      });
     }
 
     return await Promise.all(

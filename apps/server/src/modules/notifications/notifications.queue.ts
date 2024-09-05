@@ -1,7 +1,8 @@
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import {
   NotificationData,
   NotificationEventFrom,
@@ -12,14 +13,19 @@ export class NotificationsQueue {
   constructor(
     @InjectQueue('notifications') private readonly notificationsQueue: Queue,
   ) {}
-  private readonly logger: Logger = new Logger('NotificationsQueue');
+  private readonly logger: LoggerService = new LoggerService(
+    'NotificationsQueue',
+  );
 
   async addToNotification(
     eventType: NotificationEventFrom,
     createdById: string,
     notificationData: NotificationData,
   ) {
-    this.logger.log(`Adding notifications to Queue with event: ${eventType}`);
+    this.logger.info({
+      message: `Adding notifications to Queue with event: ${eventType}`,
+      where: `NotificationsQueue.addToNotification`,
+    });
     return this.notificationsQueue.add('addToNotification', {
       eventType,
       createdById,

@@ -1,16 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import {
   CreateIssueDto,
   CreateIssueRelationDto,
   CreateLinkedIssueDto,
+  GetIssuesByFilterDTO,
   Issue,
   IssueRequestParamsDto,
   TeamRequestParamsDto,
   UpdateIssueDto,
   WorkflowCategoryEnum,
   WorkspaceRequestParamsDto,
-  GetIssuesByFilterDTO,
 } from '@tegonhq/types';
 import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
@@ -24,6 +24,7 @@ import IssueRelationService from 'modules/issue-relation/issue-relation.service'
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import { SubscribeType } from './issues.interface';
 import { IssuesQueue } from './issues.queue';
 import {
@@ -39,7 +40,7 @@ import {
 
 @Injectable()
 export default class IssuesService {
-  private readonly logger: Logger = new Logger('IssueService');
+  private readonly logger: LoggerService = new LoggerService('IssueService');
 
   constructor(
     private prisma: PrismaService,
@@ -243,9 +244,10 @@ export default class IssuesService {
       },
     });
 
-    this.logger.log(
-      `Issue with ID ${issueParams.issueId} updated successfully`,
-    );
+    this.logger.info({
+      message: `Issue with ID ${issueParams.issueId} updated successfully`,
+      where: `IssueService.updateIssueApi`,
+    });
 
     // Get the difference between the updated and current issue
     const issueDiff = await getIssueDiff(updatedIssue, currentIssue);
@@ -311,9 +313,10 @@ export default class IssuesService {
     teamRequestParams: TeamRequestParamsDto,
     issueParams: IssueRequestParamsDto,
   ): Promise<Issue> {
-    this.logger.log(
-      `Deleting issue with id ${issueParams.issueId} for team ${teamRequestParams.teamId}`,
-    );
+    this.logger.info({
+      message: `Deleting issue with id ${issueParams.issueId} for team ${teamRequestParams.teamId}`,
+      where: `IssueService.updateIssueApi`,
+    });
 
     // Update the issue in the database by marking it as deleted with the current timestamp
     const deleteIssue = await this.prisma.issue.update({
@@ -335,13 +338,19 @@ export default class IssuesService {
       },
     });
 
-    this.logger.log(`Issue ${deleteIssue.id} marked as deleted`);
+    this.logger.info({
+      message: `Issue ${deleteIssue.id} marked as deleted`,
+      where: `IssueService.updateIssueApi`,
+    });
 
     // Delete the issue history associated with the deleted issue
     await this.deleteIssueHistory(deleteIssue.id);
     await this.notificationsQueue.deleteNotificationsByIssue(deleteIssue.id);
 
-    this.logger.log(`Issue history deleted for issue ${deleteIssue.id}`);
+    this.logger.info({
+      message: `Issue history deleted for issue ${deleteIssue.id}`,
+      where: `IssueService.updateIssueApi`,
+    });
 
     return deleteIssue;
   }
@@ -361,7 +370,10 @@ export default class IssuesService {
     linkMetaData?: Record<string, string>,
     issueRelation?: CreateIssueRelationDto,
   ): Promise<void> {
-    this.logger.log(`Upserting issue history for issue ${issue.id}`);
+    this.logger.info({
+      message: `Upserting issue history for issue ${issue.id}`,
+      where: `IssueService.updateIssueApi`,
+    });
 
     // Upsert the issue history using the issueHistoryService
     await this.issueHistoryService.upsertIssueHistory(
@@ -373,7 +385,10 @@ export default class IssuesService {
 
     // Check if an issue relation is provided
     if (issueRelation) {
-      this.logger.log(`Creating issue relation for issue ${issue.id}`);
+      this.logger.info({
+        message: `Creating issue relation for issue ${issue.id}`,
+        where: `IssueService.updateIssueApi`,
+      });
 
       // Create the issue relation input object
       const relationInput: CreateIssueRelationDto = {
@@ -395,7 +410,10 @@ export default class IssuesService {
    * @param issueId The ID of the issue.
    */
   private async deleteIssueHistory(issueId: string): Promise<void> {
-    this.logger.log(`Deleting issue history for issue ${issueId}`);
+    this.logger.info({
+      message: `Deleting issue history for issue ${issueId}`,
+      where: `IssueService.updateIssueApi`,
+    });
 
     // Call the issueHistoryService to delete the issue history
     await this.issueHistoryService.deleteIssueHistory(issueId);
