@@ -2,22 +2,24 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  Logger,
 } from '@nestjs/common';
 import {
   IssueRequestParamsDto,
+  LinkIssueInput,
   LinkedIssue,
   LinkedIssueRequestParamsDto,
-  LinkIssueInput,
   UpdateLinkedIssueDto,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { ApiResponse } from 'modules/issues/issues.interface';
+import { LoggerService } from 'modules/logger/logger.service';
 
 @Injectable()
 export default class LinkedIssueService {
-  private readonly logger: Logger = new Logger('LinkedIssueService');
+  private readonly logger: LoggerService = new LoggerService(
+    'LinkedIssueService',
+  );
 
   constructor(private prisma: PrismaService) {}
 
@@ -31,9 +33,10 @@ export default class LinkedIssueService {
       include: { issue: { include: { team: true } } },
     });
     if (linkedIssue) {
-      this.logger.debug(
-        `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
-      );
+      this.logger.debug({
+        message: `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
+        where: `LinkedIssueService.createLinkIssue`,
+      });
       throw new BadRequestException(
         `This ${linkData.type} has already been linked to an issue ${linkedIssue.issue.team.identifier}-${linkedIssue.issue.number}`,
       );

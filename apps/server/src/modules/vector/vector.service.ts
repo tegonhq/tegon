@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { CohereClient } from 'cohere-ai';
 import { PrismaService } from 'nestjs-prisma';
 import { Client as TypesenseClient } from 'typesense';
@@ -6,6 +6,7 @@ import { Client as TypesenseClient } from 'typesense';
 import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
 
 import { IssueWithRelations } from 'modules/issues/issues.interface';
+import { LoggerService } from 'modules/logger/logger.service';
 
 import {
   cohereEmbedding,
@@ -28,7 +29,7 @@ export class VectorService implements OnModuleInit {
     this.isCohere = process.env.COHERE_API_KEY ? true : false;
   }
 
-  private readonly logger: Logger = new Logger('VectorService');
+  private readonly logger: LoggerService = new LoggerService('VectorService');
 
   async onModuleInit() {
     // await this.typesenseClient.collections('issues').delete();
@@ -38,7 +39,10 @@ export class VectorService implements OnModuleInit {
   async createIssuesCollection() {
     try {
       await this.typesenseClient.collections('issues').retrieve();
-      this.logger.log('Issues collection already exists');
+      this.logger.info({
+        message: 'Issues collection already exists',
+        where: `VectorService.createIssuesCollection`,
+      });
     } catch (error) {
       if (error.httpStatus === 404) {
         issueSchema.fields.push(
@@ -46,7 +50,10 @@ export class VectorService implements OnModuleInit {
         );
 
         await this.typesenseClient.collections().create(issueSchema);
-        this.logger.log('Created an issue collection');
+        this.logger.info({
+          message: 'Created an issue collection',
+          where: `VectorService.createIssuesCollection`,
+        });
         const workspaces = await this.prisma.workspace.findMany({
           where: { deleted: null },
           select: { id: true },
@@ -54,9 +61,16 @@ export class VectorService implements OnModuleInit {
         await Promise.all(
           workspaces.map((workspace) => this.prefillIssuesData(workspace.id)),
         );
-        this.logger.log('Prefilled data for all workspaces');
+        this.logger.info({
+          message: 'Prefilled data for all workspaces',
+          where: `VectorService.createIssuesCollection`,
+        });
       } else {
-        this.logger.error('Error creating issues collection:', error);
+        this.logger.error({
+          message: 'Error creating issues collection:',
+          where: `VectorService.createIssuesCollection`,
+          error,
+        });
       }
     }
   }
@@ -329,8 +343,9 @@ export class VectorService implements OnModuleInit {
       await this.createIssueEmbedding(issue);
     }
 
-    this.logger.log(
-      `Prefilled all issues data into vector for workspaceId: ${workspaceId}`,
-    );
+    this.logger.info({
+      message: `Prefilled all issues data into vector for workspaceId: ${workspaceId}`,
+      where: `VectorService.prefillIssuesData`,
+    });
   }
 }

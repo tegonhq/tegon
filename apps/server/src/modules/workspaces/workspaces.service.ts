@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import {
   InviteStatusEnum,
@@ -13,6 +13,7 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { createMagicLink } from 'common/utils/login';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import { workflowSeedData } from 'modules/teams/teams.interface';
 import { UsersService } from 'modules/users/users.service';
 
@@ -28,7 +29,9 @@ import {
 
 @Injectable()
 export default class WorkspacesService {
-  private readonly logger: Logger = new Logger('WorkspaceService');
+  private readonly logger: LoggerService = new LoggerService(
+    'WorkspaceService',
+  );
   constructor(
     private prisma: PrismaService,
     private mailerService: MailerService,
@@ -261,7 +264,10 @@ export default class WorkspacesService {
             invitationUrl: magicLink,
           },
         });
-        this.logger.log('Invite Email sent to user');
+        this.logger.info({
+          message: 'Invite Email sent to user',
+          where: `WorkspacesService.inviteUsers`,
+        });
 
         responseRecord[email] = 'Success';
       } catch (error) {

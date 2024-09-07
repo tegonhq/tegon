@@ -10,3 +10,5 @@ prisma/migrations/dev/
 
 certs/
 .trigger
+
+combined.log

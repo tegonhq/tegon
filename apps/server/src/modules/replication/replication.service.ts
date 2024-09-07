@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ModelNameEnum } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
@@ -10,6 +10,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 import ActionEventService from 'modules/action-event/action-event.service';
+import { LoggerService } from 'modules/logger/logger.service';
 import { SyncGateway } from 'modules/sync/sync.gateway';
 import SyncActionsService from 'modules/sync-actions/sync-actions.service';
 import { getWorkspaceId } from 'modules/sync-actions/sync-actions.utils';
@@ -26,7 +27,9 @@ const REPLICATION_SLOT_PLUGIN = 'wal2json';
 @Injectable()
 export default class ReplicationService {
   client: Client;
-  private readonly logger: Logger = new Logger('ReplicationService');
+  private readonly logger: LoggerService = new LoggerService(
+    'ReplicationService',
+  );
   private replicationSlotName = `tegon_replication_slot_${uuidv4().replace(/-/g, '')}`;
 
   constructor(
@@ -69,21 +72,24 @@ export default class ReplicationService {
         const slotName = row.slot_name;
         try {
           await this.deleteSlot(slotName);
-          this.logger.log(
-            `Orphaned replication slot ${slotName} deleted successfully.`,
-          );
-        } catch (err) {
-          this.logger.error(
-            `Error deleting replication slot ${slotName}:`,
-            err,
-          );
+          this.logger.info({
+            message: `Orphaned replication slot ${slotName} deleted successfully.`,
+            where: `ReplicationService.deleteOrphanedSlots`,
+          });
+        } catch (error) {
+          this.logger.error({
+            message: `Error deleting replication slot ${slotName}:`,
+            where: `ReplicationService.deleteOrphanedSlots`,
+            error,
+          });
         }
       }
-    } catch (err) {
-      this.logger.error(
-        'Error finding or deleting orphaned replication slots:',
-        err,
-      );
+    } catch (error) {
+      this.logger.error({
+        message: 'Error finding or deleting orphaned replication slots:',
+        where: `ReplicationService.deleteOrphanedSlots`,
+        error,
+      });
     }
   }
 
@@ -125,9 +131,17 @@ export default class ReplicationService {
       // Create replication slot
       const result = await this.client.query(createReplicationSlotQuery);
 
-      this.logger.log('Replication slot created successfully:', result.rows[0]);
+      this.logger.info({
+        message: 'Replication slot created successfully:',
+        where: `ReplicationService.createReplicationSlot`,
+        payload: { row: result.rows[0] },
+      });
     } catch (error) {
-      this.logger.error('Error creating replication slot:', error);
+      this.logger.error({
+        message: 'Error creating replication slot:',
+        where: `ReplicationService.createReplicationSlot`,
+        error,
+      });
     } finally {
       await this.client.end();
     }
@@ -141,9 +155,16 @@ export default class ReplicationService {
       await this.prisma
         .$executeRaw`ALTER TABLE "LinkedIssue" REPLICA IDENTITY FULL`;
 
-      this.logger.log('REPLICA IDENTITY FULL set for all specified tables.');
+      this.logger.info({
+        message: 'REPLICA IDENTITY FULL set for all specified tables.',
+        where: `ReplicationService.setReplicaIdentityFull`,
+      });
     } catch (error) {
-      this.logger.error('Error setting REPLICA IDENTITY FULL:', error);
+      this.logger.error({
+        message: 'Error setting REPLICA IDENTITY FULL:',
+        where: `ReplicationService.setReplicaIdentityFull`,
+        error,
+      });
     }
   }
 
@@ -193,7 +214,10 @@ export default class ReplicationService {
         this.logger.error(e);
       })
       .then(() => {
-        this.logger.log('Replication server connected');
+        this.logger.info({
+          message: 'Replication server connected',
+          where: `ReplicationService.setupReplication`,
+        });
       });
 
     service.on('data', (_lsn: string, log: logType) => {
@@ -252,7 +276,7 @@ export default class ReplicationService {
           }
         });
       } else {
-        this.logger.log('No change data in log');
+        this.logger.info({ message: 'No change data in log' });
       }
     });
   }

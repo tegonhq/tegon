@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import jwt from 'supertokens-node/lib/build/recipe/jwt';
 import { TypePasswordlessEmailDeliveryInput } from 'supertokens-node/lib/build/recipe/passwordless/types';
@@ -6,9 +5,12 @@ import Passwordless from 'supertokens-node/recipe/passwordless';
 import Session from 'supertokens-node/recipe/session';
 import UserRoles from 'supertokens-node/recipe/userroles';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import { UsersService } from 'modules/users/users.service';
 
-function logEmail(logger: Logger, email: string, link: string) {
+const logger = new LoggerService('Supertokens');
+
+function logEmail(email: string, link: string) {
   const message = `##### sendEmail to ${email}, subject: Login email
 
 Log in to Tegon.ai
@@ -17,7 +19,7 @@ Click here to log in with this magic link:
 ${link}\n\n`;
 
   if (process.env.NODE_ENV !== 'production') {
-    logger.log(message);
+    logger.info({ message });
   }
 }
 
@@ -43,8 +45,7 @@ export const recipeList = (
               urlWithLinkCode,
               codeLifetime,
             }: TypePasswordlessEmailDeliveryInput) {
-              const logger = new Logger('Supertokens');
-              logEmail(logger, email, urlWithLinkCode);
+              logEmail(email, urlWithLinkCode);
 
               try {
                 await mailerService.sendMail({
@@ -57,8 +58,12 @@ export const recipeList = (
                     linkExpiresIn: Math.floor(codeLifetime / 60000),
                   },
                 });
-              } catch (err) {
-                logger.error(err);
+              } catch (error) {
+                logger.error({
+                  message: `Error while sending mail`,
+                  where: `supertokens.config.recipeList`,
+                  error,
+                });
               }
             },
           };

@@ -1,6 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
-import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
+
+import { LoggerService } from 'modules/logger/logger.service';
 
 import {
   NotificationData,
@@ -11,7 +12,9 @@ import NotificationsService from './notifications.service';
 @Processor('notifications')
 export class NotificationsProcessor {
   constructor(private notificationsService: NotificationsService) {}
-  private readonly logger: Logger = new Logger('NotificationsProcessor');
+  private readonly logger: LoggerService = new LoggerService(
+    'NotificationsProcessor',
+  );
 
   @Process('addToNotification')
   async addToNotification(
@@ -23,9 +26,10 @@ export class NotificationsProcessor {
   ) {
     const { eventType, createdById, notificationData } = job.data;
 
-    this.logger.log(
-      `Adding notification for event ${eventType} by user ${createdById}`,
-    );
+    this.logger.info({
+      message: `Adding notification for event ${eventType} by user ${createdById}`,
+      where: `NotificationsProcessor.addToNotification`,
+    });
     await this.notificationsService.createNotification(
       eventType,
       createdById,
@@ -41,7 +45,10 @@ export class NotificationsProcessor {
     }>,
   ) {
     const { eventType, notificationData } = job.data;
-    this.logger.log(`Deleting notification for event ${eventType}`);
+    this.logger.info({
+      message: `Deleting notification for event ${eventType}`,
+      where: `NotificationsProcessor.deleteNotificationByEvent`,
+    });
     await this.notificationsService.deleteNotificationByEventType(
       eventType,
       notificationData,
@@ -55,7 +62,10 @@ export class NotificationsProcessor {
     }>,
   ) {
     const { issueId } = job.data;
-    this.logger.log(`Deleting notifications for issue ${issueId}`);
+    this.logger.info({
+      message: `Deleting notifications for issue ${issueId}`,
+      where: `NotificationsProcessor.deleteNotificationsByIssue`,
+    });
     await this.notificationsService.deleteNotificationByIssueId(issueId);
   }
 }

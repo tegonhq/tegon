@@ -1,15 +1,17 @@
 import { openai } from '@ai-sdk/openai';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { GetAIRequestDTO, AIStreamResponse } from '@tegonhq/types';
-import { streamText, generateText, CoreMessage, CoreUserMessage } from 'ai';
+import { AIStreamResponse, GetAIRequestDTO } from '@tegonhq/types';
+import { CoreMessage, CoreUserMessage, generateText, streamText } from 'ai';
 import { PrismaService } from 'nestjs-prisma';
 import { Ollama } from 'ollama';
 import { ollama } from 'ollama-ai-provider';
 
+import { LoggerService } from 'modules/logger/logger.service';
+
 @Injectable()
 export default class AIRequestsService {
-  private readonly logger: Logger = new Logger('RequestsService');
+  private readonly logger: LoggerService = new LoggerService('RequestsService');
   constructor(
     private prisma: PrismaService,
     private configService: ConfigService,
@@ -36,7 +38,11 @@ export default class AIRequestsService {
       (message: CoreMessage) => message.role === 'user',
     );
     const model = reqBody.llmModel;
-    this.logger.log(`Received request with model: ${model}`);
+    this.logger.info({
+      message: `Received request with model: ${model}`,
+      payload: { userMessages },
+      where: `AIRequestsService.LLMRequestStream`,
+    });
 
     try {
       return await this.makeModelCall(
@@ -54,7 +60,11 @@ export default class AIRequestsService {
         },
       );
     } catch (error) {
-      this.logger.error(`Error in LLMRequestStream: ${error.message}`);
+      this.logger.error({
+        message: `Error in LLMRequestStream: ${error.message}`,
+        where: `AIRequestsService.LLMRequestStream`,
+        error,
+      });
       throw error;
     }
   }
@@ -66,7 +76,7 @@ export default class AIRequestsService {
     onFinish: (text: string, model: string) => void,
   ) {
     let modelInstance;
-    let finalModel;
+    let finalModel: string;
 
     if (!this.configService.get('OPENAI_API_KEY')) {
       model = null;
@@ -77,12 +87,18 @@ export default class AIRequestsService {
       case 'gpt-4-turbo':
       case 'gpt-4o':
         finalModel = model;
-        this.logger.log(`Sending request to OpenAI with model: ${model}`);
+        this.logger.info({
+          message: `Sending request to OpenAI with model: ${model}`,
+          where: `AIRequestsService.makeModelCall`,
+        });
         modelInstance = openai(model);
         break;
       default:
         finalModel = process.env.LOCAL_MODEL;
-        this.logger.log(`Sending request to ollama with model: ${model}`);
+        this.logger.info({
+          message: `Sending request to ollama with model: ${model}`,
+          where: `AIRequestsService.makeModelCall`,
+        });
         modelInstance = ollama(finalModel);
     }
 
@@ -113,7 +129,10 @@ export default class AIRequestsService {
     serviceModel: string,
     workspaceId: string,
   ) {
-    this.logger.log(`Saving request and response to database`);
+    this.logger.info({
+      message: `Saving request and response to database`,
+      where: `AIRequestsService.createRecord`,
+    });
     await this.prisma.aIRequest.create({
       data: {
         data: JSON.stringify(userMessages),
