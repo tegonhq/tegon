@@ -7,12 +7,12 @@ import { PrismaService } from 'nestjs-prisma';
 import * as simpleOauth2 from 'simple-oauth2';
 
 import { IntegrationDefinitionService } from 'modules/integration-definition/integration-definition.service';
+import { LoggerService } from 'modules/logger/logger.service';
 import {
   TriggerdevService,
   TriggerProjects,
 } from 'modules/triggerdev/triggerdev.service';
 
-import { LoggerService } from 'modules/logger/logger.service';
 import {
   CallbackParams,
   OAuthBodyInterface,

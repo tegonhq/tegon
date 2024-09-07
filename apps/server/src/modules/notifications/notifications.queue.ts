@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
 
 import { LoggerService } from 'modules/logger/logger.service';
+
 import {
   NotificationData,
   NotificationEventFrom,

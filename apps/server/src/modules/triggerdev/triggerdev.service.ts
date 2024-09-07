@@ -5,6 +5,7 @@ import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid for generating unique identifiers
 
 import { LoggerService } from 'modules/logger/logger.service';
+
 import { formatRunEvent, prepareEvent } from './trigger.utils'; // Import utility functions for formatting run events
 import {
   encryptToken,

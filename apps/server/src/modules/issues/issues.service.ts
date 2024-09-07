@@ -21,10 +21,10 @@ import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
+import { LoggerService } from 'modules/logger/logger.service';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
-import { LoggerService } from 'modules/logger/logger.service';
 import { SubscribeType } from './issues.interface';
 import { IssuesQueue } from './issues.queue';
 import {

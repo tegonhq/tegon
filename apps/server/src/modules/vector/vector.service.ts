@@ -6,8 +6,8 @@ import { Client as TypesenseClient } from 'typesense';
 import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
 
 import { IssueWithRelations } from 'modules/issues/issues.interface';
-
 import { LoggerService } from 'modules/logger/logger.service';
+
 import {
   cohereEmbedding,
   issueSchema,

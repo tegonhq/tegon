@@ -2,6 +2,7 @@ import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 
 import { LoggerService } from 'modules/logger/logger.service';
+
 import {
   NotificationData,
   NotificationEventFrom,

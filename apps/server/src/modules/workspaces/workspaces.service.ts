@@ -1,5 +1,5 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { MailerService } from '@nestjs-modules/mailer';
 import {
   InviteStatusEnum,
   RoleEnum,
@@ -13,10 +13,10 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { createMagicLink } from 'common/utils/login';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import { workflowSeedData } from 'modules/teams/teams.interface';
 import { UsersService } from 'modules/users/users.service';
 
-import { LoggerService } from 'modules/logger/logger.service';
 import {
   CreateInitialResourcesDto,
   CreateWorkspaceInput,

@@ -1,9 +1,9 @@
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import { VectorService } from 'modules/vector/vector.service';
 
-import { LoggerService } from 'modules/logger/logger.service';
 import IssuesAIService from './issues-ai.service';
 import { IssueWithRelations } from './issues.interface';
 

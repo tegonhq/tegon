@@ -3,10 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AIStreamResponse, GetAIRequestDTO } from '@tegonhq/types';
 import { CoreMessage, CoreUserMessage, generateText, streamText } from 'ai';
-import { LoggerService } from 'modules/logger/logger.service';
 import { PrismaService } from 'nestjs-prisma';
 import { Ollama } from 'ollama';
 import { ollama } from 'ollama-ai-provider';
+
+import { LoggerService } from 'modules/logger/logger.service';
 
 @Injectable()
 export default class AIRequestsService {

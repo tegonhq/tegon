@@ -7,12 +7,12 @@ import {
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
+import { LoggerService } from 'modules/logger/logger.service';
 import { convertLsnToInt } from 'modules/sync-actions/sync-actions.utils';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { CreateActionEvent } from './action-event.interface';
 import { prepareTriggerPayload } from './action-event.utils';
-import { LoggerService } from 'modules/logger/logger.service';
 
 const SUPPORTED_MODELS = ['Issue', 'IssueComment', 'LinkedIssue'];
 

@@ -7,6 +7,7 @@ import {
 import { Server, Socket } from 'socket.io';
 
 import { LoggerService } from 'modules/logger/logger.service';
+
 import { ClientMetadata } from './sync.interface';
 import { isValidAuthentication } from './sync.utils';
 

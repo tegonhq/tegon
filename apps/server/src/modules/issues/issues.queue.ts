@@ -2,6 +2,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Issue } from '@tegonhq/types';
 import { Queue } from 'bull';
+
 import { LoggerService } from 'modules/logger/logger.service';
 
 @Injectable()

@@ -10,11 +10,11 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 import ActionEventService from 'modules/action-event/action-event.service';
+import { LoggerService } from 'modules/logger/logger.service';
+import { SyncGateway } from 'modules/sync/sync.gateway';
 import SyncActionsService from 'modules/sync-actions/sync-actions.service';
 import { getWorkspaceId } from 'modules/sync-actions/sync-actions.utils';
-import { SyncGateway } from 'modules/sync/sync.gateway';
 
-import { LoggerService } from 'modules/logger/logger.service';
 import {
   logChangeType,
   logType,
