@@ -69,7 +69,7 @@ export const LeftSide = observer(() => {
         <Editor
           value={issue.description}
           onChange={onDescriptionChange}
-          className="min-h-[50px] mb-8 px-6 mt-3"
+          className="min-h-[50px] mb-8 px-6 mt-3 text-md"
         >
           <EditorExtensions suggestionItems={suggestionItems} />
         </Editor>

@@ -4,7 +4,6 @@ import type { Editor as EditorT, Extension, Mark, Node } from '@tiptap/core';
 import { EditorInstance, EditorContent, EditorBubble, useEditor } from 'novel';
 import {
   ImageResizer,
-  UpdatedImage,
   handleCommandNavigation,
   type SuggestionItem,
 } from 'novel/extensions';
@@ -16,9 +15,13 @@ import { defaultExtensions, getPlaceholder } from './editor-extensions';
 import { LinkSelector, NodeSelector, TextButtons } from './selectors';
 import { slashCommand } from './slash-command';
 import { uploadFn } from './utils';
-import { EditorRoot, EditorCommand, EditorCommandItem } from './utils/index';
+import {
+  EditorRoot,
+  EditorCommand,
+  EditorCommandItem,
+  EditorCommandEmpty,
+} from './utils/index';
 import { cn } from '../../../lib/utils';
-import { CommandEmpty } from '../command';
 import { Separator } from '../separator';
 
 interface EditorExtensionsProps {
@@ -38,9 +41,9 @@ export const EditorExtensions = ({
           'font-sans w-52 bg-background-2 backdrop-blur-md pl-1 shadow-1 border border-[#ffffff38] transition-all flex flex-col',
         )}
       >
-        <CommandEmpty className="px-2 text-muted-foreground">
+        <EditorCommandEmpty className="px-2 text-muted-foreground">
           No results
-        </CommandEmpty>
+        </EditorCommandEmpty>
 
         {suggestionItems.map((item: SuggestionItem) => (
           <EditorCommandItem
@@ -149,7 +152,6 @@ export const Editor = ({
     const finalExtensions = [
       ...defaultExtensions,
       slashCommand,
-      UpdatedImage,
       getPlaceholder(placeholder),
       ...extensions,
     ];

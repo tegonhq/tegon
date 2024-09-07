@@ -6,7 +6,6 @@ import * as React from 'react';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { UserContext } from 'store/user-context';
-import { WorkspaceStoreInit } from 'store/workspace-store-provider';
 
 import {
   SECTION_COMPONENTS,
@@ -39,9 +38,5 @@ export function PersonalSettings() {
 }
 
 PersonalSettings.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <SettingsLayout>
-      <WorkspaceStoreInit>{page}</WorkspaceStoreInit>
-    </SettingsLayout>
-  );
+  return <SettingsLayout>{page}</SettingsLayout>;
 };

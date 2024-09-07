@@ -23,6 +23,7 @@
     "start": "nest start",
     "dev": "nest start --watch",
     "start-prod": "pnpm run migrate:deploy && pnpm run generate && node dist/src/main",
+    "start-prod-with-prisma": "pnpm run start-prod && pnpm prisma:studio",
     "start:debug": "nest start --debug --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "migrate": "prisma migrate dev --preview-feature",
