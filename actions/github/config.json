@@ -1,0 +1,20 @@
+{
+  "slug": "github",
+  "name": "Github",
+  "description": "Create issues from Github messages, sync Issues and Comments",
+  "triggers": [
+    {
+      "type": "on_create",
+      "entities": ["Issue", "IssueComment", "LinkedIssue"]
+    },
+    {
+      "type": "on_update",
+      "entities": ["Issue", "IssueComment"]
+    },
+    {
+      "type": "source_webhook",
+      "entities": ["github"]
+    }
+  ],
+  "integrations": ["github"]
+}

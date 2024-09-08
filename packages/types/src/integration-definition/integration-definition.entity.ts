@@ -34,6 +34,7 @@ export class IntegrationDefinition {
   slug: string;
   description: string;
   icon: string;
+  config?: JsonValue;
   spec?: Spec;
   clientId: string;
   clientSecret: string;

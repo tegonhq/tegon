@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { JsonObject } from '@tegonhq/types';
+
+import { getAccessToken, getBotAccessToken } from './utils';
 
 const prisma = new PrismaClient();
 export const getToken = async (integrationAccountId: string) => {
@@ -8,10 +9,11 @@ export const getToken = async (integrationAccountId: string) => {
       id: integrationAccountId,
       deleted: null,
     },
+    include: { integrationDefinition: true },
   });
 
-  const integrationConfig =
-    integrationAccount.integrationConfiguration as JsonObject;
+  const token = await getAccessToken(prisma, integrationAccount);
+  const botToken = await getBotAccessToken(integrationAccount);
 
-  return { token: integrationConfig.api_key };
+  return { token, botToken };
 };

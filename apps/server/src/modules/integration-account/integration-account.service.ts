@@ -3,6 +3,7 @@ import {
   CreateIntegrationAccountDto,
   InputJsonValue,
   IntegrationAccountIdDto,
+  PersonalAccountDto,
   UpdateIntegrationAccountDto,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
@@ -133,6 +134,26 @@ export class IntegrationAccountService {
   async getIntegrationAccountByAccountId(accountId: string) {
     return await this.prisma.integrationAccount.findFirst({
       where: { accountId, deleted: null },
+      select: IntegrationAccountSelect,
+    });
+  }
+
+  async getPersonalIntegrationAccount(personalAccountData: PersonalAccountDto) {
+    const {
+      workspaceId,
+      userId: integratedById,
+      definitionSlug: slug,
+    } = personalAccountData;
+
+    return await this.prisma.integrationAccount.findFirst({
+      where: {
+        integratedById,
+        personal: true,
+        workspaceId,
+        integrationDefinition: {
+          slug,
+        },
+      },
       select: IntegrationAccountSelect,
     });
   }

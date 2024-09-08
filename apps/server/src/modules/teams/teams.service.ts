@@ -25,6 +25,9 @@ export default class TeamsService {
       where: {
         id: TeamRequestParams.teamId,
       },
+      include: {
+        workspace: true,
+      },
     });
   }
 
@@ -35,6 +38,9 @@ export default class TeamsService {
       where: {
         workspaceId: workspaceRequestParams.workspaceId,
         deleted: null,
+      },
+      include: {
+        workspace: true,
       },
     });
   }
@@ -47,6 +53,9 @@ export default class TeamsService {
           equals: name,
           mode: 'insensitive',
         },
+      },
+      include: {
+        workspace: true,
       },
     });
   }

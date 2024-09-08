@@ -5,6 +5,7 @@ import {
 import { task } from '@trigger.dev/sdk/v3';
 
 import { integrationCreate } from './account-create';
+import { getToken } from './get-token';
 import { spec } from './spec';
 
 async function run(eventPayload: IntegrationEventPayload) {
@@ -15,10 +16,16 @@ async function run(eventPayload: IntegrationEventPayload) {
     // Used to save settings data
     case IntegrationPayloadEventType.CREATE:
       return await integrationCreate(
-        eventPayload.payload.userId,
-        eventPayload.payload.workspaceId,
-        eventPayload.payload.data,
+        eventPayload.userId,
+        eventPayload.workspaceId,
+        eventPayload.data,
       );
+
+    case IntegrationPayloadEventType.GET_IDENTIFIER:
+      return eventPayload.data.eventBody.installation.id.toString();
+
+    case IntegrationPayloadEventType.GET_TOKEN:
+      return await getToken(eventPayload.integrationAccountId);
 
     default:
       return {

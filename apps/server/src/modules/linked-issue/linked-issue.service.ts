@@ -78,6 +78,12 @@ export default class LinkedIssueService {
     });
   }
 
+  async getLinkedIssueByIssueId(issueId: string) {
+    return this.prisma.linkedIssue.findMany({
+      where: { issueId, deleted: null },
+    });
+  }
+
   async updateLinkIssue(
     linkedIssueIdParams: LinkedIssueRequestParamsDto,
     linkedIssueData: UpdateLinkedIssueDto,

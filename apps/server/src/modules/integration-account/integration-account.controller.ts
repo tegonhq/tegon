@@ -12,6 +12,7 @@ import {
   CreateIntegrationAccountDto,
   IntegrationAccount,
   IntegrationAccountIdDto,
+  PersonalAccountDto,
   UpdateIntegrationAccountDto,
 } from '@tegonhq/types';
 
@@ -48,6 +49,16 @@ export class IntegrationAccountController {
   ): Promise<IntegrationAccount> {
     return await this.integrationAccountService.getIntegrationAccountByAccountId(
       accountId,
+    );
+  }
+
+  @Get('personal')
+  @UseGuards(AuthGuard)
+  async getPersonalIntegrationAccount(
+    @Query() personalAccountParams: PersonalAccountDto,
+  ): Promise<IntegrationAccount> {
+    return await this.integrationAccountService.getPersonalIntegrationAccount(
+      personalAccountParams,
     );
   }
 
