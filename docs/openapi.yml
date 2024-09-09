@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Tegon
   description: AI First Project Management Tool
-  version: 0.3.1
+  version: 0.3.4
 
 servers:
   - url: https://app.tegon.ai
@@ -38,7 +38,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Action        
+        - Action
 
   /api/v1/action/{slug}/inputs:
     post:
@@ -70,7 +70,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Action          
+        - Action
 
   /api/v1/ai_requests:
     post:
@@ -96,7 +96,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Ai_requests        
+        - Ai_requests
 
   /api/v1/ai_requests/stream:
     post:
@@ -122,7 +122,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Ai_requests         
+        - Ai_requests
 
   /api/v1/integration_account/{integrationAccountId}:
     get:
@@ -149,7 +149,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Integration_account           
+        - Integration_account
 
   /api/v1/integration_account/accountId:
     get:
@@ -176,7 +176,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Integration_account           
+        - Integration_account
 
   /api/v1/integration_definition/{integrationDefinitionId}:
     get:
@@ -201,7 +201,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Integration_definition        
+        - Integration_definition
 
   /api/v1/integration_definition:
     get:
@@ -258,7 +258,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Issue_comments        
+        - Issue_comments
 
   /api/v1/issue_comments/linked_comment:
     post:
@@ -282,7 +282,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Issue_comments         
+        - Issue_comments
 
   # /api/v1/issue_comments/linked_comment:
   #   get:
@@ -307,7 +307,7 @@ paths:
   #       "422":
   #         description: Unprocessable Entity
   #     tags:
-  #       - Issue_comments       
+  #       - Issue_comments
 
   /api/v1/issue_comments/{issueCommentId}:
     get:
@@ -332,7 +332,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Issue_comments 
+        - Issue_comments
 
     post:
       summary: Update issue comment
@@ -362,7 +362,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Issue_comments        
+        - Issue_comments
 
   /api/v1/issue_relation/{issueRelationId}:
     delete:
@@ -388,7 +388,6 @@ paths:
           description: Unprocessable Entity
       tags:
         - Issue_relation
-        
 
   /api/v1/issues:
     post:
@@ -449,7 +448,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Issue  
+        - Issue
 
     delete:
       summary: Delete issue
@@ -478,7 +477,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Issue          
+        - Issue
 
   /api/v1/issues/filter:
     post:
@@ -505,7 +504,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Issue           
+        - Issue
 
   /api/v1/issues/{issueId}/move:
     post:
@@ -536,8 +535,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Issue           
-        
+        - Issue
 
   /api/v1/labels:
     get:
@@ -569,7 +567,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Labels           
+        - Labels
 
     post:
       summary: Create label
@@ -593,7 +591,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Labels           
+        - Labels
 
   /api/v1/labels/{labelId}:
     post:
@@ -624,7 +622,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Labels         
+        - Labels
 
     delete:
       summary: Delete label
@@ -648,7 +646,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Labels          
+        - Labels
 
   /api/v1/issues/{issueId}/link:
     post:
@@ -684,7 +682,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Issue        
+        - Issue
 
   /api/v1/linked_issues/{linkedIssueId}:
     get:
@@ -709,7 +707,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Linked_issue         
+        - Linked_issue
 
     post:
       summary: Update linked issue by ID
@@ -739,7 +737,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Linked_issue            
+        - Linked_issue
 
     delete:
       summary: Delete linked issue
@@ -763,8 +761,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Linked_issue            
-        
+        - Linked_issue
 
   /api/v1/linked_issues/source:
     get:
@@ -789,7 +786,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Linked_issue         
+        - Linked_issue
 
   /api/v1/linked_issues/source/{sourceId}:
     get:
@@ -816,7 +813,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Linked_issue           
+        - Linked_issue
 
     post:
       summary: Update linked issue by source ID
@@ -846,7 +843,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Linked_issue         
+        - Linked_issue
 
   /api/v1/users/pat:
     post:
@@ -871,7 +868,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Users         
+        - Users
 
   /api/v1/users/pats/{patId}:
     delete:
@@ -896,7 +893,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Users         
+        - Users
 
   /api/v1/users:
     get:
@@ -915,7 +912,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Users        
+        - Users
 
     post:
       summary: Get users
@@ -941,7 +938,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Users          
+        - Users
 
   /api/v1/views/{viewId}:
     get:
@@ -966,7 +963,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Users        
+        - Users
 
   /api/v1/{teamId}/workflows:
     get:
@@ -993,7 +990,7 @@ paths:
         "422":
           description: Unprocessable Entity
       tags:
-        - Teams          
+        - Teams
 
 components:
   schemas:
