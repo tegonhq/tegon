@@ -1,10 +1,14 @@
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { WorkflowCategoryEnum } from './workflow.entity';
 
 export class CreateWorkflowDTO {
   @IsString()
   name: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
 
   @IsNumber()
   position: number;

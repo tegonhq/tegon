@@ -5,7 +5,7 @@
 
 */
 -- AlterTable
-ALTER TABLE "Workflow" ADD COLUMN     "descrfiption" TEXT;
+ALTER TABLE "Workflow" ADD COLUMN     "description" TEXT;
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_ci" ON "Workflow"("name", "teamId");

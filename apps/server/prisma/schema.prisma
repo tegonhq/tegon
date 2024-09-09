@@ -562,7 +562,7 @@ model Workflow {
   deleted   DateTime?
 
   name         String
-  descrfiption String?
+  description String?
   position     Int
   color        String
   category     WorkflowCategory
