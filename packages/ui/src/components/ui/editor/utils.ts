@@ -69,6 +69,24 @@ export const uploadFn = createImageUpload({
   },
 });
 
+export const handleImagePaste = (
+  editor: Editor,
+  event: ClipboardEvent,
+  uploadFn: UploadFileFn,
+) => {
+  if (event.clipboardData?.files.length) {
+    event.preventDefault();
+    const [file] = Array.from(event.clipboardData.files);
+    const pos = editor.view.state.selection.from;
+
+    if (file) {
+      uploadFn(file, editor, pos);
+    }
+    return true;
+  }
+  return false;
+};
+
 type UploadFileFn = (file: File, view: Editor, pos: number) => void;
 
 export const createFileUpload =

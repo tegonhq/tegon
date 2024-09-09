@@ -19,6 +19,7 @@ export async function saveWorkspaceData(
           userId: record.data.userId,
           workspaceId: record.data.workspaceId,
           teamIds: record.data.teamIds,
+          role: record.data.role,
         };
 
         await tegonDatabase.usersOnWorkspaces.put(userOnWorkspace);
