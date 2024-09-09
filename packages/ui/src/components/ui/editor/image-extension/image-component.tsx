@@ -38,8 +38,6 @@ export const ImageComponent = (props: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.node.attrs.openViewer]);
 
-  console.log(props.node.attrs);
-
   return (
     <NodeViewWrapper className="react-component-with-content">
       <div className="content">

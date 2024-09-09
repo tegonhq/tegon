@@ -1,6 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JsonObject } from '@tegonhq/types';
 import Knex, { Knex as KnexT } from 'knex'; // Import Knex for database operations
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid for generating unique identifiers
@@ -257,26 +256,6 @@ export class TriggerdevService {
         workspace: true, // Include the workspace data
       },
     });
-
-    const totalActionsDeployed = await this.prisma.action.findMany({
-      where: {
-        workspaceId,
-      },
-    });
-
-    const workspacePreferences = usersOnWorkspace.workspace
-      .preferences as JsonObject;
-
-    // Check if the actions deployed are under the allowed limit
-    if (
-      !workspacePreferences.actionsCount ||
-      totalActionsDeployed.length >=
-        (workspacePreferences.actionsCount as number)
-    ) {
-      throw new BadRequestException(
-        'Total number of actions you can deploy is maxed',
-      );
-    }
 
     if (usersOnWorkspace) {
       const projectExist = await this.checkIfProjectExist({

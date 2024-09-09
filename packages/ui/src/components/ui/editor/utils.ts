@@ -35,8 +35,6 @@ export const createImageUpload =
     reader.readAsDataURL(file);
 
     onUpload(file).then((response: any) => {
-      console.log(response);
-
       editor
         .chain()
         .insertContentAt(pos, [

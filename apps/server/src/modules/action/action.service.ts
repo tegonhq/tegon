@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import {
   RoleEnum,
@@ -62,6 +62,11 @@ export default class ActionService {
 
     // Use a transaction to ensure atomicity
     await this.prisma.$transaction(async (prisma) => {
+      await this.checkIfActionCanBeDeployed(
+        prisma,
+        workspaceId,
+        actionCreateResource.config.slug,
+      );
       // Upsert a workflow user for the action
       const workflowUser = await this.upsertWorkflowUser(
         prisma,
@@ -92,6 +97,39 @@ export default class ActionService {
       // Recreate the action entities
       await this.recreateActionEntities(prisma, action.id, entities);
     });
+  }
+
+  private async checkIfActionCanBeDeployed(
+    prisma: Partial<PrismaClient>,
+    workspaceId: string,
+    slug: string,
+  ) {
+    const workspace = await prisma.workspace.findUnique({
+      where: { id: workspaceId },
+    });
+    const workspacePreferences = workspace.preferences as JsonObject;
+
+    const totalActionsDeployed = await prisma.action.findMany({
+      where: {
+        workspaceId,
+      },
+    });
+
+    const alreadyCreatedAction = await prisma.action.findMany({
+      where: {
+        slug,
+      },
+    });
+
+    if (
+      workspace.actionsEnabled &&
+      !alreadyCreatedAction &&
+      totalActionsDeployed >= workspacePreferences.actionCount
+    ) {
+      throw new BadRequestException(
+        'Total number of actions you can deploy is maxed',
+      );
+    }
   }
 
   // Create a personal access token for the trigger
@@ -362,7 +400,7 @@ export default class ActionService {
         workspaceId,
         ...triggerPayload,
       },
-      { locktoVersion: action.triggerVersion },
+      { lockToVersion: action.triggerVersion },
     );
   }
 }

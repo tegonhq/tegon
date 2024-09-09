@@ -64,7 +64,7 @@ export const Configuration = () => {
   };
 
   if (configLoading) {
-    return <Loader />;
+    return <Loader text="Fetching configuration..." />;
   }
 
   if (!inputs) {
