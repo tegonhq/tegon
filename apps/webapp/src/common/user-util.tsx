@@ -14,7 +14,9 @@ export function getUserIcon(user: User) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const Component = getBotIcon(user.image as any);
 
-    return <Component className="text-[9px] mr-2 w-5" />;
+    return (
+      <Component className="text-[9px] mr-2 h-5 w-5 bg-background-3 rounded-sm p-[2px]" />
+    );
   }
 
   return <AvatarText text={user?.fullname} className="text-[9px] mr-2" />;

@@ -24,11 +24,11 @@ import { getCreatedBy } from './triage-utils';
 interface TriageCategoryProps {
   issues: IssueType[];
   labelId: string;
-  usersData: User[];
+  users: User[];
 }
 
 export const TriageCategory = observer(
-  ({ labelId, issues, usersData }: TriageCategoryProps) => {
+  ({ labelId, issues, users }: TriageCategoryProps) => {
     const [isOpen, setIsOpen] = React.useState(true);
     const currentTeam = useCurrentTeam();
     const { labelsStore } = useContextStore();
@@ -77,7 +77,7 @@ export const TriageCategory = observer(
               (nextIssue &&
                 issueId === `${currentTeam.identifier}-${nextIssue.number}`) ||
               issueId === `${currentTeam.identifier}-${issue.number}`;
-            const userData = getUserFromUsersData(usersData, issue.createdById);
+            const userData = getUserFromUsersData(users, issue.createdById);
 
             return (
               <div

@@ -138,7 +138,7 @@ export async function createLinkIssueComment(
   } = messageResponse.message;
 
   // Create a comment body that includes the Slack channel's name
-  const channelName = getChannelNameFromIntegrationAccount(
+  const channelName = await getChannelNameFromIntegrationAccount(
     integrationAccount,
     channelId,
   );

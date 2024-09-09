@@ -69,7 +69,7 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
             </Button>
           </div>
         </div>
-        <CollapsibleContent className="flex gap-1 flex-col px-4">
+        <CollapsibleContent className="flex flex-col px-4">
           {linkedIssues.map((linkedIssue: LinkedIssueType) => (
             <LinkedIssueItem linkedIssue={linkedIssue} key={linkedIssue.id} />
           ))}

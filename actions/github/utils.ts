@@ -91,6 +91,7 @@ export async function createLinkIssueComment(
   const commentSourceMetadata = {
     ...sourceMetadata,
     id: commentResponse.id,
+    type: linkIssueInput.sourceData.type,
     url: commentResponse.url,
     commentApiUrl: `${githubUrl}/comments`,
   };

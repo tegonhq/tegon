@@ -45,7 +45,9 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
     if (user && user.role === RoleEnum.BOT) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const Component = getBotIcon(user.image as any);
-      return <Component className="text-[9px] w-5" />;
+      return (
+        <Component className="text-[9px] w-5 h-5 bg-background-3 rounded-sm p-[2px]" />
+      );
     }
 
     return <RiLink size={20} />;
