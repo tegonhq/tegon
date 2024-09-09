@@ -78,11 +78,11 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
                   href: `/${workspaceSlug}/inbox`,
                   count: notificationsStore.unReadCount,
                 },
-                {
-                  title: 'Notes',
-                  icon: DocumentLine,
-                  href: `/${workspaceSlug}/settings/overview`,
-                },
+                // {
+                //   title: 'Notes',
+                //   icon: DocumentLine,
+                //   href: `/${workspaceSlug}/settings/overview`,
+                // },
                 ...actionsLink,
               ]}
             />
