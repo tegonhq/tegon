@@ -61,7 +61,9 @@ export default class WorkspacesService {
       const workspace = await prisma.workspace.create({
         data: {
           name: workspaceData.workspaceName,
-          slug: workspaceData.workspaceName.toLowerCase().replace(/-/g, ''),
+          slug: workspaceData.workspaceName
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, ''),
           usersOnWorkspaces: {
             create: { userId },
           },

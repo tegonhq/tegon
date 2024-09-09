@@ -29,6 +29,7 @@ export class Workflow {
   name: string;
   position: number;
   color: string;
+  description?: string;
 
   category: WorkflowCategory;
   team?: Team | null;

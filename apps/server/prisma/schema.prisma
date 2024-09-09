@@ -561,13 +561,16 @@ model Workflow {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name     String
-  position Int
-  color    String
-  category WorkflowCategory
+  name         String
+  description String?
+  position     Int
+  color        String
+  category     WorkflowCategory
 
   team   Team?  @relation(fields: [teamId], references: [id])
   teamId String
+
+  @@unique([name, teamId], map: "_ci")
 }
 
 model Workspace {
@@ -576,9 +579,9 @@ model Workspace {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name         String
-  slug         String  @unique
-  icon         String?
+  name String
+  slug String  @unique
+  icon String?
 
   actionsEnabled Boolean @default(false)
 
