@@ -57,7 +57,7 @@ export async function getIntegrationAccountsFromActions(
         },
       );
 
-      return { ...integrationAccount, integrationConfiguration: { token } };
+      return { ...integrationAccount, integrationConfiguration: token };
     }),
   );
 

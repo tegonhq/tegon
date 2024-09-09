@@ -36,8 +36,8 @@ export class TegonDatabase extends Dexie {
   views: Dexie.Table<ViewType, string>;
   issueSuggestions: Dexie.Table<IssueSuggestionType, string>;
 
-  constructor() {
-    super('Tegon');
+  constructor(databaseName: string) {
+    super(databaseName);
 
     this.version(4).stores({
       [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug',
@@ -88,4 +88,16 @@ export class TegonDatabase extends Dexie {
   }
 }
 
-export const tegonDatabase = new TegonDatabase();
+export let tegonDatabase: TegonDatabase;
+
+export function initDatabase(hash: number) {
+  tegonDatabase = new TegonDatabase(`Tegon_${hash}`);
+}
+
+export async function resetDatabase() {
+  localStorage.removeItem('lastSequenceId');
+
+  if (tegonDatabase) {
+    await tegonDatabase.delete();
+  }
+}

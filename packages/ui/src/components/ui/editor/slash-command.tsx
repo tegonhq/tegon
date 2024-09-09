@@ -122,7 +122,7 @@ export const suggestionItems = createSuggestionItems([
         if (input.files?.length) {
           const file = input.files[0];
           const pos = editor.view.state.selection.from;
-          uploadFn(file, editor.view, pos);
+          uploadFn(file, editor, pos);
         }
       };
       input.click();

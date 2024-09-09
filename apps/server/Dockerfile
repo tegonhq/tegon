@@ -62,6 +62,7 @@ COPY --from=builder  --chown=node:node /app/apps/server/templates ./apps/server/
 COPY --from=builder  --chown=node:node /app/apps/server/scripts ./apps/server/scripts
 
 EXPOSE 3001
+EXPOSE 5555
 
 USER node
 

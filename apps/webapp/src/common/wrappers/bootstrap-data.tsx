@@ -14,6 +14,7 @@ import { MODELS } from 'store/models';
 import { UserContext } from 'store/user-context';
 
 import { saveSocketData } from './socket-data-util';
+import { hash } from 'common/common-utils';
 
 interface Props {
   children: React.ReactElement;
@@ -23,7 +24,9 @@ export function BootstrapWrapper({ children }: Props) {
   const workspace = useCurrentWorkspace();
   const user = React.useContext(UserContext);
   const [loading, setLoading] = React.useState(true);
-  const lastSequenceId = localStorage && localStorage.getItem('lastSequenceId');
+  const hashKey = `${workspace.id}__${user.id}`;
+  const lastSequenceId =
+    localStorage && localStorage.getItem(`lastSequenceId_${hashKey}`);
   const {
     commentsStore,
     issuesHistoryStore,
@@ -73,7 +76,10 @@ export function BootstrapWrapper({ children }: Props) {
     userId: user.id,
     onSuccess: (data: BootstrapResponse) => {
       saveSocketData(data.syncActions, MODEL_STORE_MAP);
-      localStorage.setItem('lastSequenceId', `${data.lastSequenceId}`);
+      localStorage.setItem(
+        `lastSequenceId_${hash(hashKey)}`,
+        `${data.lastSequenceId}`,
+      );
     },
   });
 
@@ -84,7 +90,10 @@ export function BootstrapWrapper({ children }: Props) {
     userId: user.id,
     onSuccess: (data: BootstrapResponse) => {
       saveSocketData(data.syncActions, MODEL_STORE_MAP);
-      localStorage.setItem('lastSequenceId', `${data.lastSequenceId}`);
+      localStorage.setItem(
+        `lastSequenceId_${hash(hashKey)}`,
+        `${data.lastSequenceId}`,
+      );
     },
   });
 

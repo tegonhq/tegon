@@ -27,8 +27,10 @@ export class ALSMiddleware implements NestMiddleware {
     store.set('opName', req.baseUrl);
     store.set('ipAddress', req.headers['x-forwarded-for']);
     store.set('requestId', requestId);
-    store.set('actorId', session.getUserId());
-    store.set('workspaceId', session.getTenantId());
+    if (session) {
+      store.set('actorId', session.getUserId());
+      store.set('workspaceId', session.getTenantId());
+    }
 
     this.als.run(store, () => {
       next();

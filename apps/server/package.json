@@ -23,6 +23,7 @@
     "start": "nest start",
     "dev": "nest start --watch",
     "start-prod": "pnpm run migrate:deploy && pnpm run generate && node dist/src/main",
+    "start-prod-with-prisma": "pnpm run start-prod && pnpm prisma:studio",
     "start:debug": "nest start --debug --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "migrate": "prisma migrate dev --preview-feature",
@@ -35,7 +36,7 @@
     "generate": "prisma generate",
     "db:init-resources": "pnpm run migrate && pnpm run generate",
     "deploy-trigger-tasks": "npx trigger.dev@beta deploy --self-hosted",
-    "trigger-dev": "npx trigger.dev@beta dev -a http://localhost:3030"
+    "trigger-dev": "npx trigger.dev@beta dev"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.40",

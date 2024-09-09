@@ -8,7 +8,6 @@ import {
   HorizontalRule,
   StarterKit,
   Placeholder,
-  TiptapImage,
   HighlightExtension,
   AIHighlight,
   MarkdownExtension,
@@ -16,6 +15,7 @@ import {
 import { UploadImagesPlugin } from 'novel/plugins';
 
 import { fileExtension } from './file-extension';
+import { imageExtension } from './image-extension';
 
 const tiptapLink = TiptapLink.configure({
   HTMLAttributes: {
@@ -50,7 +50,7 @@ const heading = Heading.extend({
     const level: 1 | 2 | 3 = hasLevel
       ? node.attrs.level
       : this.options.levels[0];
-    const levelMap = { 1: 'text-xl', 2: 'text-lg', 3: 'text-md' };
+    const levelMap = { 1: 'text-2xl', 2: 'text-xl', 3: 'text-lg' };
 
     return [
       `h${level}`,
@@ -61,21 +61,6 @@ const heading = Heading.extend({
     ];
   },
 }).configure({ levels: [1, 2, 3] });
-
-const tiptapImage = TiptapImage.extend({
-  addProseMirrorPlugins() {
-    return [
-      UploadImagesPlugin({
-        imageClass: cx('opacity-40 rounded-lg border'),
-      }),
-    ];
-  },
-}).configure({
-  allowBase64: false,
-  HTMLAttributes: {
-    class: cx('rounded-lg border'),
-  },
-});
 
 const starterKit = StarterKit.configure({
   heading: false,
@@ -102,14 +87,14 @@ const starterKit = StarterKit.configure({
   codeBlock: {
     HTMLAttributes: {
       class: cx(
-        'rounded-sm bg-grayAlpha-100 text-[#BF4594] border px-1.5 py-1 font-mono font-medium',
+        'rounded-sm bg-grayAlpha-100 text-[#BF4594] px-1.5 py-1 font-mono font-medium border-none',
       ),
     },
   },
   code: {
     HTMLAttributes: {
       class: cx(
-        'rounded-md bg-grayAlpha-100 text-[#BF4594] px-1.5 py-1 font-mono font-medium',
+        'rounded-md bg-grayAlpha-100 text-[#BF4594] px-1.5 py-1 font-mono font-medium border-none',
       ),
       spellcheck: 'false',
     },
@@ -163,9 +148,9 @@ export const defaultExtensions = [
   taskItem,
   horizontalRule,
   heading,
-  tiptapImage,
   AIHighlight,
   fileExtension,
+  imageExtension,
   MarkdownExtension,
   HighlightExtension,
 ];

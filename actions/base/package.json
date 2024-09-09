@@ -1,11 +1,10 @@
 {
-  "name": "bug-suggestions",
+  "name": "base",
   "version": "0.0.0",
   "description": "",
   "private": true,
   "scripts": {
-    "lint": "eslint . --fix",
-    "trigger-dev": "npx trigger.dev@beta dev -a http://localhost:3030"
+    "lint": "eslint . --fix"
   },
   "packageManager": "pnpm@8.15.6",
   "dependencies": {

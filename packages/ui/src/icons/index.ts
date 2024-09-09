@@ -57,6 +57,8 @@ export * from './cross-circle';
 export * from './warning';
 export * from './arrow-left';
 export * from './book-line';
+export * from './document-line';
+export * from './fullscreen-line';
 
 export * from './team-line';
 export * from './issues-fill';

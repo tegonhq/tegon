@@ -3,7 +3,7 @@ import { NodeViewWrapper } from '@tiptap/react';
 import { filesize } from 'filesize';
 import React from 'react';
 
-import { LinkLine } from '@tegonhq/ui/icons';
+import { DocumentLine } from '@tegonhq/ui/icons';
 
 import { Button } from '../../../ui/button';
 
@@ -12,18 +12,8 @@ export const FileComponent = (props: any) => {
   return (
     <NodeViewWrapper className="react-component-with-content">
       <div className="content">
-        <div
-          className="flex w-fit items-center p-3 bg-grayAlpha-100 rounded-lg gap-2 hover:bg-accent/50 my-1"
-          onClick={() => {
-            window.open(
-              props.node.attrs.src
-                ? props.node.attrs.src
-                : props.node.attrs.url,
-              '_blank',
-            );
-          }}
-        >
-          <LinkLine size={20} />
+        <div className="flex w-fit items-center p-3 bg-grayAlpha-100 rounded-lg gap-2 my-1 hover:border-border hover:border">
+          <DocumentLine size={20} />
 
           <div className="grow text-sm flex flex-col justify-center">
             <div>{props.node.attrs.alt}</div>
@@ -34,18 +24,19 @@ export const FileComponent = (props: any) => {
             )}
           </div>
 
-          <Button variant="ghost">
-            <RiDownloadLine
-              size={16}
-              onClick={() => {
-                window.open(
-                  props.node.attrs.src
-                    ? props.node.attrs.src
-                    : props.node.attrs.url,
-                  '_blank',
-                );
-              }}
-            />
+          <Button
+            variant="ghost"
+            className="bg-grayAlpha-100"
+            onClick={() => {
+              window.open(
+                props.node.attrs.src
+                  ? props.node.attrs.src
+                  : props.node.attrs.url,
+                '_blank',
+              );
+            }}
+          >
+            <RiDownloadLine size={16} />
           </Button>
         </div>
       </div>

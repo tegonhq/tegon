@@ -35,7 +35,7 @@ export function useGetRunForActionQuery(
   workspaceId: string,
 ): UseQueryResult<TriggerRunWithLogs, XHRErrorResponse> {
   return useQuery(
-    [GetRunForAction],
+    [GetRunForAction, slug, runId],
     () => getRunForAction(slug, runId, workspaceId),
     {
       retry: 1,

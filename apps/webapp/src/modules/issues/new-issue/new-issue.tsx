@@ -126,7 +126,7 @@ export function NewIssue({ open, setOpen, parentId }: NewIssueProps) {
                         collapsed && 'shrink-0',
                       )}
                     >
-                      <AccordionTrigger className={cn()}>
+                      <AccordionTrigger>
                         {collapsed && (
                           <div className="flex flex-col w-full">
                             <Separator />
@@ -143,7 +143,6 @@ export function NewIssue({ open, setOpen, parentId }: NewIssueProps) {
                             <Separator />
                           </div>
                         )}
-                        <Separator />
                       </AccordionTrigger>
                       <AccordionContent className="flex flex-col h-full overflow-hidden">
                         <NewIssueForm
