@@ -13,5 +13,5 @@ export const onLabelHandler = async (actionPayload: ActionEventPayload) => {
   }
 
   logger.log(`Github mapped label is not present in the issue`);
-  return { status: 200 };
+  return { message: 'Github mapped label is not present in the issue' };
 };

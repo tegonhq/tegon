@@ -17,6 +17,10 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
 
   const { botToken, accessToken } = integrationAccount.integrationConfiguration;
 
+  const {
+    integrationDefinition: { slug: integrationDefinitionSlug },
+  } = integrationAccount;
+
   const issueComment = await getIssueComment({ issueCommentId });
   const issue = await getIssueById({ issueId: issueComment.issueId });
 
@@ -34,7 +38,16 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
   }
 
   const parentIssueComment = issueComment.parent;
-  if (!parentIssueComment || !parentIssueComment.sourceMetadata) {
+  const parentSourceMetadata = parentIssueComment
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (parentIssueComment.sourceMetadata as Record<string, any>)
+    : {};
+
+  if (
+    !parentIssueComment ||
+    !parentSourceMetadata ||
+    parentSourceMetadata.type !== integrationDefinitionSlug
+  ) {
     return {
       message: 'Parent comment does not exist or has empty source metadata',
     };

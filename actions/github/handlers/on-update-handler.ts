@@ -20,16 +20,22 @@ export const onUpdateHandler = async (actionPayload: ActionEventPayload) => {
         )
       ).data;
       if (linkedIssues.length > 0) {
-        return await Promise.all(
-          linkedIssues.map(async (linkedIssue: LinkedIssue) => {
+        const githubLinkedIssues = linkedIssues.filter(
+          (linkedIssue: LinkedIssue) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const sourceData = linkedIssue.sourceData as Record<string, any>;
-            if (sourceData.type === 'github') {
+            return sourceData.type === 'github';
+          },
+        );
+
+        if (githubLinkedIssues.length > 0) {
+          return await Promise.all(
+            githubLinkedIssues.map(async (linkedIssue: LinkedIssue) => {
               actionPayload.linkedIssue = linkedIssue;
               return await issueSync(actionPayload);
-            }
-          }),
-        );
+            }),
+          );
+        }
       }
       return await onLabelHandler(actionPayload);
 
