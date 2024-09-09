@@ -6,8 +6,8 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import {
   useWatch,
-  type UseFieldArrayReturn,
   type UseFormReturn,
+  type UseFieldArrayRemove,
 } from 'react-hook-form';
 
 import { getWorkflowColor } from 'common/status-color';
@@ -23,7 +23,11 @@ interface IssueCollapseViewProps {
   isSubIssue: boolean;
   index: number;
   form: UseFormReturn;
-  subIssueOperations: Partial<UseFieldArrayReturn>;
+  subIssueOperations: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    append: any;
+    remove: UseFieldArrayRemove;
+  };
 }
 
 export const IssueCollapseView = observer(

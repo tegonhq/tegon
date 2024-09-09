@@ -15,9 +15,12 @@ import {
   TriggerdevService,
   TriggerProjects,
 } from 'modules/triggerdev/triggerdev.service';
+import { LoggerService } from 'modules/logger/logger.service';
 
 @Injectable()
 export default class WebhookService {
+  private readonly logger: LoggerService = new LoggerService('WebhookService'); // Logger instance for logging
+
   constructor(
     private triggerDevService: TriggerdevService,
     private prisma: PrismaService,
@@ -32,6 +35,19 @@ export default class WebhookService {
     if (sourceName === 'slack') {
       if (eventBody.type === 'url_verification') {
         response.send({ challenge: eventBody.challenge });
+        return null;
+      }
+    }
+
+    if (sourceName === 'discord') {
+      this.logger.info({
+        message: 'Discord webhook received',
+        where: 'WebhookService.handleEvents',
+        payload: eventBody,
+      });
+
+      if (eventBody.type === 1) {
+        response.status(200).send({ type: 4 });
         return null;
       }
     }
@@ -86,6 +102,7 @@ export default class WebhookService {
       );
     });
 
+    response.send({ status: 200 });
     return { status: 200 };
   }
 }

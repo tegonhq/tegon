@@ -36,7 +36,7 @@
     "generate": "prisma generate",
     "db:init-resources": "pnpm run migrate && pnpm run generate",
     "deploy-trigger-tasks": "npx trigger.dev@beta deploy --self-hosted",
-    "trigger-dev": "npx trigger.dev@beta dev -a http://localhost:3030"
+    "trigger-dev": "npx trigger.dev@beta dev"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.40",

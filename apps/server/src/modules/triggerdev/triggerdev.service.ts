@@ -122,7 +122,10 @@ export class TriggerdevService {
       const response = await this.knex('RuntimeEnvironment')
         .where({
           projectId, // Filter by the project ID
-          slug: 'prod', // Filter by the 'prod' slug
+          slug:
+            this.configService.get('NODE_ENV') === 'production'
+              ? 'prod'
+              : 'dev', // Filter by the 'prod' slug
         })
         .select('id', 'slug', 'apiKey'); // Select the ID, slug, and API key columns
 
@@ -207,6 +210,12 @@ export class TriggerdevService {
     payload: any, // eslint-disable-line @typescript-eslint/no-explicit-any
     options?: Record<string, string>,
   ) {
+    this.logger.info({
+      message: 'Triggering task',
+      where: `TriggerdevService.triggerTask`,
+      payload: { projectSlug, id },
+    });
+
     const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
     const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen); // Get the production runtime API key
     const response = await triggerTaskSync(id, payload, apiKey, options); // Trigger the task synchronously

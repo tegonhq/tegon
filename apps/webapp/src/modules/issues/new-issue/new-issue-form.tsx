@@ -6,11 +6,14 @@ import { DeleteLine } from '@tegonhq/ui/icons';
 import React from 'react';
 import {
   useWatch,
-  type UseFieldArrayReturn,
   type UseFormReturn,
+  type UseFieldArrayAppend,
+  type UseFieldArrayRemove,
 } from 'react-hook-form';
 
 import { AiWritingExtension } from 'common/ai-writing';
+
+import type { CreateIssueParams } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -35,7 +38,11 @@ interface NewIssueFormProps {
 
   onClose: () => void;
 
-  subIssueOperations: Partial<UseFieldArrayReturn>;
+  subIssueOperations: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    append: any;
+    remove: UseFieldArrayRemove;
+  };
 }
 
 export function NewIssueForm({
