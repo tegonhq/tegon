@@ -51,8 +51,42 @@ export async function createLinkIssueComment(
     githubCommentBody,
   );
 
-  const commentBody = `Github thread in #${repoName}`;
-
+  const commentBody = {
+    type: 'doc',
+    content: [
+      {
+        type: 'paragraph',
+        content: [
+          {
+            type: 'text',
+            text: 'Github thread of ',
+          },
+          {
+            type: 'text',
+            marks: [
+              {
+                type: 'link',
+                attrs: {
+                  href: linkIssueInput.sourceData.htmlUrl,
+                },
+              },
+            ],
+            text: `Issue #${linkIssueInput.sourceData.issueNumber} `,
+          },
+          { type: 'text', text: 'in ' },
+          {
+            type: 'text',
+            marks: [
+              {
+                type: 'italic',
+              },
+            ],
+            text: repoName,
+          },
+        ],
+      },
+    ],
+  };
   // Merge provided metadata with message-specific details
   const commentSourceMetadata = {
     ...sourceMetadata,
@@ -64,7 +98,7 @@ export async function createLinkIssueComment(
   // Post the comment to the backend and capture the response
   const issueComment = await createIssueComment({
     issueId: issue.id,
-    body: commentBody,
+    body: JSON.stringify(commentBody),
     sourceMetadata: commentSourceMetadata,
   });
 

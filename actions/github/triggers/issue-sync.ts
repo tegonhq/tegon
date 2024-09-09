@@ -138,8 +138,10 @@ export const issueSync = async (actionPayload: ActionEventPayload) => {
     sourceId: githubIssue.id.toString(),
     sourceData: {
       id: githubIssue.id.toString(),
-      title: githubIssue.title,
+      issueNumber: githubIssue.number,
+      title: `#${githubIssue.number} - ${githubIssue.title}`,
       apiUrl: githubIssue.url,
+      htmlUrl: githubIssue.html_url,
       type: integrationAccount.integrationDefinition.slug,
       displayName: githubIssue.user.login,
     },
