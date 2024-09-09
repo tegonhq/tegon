@@ -3,7 +3,6 @@ import { Prisma } from '@prisma/client';
 import {
   CreateIssueDto,
   CreateIssueRelationDto,
-  CreateLinkedIssueDto,
   GetIssuesByFilterDTO,
   Issue,
   IssueRequestParamsDto,
@@ -183,14 +182,14 @@ export default class IssuesService {
     issueData: UpdateIssueDto,
     issueParams: IssueRequestParamsDto,
     userId: string,
-    linkIssuedata?: CreateLinkedIssueDto,
-    linkMetaData?: Record<string, string>,
   ) {
     // Destructure the issue data
     const {
       parentId,
       issueRelation,
       subscriberIds = null,
+      linkIssueData,
+      sourceMetadata,
       ...otherIssueData
     } = issueData;
 
@@ -214,18 +213,17 @@ export default class IssuesService {
       updatedById: userId,
       ...otherIssueData,
       ...(parentId ? { parent: { connect: { id: parentId } } } : { parentId }),
-      ...(linkIssuedata && {
+      ...(linkIssueData && {
         linkedIssue: {
           upsert: {
-            where: { url: linkIssuedata.url },
+            where: { url: linkIssueData.url },
             update: {
-              sourceData: linkIssuedata.sourceData,
+              sourceData: linkIssueData.sourceData,
               ...updatedIssueInfo,
             },
             create: {
-              ...linkIssuedata,
+              ...linkIssueData,
               ...updatedIssueInfo,
-              createdById: userId,
             },
           },
         },
@@ -257,7 +255,7 @@ export default class IssuesService {
       updatedIssue,
       issueDiff,
       userId,
-      linkMetaData,
+      sourceMetadata,
       issueRelation,
     );
 
@@ -269,7 +267,7 @@ export default class IssuesService {
         {
           issueId: updatedIssue.id,
           ...issueDiff,
-          sourceMetadata: linkMetaData,
+          sourceMetadata,
           subscriberIds: updatedIssue.subscriberIds,
           workspaceId: updatedIssue.team.workspaceId,
         },

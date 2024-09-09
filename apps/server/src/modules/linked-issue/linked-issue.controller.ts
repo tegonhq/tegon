@@ -34,6 +34,12 @@ export class LinkedIssueController {
     return await this.linkedIssueService.getLinkedIssueBySourceId(sourceId);
   }
 
+  @Get('issue')
+  @UseGuards(AuthGuard)
+  async getLinkedIssueByIssueId(@Query('issueId') issueId: string) {
+    return await this.linkedIssueService.getLinkedIssueByIssueId(issueId);
+  }
+
   @Get(':linkedIssueId')
   @UseGuards(AuthGuard)
   async getLinkedIssue(

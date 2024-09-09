@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   IntegrationEventPayload,
   IntegrationPayloadEventType,
@@ -25,19 +26,21 @@ import {
   getTemplate,
 } from './oauth-callback.utils';
 
-const CALLBACK_URL = `${process.env.FRONTEND_HOST}/api/v1/oauth/callback`;
-
 @Injectable()
 export class OAuthCallbackService {
   // TODO(Manoj): Move this to Redis once we have multiple servers
   session: Record<string, SessionRecord> = {};
   private readonly logger = new LoggerService(OAuthCallbackService.name);
+  CALLBACK_URL = '';
 
   constructor(
     private integrationDefinitionService: IntegrationDefinitionService,
     private triggerdevService: TriggerdevService,
     private prisma: PrismaService,
-  ) {}
+    private configService: ConfigService,
+  ) {
+    this.CALLBACK_URL = this.configService.get<string>('OAUTH_CALLBACK_URL');
+  }
 
   async getRedirectURL(
     oAuthBody: OAuthBodyInterface,
@@ -95,7 +98,7 @@ export class OAuthCallbackService {
       ];
 
       const authorizationUri = simpleOAuthClient.authorizeURL({
-        redirect_uri: CALLBACK_URL,
+        redirect_uri: this.CALLBACK_URL,
         scope: scopes.join(template.scope_separator || ' '),
         state: uniqueId,
         ...additionalAuthParams,
@@ -201,7 +204,7 @@ export class OAuthCallbackService {
       const tokensResponse: any = await simpleOAuthClient.getToken(
         {
           code: params.code as string,
-          redirect_uri: CALLBACK_URL,
+          redirect_uri: this.CALLBACK_URL,
           ...additionalTokenParams,
         },
         {

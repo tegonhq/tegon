@@ -1,16 +1,17 @@
 {
   "slug": "slack",
   "name": "Slack",
+  "icon": "slack",
   "description": "Create issues from Slack messages and sync threads",
   "triggers": [
     {
       "type": "on_create",
-      "entities": ["IssueComment", "LinkedIssue"]
+      "entities": [ "IssueComment", "LinkedIssue" ]
     },
     {
       "type": "source_webhook",
-      "entities": ["slack"]
+      "entities": [ "slack" ]
     }
   ],
-  "integrations": ["slack"]
+  "integrations": [ "slack" ]
 }

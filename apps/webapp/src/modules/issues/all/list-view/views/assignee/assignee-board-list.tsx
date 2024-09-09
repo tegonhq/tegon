@@ -14,10 +14,9 @@ import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
 import type { UsersOnWorkspaceType } from 'common/types';
 import type { IssueType } from 'common/types';
-import type { User } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
-import { useUsersData } from 'hooks/users';
+import { useUserData } from 'hooks/users';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -35,15 +34,11 @@ export const AssigneeBoardList = observer(
       applicationStore.displaySettings.showSubIssues,
       { userId: userOnWorkspace.userId, teamId: team.id },
     );
-    const { usersData, isLoading } = useUsersData();
+    const { user, isLoading } = useUserData(userOnWorkspace.userId);
     const computedIssues = useFilterIssues(issues, team.id);
 
     if (isLoading) {
       return null;
-    }
-
-    function getUserData(userId: string) {
-      return usersData.find((userData: User) => userData.id === userId);
     }
 
     if (
@@ -57,13 +52,8 @@ export const AssigneeBoardList = observer(
         <div className="flex flex-col max-h-[100%]">
           <div className="flex gap-1 items-center mb-2">
             <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
-              <AvatarText
-                text={getUserData(userOnWorkspace.userId).fullname}
-                className="h-5 w-5 text-[9px]"
-              />
-              <h3 className="pl-2">
-                {getUserData(userOnWorkspace.userId).fullname}
-              </h3>
+              <AvatarText text={user.fullname} className="h-5 w-5 text-[9px]" />
+              <h3 className="pl-2">{user.fullname}</h3>
             </div>
 
             <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">

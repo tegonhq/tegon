@@ -30,5 +30,5 @@ export const getToken = async (integrationAccountId: string) => {
     { headers: {} },
   );
 
-  return accessResponse.data.access_token;
+  return { token: accessResponse.data.access_token };
 };

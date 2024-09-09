@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { RiDownloadLine } from '@remixicon/react';
 import { NodeViewWrapper } from '@tiptap/react';
 import React from 'react';
@@ -16,6 +17,7 @@ export const ImageComponent = (props: any) => {
 
   React.useEffect(() => {
     setOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -33,9 +35,8 @@ export const ImageComponent = (props: any) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.node.attrs.openViewer]);
-
-  console.log(props.node.attrs);
 
   return (
     <NodeViewWrapper className="react-component-with-content">

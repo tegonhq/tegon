@@ -7,14 +7,13 @@ import {
   handleCommandNavigation,
   type SuggestionItem,
 } from 'novel/extensions';
-import { handleImagePaste } from 'novel/plugins';
 import * as React from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
 import { defaultExtensions, getPlaceholder } from './editor-extensions';
 import { LinkSelector, NodeSelector, TextButtons } from './selectors';
 import { slashCommand } from './slash-command';
-import { uploadFn } from './utils';
+import { handleImagePaste, uploadFn } from './utils';
 import {
   EditorRoot,
   EditorCommand,
@@ -180,8 +179,8 @@ export const Editor = ({
             autoFocus && editor.commands.focus();
           }}
           editorProps={{
-            handlePaste: (view, event) =>
-              handleImagePaste(view, event, uploadFn),
+            handlePaste: (_, event) =>
+              handleImagePaste(editor, event, uploadFn),
 
             handleDOMEvents: {
               keydown: (_view, event) => {

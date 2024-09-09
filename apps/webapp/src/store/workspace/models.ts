@@ -14,5 +14,6 @@ export const UsersOnWorkspace = types.model({
   updatedAt: types.string,
   userId: types.string,
   workspaceId: types.string,
+  role: types.enumeration(['ADMIN', 'USER', 'BOT', 'AGENT']),
   teamIds: types.array(types.string),
 });

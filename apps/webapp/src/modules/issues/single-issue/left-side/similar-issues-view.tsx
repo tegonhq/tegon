@@ -39,6 +39,10 @@ export function SimilarIssuesView({ issueId }: SimilarIssuesViewProps) {
     true,
   );
 
+  if (issues.length === 0) {
+    return null;
+  }
+
   return (
     <div
       className={cn('rounded-md p-2 mb-2 mx-6 bg-grayAlpha-100')}

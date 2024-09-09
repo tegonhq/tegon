@@ -38,7 +38,7 @@ export const IssueCollapseView = observer(
     });
     const { workflowsStore, teamsStore } = useContextStore();
     const team = teamsStore.getTeamWithId(values.teamId);
-    const { usersData, isLoading } = useUsersData();
+    const { users, isLoading } = useUsersData();
 
     const workflows = workflowsStore.getWorkflowsForTeam(values.teamId);
     const currentWorkflow = values.stateId
@@ -56,7 +56,7 @@ export const IssueCollapseView = observer(
         return { username: 'No Assignee', fullname: 'No Assignee' };
       }
 
-      return usersData.find((userData: User) => userData.id === userId);
+      return users.find((userData: User) => userData.id === userId);
     }
 
     if (isLoading) {

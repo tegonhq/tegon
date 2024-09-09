@@ -12,11 +12,8 @@ export const integrationCreate = async (
 ) => {
   const { oauthResponse, personal, integrationDefinition, oauthParams } = data;
   const integrationConfiguration = {
-    scope: oauthResponse.scope,
     refresh_token: oauthResponse.refresh_token,
     access_token: oauthResponse.access_token,
-    client_id: integrationDefinition.clientId,
-    client_secret: integrationDefinition.clientSecret,
   };
 
   let accountId, settings;
@@ -36,7 +33,7 @@ export const integrationCreate = async (
       axios
         .get(
           `https://api.github.com/app/installations/${accountId}`,
-          getGithubHeaders(await getBotJWTToken(integrationDefinition.spec)),
+          getGithubHeaders(await getBotJWTToken(integrationDefinition)),
         )
         .then((response) => response.data),
       axios

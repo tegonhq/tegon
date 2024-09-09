@@ -3,6 +3,7 @@
 import { Loader } from '@tegonhq/ui/components/loader';
 import * as React from 'react';
 
+import { hash } from 'common/common-utils';
 import type { BootstrapResponse } from 'common/types';
 
 import { useCurrentWorkspace } from 'hooks/workspace';
@@ -14,7 +15,6 @@ import { MODELS } from 'store/models';
 import { UserContext } from 'store/user-context';
 
 import { saveSocketData } from './socket-data-util';
-import { hash } from 'common/common-utils';
 
 interface Props {
   children: React.ReactElement;
@@ -107,7 +107,7 @@ export function BootstrapWrapper({ children }: Props) {
   };
 
   if (loading) {
-    return <Loader />;
+    return <Loader text="Syncing data..." />;
   }
 
   return <>{children}</>;

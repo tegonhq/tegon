@@ -1,10 +1,10 @@
-import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Timeline, TimelineItem } from '@tegonhq/ui/components/timeline';
 import { observer } from 'mobx-react-lite';
 
 import type { User } from 'common/types';
 import type { IssueHistoryType } from 'common/types';
 import type { LinkedIssueType } from 'common/types';
+import { getUserIcon } from 'common/user-util';
 
 import { useIssueData } from 'hooks/issues';
 import { useUsersData } from 'hooks/users';
@@ -29,7 +29,7 @@ export const IssueActivity = observer(() => {
     ? JSON.parse(issue.sourceMetadata)
     : undefined;
 
-  const { usersData, isLoading } = useUsersData(issue.teamId);
+  const { users, isLoading } = useUsersData(true, issue.teamId);
 
   const {
     issuesHistoryStore,
@@ -58,7 +58,7 @@ export const IssueActivity = observer(() => {
   });
 
   function getUserData(userId: string) {
-    return usersData.find((user: User) => user.id === userId);
+    return users.find((user: User) => user.id === userId);
   }
 
   if (isLoading) {
@@ -67,7 +67,7 @@ export const IssueActivity = observer(() => {
 
   const issueCreatedUser = getUserDetails(
     issueSourceMetadata,
-    usersData && getUserData(issue.createdById),
+    getUserData(issue.createdById),
   );
 
   return (
@@ -75,10 +75,7 @@ export const IssueActivity = observer(() => {
       <Timeline>
         <TimelineItem hasMore={false} date={issue.createdAt}>
           <div className="flex items-center text-muted-foreground">
-            <AvatarText
-              text={issueCreatedUser.fullname}
-              className="mr-4 text-[9px]"
-            />
+            {getUserIcon(issueCreatedUser)}
 
             <div className="flex items-center">
               <span className="text-foreground mr-2 font-medium">

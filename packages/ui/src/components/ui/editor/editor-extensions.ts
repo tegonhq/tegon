@@ -12,16 +12,13 @@ import {
   AIHighlight,
   MarkdownExtension,
 } from 'novel/extensions';
-import { UploadImagesPlugin } from 'novel/plugins';
 
 import { fileExtension } from './file-extension';
 import { imageExtension } from './image-extension';
 
 const tiptapLink = TiptapLink.configure({
   HTMLAttributes: {
-    class: cx(
-      'text-muted-foreground underline underline-offset-[3px] hover:text-primary transition-colors cursor-pointer',
-    ),
+    class: cx('text-primary cursor-pointer'),
   },
 });
 

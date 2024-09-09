@@ -22,7 +22,7 @@ export const allKeys = [
 
 export function useFiltersFromAI() {
   const { applicationStore, labelsStore, workflowsStore } = useContextStore();
-  const { usersData } = useUsersData();
+  const { users } = useUsersData();
 
   const getValueIds = (key: string, value: string[]) => {
     switch (key) {
@@ -33,7 +33,7 @@ export function useFiltersFromAI() {
       case 'assignee': {
         return value
           .map((name: string) => {
-            const user = usersData.find((user: User) =>
+            const user = users.find((user: User) =>
               user.fullname.toLowerCase().includes(name.toLowerCase()),
             );
 

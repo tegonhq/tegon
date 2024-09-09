@@ -7,13 +7,10 @@ import React from 'react';
 import {
   useWatch,
   type UseFormReturn,
-  type UseFieldArrayAppend,
   type UseFieldArrayRemove,
 } from 'react-hook-form';
 
 import { AiWritingExtension } from 'common/ai-writing';
-
-import type { CreateIssueParams } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 

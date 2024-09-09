@@ -35,8 +35,6 @@ export const createImageUpload =
     reader.readAsDataURL(file);
 
     onUpload(file).then((response: any) => {
-      console.log(response);
-
       editor
         .chain()
         .insertContentAt(pos, [
@@ -70,6 +68,24 @@ export const uploadFn = createImageUpload({
     return true;
   },
 });
+
+export const handleImagePaste = (
+  editor: Editor,
+  event: ClipboardEvent,
+  uploadFn: UploadFileFn,
+) => {
+  if (event.clipboardData?.files.length) {
+    event.preventDefault();
+    const [file] = Array.from(event.clipboardData.files);
+    const pos = editor.view.state.selection.from;
+
+    if (file) {
+      uploadFn(file, editor, pos);
+    }
+    return true;
+  }
+  return false;
+};
 
 type UploadFileFn = (file: File, view: Editor, pos: number) => void;
 

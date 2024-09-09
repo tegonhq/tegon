@@ -6,5 +6,5 @@ export class GetLabelsDTO {
 
   @IsString()
   @IsOptional()
-  teamId: string;
+  teamId?: string;
 }

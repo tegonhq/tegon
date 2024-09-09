@@ -510,6 +510,8 @@ model User {
   initialSetupComplete    Boolean @default(false)
   anonymousDataCollection Boolean @default(false)
 
+  image String?
+
   usersOnWorkspaces  UsersOnWorkspaces[]
   template           Template[]
   integrationAccount IntegrationAccount[]
@@ -583,7 +585,8 @@ model Workspace {
   slug String  @unique
   icon String?
 
-  actionsEnabled Boolean @default(false)
+  actionsEnabled Boolean @default(true)
+  preferences    Json?
 
   usersOnWorkspaces     UsersOnWorkspaces[]
   team                  Team[]

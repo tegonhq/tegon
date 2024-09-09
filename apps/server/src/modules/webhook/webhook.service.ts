@@ -11,11 +11,11 @@ import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
 
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
+import { LoggerService } from 'modules/logger/logger.service';
 import {
   TriggerdevService,
   TriggerProjects,
 } from 'modules/triggerdev/triggerdev.service';
-import { LoggerService } from 'modules/logger/logger.service';
 
 @Injectable()
 export default class WebhookService {

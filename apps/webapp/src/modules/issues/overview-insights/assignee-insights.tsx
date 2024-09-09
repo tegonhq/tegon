@@ -19,7 +19,7 @@ interface AssigneeInsightsProps {
 }
 
 export function AssigneeInsights({ issues }: AssigneeInsightsProps) {
-  const { usersData, isLoading } = useUsersData();
+  const { users, isLoading } = useUsersData();
   const groupedByIssues = groupBy(issues, 'assigneeId');
 
   if (isLoading) {
@@ -27,7 +27,7 @@ export function AssigneeInsights({ issues }: AssigneeInsightsProps) {
   }
 
   function getUserData(userId: string) {
-    return usersData.find((userData: User) => userData.id === userId);
+    return users.find((userData: User) => userData.id === userId);
   }
   return (
     <div className="flex flex-col gap-3 p-3">

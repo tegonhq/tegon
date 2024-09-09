@@ -21,10 +21,10 @@ export const CommentsActivity = observer(() => {
     (comment: IssueCommentType) => new Date(comment.createdAt),
   ) as IssueCommentType[];
 
-  const { usersData, isLoading } = useUsersData(issue.teamId);
+  const { users, isLoading } = useUsersData(true, issue.teamId);
 
   function getUserData(userId: string) {
-    return usersData.find((user: User) => user.id === userId);
+    return users.find((user: User) => user.id === userId);
   }
 
   if (isLoading) {

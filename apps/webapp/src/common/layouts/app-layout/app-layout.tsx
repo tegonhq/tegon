@@ -1,6 +1,6 @@
 import type { ImperativePanelHandle } from '@tegonhq/ui/components/resizable';
 
-import { Actions, DocumentLine, Inbox, SettingsLine } from '@tegonhq/ui/icons';
+import { Actions, Inbox } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import * as React from 'react';

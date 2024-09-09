@@ -4,6 +4,7 @@ import { CommandGroup } from '@tegonhq/ui/components/command';
 import { AssigneeLine } from '@tegonhq/ui/icons';
 
 import type { User } from 'common/types';
+import { getUserFromUsersData } from 'common/user-util';
 
 import { useScope } from 'hooks';
 
@@ -11,7 +12,7 @@ import { DropdownItem } from '../dropdown-item';
 
 interface IssueAssigneeDropdownContentProps {
   onChange?: (assigneeId: string | string[]) => void;
-  usersData: User[];
+  users: User[];
   onClose: () => void;
   multiple?: boolean;
   value: string | string[];
@@ -19,16 +20,12 @@ interface IssueAssigneeDropdownContentProps {
 
 export function IssueAssigneeDropdownContent({
   onChange,
-  usersData,
+  users,
   onClose,
   multiple = false,
   value,
 }: IssueAssigneeDropdownContentProps) {
   useScope('command');
-
-  function getUserData(userId: string) {
-    return usersData.find((userData: User) => userData.id === userId);
-  }
 
   const onValueChange = (checked: boolean, id: string) => {
     if (checked && !value.includes(id)) {
@@ -73,45 +70,44 @@ export function IssueAssigneeDropdownContent({
           </div>
         </div>
       </DropdownItem>
-      {usersData &&
-        usersData.map((user: User, index: number) => {
-          const userData = getUserData(user.id);
+      {users.map((user: User, index: number) => {
+        const userData = getUserFromUsersData(users, user.id);
 
-          return (
-            <DropdownItem
-              key={user.id}
-              id={user.id}
-              value={user.fullname}
-              index={index + 1}
-              onSelect={(currentValue: string) => {
-                if (!multiple) {
-                  onChange && onChange(currentValue);
-                  onClose();
-                }
-              }}
-            >
-              <div className="flex gap-2 items-center">
-                {multiple && (
-                  <Checkbox
-                    id={userData.fullname}
-                    checked={value.includes(user.id)}
-                    onCheckedChange={(value: boolean) => {
-                      onValueChange(value, user.id);
-                    }}
-                  />
-                )}
-                <label htmlFor={user.fullname} className="flex gap-2 grow">
-                  <AvatarText
-                    text={user.fullname}
-                    className="h-5 w-5 text-[9px]"
-                  />
+        return (
+          <DropdownItem
+            key={user.id}
+            id={user.id}
+            value={user.fullname}
+            index={index + 1}
+            onSelect={(currentValue: string) => {
+              if (!multiple) {
+                onChange && onChange(currentValue);
+                onClose();
+              }
+            }}
+          >
+            <div className="flex gap-2 items-center">
+              {multiple && (
+                <Checkbox
+                  id={userData.fullname}
+                  checked={value.includes(user.id)}
+                  onCheckedChange={(value: boolean) => {
+                    onValueChange(value, user.id);
+                  }}
+                />
+              )}
+              <label htmlFor={user.fullname} className="flex gap-2 grow">
+                <AvatarText
+                  text={user.fullname}
+                  className="h-5 w-5 text-[9px]"
+                />
 
-                  {userData.fullname}
-                </label>
-              </div>
-            </DropdownItem>
-          );
-        })}
+                {userData.fullname}
+              </label>
+            </div>
+          </DropdownItem>
+        );
+      })}
     </CommandGroup>
   );
 }

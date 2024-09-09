@@ -23,4 +23,5 @@ export interface User {
   workspaces: Workspace[];
   invites: Invite[];
   role: Role;
+  image?: string;
 }

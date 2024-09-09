@@ -1,4 +1,5 @@
 import { RiLink, RiMoreFill } from '@remixicon/react';
+import { RoleEnum } from '@tegonhq/types';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +21,10 @@ import {
 import { DeleteLine, EditLine } from '@tegonhq/ui/icons';
 import React from 'react';
 
+import { getBotIcon } from 'common';
 import { type LinkedIssueType } from 'common/types';
+
+import { useUserData } from 'hooks/users';
 
 import { useDeleteLinkedIssueMutation } from 'services/linked-issues';
 
@@ -35,8 +39,17 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
   const { mutate: deleteLinkedIssue } = useDeleteLinkedIssueMutation({});
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const { user } = useUserData(linkedIssue.createdById);
 
   function getIconComponent() {
+    if (user && user.role === RoleEnum.BOT) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const Component = getBotIcon(user.image as any);
+      return (
+        <Component className="text-[9px] w-5 h-5 bg-background-3 rounded-sm p-[2px]" />
+      );
+    }
+
     return <RiLink size={20} />;
   }
 

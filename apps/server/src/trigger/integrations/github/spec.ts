@@ -8,6 +8,5 @@ export function spec() {
         scopes: ['repo'],
       },
     },
-    other_data: { app_id: '863429' },
   };
 }

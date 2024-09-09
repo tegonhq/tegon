@@ -1,4 +1,5 @@
 import {
+  IssueRequestParamsDto,
   LinkedIssue,
   LinkedIssueRequestParamsDto,
   LinkedIssueSourceDto,
@@ -18,6 +19,16 @@ export async function getLinkedIssueBySource({
 }: LinkedIssueSourceDto): Promise<LinkedIssue> {
   const response = await axios.get(
     `/api/v1/linked_issues/source?sourceId=${sourceId}`,
+  );
+
+  return response.data;
+}
+
+export async function getLinkedIssuesByIssueId({
+  issueId,
+}: IssueRequestParamsDto): Promise<LinkedIssue[]> {
+  const response = await axios.get(
+    `/api/v1/linked_issues/issue?issueId=${issueId}`,
   );
 
   return response.data;

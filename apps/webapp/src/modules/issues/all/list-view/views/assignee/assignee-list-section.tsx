@@ -13,7 +13,7 @@ import { IssueListItem } from 'modules/issues/components';
 
 import type { UsersOnWorkspaceType } from 'common/types';
 import type { IssueType } from 'common/types';
-import type { User } from 'common/types';
+import { getUserFromUsersData } from 'common/user-util';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
@@ -35,7 +35,7 @@ export const AssigneeListSection = observer(
       applicationStore.displaySettings.showSubIssues,
       { userId: userOnWorkspace.userId, teamId: team.id },
     );
-    const { usersData, isLoading } = useUsersData();
+    const { users, isLoading } = useUsersData();
     const computedIssues = useFilterIssues(issues, team.id);
 
     if (isLoading) {
@@ -47,10 +47,6 @@ export const AssigneeListSection = observer(
       !applicationStore.displaySettings.showEmptyGroups
     ) {
       return null;
-    }
-
-    function getUserData(userId: string) {
-      return usersData.find((userData: User) => userData.id === userId);
     }
 
     return (
@@ -67,7 +63,9 @@ export const AssigneeListSection = observer(
               size="lg"
             >
               <AvatarText
-                text={getUserData(userOnWorkspace.userId).fullname}
+                text={
+                  getUserFromUsersData(users, userOnWorkspace.userId).fullname
+                }
                 className="h-5 w-5 group-hover:hidden text-[9px]"
               />
               <div className="hidden group-hover:block">
@@ -78,7 +76,7 @@ export const AssigneeListSection = observer(
                 )}
               </div>
               <h3 className="pl-2">
-                {getUserData(userOnWorkspace.userId).fullname}
+                {getUserFromUsersData(users, userOnWorkspace.userId).fullname}
               </h3>
             </Button>
           </CollapsibleTrigger>

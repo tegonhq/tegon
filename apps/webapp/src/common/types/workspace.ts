@@ -10,6 +10,7 @@ export interface UsersOnWorkspaceType {
   id: string;
   createdAt: string;
   updatedAt: string;
+  role: string;
 
   userId: string;
   workspaceId: string;

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.text-primary {
+  color: var(--status-icon-5);
+}
+
 @layer base {
   * {
     @apply border-border;

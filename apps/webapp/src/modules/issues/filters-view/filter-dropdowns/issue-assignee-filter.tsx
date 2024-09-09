@@ -14,7 +14,7 @@ interface IssueAssigneeFilterProps {
 
 export const IssueAssigneeFilter = observer(
   ({ onChange, onClose }: IssueAssigneeFilterProps) => {
-    const { usersData } = useUsersData();
+    const { users } = useUsersData(false);
     const { applicationStore } = useContextStore();
 
     const assigneeFilters = applicationStore.filters.assignee
@@ -29,7 +29,7 @@ export const IssueAssigneeFilter = observer(
       <IssueAssigneeDropdownContent
         onChange={change}
         onClose={onClose}
-        usersData={usersData}
+        users={users}
         value={assigneeFilters}
         multiple
       />

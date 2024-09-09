@@ -23,7 +23,7 @@ export const AssigneeDialog = observer(
     const { applicationStore, issuesStore } = useContextStore();
     const { mutate: updateIssue } = useUpdateIssueMutation({});
     const team = useCurrentTeam();
-    const { usersData, isLoading } = useUsersData(team.id);
+    const { users, isLoading } = useUsersData(false, team.id);
 
     if (
       isLoading ||
@@ -42,7 +42,7 @@ export const AssigneeDialog = observer(
     }
 
     function getOptions() {
-      return usersData.map((user: User) => {
+      return users.map((user: User) => {
         return {
           Icon: <AvatarText text={user.fullname} className="text-[9px]" />,
           text: user.username,

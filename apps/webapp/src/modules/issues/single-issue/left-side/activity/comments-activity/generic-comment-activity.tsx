@@ -1,5 +1,4 @@
-import { RiAccountBoxFill, RiMoreFill } from '@remixicon/react';
-import { AvatarText } from '@tegonhq/ui/components/avatar';
+import { RiMoreFill } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DropdownMenu,
@@ -19,6 +18,7 @@ import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
 import { type IssueCommentType, type User } from 'common/types';
+import { getUserIcon } from 'common/user-util';
 
 import { UserContext } from 'store/user-context';
 
@@ -34,10 +34,6 @@ export interface GenericCommentActivityProps {
   html?: boolean;
   getUserData: (userId: string) => User;
   hasMore?: boolean;
-}
-
-function getIcon() {
-  return <RiAccountBoxFill size={18} className="text-foreground" />;
 }
 
 export function GenericCommentActivity(props: GenericCommentActivityProps) {
@@ -57,13 +53,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
 
   return (
     <div className="flex items-start">
-      {user ? (
-        <AvatarText text={user?.fullname} className="text-[9px] mr-2" />
-      ) : (
-        <div className="h-5 w-5 flex items-center justify-center mr-2 rounded-sm">
-          {getIcon()}
-        </div>
-      )}
+      {getUserIcon(user)}
       <div
         className={cn(
           'group relative w-full flex flex-col text-foreground rounded-md',

@@ -23,6 +23,7 @@ export type ActionTrigger = OnCreateUpdateDeleteTrigger | SourceWebhookTrigger;
 export interface ActionConfig {
   name: string;
   slug: string;
+  icon?: string;
   description?: string;
   triggers: ActionTrigger[];
   integrations: string[];

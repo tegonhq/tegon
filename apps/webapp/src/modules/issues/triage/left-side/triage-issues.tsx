@@ -7,7 +7,7 @@ import { TriageCategory } from './triage-category';
 import { TriageOtherCategory } from './triage-other-category';
 
 export const TriageIssues = () => {
-  const { usersData, isLoading } = useUsersData();
+  const { users, isLoading } = useUsersData();
 
   const issueCategories = useTriageGroups();
 
@@ -25,7 +25,7 @@ export const TriageIssues = () => {
                 issues={issueCategories[labelId]}
                 key={labelId}
                 noHeader={Object.keys(issueCategories).length === 1}
-                usersData={usersData}
+                users={users}
               />
             );
           }
@@ -35,7 +35,7 @@ export const TriageIssues = () => {
               labelId={labelId}
               issues={issueCategories[labelId]}
               key={labelId}
-              usersData={usersData}
+              users={users}
             />
           );
         })}

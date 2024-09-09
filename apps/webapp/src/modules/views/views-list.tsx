@@ -21,7 +21,7 @@ interface ViewItemProps {
 
 export function ViewItem({ view }: ViewItemProps) {
   const { teamIdentifier, workspaceSlug } = useParams();
-  const { userData } = useUserData(view.createdById);
+  const { user } = useUserData(view.createdById);
   const { mutate: updateView } = useUpdateViewMutation({});
 
   return (
@@ -62,14 +62,11 @@ export function ViewItem({ view }: ViewItemProps) {
       <div className="min-w-[70px]">
         {dayjs(view.createdAt).format('DD MMM')}
       </div>
-      {userData && (
+      {user && (
         <div className="min-w-[70px] flex gap-2">
-          <AvatarText
-            text={userData?.fullname}
-            className="w-5 h-5 text-[9px]"
-          />
+          <AvatarText text={user?.fullname} className="w-5 h-5 text-[9px]" />
 
-          {userData?.fullname}
+          {user?.fullname}
         </div>
       )}
     </Link>

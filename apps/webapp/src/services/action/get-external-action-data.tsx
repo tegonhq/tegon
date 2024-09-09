@@ -19,7 +19,7 @@ export function useGetExternalActionDataQuery(
   actionSlug: string,
 ): UseQueryResult<ActionSource, XHRErrorResponse> {
   return useQuery(
-    [GetExternalActionData],
+    [GetExternalActionData, actionSlug],
     () => getExternalActionData(actionSlug),
     {
       retry: 1,

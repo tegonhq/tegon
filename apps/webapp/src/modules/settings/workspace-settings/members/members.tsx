@@ -1,4 +1,3 @@
-import { RoleEnum } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { observer } from 'mobx-react-lite';
@@ -14,15 +13,8 @@ import { AddMemberDialog } from './add-member-dialog';
 import { MemberItem } from './member-item';
 
 export const Members = observer(() => {
-  const { usersData, isLoading } = useUsersData();
+  const { users, isLoading } = useUsersData();
   const [newMemberDialog, setNewMemberDialog] = React.useState(false);
-
-  const usersDataExcludeBots = React.useMemo(() => {
-    if (!isLoading) {
-      return usersData.filter((user: User) => user.role !== RoleEnum.BOT);
-    }
-    return [];
-  }, [isLoading, usersData]);
 
   return (
     <>
@@ -42,20 +34,16 @@ export const Members = observer(() => {
                 >
                   Add member
                 </Button>
-                <h3 className="text-xs">
-                  {usersDataExcludeBots.length} Members{' '}
-                </h3>
+                <h3 className="text-xs">{users.length} Members </h3>
               </div>
 
               <div className="mt-4 flex flex-col gap-2">
-                {usersDataExcludeBots.map((userData: User, index) => (
+                {users.map((userData: User, index) => (
                   <MemberItem
                     key={userData.id}
                     name={userData.fullname}
                     email={userData.email}
-                    className={
-                      index === usersData.length - 1 && 'pb-0 !border-b-0'
-                    }
+                    className={index === users.length - 1 && 'pb-0 !border-b-0'}
                   />
                 ))}
               </div>

@@ -101,7 +101,7 @@ export const prepareTriggerPayload = async (
         integrationMap[integrationName],
       ]),
     ),
-    userId: actionUser.id,
+    userId: actionUser.userId,
     accessToken,
     action,
   };

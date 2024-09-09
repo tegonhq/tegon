@@ -117,15 +117,12 @@ export class TriggerdevService {
   }
 
   // Get the production runtime environment for a given project ID
-  async getProdRuntimeForProject(projectId: string) {
+  async getProdRuntimeForProject(projectId: string, slug: string) {
     try {
       const response = await this.knex('RuntimeEnvironment')
         .where({
           projectId, // Filter by the project ID
-          slug:
-            this.configService.get('NODE_ENV') === 'production'
-              ? 'prod'
-              : 'dev', // Filter by the 'prod' slug
+          slug,
         })
         .select('id', 'slug', 'apiKey'); // Select the ID, slug, and API key columns
 
@@ -196,9 +193,9 @@ export class TriggerdevService {
   }
 
   // Get the production runtime API key for a given project slug
-  async getProdRuntimeKey(projectSlug: string) {
+  async getProdRuntimeKey(projectSlug: string, slug: string) {
     const project = await this.getProject({ slug: projectSlug }); // Get the project by slug
-    const runtime = await this.getProdRuntimeForProject(project.id); // Get the production runtime environment for the project
+    const runtime = await this.getProdRuntimeForProject(project.id, slug); // Get the production runtime environment for the project
 
     return runtime.apiKey; // Return the API key for the production runtime environment
   }
@@ -216,8 +213,13 @@ export class TriggerdevService {
       payload: { projectSlug, id },
     });
 
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug);
+
     const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
-    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen); // Get the production runtime API key
+    const apiKey = await this.getProdRuntimeKey(
+      projectslugWithoutHyphen,
+      runtimeSlug,
+    ); // Get the production runtime API key
     const response = await triggerTaskSync(id, payload, apiKey, options); // Trigger the task synchronously
 
     return response; // Return the response from the triggered task
@@ -230,9 +232,14 @@ export class TriggerdevService {
     payload: any, // eslint-disable-line @typescript-eslint/no-explicit-any
     options?: Record<string, string>,
   ) {
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug);
+
     const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
 
-    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen); // Get the production runtime API key
+    const apiKey = await this.getProdRuntimeKey(
+      projectslugWithoutHyphen,
+      runtimeSlug,
+    ); // Get the production runtime API key
     const response = await triggerTask(id, payload, apiKey, options); // Trigger the task asynchronously
 
     return response; // Return the response from the triggered task
@@ -270,11 +277,27 @@ export class TriggerdevService {
     return undefined; // Return undefined if the user is not on the workspace
   }
 
+  getRuntimeSlugForProject(projectSlug: string) {
+    let slug = 'prod';
+
+    if (projectSlug === 'common') {
+      slug =
+        this.configService.get('NODE_ENV') === 'production' ? 'prod' : 'dev';
+    }
+
+    return slug;
+  }
+
   // Get runs for a given project slug and task ID
   async getRunsForTask(projectSlug: string, taskId: string) {
     const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
 
-    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen); // Get the production runtime API key
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug);
+
+    const apiKey = await this.getProdRuntimeKey(
+      projectslugWithoutHyphen,
+      runtimeSlug,
+    ); // Get the production runtime API key
 
     return await getRuns(taskId, apiKey); // Get the runs for the task
   }
@@ -282,8 +305,12 @@ export class TriggerdevService {
   // Get a run for a given project slug and run ID
   async getRun(projectSlug: string, runId: string) {
     const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug);
 
-    const apiKey = await this.getProdRuntimeKey(projectslugWithoutHyphen); // Get the production runtime API key
+    const apiKey = await this.getProdRuntimeKey(
+      projectslugWithoutHyphen,
+      runtimeSlug,
+    ); // Get the production runtime API key
     const run = await getRun(runId, apiKey); // Get the run data
     const logs = await this.getLogsForRunId(runId); // Get the logs for the run
 

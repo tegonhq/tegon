@@ -13,5 +13,5 @@ export const getToken = async (integrationAccountId: string) => {
   const integrationConfig =
     integrationAccount.integrationConfiguration as JsonObject;
 
-  return integrationConfig.api_key;
+  return { token: integrationConfig.api_key };
 };

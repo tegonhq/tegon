@@ -15,7 +15,7 @@ export function useGetActionInputsQuery(
   workspaceId: string,
 ): UseQueryResult<ActionConfig['inputs'], XHRErrorResponse> {
   return useQuery(
-    [GetActionInputs],
+    [GetActionInputs, slug, workspaceId],
     () => getActionInputs({ slug, workspaceId }),
     {
       retry: 1,

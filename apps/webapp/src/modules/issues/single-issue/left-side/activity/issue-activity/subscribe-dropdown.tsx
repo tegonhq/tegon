@@ -13,14 +13,14 @@ interface SubscribeDropdownProps {
 
 export const SubscribeDropdown = observer(
   ({ value = [] }: SubscribeDropdownProps) => {
-    const { usersData, isLoading } = useUsersData();
+    const { users, isLoading } = useUsersData();
 
     if (isLoading) {
       return null;
     }
-    const subscribedUserData = usersData
-      ? usersData.filter((userData: User) => value.includes(userData.id))
-      : [];
+    const subscribedUserData = users.filter((userData: User) =>
+      value.includes(userData.id),
+    );
 
     return (
       <>

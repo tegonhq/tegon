@@ -5,17 +5,9 @@ import {
   GenericCommentActivity,
   type GenericCommentActivityProps,
 } from './generic-comment-activity';
-import { SyncCommentActivity } from './sync-comment-activity';
 
 export function CommentActivity(props: GenericCommentActivityProps) {
   const { comment, hasMore } = props;
-  const sourceMetadata = comment.sourceMetadata
-    ? JSON.parse(comment.sourceMetadata)
-    : undefined;
-
-  if (sourceMetadata && sourceMetadata.type) {
-    return <SyncCommentActivity {...props} />;
-  }
 
   return (
     <TimelineItem

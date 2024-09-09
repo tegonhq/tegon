@@ -1,3 +1,4 @@
+import { RoleEnum } from '@tegonhq/types';
 import * as React from 'react';
 
 import type { User } from 'common/types';
@@ -9,7 +10,7 @@ import { useGetUsersQuery } from 'services/users';
 
 import { useContextStore } from 'store/global-context-provider';
 
-export function useUsersData(teamId?: string) {
+export function useUsersData(bot = true, teamId?: string) {
   const { workspaceStore } = useContextStore();
   const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
   const {
@@ -33,7 +34,20 @@ export function useUsersData(teamId?: string) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceStore]);
 
-  return { isLoading, usersData };
+  const users = React.useMemo(() => {
+    if (usersData) {
+      return usersData.filter((user) =>
+        bot ? true : user.role !== RoleEnum.BOT,
+      );
+    }
+
+    return [];
+  }, [bot, usersData]);
+
+  return {
+    isLoading,
+    users,
+  };
 }
 
 export function useUserData(
@@ -41,7 +55,7 @@ export function useUserData(
   teamId?: string,
 ): {
   isLoading: boolean;
-  userData: User | undefined;
+  user: User | undefined;
 } {
   const team = useTeamWithId(teamId);
 
@@ -67,5 +81,5 @@ export function useUserData(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceStore]);
 
-  return { isLoading, userData: usersData ? usersData[0] : undefined };
+  return { isLoading, user: usersData ? usersData[0] : undefined };
 }

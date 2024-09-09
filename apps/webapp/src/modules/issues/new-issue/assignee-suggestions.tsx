@@ -16,12 +16,12 @@ export function AssigneeSuggestions({
   userIds,
   teamId,
 }: AssigneeSuggestionsProps) {
-  const { usersData, isLoading } = useUsersData(teamId);
+  const { users, isLoading } = useUsersData(false, teamId);
   if (isLoading) {
     return null;
   }
 
-  const usersToSuggest = usersData.filter((user: User) => {
+  const usersToSuggest = users.filter((user: User) => {
     return userIds.includes(user.id);
   });
 
