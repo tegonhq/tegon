@@ -1,5 +1,4 @@
-import { RiAccountBoxFill, RiMoreFill } from '@remixicon/react';
-import { AvatarText } from '@tegonhq/ui/components/avatar';
+import { RiMoreFill } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DropdownMenu,
@@ -19,13 +18,13 @@ import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
 import { type IssueCommentType, type User } from 'common/types';
+import { getUserIcon } from 'common/user-util';
 
 import { UserContext } from 'store/user-context';
 
 import { EditComment } from './edit-comment';
 import { ReplyComment } from './reply-comment';
 import { getUserDetails } from '../issue-activity/user-activity-utils';
-import { getUserIcon } from 'common/user-util';
 
 export interface GenericCommentActivityProps {
   comment: IssueCommentType;

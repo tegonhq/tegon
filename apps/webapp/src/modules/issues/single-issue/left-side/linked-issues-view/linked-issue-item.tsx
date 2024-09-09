@@ -1,4 +1,5 @@
 import { RiLink, RiMoreFill } from '@remixicon/react';
+import { RoleEnum } from '@tegonhq/types';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,14 +21,14 @@ import {
 import { DeleteLine, EditLine } from '@tegonhq/ui/icons';
 import React from 'react';
 
+import { getBotIcon } from 'common';
 import { type LinkedIssueType } from 'common/types';
+
+import { useUserData } from 'hooks/users';
 
 import { useDeleteLinkedIssueMutation } from 'services/linked-issues';
 
 import { EditLink } from './edit-link';
-import { useUserData } from 'hooks/users';
-import { RoleEnum } from '@tegonhq/types';
-import { getBotIcon } from 'common';
 
 interface LinkedIssueItemProps {
   linkedIssue: LinkedIssueType;

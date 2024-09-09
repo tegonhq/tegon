@@ -12,7 +12,6 @@ import {
   AIHighlight,
   MarkdownExtension,
 } from 'novel/extensions';
-import { UploadImagesPlugin } from 'novel/plugins';
 
 import { fileExtension } from './file-extension';
 import { imageExtension } from './image-extension';

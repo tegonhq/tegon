@@ -1,6 +1,3 @@
-import { RoleEnum } from '@tegonhq/types';
-import { AvatarText } from '@tegonhq/ui/components/avatar';
-import { getBotIcon } from 'common';
 import type { User } from 'common/types';
 import type { IssueSourceMetadataType } from 'common/types';
 

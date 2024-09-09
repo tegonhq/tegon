@@ -1,11 +1,12 @@
 import { Loader } from '@tegonhq/ui/components/loader';
 import * as React from 'react';
 
+import { hash } from 'common/common-utils';
+
 import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { initDatabase } from 'store/database';
 import { UserContext } from 'store/user-context';
-import { hash } from 'common/common-utils';
 
 interface Props {
   children: React.ReactElement;
@@ -23,6 +24,7 @@ export function DatabaseWrapper(props: Props): React.ReactElement {
       initDatabase(hash(hashKey));
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspace]);
 
   if (loading) {

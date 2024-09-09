@@ -1,10 +1,10 @@
-import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Timeline, TimelineItem } from '@tegonhq/ui/components/timeline';
 import { observer } from 'mobx-react-lite';
 
 import type { User } from 'common/types';
 import type { IssueHistoryType } from 'common/types';
 import type { LinkedIssueType } from 'common/types';
+import { getUserIcon } from 'common/user-util';
 
 import { useIssueData } from 'hooks/issues';
 import { useUsersData } from 'hooks/users';
@@ -14,7 +14,6 @@ import { useContextStore } from 'store/global-context-provider';
 import { ActivityItem } from './activity-item';
 import { LinkedIssueActivity } from './linked-issue-activity';
 import { getUserDetails } from './user-activity-utils';
-import { getUserIcon } from 'common/user-util';
 
 enum ActivityType {
   Comment = 'Comment',
