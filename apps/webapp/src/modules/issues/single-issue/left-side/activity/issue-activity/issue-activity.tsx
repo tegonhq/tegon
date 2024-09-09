@@ -14,6 +14,7 @@ import { useContextStore } from 'store/global-context-provider';
 import { ActivityItem } from './activity-item';
 import { LinkedIssueActivity } from './linked-issue-activity';
 import { getUserDetails } from './user-activity-utils';
+import { getUserIcon } from 'common/user-util';
 
 enum ActivityType {
   Comment = 'Comment',
@@ -29,7 +30,7 @@ export const IssueActivity = observer(() => {
     ? JSON.parse(issue.sourceMetadata)
     : undefined;
 
-  const { usersData, isLoading } = useUsersData(issue.teamId);
+  const { users, isLoading } = useUsersData(true, issue.teamId);
 
   const {
     issuesHistoryStore,
@@ -58,7 +59,7 @@ export const IssueActivity = observer(() => {
   });
 
   function getUserData(userId: string) {
-    return usersData.find((user: User) => user.id === userId);
+    return users.find((user: User) => user.id === userId);
   }
 
   if (isLoading) {
@@ -67,7 +68,7 @@ export const IssueActivity = observer(() => {
 
   const issueCreatedUser = getUserDetails(
     issueSourceMetadata,
-    usersData && getUserData(issue.createdById),
+    getUserData(issue.createdById),
   );
 
   return (
@@ -75,10 +76,7 @@ export const IssueActivity = observer(() => {
       <Timeline>
         <TimelineItem hasMore={false} date={issue.createdAt}>
           <div className="flex items-center text-muted-foreground">
-            <AvatarText
-              text={issueCreatedUser.fullname}
-              className="mr-4 text-[9px]"
-            />
+            {getUserIcon(issueCreatedUser)}
 
             <div className="flex items-center">
               <span className="text-foreground mr-2 font-medium">

@@ -48,7 +48,7 @@ export function SyncCommentActivity({
       hasMore={hasMore}
     >
       <div className="flex items-start text-muted-foreground ">
-        <LinkLine size={20} className="text-foreground mr-4" />
+        <LinkLine size={20} className="text-foreground mr-2" />
 
         <div
           className={cn(

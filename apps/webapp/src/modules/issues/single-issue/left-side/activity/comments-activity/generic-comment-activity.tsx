@@ -25,6 +25,7 @@ import { UserContext } from 'store/user-context';
 import { EditComment } from './edit-comment';
 import { ReplyComment } from './reply-comment';
 import { getUserDetails } from '../issue-activity/user-activity-utils';
+import { getUserIcon } from 'common/user-util';
 
 export interface GenericCommentActivityProps {
   comment: IssueCommentType;
@@ -34,10 +35,6 @@ export interface GenericCommentActivityProps {
   html?: boolean;
   getUserData: (userId: string) => User;
   hasMore?: boolean;
-}
-
-function getIcon() {
-  return <RiAccountBoxFill size={18} className="text-foreground" />;
 }
 
 export function GenericCommentActivity(props: GenericCommentActivityProps) {
@@ -57,13 +54,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
 
   return (
     <div className="flex items-start">
-      {user ? (
-        <AvatarText text={user?.fullname} className="text-[9px] mr-2" />
-      ) : (
-        <div className="h-5 w-5 flex items-center justify-center mr-2 rounded-sm">
-          {getIcon()}
-        </div>
-      )}
+      {getUserIcon(user)}
       <div
         className={cn(
           'group relative w-full flex flex-col text-foreground rounded-md',

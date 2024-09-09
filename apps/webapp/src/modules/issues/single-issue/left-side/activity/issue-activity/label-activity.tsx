@@ -35,16 +35,16 @@ export function LabelActivity({
         date={showTime && issueHistory.updatedAt}
       >
         <div className="flex items-center text-muted-foreground">
-          <LabelLine size={20} className="mr-4" />
+          <LabelLine size={20} className="mr-2" />
 
           <div className="flex items-center">
             <span className="mr-2 font-medium text-foreground">{fullname}</span>
             added label
           </div>
 
-          <div>
+          <div className="flex gap-1 ml-2">
             {issueHistory.addedLabelIds.map((labelId: string) => (
-              <Badge variant="secondary" key={labelId} className="ml-2">
+              <Badge variant="secondary" key={labelId}>
                 <BadgeColor
                   style={{ backgroundColor: getLabel(labelId).color }}
                 />
@@ -64,7 +64,7 @@ export function LabelActivity({
       date={showTime && issueHistory.updatedAt}
     >
       <div className="flex items-center text-muted-foreground">
-        <LabelLine size={20} className="mr-4" />
+        <LabelLine size={20} className="mr-2" />
 
         <div className="flex items-center">
           <span className="mr-2 font-medium text-foreground">{fullname}</span>

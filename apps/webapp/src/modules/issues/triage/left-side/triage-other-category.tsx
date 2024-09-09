@@ -13,7 +13,7 @@ import ReactTimeAgo from 'react-time-ago';
 
 import type { IssueType } from 'common/types';
 import type { User } from 'common/types';
-import { getUserData } from 'common/user-util';
+import { getUserFromUsersData } from 'common/user-util';
 
 import { useCurrentTeam } from 'hooks/teams';
 
@@ -71,7 +71,7 @@ export const TriageOtherCategory = observer(
               (nextIssue &&
                 issueId === `${currentTeam.identifier}-${nextIssue.number}`) ||
               issueId === `${currentTeam.identifier}-${issue.number}`;
-            const userData = getUserData(usersData, issue.createdById);
+            const userData = getUserFromUsersData(usersData, issue.createdById);
 
             return (
               <div

@@ -44,8 +44,6 @@ export async function createLinkIssueComment(
   // Create the GitHub comment body with a link to the issue
   const githubCommentBody = `[${team.identifier}-${issue.number} ${issue.title}](https://app.tegon.ai/${team.workspace.slug}/issue/${team.identifier}-${issue.number})`;
 
-  console.log(githubCommentBody);
-  console.log(githubUrl);
   // Send the comment to GitHub
   const commentResponse = await sendGithubComment(
     githubUrl,

@@ -112,6 +112,7 @@ export class UsersService {
       username: user.username,
       fullname: user.fullname,
       email: user.email,
+      image: user.image,
       // This default takes the first workspace
       role: user.usersOnWorkspaces[0].role,
     }));

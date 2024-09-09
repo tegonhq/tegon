@@ -1,3 +1,5 @@
+import type { RoleEnum } from '@tegonhq/types';
+
 export interface WorkspaceType {
   id: string;
   createdAt: string;
@@ -10,6 +12,7 @@ export interface UsersOnWorkspaceType {
   id: string;
   createdAt: string;
   updatedAt: string;
+  role: RoleEnum;
 
   userId: string;
   workspaceId: string;

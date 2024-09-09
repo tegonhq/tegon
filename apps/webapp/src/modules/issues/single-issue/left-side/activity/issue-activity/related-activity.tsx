@@ -155,7 +155,7 @@ export function RelatedActivity({
       date={showTime && issueHistory.updatedAt}
     >
       <div className="flex items-center text-muted-foreground">
-        <div className="h-[15px] w-[20px] flex items-center justify-center mr-4">
+        <div className="h-[15px] w-[20px] flex items-center justify-center mr-2">
           <Icon.icon
             size={20}
             className={cn(

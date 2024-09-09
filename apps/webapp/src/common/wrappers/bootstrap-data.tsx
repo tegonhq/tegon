@@ -107,7 +107,7 @@ export function BootstrapWrapper({ children }: Props) {
   };
 
   if (loading) {
-    return <Loader />;
+    return <Loader text="Syncing data..." />;
   }
 
   return <>{children}</>;

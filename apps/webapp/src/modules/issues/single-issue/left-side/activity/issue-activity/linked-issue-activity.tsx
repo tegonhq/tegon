@@ -1,10 +1,9 @@
 import { RiLink } from '@remixicon/react';
-import { AvatarText } from '@tegonhq/ui/components/avatar';
 
 import { type LinkedIssueType } from 'common/types';
-import type { User } from 'common/types';
+import { getUserIcon } from 'common/user-util';
 
-import { useUsersData } from 'hooks/users';
+import { useUserData } from 'hooks/users';
 
 import { getUserDetails } from './user-activity-utils';
 
@@ -13,11 +12,7 @@ interface LinkedIssueActivityProps {
 }
 
 export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
-  const { usersData, isLoading } = useUsersData();
-
-  function getUserData(userId: string) {
-    return usersData.find((userData: User) => userData.id === userId);
-  }
+  const { user, isLoading } = useUserData(linkedIssue.createdById);
 
   if (isLoading) {
     return null;
@@ -36,22 +31,16 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
   return (
     <div className="flex items-center">
       {linkedIssue.createdById ? (
-        <AvatarText
-          text={getUserData(linkedIssue.createdById).fullname}
-          className="h-5 w-5 text-[9px] mr-4"
-        />
+        <> {getUserIcon(user)}</>
       ) : (
-        <div className="h-5 w-5 flex items-center justify-center mr-4">
+        <div className="h-5 w-5 flex items-center justify-center mr-2">
           {getIcon()}
         </div>
       )}
 
       <div className="flex items-center">
         <span className="text-foreground mr-2 font-medium">
-          {
-            getUserDetails(sourceData, getUserData(linkedIssue.createdById))
-              .fullname
-          }
+          {getUserDetails(sourceData, user).fullname}
         </span>
         <span className="text-muted-foreground">linked</span>
         <a

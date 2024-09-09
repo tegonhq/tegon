@@ -29,7 +29,7 @@ export function PriorityActivity({
         <PriorityIcon.icon
           size={20}
           className={cn(
-            'mr-4',
+            'mr-2',
             issueHistory.toPriority === 1 && 'text-[#F9703E]',
           )}
         />

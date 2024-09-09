@@ -10,7 +10,7 @@ import { AssigneeLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 
-import type { User } from 'common/types';
+import { getUserFromUsersData } from 'common/user-util';
 
 import { useUsersData } from 'hooks/users/use-users-data';
 
@@ -35,13 +35,9 @@ export function IssueAssigneeDropdown({
 }: IssueAssigneeDropdownProps) {
   const [open, setOpen] = React.useState(false);
 
-  const { usersData, isLoading } = useUsersData();
+  const { users, isLoading } = useUsersData(false);
 
-  function getUserData(userId: string) {
-    return usersData.find((userData: User) => userData.id === userId);
-  }
-
-  if (isLoading || !usersData) {
+  if (isLoading) {
     return null;
   }
 
@@ -59,7 +55,7 @@ export function IssueAssigneeDropdown({
           {value ? (
             <>
               <AvatarText
-                text={getUserData(value).fullname}
+                text={getUserFromUsersData(users, value).fullname}
                 className="text-[9px]"
               />
             </>
@@ -85,10 +81,10 @@ export function IssueAssigneeDropdown({
           {value ? (
             <>
               <AvatarText
-                text={getUserData(value).fullname}
+                text={getUserFromUsersData(users, value).fullname}
                 className="h-5 w-5 text-[9px] mr-2"
               />
-              {getUserData(value).fullname}
+              {getUserFromUsersData(users, value).fullname}
             </>
           ) : (
             <div className="text-muted-foreground flex">
@@ -112,11 +108,11 @@ export function IssueAssigneeDropdown({
         {value ? (
           <>
             <AvatarText
-              text={getUserData(value).fullname}
+              text={getUserFromUsersData(users, value).fullname}
               className="w-5 h-5 text-[9px]"
             />
 
-            {getUserData(value).fullname}
+            {getUserFromUsersData(users, value).fullname}
           </>
         ) : (
           <>
@@ -140,7 +136,7 @@ export function IssueAssigneeDropdown({
             <CommandInput placeholder="Set assignee..." autoFocus />
             <IssueAssigneeDropdownContent
               onClose={() => setOpen(false)}
-              usersData={usersData}
+              users={users}
               onChange={onChange}
               value={value}
             />

@@ -68,6 +68,7 @@ export default class ActionService {
         config.name,
         config.slug,
         workspaceId,
+        config.icon,
       );
 
       // Create a personal access token for the trigger
@@ -122,6 +123,7 @@ export default class ActionService {
     name: string,
     username: string,
     workspaceId: string,
+    icon?: string,
   ) {
     const email = `${name}_${workspaceId}@tegon.ai`;
     return await prisma.user.upsert({
@@ -131,8 +133,12 @@ export default class ActionService {
         email,
         fullname: name,
         username,
+        image: icon,
       },
-      update: {},
+      update: {
+        image: icon,
+        fullname: name,
+      },
     });
   }
 

@@ -35,7 +35,6 @@ export const viewSummary = async (actionPayload: ActionEventPayload) => {
       mappedTeamId === view.teamId,
   );
 
-  console.log(channelMapping);
   // If no channel mapping is found, return undefined
   if (!channelMapping) {
     return undefined;

@@ -88,7 +88,10 @@ export function FormField({ name, control, config }: FormControllerProps) {
                   <SelectContent>
                     <SelectGroup>
                       {config.options.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
+                        <SelectItem
+                          key={option.value}
+                          value={option.value.toString()}
+                        >
                           {option.label}
                         </SelectItem>
                       ))}

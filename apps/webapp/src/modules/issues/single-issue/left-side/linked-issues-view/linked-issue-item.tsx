@@ -25,6 +25,9 @@ import { type LinkedIssueType } from 'common/types';
 import { useDeleteLinkedIssueMutation } from 'services/linked-issues';
 
 import { EditLink } from './edit-link';
+import { useUserData } from 'hooks/users';
+import { RoleEnum } from '@tegonhq/types';
+import { getBotIcon } from 'common';
 
 interface LinkedIssueItemProps {
   linkedIssue: LinkedIssueType;
@@ -35,8 +38,15 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
   const { mutate: deleteLinkedIssue } = useDeleteLinkedIssueMutation({});
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const { user } = useUserData(linkedIssue.createdById);
 
   function getIconComponent() {
+    if (user && user.role === RoleEnum.BOT) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const Component = getBotIcon(user.image as any);
+      return <Component className="text-[9px] w-5" />;
+    }
+
     return <RiLink size={20} />;
   }
 

@@ -38,7 +38,7 @@ export const StatusActivity = observer(
         <div className="flex items-cente text-muted-foreground">
           <CategoryIcon
             size={20}
-            className="mr-4"
+            className="mr-2"
             color={getWorkflowColor(toWorkflow).color}
           />
 

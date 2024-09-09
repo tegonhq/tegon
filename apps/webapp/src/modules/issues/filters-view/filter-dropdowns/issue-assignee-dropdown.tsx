@@ -26,14 +26,14 @@ export function IssueAssigneeDropdown({
 }: IssueAssigneeDropdownProps) {
   const [open, setOpen] = React.useState(false);
 
-  const { usersData, isLoading } = useUsersData();
+  const { users, isLoading } = useUsersData(false);
 
   function getUserData(userId: string) {
     if (userId === 'no-user') {
       return { username: 'No Assignee', fullname: 'No Assignee' };
     }
 
-    return usersData.find((userData: User) => userData.id === userId);
+    return users.find((userData: User) => userData.id === userId);
   }
 
   if (isLoading) {
@@ -72,7 +72,7 @@ export function IssueAssigneeDropdown({
             <CommandInput placeholder="Set assignee..." autoFocus />
             <IssueAssigneeDropdownContent
               onClose={() => setOpen(false)}
-              usersData={usersData}
+              users={users}
               onChange={onChange}
               value={value}
               multiple
