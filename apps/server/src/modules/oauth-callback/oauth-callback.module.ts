@@ -1,25 +1,23 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule, PrismaService } from 'nestjs-prisma';
+import { PrismaModule } from 'nestjs-prisma';
 
 import { IntegrationAccountModule } from 'modules/integration-account/integration-account.module';
-import { IntegrationDefinitionService } from 'modules/integration-definition/integration-definition.service';
-import { TriggerdevModule } from 'modules/triggerdev/triggerdev.module';
-import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
+import { IntegrationDefinitionModule } from 'modules/integration-definition/integration-definition.module';
+import { IntegrationsModule } from 'modules/integrations/integrations.module';
 import { UsersService } from 'modules/users/users.service';
 
 import { OAuthCallbackController } from './oauth-callback.controller';
 import { OAuthCallbackService } from './oauth-callback.service';
 
 @Module({
-  imports: [PrismaModule, TriggerdevModule, IntegrationAccountModule],
-  controllers: [OAuthCallbackController],
-  providers: [
-    OAuthCallbackService,
-    PrismaService,
-    TriggerdevService,
-    UsersService,
-    IntegrationDefinitionService,
+  imports: [
+    PrismaModule,
+    IntegrationAccountModule,
+    IntegrationDefinitionModule,
+    IntegrationsModule,
   ],
+  controllers: [OAuthCallbackController],
+  providers: [OAuthCallbackService, UsersService],
   exports: [OAuthCallbackService],
 })
 export class OAuthCallbackModule {}

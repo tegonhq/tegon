@@ -2,14 +2,20 @@ import {
   IntegrationEventPayload,
   IntegrationPayloadEventType,
 } from '@tegonhq/types';
-import { task } from '@trigger.dev/sdk/v3';
 
 import { integrationCreate } from './account-create';
 import { getToken } from './get-token';
 import { spec } from './spec';
+import { webhookRespose } from './webhook-response';
 
-async function run(eventPayload: IntegrationEventPayload) {
+export default async function run(eventPayload: IntegrationEventPayload) {
   switch (eventPayload.event) {
+    /**
+     * This is used to identify to which integration account the webhook belongs to
+     */
+    case IntegrationPayloadEventType.GET_CONNECTED_ACCOUNT_ID:
+      return eventPayload.data.eventBody.team_id;
+
     case IntegrationPayloadEventType.SPEC:
       return spec();
 
@@ -21,11 +27,14 @@ async function run(eventPayload: IntegrationEventPayload) {
         eventPayload.data,
       );
 
-    case IntegrationPayloadEventType.GET_IDENTIFIER:
-      return eventPayload.data.eventBody.installation.id.toString();
-
     case IntegrationPayloadEventType.GET_TOKEN:
       return await getToken(eventPayload.integrationAccountId);
+
+    case IntegrationPayloadEventType.WEBHOOK_RESPONSE:
+      return await webhookRespose(eventPayload.eventBody);
+
+    case IntegrationPayloadEventType.IS_ACTION_SUPPORTED_EVENT:
+      return true;
 
     default:
       return {
@@ -33,5 +42,3 @@ async function run(eventPayload: IntegrationEventPayload) {
       };
   }
 }
-
-export const githubHandler = task({ id: 'github', run });

@@ -9,7 +9,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  CreateIntegrationAccountDto,
   IntegrationAccount,
   IntegrationAccountIdDto,
   PersonalAccountDto,
@@ -104,20 +103,6 @@ export class IntegrationAccountController {
     return await this.integrationAccountService.updateIntegrationAccount(
       integrationAccountIdRequestIdBody.integrationAccountId,
       updateIntegrationAccountBody,
-    );
-  }
-
-  /**
-   * Create integration account in a workspace
-   */
-  @Post()
-  @UseGuards(AuthGuard)
-  async createIntegrationAccount(
-    @Body()
-    createIntegrationAccountBody: CreateIntegrationAccountDto,
-  ): Promise<IntegrationAccount> {
-    return await this.integrationAccountService.createIntegrationAccount(
-      createIntegrationAccountBody,
     );
   }
 }

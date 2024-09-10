@@ -1,6 +1,5 @@
 import nodeCrypto from 'node:crypto';
 
-import { wait } from '@trigger.dev/sdk/v3';
 import axios from 'axios';
 
 export function encryptToken(value: string) {
@@ -59,7 +58,7 @@ export async function getRun(runId: string, apiKey: string) {
     return response.data;
   } catch (error) {
     console.log(error);
-    return [];
+    return { data: [] };
   }
 }
 
@@ -98,42 +97,65 @@ export async function getTriggerRun(runId: string, apiKey: string) {
         Authorization: `Bearer ${apiKey}`,
       },
     });
-    return response.data;
+    return {
+      data: response.data,
+      rateLimit: {
+        limit: response.headers['x-ratelimit-limit'],
+        remaining: response.headers['x-ratelimit-remaining'],
+        reset: response.headers['x-ratelimit-reset'],
+      },
+    };
   } catch (error) {
-    return {};
+    return {
+      status: 'FAILED',
+    };
   }
+}
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export async function pollTriggerRun(
   runId: string,
   apiKey: string,
-  retryDelay = 10,
+  retryDelay = 1000,
 ) {
-  const completionStatuses = [
-    'COMPLETED',
-    'CANCELED',
-    'FAILED',
-    'CRASHED',
-    'INTERRUPTED',
-    'SYSTEM_FAILURE',
-  ];
-  const timeoutDuration = 10 * 60 * 1000; // 10 minutes in milliseconds
+  try {
+    const completionStatuses = [
+      'COMPLETED',
+      'CANCELED',
+      'FAILED',
+      'CRASHED',
+      'INTERRUPTED',
+      'SYSTEM_FAILURE',
+    ];
+    const timeoutDuration = 10 * 60 * 1000; // 10 minutes in milliseconds
 
-  const startTime = Date.now();
+    const startTime = Date.now();
 
-  while (Date.now() - startTime < timeoutDuration) {
-    const run = await getTriggerRun(runId, apiKey);
+    while (Date.now() - startTime < timeoutDuration) {
+      const { data: run, rateLimit } = await getTriggerRun(runId, apiKey);
 
-    if (completionStatuses.includes(run.status)) {
-      return run;
+      if (completionStatuses.includes(run.status)) {
+        return run; // Return run status if completed
+      }
+
+      // Extract rate limit info from headers
+      const remaining = parseInt(rateLimit.remaining, 10);
+      const resetTime = parseInt(rateLimit.reset, 10) * 1000; // Convert to milliseconds
+
+      if (remaining === 0) {
+        const delayUntilReset = resetTime - Date.now();
+        await wait(delayUntilReset); // Wait until reset if rate limit is reached
+      } else {
+        // Normal delay between retries
+        await wait(retryDelay); // Convert retryDelay to milliseconds
+      }
     }
-
-    await wait.for({ seconds: retryDelay });
+  } catch (e) {
+    return {};
   }
-
-  throw new Error(
-    `Timeout exceeded or maximum retries reached for trigger run ${runId}`,
-  );
 }
 
 export async function triggerTaskSync(

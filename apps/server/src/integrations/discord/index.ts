@@ -2,20 +2,19 @@ import {
   IntegrationEventPayload,
   IntegrationPayloadEventType,
 } from '@tegonhq/types';
-import { task } from '@trigger.dev/sdk/v3';
 
 import { integrationCreate } from './account-create';
-import { getIdentifier } from './get-identifier';
 import { getToken } from './get-token';
+import { isActionSupportedEvent } from './is_action_supported_event';
 import { spec } from './spec';
 
-async function run(eventPayload: IntegrationEventPayload) {
+export default async function run(eventPayload: IntegrationEventPayload) {
   switch (eventPayload.event) {
     /**
      * This is used to identify to which integration account the webhook belongs to
      */
-    case IntegrationPayloadEventType.GET_IDENTIFIER:
-      return await getIdentifier(eventPayload.data.eventBody);
+    case IntegrationPayloadEventType.GET_CONNECTED_ACCOUNT_ID:
+      return eventPayload.data.eventBody.team_id;
 
     case IntegrationPayloadEventType.SPEC:
       return spec();
@@ -31,11 +30,12 @@ async function run(eventPayload: IntegrationEventPayload) {
     case IntegrationPayloadEventType.GET_TOKEN:
       return await getToken(eventPayload.integrationAccountId);
 
+    case IntegrationPayloadEventType.IS_ACTION_SUPPORTED_EVENT:
+      return isActionSupportedEvent(eventPayload.eventBody);
+
     default:
       return {
         message: `The event payload type is ${eventPayload.event}`,
       };
   }
 }
-
-export const emailHandler = task({ id: 'email', run });

@@ -37,7 +37,12 @@ export const onUpdateHandler = async (actionPayload: ActionEventPayload) => {
           );
         }
       }
-      return await onLabelHandler(actionPayload);
+
+      if (actionPayload.changedData.labelIds) {
+        return await onLabelHandler(actionPayload);
+      }
+
+      return null;
 
     case ModelNameEnum.IssueComment:
       return undefined;

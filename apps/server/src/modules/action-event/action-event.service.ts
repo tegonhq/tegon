@@ -7,6 +7,7 @@ import {
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
+import { IntegrationsService } from 'modules/integrations/integrations.service';
 import { LoggerService } from 'modules/logger/logger.service';
 import { convertLsnToInt } from 'modules/sync-actions/sync-actions.utils';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
@@ -25,6 +26,7 @@ export default class ActionEventService {
   constructor(
     private prisma: PrismaService,
     private triggerdevService: TriggerdevService,
+    private integrationsService: IntegrationsService,
   ) {}
 
   async createEvent(event: CreateActionEvent) {
@@ -88,7 +90,7 @@ export default class ActionEventService {
   async triggerAction(actionEvent: ActionEvent, actionEntity: ActionEntity) {
     const addedTaskInfo = await prepareTriggerPayload(
       this.prisma,
-      this.triggerdevService,
+      this.integrationsService,
       actionEntity.action.id,
     );
 
@@ -97,6 +99,7 @@ export default class ActionEventService {
       actionEntity.action.slug,
       {
         event: actionEvent.eventType,
+        changedData: actionEvent.eventData,
         type: actionEvent.modelName,
         modelId: actionEvent.modelId,
         ...addedTaskInfo,

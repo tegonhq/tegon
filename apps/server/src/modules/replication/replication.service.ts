@@ -189,7 +189,11 @@ export default class ReplicationService {
       const newValue = newValues[index];
 
       // Check if the old value and new value are different
-      if (oldValue !== undefined && oldValue !== newValue) {
+      if (
+        oldValue !== newValue &&
+        oldValue !== 'undefined' &&
+        newValue !== null
+      ) {
         changedData[columnName] = newValue;
       }
     });
@@ -229,7 +233,6 @@ export default class ReplicationService {
           }
 
           // Log or process the changed data
-
           const { columnvalues, columnnames } = change;
           const modelName = change.table as ModelNameEnum;
           const deletedIndex = columnnames?.indexOf('deleted');

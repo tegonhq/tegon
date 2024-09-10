@@ -7,10 +7,7 @@ import {
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-import {
-  TriggerdevService,
-  TriggerProjects,
-} from 'modules/triggerdev/triggerdev.service';
+import { IntegrationsService } from 'modules/integrations/integrations.service';
 
 import { IntegrationDefinitionUpdateBody } from './integration-definition.interface';
 
@@ -18,7 +15,7 @@ import { IntegrationDefinitionUpdateBody } from './integration-definition.interf
 export class IntegrationDefinitionService {
   constructor(
     private prisma: PrismaService,
-    private triggerdevService: TriggerdevService,
+    private integrations: IntegrationsService,
   ) {}
 
   async getIntegrationDefinitions(
@@ -57,8 +54,7 @@ export class IntegrationDefinitionService {
       event: IntegrationPayloadEventType.SPEC,
     };
 
-    const spec = await this.triggerdevService.triggerTask(
-      TriggerProjects.Common,
+    const spec = await this.integrations.loadIntegration(
       integrationDefinition.slug,
       payload,
     );

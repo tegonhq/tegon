@@ -17,6 +17,7 @@ import { AuthModule } from 'modules/auth/auth.module';
 import { BullConfigModule } from 'modules/bull/bull.module';
 import { IntegrationAccountModule } from 'modules/integration-account/integration-account.module';
 import { IntegrationDefinitionModule } from 'modules/integration-definition/integration-definition.module';
+import { IntegrationsModule } from 'modules/integrations/integrations.module';
 import { IssueCommentsModule } from 'modules/issue-comments/issue-comments.module';
 import { IssueHistoryModule } from 'modules/issue-history/issue-history.module';
 import { IssueRelationModule } from 'modules/issue-relation/issue-relation.module';
@@ -113,6 +114,7 @@ import { AppService } from './app.service';
     IntegrationDefinitionModule,
     OAuthCallbackModule,
     IntegrationAccountModule,
+    IntegrationsModule,
 
     BullConfigModule,
   ],
