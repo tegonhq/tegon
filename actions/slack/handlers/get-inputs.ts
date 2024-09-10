@@ -18,7 +18,7 @@ export const getInputs = async (payload: ActionEventPayload) => {
   const slackChannels = (
     await axios.get(
       `https://slack.com/api/conversations.list`,
-      await getSlackHeaders(integrationAccount),
+      getSlackHeaders(integrationAccount),
     )
   ).data;
 

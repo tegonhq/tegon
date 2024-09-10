@@ -11,11 +11,9 @@ import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
 
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
+import { IntegrationsService } from 'modules/integrations/integrations.service';
 import { LoggerService } from 'modules/logger/logger.service';
-import {
-  TriggerdevService,
-  TriggerProjects,
-} from 'modules/triggerdev/triggerdev.service';
+import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 @Injectable()
 export default class WebhookService {
@@ -24,6 +22,7 @@ export default class WebhookService {
   constructor(
     private triggerDevService: TriggerdevService,
     private prisma: PrismaService,
+    private integrations: IntegrationsService,
   ) {}
 
   async handleEvents(
@@ -32,36 +31,47 @@ export default class WebhookService {
     eventHeaders: EventHeaders,
     eventBody: EventBody,
   ) {
-    if (sourceName === 'slack') {
-      if (eventBody.type === 'url_verification') {
-        response.send({ challenge: eventBody.challenge });
-        return null;
-      }
-    }
+    this.logger.log({
+      message: `Received webhook ${sourceName}`,
+      where: `WebhookService.handleEvents`,
+    });
 
-    if (sourceName === 'discord') {
-      this.logger.info({
-        message: 'Discord webhook received',
-        where: 'WebhookService.handleEvents',
-        payload: eventBody,
-      });
-
-      if (eventBody.type === 1) {
-        response.status(200).send({ type: 4 });
-        return null;
-      }
-    }
-
-    response.send({ status: 200 });
-
-    const accountId = await this.triggerDevService.triggerTask(
-      TriggerProjects.Common,
+    console.log(eventBody);
+    const webhookResponse = await this.integrations.loadIntegration(
       sourceName,
       {
-        event: IntegrationPayloadEventType.GET_IDENTIFIER,
-        data: { eventBody, eventHeaders },
+        event: IntegrationPayloadEventType.WEBHOOK_RESPONSE,
+        eventBody,
+        eventHeaders,
       },
     );
+
+    if (webhookResponse === false) {
+      response.status(401).send('Not valid signature');
+    } else {
+      response.status(200).json(webhookResponse);
+    }
+
+    const isActionSupported = await this.integrations.loadIntegration(
+      sourceName,
+      {
+        event: IntegrationPayloadEventType.IS_ACTION_SUPPORTED_EVENT,
+        eventBody,
+      },
+    );
+
+    if (!isActionSupported) {
+      this.logger.log({
+        message: `Received webhook event for ${sourceName} is not supported for actions`,
+        where: `WebhookService.handleEvents`,
+      });
+      return false;
+    }
+
+    const accountId = await this.integrations.loadIntegration(sourceName, {
+      event: IntegrationPayloadEventType.GET_CONNECTED_ACCOUNT_ID,
+      data: { eventBody, eventHeaders },
+    });
 
     const integrationAccount = await this.prisma.integrationAccount.findFirst({
       where: { accountId, deleted: null },
@@ -102,7 +112,6 @@ export default class WebhookService {
       );
     });
 
-    response.send({ status: 200 });
     return { status: 200 };
   }
 }

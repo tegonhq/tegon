@@ -8,11 +8,8 @@ import { PrismaService } from 'nestjs-prisma';
 import * as simpleOauth2 from 'simple-oauth2';
 
 import { IntegrationDefinitionService } from 'modules/integration-definition/integration-definition.service';
+import { IntegrationsService } from 'modules/integrations/integrations.service';
 import { LoggerService } from 'modules/logger/logger.service';
-import {
-  TriggerdevService,
-  TriggerProjects,
-} from 'modules/triggerdev/triggerdev.service';
 
 import {
   CallbackParams,
@@ -35,9 +32,9 @@ export class OAuthCallbackService {
 
   constructor(
     private integrationDefinitionService: IntegrationDefinitionService,
-    private triggerdevService: TriggerdevService,
     private prisma: PrismaService,
     private configService: ConfigService,
+    private integrations: IntegrationsService,
   ) {
     this.CALLBACK_URL = this.configService.get<string>('OAUTH_CALLBACK_URL');
   }
@@ -217,15 +214,14 @@ export class OAuthCallbackService {
         userId: sessionRecord.userId,
         workspaceId: sessionRecord.workspaceId,
         data: {
-          oauthResponse: tokensResponse,
+          oauthResponse: tokensResponse.token,
           oauthParams: params,
           integrationDefinition,
           personal: sessionRecord.personal,
         },
       };
 
-      await this.triggerdevService.triggerTask(
-        TriggerProjects.Common,
+      await this.integrations.loadIntegration(
         integrationDefinition.slug,
         payload,
       );
@@ -234,6 +230,11 @@ export class OAuthCallbackService {
         `${sessionRecord.redirectURL}?success=true&integrationName=${integrationDefinition.name}${accountIdentifier}${integrationKeys}`,
       );
     } catch (e) {
+      this.logger.error({
+        message: e,
+        where: `OAuthCallbackService.callbackHandler`,
+      });
+
       res.redirect(
         `${sessionRecord.redirectURL}?success=false&error=${e.message}${accountIdentifier}${integrationKeys}`,
       );
@@ -260,9 +261,8 @@ export class OAuthCallbackService {
       },
     };
 
-    return await this.triggerdevService.triggerTask(
-      TriggerProjects.Common,
-      integrationDefinition.name,
+    return await this.integrations.loadIntegration(
+      integrationDefinition.slug,
       payload,
     );
   }
@@ -307,8 +307,7 @@ export class OAuthCallbackService {
       },
     };
 
-    await this.triggerdevService.triggerTask(
-      TriggerProjects.Common,
+    await this.integrations.loadIntegration(
       integrationDefinition.slug,
       payload,
     );

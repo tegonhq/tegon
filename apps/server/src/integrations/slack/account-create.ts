@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { getSlackTeamInfo } from './utils';
 
 const prisma = new PrismaClient();
+
 export const integrationCreate = async (
   userId: string,
   workspaceId: string,

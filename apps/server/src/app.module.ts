@@ -40,6 +40,7 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { IntegrationsModule } from 'modules/integrations/integrations.module';
 
 @Module({
   imports: [
@@ -113,6 +114,7 @@ import { AppService } from './app.service';
     IntegrationDefinitionModule,
     OAuthCallbackModule,
     IntegrationAccountModule,
+    IntegrationsModule,
 
     BullConfigModule,
   ],

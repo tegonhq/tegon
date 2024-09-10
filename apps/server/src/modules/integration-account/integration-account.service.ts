@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import {
-  CreateIntegrationAccountDto,
   InputJsonValue,
   IntegrationAccountIdDto,
   PersonalAccountDto,
@@ -16,43 +15,6 @@ import {
 @Injectable()
 export class IntegrationAccountService {
   constructor(private prisma: PrismaService) {}
-
-  async createIntegrationAccount(
-    createIntegrationAccountBody: CreateIntegrationAccountDto,
-  ) {
-    const { integrationDefinitionId, config, workspaceId, userId, settings } =
-      createIntegrationAccountBody;
-
-    const integrationAccount = await this.prisma.integrationAccount.upsert({
-      where: {
-        accountId_integrationDefinitionId_workspaceId: {
-          accountId: createIntegrationAccountBody.accountId,
-          workspaceId,
-          integrationDefinitionId,
-        },
-      },
-      update: {
-        integrationConfiguration: config,
-        deleted: null,
-        isActive: true,
-      },
-      create: {
-        integrationDefinition: { connect: { id: integrationDefinitionId } },
-        workspace: { connect: { id: workspaceId } },
-        integrationConfiguration: config,
-        accountId: createIntegrationAccountBody.accountId,
-        integratedBy: { connect: { id: userId } },
-        isActive: true,
-        settings,
-      },
-      include: {
-        integrationDefinition: true,
-        workspace: true,
-      },
-    });
-
-    return integrationAccount;
-  }
 
   async getIntegrationAccountWithId(
     integrationAccountRequestIdBody: IntegrationAccountIdDto,
@@ -82,7 +44,11 @@ export class IntegrationAccountService {
       },
     });
 
-    return integrationAccount;
+    await this.prisma.integrationAccount.delete({
+      where: {
+        id: integrationAccount.id,
+      },
+    });
   }
 
   async getIntegrationAccount(
