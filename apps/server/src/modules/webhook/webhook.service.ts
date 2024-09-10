@@ -36,7 +36,6 @@ export default class WebhookService {
       where: `WebhookService.handleEvents`,
     });
 
-    console.log(eventBody);
     const webhookResponse = await this.integrations.loadIntegration(
       sourceName,
       {

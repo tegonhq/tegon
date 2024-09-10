@@ -145,7 +145,6 @@ export async function pollTriggerRun(
       const remaining = parseInt(rateLimit.remaining, 10);
       const resetTime = parseInt(rateLimit.reset, 10) * 1000; // Convert to milliseconds
 
-      console.log(remaining, resetTime);
       if (remaining === 0) {
         const delayUntilReset = resetTime - Date.now();
         await wait(delayUntilReset); // Wait until reset if rate limit is reached

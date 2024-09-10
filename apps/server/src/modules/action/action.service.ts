@@ -14,9 +14,9 @@ import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
 
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
+import { IntegrationsService } from 'modules/integrations/integrations.service';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 import { UsersService } from 'modules/users/users.service';
-import { IntegrationsService } from 'modules/integrations/integrations.service';
 
 @Injectable()
 export default class ActionService {

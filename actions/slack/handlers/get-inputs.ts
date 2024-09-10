@@ -1,4 +1,9 @@
-import { ActionEventPayload, getTeams, Team } from '@tegonhq/sdk';
+import {
+  ActionEventPayload,
+  getTeams,
+  IntegrationAccount,
+  Team,
+} from '@tegonhq/sdk';
 import axios from 'axios';
 import { getSlackHeaders } from 'utils';
 
@@ -15,12 +20,7 @@ export const getInputs = async (payload: ActionEventPayload) => {
     value: team.id,
   }));
 
-  const slackChannels = (
-    await axios.get(
-      `https://slack.com/api/conversations.list`,
-      getSlackHeaders(integrationAccount),
-    )
-  ).data;
+  const slackChannels = await getAllSlackChannels(integrationAccount);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let channelId: any = {
@@ -30,9 +30,10 @@ export const getInputs = async (payload: ActionEventPayload) => {
       required: true,
     },
   };
-  if (slackChannels.ok) {
+
+  if (slackChannels.length > 0) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const channelOptions = slackChannels.channels.map((channel: any) => ({
+    const channelOptions = slackChannels.map((channel: any) => ({
       label: channel.name,
       value: channel.id,
     }));
@@ -71,3 +72,38 @@ export const getInputs = async (payload: ActionEventPayload) => {
     },
   };
 };
+
+async function getAllSlackChannels(integrationAccount: IntegrationAccount) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let allChannels: any[] = [];
+  let nextCursor = '';
+  const baseUrl =
+    'https://slack.com/api/conversations.list?types=private_channel,public_channel&limit=200';
+
+  try {
+    do {
+      const url = nextCursor ? `${baseUrl}&cursor=${nextCursor}` : baseUrl;
+      const response = await axios.get(
+        url,
+        getSlackHeaders(integrationAccount),
+      );
+      const slackChannels = response.data;
+
+      if (!slackChannels.ok) {
+        throw new Error(
+          `Error fetching Slack channels: ${slackChannels.error}`,
+        );
+      }
+
+      // Add the retrieved channels to the list
+      allChannels = [...allChannels, ...slackChannels.channels];
+
+      // Get the next cursor if available
+      nextCursor = slackChannels.response_metadata?.next_cursor || '';
+    } while (nextCursor); // Continue if there's a next page
+
+    return allChannels;
+  } catch (error) {
+    return [];
+  }
+}

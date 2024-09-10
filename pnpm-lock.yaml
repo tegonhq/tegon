@@ -261,9 +261,6 @@ importers:
       supertokens-node:
         specifier: ^16.7.1
         version: 16.7.6(encoding@0.1.13)
-      tweetnacl:
-        specifier: ^1.0.3
-        version: 1.0.3
       typesense:
         specifier: ^1.7.2
         version: 1.8.2(@babel/runtime@7.25.6)
@@ -408,7 +405,7 @@ importers:
         version: 3.20.0(react@18.3.1)
       ai:
         specifier: ^3.2.37
-        version: 3.3.21(openai@4.57.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.4.38(typescript@5.5.4))(zod@3.23.8)
+        version: 3.3.21(openai@4.57.0(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.4.38(typescript@5.5.4))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -923,7 +920,7 @@ importers:
     dependencies:
       ai:
         specifier: ^3.2.37
-        version: 3.3.21(openai@4.57.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.4.38(typescript@5.5.4))(zod@3.23.8)
+        version: 3.3.21(openai@4.57.0(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.4.38(typescript@5.5.4))(zod@3.23.8)
       class-validator:
         specifier: 0.14.1
         version: 0.14.1
@@ -1035,7 +1032,7 @@ importers:
         version: 2.6.6(@tiptap/core@2.6.6(@tiptap/pm@2.6.6))(@tiptap/pm@2.6.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       ai:
         specifier: ^3.2.37
-        version: 3.3.21(openai@4.57.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.4.38(typescript@5.5.4))(zod@3.23.8)
+        version: 3.3.21(openai@4.57.0(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.4.38(typescript@5.5.4))(zod@3.23.8)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -11013,9 +11010,6 @@ packages:
     resolution: {integrity: sha512-A969/LO/sPHKlapIarY2VVzqQ5JnnW2/1kksZlnMEpsRD6gwOELvVL+ozfMiO7av9RILt3UeN02L17efr6HUCA==}
     hasBin: true
 
-  tweetnacl@1.0.3:
-    resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
-
   twilio@4.23.0:
     resolution: {integrity: sha512-LdNBQfOe0dY2oJH2sAsrxazpgfFQo5yXGxe96QA8UWB5uu+433PrUbkv8gQ5RmrRCqUTPQ0aOrIyAdBr1aB03Q==}
     engines: {node: '>=14.0'}
@@ -16469,7 +16463,7 @@ snapshots:
       - solid-js
       - vue
 
-  ai@3.3.21(openai@4.57.0(encoding@0.1.13)(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.4.38(typescript@5.5.4))(zod@3.23.8):
+  ai@3.3.21(openai@4.57.0(zod@3.23.8))(react@18.3.1)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.4.38(typescript@5.5.4))(zod@3.23.8):
     dependencies:
       '@ai-sdk/provider': 0.0.22
       '@ai-sdk/provider-utils': 1.0.17(zod@3.23.8)
@@ -18282,7 +18276,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.2(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.4))(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
+      eslint-module-utils: 2.8.2(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -24282,8 +24276,6 @@ snapshots:
       turbo-linux-arm64: 2.1.0
       turbo-windows-64: 2.1.0
       turbo-windows-arm64: 2.1.0
-
-  tweetnacl@1.0.3: {}
 
   twilio@4.23.0(debug@4.3.6):
     dependencies:

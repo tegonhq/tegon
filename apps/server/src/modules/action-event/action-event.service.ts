@@ -99,6 +99,7 @@ export default class ActionEventService {
       actionEntity.action.slug,
       {
         event: actionEvent.eventType,
+        changedData: actionEvent.eventData,
         type: actionEvent.modelName,
         modelId: actionEvent.modelId,
         ...addedTaskInfo,

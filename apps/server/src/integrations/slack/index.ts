@@ -34,7 +34,7 @@ export default async function run(eventPayload: IntegrationEventPayload) {
       return await webhookRespose(eventPayload.eventBody);
 
     case IntegrationPayloadEventType.IS_ACTION_SUPPORTED_EVENT:
-      return false;
+      return true;
 
     default:
       return {

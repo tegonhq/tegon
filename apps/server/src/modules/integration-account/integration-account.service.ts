@@ -30,7 +30,7 @@ export class IntegrationAccountService {
   async deleteIntegrationAccount(
     integrationAccountRequestIdBody: IntegrationAccountIdDto,
   ) {
-    const integrationAccount = await this.prisma.integrationAccount.update({
+    return await this.prisma.integrationAccount.update({
       where: {
         id: integrationAccountRequestIdBody.integrationAccountId,
       },
@@ -41,12 +41,6 @@ export class IntegrationAccountService {
       include: {
         integrationDefinition: true,
         workspace: true,
-      },
-    });
-
-    await this.prisma.integrationAccount.delete({
-      where: {
-        id: integrationAccount.id,
       },
     });
   }

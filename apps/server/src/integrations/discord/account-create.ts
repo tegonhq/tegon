@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { createIntegrationAccount } from 'integrations/utils';
 
 const prisma = new PrismaClient();
 export const integrationCreate = async (
@@ -23,15 +24,13 @@ export const integrationCreate = async (
   };
 
   // Update the integration account with the new configuration in the database
-  const integrationAccount = await prisma.integrationAccount.create({
-    data: {
-      integrationConfiguration,
-      accountId,
-      settings,
-      integratedById: userId,
-      workspaceId,
-      integrationDefinitionId: integrationDefinition.id,
-    },
+  const integrationAccount = await createIntegrationAccount(prisma, {
+    settings,
+    userId,
+    accountId,
+    config: integrationConfiguration,
+    workspaceId,
+    integrationDefinitionId: integrationDefinition.id,
   });
 
   return {
