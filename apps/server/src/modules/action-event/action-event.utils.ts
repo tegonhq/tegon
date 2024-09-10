@@ -6,14 +6,11 @@ import { PrismaService } from 'nestjs-prisma';
 
 import { generateKeyForUserId } from 'common/authentication';
 
-import {
-  TriggerdevService,
-  TriggerProjects,
-} from 'modules/triggerdev/triggerdev.service';
+import { IntegrationsService } from 'modules/integrations/integrations.service';
 
 export async function getIntegrationAccountsFromActions(
   prisma: PrismaService,
-  triggerDevService: TriggerdevService,
+  integrationsService: IntegrationsService,
   workspaceId: string,
   integrations: string[],
 ): Promise<Record<string, IntegrationAccount>> {
@@ -47,8 +44,7 @@ export async function getIntegrationAccountsFromActions(
 
   const updatedIntegrationAccount = await Promise.all(
     integrationAccounts.map(async (integrationAccount) => {
-      const token = await triggerDevService.triggerTask(
-        TriggerProjects.Common,
+      const token = await integrationsService.loadIntegration(
         integrationAccount.integrationDefinition.slug,
         {
           event: IntegrationPayloadEventType.GET_TOKEN,
@@ -72,7 +68,7 @@ export async function getIntegrationAccountsFromActions(
 
 export const prepareTriggerPayload = async (
   prisma: PrismaService,
-  triggerDevService: TriggerdevService,
+  integrationsService: IntegrationsService,
   actionId: string,
 ) => {
   const action = await prisma.action.findUnique({
@@ -89,7 +85,7 @@ export const prepareTriggerPayload = async (
 
   const integrationMap = await getIntegrationAccountsFromActions(
     prisma,
-    triggerDevService,
+    integrationsService,
     action.workspaceId,
     action.integrations,
   );

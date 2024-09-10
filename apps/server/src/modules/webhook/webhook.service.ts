@@ -104,7 +104,7 @@ export default class WebhookService {
           eventHeaders,
           ...(await prepareTriggerPayload(
             this.prisma,
-            this.triggerDevService,
+            this.integrations,
             actionEntity.action.id,
           )),
         },

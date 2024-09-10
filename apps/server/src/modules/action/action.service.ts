@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 import { UsersService } from 'modules/users/users.service';
+import { IntegrationsService } from 'modules/integrations/integrations.service';
 
 @Injectable()
 export default class ActionService {
@@ -23,6 +24,7 @@ export default class ActionService {
     private prisma: PrismaService, // Prisma service for database operations
     private triggerdev: TriggerdevService, // Service for interacting with TriggerDev
     private usersService: UsersService, // Service for managing users
+    private integrationsService: IntegrationsService,
   ) {}
 
   // Update the inputs for an existing action
@@ -361,7 +363,7 @@ export default class ActionService {
     // Prepare the trigger payload
     const addedTaskInfo = await prepareTriggerPayload(
       this.prisma,
-      this.triggerdev,
+      this.integrationsService,
       action.id,
     );
 
@@ -388,7 +390,7 @@ export default class ActionService {
 
     const triggerPayload = await prepareTriggerPayload(
       this.prisma,
-      this.triggerdev,
+      this.integrationsService,
       action.id,
     );
 
