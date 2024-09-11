@@ -78,7 +78,7 @@ export function SearchDialog({ open, setOpen }: SearchDialogProps) {
             <CommandItem
               key={issue.id}
               value={issue.issueNumber}
-              className="m-2"
+              className="m-2 !py-2"
               onSelect={onSelect}
             >
               <ModalIssueItem issue={issue} />

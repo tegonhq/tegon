@@ -59,29 +59,7 @@ export async function createLinkIssueComment(
         content: [
           {
             type: 'text',
-            text: 'Github thread of ',
-          },
-          {
-            type: 'text',
-            marks: [
-              {
-                type: 'link',
-                attrs: {
-                  href: linkIssueInput.sourceData.htmlUrl,
-                },
-              },
-            ],
-            text: `Issue #${linkIssueInput.sourceData.issueNumber} `,
-          },
-          { type: 'text', text: 'in ' },
-          {
-            type: 'text',
-            marks: [
-              {
-                type: 'italic',
-              },
-            ],
-            text: repoName,
+            text: `Thread of issue #${linkIssueInput.sourceData.issueNumber} in ${repoName} is connected`,
           },
         ],
       },

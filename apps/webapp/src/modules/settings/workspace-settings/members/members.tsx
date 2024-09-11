@@ -13,7 +13,7 @@ import { AddMemberDialog } from './add-member-dialog';
 import { MemberItem } from './member-item';
 
 export const Members = observer(() => {
-  const { users, isLoading } = useUsersData();
+  const { users, isLoading } = useUsersData(false);
   const [newMemberDialog, setNewMemberDialog] = React.useState(false);
 
   return (

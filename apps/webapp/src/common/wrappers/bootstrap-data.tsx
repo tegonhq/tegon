@@ -99,11 +99,12 @@ export function BootstrapWrapper({ children }: Props) {
 
   const initStore = async () => {
     if (lastSequenceId) {
+      setLoading(false);
       await syncIssuesRecords();
     } else {
       await bootstrapIssuesRecords();
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   if (loading) {

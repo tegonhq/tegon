@@ -163,7 +163,7 @@ export async function createLinkIssueComment(
     integrationAccount,
     channelId,
   );
-  const commentBody = `Slack thread in #${channelName}`;
+  const commentBody = `Thread in #${channelName} is connected`;
 
   // Merge provided metadata with message-specific details
   const commentSourceMetadata = {
