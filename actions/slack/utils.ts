@@ -10,6 +10,7 @@ import {
   TiptapNode,
   updateLinkedIssueBySource,
   UpdateLinkedIssueDto,
+  uploadAttachment,
   Workflow,
 } from '@tegonhq/sdk';
 
@@ -17,7 +18,12 @@ import axios from 'axios';
 import fs from 'fs';
 import FormData from 'form-data';
 
-import { SlackBlock, SlackElement, SlashCommandSessionRecord } from './types';
+import {
+  SlackBlock,
+  SlackElement,
+  SlackSourceMetadata,
+  SlashCommandSessionRecord,
+} from './types';
 
 export function getSlackHeaders(integrationAccount: IntegrationAccount) {
   const integrationConfig =
@@ -38,11 +44,26 @@ export async function getSlackMessage(
     'https://slack.com/api/conversations.history',
     {
       channel: sessionData.channelId,
-      latest: sessionData.threadTs,
+      latest: sessionData.parentTs,
       inclusive: true,
       limit: 1,
     },
     getSlackHeaders(integrationAccount),
+  );
+
+  return response.data;
+}
+
+export async function getSlackReplies(
+  integrationAccount: IntegrationAccount,
+  sessionData: SlashCommandSessionRecord,
+) {
+  const response = await axios.get(
+    'https://slack.com/api/conversations.replies',
+    {
+      ...getSlackHeaders(integrationAccount),
+      params: { channel: sessionData.channelId, ts: sessionData.parentTs },
+    },
   );
 
   return response.data;
@@ -244,6 +265,32 @@ export async function getFilesBuffer(
   // });
 
   return formData;
+}
+
+export async function getAttachmentUrls(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  slackMessageResponse: any,
+  integrationAccount: IntegrationAccount,
+  sourceMetadata: SlackSourceMetadata,
+) {
+  let attachmentUrls: AttachmentResponse[] = [];
+  // add Attachments
+  if (slackMessageResponse.messages[0].files) {
+    // Get the files buffer from Slack using the integration account and message files
+    const filesFormData = await getFilesBuffer(
+      integrationAccount,
+      slackMessageResponse.messages[0].files,
+    );
+    filesFormData.append('sourceMetadata', JSON.stringify(sourceMetadata));
+
+    // Upload the files to GCP and get the attachment URLs
+    attachmentUrls = await uploadAttachment(
+      integrationAccount.workspaceId,
+      filesFormData,
+    );
+  }
+
+  return attachmentUrls;
 }
 
 /// ******************* Tip tap utils *******************//////
