@@ -4,4 +4,5 @@ export interface CreateActionDto {
   config: ActionConfig;
   workspaceId: string;
   version: string;
+  isDev?: boolean;
 }

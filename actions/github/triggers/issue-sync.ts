@@ -86,7 +86,7 @@ export const issueSync = async (actionPayload: ActionEventPayload) => {
     ...(issue.description
       ? { body: convertTiptapJsonToMarkdown(issue.description) }
       : {}),
-    labels: issueLabels,
+    labels: [...issueLabels, 'Tegon'],
     state:
       stateCategory === WorkflowCategory.COMPLETED ||
       stateCategory === WorkflowCategory.CANCELED

@@ -6,7 +6,12 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Prisma } from '@prisma/client';
-import { GetUsersDto, PublicUser, User } from '@tegonhq/types';
+import {
+  CodeDtoWithWorkspace,
+  GetUsersDto,
+  PublicUser,
+  User,
+} from '@tegonhq/types';
 import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
 import supertokens from 'supertokens-node';
@@ -23,7 +28,8 @@ import {
   UpdateUserBody,
   userSerializer,
   UserWithInvites,
-} from './user.interface';
+} from './users.interface';
+import { generateUniqueId } from './users.utils';
 
 @Injectable()
 export class UsersService {
@@ -169,15 +175,11 @@ export class UsersService {
     );
   }
 
-  async createPersonalAcccessToken(
-    name: string,
-    userId: string,
-    type = 'user',
-  ) {
+  async createPersonalAccessToken(name: string, userId: string, type = 'user') {
     const jwt = await generateKeyForUserId(userId);
     const token = generatePersonalAccessToken();
 
-    await this.prisma.personalAccessToken.create({
+    const pat = await this.prisma.personalAccessToken.create({
       data: {
         name,
         userId,
@@ -187,7 +189,7 @@ export class UsersService {
       },
     });
 
-    return { name, token };
+    return { name, token, id: pat.id };
   }
 
   async getPats(userId: string) {
@@ -217,6 +219,133 @@ export class UsersService {
     return pat.jwt;
   }
 
+  // Authorization code
+  // Used in cli
+  async generateAuthorizationCode() {
+    return this.prisma.authorizationCode.create({
+      data: {
+        code: generateUniqueId(),
+      },
+      select: {
+        code: true,
+      },
+    });
+  }
+
+  async authorizeCode(userId: string, codeBody: CodeDtoWithWorkspace) {
+    // only allow authorization codes that were created less than 10 mins ago
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+    const code = await this.prisma.authorizationCode.findFirst({
+      where: {
+        code: codeBody.code,
+        personalAccessTokenId: null,
+        createdAt: {
+          gte: tenMinutesAgo,
+        },
+      },
+    });
+
+    if (!code) {
+      throw new Error(
+        'Invalid authorization code, code already used, or code expired',
+      );
+    }
+
+    const existingCliPersonalAccessToken =
+      await this.prisma.personalAccessToken.findFirst({
+        where: {
+          userId,
+          type: 'cli',
+        },
+      });
+
+    // we only allow you to have one CLI PAT at a time, so return this
+    if (existingCliPersonalAccessToken) {
+      // associate this authorization code with the existing personal access token
+      await this.prisma.authorizationCode.updateMany({
+        where: {
+          code: codeBody.code,
+        },
+        data: {
+          personalAccessTokenId: existingCliPersonalAccessToken.id,
+          workspaceId: codeBody.workspaceId,
+        },
+      });
+
+      if (existingCliPersonalAccessToken.deleted) {
+        // re-activate revoked CLI PAT so we can use it again
+        await this.prisma.personalAccessToken.update({
+          where: {
+            id: existingCliPersonalAccessToken.id,
+          },
+          data: {
+            deleted: null,
+          },
+        });
+      }
+
+      // we don't return the decrypted token
+      return {
+        id: existingCliPersonalAccessToken.id,
+        name: existingCliPersonalAccessToken.name,
+        userId: existingCliPersonalAccessToken.userId,
+      };
+    }
+
+    const token = await this.createPersonalAccessToken('cli', userId, 'cli');
+
+    await this.prisma.authorizationCode.updateMany({
+      where: {
+        code: codeBody.code,
+      },
+      data: {
+        personalAccessTokenId: token.id,
+        workspaceId: codeBody.workspaceId,
+      },
+    });
+
+    return token;
+  }
+
+  /** Gets a PersonalAccessToken from an Auth Code, this only works within 10 mins of the auth code being created */
+  async getPersonalAccessTokenFromAuthorizationCode(authorizationCode: string) {
+    // only allow authorization codes that were created less than 10 mins ago
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+    const code = await this.prisma.authorizationCode.findFirst({
+      where: {
+        code: authorizationCode,
+        createdAt: {
+          gte: tenMinutesAgo,
+        },
+      },
+    });
+    if (!code) {
+      throw new Error('Invalid authorization code, or code expired');
+    }
+
+    if (!code.personalAccessTokenId) {
+      throw new Error('No personal token found');
+    }
+
+    const pat = await this.prisma.personalAccessToken.findUnique({
+      where: { id: code.personalAccessTokenId },
+    });
+
+    // there's no PersonalAccessToken associated with this code
+    if (!pat) {
+      return {
+        token: null,
+        workspaceId: undefined,
+      };
+    }
+
+    return {
+      token: pat.token,
+      workspaceId: code.workspaceId,
+    };
+  }
+
+  // Impersonate into accounts for better support
   async impersonate(key: string, userId: string, res: Response, req: Request) {
     if (key !== this.config.get('POSTGRES_PASSWORD')) {
       throw new BadRequestException('Wrong URL');

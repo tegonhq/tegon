@@ -10,6 +10,7 @@ import {
 import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
 
+import { getActionEnv } from 'modules/action/action.utils';
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
 import { IntegrationsService } from 'modules/integrations/integrations.service';
 import { LoggerService } from 'modules/logger/logger.service';
@@ -107,6 +108,7 @@ export default class WebhookService {
             actionEntity.action.id,
           )),
         },
+        getActionEnv(actionEntity.action),
         { lockToVersion: actionEntity.action.triggerVersion },
       );
     });

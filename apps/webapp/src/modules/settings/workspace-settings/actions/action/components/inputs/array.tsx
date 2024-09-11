@@ -1,6 +1,7 @@
 import type { ArrayFieldConfig } from '../types';
 
 import { Button } from '@tegonhq/ui/components/button';
+import { AddLine, DeleteLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import React from 'react';
 import { useFieldArray, type Control } from 'react-hook-form';
@@ -28,8 +29,8 @@ export function Array({ control, config, name }: ArrayProps) {
             <div className="text-muted-foreground">{config.description}</div>
           )}
         </div>
-        <Button type="button" variant="secondary" onClick={() => append({})}>
-          Add
+        <Button type="button" variant="ghost" onClick={() => append({})}>
+          <AddLine />
         </Button>
       </div>
       {fields.map((item, index: number) => {
@@ -55,13 +56,13 @@ export function Array({ control, config, name }: ArrayProps) {
             )}
             <div>
               <Button
-                variant="link"
+                variant="ghost"
                 className="mb-4"
                 onClick={() => {
                   remove(index);
                 }}
               >
-                Delete
+                <DeleteLine />
               </Button>
             </div>
           </div>

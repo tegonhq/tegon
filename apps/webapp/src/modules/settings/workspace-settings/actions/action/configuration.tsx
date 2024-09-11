@@ -64,9 +64,11 @@ export const Configuration = () => {
   };
 
   if (configLoading) {
-    <div className="flex flex-col gap-2 bg-background-3 rounded-md p-3">
-      <Loader text="Fetching configuration..." />
-    </div>;
+    return (
+      <div className="flex flex-col gap-2 bg-background-3 rounded-md p-3">
+        <Loader text="Fetching configuration..." />
+      </div>
+    );
   }
 
   if (!inputs) {

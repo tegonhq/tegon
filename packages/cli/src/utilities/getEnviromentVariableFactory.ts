@@ -1,8 +1,8 @@
-import { logger } from "./logger";
+import { logger } from './logger';
 
-type VariableNames = "TEGON_LOG_LEVEL";
+type VariableNames = 'TEGON_LOG_LEVEL';
 
-type DeprecatedNames = "";
+type DeprecatedNames = '';
 
 /**
  * Create a function used to access an environment variable.
@@ -58,12 +58,11 @@ export function getEnvironmentVariableFactory({
         // Only show the warning once.
         hasWarned = true;
         logger.warn(
-          `Using "${deprecatedName}" environment variable. This is deprecated. Please use "${variableName}", instead.`
+          `Using "${deprecatedName}" environment variable. This is deprecated. Please use "${variableName}", instead.`,
         );
       }
       return process.env[deprecatedName];
-    } else {
-      return defaultValue?.();
     }
+    return defaultValue?.();
   };
 }

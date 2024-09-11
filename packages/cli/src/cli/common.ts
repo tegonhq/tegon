@@ -1,9 +1,10 @@
+import { outro } from '@clack/prompts';
 import { Command } from 'commander';
 import { z } from 'zod';
 import { fromZodError } from 'zod-validation-error';
-import { logger } from '../utilities/logger';
-import { outro } from '@clack/prompts';
+
 import { chalkError } from '../utilities/cliOutput';
+import { logger } from '../utilities/logger';
 
 export const CommonCommandOptions = z.object({
   apiUrl: z.string().optional(),
@@ -11,7 +12,6 @@ export const CommonCommandOptions = z.object({
     .enum(['debug', 'info', 'log', 'warn', 'error', 'none'])
     .default('log'),
   skipTelemetry: z.boolean().default(false),
-  profile: z.string().default('default'),
 });
 
 export type CommonCommandOptions = z.infer<typeof CommonCommandOptions>;
@@ -19,7 +19,7 @@ export type CommonCommandOptions = z.infer<typeof CommonCommandOptions>;
 export function commonOptions(command: Command) {
   return command.option(
     '-l, --log-level <level>',
-    'The CLI log level to use (debug, info, log, warn, error, none). This does not effect the log level of your trigger.dev tasks.',
+    'The CLI log level to use (debug, info, log, warn, error, none). This does not effect the log level of your tegon actions',
     'log',
   );
 }
@@ -44,7 +44,7 @@ export async function wrapCommandAction<T extends z.AnyZodObject, TResult>(
     logger.loggerLevel = parsedOptions.data.logLevel;
 
     logger.debug(`Running "${name}" with the following options`, {
-      options: options,
+      options,
     });
 
     const result = await action(parsedOptions.data);
@@ -52,6 +52,9 @@ export async function wrapCommandAction<T extends z.AnyZodObject, TResult>(
     return result;
   } catch (e) {
     if (e instanceof SkipLoggingError) {
+      logger.log(
+        `${chalkError('X Error:')} ${e instanceof Error ? e.message : String(e)}`,
+      );
     } else if (e instanceof OutroCommandError) {
       outro('Operation cancelled');
     } else if (e instanceof SkipCommandError) {

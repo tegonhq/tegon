@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import {
   RoleEnum,
@@ -15,8 +19,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
 import { IntegrationsService } from 'modules/integrations/integrations.service';
+import { Env } from 'modules/triggerdev/triggerdev.interface';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 import { UsersService } from 'modules/users/users.service';
+
+import { getActionEnv } from './action.utils';
 
 @Injectable()
 export default class ActionService {
@@ -33,8 +40,13 @@ export default class ActionService {
     const action = await this.prisma.action.findFirst({
       where: {
         slug,
+        workspaceId: updateBodyDto.workspaceId,
       },
     });
+
+    if (!action) {
+      throw new NotFoundException('Action not found');
+    }
 
     // Get the current data or initialize an empty object
     const currentData = action.data ? action.data : {};
@@ -58,7 +70,7 @@ export default class ActionService {
   }
 
   // Create a new action resource
-  async createResource(actionCreateResource: CreateActionDto, userId: string) {
+  async createAction(actionCreateResource: CreateActionDto, userId: string) {
     const config = actionCreateResource.config;
     const workspaceId = actionCreateResource.workspaceId;
 
@@ -69,20 +81,23 @@ export default class ActionService {
         workspaceId,
         actionCreateResource.config.slug,
       );
-      // Upsert a workflow user for the action
-      const workflowUser = await this.upsertWorkflowUser(
-        prisma,
-        config.name,
-        config.slug,
-        workspaceId,
-        config.icon,
-      );
 
-      // Create a personal access token for the trigger
-      await this.createPersonalTokenForTrigger(prisma, workflowUser.id);
+      if (!actionCreateResource.isDev) {
+        // Upsert a workflow user for the action
+        const workflowUser = await this.upsertWorkflowUser(
+          prisma,
+          config.name,
+          config.slug,
+          workspaceId,
+          config.icon,
+        );
 
-      // Upsert the workflow user on the workspace
-      await this.upsertUserOnWorkspace(prisma, workflowUser.id, workspaceId);
+        // Create a personal access token for the trigger
+        await this.createPersonalTokenForTrigger(prisma, workflowUser.id);
+
+        // Upsert the workflow user on the workspace
+        await this.upsertUserOnWorkspace(prisma, workflowUser.id, workspaceId);
+      }
 
       // Map triggers to entities
       const entities = this.mapTriggersToEntities(config.triggers);
@@ -94,6 +109,7 @@ export default class ActionService {
         workspaceId,
         config,
         actionCreateResource.version,
+        actionCreateResource.isDev,
       );
 
       // Recreate the action entities
@@ -149,7 +165,7 @@ export default class ActionService {
 
     // If no token exists, create a new one
     if (!pat) {
-      await this.usersService.createPersonalAcccessToken(
+      await this.usersService.createPersonalAccessToken(
         'Trigger',
         userId,
         'trigger',
@@ -220,6 +236,7 @@ export default class ActionService {
     workspaceId: string,
     config: ActionConfig,
     version: string,
+    isDev: boolean = false,
   ) {
     // Find an existing action by slug and workspace
     let action = await prisma.action.findFirst({
@@ -240,6 +257,7 @@ export default class ActionService {
           description: config.description,
           integrations: config.integrations ? config.integrations : [],
           createdById: userId,
+          isDev,
           workspaceId,
           status: config.inputs
             ? ActionStatusEnum.NEEDS_CONFIGURATION
@@ -263,6 +281,7 @@ export default class ActionService {
           integrations: config.integrations ? config.integrations : [],
           status: ActionStatusEnum.ACTIVE,
           triggerVersion: latestVersion,
+          deleted: null,
         },
       });
     }
@@ -291,10 +310,10 @@ export default class ActionService {
   }
 
   // Delete an action
-  async delete(name: string, workspaceId: string) {
+  async delete(id: string) {
     // Find the action by name and workspace
-    const action = await this.prisma.action.findFirst({
-      where: { name, workspaceId },
+    const action = await this.prisma.action.findUnique({
+      where: { id },
     });
 
     if (action) {
@@ -304,9 +323,21 @@ export default class ActionService {
       });
 
       // Delete the action itself
-      await this.prisma.action.delete({
+      await this.prisma.action.update({
         where: { id: action.id },
+        data: { deleted: new Date() },
       });
+    }
+  }
+
+  async cleanDevActions(slug: string, workspaceId: string, userId: string) {
+    // Find the action by name and workspace
+    const action = await this.prisma.action.findFirst({
+      where: { slug, workspaceId, createdById: userId, isDev: true },
+    });
+
+    if (action) {
+      await this.delete(action.id);
     }
   }
 
@@ -332,7 +363,11 @@ export default class ActionService {
     });
 
     // Get runs for the action from TriggerDev
-    return await this.triggerdev.getRunsForTask(action.workspaceId, slug);
+    return await this.triggerdev.getRunsForTask(
+      action.workspaceId,
+      slug,
+      action.isDev ? Env.DEV : Env.PROD,
+    );
   }
 
   // Get a specific run for an action slug
@@ -346,7 +381,11 @@ export default class ActionService {
     });
 
     // Get the run from TriggerDev
-    return await this.triggerdev.getRun(action.workspaceId, runId);
+    return await this.triggerdev.getRun(
+      action.workspaceId,
+      runId,
+      action.isDev ? Env.DEV : Env.PROD,
+    );
   }
 
   // Run an action with a payload
@@ -375,6 +414,7 @@ export default class ActionService {
         ...payload,
         ...addedTaskInfo,
       },
+      getActionEnv(action),
       { lockToVersion: action.triggerVersion },
     );
   }
@@ -402,6 +442,7 @@ export default class ActionService {
         workspaceId,
         ...triggerPayload,
       },
+      getActionEnv(action),
       { lockToVersion: action.triggerVersion },
     );
   }

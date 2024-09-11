@@ -10,6 +10,7 @@ import {
 import {
   ActionSlugDto,
   CreateActionDto,
+  DeleteActionDto,
   UpdateActionInputsDto,
   WorkspaceRequestParamsDto,
 } from '@tegonhq/types';
@@ -34,16 +35,28 @@ import {
 export class ActionController {
   constructor(private actionService: ActionService) {}
 
-  @Post('create-resource')
+  @Post('create-action')
   @UseGuards(ActionGuard)
-  async createResource(
+  async createAction(
     @SessionDecorator() session: SessionContainer,
     @Body() actionCreateResource: CreateActionDto,
   ) {
     const userId = session.getUserId();
 
-    return await this.actionService.createResource(
-      actionCreateResource,
+    return await this.actionService.createAction(actionCreateResource, userId);
+  }
+
+  @Post('clean-dev-action')
+  @UseGuards(ActionGuard)
+  async cleanDevActions(
+    @SessionDecorator() session: SessionContainer,
+    @Body() deleteActionDto: DeleteActionDto,
+  ) {
+    const userId = session.getUserId();
+
+    return await this.actionService.cleanDevActions(
+      deleteActionDto.config.slug,
+      deleteActionDto.workspaceId,
       userId,
     );
   }

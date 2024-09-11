@@ -4,6 +4,8 @@ import fs from 'node:fs';
 import { tmpdir } from 'node:os';
 import pathModule from 'node:path';
 
+import { log } from '@clack/prompts';
+
 // Creates a file at the given path, if the directory doesn't exist it will be created
 export async function createFile(
   path: string,
@@ -34,7 +36,9 @@ export async function someFileExists(
 ): Promise<boolean> {
   for (let index = 0; index < filenames.length; index++) {
     const filename = filenames[index];
-    if (!filename) continue;
+    if (!filename) {
+      continue;
+    }
 
     const path = pathModule.join(directory, filename);
     if (await pathExists(path)) {
@@ -63,13 +67,15 @@ export async function safeFeadJSONFile(path: string) {
   try {
     const fileExists = await pathExists(path);
 
-    if (!fileExists) return;
+    if (!fileExists) {
+      return;
+    }
 
     const fileContents = await readFile(path);
 
     return JSON.parse(fileContents);
-  } catch {
-    return;
+  } catch (e: any) {
+    log.error(e);
   }
 }
 

@@ -13,7 +13,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { defaultExtensions, getPlaceholder } from './editor-extensions';
 import { LinkSelector, NodeSelector, TextButtons } from './selectors';
 import { slashCommand } from './slash-command';
-import { handleImagePaste, uploadFn } from './utils';
+import { handlePaste, uploadFn } from './utils';
 import {
   EditorRoot,
   EditorCommand,
@@ -135,7 +135,6 @@ export const Editor = ({
   const debouncedUpdates = useDebouncedCallback(
     async (editor: EditorInstance) => {
       const json = editor.getJSON();
-
       onChange &&
         onChange(
           JSON.stringify({
@@ -179,8 +178,7 @@ export const Editor = ({
             autoFocus && editor.commands.focus();
           }}
           editorProps={{
-            handlePaste: (_, event) =>
-              handleImagePaste(editor, event, uploadFn),
+            handlePaste: (_, event) => handlePaste(editor, event, uploadFn),
 
             handleDOMEvents: {
               keydown: (_view, event) => {

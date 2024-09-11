@@ -69,22 +69,44 @@ export const uploadFn = createImageUpload({
   },
 });
 
-export const handleImagePaste = (
+export const handlePaste = (
   editor: Editor,
   event: ClipboardEvent,
   uploadFn: UploadFileFn,
 ) => {
   if (event.clipboardData?.files.length) {
-    event.preventDefault();
-    const [file] = Array.from(event.clipboardData.files);
-    const pos = editor.view.state.selection.from;
+    return handleImagePaste(editor, event, uploadFn);
+  }
 
-    if (file) {
-      uploadFn(file, editor, pos);
-    }
+  if (event.clipboardData.getData('text/plain')) {
+    const clipboardText = event.clipboardData.getData('text/plain');
+    // Convert newlines to line breaks
+    const transformedText = clipboardText.replace(/\n/g, '<br>');
+
+    // Manually insert the transformed text
+    editor.commands.insertContent(transformedText);
+
+    // Prevent the default paste action
+    event.preventDefault();
+
     return true;
   }
   return false;
+};
+
+export const handleImagePaste = (
+  editor: Editor,
+  event: ClipboardEvent,
+  uploadFn: UploadFileFn,
+) => {
+  event.preventDefault();
+  const [file] = Array.from(event.clipboardData.files);
+  const pos = editor.view.state.selection.from;
+
+  if (file) {
+    uploadFn(file, editor, pos);
+  }
+  return true;
 };
 
 type UploadFileFn = (file: File, view: Editor, pos: number) => void;

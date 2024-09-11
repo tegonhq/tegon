@@ -2,14 +2,14 @@ import { chalkGrey, chalkRun, chalkTask, chalkWorker, logo } from './cliOutput';
 import { getVersion } from './getVersion';
 import { logger } from './logger';
 
-export async function printInitialBanner(performUpdateCheck = true) {
+export async function printInitialBanner() {
   const cliVersion = getVersion();
   const text = `\n${logo()} ${chalkGrey(`(${cliVersion})`)}\n`;
 
   logger.info(text);
 }
 
-export async function printStandloneInitialBanner(performUpdateCheck = true) {
+export async function printStandloneInitialBanner() {
   const cliVersion = getVersion();
 
   logger.log(`\n${logo()} ${chalkGrey(`(${cliVersion})`)}`);

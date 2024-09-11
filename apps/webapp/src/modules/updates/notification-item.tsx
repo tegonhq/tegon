@@ -123,7 +123,10 @@ export const NotificationItem = observer(
             </div>
 
             <div className="text-muted-foreground">
-              <ReactTimeAgo date={new Date(issue.updatedAt)} />
+              <ReactTimeAgo
+                date={new Date(issue.updatedAt)}
+                timeStyle="twitter"
+              />
             </div>
           </div>
         </div>

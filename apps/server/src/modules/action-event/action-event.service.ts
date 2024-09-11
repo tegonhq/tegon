@@ -7,6 +7,7 @@ import {
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
+import { getActionEnv } from 'modules/action/action.utils';
 import { IntegrationsService } from 'modules/integrations/integrations.service';
 import { LoggerService } from 'modules/logger/logger.service';
 import { convertLsnToInt } from 'modules/sync-actions/sync-actions.utils';
@@ -104,6 +105,7 @@ export default class ActionEventService {
         modelId: actionEvent.modelId,
         ...addedTaskInfo,
       },
+      getActionEnv(actionEntity.action),
       { lockToVersion: actionEntity.action.triggerVersion },
     );
 

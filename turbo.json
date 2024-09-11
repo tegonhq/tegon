@@ -96,7 +96,9 @@
       "env": [ "DATABASE_URL" ]
     },
     "migrate": {
-      "env": [ "DATABASE_URL" ]
+      "env": [ "DATABASE_URL" ],
+      "interactive": true,
+      "cache": false
     }
   }
 }
