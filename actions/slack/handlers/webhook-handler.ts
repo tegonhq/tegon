@@ -4,6 +4,7 @@ import { slackThread } from '../triggers/thread';
 import { slackTriage } from '../triggers/triage';
 
 import { SlackIntegrationSettings } from '../types';
+import { appMention } from 'triggers/app-mention';
 
 export const webhookHandler = async (payload: ActionEventPayload) => {
   const { eventBody, integrationAccounts, userId, action } = payload;
@@ -42,9 +43,14 @@ export const webhookHandler = async (payload: ActionEventPayload) => {
     case 'message':
       // Handle thread messages
       return await slackThread(integrationAccount, eventBody, action);
+
     case 'reaction_added':
       // Handle message reactions)
       return await slackTriage(integrationAccount, userId, eventBody, action);
+
+    case 'app_mention':
+      return await appMention(integrationAccount, userId, eventBody, action);
+
     default:
       logger.debug('Unhandled Slack event type:', event.type);
       return undefined;

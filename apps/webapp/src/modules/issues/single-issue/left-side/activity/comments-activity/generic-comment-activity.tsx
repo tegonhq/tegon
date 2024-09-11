@@ -68,27 +68,25 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         >
           <div className="flex gap-2">
             {user ? (
-              <span className="font-medium">
-                {getUserDetails(sourceMetadata, user).fullname}
-              </span>
+              <span>{getUserDetails(sourceMetadata, user).fullname}</span>
             ) : (
-              <span className="font-medium">
+              <span>
                 {sourceMetadata.userDisplayName} via {sourceMetadata.type}
               </span>
             )}
           </div>
 
           <div className="flex gap-2 items-center">
-            <span>
+            <div>
               <ReactTimeAgo
                 date={new Date(comment.updatedAt)}
                 className="text-muted-foreground font-mono text-xs"
               />
-            </span>
+            </div>
             {!sourceMetadata && user.id === currentUser.id && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="px-2 -mt-1">
+                  <Button variant="ghost" className="px-2 py-0 h-5">
                     <RiMoreFill size={16} className="text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -96,7 +94,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
                   <DropdownMenuGroup>
                     <DropdownMenuItem onClick={() => setEdit(true)}>
                       <div className="flex items-center gap-1">
-                        <EditLine size={16} /> Edit
+                        <EditLine size={16} className="mr-1" /> Edit
                       </div>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>

@@ -10,6 +10,7 @@ import {
   TiptapNode,
   updateLinkedIssueBySource,
   UpdateLinkedIssueDto,
+  uploadAttachment,
   Workflow,
 } from '@tegonhq/sdk';
 
@@ -17,7 +18,12 @@ import axios from 'axios';
 import fs from 'fs';
 import FormData from 'form-data';
 
-import { SlackBlock, SlackElement, SlashCommandSessionRecord } from './types';
+import {
+  SlackBlock,
+  SlackElement,
+  SlackSourceMetadata,
+  SlashCommandSessionRecord,
+} from './types';
 
 export function getSlackHeaders(integrationAccount: IntegrationAccount) {
   const integrationConfig =
@@ -38,11 +44,26 @@ export async function getSlackMessage(
     'https://slack.com/api/conversations.history',
     {
       channel: sessionData.channelId,
-      latest: sessionData.threadTs,
+      latest: sessionData.parentTs,
       inclusive: true,
       limit: 1,
     },
     getSlackHeaders(integrationAccount),
+  );
+
+  return response.data;
+}
+
+export async function getSlackReplies(
+  integrationAccount: IntegrationAccount,
+  sessionData: SlashCommandSessionRecord,
+) {
+  const response = await axios.get(
+    'https://slack.com/api/conversations.replies',
+    {
+      ...getSlackHeaders(integrationAccount),
+      params: { channel: sessionData.channelId, ts: sessionData.parentTs },
+    },
   );
 
   return response.data;
@@ -142,7 +163,7 @@ export async function createLinkIssueComment(
     integrationAccount,
     channelId,
   );
-  const commentBody = `Slack thread in #${channelName}`;
+  const commentBody = `Thread in #${channelName} is connected`;
 
   // Merge provided metadata with message-specific details
   const commentSourceMetadata = {
@@ -246,13 +267,78 @@ export async function getFilesBuffer(
   return formData;
 }
 
+export async function getAttachmentUrls(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  slackMessageResponse: any,
+  integrationAccount: IntegrationAccount,
+  sourceMetadata: SlackSourceMetadata,
+) {
+  let attachmentUrls: AttachmentResponse[] = [];
+  // add Attachments
+  if (slackMessageResponse.messages[0].files) {
+    // Get the files buffer from Slack using the integration account and message files
+    const filesFormData = await getFilesBuffer(
+      integrationAccount,
+      slackMessageResponse.messages[0].files,
+    );
+    filesFormData.append('sourceMetadata', JSON.stringify(sourceMetadata));
+
+    // Upload the files to GCP and get the attachment URLs
+    attachmentUrls = await uploadAttachment(
+      integrationAccount.workspaceId,
+      filesFormData,
+    );
+  }
+
+  return attachmentUrls;
+}
+
 /// ******************* Tip tap utils *******************//////
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleRichTextSection = (sectionElement: any): TiptapNode[] => {
+  if (sectionElement.type === 'text') {
+    // Split the text by newline characters
+    const text = sectionElement.text;
+
+    if (text === '') {
+      return [];
+    }
+    // Create marks based on the text style
+    const marks: TiptapMarks[] = Object.entries(sectionElement.style || {})
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .filter(([_, value]) => value)
+      .map(([type]) => ({ type }));
+    return [{ type: 'text', text, marks }];
+  } else if (sectionElement.type === 'link') {
+    // Create a text node with a link mark for links
+    return [
+      {
+        type: 'text',
+        text: sectionElement.text ?? sectionElement.url,
+        marks: [
+          {
+            type: 'link',
+            attrs: {
+              href: sectionElement.url,
+              target: '_blank',
+              rel: 'noopener noreferrer',
+              class: 'c-link',
+            },
+          },
+        ],
+      },
+    ];
+  }
+  return [];
+};
 
 export function convertSlackMessageToTiptapJson(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   blocks: any,
   attachmentUrls: AttachmentResponse[],
 ): string {
+  logger.debug(JSON.stringify(blocks));
   const content: TiptapNode[] = blocks
     ? blocks.flatMap((block: SlackBlock) => {
         if (block.type === 'rich_text') {
@@ -263,53 +349,9 @@ export function convertSlackMessageToTiptapJson(
                 const paragraph: TiptapNode = {
                   type: 'paragraph',
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  content: element.elements.flatMap((sectionElement: any) => {
-                    if (sectionElement.type === 'text') {
-                      // Split the text by newline characters
-                      const textParts = sectionElement.text.split('\n');
-                      return textParts.flatMap(
-                        (text: string, index: number) => {
-                          if (text === '') {
-                            return [];
-                          }
-                          // Create marks based on the text style
-                          const marks: TiptapMarks[] = Object.entries(
-                            sectionElement.style || {},
-                          )
-                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                            .filter(([_, value]) => value)
-                            .map(([type]) => ({ type }));
-                          return [
-                            { type: 'text', text, marks },
-                            // Add a hardBreak if it's not the last line
-                            ...(index < textParts.length - 1
-                              ? [{ type: 'hardBreak' }]
-                              : []),
-                          ];
-                        },
-                      );
-                    } else if (sectionElement.type === 'link') {
-                      // Create a text node with a link mark for links
-                      return [
-                        {
-                          type: 'text',
-                          text: sectionElement.url,
-                          marks: [
-                            {
-                              type: 'link',
-                              attrs: {
-                                href: sectionElement.url,
-                                target: '_blank',
-                                rel: 'noopener noreferrer',
-                                class: 'c-link',
-                              },
-                            },
-                          ],
-                        },
-                      ];
-                    }
-                    return [];
-                  }),
+                  content: element.elements.flatMap((sectionElement: any) =>
+                    handleRichTextSection(sectionElement),
+                  ),
                 };
                 return [paragraph];
 
@@ -318,17 +360,23 @@ export function convertSlackMessageToTiptapJson(
                 const listType =
                   element.style === 'ordered' ? 'orderedList' : 'bulletList';
                 // Create list items with paragraphs for each list element
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const listItems = element.elements.map((item: any) => ({
-                  type: 'listItem',
+                const listItems: TiptapNode[] = element.elements.map(
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  content: item.elements.flatMap((listElement: any) =>
-                    listElement.text.split('\n').map((part: string) => ({
-                      type: 'paragraph',
-                      content: [{ type: 'text', text: part.trim() }],
-                    })),
-                  ),
-                }));
+                  (item: any) => ({
+                    type: 'listItem',
+                    content: [
+                      {
+                        type: 'paragraph',
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        content: item.elements.flatMap((listElement: any) =>
+                          handleRichTextSection(listElement),
+                        ),
+                      },
+                    ],
+                  }),
+                );
+
+                listItems.push({ type: 'hardBreak' });
                 // Add the list to the content
                 return [
                   {
@@ -340,17 +388,18 @@ export function convertSlackMessageToTiptapJson(
 
               case 'rich_text_quote':
                 // Create blockquote nodes for each line of the quote
-                const blockquoteContent = element.elements[0].text
-                  .split('\n')
-                  .map((line: string) => ({
-                    type: 'paragraph',
-                    content: [{ type: 'text', text: line.trim() }],
-                  }));
+                const blockquoteContent = element.elements.flatMap(
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  (sectionElement: any) =>
+                    handleRichTextSection(sectionElement),
+                );
 
                 return [
                   {
                     type: 'blockquote',
-                    content: blockquoteContent,
+                    content: [
+                      { type: 'paragraph', content: blockquoteContent },
+                    ],
                   },
                 ];
 

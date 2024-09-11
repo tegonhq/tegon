@@ -104,6 +104,16 @@ const starterKit = StarterKit.configure({
   gapcursor: false,
 });
 
+const markdown = MarkdownExtension.configure({
+  html: true, // Allow HTML input/output
+  tightLists: false, // No <p> inside <li> in markdown output
+  bulletListMarker: '-', // <li> prefix in markdown output
+  linkify: true, // Create links from "https://..." text
+  breaks: true, // New lines (\n) in markdown input are converted to <br>
+  transformPastedText: true, // Allow to paste markdown text in the editor
+  transformCopiedText: true, // Copied text is transformed to markdown
+});
+
 const defaultPlaceholder = Placeholder.configure({
   placeholder: ({ node }) => {
     if (node.type.name === 'heading') {
@@ -148,6 +158,6 @@ export const defaultExtensions = [
   AIHighlight,
   fileExtension,
   imageExtension,
-  MarkdownExtension,
+  markdown,
   HighlightExtension,
 ];

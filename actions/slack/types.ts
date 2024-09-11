@@ -8,6 +8,7 @@ export interface SlashCommandSessionRecord {
   teamId?: string;
   slackTeamDomain?: string;
   threadTs?: string;
+  parentTs?: string;
   messageText?: string;
   messagedById?: string;
 }
@@ -61,4 +62,11 @@ export interface SlackIntegrationSettings {
   teamUrl: string;
   botUserId: string;
   mappings: SlackChannelMappings[];
+}
+
+export interface SlackSourceMetadata {
+  id: string;
+  type: string;
+  channelId: string;
+  userDisplayName: string;
 }

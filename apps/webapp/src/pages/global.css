@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 .text-primary {
-  color: var(--status-icon-5);
+  color: #1a89c5;
+}
+
+strong {
+  font-weight: 500 !important;
 }
 
 @layer base {

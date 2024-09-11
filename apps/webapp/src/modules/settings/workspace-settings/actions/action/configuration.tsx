@@ -64,19 +64,21 @@ export const Configuration = () => {
   };
 
   if (configLoading) {
-    return <Loader text="Fetching configuration..." />;
+    <div className="flex flex-col gap-2 bg-background-3 rounded-md p-3">
+      <Loader text="Fetching configuration..." />
+    </div>;
   }
 
   if (!inputs) {
     return (
-      <div className="flex flex-col gap-2 bg-background-3 rounded p-3">
+      <div className="flex flex-col gap-2 bg-background-3 rounded-md p-3">
         <h2> This action doesn't need any configuration</h2>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-2 bg-background-3 rounded p-3">
+    <div className="flex flex-col gap-2 bg-background-3 rounded-md p-3">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

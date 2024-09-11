@@ -58,7 +58,7 @@ export const linkIssueSync = async (actionPayload: ActionEventPayload) => {
   if (integrationAccount) {
     const slackMessageResponse = await getSlackMessage(integrationAccount, {
       channelId,
-      threadTs,
+      parentTs: messageTs,
     });
     message = slackMessageResponse.messages[0].text;
   }

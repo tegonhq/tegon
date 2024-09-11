@@ -59,7 +59,10 @@ export function NewIssueTitle({ form, index, isSubIssue }: NewIssueTitleProps) {
   const { mutate, isLoading } = useAITitleMutation({
     onSuccess: (data) => {
       if (data) {
-        form.setValue(`issues.${index}.title`, data);
+        if (data === 'null') {
+        } else {
+          form.setValue(`issues.${index}.title`, data);
+        }
       }
     },
   });

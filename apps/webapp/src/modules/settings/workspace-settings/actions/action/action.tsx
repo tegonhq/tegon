@@ -82,7 +82,7 @@ export const Action = () => {
                 </>
               </TabsList>
               <TabsContent value="overview">
-                <div className="flex gap-2">
+                <div className="flex gap-2 bg-background-3 p-3 rounded-md">
                   <div>
                     <Editor
                       className="new-issue-editor min-h-[200px] text-base"

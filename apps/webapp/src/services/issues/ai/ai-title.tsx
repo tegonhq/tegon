@@ -1,7 +1,5 @@
 import { useMutation } from 'react-query';
 
-import type { IssueType } from 'common/types';
-
 import { ajaxPost } from 'services/utils';
 
 export interface AITitleParams {
@@ -21,7 +19,7 @@ export function aiTitleIssues({ description, workspaceId }: AITitleParams) {
 
 interface MutationParams {
   onMutate?: () => void;
-  onSuccess?: (data: IssueType) => void;
+  onSuccess?: (data: string) => void;
   onError?: (error: string) => void;
 }
 
@@ -41,7 +39,7 @@ export function useAITitleMutation({
     onError && onError(errorText);
   };
 
-  const onMutationSuccess = (data: IssueType) => {
+  const onMutationSuccess = (data: string) => {
     onSuccess && onSuccess(data);
   };
 
