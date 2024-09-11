@@ -1,17 +1,28 @@
 ## Overview
 
-Effortlessly integrate Tegon with Slack to transform your project communication and management:
+### Automatically Create a GitHub Issue from Tegon
 
-1. Create Issues from Slack Messages:
+With this action, you can automatically create a GitHub issue from Tegon based on specific triggers. Here's how it works:
 
-   - Use the "..." menu on any Slack message to effortlessly create a Tegon issue.
+When a designated label is applied to a Tegon issue within a specific team, it will create a corresponding GitHub issue in the specified repository. For example, if you assign the label "GitHub" to a Tegon issue in the "Engineering" team, an issue will be created in the "xyz" repository.
 
-2. Automate Issue Creation with Emoji 👀:
+To set up and run this action, you’ll need to provide three key details:
+1. The GitHub repository where the issue should be created.
+2. The Tegon team associated with the action.
+3. The label that will trigger the creation of the GitHub issue.
 
-   - Assign 👀 emoji to a Slack thread to automatically trigger Tegon AI to create a triage issue.
-   - This feature empowers even non-Tegon users to easily report issues.
+### Steps to Configure
 
-3. Synchronized Conversation Threads:
-   - When issues are reported in Slack, a synced comment thread is automatically created within the corresponding Tegon issue.
-   - Tegon comments are automatically reflected in the Slack thread, keeping everyone in the loop and vice versa.
-   - Both the Slack thread and the Tegon comments update in real-time, ensuring everyone stays on the same page regardless of their chosen platform.
+#### 1. Prerequisite: Integrate GitHub with Tegon
+
+   - Navigate to `Settings -> Overview -> Integrations -> GitHub`.
+   - Grant Tegon access to your GitHub account.
+
+#### 2. Configure the Action
+
+   - After connecting your GitHub account, go to `Settings -> Overview -> Actions -> GitHub -> Configuration`.
+   - Specify the repository name, Tegon team, and the label that will trigger the action.
+
+### Important Notes
+- Only one GitHub repository can be linked to each Tegon team.
+- A single label will be used to trigger the action across all linked repositories and teams.
