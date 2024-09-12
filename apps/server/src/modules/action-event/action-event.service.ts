@@ -106,7 +106,9 @@ export default class ActionEventService {
         ...addedTaskInfo,
       },
       getActionEnv(actionEntity.action),
-      { lockToVersion: actionEntity.action.triggerVersion },
+      actionEntity.action.isDev
+        ? {}
+        : { lockToVersion: actionEntity.action.triggerVersion },
     );
 
     return triggerHandle.id;

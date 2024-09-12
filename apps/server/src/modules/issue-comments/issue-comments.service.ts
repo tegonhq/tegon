@@ -8,6 +8,11 @@ import {
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
+import {
+  convertMarkdownToTiptapJson,
+  convertTiptapJsonToMarkdown,
+} from 'common/utils/tiptap.utils';
+
 import IssuesService from 'modules/issues/issues.service';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
@@ -28,10 +33,14 @@ export default class IssueCommentsService {
   ) {}
 
   async getIssueComment(issueCommentParams: IssueCommentRequestParamsDto) {
-    return await this.prisma.issueComment.findUnique({
+    const issueComment = await this.prisma.issueComment.findUnique({
       where: { id: issueCommentParams.issueCommentId },
       include: { parent: true, linkedComment: true },
     });
+
+    const bodyMarkdown = convertTiptapJsonToMarkdown(issueComment.body);
+
+    return { bodyMarkdown, ...issueComment };
   }
 
   async createIssueComment(
@@ -39,15 +48,22 @@ export default class IssueCommentsService {
     userId: string,
     commentData: CreateIssueCommentDto,
   ): Promise<IssueComment> {
-    const { linkCommentMetadata, ...otherCommentData } = commentData;
+    const { linkCommentMetadata, body, bodyMarkdown, ...otherCommentData } =
+      commentData;
 
     const createdByInfo = {
       userId,
       updatedById: userId,
     };
 
+    let updatedBody = body;
+    if (!body && bodyMarkdown) {
+      updatedBody = JSON.stringify(convertMarkdownToTiptapJson(bodyMarkdown));
+    }
+
     const issueComment = await this.prisma.issueComment.create({
       data: {
+        body: updatedBody,
         ...otherCommentData,
         ...createdByInfo,
         issueId: issueRequestParams.issueId,
@@ -81,11 +97,17 @@ export default class IssueCommentsService {
     issueCommentParams: IssueCommentRequestParamsDto,
     commentData: CreateIssueCommentDto,
   ): Promise<IssueComment> {
+    const { body, bodyMarkdown, ...otherCommentData } = commentData;
+    let updatedBody = body;
+    if (!body && bodyMarkdown) {
+      updatedBody = JSON.stringify(convertMarkdownToTiptapJson(bodyMarkdown));
+    }
+
     const issueComment = await this.prisma.issueComment.update({
       where: {
         id: issueCommentParams.issueCommentId,
       },
-      data: commentData,
+      data: { body: updatedBody, ...otherCommentData },
       include: {
         issue: { include: { team: true } },
         parent: true,

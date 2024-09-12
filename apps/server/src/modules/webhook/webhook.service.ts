@@ -73,8 +73,6 @@ export default class WebhookService {
       data: { eventBody, eventHeaders },
     });
 
-    console.log(accountId);
-
     const integrationAccount = await this.prisma.integrationAccount.findFirst({
       where: { accountId, deleted: null },
       include: { workspace: true, integrationDefinition: true },
@@ -111,7 +109,9 @@ export default class WebhookService {
           )),
         },
         getActionEnv(actionEntity.action),
-        { lockToVersion: actionEntity.action.triggerVersion },
+        actionEntity.action.isDev
+          ? {}
+          : { lockToVersion: actionEntity.action.triggerVersion },
       );
     });
 

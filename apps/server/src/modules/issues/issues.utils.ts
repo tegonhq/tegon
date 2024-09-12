@@ -243,6 +243,7 @@ export async function getCreateIssueInput(
     updatedDescription = JSON.stringify(
       convertMarkdownToTiptapJson(descriptionMarkdown),
     );
+    issueData.description = updatedDescription;
   }
 
   return {

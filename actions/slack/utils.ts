@@ -163,7 +163,7 @@ export async function createLinkIssueComment(
     integrationAccount,
     channelId,
   );
-  const commentBody = `Thread in #${channelName} is connected`;
+  const commentBody = `Slack thread in #${channelName}`;
 
   // Merge provided metadata with message-specific details
   const commentSourceMetadata = {
@@ -522,7 +522,7 @@ export async function getIssueMessageModal(
           elements: [
             {
               type: 'plain_text',
-              text: ':slack: This thread is synced with Slack',
+              text: ':slack: This slack thread is synced with Tegon',
               emoji: true,
             },
           ],
