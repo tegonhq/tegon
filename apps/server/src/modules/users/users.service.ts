@@ -10,6 +10,7 @@ import {
   CodeDtoWithWorkspace,
   GetUsersDto,
   PublicUser,
+  RoleEnum,
   User,
 } from '@tegonhq/types';
 import { Response } from 'express';
@@ -157,6 +158,25 @@ export class UsersService {
       },
     });
     return userSerializer(user);
+  }
+
+  async checkifAdmin(userId: string, workspaceId: string) {
+    try {
+      const userOnWorkspace = await this.prisma.usersOnWorkspaces.findFirst({
+        where: {
+          userId,
+          workspaceId,
+        },
+      });
+
+      if (!userOnWorkspace) {
+        throw new NotFoundException('User not found in workspace');
+      }
+
+      return userOnWorkspace.role === RoleEnum.ADMIN;
+    } catch (e) {
+      throw new BadRequestException('Forbidden');
+    }
   }
 
   async getInvitesForUser(email: string) {

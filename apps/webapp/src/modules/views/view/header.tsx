@@ -1,4 +1,4 @@
-import { RiBookmarkFill, RiBookmarkLine, RiMoreFill } from '@remixicon/react';
+import { RiBookmarkFill, RiBookmarkLine } from '@remixicon/react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,6 +14,7 @@ import {
 import {
   DeleteLine,
   EditLine,
+  MoreLine,
   SidebarLine,
   StackLine,
 } from '@tegonhq/ui/icons';
@@ -87,7 +88,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
               size="sm"
               className="flex items-center ml-1"
             >
-              <RiMoreFill size={16} />
+              <MoreLine size={16} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

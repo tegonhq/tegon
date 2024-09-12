@@ -62,6 +62,40 @@ export async function getRun(runId: string, apiKey: string) {
   }
 }
 
+export async function replayRun(runId: string, apiKey: string) {
+  const url = `${process.env['TRIGGER_API_URL']}/api/v1/runs/${runId}/replay`;
+
+  try {
+    const response = await axios.post(url, undefined, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return { data: [] };
+  }
+}
+
+export async function cancelRun(runId: string, apiKey: string) {
+  const url = `${process.env['TRIGGER_API_URL']}/api/v3/runs/${runId}/cancel`;
+
+  try {
+    const response = await axios.post(url, undefined, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return { data: [] };
+  }
+}
+
 export async function triggerTask(
   taskId: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

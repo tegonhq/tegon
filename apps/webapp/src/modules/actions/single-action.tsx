@@ -18,7 +18,6 @@ import { useGetExternalActionDataQuery } from 'services/action';
 
 import { useContextStore } from 'store/global-context-provider';
 
-import { RunActionPopover } from './components/run-action-popover';
 import { RunsTable } from './components/runs-table';
 
 export function SingleAction() {
@@ -71,9 +70,6 @@ export function SingleAction() {
             <div className="flex flex-col">
               <div className="text-md">All runs</div>
               <p className="text-muted-foreground"> last 25 runs</p>
-            </div>
-            <div>
-              <RunActionPopover slug={action.slug} />
             </div>
           </div>
           <RunsTable action={action} />

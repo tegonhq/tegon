@@ -5,3 +5,7 @@ export class ActionIdDto {
 export class ActionSlugDto {
   slug: string;
 }
+
+export class ActionRunDto {
+  runId: string;
+}

@@ -1,4 +1,3 @@
-import { RiMoreFill } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DropdownMenu,
@@ -6,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
-import { DeleteLine, EditLine } from '@tegonhq/ui/icons';
+import { DeleteLine, EditLine, MoreLine } from '@tegonhq/ui/icons';
 import * as React from 'react';
 
 import type { LabelType } from 'common/types';
@@ -39,7 +38,7 @@ export function Label({ label, setEditLabelState }: LabelProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="flex items-center">
             <Button variant="ghost" size="sm" className="flex items-center">
-              <RiMoreFill size={16} />
+              <MoreLine size={16} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

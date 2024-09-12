@@ -28,6 +28,7 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
+import { AdminGuard } from 'modules/users/admin.guard';
 
 import { ApiResponse, SubscribeIssueInput } from './issues.interface';
 import IssuesService from './issues.service';
@@ -78,7 +79,7 @@ export class IssuesController {
   }
 
   @Delete(':issueId')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, AdminGuard)
   async deleteIssue(
     @Param() issueParams: IssueRequestParamsDto,
     @Query() teamParams: TeamRequestParamsDto,

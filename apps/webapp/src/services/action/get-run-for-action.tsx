@@ -16,6 +16,7 @@ export interface TriggerRunWithLogs extends TriggerRun {
   updatedAt: string;
   finishedAt: string;
   startedAt: string;
+  payload: { event: string; type: string };
   logs?: string;
 }
 

@@ -16,6 +16,7 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import { AdminGuard } from 'modules/users/admin.guard';
 
 import {
   CreateInitialResourcesDto,
@@ -139,8 +140,8 @@ export class WorkspacesController {
     );
   }
 
+  @UseGuards(AuthGuard, AdminGuard)
   @Post(':workspaceId/invite_users')
-  @UseGuards(AuthGuard)
   async inviteUsers(
     @SessionDecorator() session: SessionContainer,
     @Param() workspaceIdRequestBody: WorkspaceRequestParamsDto,
