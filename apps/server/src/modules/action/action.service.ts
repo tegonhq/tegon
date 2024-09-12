@@ -13,6 +13,8 @@ import {
   UpdateActionInputsDto,
   JsonObject,
   ActionTypesEnum,
+  ActionScheduleStatusEnum,
+  ActionScheduleDto,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
@@ -32,6 +34,7 @@ export default class ActionService {
     private triggerdev: TriggerdevService, // Service for interacting with TriggerDev
     private usersService: UsersService, // Service for managing users
     private integrationsService: IntegrationsService,
+    private triggerdevService: TriggerdevService,
   ) {}
 
   async getAction(slug: string, workspaceId: string) {
@@ -444,6 +447,143 @@ export default class ActionService {
       },
       getActionEnv(action),
       action.isDev ? {} : { lockToVersion: action.triggerVersion },
+    );
+  }
+
+  async createActionSchedule(
+    slug: string,
+    scheduleActionBody: ActionScheduleDto,
+    scheduledById: string,
+  ) {
+    const prisma = this.prisma;
+    return await prisma.$transaction(async (tx) => {
+      const { workspaceId, ...otherScheduleData } = scheduleActionBody;
+      const action = await tx.action.findFirst({
+        where: { slug, workspaceId },
+      });
+
+      const actionSchedule = await tx.actionSchedule.create({
+        data: {
+          ...otherScheduleData,
+          status: ActionScheduleStatusEnum.IN_ACTIVE,
+          scheduledById,
+          action: { connect: { id: action.id } },
+        },
+      });
+
+      try {
+        const scheduleResponse = await this.triggerdev.createScheduleTask(
+          {
+            cron: actionSchedule.cron,
+            deduplicationKey: actionSchedule.id,
+            externalId: actionSchedule.id,
+            ...(actionSchedule.timezone
+              ? { timezone: actionSchedule.timezone }
+              : {}),
+          },
+          getActionEnv(action),
+        );
+
+        return await tx.actionSchedule.update({
+          where: { id: actionSchedule.id },
+          data: {
+            status: ActionScheduleStatusEnum.ACTIVE,
+            scheduleId: scheduleResponse.id,
+          },
+        });
+      } catch (error) {
+        // If createScheduleTask fails, the transaction will be rolled back automatically
+        throw error;
+      }
+    });
+  }
+
+  async udpateActionSchedule(
+    actionScheduleId: string,
+    scheduleActionBody: ActionScheduleDto,
+  ) {
+    const prisma = this.prisma;
+    return await prisma.$transaction(async (tx) => {
+      const actionSchedule = await tx.actionSchedule.update({
+        where: { id: actionScheduleId },
+        data: scheduleActionBody,
+        include: { action: true },
+      });
+
+      try {
+        await this.triggerdev.updateScheduleTask(
+          actionScheduleId,
+          {
+            cron: actionSchedule.cron,
+            externalId: actionSchedule.id,
+            ...(actionSchedule.timezone
+              ? { timezone: actionSchedule.timezone }
+              : {}),
+          },
+          getActionEnv(actionSchedule.action),
+        );
+
+        return actionSchedule;
+      } catch (error) {
+        // If updateScheduleTask fails, the transaction will be rolled back automatically
+        throw error;
+      }
+    });
+  }
+
+  async deleteActionSchedule(actionScheduleId: string) {
+    const prisma = this.prisma;
+    return await prisma.$transaction(async (tx) => {
+      const actionSchedule = await tx.actionSchedule.update({
+        where: { id: actionScheduleId },
+        data: {
+          deleted: new Date().toISOString(),
+          status: ActionScheduleStatusEnum.IN_ACTIVE,
+        },
+        include: { action: true },
+      });
+
+      try {
+        await this.triggerdev.updateScheduleTask(
+          actionScheduleId,
+          {
+            cron: actionSchedule.cron,
+            externalId: actionSchedule.id,
+            ...(actionSchedule.timezone
+              ? { timezone: actionSchedule.timezone }
+              : {}),
+          },
+          getActionEnv(actionSchedule.action),
+        );
+
+        return actionSchedule;
+      } catch (error) {
+        // If updateScheduleTask fails, the transaction will be rolled back automatically
+        throw error;
+      }
+    });
+  }
+
+  async triggerActionEntity(actionId: string) {
+    const action = await this.prisma.action.findUnique({
+      where: { id: actionId },
+    });
+
+    const addedTaskInfo = await prepareTriggerPayload(
+      this.prisma,
+      this.integrationsService,
+      action.id,
+    );
+
+    return await this.triggerdevService.triggerTaskAsync(
+      action.workspaceId,
+      action.slug,
+      {
+        event: ActionTypesEnum.ON_SCHEDULE,
+        ...addedTaskInfo,
+      },
+      getActionEnv(action),
+      { lockToVersion: action.triggerVersion },
     );
   }
 }

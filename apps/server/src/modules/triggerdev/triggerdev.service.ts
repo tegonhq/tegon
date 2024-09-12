@@ -1,5 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ActionScheduleStatusEnum } from '@tegonhq/types';
+import axios from 'axios';
 import Knex, { Knex as KnexT } from 'knex'; // Import Knex for database operations
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid for generating unique identifiers
@@ -363,5 +365,100 @@ export class TriggerdevService {
     const logString = logEntries.join('\n'); // Join the log entries with newlines
 
     return logString; // Return the log string
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async createScheduleTask(payload: any, env: Env) {
+    const projectSlug = 'common'; // Specify the project slug
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug, env); // Get the runtime slug for the project and environment
+
+    const apiKey = await this.getProdRuntimeKey(projectSlug, runtimeSlug); // Get the production runtime API key
+
+    const url = `${process.env['TRIGGER_API_URL']}/api/v1/schedules`; // Construct the API URL for creating a schedule task
+
+    try {
+      const response = await axios.post(
+        // Send a POST request to create the schedule task
+        url,
+        { task: 'schedule-proxy', ...payload }, // Include the task type and payload data
+        { headers: { Authorization: `Bearer ${apiKey}` } }, // Include the API key in the headers
+      );
+
+      return response.data; // Return the response data from the POST request
+    } catch (error) {
+      this.logger.error({
+        // Log the error if the create schedule task operation fails
+        message: 'Failed to create schedule task',
+        where: 'TriggerDevService.CreateScheduleTask',
+        error,
+      });
+      throw new InternalServerErrorException(`Failed to create schedule task`); // Throw an InternalServerErrorException
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async updateScheduleTask(actionScheduleId: string, payload: any, env: Env) {
+    const projectSlug = 'common'; // Specify the project slug
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug, env); // Get the runtime slug for the project and environment
+
+    const apiKey = await this.getProdRuntimeKey(projectSlug, runtimeSlug); // Get the production runtime API key
+
+    try {
+      const { status, ...otherPayload } = payload; // Destructure the payload to separate the status
+      let url = `${process.env['TRIGGER_API_URL']}/api/v1/schedules/${actionScheduleId}`; // Construct the API URL for updating the schedule task
+      const response = await axios.put(
+        // Send a PUT request to update the schedule task
+        url,
+        { task: 'schedule-proxy', ...otherPayload }, // Include the task type and other payload data
+        { headers: { Authorization: `Bearer ${apiKey}` } }, // Include the API key in the headers
+      );
+
+      // Construct the URL for activating or deactivating the schedule task based on the status
+      url =
+        status === ActionScheduleStatusEnum.ACTIVE
+          ? `${url}/activate`
+          : `${url}/deactivate`;
+
+      await axios.post(
+        // Send a POST request to activate or deactivate the schedule task
+        url,
+        {},
+        { headers: { Authorization: `Bearer ${apiKey}` } }, // Include the API key in the headers
+      );
+
+      return response.data; // Return the response data from the initial PUT request
+    } catch (error) {
+      this.logger.error({
+        // Log the error if the update schedule task operation fails
+        message: 'Failed to update schedule task',
+        where: 'TriggerDevService.CreateScheduleTask',
+        error,
+      });
+      throw new InternalServerErrorException(`Failed to update schedule task`); // Throw an InternalServerErrorException
+    }
+  }
+
+  async deleteScheduleTask(actionScheduleId: string, env: Env) {
+    const projectSlug = 'common';
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug, env);
+
+    const apiKey = await this.getProdRuntimeKey(projectSlug, runtimeSlug); // Get the production runtime API key
+
+    const url = `${process.env['TRIGGER_API_URL']}/api/v1/schedules/${actionScheduleId}`;
+
+    try {
+      const response = await axios.delete(url, {
+        headers: { Authorization: `Bearer ${apiKey}` },
+      });
+
+      return response.data;
+    } catch (error) {
+      this.logger.error({
+        message: 'Failed to delete schedule task',
+        where: 'TriggerDevService.CreateScheduleTask',
+        error,
+      });
+      throw new InternalServerErrorException(`Failed to delete schedule task`); // Throw InternalServerErrorException
+    }
   }
 }

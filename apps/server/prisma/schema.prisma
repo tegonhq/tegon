@@ -31,12 +31,12 @@ model Action {
   // This is used to store inputs or some data needed for the action 
   data Json?
 
-  cron         String?
   workspace    Workspace?     @relation(fields: [workspaceId], references: [id])
   workspaceId  String?
   actionEntity ActionEntity[]
 
-  createdById String
+  createdById    String
+  actionSchedule ActionSchedule[]
 }
 
 model ActionEntity {
@@ -73,6 +73,24 @@ model ActionEvent {
 
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   workspaceId String
+}
+
+model ActionSchedule {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  cron       String?
+  scheduleId String?
+  status     ActionScheduleStatus
+  timezone   String?
+
+  scheduledById String
+  action        Action @relation(fields: [actionId], references: [id])
+  actionId      String
+
+  @@unique([actionId, cron, timezone])
 }
 
 model Attachment {
@@ -119,9 +137,9 @@ model AuthorizationCode {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  personalAccessTokenId   String?
-  workspaceId             String?
-  code                    String
+  personalAccessTokenId String?
+  workspaceId           String?
+  code                  String
 }
 
 model Emoji {
@@ -165,8 +183,8 @@ model IntegrationDefinitionV2 {
   slug         String
   description  String
   icon         String
-  clientId     String 
-  clientSecret String 
+  clientId     String
+  clientSecret String
   config       Json?
   workspace    Workspace? @relation(references: [id], fields: [workspaceId])
   workspaceId  String?
@@ -580,11 +598,11 @@ model Workflow {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name         String
+  name        String
   description String?
-  position     Int
-  color        String
-  category     WorkflowCategory
+  position    Int
+  color       String
+  category    WorkflowCategory
 
   team   Team?  @relation(fields: [teamId], references: [id])
   teamId String
@@ -646,6 +664,12 @@ enum ActionStatus {
   NEEDS_CONFIGURATION
   ACTIVE
   SUSPENDED
+}
+
+enum ActionScheduleStatus {
+  ACTIVE
+  IN_ACTIVE
+  DELETED
 }
 
 enum ModelName {
