@@ -8,10 +8,11 @@ export const getToken = async (integrationAccountId: string) => {
       id: integrationAccountId,
       deleted: null,
     },
+    include: { integrationDefinition: true },
   });
 
-  const integrationConfig =
-    integrationAccount.integrationConfiguration as JsonObject;
+  const definitionConfig = integrationAccount.integrationDefinition
+    .config as JsonObject;
 
-  return integrationConfig.api_key;
+  return { token: definitionConfig.botToken };
 };

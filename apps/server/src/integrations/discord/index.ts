@@ -14,7 +14,7 @@ export default async function run(eventPayload: IntegrationEventPayload) {
      * This is used to identify to which integration account the webhook belongs to
      */
     case IntegrationPayloadEventType.GET_CONNECTED_ACCOUNT_ID:
-      return eventPayload.data.eventBody.team_id;
+      return eventPayload.data.eventBody.d.guild_id;
 
     case IntegrationPayloadEventType.SPEC:
       return spec();
