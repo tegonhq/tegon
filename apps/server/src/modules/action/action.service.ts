@@ -51,9 +51,13 @@ export default class ActionService {
   }
 
   // Update the inputs for an existing action
-  async updateActionInputs(updateBodyDto: UpdateActionInputsDto, slug: string) {
+  async updateActionInputs(
+    updateBodyDto: UpdateActionInputsDto,
+    slug: string,
+    workspaceId: string,
+  ) {
     // Find the action by its slug
-    const action = await this.getAction(slug, updateBodyDto.workspaceId);
+    const action = await this.getAction(slug, workspaceId);
 
     // Get the current data or initialize an empty object
     const currentData = action.data ? action.data : {};
@@ -100,7 +104,11 @@ export default class ActionService {
         );
 
         // Create a personal access token for the trigger
-        await this.createPersonalTokenForTrigger(prisma, workflowUser.id);
+        await this.createPersonalTokenForTrigger(
+          prisma,
+          workflowUser.id,
+          workspaceId,
+        );
 
         // Upsert the workflow user on the workspace
         await this.upsertUserOnWorkspace(prisma, workflowUser.id, workspaceId);
@@ -161,6 +169,7 @@ export default class ActionService {
   private async createPersonalTokenForTrigger(
     prisma: Partial<PrismaClient>,
     userId: string,
+    workspaceId: string,
   ) {
     // Find an existing personal access token for the trigger
     const pat = await prisma.personalAccessToken.findFirst({
@@ -175,6 +184,7 @@ export default class ActionService {
       await this.usersService.createPersonalAccessToken(
         'Trigger',
         userId,
+        workspaceId,
         'trigger',
       );
     }

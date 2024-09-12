@@ -23,7 +23,10 @@ import { Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import {
+  Session as SessionDecorator,
+  Workspace,
+} from 'modules/auth/session.decorator';
 
 import {
   UpdateUserBody,
@@ -76,6 +79,7 @@ export class UsersController {
   @Post('pat')
   @UseGuards(AuthGuard)
   async createPersonalAccessToken(
+    @Workspace() workspaceId: string,
     @SessionDecorator() session: SessionContainer,
     @Body()
     createPatDto: CreatePatDto,
@@ -84,6 +88,7 @@ export class UsersController {
     const user = await this.users.createPersonalAccessToken(
       createPatDto.name,
       userId,
+      workspaceId,
     );
 
     return user;

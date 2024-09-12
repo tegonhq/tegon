@@ -67,7 +67,7 @@ export const TeamSettingsList = observer(() => {
                       key={item.href}
                       href={`/${workspaceSlug}/settings/teams/${team.identifier}/${item.href}`}
                       className={cn(
-                        buttonVariants({ variant: 'ghost' }),
+                        buttonVariants({ variant: 'link' }),
                         'flex items-center justify-start bg-grayAlpha-100 w-fit',
 
                         team.identifier === teamIdentifier &&

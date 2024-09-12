@@ -13,12 +13,14 @@ import {
   DeleteActionDto,
   ReplayRunDto,
   UpdateActionInputsDto,
-  WorkspaceRequestParamsDto,
 } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import {
+  Session as SessionDecorator,
+  Workspace,
+} from 'modules/auth/session.decorator';
 
 import { ActionGuard } from './action.guard';
 import ActionService from './action.service';
@@ -75,49 +77,45 @@ export class ActionController {
   @Get(':slug/runs')
   @UseGuards(ActionGuard)
   async getRunsForSlug(
+    @Workspace() workspaceId: string,
     @Param() slugDto: ActionSlugDto,
-    @Query() runIdParams: { runId: string; workspaceId: string },
+    @Query() runIdParams: { runId: string },
   ) {
     if (runIdParams.runId) {
       return await this.actionService.getRunForSlug(
-        runIdParams.workspaceId,
+        workspaceId,
         slugDto.slug,
         runIdParams.runId,
       );
     }
 
-    return await this.actionService.getRunsForSlug(
-      runIdParams.workspaceId,
-      slugDto.slug,
-    );
+    return await this.actionService.getRunsForSlug(workspaceId, slugDto.slug);
   }
 
   @Get(':slug/inputs')
   @UseGuards(ActionGuard)
   async getInputsForSlug(
+    @Workspace() workspaceId: string,
     @Param() slugDto: { slug: string },
-    @Query() configParams: { workspaceId: string },
   ) {
-    return await this.actionService.getInputsForSlug(
-      slugDto.slug,
-      configParams.workspaceId,
-    );
+    return await this.actionService.getInputsForSlug(slugDto.slug, workspaceId);
   }
 
   @Get()
   @UseGuards(ActionGuard)
-  async getActions(@Query() workspaceIdDto: WorkspaceRequestParamsDto) {
-    return await this.actionService.getActions(workspaceIdDto.workspaceId);
+  async getActions(@Workspace() workspaceId: string) {
+    return await this.actionService.getActions(workspaceId);
   }
 
   @Post(':slug/replay')
   @UseGuards(ActionGuard)
   async replayRunForSlug(
+    @Workspace() workspaceId: string,
     @Param() slugDto: ActionSlugDto,
     @Body() replayBody: ReplayRunDto,
   ) {
     return await this.actionService.replayRunForSlug(
-      replayBody.workspaceId,
+      workspaceId,
       slugDto.slug,
       replayBody.runId,
     );
@@ -126,11 +124,12 @@ export class ActionController {
   @Post(':slug/cancel')
   @UseGuards(ActionGuard)
   async cancelRunForSlug(
+    @Workspace() workspaceId: string,
     @Param() slugDto: ActionSlugDto,
     @Body() replayBody: ReplayRunDto,
   ) {
     return await this.actionService.cancelRunForSlug(
-      replayBody.workspaceId,
+      workspaceId,
       slugDto.slug,
       replayBody.runId,
     );
@@ -138,12 +137,14 @@ export class ActionController {
 
   @Post(':slug/inputs')
   async updateActionInputs(
+    @Workspace() workspaceId: string,
     @Body() updateBodyDto: UpdateActionInputsDto,
     @Param() actionSlugDto: ActionSlugDto,
   ) {
     return await this.actionService.updateActionInputs(
       updateBodyDto,
       actionSlugDto.slug,
+      workspaceId,
     );
   }
 

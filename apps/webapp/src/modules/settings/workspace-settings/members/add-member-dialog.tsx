@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { RoleEnum } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DialogContent,
@@ -12,13 +13,24 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from '@tegonhq/ui/components/form';
+import { MultiSelect } from '@tegonhq/ui/components/multi-select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@tegonhq/ui/components/select';
 import { Textarea } from '@tegonhq/ui/components/textarea';
 import { useToast } from '@tegonhq/ui/components/use-toast';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { capitalizeFirstLetter } from 'common/lib/common';
 import type { TeamType } from 'common/types';
 
 import { useCurrentWorkspace } from 'hooks/workspace';
@@ -33,6 +45,10 @@ interface AddMemberDialogProps {
 
 const AddMemberDialogSchema = z.object({
   emailIds: z.string(),
+  teamIds: z
+    .array(z.string())
+    .min(1, { message: 'At least one team should be selected' }),
+  role: z.enum(Object.values(RoleEnum) as [RoleEnum, ...RoleEnum[]]), // Ensure it's cast as a tuple of RoleEnum values
 });
 
 export function AddMemberDialog({ setDialogOpen }: AddMemberDialogProps) {
@@ -42,6 +58,8 @@ export function AddMemberDialog({ setDialogOpen }: AddMemberDialogProps) {
     resolver: zodResolver(AddMemberDialogSchema),
     defaultValues: {
       emailIds: '',
+      role: RoleEnum.USER,
+      teamIds: [],
     },
   });
   const workspace = useCurrentWorkspace();
@@ -66,11 +84,20 @@ export function AddMemberDialog({ setDialogOpen }: AddMemberDialogProps) {
     },
   });
 
-  const onSubmit = ({ emailIds }: { emailIds: string }) => {
+  const onSubmit = ({
+    emailIds,
+    role,
+    teamIds,
+  }: {
+    emailIds: string;
+    role: RoleEnum;
+    teamIds: string[];
+  }) => {
     inviteUsers({
       workspaceId: workspace.id,
-      teamIds: teamsStore.teams.map((team: TeamType) => team.id),
+      teamIds,
       emailIds,
+      role,
     });
   };
 
@@ -88,7 +115,10 @@ export function AddMemberDialog({ setDialogOpen }: AddMemberDialogProps) {
 
         <div className="flex flex-col gap-2 items-center w-full">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="w-full flex flex-col gap-2"
+            >
               <FormField
                 control={form.control}
                 name="emailIds"
@@ -102,6 +132,62 @@ export function AddMemberDialog({ setDialogOpen }: AddMemberDialogProps) {
                         placeholder="elon@tesla.com, sam@tesla.com"
                       />
                     </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem className="my-3">
+                    <FormLabel>Invite as </FormLabel>
+
+                    <FormControl>
+                      <Select
+                        onValueChange={(value: string) => {
+                          field.onChange(value);
+                        }}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="flex gap-1 items-center">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {Object.values(RoleEnum).map((role) => (
+                              <SelectItem key={role} value={role}>
+                                {capitalizeFirstLetter(role)}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="teamIds"
+                render={({ field }) => (
+                  <FormItem className="my-3">
+                    <FormLabel>Add to teams </FormLabel>
+
+                    <FormControl>
+                      <MultiSelect
+                        placeholder="Select teams"
+                        options={teamsStore.teams.map((team: TeamType) => ({
+                          value: team.id,
+                          label: team.name,
+                        }))}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />

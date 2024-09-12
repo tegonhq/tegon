@@ -32,6 +32,31 @@ export const recipeList = (
     UserRoles.init(),
     Session.init({
       cookieSecure: true,
+      override: {
+        functions(originalImplementation) {
+          return {
+            ...originalImplementation,
+            async createNewSession(input) {
+              // since frontend needs workspaces we converted usersOnWorkspaces
+              // To workspaces
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const user = (await usersService.getUser(input.userId)) as any;
+              const workspace = user.workspaces[0];
+
+              const workspaceData = workspace
+                ? { workspaceId: workspace.id, role: workspace.role }
+                : {};
+
+              input.accessTokenPayload = {
+                ...input.accessTokenPayload,
+                ...workspaceData,
+              };
+
+              return originalImplementation.createNewSession(input);
+            },
+          };
+        },
+      },
     }), // initializes session features
     Passwordless.init({
       contactMethod: 'EMAIL',

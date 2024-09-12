@@ -41,6 +41,7 @@ export const Members = observer(() => {
                 {users.map((userData: User, index) => (
                   <MemberItem
                     key={userData.id}
+                    id={userData.id}
                     name={userData.fullname}
                     email={userData.email}
                     className={index === users.length - 1 && 'pb-0 !border-b-0'}

@@ -328,8 +328,11 @@ model PersonalAccessToken {
   name   String
   jwt    String
   token  String
+
+  user   User @relation(fields: [userId], references: [id])
   userId String
   type   String @default("user")
+  workspaceId String
 
   @@unique([name, userId, token])
 }
@@ -529,6 +532,7 @@ model User {
   template           Template[]
   integrationAccount IntegrationAccount[]
   attachment         Attachment[]
+  personalAccessToken PersonalAccessToken[]
 }
 
 model UsersOnWorkspaces {

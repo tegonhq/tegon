@@ -16,8 +16,8 @@ import {
 } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
+import { Workspace } from 'modules/auth/session.decorator';
 
-import { IntegrationAccountsRequestBody } from './integration-account.interface';
 import { IntegrationAccountService } from './integration-account.service';
 
 @Controller({
@@ -33,11 +33,10 @@ export class IntegrationAccountController {
   @Get()
   @UseGuards(AuthGuard)
   async getIntegrationAccounts(
-    @Query()
-    integrationAccountsRequestBody: IntegrationAccountsRequestBody,
+    @Workspace() workspaceId: string,
   ): Promise<IntegrationAccount[]> {
     return await this.integrationAccountService.getIntegrationAccountsForWorkspace(
-      integrationAccountsRequestBody.workspaceId,
+      workspaceId,
     );
   }
 
@@ -71,7 +70,7 @@ export class IntegrationAccountController {
     integrationAccountIdRequestIdBody: IntegrationAccountIdDto,
   ): Promise<IntegrationAccount> {
     return await this.integrationAccountService.getIntegrationAccountWithId(
-      integrationAccountIdRequestIdBody,
+      integrationAccountIdRequestIdBody.integrationAccountId,
     );
   }
 

@@ -5,7 +5,6 @@ import {
   Get,
   Param,
   Post,
-  Query,
   Res,
   UploadedFiles,
   UseGuards,
@@ -16,11 +15,13 @@ import { Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import {
+  Session as SessionDecorator,
+  Workspace,
+} from 'modules/auth/session.decorator';
 
 import {
   AttachmentRequestParams,
-  AttachmentQueryParams,
   AttachmentBody,
 } from './attachments.interface';
 import { AttachmentService } from './attachments.service';
@@ -37,7 +38,7 @@ export class AttachmentController {
   @UseGuards(AuthGuard)
   async uploadFiles(
     @SessionDecorator() session: SessionContainer,
-    @Query() attachmentQueryParams: AttachmentQueryParams,
+    @Workspace() workspaceId: string,
     @UploadedFiles() files: Express.Multer.File[],
     @Body() attachmentBody: AttachmentBody,
   ) {
@@ -50,7 +51,7 @@ export class AttachmentController {
     return await this.attachementService.uploadAttachment(
       files,
       userId,
-      attachmentQueryParams.workspaceId,
+      workspaceId,
       sourceMetadata,
     );
   }

@@ -32,22 +32,12 @@ export class TeamRequestParams {
   teamId: string;
 }
 
-export class WorkspaceRequestParams {
-  @IsString()
-  workspaceId: string;
-}
-
 export class PreferenceInput {
   @IsString()
   preference: PreferenceEnum;
 
   @IsString()
   value: IssueEstimateValues | Priorities;
-}
-
-export class TeamMemberInput {
-  @IsString()
-  userId: string;
 }
 
 enum IssueEstimateValues {

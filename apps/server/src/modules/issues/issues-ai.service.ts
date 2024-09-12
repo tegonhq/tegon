@@ -461,20 +461,22 @@ export default class IssuesAIService {
     });
 
     // Generate sub-issues using the AI request service
-    const subissues = await this.aiRequestsService.getLLMRequest({
-      messages: [
-        { role: 'system', content: subIssuePrompt.prompt },
-        {
-          role: 'user',
-          content: `[INPUT] 
+    const subissues = await this.aiRequestsService.getLLMRequest(
+      {
+        messages: [
+          { role: 'system', content: subIssuePrompt.prompt },
+          {
+            role: 'user',
+            content: `[INPUT] 
           description: ${subIssueInput.description}
           labels: ${JSON.stringify(labelNames)}`,
-        },
-      ],
-      llmModel: LLMMappings[subIssuePrompt.model],
-      model: 'SubIssues',
-      workspaceId: subIssueInput.workspaceId,
-    });
+          },
+        ],
+        llmModel: LLMMappings[subIssuePrompt.model],
+        model: 'SubIssues',
+      },
+      subIssueInput.workspaceId,
+    );
     this.logger.debug({
       message: `Generated sub-issues: ${subissues}`,
       where: `IssuesAIService.generateSubIssues`,
@@ -529,19 +531,21 @@ export default class IssuesAIService {
           },
         },
       });
-      const responseStream = await this.aiRequestsService.getLLMRequestStream({
-        messages: [
-          { role: 'system', content: descriptionPrompt.prompt },
-          {
-            role: 'user',
-            content: `[INPUT] short_description: ${descriptionInput.description}
+      const responseStream = await this.aiRequestsService.getLLMRequestStream(
+        {
+          messages: [
+            { role: 'system', content: descriptionPrompt.prompt },
+            {
+              role: 'user',
+              content: `[INPUT] short_description: ${descriptionInput.description}
                 user_input: ${descriptionInput.userInput}`,
-          },
-        ],
-        llmModel: LLMMappings[descriptionPrompt.model],
-        model: 'IssueDescrptionStream',
-        workspaceId: descriptionInput.workspaceId,
-      });
+            },
+          ],
+          llmModel: LLMMappings[descriptionPrompt.model],
+          model: 'IssueDescrptionStream',
+        },
+        descriptionInput.workspaceId,
+      );
 
       response.setHeader('Content-Type', 'text/event-stream');
       response.setHeader('Cache-Control', 'no-cache');

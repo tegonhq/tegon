@@ -1,3 +1,5 @@
+import type { RoleEnum } from '@tegonhq/types';
+
 import { useMutation } from 'react-query';
 
 import { ajaxPost } from 'services/utils';
@@ -8,19 +10,21 @@ export interface InviteUsersParams {
   emailIds: string;
   workspaceId: string;
   teamIds: string[];
+  role: RoleEnum;
 }
 
 export function inviteUsers({
   emailIds,
   workspaceId,
   teamIds,
+  role,
 }: InviteUsersParams) {
   return ajaxPost({
     url: `/api/v1/workspaces/${workspaceId}/invite_users`,
     data: {
       emailIds,
       teamIds,
-      role: 'USER',
+      role,
     },
   });
 }

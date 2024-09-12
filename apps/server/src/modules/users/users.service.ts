@@ -195,7 +195,12 @@ export class UsersService {
     );
   }
 
-  async createPersonalAccessToken(name: string, userId: string, type = 'user') {
+  async createPersonalAccessToken(
+    name: string,
+    userId: string,
+    workspaceId: string,
+    type = 'user',
+  ) {
     const jwt = await generateKeyForUserId(userId);
     const token = generatePersonalAccessToken();
 
@@ -204,6 +209,7 @@ export class UsersService {
         name,
         userId,
         token,
+        workspaceId,
         jwt,
         type,
       },
