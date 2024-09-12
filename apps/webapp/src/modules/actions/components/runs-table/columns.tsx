@@ -15,6 +15,8 @@ import { capitalizeFirstLetter } from 'common/lib/common';
 
 import type { TriggerRun } from 'services/action';
 
+import { RunOptionsDropdown } from './run-options-dropdown';
+
 const statusIconMapping = {
   // Loading states
   WAITING_FOR_DEPLOY: 'loading',
@@ -130,6 +132,13 @@ export const columns: Array<ColumnDef<TriggerRun>> = [
     cell: ({ row }) => {
       const startedAt = row.original.startedAt ?? row.original.createdAt;
       return <div>{format(new Date(startedAt), 'MMM dd HH:mm bb')}</div>;
+    },
+  },
+  {
+    id: 'options',
+    enableHiding: false,
+    cell: ({ row }) => {
+      return <RunOptionsDropdown run={row.original} />;
     },
   },
 ];

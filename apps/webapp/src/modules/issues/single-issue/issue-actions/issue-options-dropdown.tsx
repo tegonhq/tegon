@@ -1,4 +1,3 @@
-import { RiMoreFill } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DropdownMenu,
@@ -7,7 +6,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
-import { ArrowForwardLine } from '@tegonhq/ui/icons';
+import { ArrowForwardLine, MoreLine } from '@tegonhq/ui/icons';
 import React from 'react';
 
 import { AddIssueRelationModal } from 'modules/issues/components/modals';
@@ -42,7 +41,7 @@ export function IssueOptionsDropdown() {
               e.preventDefault();
             }}
           >
-            <RiMoreFill size={16} />
+            <MoreLine size={16} />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">

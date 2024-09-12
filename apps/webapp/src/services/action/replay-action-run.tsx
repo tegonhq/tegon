@@ -1,23 +1,17 @@
-import { createRunAction } from '@tegonhq/services';
-import { useMutation, useQueryClient } from 'react-query';
-
-import type { ActionType } from 'common/types';
-
-import { GetRunsForAction } from './get-runs-for-action';
+import { replayActionRun } from '@tegonhq/services';
+import { useMutation } from 'react-query';
 
 interface MutationParams {
   onMutate?: () => void;
-  onSuccess?: (data: ActionType) => void;
+  onSuccess?: () => void;
   onError?: (error: string) => void;
 }
 
-export function useRunActionMutation({
+export function useReplayActionRunMutation({
   onMutate,
   onSuccess,
   onError,
 }: MutationParams) {
-  const queryClient = useQueryClient();
-
   const onMutationTriggered = () => {
     onMutate && onMutate();
   };
@@ -29,12 +23,11 @@ export function useRunActionMutation({
     onError && onError(errorText);
   };
 
-  const onMutationSuccess = (data: ActionType) => {
-    queryClient.invalidateQueries({ queryKey: [GetRunsForAction] });
-    onSuccess && onSuccess(data);
+  const onMutationSuccess = () => {
+    onSuccess && onSuccess();
   };
 
-  return useMutation(createRunAction, {
+  return useMutation(replayActionRun, {
     onError: onMutationError,
     onMutate: onMutationTriggered,
     onSuccess: onMutationSuccess,

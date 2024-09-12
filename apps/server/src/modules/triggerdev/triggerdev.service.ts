@@ -9,10 +9,12 @@ import { LoggerService } from 'modules/logger/logger.service';
 import { formatRunEvent, prepareEvent } from './trigger.utils'; // Import utility functions for formatting run events
 import { Env } from './triggerdev.interface';
 import {
+  cancelRun,
   encryptToken,
   getRun,
   getRuns,
   hashToken,
+  replayRun,
   triggerTask,
   triggerTaskSync,
 } from './triggerdev.utils'; // Import utility functions for triggering tasks and handling runs
@@ -317,6 +319,30 @@ export class TriggerdevService {
     const logs = await this.getLogsForRunId(runId); // Get the logs for the run
 
     return { ...run, logs }; // Return the run data with logs
+  }
+
+  // Replay a run for a given project slug and run ID
+  async replayRun(projectSlug: string, runId: string, env: Env) {
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug, env);
+
+    const apiKey = await this.getProdRuntimeKey(
+      projectslugWithoutHyphen,
+      runtimeSlug,
+    ); // Get the production runtime API key
+
+    return await replayRun(runId, apiKey);
+  }
+
+  async cancelRun(projectSlug: string, runId: string, env: Env) {
+    const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug, env);
+
+    const apiKey = await this.getProdRuntimeKey(
+      projectslugWithoutHyphen,
+      runtimeSlug,
+    ); // Get the production runtime API key
+    return await cancelRun(runId, apiKey);
   }
 
   // Get logs for a given run ID

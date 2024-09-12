@@ -34,19 +34,26 @@ export default class ActionService {
     private integrationsService: IntegrationsService,
   ) {}
 
+  async getAction(slug: string, workspaceId: string) {
+    try {
+      // Find the action by its slug
+      const action = await this.prisma.action.findFirst({
+        where: {
+          slug,
+          workspaceId,
+        },
+      });
+
+      return action;
+    } catch (e) {
+      throw new NotFoundException('Action not found');
+    }
+  }
+
   // Update the inputs for an existing action
   async updateActionInputs(updateBodyDto: UpdateActionInputsDto, slug: string) {
     // Find the action by its slug
-    const action = await this.prisma.action.findFirst({
-      where: {
-        slug,
-        workspaceId: updateBodyDto.workspaceId,
-      },
-    });
-
-    if (!action) {
-      throw new NotFoundException('Action not found');
-    }
+    const action = await this.getAction(slug, updateBodyDto.workspaceId);
 
     // Get the current data or initialize an empty object
     const currentData = action.data ? action.data : {};
@@ -355,12 +362,7 @@ export default class ActionService {
   // Get runs for a specific action slug
   async getRunsForSlug(workspaceId: string, slug: string) {
     // Find the action by slug and workspace
-    const action = await this.prisma.action.findFirst({
-      where: {
-        slug,
-        workspaceId,
-      },
-    });
+    const action = await this.getAction(slug, workspaceId);
 
     // Get runs for the action from TriggerDev
     return await this.triggerdev.getRunsForTask(
@@ -373,12 +375,7 @@ export default class ActionService {
   // Get a specific run for an action slug
   async getRunForSlug(workspaceId: string, slug: string, runId: string) {
     // Find the action by slug and workspace
-    const action = await this.prisma.action.findFirst({
-      where: {
-        slug,
-        workspaceId,
-      },
-    });
+    const action = await this.getAction(slug, workspaceId);
 
     // Get the run from TriggerDev
     return await this.triggerdev.getRun(
@@ -388,34 +385,27 @@ export default class ActionService {
     );
   }
 
-  // Run an action with a payload
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async run(workspaceId: string, slug: string, payload: any) {
+  async replayRunForSlug(workspaceId: string, slug: string, runId: string) {
     // Find the action by slug and workspace
-    const action = await this.prisma.action.findFirst({
-      where: {
-        slug,
-        workspaceId,
-      },
-    });
+    const action = await this.getAction(slug, workspaceId);
 
-    // Prepare the trigger payload
-    const addedTaskInfo = await prepareTriggerPayload(
-      this.prisma,
-      this.integrationsService,
-      action.id,
-    );
-
-    // Trigger the task asynchronously with the payload and added task info
-    await this.triggerdev.triggerTaskAsync(
+    // Get the run from TriggerDev
+    return await this.triggerdev.replayRun(
       action.workspaceId,
-      action.slug,
-      {
-        ...payload,
-        ...addedTaskInfo,
-      },
-      getActionEnv(action),
-      { lockToVersion: action.triggerVersion },
+      runId,
+      action.isDev ? Env.DEV : Env.PROD,
+    );
+  }
+
+  async cancelRunForSlug(workspaceId: string, slug: string, runId: string) {
+    // Find the action by slug and workspace
+    const action = await this.getAction(slug, workspaceId);
+
+    // Get the run from TriggerDev
+    return await this.triggerdev.cancelRun(
+      action.workspaceId,
+      runId,
+      action.isDev ? Env.DEV : Env.PROD,
     );
   }
 

@@ -27,7 +27,19 @@ export function ExpandedRow({ row }: ExpandedRowProps) {
         {isLoading ? (
           <Loader text="Loading logs..." />
         ) : (
-          <>
+          <div>
+            <div className="flex gap-4 mb-2 px-[0.3rem] py-[0.2rem]">
+              <div className="flex flex-col min-w-24">
+                <div>Event</div>
+                <div className="font-mono font-medium">{run.payload.event}</div>
+              </div>
+
+              <div className="flex flex-col min-w-24">
+                <div>Type</div>
+                <div className="font-mono font-medium">{run.payload.type}</div>
+              </div>
+            </div>
+
             {run.logs.split('\n').map((log: string, index: number) => (
               <div key={index}>
                 <code className="relative rounded px-[0.3rem] py-[0.2rem] font-mono text-xs font-semibold text-[#BF4594]">
@@ -35,7 +47,7 @@ export function ExpandedRow({ row }: ExpandedRowProps) {
                 </code>
               </div>
             ))}
-          </>
+          </div>
         )}
       </div>
     </TableCell>

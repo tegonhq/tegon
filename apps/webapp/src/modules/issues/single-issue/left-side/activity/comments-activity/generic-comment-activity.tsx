@@ -1,4 +1,3 @@
-import { RiMoreFill } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DropdownMenu,
@@ -12,7 +11,7 @@ import {
   EditorExtensions,
   suggestionItems,
 } from '@tegonhq/ui/components/editor/index';
-import { EditLine } from '@tegonhq/ui/icons';
+import { EditLine, MoreLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
@@ -81,7 +80,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="px-2 py-0 h-5">
-                    <RiMoreFill size={16} className="text-muted-foreground" />
+                    <MoreLine size={16} className="text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">

@@ -11,6 +11,7 @@ import {
   ActionSlugDto,
   CreateActionDto,
   DeleteActionDto,
+  ReplayRunDto,
   UpdateActionInputsDto,
   WorkspaceRequestParamsDto,
 } from '@tegonhq/types';
@@ -74,7 +75,7 @@ export class ActionController {
   @Get(':slug/runs')
   @UseGuards(ActionGuard)
   async getRunsForSlug(
-    @Param() slugDto: { slug: string },
+    @Param() slugDto: ActionSlugDto,
     @Query() runIdParams: { runId: string; workspaceId: string },
   ) {
     if (runIdParams.runId) {
@@ -103,26 +104,36 @@ export class ActionController {
     );
   }
 
-  @Post(':slug/run')
-  @UseGuards(ActionGuard)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async run(@Param() slugDto: { slug: string }, @Body() runBody: any) {
-    return await this.actionService.run(
-      runBody.workpspaceId,
-      slugDto.slug,
-      runBody.payload,
-    );
-  }
-
   @Get()
   @UseGuards(ActionGuard)
   async getActions(@Query() workspaceIdDto: WorkspaceRequestParamsDto) {
     return await this.actionService.getActions(workspaceIdDto.workspaceId);
   }
 
-  @Get(':slug')
-  async getActionConfig(@Param() slugDto: { slug: string }) {
-    return await getActionConfig(slugDto.slug);
+  @Post(':slug/replay')
+  @UseGuards(ActionGuard)
+  async replayRunForSlug(
+    @Param() slugDto: ActionSlugDto,
+    @Body() replayBody: ReplayRunDto,
+  ) {
+    return await this.actionService.replayRunForSlug(
+      replayBody.workspaceId,
+      slugDto.slug,
+      replayBody.runId,
+    );
+  }
+
+  @Post(':slug/cancel')
+  @UseGuards(ActionGuard)
+  async cancelRunForSlug(
+    @Param() slugDto: ActionSlugDto,
+    @Body() replayBody: ReplayRunDto,
+  ) {
+    return await this.actionService.cancelRunForSlug(
+      replayBody.workspaceId,
+      slugDto.slug,
+      replayBody.runId,
+    );
   }
 
   @Post(':slug/inputs')
@@ -134,5 +145,10 @@ export class ActionController {
       updateBodyDto,
       actionSlugDto.slug,
     );
+  }
+
+  @Get(':slug')
+  async getActionConfig(@Param() slugDto: { slug: string }) {
+    return await getActionConfig(slugDto.slug);
   }
 }

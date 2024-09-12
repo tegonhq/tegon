@@ -1,4 +1,4 @@
-import { RiLink, RiMoreFill } from '@remixicon/react';
+import { RiLink } from '@remixicon/react';
 import { RoleEnum } from '@tegonhq/types';
 import {
   AlertDialog,
@@ -18,7 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
-import { DeleteLine, EditLine } from '@tegonhq/ui/icons';
+import { DeleteLine, EditLine, MoreLine } from '@tegonhq/ui/icons';
 import React from 'react';
 
 import { getBotIcon } from 'common';
@@ -71,13 +71,13 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="ghost"
+                variant="link"
                 size="sm"
                 onClick={(e) => {
                   e.preventDefault();
                 }}
               >
-                <RiMoreFill size={16} />
+                <MoreLine size={16} />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
