@@ -58,7 +58,6 @@ export function RunOptionsDropdown({ run }: RunOptionsDropdownProps) {
               replayRun({
                 slug: run.action.slug,
                 runId: run.id,
-                workspaceId: run.action.workspaceId,
               });
             }}
           >
@@ -71,7 +70,6 @@ export function RunOptionsDropdown({ run }: RunOptionsDropdownProps) {
               cancelRun({
                 slug: run.action.slug,
                 runId: run.id,
-                workspaceId: run.action.workspaceId,
               });
             }}
           >
