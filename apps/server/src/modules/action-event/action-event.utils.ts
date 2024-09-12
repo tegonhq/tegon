@@ -81,7 +81,8 @@ export const prepareTriggerPayload = async (
     where: { workspaceId: action.workspaceId, user: { username: action.slug } },
   });
 
-  const accessToken = await generateKeyForUserId(actionUser.userId);
+  const userId = actionUser?.userId ?? action.createdById;
+  const accessToken = await generateKeyForUserId(userId);
 
   const integrationMap = await getIntegrationAccountsFromActions(
     prisma,
@@ -97,7 +98,7 @@ export const prepareTriggerPayload = async (
         integrationMap[integrationName],
       ]),
     ),
-    userId: actionUser.userId,
+    userId,
     accessToken,
     action,
   };

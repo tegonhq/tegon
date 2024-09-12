@@ -6,7 +6,6 @@ module.exports = {
     "eslint:recommended",
     "plugin:prettier/recommended",
     "next/core-web-vitals",
-    require.resolve("@vercel/style-guide/eslint/next"),
     "turbo",
   ],
   plugins: [
@@ -56,23 +55,6 @@ module.exports = {
           "index",
         ],
         pathGroupsExcludedImportTypes: ["builtin"],
-        pathGroups: [
-          {
-            pattern: "+(modules){/**,}",
-            group: "internal",
-            position: "after",
-          },
-          {
-            pattern: "+(common|wrappers|layouts){/**,}",
-            group: "internal",
-            position: "after",
-          },
-          {
-            pattern: "+(icons|components|hooks){/**,}",
-            group: "internal",
-            position: "after",
-          },
-        ],
         alphabetize: {
           order:
             "asc" /* sort in ascending order. Options: ['ignore', 'asc', 'desc'] */,

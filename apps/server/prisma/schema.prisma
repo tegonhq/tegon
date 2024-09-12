@@ -22,7 +22,8 @@ model Action {
   status  ActionStatus
   version String
 
-  triggerVersion String
+  triggerVersion String?
+  isDev          Boolean @default(false)
 
   // We store the config of the action
   config Json
@@ -109,6 +110,18 @@ model AIRequest {
   workspaceId String
 
   successful Boolean @default(false)
+}
+
+// Used to authenticate users from cli
+model AuthorizationCode {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  personalAccessTokenId   String?
+  workspaceId             String?
+  code                    String
 }
 
 model Emoji {

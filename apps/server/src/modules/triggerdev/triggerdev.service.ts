@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid'; // Import uuid for generating unique identi
 import { LoggerService } from 'modules/logger/logger.service';
 
 import { formatRunEvent, prepareEvent } from './trigger.utils'; // Import utility functions for formatting run events
+import { Env } from './triggerdev.interface';
 import {
   encryptToken,
   getRun,
@@ -205,6 +206,7 @@ export class TriggerdevService {
     projectSlug: string,
     id: string,
     payload: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    env: Env,
     options?: Record<string, string>,
   ) {
     this.logger.info({
@@ -213,7 +215,7 @@ export class TriggerdevService {
       payload: { projectSlug, id },
     });
 
-    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug);
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug, env);
 
     const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
     const apiKey = await this.getProdRuntimeKey(
@@ -230,9 +232,10 @@ export class TriggerdevService {
     projectSlug: string,
     id: string,
     payload: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    env: Env,
     options?: Record<string, string>,
   ) {
-    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug);
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug, env);
 
     const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
 
@@ -277,22 +280,21 @@ export class TriggerdevService {
     return undefined; // Return undefined if the user is not on the workspace
   }
 
-  getRuntimeSlugForProject(projectSlug: string) {
-    let slug = 'prod';
-
+  getRuntimeSlugForProject(projectSlug: string, env: Env = Env.PROD) {
     if (projectSlug === 'common') {
-      slug =
-        this.configService.get('NODE_ENV') === 'production' ? 'prod' : 'dev';
+      return this.configService.get('NODE_ENV') === 'production'
+        ? Env.PROD
+        : Env.DEV;
     }
 
-    return slug;
+    return env;
   }
 
   // Get runs for a given project slug and task ID
-  async getRunsForTask(projectSlug: string, taskId: string) {
+  async getRunsForTask(projectSlug: string, taskId: string, env: Env) {
     const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
 
-    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug);
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug, env);
 
     const apiKey = await this.getProdRuntimeKey(
       projectslugWithoutHyphen,
@@ -303,9 +305,9 @@ export class TriggerdevService {
   }
 
   // Get a run for a given project slug and run ID
-  async getRun(projectSlug: string, runId: string) {
+  async getRun(projectSlug: string, runId: string, env: Env) {
     const projectslugWithoutHyphen = projectSlug.replace(/-/g, ''); // Remove hyphens from the project slug
-    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug);
+    const runtimeSlug = this.getRuntimeSlugForProject(projectSlug, env);
 
     const apiKey = await this.getProdRuntimeKey(
       projectslugWithoutHyphen,

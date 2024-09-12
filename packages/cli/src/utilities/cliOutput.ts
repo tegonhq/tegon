@@ -61,7 +61,7 @@ export function prettyPrintDate(date: Date = new Date()) {
   }).format(date);
 
   // Append milliseconds
-  formattedDate += '.' + ('00' + date.getMilliseconds()).slice(-3);
+  formattedDate += `.${`00${date.getMilliseconds()}`.slice(-3)}`;
 
   return formattedDate;
 }

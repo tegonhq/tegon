@@ -48,7 +48,10 @@ export function Action({ action, noBorder }: ActionProps) {
           </div>
 
           <div className="text-muted-foreground text-xs">
-            <ReactTimeAgo date={new Date(action.updatedAt)} />
+            <ReactTimeAgo
+              date={new Date(action.updatedAt)}
+              timeStyle="twitter"
+            />
           </div>
         </div>
       </div>

@@ -95,7 +95,7 @@ export const TriageCategory = observer(
               >
                 <div
                   className={cn(
-                    'flex flex-col gap-1 py-3',
+                    'flex flex-col gap-1 py-2',
                     !noBorder && 'border-b border-border',
                   )}
                 >
@@ -109,7 +109,10 @@ export const TriageCategory = observer(
                   <div className="flex justify-between text-sm">
                     {getCreatedBy(userData)}
                     <div className="text-muted-foreground text-xs">
-                      <ReactTimeAgo date={new Date(issue.updatedAt)} />
+                      <ReactTimeAgo
+                        date={new Date(issue.updatedAt)}
+                        timeStyle="twitter"
+                      />
                     </div>
                   </div>
                 </div>

@@ -1,11 +1,13 @@
+import fs from 'node:fs';
+import path from 'path';
+
+import { spinner, intro, outro } from '@clack/prompts';
 import { Command } from 'commander';
+import degit from 'degit';
+
 import { commonOptions } from '../cli/common';
 import { getVersion } from '../utilities/getVersion';
-import path from 'path';
-import { spinner, intro, outro } from '@clack/prompts';
 import { printInitialBanner } from '../utilities/initialBanner';
-import degit from 'degit';
-import fs from 'node:fs';
 
 export function configureInitCommand(program: Command) {
   return commonOptions(
@@ -20,7 +22,7 @@ export function configureInitCommand(program: Command) {
   )
     .version(getVersion(), '-v, --version', 'Display the version number')
     .action(async (options) => {
-      await printInitialBanner(false);
+      await printInitialBanner();
 
       const { action } = options;
       const repoUrl = `tegonhq/tegon/actions/${action}`;

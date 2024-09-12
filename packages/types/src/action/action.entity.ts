@@ -60,6 +60,7 @@ export class Action {
   data?: any;
 
   status: ActionStatus;
+  isDev: boolean;
 
   triggerVersion: string;
   version: string;

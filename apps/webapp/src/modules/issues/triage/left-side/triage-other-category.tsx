@@ -77,7 +77,7 @@ export const TriageOtherCategory = observer(
               <div
                 key={issue.id}
                 className={cn(
-                  'ml-4 p-3 py-0 mr-4 hover:bg-grayAlpha-200 rounded mb-1',
+                  'ml-4 p-3 py-0 mr-4 hover:bg-grayAlpha-200 rounded my-1',
                   issueId === `${currentTeam.identifier}-${issue.number}` &&
                     'bg-grayAlpha-200',
                 )}
@@ -89,7 +89,7 @@ export const TriageOtherCategory = observer(
               >
                 <div
                   className={cn(
-                    'flex flex-col gap-1 py-3',
+                    'flex flex-col gap-1 py-2',
                     !noBorder && 'border-b border-border',
                   )}
                 >
@@ -103,7 +103,10 @@ export const TriageOtherCategory = observer(
                   <div className="flex justify-between text-sm">
                     {getCreatedBy(userData)}
                     <div className="text-muted-foreground text-xs">
-                      <ReactTimeAgo date={new Date(issue.updatedAt)} />
+                      <ReactTimeAgo
+                        date={new Date(issue.updatedAt)}
+                        timeStyle="twitter"
+                      />
                     </div>
                   </div>
                 </div>

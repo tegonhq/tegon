@@ -19,6 +19,7 @@ export function SentryItem({ title, linkedIssueId }: SentryItemProps) {
           <ReactTimeAgo
             date={new Date(linkedIssueDetails.lastSeen)}
             className="text-muted-foreground"
+            timeStyle="twitter"
           />
         </div>
       </div>

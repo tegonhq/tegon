@@ -37,7 +37,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
           <div className="w-full">{children}</div>
           {date && (
             <div className="font-mono text-muted-foreground text-xs shrink-0">
-              <ReactTimeAgo date={new Date(date)} />
+              <ReactTimeAgo date={new Date(date)} timeStyle="twitter" />
             </div>
           )}
         </div>

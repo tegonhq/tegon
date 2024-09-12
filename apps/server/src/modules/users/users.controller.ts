@@ -11,6 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  CodeDto,
+  CodeDtoWithWorkspace,
   CreatePatDto,
   GetUsersDto,
   PatIdDto,
@@ -27,7 +29,7 @@ import {
   UpdateUserBody,
   UserIdParams,
   UserWithInvites,
-} from './user.interface';
+} from './users.interface';
 import { UsersService } from './users.service';
 
 @Controller({
@@ -35,7 +37,7 @@ import { UsersService } from './users.service';
   path: 'users',
 })
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private users: UsersService) {}
 
   @Get()
   @UseGuards(AuthGuard)
@@ -43,7 +45,7 @@ export class UsersController {
     @SessionDecorator() session: SessionContainer,
   ): Promise<UserWithInvites> {
     const userId = session.getUserId();
-    const user = await this.usersService.getUser(userId);
+    const user = await this.users.getUser(userId);
 
     return user;
   }
@@ -51,7 +53,7 @@ export class UsersController {
   @Post()
   @UseGuards(AuthGuard)
   async getUsersById(@Body() getUsersDto: GetUsersDto): Promise<PublicUser[]> {
-    return await this.usersService.getUsersbyId(getUsersDto);
+    return await this.users.getUsersbyId(getUsersDto);
   }
 
   @Post('impersonate')
@@ -61,13 +63,13 @@ export class UsersController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
-    return this.usersService.impersonate(key, userId, res, req);
+    return this.users.impersonate(key, userId, res, req);
   }
 
   @Get('email')
   @UseGuards(AuthGuard)
   async getUserByEmail(@Query('email') email: string): Promise<User> {
-    const user = await this.usersService.getUserByEmail(email);
+    const user = await this.users.getUserByEmail(email);
     return user;
   }
 
@@ -79,7 +81,7 @@ export class UsersController {
     createPatDto: CreatePatDto,
   ) {
     const userId = session.getUserId();
-    const user = await this.usersService.createPersonalAcccessToken(
+    const user = await this.users.createPersonalAccessToken(
       createPatDto.name,
       userId,
     );
@@ -87,17 +89,43 @@ export class UsersController {
     return user;
   }
 
+  @Post('pat-for-code')
+  async getPatForCode(
+    @Body()
+    codeBody: CodeDto,
+  ) {
+    return await this.users.getPersonalAccessTokenFromAuthorizationCode(
+      codeBody.code,
+    );
+  }
+
   @Get('pats')
   @UseGuards(AuthGuard)
   async getPats(@SessionDecorator() session: SessionContainer) {
     const userId = session.getUserId();
-    return await this.usersService.getPats(userId);
+    return await this.users.getPats(userId);
   }
 
   @Delete('pats/:patId')
   @UseGuards(AuthGuard)
   async deletePat(@Param() patIdDto: PatIdDto) {
-    return await this.usersService.deletePat(patIdDto.patId);
+    return await this.users.deletePat(patIdDto.patId);
+  }
+
+  @Get('authorization')
+  async createAuthorizationCode(): Promise<CodeDto> {
+    return this.users.generateAuthorizationCode();
+  }
+
+  @Post('authorization')
+  @UseGuards(AuthGuard)
+  async authorizeCode(
+    @SessionDecorator() session: SessionContainer,
+    @Body()
+    codeBody: CodeDtoWithWorkspace,
+  ) {
+    const userId = session.getUserId();
+    return this.users.authorizeCode(userId, codeBody);
   }
 
   @Post(':userId')
@@ -107,10 +135,7 @@ export class UsersController {
     @Body()
     updateUserBody: UpdateUserBody,
   ): Promise<User> {
-    const user = await this.usersService.updateUser(
-      userIdBody.userId,
-      updateUserBody,
-    );
+    const user = await this.users.updateUser(userIdBody.userId, updateUserBody);
 
     return user;
   }

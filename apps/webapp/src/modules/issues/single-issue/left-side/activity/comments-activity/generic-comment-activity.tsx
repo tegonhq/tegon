@@ -77,12 +77,6 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           </div>
 
           <div className="flex gap-2 items-center">
-            <div>
-              <ReactTimeAgo
-                date={new Date(comment.updatedAt)}
-                className="text-muted-foreground font-mono text-xs"
-              />
-            </div>
             {!sourceMetadata && user.id === currentUser.id && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -101,6 +95,13 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+            <div>
+              <ReactTimeAgo
+                date={new Date(comment.updatedAt)}
+                timeStyle="twitter"
+                className="text-muted-foreground font-mono text-xs"
+              />
+            </div>
           </div>
         </div>
 

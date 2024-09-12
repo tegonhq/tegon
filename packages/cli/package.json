@@ -1,6 +1,6 @@
 {
   "name": "@tegonhq/cli",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "A Command-Line Deploying actions",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -24,15 +24,20 @@
     "tegon": "./dist/index.js"
   },
   "devDependencies": {
+    "@tegonhq/eslint-config": "workspace:*",
+    "@tegonhq/typescript-config": "workspace:*",
     "@types/degit": "^2.8.6",
     "@types/gradient-string": "^1.1.2",
     "@types/node": "18",
     "@types/object-hash": "^3.0.6",
     "@types/semver": "^7.3.13",
     "@types/ws": "^8.5.3",
+    "@typescript-eslint/parser": "^6.19.1",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
     "nodemon": "^3.0.1",
     "open": "^10.0.3",
-    "p-retry": "^6.1.0",
+    "p-retry": "^6.2.0",
     "rimraf": "^5.0.7",
     "tsup": "^8.0.1",
     "type-fest": "^3.6.0",
@@ -45,7 +50,8 @@
     "dev:cli": "npm run clean && pnpm run dev:main",
     "dev:main": "tsup --watch",
     "clean": "rimraf dist",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "lint": "eslint \"src/**/*.ts\" --fix"
   },
   "dependencies": {
     "@anatine/esbuild-decorators": "^0.2.19",
@@ -66,11 +72,13 @@
     "ink": "^4.4.1",
     "node-fetch": "^3.3.0",
     "semver": "^7.5.0",
+    "std-env": "^3.7.0",
     "terminal-link": "^3.0.0",
     "tiny-invariant": "^1.2.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.4.0",
     "url": "^0.11.1",
+    "xdg-app-paths": "^8.3.0",
     "zod": "3.22.3",
     "zod-validation-error": "^1.5.0"
   },

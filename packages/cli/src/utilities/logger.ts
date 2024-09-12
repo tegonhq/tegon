@@ -1,11 +1,14 @@
 // This is a copy of the logger utility from the wrangler repo: https://github.com/cloudflare/workers-sdk/blob/main/packages/wrangler/src/logger.ts
 
-import { format } from "node:util";
-import chalk from "chalk";
-import CLITable from "cli-table3";
-import { formatMessagesSync } from "esbuild";
-import type { Message } from "esbuild";
-import { getEnvironmentVariableFactory } from "./getEnviromentVariableFactory";
+import type { Message } from 'esbuild';
+
+import { format } from 'node:util';
+
+import chalk from 'chalk';
+import CLITable from 'cli-table3';
+import { formatMessagesSync } from 'esbuild';
+
+import { getEnvironmentVariableFactory } from './getEnviromentVariableFactory';
 export const LOGGER_LEVELS = {
   none: -1,
   error: 0,
@@ -19,31 +22,33 @@ export type LoggerLevel = keyof typeof LOGGER_LEVELS;
 
 /** A map from LOGGER_LEVEL to the error `kind` needed by `formatMessagesSync()`. */
 const LOGGER_LEVEL_FORMAT_TYPE_MAP = {
-  error: "error",
-  warn: "warning",
+  error: 'error',
+  warn: 'warning',
   info: undefined,
   log: undefined,
   debug: undefined,
 } as const;
 
 const getLogLevelFromEnv = getEnvironmentVariableFactory({
-  variableName: "TEGON_LOG_LEVEL",
+  variableName: 'TEGON_LOG_LEVEL',
 });
 
 function getLoggerLevel(): LoggerLevel {
   const fromEnv = getLogLevelFromEnv()?.toLowerCase();
   if (fromEnv !== undefined) {
-    if (fromEnv in LOGGER_LEVELS) return fromEnv as LoggerLevel;
+    if (fromEnv in LOGGER_LEVELS) {
+      return fromEnv as LoggerLevel;
+    }
     const expected = Object.keys(LOGGER_LEVELS)
       .map((level) => `"${level}"`)
-      .join(" | ");
+      .join(' | ');
     console.warn(
       `Unrecognised WRANGLER_LOG value ${JSON.stringify(
-        fromEnv
-      )}, expected ${expected}, defaulting to "log"...`
+        fromEnv,
+      )}, expected ${expected}, defaulting to "log"...`,
     );
   }
-  return "log";
+  return 'log';
 }
 
 export type TableRow<Keys extends string> = Record<Keys, string>;
@@ -54,33 +59,33 @@ export class Logger {
   loggerLevel = getLoggerLevel();
   columns = process.stdout.columns;
 
-  debug = (...args: unknown[]) => this.doLog("debug", args);
-  ignore = (...args: unknown[]) => {};
+  debug = (...args: unknown[]) => this.doLog('debug', args);
+  ignore = () => {};
   debugWithSanitization = (label: string, ...args: unknown[]) => {
-    this.doLog("debug", [label, ...args]);
+    this.doLog('debug', [label, ...args]);
   };
-  info = (...args: unknown[]) => this.doLog("info", args);
-  log = (...args: unknown[]) => this.doLog("log", args);
-  warn = (...args: unknown[]) => this.doLog("warn", args);
-  error = (...args: unknown[]) => this.doLog("error", args);
+  info = (...args: unknown[]) => this.doLog('info', args);
+  log = (...args: unknown[]) => this.doLog('log', args);
+  warn = (...args: unknown[]) => this.doLog('warn', args);
+  error = (...args: unknown[]) => this.doLog('error', args);
   table<Keys extends string>(
-    data: TableRow<Keys>[],
-    level?: Exclude<LoggerLevel, "none">
+    data: Array<TableRow<Keys>>,
+    level?: Exclude<LoggerLevel, 'none'>,
   ) {
     const keys: Keys[] =
       data.length === 0 ? [] : (Object.keys(data[0]!) as Keys[]);
     const t = new CLITable({
       head: keys,
       style: {
-        head: chalk.level ? ["blue"] : [],
-        border: chalk.level ? ["gray"] : [],
+        head: chalk.level ? ['blue'] : [],
+        border: chalk.level ? ['gray'] : [],
       },
     });
     t.push(...data.map((row) => keys.map((k) => row[k])));
-    return this.doLog(level ?? "log", [t.toString()]);
+    return this.doLog(level ?? 'log', [t.toString()]);
   }
 
-  private doLog(messageLevel: Exclude<LoggerLevel, "none">, args: unknown[]) {
+  private doLog(messageLevel: Exclude<LoggerLevel, 'none'>, args: unknown[]) {
     const message = this.formatMessage(messageLevel, format(...args));
 
     // only send logs to the terminal if their level is at least the configured log-level
@@ -90,15 +95,15 @@ export class Logger {
   }
 
   private formatMessage(
-    level: Exclude<LoggerLevel, "none">,
-    message: string
+    level: Exclude<LoggerLevel, 'none'>,
+    message: string,
   ): string {
     const kind = LOGGER_LEVEL_FORMAT_TYPE_MAP[level];
     if (kind) {
       // Format the message using the esbuild formatter.
       // The first line of the message is the main `text`,
       // subsequent lines are put into the `notes`.
-      const [firstLine, ...otherLines] = message.split("\n");
+      const [firstLine, ...otherLines] = message.split('\n');
       const notes =
         otherLines.length > 0
           ? otherLines.map((text) => ({ text }))
@@ -108,9 +113,8 @@ export class Logger {
         kind,
         terminalWidth: this.columns,
       })[0]!;
-    } else {
-      return message;
     }
+    return message;
   }
 }
 
@@ -124,8 +128,10 @@ export class Logger {
 export const logger = new Logger();
 
 export function logBuildWarnings(warnings: Message[]) {
-  const logs = formatMessagesSync(warnings, { kind: "warning", color: true });
-  for (const log of logs) console.warn(log);
+  const logs = formatMessagesSync(warnings, { kind: 'warning', color: true });
+  for (const log of logs) {
+    console.warn(log);
+  }
 }
 
 /**
@@ -133,7 +139,9 @@ export function logBuildWarnings(warnings: Message[]) {
  * style esbuild would.
  */
 export function logBuildFailure(errors: Message[], warnings: Message[]) {
-  const logs = formatMessagesSync(errors, { kind: "error", color: true });
-  for (const log of logs) console.error(log);
+  const logs = formatMessagesSync(errors, { kind: 'error', color: true });
+  for (const log of logs) {
+    console.error(log);
+  }
   logBuildWarnings(warnings);
 }

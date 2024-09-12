@@ -5,7 +5,7 @@ import { useMutation } from 'react-query';
 
 interface MutationParams {
   onMutate?: () => void;
-  onSuccess?: (data: Pat) => void;
+  onSuccess?: (data: typeof Pat) => void;
   onError?: (error: string) => void;
 }
 
@@ -25,7 +25,7 @@ export function useCreatePatMutation({
     onError && onError(errorText);
   };
 
-  const onMutationSuccess = (data: Pat) => {
+  const onMutationSuccess = (data: typeof Pat) => {
     onSuccess && onSuccess(data);
   };
 
