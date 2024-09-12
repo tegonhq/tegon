@@ -32,6 +32,7 @@ import { AdminGuard } from 'modules/users/admin.guard';
 
 import { ApiResponse, SubscribeIssueInput } from './issues.interface';
 import IssuesService from './issues.service';
+import { AdminGuard } from 'modules/users/admin.guard';
 
 @Controller({
   version: '1',
