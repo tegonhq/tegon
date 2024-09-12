@@ -1,0 +1,17 @@
+{
+  "slug": "discord",
+  "name": "Discord",
+  "icon": "discord",
+  "description": "Create issues from Discord messages and sync threads",
+  "triggers": [
+    {
+      "type": "on_create",
+      "entities": ["IssueComment", "LinkedIssue"]
+    },
+    {
+      "type": "source_webhook",
+      "entities": ["discord"]
+    }
+  ],
+  "integrations": ["discord"]
+}

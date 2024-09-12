@@ -79,6 +79,7 @@
     "@tiptap/pm": "^2.4.0",
     "@trigger.dev/sdk": "3.0.0-beta.56",
     "@types/multer": "^1.4.11",
+    "@types/turndown": "^5.0.5",
     "@xenova/transformers": "^2.16.1",
     "ai": "^3.2.37",
     "axios": "^1.6.7",
@@ -97,6 +98,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.1.0",
     "knex": "^3.1.0",
+    "marked": "^14.1.2",
     "nest-winston": "^1.9.7",
     "nestjs-prisma": "0.22.0",
     "nodemailer": "^6.9.13",
@@ -115,6 +117,7 @@
     "simple-oauth2": "^5.0.0",
     "socket.io": "^4.7.5",
     "supertokens-node": "^16.7.1",
+    "turndown": "^7.2.0",
     "typesense": "^1.7.2",
     "uuid": "^10.0.0",
     "winston": "^3.14.2"

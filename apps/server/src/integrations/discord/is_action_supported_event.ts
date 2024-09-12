@@ -5,5 +5,6 @@ interface Payload {
 }
 
 export function isActionSupportedEvent(payload: Payload) {
+  console.log(payload.t);
   return SUPPORTED_TYPES.includes(payload.t);
 }

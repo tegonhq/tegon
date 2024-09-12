@@ -10,6 +10,8 @@ import {
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
+import { convertMarkdownToTiptapJson } from 'common/utils/tiptap.utils';
+
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
@@ -223,15 +225,29 @@ export async function getCreateIssueInput(
   workspaceId: string,
   userId: string,
 ) {
-  const { parentId, teamId, ...otherIssueData } = issueData;
+  const {
+    parentId,
+    teamId,
+    description,
+    descriptionMarkdown,
+    ...otherIssueData
+  } = issueData;
 
   delete otherIssueData.subIssues;
   delete otherIssueData.issueRelation;
   delete otherIssueData.linkIssueData;
   delete otherIssueData.sourceMetadata;
 
+  let updatedDescription = description;
+  if (!description && descriptionMarkdown) {
+    updatedDescription = JSON.stringify(
+      convertMarkdownToTiptapJson(descriptionMarkdown),
+    );
+  }
+
   return {
     ...otherIssueData,
+    description: updatedDescription,
     title: await getIssueTitle(
       prisma,
       aiRequestsService,

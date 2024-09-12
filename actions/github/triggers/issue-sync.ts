@@ -2,8 +2,10 @@ import {
   ActionEventPayload,
   getIssueById,
   getLabels,
+  getUsers,
   getWorkflowsByTeam,
   logger,
+  RoleEnum,
   updateIssue,
   WorkflowCategory,
 } from '@tegonhq/sdk';
@@ -27,23 +29,27 @@ export const issueSync = async (actionPayload: ActionEventPayload) => {
 
   const issue = await getIssueById({ issueId });
 
-  // const userRole = (
-  //   await getUsers({
-  //     userIds: [issue.updatedById || issue.createdById],
-  //     workspaceId: integrationAccount.workspaceId,
-  //   })
-  // )[0].role;
+  const userRole = (
+    await getUsers({
+      userIds: [issue.updatedById || issue.createdById],
+      workspaceId: integrationAccount.workspaceId,
+    })
+  )[0].role;
 
-  // if (userRole === RoleEnum.BOT) {
-  //   return {
-  //     message: `Ignoring issue created from Bot`,
-  //   };
-  // }
+  if (userRole === RoleEnum.BOT) {
+    return {
+      message: `Ignoring issue created from Bot`,
+    };
+  }
 
   const repoMapping = action.data.inputs.repoTeamMappings.find(
     ({ teamId: mappedTeamId }: { teamId: string }) =>
       mappedTeamId === issue.teamId,
   );
+  if (!repoMapping) {
+    logger.debug(`The team is not connected`);
+    return undefined;
+  }
 
   const repoFullName = integrationAccount.settings.repositories.find(
     (repo: Record<string, string | boolean>) => repo.id === repoMapping.repo,

@@ -14,7 +14,9 @@ import { TaskItem } from '@tiptap/extension-task-item';
 import { TaskList } from '@tiptap/extension-task-list';
 import { Text } from '@tiptap/extension-text';
 import { Underline } from '@tiptap/extension-underline';
-import { generateJSON } from '@tiptap/html';
+import { generateHTML, generateJSON } from '@tiptap/html';
+import { marked } from 'marked';
+import TurndownService from 'turndown';
 
 import {
   TiptapListTypes,
@@ -67,7 +69,7 @@ function extractTextFromNodes(nodes: TiptapNode[]): string {
     .join('\n');
 }
 
-export function convertMarkdownToTiptapJson(markdown: string): string {
+export function convertMarkdownToTiptapJsonOld(markdown: string): string {
   // Split the markdown string into an array of lines
   const lines = markdown.split('\n');
   // Initialize an array to store the parsed content
@@ -339,7 +341,7 @@ function processTiptapNode(node: TiptapNode, markdown: string): string {
   return markdown;
 }
 
-export function convertTiptapJsonToMarkdown(tiptapJson: string): string {
+export function convertTiptapJsonToMarkdownOld(tiptapJson: string): string {
   const parsedJson = JSON.parse(tiptapJson);
   let markdown = '';
 
@@ -371,4 +373,45 @@ export function convertHtmlToTiptapJson(html: string) {
   ];
   const tiptapJson = generateJSON(html, extensions);
   return tiptapJson;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function convertTiptapJsonToHtml(tiptapJson: Record<string, any>) {
+  const extensions = [
+    Document,
+    Text,
+    Paragraph,
+    Heading,
+    Blockquote,
+    ListItem,
+    OrderedList,
+    BulletList,
+    TaskList,
+    TaskItem,
+    Image,
+    CodeBlock,
+    HardBreak,
+    HorizontalRule,
+    Link,
+    Underline,
+  ];
+  return generateHTML(tiptapJson, extensions);
+}
+
+export function convertMarkdownToTiptapJson(markdown: string) {
+  const tokens = marked.lexer(markdown, {});
+  const htmlText = marked.parser(tokens, {
+    gfm: true, // Enable GitHub Flavored Markdown
+    breaks: true, // Render line breaks as <br>
+  });
+
+  return convertHtmlToTiptapJson(htmlText);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function convertTiptapJsonToMarkdown(tiptapJson: Record<string, any>) {
+  const htmlText = convertTiptapJsonToHtml(tiptapJson);
+
+  const turndownService = new TurndownService();
+  return turndownService.turndown(htmlText);
 }
