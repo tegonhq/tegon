@@ -409,9 +409,12 @@ export function convertMarkdownToTiptapJson(markdown: string) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function convertTiptapJsonToMarkdown(tiptapJson: Record<string, any>) {
-  const htmlText = convertTiptapJsonToHtml(tiptapJson);
-
-  const turndownService = new TurndownService();
-  return turndownService.turndown(htmlText);
+export function convertTiptapJsonToMarkdown(tiptapJson: string) {
+  try {
+    const htmlText = convertTiptapJsonToHtml(JSON.parse(tiptapJson));
+    const turndownService = new TurndownService();
+    return turndownService.turndown(htmlText);
+  } catch (e) {
+    return '';
+  }
 }

@@ -5,7 +5,8 @@ import {
   JsonObject,
   logger,
 } from '@tegonhq/sdk';
-import { Client, TextChannel } from 'discord.js';
+import { Client, EmbedBuilder, TextChannel } from 'discord.js';
+import { createLinkIssueComment } from 'utils';
 
 export const discordIssueCreate = async (
   integrationAccount: IntegrationAccount,
@@ -20,7 +21,7 @@ export const discordIssueCreate = async (
   const integrationDefinitionConfig = integrationAccount.integrationDefinition
     .config as JsonObject;
 
-  logger.info('Creating issue with issueInput', { issueInput });
+  logger.info('Creating issue with issueInput', { issueData });
 
   const createdIssue = await createIssue(issueInput);
 
@@ -40,36 +41,38 @@ export const discordIssueCreate = async (
   }
   const message = await channel.messages.fetch(sessionData.messageId);
 
-  message.startThread('');
-  // Prepare the payload for sending a Slack message
-  const messagePayload = {
-    channel: sessionData.channelId,
-    text: `<@${sessionData.messagedById}> created a Issue`,
-    attachments: await getIssueMessageModal(createdIssue, team.workspace.slug),
-    ...(sessionData.parentTs ? { thread_ts: sessionData.parentTs } : {}),
-  };
+  const issueIdentifier = `${team.identifier}-${createdIssue.number}`;
+  const thread = await message.startThread({
+    name: `Tegon issue #${issueIdentifier}: ${createdIssue.title}`,
+  });
 
-  logger.info('Sending Slack message with payload', { messagePayload });
+  logger.info(`Thread created successfully ${thread.id}`);
 
-  // Send the Slack message
-  const messageResponse = await sendSlackMessage(
-    integrationAccount,
-    messagePayload,
+  const issueUrl = `https://app.tegon.ai/${team.workspace.slug}/issue/${issueIdentifier}`;
+
+  const issueTitle = `${issueIdentifier} ${createdIssue.title}`;
+
+  const messageEmbed = new EmbedBuilder()
+    .setTitle(`${issueTitle}`)
+    .setURL(issueUrl)
+    .setFooter({ text: 'This thread is in sync with Tegon' });
+
+  const threadResponse = await thread.send({
+    content: `<@${sessionData.discordUserId}> created a Issue`,
+    embeds: [messageEmbed],
+  });
+
+  logger.info('Discord message sent successfully');
+
+  // Create a comment thread for this Slack thread and Update link issue with synced comment
+  await createLinkIssueComment(
+    issueInput.linkIssueData,
+    thread.id,
+    threadResponse,
+    channel.name,
+    createdIssue.id,
+    sourceMetadata,
   );
-
-  if (messageResponse.ok) {
-    logger.info('Slack message sent successfully', { messageResponse });
-
-    // Create a comment thread for this Slack thread and Update link issue with synced comment
-    await createLinkIssueComment(
-      messageResponse,
-      integrationAccount,
-      issueInput.linkIssueData,
-      sessionData.channelId as string,
-      createdIssue.id,
-      sourceMetadata,
-    );
-  }
 
   return createdIssue;
 };

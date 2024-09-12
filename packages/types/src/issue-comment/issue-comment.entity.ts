@@ -9,6 +9,7 @@ export class IssueComment {
   updatedAt: Date;
   deleted: Date | null;
   body: string;
+  bodyMarkdown?: string | null;
   userId: string | null;
   updatedById: string;
   sourceMetadata: JsonValue | null;

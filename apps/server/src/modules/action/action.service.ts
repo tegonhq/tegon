@@ -433,7 +433,7 @@ export default class ActionService {
         ...triggerPayload,
       },
       getActionEnv(action),
-      { lockToVersion: action.triggerVersion },
+      action.isDev ? {} : { lockToVersion: action.triggerVersion },
     );
   }
 }

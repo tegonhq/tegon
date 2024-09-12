@@ -4,6 +4,10 @@ export class CreateIssueCommentDto {
   @IsString()
   body: string;
 
+  @IsString()
+  @IsOptional()
+  bodyMarkdown?: string;
+
   @IsOptional()
   @IsString()
   parentId?: string;

@@ -14,7 +14,10 @@ import {
 import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
 
-import { convertTiptapJsonToText } from 'common/utils/tiptap.utils';
+import {
+  convertTiptapJsonToMarkdown,
+  convertTiptapJsonToText,
+} from 'common/utils/tiptap.utils';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
@@ -51,12 +54,16 @@ export default class IssuesService {
   ) {}
 
   async getIssueById(issueParams: IssueRequestParamsDto): Promise<Issue> {
-    return this.prisma.issue.findUnique({
+    const issue = await this.prisma.issue.findUnique({
       where: { id: issueParams.issueId },
       include: {
         team: true,
       },
     });
+
+    const descriptionMarkdown = convertTiptapJsonToMarkdown(issue.description);
+
+    return { descriptionMarkdown, ...issue };
   }
 
   /**
@@ -75,6 +82,11 @@ export default class IssuesService {
     // Destructure issueData to separate parentId, subIssues, issueRelation, teamId, and other issue data
     const { issueRelation, teamId, linkIssueData, sourceMetadata } = issueData;
 
+    this.logger.debug({
+      message: `Creating issue with data`,
+      payload: issueData,
+      where: 'IssueService.CreateIssueAPI',
+    });
     // Fetch the workspace associated with the team
     const workspace = await getWorkspace(this.prisma, teamId);
 

@@ -14,6 +14,7 @@ export class Issue {
   title: string;
   number: number;
   description: string | null;
+  descriptionMarkdown?: string | null;
   priority: number | null;
   dueDate: Date | null;
   sortOrder: number | null;

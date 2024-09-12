@@ -1,12 +1,14 @@
 import {
   ActionEventPayload,
   getLinkedIssueBySource,
+  getTeamById,
   getWorkflowsByTeam,
   JsonObject,
   logger,
 } from '@tegonhq/sdk';
 import { Client, TextChannel } from 'discord.js';
 import { getStateId } from 'utils';
+import { discordIssueCreate } from './issue-create';
 
 export const emojiReaction = async (payload: ActionEventPayload) => {
   const {
@@ -34,11 +36,11 @@ export const emojiReaction = async (payload: ActionEventPayload) => {
   } = eventData;
 
   const sessionData = {
-    guild_id: guildId,
-    channel_id: channelId,
-    user_id: discordUserId,
-    message_id: messageId,
-    message_author_id: messageAuthorId,
+    guildId,
+    channelId,
+    discordUserId,
+    messageId,
+    messageAuthorId,
   };
 
   const channelMapping = action.data.inputs.channelTeamMappings.find(
@@ -54,7 +56,7 @@ export const emojiReaction = async (payload: ActionEventPayload) => {
   // If the reaction is not 'eyes' or the channel mapping doesn't exist, ignore the event
   if (reaction !== '👀') {
     logger.debug(`Ignoring reaction event with reaction: ${reaction}`);
-    return null;
+    return { message: `Ignoring reaction event with reaction: ${reaction}` };
   }
 
   const client = new Client({ intents: [] }); // Create a new client instance
@@ -78,8 +80,15 @@ export const emojiReaction = async (payload: ActionEventPayload) => {
 
   // // If the thread is already linked to an issue, send an ephemeral message and return
   if (linkedIssue) {
+    const team = await getTeamById({ teamId });
+    const issueIdentifier = `${team.identifier}-${linkedIssue.issue.number}`;
+
+    const issueUrl = `https://app.tegon.ai/${team.workspace.slug}/issue/${issueIdentifier}`;
+
+    const issueTitle = `${issueIdentifier} ${linkedIssue.issue.title}`;
+
     await message.reply(
-      `This thread is already linked with an existing Issue. so we can't create a new Issue`,
+      `This message is already linked with an existing Issue [${issueTitle}](${issueUrl}). so we can't create a new Issue`,
     );
 
     logger.debug(
@@ -106,12 +115,14 @@ export const emojiReaction = async (payload: ActionEventPayload) => {
       channelId,
       messageAuthorId,
       userDisplayName,
+      title: `Discord message from ${channel.name}`,
     },
     createdById: userId,
   };
 
   // Create issue input data
   const issueInput = {
+    description: '',
     descriptionMarkdown: message.content,
     stateId,
     isBidirectional: true,
@@ -121,5 +132,9 @@ export const emojiReaction = async (payload: ActionEventPayload) => {
     linkIssueData,
   };
 
-  return issueInput;
+  return await discordIssueCreate(
+    integrationAccount,
+    { issueInput, sourceMetadata },
+    sessionData,
+  );
 };

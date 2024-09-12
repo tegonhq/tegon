@@ -1,5 +1,6 @@
 import { ActionEventPayload, logger } from '@tegonhq/sdk';
 import { emojiReaction } from 'triggers/emoji-reaction';
+import { discordMessage } from 'triggers/message';
 
 export const webhookHandler = async (payload: ActionEventPayload) => {
   const {
@@ -29,13 +30,12 @@ export const webhookHandler = async (payload: ActionEventPayload) => {
   //     return { message: `Ignoring bot message` };
   //   }
 
-  logger.log('Processing Discord event:', eventType);
+  logger.log(`Processing Discord event: ${eventType}`);
 
   // Handle different event types
   switch (eventType) {
-    case 'message':
-      // Handle thread messages
-      return undefined;
+    case 'MESSAGE_CREATE':
+      return discordMessage(payload);
 
     case 'MESSAGE_REACTION_ADD':
       // Handle message reactions)
