@@ -12,6 +12,9 @@ export const Action = types.model({
   version: types.string,
   integrations: types.array(types.string),
 
+  isDev: types.boolean,
+  isPersonal: types.boolean,
+
   data: types.string,
   status: types.enumeration([
     'DEPLOYING',
