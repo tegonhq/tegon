@@ -5,6 +5,8 @@ import {
   Get,
   Param,
   Post,
+  Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -12,6 +14,7 @@ import {
   Workspace,
   WorkspaceRequestParamsDto,
 } from '@tegonhq/types';
+import { Request, Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
@@ -77,10 +80,14 @@ export class WorkspacesController {
   async inviteAction(
     @SessionDecorator() session: SessionContainer,
     @Body() inviteActionBody: InviteActionBody,
+    @Res() response: Response,
+    @Req() request: Request,
   ) {
     const userId = session.getUserId();
 
     return await this.workspacesService.inviteAction(
+      request,
+      response,
       inviteActionBody.inviteId,
       userId,
       inviteActionBody.accept,

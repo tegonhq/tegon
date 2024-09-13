@@ -45,28 +45,22 @@ export const StatusActivity = observer(
           <div className="flex items-center">
             {fromWorkflow ? (
               <>
-                <span className="text-foreground mr-2 font-medium">
-                  {fullname}
-                </span>
+                <span className="text-foreground mr-2">{fullname}</span>
                 changed status from
-                <span className="text-foreground mx-2 font-medium">
+                <span className="text-foreground mx-2">
                   {fromWorkflow.name}
                 </span>
                 <span> to </span>
               </>
             ) : (
               <>
-                <span className="text-foreground mr-2 font-medium">
-                  {fullname}
-                </span>
+                <span className="text-foreground mr-2">{fullname}</span>
                 changed status
                 <span className="ml-1"> to </span>
               </>
             )}
 
-            <span className="text-foreground mx-2 font-medium">
-              {toWorkflow.name}
-            </span>
+            <span className="text-foreground mx-2">{toWorkflow.name}</span>
           </div>
         </div>
       </TimelineItem>

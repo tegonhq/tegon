@@ -7,21 +7,16 @@ import {
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-import {
-  IntegrationAccountRequestBody,
-  IntegrationAccountSelect,
-} from './integration-account.interface';
+import { IntegrationAccountSelect } from './integration-account.interface';
 
 @Injectable()
 export class IntegrationAccountService {
   constructor(private prisma: PrismaService) {}
 
-  async getIntegrationAccountWithId(
-    integrationAccountRequestIdBody: IntegrationAccountIdDto,
-  ) {
+  async getIntegrationAccountWithId(integrationAccountId: string) {
     return await this.prisma.integrationAccount.findUnique({
       where: {
-        id: integrationAccountRequestIdBody.integrationAccountId,
+        id: integrationAccountId,
       },
       select: IntegrationAccountSelect,
     });
@@ -46,12 +41,13 @@ export class IntegrationAccountService {
   }
 
   async getIntegrationAccount(
-    integrationAccountRequestBody: IntegrationAccountRequestBody,
+    integrationAccountId: string,
+    workspaceId: string,
   ) {
     const integrationAccount = await this.prisma.integrationAccount.findUnique({
       where: {
-        workspaceId: integrationAccountRequestBody.workspaceId,
-        id: integrationAccountRequestBody.integrationAccountId,
+        workspaceId,
+        id: integrationAccountId,
       },
       select: IntegrationAccountSelect,
     });

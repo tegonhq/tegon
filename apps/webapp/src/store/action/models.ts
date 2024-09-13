@@ -22,7 +22,6 @@ export const Action = types.model({
     'SUSPENDED',
   ]),
 
-  cron: types.union(types.string, types.null),
   workspaceId: types.string,
 
   createdById: types.string,

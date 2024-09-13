@@ -18,7 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
-import { DeleteLine, EditLine, MoreLine } from '@tegonhq/ui/icons';
+import { DeleteLine, EditLine, LinkLine, MoreLine } from '@tegonhq/ui/icons';
 import React from 'react';
 
 import { getBotIcon } from 'common';
@@ -67,7 +67,10 @@ export function LinkedIssueItem({ linkedIssue }: LinkedIssueItemProps) {
           </div>
         </div>
 
-        <div>
+        <div className="flex gap-1">
+          <Button variant="ghost" size="sm">
+            <LinkLine size={16} className="text-muted-foreground" />
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

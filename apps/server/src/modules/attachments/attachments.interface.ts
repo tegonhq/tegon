@@ -1,10 +1,5 @@
 import { IsOptional, IsString } from 'class-validator';
 
-export class AttachmentQueryParams {
-  @IsString()
-  workspaceId: string;
-}
-
 export class AttachmentRequestParams {
   @IsString()
   workspaceId: string;

@@ -13,9 +13,11 @@ export async function getIntegrationAccountsFromActions(
   integrationsService: IntegrationsService,
   workspaceId: string,
   integrations: string[],
+  personal: boolean,
 ): Promise<Record<string, IntegrationAccount>> {
   const integrationAccounts = await prisma.integrationAccount.findMany({
     where: {
+      personal,
       integrationDefinition: {
         slug: {
           in: integrations,
@@ -81,6 +83,7 @@ export const prepareTriggerPayload = async (
     where: { workspaceId: action.workspaceId, user: { username: action.slug } },
   });
 
+  // Created by id is taken for both dev and personal deployed actions
   const userId = actionUser?.userId ?? action.createdById;
   const accessToken = await generateKeyForUserId(userId);
 
@@ -89,6 +92,7 @@ export const prepareTriggerPayload = async (
     integrationsService,
     action.workspaceId,
     action.integrations,
+    action.isPersonal,
   );
 
   return {

@@ -14,15 +14,18 @@ export async function getViewNameDescription(
   const viewNameDescriptionPrompt = await prisma.prompt.findFirst({
     where: { name: 'ViewNameDescription', workspaceId },
   });
-  const content = await aiRequestsService.getLLMRequest({
-    messages: [
-      { role: 'system', content: viewNameDescriptionPrompt.prompt },
-      { role: 'user', content: JSON.stringify(filtersData.filters) },
-    ],
-    llmModel: LLMMappings[viewNameDescriptionPrompt.model],
-    model: 'ViewNameDescription',
+  const content = await aiRequestsService.getLLMRequest(
+    {
+      messages: [
+        { role: 'system', content: viewNameDescriptionPrompt.prompt },
+        { role: 'user', content: JSON.stringify(filtersData.filters) },
+      ],
+      llmModel: LLMMappings[viewNameDescriptionPrompt.model],
+      model: 'ViewNameDescription',
+    },
+
     workspaceId,
-  });
+  );
   const viewNameRegex = /viewName:\s*(.*)/i;
   const viewDescriptionRegex = /viewDescription:\s*(.*)/i;
 

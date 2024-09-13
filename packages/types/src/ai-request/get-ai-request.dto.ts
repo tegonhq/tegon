@@ -2,6 +2,5 @@
 export interface GetAIRequestDTO {
   messages: any[];
   model: string;
-  workspaceId: string;
   llmModel: string;
 }

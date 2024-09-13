@@ -22,17 +22,29 @@ export default class AIRequestsService {
     }
   }
 
-  async getLLMRequest(reqBody: GetAIRequestDTO): Promise<string> {
-    return (await this.LLMRequestStream(reqBody, false)) as string;
+  async getLLMRequest(
+    reqBody: GetAIRequestDTO,
+    workspaceId: string,
+  ): Promise<string> {
+    return (await this.LLMRequestStream(reqBody, workspaceId, false)) as string;
   }
 
   async getLLMRequestStream(
     reqBody: GetAIRequestDTO,
+    workspaceId: string,
   ): Promise<AIStreamResponse> {
-    return (await this.LLMRequestStream(reqBody, true)) as AIStreamResponse;
+    return (await this.LLMRequestStream(
+      reqBody,
+      workspaceId,
+      true,
+    )) as AIStreamResponse;
   }
 
-  async LLMRequestStream(reqBody: GetAIRequestDTO, stream: boolean = true) {
+  async LLMRequestStream(
+    reqBody: GetAIRequestDTO,
+    workspaceId: string,
+    stream: boolean = true,
+  ) {
     const messages = reqBody.messages;
     const userMessages = reqBody.messages.filter(
       (message: CoreMessage) => message.role === 'user',
@@ -55,7 +67,7 @@ export default class AIRequestsService {
             userMessages,
             model,
             reqBody.model,
-            reqBody.workspaceId,
+            workspaceId,
           );
         },
       );

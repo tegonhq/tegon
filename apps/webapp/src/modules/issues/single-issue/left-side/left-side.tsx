@@ -53,43 +53,47 @@ export const LeftSide = observer(() => {
   }, 1000);
 
   return (
-    <ScrollArea className="grow flex flex-col gap-2 h-full">
-      <div className="flex xl:hidden px-6 py-2 border-b">
-        <FilterSmall />
-      </div>
-      <div className="py-6 flex flex-col">
-        {isTriageView && <SimilarIssuesView issueId={issue.id} />}
-
-        <IssueTitle value={issue.title} onChange={onIssueChange} />
-        {issue.parentId && (
-          <div className="px-6">
-            <ParentIssueView issue={issue} />
+    <ScrollArea className="grow flex h-full justify-center w-full">
+      <div className="flex h-full justify-center w-full">
+        <div className="grow flex flex-col gap-2 h-full max-w-[97ch]">
+          <div className="flex xl:hidden px-6 py-2 border-b">
+            <FilterSmall />
           </div>
-        )}
-        <Editor
-          value={issue.description}
-          onChange={onDescriptionChange}
-          className="min-h-[50px] mb-8 px-6 mt-3 text-md"
-        >
-          <EditorExtensions suggestionItems={suggestionItems} />
-        </Editor>
+          <div className="py-6 flex flex-col">
+            {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
-        <div className="mx-6">
-          <Separator />
+            <IssueTitle value={issue.title} onChange={onIssueChange} />
+            {issue.parentId && (
+              <div className="px-6">
+                <ParentIssueView issue={issue} />
+              </div>
+            )}
+            <Editor
+              value={issue.description}
+              onChange={onDescriptionChange}
+              className="min-h-[50px] mb-8 px-6 mt-3 text-md"
+            >
+              <EditorExtensions suggestionItems={suggestionItems} />
+            </Editor>
+
+            <div className="mx-6">
+              <Separator />
+            </div>
+
+            <SubIssueView childIssues={issue.children} issueId={issue.id} />
+
+            <div className="mx-6">
+              <Separator />
+            </div>
+
+            <LinkedIssuesView issueId={issue.id} />
+
+            <div className="mx-6">
+              <Separator />
+            </div>
+            <Activity />
+          </div>
         </div>
-
-        <SubIssueView childIssues={issue.children} issueId={issue.id} />
-
-        <div className="mx-6">
-          <Separator />
-        </div>
-
-        <LinkedIssuesView issueId={issue.id} />
-
-        <div className="mx-6">
-          <Separator />
-        </div>
-        <Activity />
       </div>
     </ScrollArea>
   );

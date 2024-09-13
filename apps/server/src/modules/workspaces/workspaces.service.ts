@@ -8,8 +8,13 @@ import {
   WorkspaceRequestParamsDto,
   WorkspaceStatusEnum,
 } from '@tegonhq/types';
+import { Request, Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
-import { SessionContainer } from 'supertokens-node/recipe/session';
+import supertokens from 'supertokens-node';
+import {
+  createNewSession,
+  SessionContainer,
+} from 'supertokens-node/recipe/session';
 
 import { createMagicLink } from 'common/utils/login';
 
@@ -289,6 +294,8 @@ export default class WorkspacesService {
   }
 
   async inviteAction(
+    req: Request,
+    res: Response,
     inviteId: string,
     userId: string,
     accepted: boolean = false,
@@ -307,12 +314,20 @@ export default class WorkspacesService {
       });
     }
 
-    return await this.prisma.invite.update({
+    const invite = await this.prisma.invite.update({
       where: { id: inviteId },
       data: {
         status: InviteStatusEnum.ACCEPTED,
         deleted: new Date().toISOString(),
       },
     });
+
+    await createNewSession(
+      req,
+      res,
+      'public',
+      supertokens.convertToRecipeUserId(userId),
+    );
+    res.status(200).json(invite);
   }
 }

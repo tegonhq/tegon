@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -13,12 +14,18 @@ import {
   DeleteActionDto,
   ReplayRunDto,
   UpdateActionInputsDto,
-  WorkspaceRequestParamsDto,
+  ActionScheduleParamsDto,
+  ActionScheduleDto,
+  ActionIdDto,
 } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import {
+  Session as SessionDecorator,
+  UserId,
+  Workspace,
+} from 'modules/auth/session.decorator';
 
 import { ActionGuard } from './action.guard';
 import ActionService from './action.service';
@@ -75,49 +82,50 @@ export class ActionController {
   @Get(':slug/runs')
   @UseGuards(ActionGuard)
   async getRunsForSlug(
+    @Workspace() workspaceId: string,
     @Param() slugDto: ActionSlugDto,
-    @Query() runIdParams: { runId: string; workspaceId: string },
+    @Query() runIdParams: { runId: string },
   ) {
     if (runIdParams.runId) {
       return await this.actionService.getRunForSlug(
-        runIdParams.workspaceId,
+        workspaceId,
         slugDto.slug,
         runIdParams.runId,
       );
     }
 
-    return await this.actionService.getRunsForSlug(
-      runIdParams.workspaceId,
-      slugDto.slug,
-    );
+    return await this.actionService.getRunsForSlug(workspaceId, slugDto.slug);
   }
 
   @Get(':slug/inputs')
   @UseGuards(ActionGuard)
   async getInputsForSlug(
+    @Workspace() workspaceId: string,
     @Param() slugDto: { slug: string },
-    @Query() configParams: { workspaceId: string },
   ) {
-    return await this.actionService.getInputsForSlug(
-      slugDto.slug,
-      configParams.workspaceId,
-    );
+    return await this.actionService.getInputsForSlug(slugDto.slug, workspaceId);
+  }
+
+  @Get(':slug')
+  async getActionConfig(@Param() slugDto: { slug: string }) {
+    return await getActionConfig(slugDto.slug);
   }
 
   @Get()
   @UseGuards(ActionGuard)
-  async getActions(@Query() workspaceIdDto: WorkspaceRequestParamsDto) {
-    return await this.actionService.getActions(workspaceIdDto.workspaceId);
+  async getActions(@Workspace() workspaceId: string) {
+    return await this.actionService.getActions(workspaceId);
   }
 
   @Post(':slug/replay')
   @UseGuards(ActionGuard)
   async replayRunForSlug(
+    @Workspace() workspaceId: string,
     @Param() slugDto: ActionSlugDto,
     @Body() replayBody: ReplayRunDto,
   ) {
     return await this.actionService.replayRunForSlug(
-      replayBody.workspaceId,
+      workspaceId,
       slugDto.slug,
       replayBody.runId,
     );
@@ -126,11 +134,12 @@ export class ActionController {
   @Post(':slug/cancel')
   @UseGuards(ActionGuard)
   async cancelRunForSlug(
+    @Workspace() workspaceId: string,
     @Param() slugDto: ActionSlugDto,
     @Body() replayBody: ReplayRunDto,
   ) {
     return await this.actionService.cancelRunForSlug(
-      replayBody.workspaceId,
+      workspaceId,
       slugDto.slug,
       replayBody.runId,
     );
@@ -138,17 +147,55 @@ export class ActionController {
 
   @Post(':slug/inputs')
   async updateActionInputs(
+    @Workspace() workspaceId: string,
     @Body() updateBodyDto: UpdateActionInputsDto,
     @Param() actionSlugDto: ActionSlugDto,
   ) {
     return await this.actionService.updateActionInputs(
       updateBodyDto,
       actionSlugDto.slug,
+      workspaceId,
     );
   }
 
-  @Get(':slug')
-  async getActionConfig(@Param() slugDto: { slug: string }) {
-    return await getActionConfig(slugDto.slug);
+  @Post(':slug/schedule')
+  async createActionSchedule(
+    @Workspace() workspaceId: string,
+    @UserId() userId: string,
+    @Body() scheduleBodyDto: ActionScheduleDto,
+    @Param() actionSlugDto: ActionSlugDto,
+  ) {
+    return await this.actionService.createActionSchedule(
+      actionSlugDto.slug,
+      workspaceId,
+      scheduleBodyDto,
+      userId,
+    );
+  }
+
+  @Post(':slug/schedule/:scheduleId')
+  async updateActionSchedule(
+    @Body() scheduleBodyDto: ActionScheduleDto,
+    @Param() actionScheduleParams: ActionScheduleParamsDto,
+  ) {
+    return await this.actionService.udpateActionSchedule(
+      actionScheduleParams.actionScheduleId,
+      scheduleBodyDto,
+    );
+  }
+
+  @Post(':actionId/trigger-scheduled')
+  @UseGuards(ActionGuard)
+  async triggerActionSchedule(@Param() actionIdDto: ActionIdDto) {
+    return await this.actionService.triggerActionEntity(actionIdDto.actionId);
+  }
+
+  @Delete(':slug/schedule/:scheduleId')
+  async deleteActionCron(
+    @Param() actionScheduleParams: ActionScheduleParamsDto,
+  ) {
+    return await this.actionService.deleteActionSchedule(
+      actionScheduleParams.actionScheduleId,
+    );
   }
 }

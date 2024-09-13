@@ -5,4 +5,5 @@ export interface CreateActionDto {
   workspaceId: string;
   version: string;
   isDev?: boolean;
+  isPersonal?: boolean;
 }

@@ -59,7 +59,7 @@ export function RelatedActivity({
     if (relatedChanges.type === IssueRelationEnum.RELATED) {
       return (
         <div className="flex items-center">
-          <span className="text-foreground mr-2 font-medium">{fullname}</span>
+          <span className="text-foreground mr-2">{fullname}</span>
           <span>
             {relatedChanges.isDeleted ? 'removed' : 'added'} related issue
           </span>
@@ -76,7 +76,7 @@ export function RelatedActivity({
     if (relatedChanges.type === IssueRelationEnum.BLOCKED) {
       return (
         <div className="flex items-center">
-          <span className="text-foreground mr-2 font-medium">{fullname}</span>
+          <span className="text-foreground mr-2">{fullname}</span>
           <span>
             {relatedChanges.isDeleted ? 'removed' : 'marked'} this issue as
             being blocked by
@@ -94,7 +94,7 @@ export function RelatedActivity({
     if (relatedChanges.type === IssueRelationEnum.BLOCKS) {
       return (
         <div className="flex items-center">
-          <span className="text-foreground mr-2 font-medium">{fullname}</span>
+          <span className="text-foreground mr-2">{fullname}</span>
           <span>
             {relatedChanges.isDeleted ? 'removed' : 'marked'} this issue as
             blocking
@@ -112,7 +112,7 @@ export function RelatedActivity({
     if (relatedChanges.type === IssueRelationEnum.DUPLICATE_OF) {
       return (
         <div className="flex items-center">
-          <span className="text-foreground mr-2 font-medium">{fullname}</span>
+          <span className="text-foreground mr-2">{fullname}</span>
           <span>
             {relatedChanges.isDeleted ? 'removed' : 'marked'} this issue as
             duplicate of
@@ -130,7 +130,7 @@ export function RelatedActivity({
     if (relatedChanges.type === IssueRelationEnum.DUPLICATE) {
       return (
         <div className="flex items-center">
-          <span className="text-foreground mr-2 font-medium">{fullname}</span>
+          <span className="text-foreground mr-2">{fullname}</span>
           <span>
             {relatedChanges.isDeleted ? 'removed' : 'marked'} this issue as
             duplicated by

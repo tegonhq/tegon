@@ -8,6 +8,8 @@ import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { SidebarExpand } from 'common/sidebar-expand';
+
 import { useCurrentTeam } from 'hooks/teams';
 
 interface HeaderProps {
@@ -22,23 +24,27 @@ export const Header = observer(({ title }: HeaderProps) => {
   } = useRouter();
 
   return (
-    <header className="flex px-6 py-4 w-full items-center gap-2">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <BreadcrumbLink
-            as={Link}
-            className="flex items-center gap-2"
-            href={`/${workspaceSlug}/team/${team.identifier}/all`}
-          >
-            <TeamIcon name={team.name} />
+    <header className="flex px-6 w-full items-center gap-2">
+      <div className="flex gap-2 py-4 items-center">
+        <SidebarExpand />
 
-            <span className="inline-block">{team.name}</span>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <BreadcrumbLink>{title}</BreadcrumbLink>
-        </BreadcrumbItem>
-      </Breadcrumb>
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <BreadcrumbLink
+              as={Link}
+              className="flex items-center gap-2"
+              href={`/${workspaceSlug}/team/${team.identifier}/all`}
+            >
+              <TeamIcon name={team.name} />
+
+              <span className="inline-block">{team.name}</span>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbLink>{title}</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
+      </div>
     </header>
   );
 });

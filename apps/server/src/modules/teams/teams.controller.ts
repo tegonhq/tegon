@@ -5,25 +5,20 @@ import {
   Get,
   Param,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
-import {
-  Team,
-  TeamPreference,
-  UsersOnWorkspaces,
-  WorkspaceRequestParamsDto,
-} from '@tegonhq/types';
+import { Team, TeamPreference, UsersOnWorkspaces } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
+import { UserId, Workspace } from 'modules/auth/session.decorator';
+import { AdminGuard } from 'modules/users/admin.guard';
+import { UserIdParams } from 'modules/users/users.interface';
 
 import {
   UpdateTeamInput,
   TeamRequestParams,
   PreferenceInput,
-  WorkspaceRequestParams,
   CreateTeamInput,
-  TeamMemberInput,
 } from './teams.interface';
 import TeamsService from './teams.service';
 
@@ -36,11 +31,8 @@ export class TeamsController {
 
   @Get()
   @UseGuards(AuthGuard)
-  async getTeams(
-    @Query()
-    workspaceRequestParams: WorkspaceRequestParamsDto,
-  ): Promise<Team[]> {
-    return await this.teamsService.getTeams(workspaceRequestParams);
+  async getTeams(@Workspace() workspaceId: string): Promise<Team[]> {
+    return await this.teamsService.getTeams(workspaceId);
   }
 
   @Get(':teamId')
@@ -56,21 +48,46 @@ export class TeamsController {
   @UseGuards(AuthGuard)
   async getTeamByName(
     @Param('teamName') teamName: string,
-    @Query() workspaceParams: WorkspaceRequestParams,
+    @Workspace() workspaceId: string,
   ): Promise<Team> {
-    return await this.teamsService.getTeamByName(
-      workspaceParams.workspaceId,
-      teamName,
-    );
+    return await this.teamsService.getTeamByName(workspaceId, teamName);
   }
 
   @Post()
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, AdminGuard)
   async createTeam(
-    @Query() WorkspaceParams: WorkspaceRequestParams,
+    @Workspace() workspaceId: string,
+    @UserId() userId: string,
     @Body() teamData: CreateTeamInput,
   ): Promise<Team> {
-    return await this.teamsService.createTeam(WorkspaceParams, teamData);
+    return await this.teamsService.createTeam(workspaceId, userId, teamData);
+  }
+
+  @Post(':teamId/preference')
+  @UseGuards(AuthGuard)
+  async createUpdatePreference(
+    @Param()
+    teamRequestParams: TeamRequestParams,
+    @Body() preferenceData: PreferenceInput,
+  ): Promise<TeamPreference> {
+    return await this.teamsService.createUpdatePreference(
+      teamRequestParams,
+      preferenceData,
+    );
+  }
+
+  @Post(':teamId/add-member')
+  @UseGuards(AuthGuard, AdminGuard)
+  async addTeamMember(
+    @Param() teamRequestParams: TeamRequestParams,
+    @Workspace() workspaceId: string,
+    @Body() teamMemberData: UserIdParams,
+  ): Promise<UsersOnWorkspaces> {
+    return await this.teamsService.addTeamMember(
+      teamRequestParams.teamId,
+      workspaceId,
+      teamMemberData.userId,
+    );
   }
 
   @Post(':teamId')
@@ -92,33 +109,6 @@ export class TeamsController {
     return await this.teamsService.deleteTeam(teamRequestParams);
   }
 
-  @Post(':teamId/preference')
-  @UseGuards(AuthGuard)
-  async createUpdatePreference(
-    @Param()
-    teamRequestParams: TeamRequestParams,
-    @Body() preferenceData: PreferenceInput,
-  ): Promise<TeamPreference> {
-    return await this.teamsService.createUpdatePreference(
-      teamRequestParams,
-      preferenceData,
-    );
-  }
-
-  @Post(':teamId/add_member')
-  @UseGuards(AuthGuard)
-  async addTeamMember(
-    @Param() teamRequestParams: TeamRequestParams,
-    @Query() workspaceRequestParams: WorkspaceRequestParams,
-    @Body() teamMemberData: TeamMemberInput,
-  ): Promise<UsersOnWorkspaces> {
-    return await this.teamsService.addTeamMember(
-      teamRequestParams.teamId,
-      workspaceRequestParams.workspaceId,
-      teamMemberData.userId,
-    );
-  }
-
   @Get(':teamId/members')
   @UseGuards(AuthGuard)
   async getTeamMembers(
@@ -133,12 +123,13 @@ export class TeamsController {
   async removeTeamMemeber(
     @Param()
     teamRequestParams: TeamRequestParams,
-    @Query() workspaceRequestParams: WorkspaceRequestParams,
-    @Body() teamMemberData: TeamMemberInput,
+    @Workspace() workspaceId: string,
+
+    @Body() teamMemberData: UserIdParams,
   ): Promise<UsersOnWorkspaces> {
     return await this.teamsService.removeTeamMember(
       teamRequestParams,
-      workspaceRequestParams,
+      workspaceId,
       teamMemberData,
     );
   }

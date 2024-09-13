@@ -2,8 +2,8 @@ import type { WorkflowType } from 'common/types';
 
 export const WorkflowColors = {
   Triage: {
-    background: 'var(--status-pill-0)',
-    color: 'var(--status-icon-0)',
+    background: 'var(--custom-color-1)',
+    color: 'var(--custom-color-1)',
   },
   Unscoped: {
     background: 'var(--status-pill-1)',

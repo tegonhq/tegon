@@ -16,15 +16,17 @@ export async function getIssueTitle(
     const titlePrompt = await prisma.prompt.findFirst({
       where: { name: 'IssueTitle', workspaceId },
     });
-    return await aiRequestsService.getLLMRequest({
-      messages: [
-        { role: 'system', content: titlePrompt.prompt },
-        { role: 'user', content: issueData.description },
-      ],
-      llmModel: LLMMappings[titlePrompt.model],
-      model: 'IssueTitle',
+    return await aiRequestsService.getLLMRequest(
+      {
+        messages: [
+          { role: 'system', content: titlePrompt.prompt },
+          { role: 'user', content: issueData.description },
+        ],
+        llmModel: LLMMappings[titlePrompt.model],
+        model: 'IssueTitle',
+      },
       workspaceId,
-    });
+    );
   }
   return '';
 }
@@ -45,15 +47,17 @@ export async function getAiFilter(
     .replace('{{label}}', filterData.labelNames.join(', '));
 
   try {
-    const response = await aiRequestsService.getLLMRequest({
-      messages: [
-        { role: 'system', content: filterPrompt },
-        { role: 'user', content: filterText },
-      ],
-      llmModel: LLMMappings[aiFilterPrompt.model],
-      model: 'AIFilters',
+    const response = await aiRequestsService.getLLMRequest(
+      {
+        messages: [
+          { role: 'system', content: filterPrompt },
+          { role: 'user', content: filterText },
+        ],
+        llmModel: LLMMappings[aiFilterPrompt.model],
+        model: 'AIFilters',
+      },
       workspaceId,
-    });
+    );
     return JSON.parse(response);
   } catch (error) {
     return {};
@@ -70,18 +74,20 @@ export async function getSuggestedLabels(
   const labelPrompt = await prisma.prompt.findUnique({
     where: { name_workspaceId: { name: 'IssueLabels', workspaceId } },
   });
-  return await aiRequestsService.getLLMRequest({
-    messages: [
-      { role: 'system', content: labelPrompt.prompt },
-      {
-        role: 'user',
-        content: `Text Description  -  ${description} \n Company Specific Labels -  ${labels.join(',')}`,
-      },
-    ],
-    llmModel: LLMMappings[labelPrompt.model],
-    model: 'LabelSuggestion',
+  return await aiRequestsService.getLLMRequest(
+    {
+      messages: [
+        { role: 'system', content: labelPrompt.prompt },
+        {
+          role: 'user',
+          content: `Text Description  -  ${description} \n Company Specific Labels -  ${labels.join(',')}`,
+        },
+      ],
+      llmModel: LLMMappings[labelPrompt.model],
+      model: 'LabelSuggestion',
+    },
     workspaceId,
-  });
+  );
 }
 
 export async function getSummary(
@@ -93,16 +99,18 @@ export async function getSummary(
   const summarizePrompt = await prisma.prompt.findFirst({
     where: { name: 'IssueSummary', workspaceId },
   });
-  return await aiRequestsService.getLLMRequest({
-    messages: [
-      { role: 'system', content: summarizePrompt.prompt },
-      {
-        role: 'user',
-        content: `[INPUT] conversations: ${conversations}`,
-      },
-    ],
-    llmModel: LLMMappings[summarizePrompt.model],
-    model: 'IssueSummary',
+  return await aiRequestsService.getLLMRequest(
+    {
+      messages: [
+        { role: 'system', content: summarizePrompt.prompt },
+        {
+          role: 'user',
+          content: `[INPUT] conversations: ${conversations}`,
+        },
+      ],
+      llmModel: LLMMappings[summarizePrompt.model],
+      model: 'IssueSummary',
+    },
     workspaceId,
-  });
+  );
 }

@@ -39,7 +39,7 @@ export function LinkedIssueActivity({ linkedIssue }: LinkedIssueActivityProps) {
       )}
 
       <div className="flex items-center">
-        <span className="text-foreground mr-2 font-medium">
+        <span className="text-foreground mr-2">
           {getUserDetails(sourceData, user).fullname}
         </span>
         <span className="text-muted-foreground">linked</span>

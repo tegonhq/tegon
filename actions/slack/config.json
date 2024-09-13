@@ -3,6 +3,7 @@
   "name": "Slack",
   "icon": "slack",
   "description": "Create issues from Slack messages and sync threads",
+  "isPersonal": true,
   "triggers": [
     {
       "type": "on_create",
@@ -11,7 +12,8 @@
     {
       "type": "source_webhook",
       "entities": [ "slack" ]
-    }
+    },
+    { "type": "on_schedule" }
   ],
   "integrations": [ "slack" ]
 }

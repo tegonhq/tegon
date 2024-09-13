@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import {
-  Team,
-  UsersOnWorkspaces,
-  WorkspaceRequestParamsDto,
-} from '@tegonhq/types';
+import { Team, UsersOnWorkspaces } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
+
+import { UserIdParams } from 'modules/users/users.interface';
 
 import {
   UpdateTeamInput,
   TeamRequestParams,
-  WorkspaceRequestParams,
   PreferenceInput,
   CreateTeamInput,
-  TeamMemberInput,
   workflowSeedData,
 } from './teams.interface';
 
@@ -31,12 +27,10 @@ export default class TeamsService {
     });
   }
 
-  async getTeams(
-    workspaceRequestParams: WorkspaceRequestParamsDto,
-  ): Promise<Team[]> {
+  async getTeams(workspaceId: string): Promise<Team[]> {
     return await this.prisma.team.findMany({
       where: {
-        workspaceId: workspaceRequestParams.workspaceId,
+        workspaceId,
         deleted: null,
       },
       include: {
@@ -61,33 +55,19 @@ export default class TeamsService {
   }
 
   async createTeam(
-    workspaceRequestParams: WorkspaceRequestParams,
+    workspaceId: string,
+    userId: string,
     teamData: CreateTeamInput,
   ): Promise<Team> {
     const team = await this.prisma.team.create({
       data: {
-        workspaceId: workspaceRequestParams.workspaceId,
+        workspaceId,
         ...teamData,
         workflow: { create: workflowSeedData },
       },
     });
 
-    const users = await this.prisma.usersOnWorkspaces.findMany({
-      where: {
-        workspaceId: workspaceRequestParams.workspaceId,
-        status: 'ACTIVE',
-      },
-    });
-
-    await Promise.all(
-      users.map(async (user) => {
-        await this.addTeamMember(
-          team.id,
-          workspaceRequestParams.workspaceId,
-          user.userId,
-        );
-      }),
-    );
+    await this.addTeamMember(team.id, workspaceId, userId);
 
     return team;
   }
@@ -183,14 +163,14 @@ export default class TeamsService {
 
   async removeTeamMember(
     teamRequestParams: TeamRequestParams,
-    workspaceRequestParams: WorkspaceRequestParams,
-    teamMemberData: TeamMemberInput,
+    workspaceId: string,
+    teamMemberData: UserIdParams,
   ): Promise<UsersOnWorkspaces> {
     const userOnWorkspace = await this.prisma.usersOnWorkspaces.findUnique({
       where: {
         userId_workspaceId: {
           userId: teamMemberData.userId,
-          workspaceId: workspaceRequestParams.workspaceId,
+          workspaceId,
         },
       },
     });
@@ -203,7 +183,7 @@ export default class TeamsService {
       where: {
         userId_workspaceId: {
           userId: teamMemberData.userId,
-          workspaceId: workspaceRequestParams.workspaceId,
+          workspaceId,
         },
       },
       data: { teamIds: updatedTeamIds },

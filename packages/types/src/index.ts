@@ -35,3 +35,4 @@ export * from './workspace-trigger-project';
 export * from './action';
 export * from './action-entity';
 export * from './action-event';
+export * from './action-schedule';
