@@ -35,11 +35,9 @@ export function PriorityActivity({
         />
 
         <div className="flex items-center">
-          <span className="text-foreground mr-2 font-medium">{fullname}</span>
+          <span className="text-foreground mr-2">{fullname}</span>
           set priority to
-          <span className="text-foreground mx-2 font-medium">
-            {priorityText}
-          </span>
+          <span className="text-foreground mx-2">{priorityText}</span>
         </div>
       </div>
     </TimelineItem>

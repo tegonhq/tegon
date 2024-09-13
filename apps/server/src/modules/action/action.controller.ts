@@ -23,6 +23,7 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import {
   Session as SessionDecorator,
+  UserId,
   Workspace,
 } from 'modules/auth/session.decorator';
 
@@ -159,13 +160,14 @@ export class ActionController {
 
   @Post(':slug/schedule')
   async createActionSchedule(
-    @SessionDecorator() session: SessionContainer,
+    @Workspace() workspaceId: string,
+    @UserId() userId: string,
     @Body() scheduleBodyDto: ActionScheduleDto,
     @Param() actionSlugDto: ActionSlugDto,
   ) {
-    const userId = await session.getUserId();
     return await this.actionService.createActionSchedule(
       actionSlugDto.slug,
+      workspaceId,
       scheduleBodyDto,
       userId,
     );

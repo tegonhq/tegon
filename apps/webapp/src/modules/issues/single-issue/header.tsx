@@ -5,15 +5,15 @@ import {
 } from '@tegonhq/ui/components/breadcrumb';
 import { Button } from '@tegonhq/ui/components/button';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
-import { CheckLine, CrossLine, SidebarLine } from '@tegonhq/ui/icons';
+import { CheckLine, CrossLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import { useCurrentTeam } from 'hooks/teams';
+import { SidebarExpand } from 'common/sidebar-expand';
 
-import { useContextStore } from 'store/global-context-provider';
+import { useCurrentTeam } from 'hooks/teams';
 
 import { IssueOptionsDropdown } from './issue-actions/issue-options-dropdown';
 import { TriageAcceptModal } from './triage-view/triage-accept-modal';
@@ -28,7 +28,6 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
   const [triageAction, setTriageAction] = React.useState<
     'Accept' | 'Decline' | 'Duplicate'
   >(undefined);
-  const { applicationStore } = useContextStore();
 
   const {
     query: { issueId, workspaceSlug },
@@ -47,17 +46,7 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
   return (
     <header className="flex px-6 w-full gap-2 justify-between items-center">
       <div className="flex gap-2 py-4 items-center">
-        {applicationStore.sidebarCollapsed && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              applicationStore.updateSideBar(false);
-            }}
-          >
-            <SidebarLine size={20} />
-          </Button>
-        )}
+        <SidebarExpand />
         <Breadcrumb>
           <BreadcrumbItem>
             <BreadcrumbLink

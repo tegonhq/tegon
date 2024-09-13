@@ -690,6 +690,7 @@ export default class IssuesService {
         },
       });
     });
+
     return updatedIssue;
   }
 

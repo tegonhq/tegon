@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { schedules } from '@trigger.dev/sdk/v3';
+import { logger, schedules } from '@trigger.dev/sdk/v3';
 import axios from 'axios';
 
 interface Payload {
@@ -21,16 +21,26 @@ export const scheduleProxy = schedules.task({
       include: { action: true },
     });
 
-    const usersOnWorkspace = await prisma.usersOnWorkspaces.findFirst({
-      where: {
-        workspaceId: actionSchedule.action.workspaceId,
-        user: { username: actionSchedule.action.slug },
-      },
-    });
+    const pat = actionSchedule.action.isPersonal
+      ? await prisma.personalAccessToken.findFirst({
+          where: {
+            workspaceId: actionSchedule.action.workspaceId,
+            userId: actionSchedule.action.createdById,
+            type: 'user',
+          },
+        })
+      : await prisma.personalAccessToken.findFirst({
+          where: {
+            workspaceId: actionSchedule.action.workspaceId,
+            user: { username: actionSchedule.action.slug },
+            type: 'trigger',
+          },
+        });
 
-    const pat = await prisma.personalAccessToken.findFirst({
-      where: { userId: usersOnWorkspace.userId, type: 'trigger' },
-    });
+    if (!pat) {
+      logger.error('No pat found');
+      return;
+    }
 
     return (
       await axios.post(

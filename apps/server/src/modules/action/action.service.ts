@@ -96,7 +96,7 @@ export default class ActionService {
         actionCreateResource.config.slug,
       );
 
-      if (!actionCreateResource.isDev) {
+      if (!actionCreateResource.isDev && !actionCreateResource.isPersonal) {
         // Upsert a workflow user for the action
         const workflowUser = await this.upsertWorkflowUser(
           prisma,
@@ -241,12 +241,18 @@ export default class ActionService {
 
   // Map triggers to entities
   private mapTriggersToEntities(triggers: ActionTrigger[]) {
-    return triggers.flatMap((trigger) =>
-      trigger.entities.map((entity) => ({
-        type: trigger.type,
-        entity,
-      })),
-    );
+    return triggers
+      .flatMap((trigger) => {
+        if (trigger.entities && trigger.entities.length > 0) {
+          return trigger.entities.map((entity) => ({
+            type: trigger.type,
+            entity,
+          }));
+        }
+
+        return undefined;
+      })
+      .filter(Boolean);
   }
 
   // Find or create an action
@@ -452,19 +458,19 @@ export default class ActionService {
 
   async createActionSchedule(
     slug: string,
+    workspaceId: string,
     scheduleActionBody: ActionScheduleDto,
     scheduledById: string,
   ) {
     const prisma = this.prisma;
     return await prisma.$transaction(async (tx) => {
-      const { workspaceId, ...otherScheduleData } = scheduleActionBody;
       const action = await tx.action.findFirst({
         where: { slug, workspaceId },
       });
 
       const actionSchedule = await tx.actionSchedule.create({
         data: {
-          ...otherScheduleData,
+          ...scheduleActionBody,
           status: ActionScheduleStatusEnum.IN_ACTIVE,
           scheduledById,
           action: { connect: { id: action.id } },

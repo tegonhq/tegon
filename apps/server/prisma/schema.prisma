@@ -22,8 +22,13 @@ model Action {
   status  ActionStatus
   version String
 
+  // Used to trigger only specific version of trigger
   triggerVersion String?
+
   isDev          Boolean @default(false)
+
+  // To define if the action is deployed in personal account
+  isPersonal     Boolean @default(false)
 
   // We store the config of the action
   config Json

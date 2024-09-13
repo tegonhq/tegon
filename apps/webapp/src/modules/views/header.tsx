@@ -3,17 +3,16 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
 } from '@tegonhq/ui/components/breadcrumb';
-import { Button, buttonVariants } from '@tegonhq/ui/components/button';
+import { buttonVariants } from '@tegonhq/ui/components/button';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
-import { SidebarLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { useCurrentTeam } from 'hooks/teams';
+import { SidebarExpand } from 'common/sidebar-expand';
 
-import { useContextStore } from 'store/global-context-provider';
+import { useCurrentTeam } from 'hooks/teams';
 
 interface HeaderProps {
   title: string;
@@ -21,25 +20,16 @@ interface HeaderProps {
 
 export const Header = observer(({ title }: HeaderProps) => {
   const team = useCurrentTeam();
-  const { applicationStore } = useContextStore();
+
   const {
     query: { workspaceSlug },
   } = useRouter();
 
   return (
     <header className="flex px-6 w-full items-center gap-2 justify-between">
-      <div className="py-4">
-        {applicationStore.sidebarCollapsed && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              applicationStore.updateSideBar(false);
-            }}
-          >
-            <SidebarLine size={16} />
-          </Button>
-        )}
+      <div className="flex gap-2 py-4 items-center">
+        <SidebarExpand />
+
         <Breadcrumb>
           <BreadcrumbItem>
             <BreadcrumbLink

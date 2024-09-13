@@ -11,25 +11,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
-import {
-  DeleteLine,
-  EditLine,
-  MoreLine,
-  SidebarLine,
-  StackLine,
-} from '@tegonhq/ui/icons';
+import { DeleteLine, EditLine, MoreLine, StackLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
+import { SidebarExpand } from 'common/sidebar-expand';
 import type { ViewType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useUpdateViewMutation } from 'services/views';
-
-import { useContextStore } from 'store/global-context-provider';
 
 import { DeleteViewAlert } from './delete-view-alert';
 import { EditViewDialog } from './edit-view-dialog';
@@ -41,7 +34,7 @@ interface HeaderProps {
 
 export const Header = observer(({ title, view }: HeaderProps) => {
   const team = useCurrentTeam();
-  const { applicationStore } = useContextStore();
+
   const {
     query: { workspaceSlug },
   } = useRouter();
@@ -50,19 +43,9 @@ export const Header = observer(({ title, view }: HeaderProps) => {
   const { mutate: updateView } = useUpdateViewMutation({});
 
   return (
-    <header className="flex px-6 py-4 w-full items-center gap-2">
-      <div className="flex items-center">
-        {applicationStore.sidebarCollapsed && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              applicationStore.updateSideBar(false);
-            }}
-          >
-            <SidebarLine size={16} />
-          </Button>
-        )}
+    <header className="flex px-6  w-full items-center gap-2">
+      <div className="flex py-4 items-center">
+        <SidebarExpand />
         <Breadcrumb>
           <BreadcrumbItem>
             <BreadcrumbLink

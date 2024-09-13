@@ -2,7 +2,12 @@
 
 import { Button, buttonVariants } from '@tegonhq/ui/components/button';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
-import { BuildingLine, ChevronLeft, UserLine } from '@tegonhq/ui/icons';
+import {
+  BuildingLine,
+  ChevronLeft,
+  SidebarLine,
+  UserLine,
+} from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -23,7 +28,7 @@ interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {}
 export function SidebarNav({ className, ...props }: SidebarNavProps) {
   const router = useRouter();
   const { query, push } = router;
-  const { teamsStore } = useContextStore();
+  const { teamsStore, applicationStore } = useContextStore();
   const pathname = usePathname();
   const {
     workspaceSlug,
@@ -41,20 +46,28 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
 
   return (
     <nav className={cn('flex flex-col', className)} {...props}>
-      <Button
-        variant="ghost"
-        size="xl"
-        onClick={() => {
-          push(
-            `/${query.workspaceSlug}/team/${teamsStore.teams[0].identifier}/all`,
-          );
-        }}
-        className="group my-2 px-4 flex justify-start hover:bg-transparent"
-      >
-        <ChevronLeft className="mr-2 " size={20} />
-        Settings
-      </Button>
-
+      <div className="flex justify-between items-center">
+        <Button
+          variant="ghost"
+          size="xl"
+          onClick={() => {
+            push(
+              `/${query.workspaceSlug}/team/${teamsStore.teams[0].identifier}/all`,
+            );
+          }}
+          className="group my-2 px-4 flex justify-start hover:bg-transparent"
+        >
+          <ChevronLeft className="mr-2 " size={20} />
+          Settings
+        </Button>
+        <Button
+          variant="link"
+          size="sm"
+          onClick={() => applicationStore.updateSideBar(true)}
+        >
+          <SidebarLine size={20} />
+        </Button>
+      </div>
       <ScrollArea className="overflow-y-auto h-[calc(100vh_-_56px)]">
         <div className="px-6 py-3">
           <div className="flex flex-col items-start justify-start w-full">

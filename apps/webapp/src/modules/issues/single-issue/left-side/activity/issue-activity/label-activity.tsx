@@ -38,7 +38,7 @@ export function LabelActivity({
           <LabelLine size={20} className="mr-2" />
 
           <div className="flex items-center">
-            <span className="mr-2 font-medium text-foreground">{fullname}</span>
+            <span className="mr-2 text-foreground">{fullname}</span>
             added label
           </div>
 

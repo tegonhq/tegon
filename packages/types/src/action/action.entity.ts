@@ -61,6 +61,7 @@ export class Action {
 
   status: ActionStatus;
   isDev: boolean;
+  isPersonal: boolean;
 
   triggerVersion: string;
   version: string;

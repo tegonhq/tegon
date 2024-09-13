@@ -9,7 +9,6 @@ export class ActionScheduleDto {
   cron: string;
   timezone?: string;
   status?: ActionScheduleStatusEnum;
-  workspaceId?: string;
 }
 
 export class ActionScheduleTriggerParamsDto {
