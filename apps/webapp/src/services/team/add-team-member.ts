@@ -1,11 +1,9 @@
 import { addTeamMember } from '@tegonhq/services';
 import { useMutation } from 'react-query';
 
-import type { TeamType } from 'common/types';
-
-export interface MutationParams {
+interface MutationParams {
   onMutate?: () => void;
-  onSuccess?: (data: TeamType) => void;
+  onSuccess?: () => void;
   onError?: (error: string) => void;
 }
 
@@ -25,8 +23,8 @@ export function useAddTeamMemberMutation({
     onError && onError(errorText);
   };
 
-  const onMutationSuccess = (data: TeamType) => {
-    onSuccess && onSuccess(data);
+  const onMutationSuccess = () => {
+    onSuccess && onSuccess();
   };
 
   return useMutation(addTeamMember, {

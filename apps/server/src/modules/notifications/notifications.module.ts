@@ -3,6 +3,8 @@ import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
+import { UsersService } from 'modules/users/users.service';
+
 import { NotificationsController } from './notifications.controller';
 import { NotificationsProcessor } from './notifications.processor';
 import { NotificationsQueue } from './notifications.queue';
@@ -19,6 +21,7 @@ import NotificationsService from './notifications.service';
     NotificationsService,
     PrismaService,
     NotificationsQueue,
+    UsersService,
     NotificationsProcessor,
   ],
   exports: [NotificationsService, NotificationsQueue],

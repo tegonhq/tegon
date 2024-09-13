@@ -11,7 +11,7 @@ import { NotificationItem } from './notification-item';
 export const NotificationsList = observer(() => {
   const { notificationsStore } = useContextStore();
   const notifications = sort(notificationsStore.getNotifications).desc(
-    (notification: NotificationType) => new Date(notification.updatedAt),
+    (notification: NotificationType) => new Date(notification.createdAt),
   ) as NotificationType[];
 
   return (

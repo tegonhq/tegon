@@ -22,6 +22,8 @@ export async function saveActionData(
         name: record.data.name,
         description: record.data.description,
         slug: record.data.slug,
+        isDev: record.data.isDev,
+        isPersonal: record.data.isPersonal,
 
         integrations: record.data.integrations,
         data: JSON.stringify(record.data.data),

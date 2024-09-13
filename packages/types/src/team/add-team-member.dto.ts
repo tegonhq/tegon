@@ -1,4 +1,4 @@
-export class AddMemberDto {
+export class AddTeamMemberDto {
   userId: string;
   teamId: string;
 }
