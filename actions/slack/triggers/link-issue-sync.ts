@@ -7,6 +7,8 @@ import {
   ActionEventPayload,
   getUsers,
   RoleEnum,
+  ActionTypesEnum,
+  JsonObject,
 } from '@tegonhq/sdk';
 
 import { slackLinkRegex } from '../types';
@@ -17,6 +19,21 @@ import {
 } from '../utils';
 
 export const linkIssueSync = async (actionPayload: ActionEventPayload) => {
+  switch (actionPayload.event) {
+    case ActionTypesEnum.ON_CREATE:
+      return await onCreateLinkedIssue(actionPayload);
+
+    case ActionTypesEnum.ON_UPDATE:
+      return await onUpdateLinkedIssue(actionPayload);
+
+    default:
+      return {
+        message: `This event ${actionPayload.event} is not handled in LinkedIssue Sync`,
+      };
+  }
+};
+
+async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
   const {
     integrationAccounts: { slack: integrationAccount },
     modelId: linkIssueId,
@@ -135,4 +152,61 @@ export const linkIssueSync = async (actionPayload: ActionEventPayload) => {
   }
 
   return linkedIssue;
-};
+}
+
+async function onUpdateLinkedIssue(actionPayload: ActionEventPayload) {
+  console.log(actionPayload);
+  const {
+    modelId: linkedIssueId,
+    changedData,
+    integrationAccounts: { slack: integrationAccount },
+  } = actionPayload;
+  if (changedData.sync !== undefined) {
+    const linkedIssue = await getLinkedIssue({ linkedIssueId });
+
+    const sourceData = linkedIssue.sourceData as JsonObject;
+
+    const {
+      issue: { team, number: issueNumber },
+    } = linkedIssue;
+    const { identifier: teamIdentifier } = team;
+
+    // Create the issue identifier
+    const issueIdentifier = `${teamIdentifier}-${issueNumber}`;
+
+    // Create the issue URL using the workspace slug and issue identifier
+    const issueUrl = `https://app.tegon.ai/${integrationAccount.workspace.slug}/issue/${issueIdentifier}`;
+
+    let messageText = `Stopping sync with Tegon issue <${issueUrl}|${issueIdentifier}>`;
+    if (changedData.sync) {
+      messageText = `This thread is syncing with a Tegon issue <${issueUrl}|${issueIdentifier}>`;
+    }
+
+    // Create the message payload with the issue URL and thread details
+    const messagePayload: EventBody = {
+      channel: sourceData.channelId,
+      blocks: [
+        {
+          type: 'context',
+          elements: [
+            {
+              type: 'mrkdwn',
+              text: messageText,
+            },
+          ],
+        },
+      ],
+      thread_ts: sourceData.parentTs,
+    };
+
+    // Send the Slack message using the integration account and message payload
+    await sendSlackMessage(integrationAccount, messagePayload);
+    logger.debug(
+      `Slack message sent successfully for linked issue: ${issueIdentifier}`,
+    );
+
+    return { message: `Slack message sent successfully` };
+  }
+
+  return { message: 'ignoring the change in linked issue' };
+}

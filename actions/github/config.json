@@ -6,16 +6,16 @@
   "triggers": [
     {
       "type": "on_create",
-      "entities": [ "Issue", "IssueComment", "LinkedIssue" ]
+      "entities": ["Issue", "IssueComment", "LinkedIssue"]
     },
     {
       "type": "on_update",
-      "entities": [ "Issue", "IssueComment" ]
+      "entities": ["Issue", "IssueComment", "LinkedIssue"]
     },
     {
       "type": "source_webhook",
-      "entities": [ "github" ]
+      "entities": ["github"]
     }
   ],
-  "integrations": [ "github" ]
+  "integrations": ["github"]
 }

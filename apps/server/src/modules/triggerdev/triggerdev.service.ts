@@ -67,6 +67,10 @@ export class TriggerdevService {
     }
   }
 
+  async getDockerToken() {
+    return { token: this.configService.get('DOCKER_TOKEN') };
+  }
+
   // Create personal token taking from the .env
   // Used to deploy the tegon backgrounds
   async createPersonalToken() {

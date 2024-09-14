@@ -175,8 +175,11 @@ export default class IssuesService {
       }),
     );
 
+    const descriptionMarkdown = convertTiptapJsonToMarkdown(
+      issues[0].description,
+    );
     // Return the main created issue
-    return issues[0];
+    return { ...issues[0], descriptionMarkdown };
   }
 
   /**
@@ -310,7 +313,10 @@ export default class IssuesService {
       );
     }
 
-    return updatedIssue;
+    const descriptionMarkdown = convertTiptapJsonToMarkdown(
+      updatedIssue.description,
+    );
+    return { ...updatedIssue, descriptionMarkdown };
   }
 
   /**

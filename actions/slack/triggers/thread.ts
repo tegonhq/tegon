@@ -8,6 +8,7 @@ import {
   getLinkedComment,
   getLinkedIssueBySource,
   uploadAttachment,
+  JsonObject,
 } from '@tegonhq/sdk';
 
 import {
@@ -56,6 +57,15 @@ export const slackThread = async (
   if (!linkedIssue) {
     logger.debug(`No linked issue found for Slack issue ID: ${parentThreadId}`);
     return undefined;
+  }
+
+  const sourceData = linkedIssue.sourceData as JsonObject;
+  const syncingLinkedIssue =
+    sourceData.type === integrationAccount.integrationDefinition.slug &&
+    linkedIssue.sync === true;
+
+  if (!syncingLinkedIssue) {
+    return { message: 'Linked issue is not sync with source' };
   }
 
   // Extract issue ID and synced comment ID from the linked issue

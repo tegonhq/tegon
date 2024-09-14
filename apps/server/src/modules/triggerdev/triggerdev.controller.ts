@@ -15,6 +15,12 @@ import { TriggerdevService } from './triggerdev.service';
 export class TriggerdevController {
   constructor(private triggerdevService: TriggerdevService) {}
 
+  @Get('docker-token')
+  @UseGuards(AuthGuard)
+  async getDockerToken() {
+    return this.triggerdevService.getDockerToken();
+  }
+
   @Get()
   @UseGuards(AuthGuard, ActionGuard)
   async getRequiredKeys(

@@ -91,7 +91,8 @@ export default class IssueCommentsService {
       },
     );
 
-    return issueComment;
+    const newBodyMarkdown = convertTiptapJsonToMarkdown(issueComment.body);
+    return { ...issueComment, bodyMarkdown: newBodyMarkdown };
   }
 
   async updateIssueComment(
@@ -116,7 +117,8 @@ export default class IssueCommentsService {
       },
     });
 
-    return issueComment;
+    const newBodyMarkdown = convertTiptapJsonToMarkdown(issueComment.body);
+    return { ...issueComment, bodyMarkdown: newBodyMarkdown };
   }
 
   async deleteIssueComment(

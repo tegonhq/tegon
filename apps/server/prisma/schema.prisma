@@ -25,10 +25,10 @@ model Action {
   // Used to trigger only specific version of trigger
   triggerVersion String?
 
-  isDev          Boolean @default(false)
+  isDev Boolean @default(false)
 
   // To define if the action is deployed in personal account
-  isPersonal     Boolean @default(false)
+  isPersonal Boolean @default(false)
 
   // We store the config of the action
   config Json
@@ -348,13 +348,13 @@ model PersonalAccessToken {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name   String
-  jwt    String
-  token  String
+  name  String
+  jwt   String
+  token String
 
-  user   User @relation(fields: [userId], references: [id])
-  userId String
-  type   String @default("user")
+  user        User   @relation(fields: [userId], references: [id])
+  userId      String
+  type        String @default("user")
   workspaceId String
 
   @@unique([name, userId, token])
@@ -407,6 +407,7 @@ model LinkedIssue {
   url         String
   sourceId    String?
   sourceData  Json?
+  sync        Boolean @default(true)
   createdById String?
   updatedById String?
 
@@ -551,10 +552,10 @@ model User {
 
   image String?
 
-  usersOnWorkspaces  UsersOnWorkspaces[]
-  template           Template[]
-  integrationAccount IntegrationAccount[]
-  attachment         Attachment[]
+  usersOnWorkspaces   UsersOnWorkspaces[]
+  template            Template[]
+  integrationAccount  IntegrationAccount[]
+  attachment          Attachment[]
   personalAccessToken PersonalAccessToken[]
 }
 
