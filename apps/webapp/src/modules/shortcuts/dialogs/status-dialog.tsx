@@ -3,7 +3,7 @@ import React from 'react';
 
 import { getWorkflowColor } from 'common/status-color';
 import type { WorkflowType } from 'common/types';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useCurrentTeam } from 'hooks/teams';
 
@@ -42,7 +42,7 @@ export const StatusDialog = observer(({ open, setOpen }: StatusDialogProps) => {
     const workflows = workflowsStore.getWorkflowsForTeam(team.id);
 
     return workflows.map((workflow: WorkflowType) => {
-      const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];
+      const CategoryIcon = getWorkflowIcon(workflow);
 
       return {
         Icon: (

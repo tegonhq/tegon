@@ -9,11 +9,11 @@ export interface UpdateWorkflowInput
   extends WorkflowRequestParamsDto,
     UpdateWorkflowDTO {}
 
-export async function updateWorkflows({
+export async function updateWorkflow({
   teamId,
   workflowId,
   ...data
-}: UpdateWorkflowInput): Promise<Workflow[]> {
+}: UpdateWorkflowInput): Promise<Workflow> {
   const response = await axios.post(
     `/api/v1/${teamId}/workflows/${workflowId}`,
     data,

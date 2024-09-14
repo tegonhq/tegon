@@ -1,5 +1,6 @@
 import type { DropResult } from '@hello-pangea/dnd';
 
+import { RoleEnum } from '@tegonhq/types';
 import { Board } from '@tegonhq/ui/components/board';
 import { observer } from 'mobx-react-lite';
 
@@ -21,6 +22,7 @@ export const AssigneeBoard = observer(
     const { issuesStore } = useContextStore();
 
     const onDragEnd = (result: DropResult) => {
+      console.log(result);
       const issueId = result.draggableId;
 
       const assigneeId = result.destination.droppableId;
@@ -34,9 +36,14 @@ export const AssigneeBoard = observer(
     return (
       <Board onDragEnd={onDragEnd} className="pl-6">
         <>
-          {usersOnWorkspaces.map((uOW: UsersOnWorkspaceType) => {
-            return <AssigneeBoardList key={uOW.id} userOnWorkspace={uOW} />;
-          })}
+          {usersOnWorkspaces
+            .filter(
+              (uOw: UsersOnWorkspaceType) =>
+                ![RoleEnum.BOT, RoleEnum.AGENT].includes(uOw.role as RoleEnum),
+            )
+            .map((uOW: UsersOnWorkspaceType) => {
+              return <AssigneeBoardList key={uOW.id} userOnWorkspace={uOW} />;
+            })}
 
           <NoAssigneeView />
         </>

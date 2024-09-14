@@ -1,4 +1,8 @@
-import type { DroppableProvided, DropResult } from '@hello-pangea/dnd';
+import type {
+  DraggableChildrenFn,
+  DroppableProvided,
+  DropResult,
+} from '@hello-pangea/dnd';
 
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import React from 'react';
@@ -58,11 +62,17 @@ export function Board({
 interface BoardColumnProps {
   children: React.ReactElement;
   id: string;
+  renderClone?: DraggableChildrenFn | null;
 }
 
-export function BoardColumn({ children, id }: BoardColumnProps) {
+export function BoardColumn({ children, id, renderClone }: BoardColumnProps) {
   return (
-    <Droppable droppableId={id} type="BoardColumn" ignoreContainerClipping>
+    <Droppable
+      droppableId={id}
+      type="BoardColumn"
+      ignoreContainerClipping
+      renderClone={renderClone}
+    >
       {(dropProvided: DroppableProvided) => (
         <div ref={dropProvided.innerRef}>
           <div className="rounded-md w-[350px] flex flex-col h-full">

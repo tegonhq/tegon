@@ -1,8 +1,9 @@
+import { WorkflowCategoryEnum } from '@tegonhq/types';
 import { sort } from 'fast-sort';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
+import { type WorkflowType } from 'common/types';
 import type { IssueType } from 'common/types';
 
 import {

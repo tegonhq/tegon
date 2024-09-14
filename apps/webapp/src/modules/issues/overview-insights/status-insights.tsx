@@ -2,7 +2,7 @@ import { groupBy } from 'common/lib/common';
 import { getWorkflowColor } from 'common/status-color';
 import type { IssueType } from 'common/types';
 import type { WorkflowType } from 'common/types';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -18,7 +18,7 @@ export function StatusInsights({ issues }: StatusInsightsProps) {
     <div className="flex flex-col gap-3 p-3">
       {Array.from(groupedByIssues.keys()).map((key: string) => {
         const workflow = workflowsStore.getWorkflowWithId(key) as WorkflowType;
-        const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];
+        const CategoryIcon = getWorkflowIcon(workflow);
 
         return (
           <div key={key} className="flex justify-between py-1">

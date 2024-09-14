@@ -80,7 +80,7 @@ export function SyncCommentActivity({
 
           <CollapsibleContent className="space-y-2">
             {childComments.length > 0 && (
-              <div className="text-muted-foreground w-full border-t border-border p-3 pb-0">
+              <div className="w-full border-t border-border p-3 pb-0">
                 {childComments.map(
                   (subComment: IssueCommentType, index: number) => (
                     <div

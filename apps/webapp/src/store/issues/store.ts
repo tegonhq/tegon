@@ -20,6 +20,14 @@ export const IssuesStore: IAnyStateTreeNode = types
     const update = (issue: IssueType, id: string) => {
       self.issuesMap.set(id, Issue.create(issue));
     };
+
+    const updateIssue = (updateProps: Partial<IssueType>, id: string) => {
+      const issue = self.issuesMap.get(id);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const issueJson = (issue as any).toJSON();
+      self.issuesMap.set(id, { ...issueJson, ...updateProps });
+    };
+
     const deleteById = (id: string) => {
       self.issuesMap.delete(id);
     };
@@ -32,7 +40,7 @@ export const IssuesStore: IAnyStateTreeNode = types
       });
     });
 
-    return { update, deleteById, load };
+    return { update, deleteById, load, updateIssue };
   })
   .views((self) => ({
     getIssues() {

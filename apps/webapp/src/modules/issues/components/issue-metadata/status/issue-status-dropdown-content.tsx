@@ -3,7 +3,7 @@ import { CommandGroup } from '@tegonhq/ui/components/command';
 
 import { getWorkflowColor } from 'common/status-color';
 import type { WorkflowType } from 'common/types';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { DropdownItem } from '../dropdown-item';
 
@@ -39,7 +39,7 @@ export function IssueStatusDropdownContent({
   return (
     <CommandGroup>
       {workflows.map((workflow, index) => {
-        const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];
+        const CategoryIcon = getWorkflowIcon(workflow);
 
         return (
           <DropdownItem

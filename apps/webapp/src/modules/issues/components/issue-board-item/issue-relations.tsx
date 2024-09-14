@@ -7,7 +7,7 @@ import React from 'react';
 import { getWorkflowColor } from 'common/status-color';
 import { IssueRelationEnum } from 'common/types';
 import type { IssueType } from 'common/types';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useTeamWithId } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
@@ -42,7 +42,7 @@ export const IssueRelations = observer(({ issue }: IssueRelationsProps) => {
     const parentWorkflow =
       parentIssue &&
       workflows.find((workflow) => workflow.id === parentIssue.stateId);
-    const CategoryIcon = WORKFLOW_CATEGORY_ICONS[parentWorkflow.name];
+    const CategoryIcon = getWorkflowIcon(parentWorkflow);
 
     return (
       <a

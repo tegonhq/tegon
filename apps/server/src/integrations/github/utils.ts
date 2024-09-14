@@ -87,25 +87,29 @@ export async function getAccessToken(
 export async function getBotAccessToken(
   integrationAccount: IntegrationAccount,
 ) {
-  // Get a new bot JWT token
-  const token = await getBotJWTToken(
-    integrationAccount.integrationDefinition as IntegrationDefinition,
-  );
+  try {
+    // Get a new bot JWT token
+    const token = await getBotJWTToken(
+      integrationAccount.integrationDefinition as IntegrationDefinition,
+    );
 
-  // Construct the URL to request a new access token
-  const url = `https://api.github.com/app/installations/${integrationAccount.accountId}/access_tokens`;
+    // Construct the URL to request a new access token
+    const url = `https://api.github.com/app/installations/${integrationAccount.accountId}/access_tokens`;
 
-  const { data: accessResponse } = await axios.post(
-    url,
-    {},
-    getGithubHeaders(token),
-  );
+    const { data: accessResponse } = await axios.post(
+      url,
+      {},
+      getGithubHeaders(token),
+    );
 
-  // Prepare the updated configuration with the new access token and expiration timestamp
-  const config = {
-    access_token: accessResponse.token,
-    expires_at: accessResponse.expires_at,
-  };
+    // Prepare the updated configuration with the new access token and expiration timestamp
+    const config = {
+      access_token: accessResponse.token,
+      expires_at: accessResponse.expires_at,
+    };
 
-  return config.access_token;
+    return config.access_token;
+  } catch (e) {
+    console.log(e.message);
+  }
 }

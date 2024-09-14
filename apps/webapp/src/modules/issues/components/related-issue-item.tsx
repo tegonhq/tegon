@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { getWorkflowColor } from 'common/status-color';
 import type { IssueRelationType } from 'common/types';
 import type { IssueType } from 'common/types';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useTeamWithId } from 'hooks/teams';
 import { useAllWorkflows } from 'hooks/workflows';
@@ -34,7 +34,7 @@ export const RelatedIssueItem = observer(
 
     const { mutate: deleteIssueRelation } = useDeleteIssueRelationMutation({});
 
-    const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];
+    const CategoryIcon = getWorkflowIcon(workflow);
 
     const deleteRelation = () => {
       deleteIssueRelation({

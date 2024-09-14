@@ -13,7 +13,7 @@ import { IssueListItem } from 'modules/issues/components';
 import { getWorkflowColor } from 'common/status-color';
 import type { WorkflowType } from 'common/types';
 import type { IssueType } from 'common/types';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useCurrentTeam } from 'hooks/teams';
 
@@ -27,9 +27,7 @@ interface CategoryViewListProps {
 
 export const CategoryViewList = observer(
   ({ workflow }: CategoryViewListProps) => {
-    const CategoryIcon =
-      WORKFLOW_CATEGORY_ICONS[workflow.name] ??
-      WORKFLOW_CATEGORY_ICONS['Backlog'];
+    const CategoryIcon = getWorkflowIcon(workflow);
     const currentTeam = useCurrentTeam();
     const [isOpen, setIsOpen] = React.useState(true);
     const { issuesStore, applicationStore } = useContextStore();

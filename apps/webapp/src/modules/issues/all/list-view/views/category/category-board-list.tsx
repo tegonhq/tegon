@@ -13,7 +13,7 @@ import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 import { getWorkflowColor } from 'common/status-color';
 import type { WorkflowType } from 'common/types';
 import type { IssueType } from 'common/types';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useCurrentTeam } from 'hooks/teams';
 
@@ -27,9 +27,7 @@ interface CategoryBoardItemProps {
 
 export const CategoryBoardList = observer(
   ({ workflow }: CategoryBoardItemProps) => {
-    const CategoryIcon =
-      WORKFLOW_CATEGORY_ICONS[workflow.name] ??
-      WORKFLOW_CATEGORY_ICONS['Backlog'];
+    const CategoryIcon = getWorkflowIcon(workflow);
     const currentTeam = useCurrentTeam();
     const { issuesStore, applicationStore } = useContextStore();
     const issues = issuesStore.getIssuesForState(

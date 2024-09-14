@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 
 import { getWorkflowColor } from 'common/status-color';
 import { type IssueType } from 'common/types';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useTeamWithId } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
@@ -16,7 +16,7 @@ export const ModalIssueItem = observer(({ issue }: ModalIssueItemProps) => {
   const workflows = useTeamWorkflows(team.identifier);
   const workflow = workflows.find((workflow) => workflow.id === issue.stateId);
 
-  const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];
+  const CategoryIcon = getWorkflowIcon(workflow);
 
   return (
     <div className="cursor-pointer flex items-center rounded-md">

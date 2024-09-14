@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { getWorkflowColor } from 'common/status-color';
 import { type IssueHistoryType } from 'common/types';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
@@ -27,7 +27,7 @@ export const StatusActivity = observer(
       (workflow) => workflow.id === issueHistory.toStateId,
     );
 
-    const CategoryIcon = WORKFLOW_CATEGORY_ICONS[toWorkflow.name];
+    const CategoryIcon = getWorkflowIcon(toWorkflow);
 
     return (
       <TimelineItem

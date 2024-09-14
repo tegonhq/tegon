@@ -1,8 +1,9 @@
+import { WorkflowCategoryEnum } from '@tegonhq/types';
 import { TriageFill } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 
-import { WorkflowColors } from 'common/status-color';
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
+import { getWorkflowColorWithNumber } from 'common/status-color';
+import { type WorkflowType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
@@ -25,7 +26,7 @@ export const RightSide = observer(() => {
 
   return (
     <div className="p-6 flex flex-col items-center justify-center gap-2">
-      <TriageFill size={32} color={WorkflowColors.Triage.color} />
+      <TriageFill size={32} color={getWorkflowColorWithNumber('0').color} />
       <div className="text-muted-foreground text-sm">
         {issues.length} issues to triage
       </div>

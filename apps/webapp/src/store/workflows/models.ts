@@ -5,6 +5,7 @@ export const Workflow = types.model({
   createdAt: types.string,
   updatedAt: types.string,
   name: types.string,
+  description: types.union(types.string, types.null),
   position: types.number,
   color: types.string,
   category: types.enumeration([

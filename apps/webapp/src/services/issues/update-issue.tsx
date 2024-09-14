@@ -4,6 +4,8 @@ import type { IssueType, IssueRelationEnum } from 'common/types';
 
 import { ajaxPost } from 'services/utils';
 
+import { useContextStore } from 'store/global-context-provider';
+
 export interface UpdateIssueParams {
   id: string;
   title?: string;
@@ -43,6 +45,21 @@ export function useUpdateIssueMutation({
   onSuccess,
   onError,
 }: MutationParams) {
+  const { issuesStore } = useContextStore();
+
+  const update = ({ id, ...otherParams }: UpdateIssueParams) => {
+    const issue = issuesStore.getIssueById(id);
+
+    try {
+      issuesStore.updateIssue(otherParams, id);
+
+      return updateIssue({ ...otherParams, id });
+    } catch (e) {
+      issuesStore.updateIssue(issue, id);
+      return undefined;
+    }
+  };
+
   const onMutationTriggered = () => {
     onMutate && onMutate();
   };
@@ -58,7 +75,7 @@ export function useUpdateIssueMutation({
     onSuccess && onSuccess(data);
   };
 
-  return useMutation(updateIssue, {
+  return useMutation(update, {
     onError: onMutationError,
     onMutate: onMutationTriggered,
     onSuccess: onMutationSuccess,
