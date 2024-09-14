@@ -10,7 +10,7 @@ import * as React from 'react';
 import { IssueStatusDropdownContent } from 'modules/issues/components';
 
 import { getWorkflowColor } from 'common/status-color';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useTeamWorkflows } from 'hooks/workflows/use-team-workflows';
 
@@ -44,9 +44,7 @@ export function IssueStatusDropdown({
     return null;
   }
 
-  const CategoryIcon = workflow
-    ? WORKFLOW_CATEGORY_ICONS[workflow.name]
-    : WORKFLOW_CATEGORY_ICONS['Backlog'];
+  const CategoryIcon = getWorkflowIcon(workflow);
 
   function getTrigger() {
     if (variant === IssueStatusDropdownVariant.NO_BACKGROUND) {

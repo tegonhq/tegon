@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { getWorkflowColor } from 'common/status-color';
 import type { WorkflowType } from 'common/types';
 import type { IssueType } from 'common/types';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -27,7 +27,7 @@ export function ParentIssueView({ issue }: ParentIssueViewProps) {
     (wk: WorkflowType) => wk.id === issue.parent.stateId,
   );
 
-  const CategoryIcon = WORKFLOW_CATEGORY_ICONS[workflow.name];
+  const CategoryIcon = getWorkflowIcon(workflow);
 
   return (
     <Link

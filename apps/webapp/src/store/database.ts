@@ -39,13 +39,13 @@ export class TegonDatabase extends Dexie {
   constructor(databaseName: string) {
     super(databaseName);
 
-    this.version(6).stores({
+    this.version(7).stores({
       [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug',
       [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',
       [MODELS.Team]: 'id,createdAt,updatedAt,name,identifier,workspaceId',
       [MODELS.Workflow]:
-        'id,createdAt,updatedAt,name,position,color,category,teamId',
+        'id,createdAt,updatedAt,name,position,color,category,teamId,description',
       [MODELS.Issue]:
         'id,createdAt,updatedAt,title,number,description,priority,dueDate,sortOrder,estimate,teamId,createdById,assigneeId,labelIds,parentId,stateId,sourceMetadata',
       [MODELS.UsersOnWorkspaces]:

@@ -13,7 +13,7 @@ import {
 import { getWorkflowColor } from 'common/status-color';
 import type { WorkflowType } from 'common/types';
 import type { User } from 'common/types';
-import { WORKFLOW_CATEGORY_ICONS } from 'common/workflow-icons';
+import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useUsersData } from 'hooks/users';
 
@@ -47,9 +47,7 @@ export const IssueCollapseView = observer(
         )
       : workflows[0];
 
-    const CategoryIcon = currentWorkflow
-      ? WORKFLOW_CATEGORY_ICONS[(currentWorkflow as WorkflowType).name]
-      : WORKFLOW_CATEGORY_ICONS['Backlog'];
+    const CategoryIcon = getWorkflowIcon(currentWorkflow);
 
     function getUserData(userId: string) {
       if (userId === 'no-user') {

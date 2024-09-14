@@ -37,6 +37,12 @@ export const Overview = observer(() => {
     },
   });
 
+  React.useEffect(() => {
+    form.setValue('name', currentTeam.name);
+    form.setValue('identifier', currentTeam.identifier);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTeam]);
+
   async function onSubmit(values: z.infer<typeof OverviewSchema>) {
     console.log(values);
   }

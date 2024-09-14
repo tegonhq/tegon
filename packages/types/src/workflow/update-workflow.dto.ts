@@ -8,6 +8,10 @@ export class UpdateWorkflowDTO {
   name?: string;
 
   @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
   @IsNumber()
   position?: number;
 

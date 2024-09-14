@@ -15,6 +15,7 @@ export async function saveWorkflowData(
         createdAt: record.data.createdAt,
         updatedAt: record.data.updatedAt,
         name: record.data.name,
+        description: record.data.description,
         position: record.data.position,
         workflowId: record.data.teamId,
         color: record.data.color,

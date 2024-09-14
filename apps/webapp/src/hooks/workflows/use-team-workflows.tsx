@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { WorkflowCategoryEnum } from '@tegonhq/types';
 import { computed } from 'mobx';
 import * as React from 'react';
 
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
+import { type WorkflowType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -19,14 +20,18 @@ const categorySequence = [
 
 function workflowSort(a: WorkflowType, b: WorkflowType): number {
   // Compare categories based on their sequence
-  const categoryAIndex = categorySequence.indexOf(a.category);
-  const categoryBIndex = categorySequence.indexOf(b.category);
+  const categoryAIndex = categorySequence.indexOf(
+    a.category as WorkflowCategoryEnum,
+  );
+  const categoryBIndex = categorySequence.indexOf(
+    b.category as WorkflowCategoryEnum,
+  );
   if (categoryAIndex !== categoryBIndex) {
     return categoryAIndex - categoryBIndex;
   }
 
   // If categories are the same, compare by position
-  return b.position - a.position;
+  return a.position - b.position;
 }
 
 export function useTeamWorkflows(
@@ -49,14 +54,14 @@ export function useTeamWorkflows(
       return [];
     }
 
-    const workflows = workflowsStore.workflows.filter(
-      (workflow: WorkflowType) => {
+    const workflows = workflowsStore.workflows
+      .filter((workflow: WorkflowType) => {
         return (
           workflow.teamId === team.id &&
-          workflowCategories.includes(workflow.category)
+          workflowCategories.includes(workflow.category as WorkflowCategoryEnum)
         );
-      },
-    );
+      })
+      .sort(workflowSort);
 
     return workflows;
   };
@@ -76,7 +81,9 @@ export function useAllWorkflows(): WorkflowType[] | undefined {
   const getWorkflows = () => {
     const workflows = workflowsStore.workflows
       .filter((workflow: WorkflowType) => {
-        return workflowCategories.includes(workflow.category);
+        return workflowCategories.includes(
+          workflow.category as WorkflowCategoryEnum,
+        );
       })
       .sort(workflowSort);
 

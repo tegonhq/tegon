@@ -155,7 +155,7 @@ export function AddMemberDialog({ setDialogOpen }: AddMemberDialogProps) {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            {Object.values(RoleEnum).map((role) => (
+                            {['User', 'Admin'].map((role) => (
                               <SelectItem key={role} value={role}>
                                 {capitalizeFirstLetter(role)}
                               </SelectItem>

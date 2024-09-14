@@ -1,3 +1,4 @@
+import { WorkflowCategoryEnum } from '@tegonhq/types';
 import {
   type IAnyStateTreeNode,
   type Instance,
@@ -5,7 +6,7 @@ import {
   flow,
 } from 'mobx-state-tree';
 
-import { WorkflowCategoryEnum, type WorkflowType } from 'common/types';
+import { type WorkflowType } from 'common/types';
 
 import { tegonDatabase } from 'store/database';
 
@@ -85,6 +86,14 @@ export const WorkflowsStore: IAnyStateTreeNode = types
           return workflow?.id;
         })
         .filter(Boolean);
+    },
+    getPositionForCategory(category: WorkflowCategoryEnum, teamId: string) {
+      const workflows = self.workflows.filter(
+        (workflow: WorkflowType) =>
+          workflow.category === category && workflow.teamId === teamId,
+      );
+
+      return workflows.length;
     },
   }));
 

@@ -36,7 +36,7 @@ export class IntegrationsService {
 
       return undefined;
     } catch (error) {
-      console.error(`Failed to load integration for ${slug}:`, error);
+      this.logger.error(error);
     }
   }
 }

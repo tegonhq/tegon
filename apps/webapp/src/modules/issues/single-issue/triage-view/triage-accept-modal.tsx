@@ -28,7 +28,8 @@ import {
 } from 'modules/issues/components';
 
 import { useIssueData } from 'hooks/issues';
-import { useCurrentTeam } from 'hooks/teams';
+import { useCurrentTeam, useTeamWithId } from 'hooks/teams';
+import { useTeamWorkflows } from 'hooks/workflows';
 
 import {
   useCreateIssueCommentMutation,
@@ -63,9 +64,11 @@ interface AcceptIssueParams {
 export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
   const currentTeam = useCurrentTeam();
   const issue = useIssueData();
+  const team = useTeamWithId(issue.teamId);
   const currentUser = React.useContext(UserContext);
   const { mutate: updateIssue } = useUpdateIssueMutation({});
   const { mutate: commentIssue } = useCreateIssueCommentMutation({});
+  const workflows = useTeamWorkflows(team.identifier);
 
   const form = useForm<z.infer<typeof AcceptIssueSchema>>({
     resolver: zodResolver(AcceptIssueSchema),
@@ -73,7 +76,7 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
       labelIds: issue.labelIds,
       priority: issue.priority ?? 0,
       assigneeId: issue.assigneeId,
-      stateId: issue.stateId,
+      stateId: workflows[0].id,
     },
   });
 

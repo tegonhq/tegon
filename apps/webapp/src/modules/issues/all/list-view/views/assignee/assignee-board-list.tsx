@@ -73,13 +73,17 @@ export const AssigneeBoardList = observer(
                     {(
                       dragProvided: DraggableProvided,
                       dragSnapshot: DraggableStateSnapshot,
-                    ) => (
-                      <BoardIssueItem
-                        issueId={issue.id}
-                        isDragging={dragSnapshot.isDragging}
-                        provided={dragProvided}
-                      />
-                    )}
+                    ) => {
+                      console.log(dragSnapshot);
+
+                      return (
+                        <BoardIssueItem
+                          issueId={issue.id}
+                          isDragging={dragSnapshot.isDragging}
+                          provided={dragProvided}
+                        />
+                      );
+                    }}
                   </Draggable>
                 </BoardItem>
               ))}
