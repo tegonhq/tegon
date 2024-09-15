@@ -5,9 +5,7 @@ import {
   IsObject,
   IsOptional,
   IsString,
-  ValidateBy,
   ValidateNested,
-  ValidationArguments,
 } from 'class-validator';
 
 import { CreateIssueRelationDto } from '../issue-relation';
@@ -28,49 +26,11 @@ export class CreateIssueDto {
   title: string;
 
   @IsString()
-  @ValidateBy(
-    {
-      name: 'eitherDescriptionOrDescriptionMarkdown',
-      validator: {
-        validate: (_value: string, args: ValidationArguments): boolean => {
-          const object = args.object as CreateIssueDto;
-          const { description, descriptionMarkdown } = object;
-          return !!(
-            (description && descriptionMarkdown) ||
-            description ||
-            descriptionMarkdown
-          );
-        },
-      },
-    },
-    {
-      message:
-        'Either description or descriptionMarkdown must be provided, but not both',
-    },
-  )
+  @IsOptional()
   description?: string;
 
   @IsString()
-  @ValidateBy(
-    {
-      name: 'eitherDescriptionOrDescriptionMarkdown',
-      validator: {
-        validate: (_value: string, args: ValidationArguments): boolean => {
-          const object = args.object as CreateIssueDto;
-          const { description, descriptionMarkdown } = object;
-          return !!(
-            (description && descriptionMarkdown) ||
-            description ||
-            descriptionMarkdown
-          );
-        },
-      },
-    },
-    {
-      message:
-        'Either description or descriptionMarkdown must be provided, but not both',
-    },
-  )
+  @IsOptional()
   descriptionMarkdown?: string;
 
   @IsOptional()
