@@ -23,6 +23,7 @@ import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
 import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
+import { getTiptapJSON } from 'common';
 
 export const LeftSide = observer(() => {
   const issue = useIssueData();
@@ -38,8 +39,10 @@ export const LeftSide = observer(() => {
   const { suggestionItems } = useEditorSuggestionItems();
 
   const onDescriptionChange = useDebouncedCallback((content: string) => {
+    const { json: description } = getTiptapJSON(content);
+
     updateIssue({
-      description: content,
+      description: JSON.stringify(description),
       teamId: issue.teamId,
       id: issue.id,
     });

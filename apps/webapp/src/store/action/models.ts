@@ -6,7 +6,7 @@ export const Action = types.model({
   updatedAt: types.string,
 
   name: types.string,
-  description: types.string,
+  description: types.union(types.string, types.null),
   slug: types.string,
   config: types.string,
   version: types.string,

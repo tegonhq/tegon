@@ -2,7 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 // To send the webhook
 import { ConfigService } from '@nestjs/config';
 import { JsonObject } from '@tegonhq/types';
-import axios from 'axios';
+// import axios from 'axios';
 import { Client, GatewayIntentBits } from 'discord.js';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -64,9 +64,11 @@ export class DiscordBotService implements OnModuleInit {
 
         const url = `${this.config.get('FRONTEND_HOST')}/api/v1/webhook/discord`;
 
-        axios.post(url, packet);
+        console.log(url);
+        // axios.post(url, packet);
       });
     } catch (e) {
+      console.log(e);
       this.logger.error({
         message: `Discord listener: ${e}`,
         where: 'DiscordBotService.onModuleInit',

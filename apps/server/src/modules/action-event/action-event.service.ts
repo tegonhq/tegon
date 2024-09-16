@@ -33,20 +33,32 @@ export default class ActionEventService {
   async createEvent(event: CreateActionEvent) {
     if (SUPPORTED_MODELS.includes(event.modelName)) {
       const eventType = this.getEventType(event);
+      const sequenceId = convertLsnToInt(event.sequenceId);
 
-      const actionEvent = await this.prisma.actionEvent.create({
-        data: {
-          ...event,
-          eventType,
-          eventData:
-            eventType === ActionTypesEnum.ON_UPDATE ? event.eventData : {},
-          sequenceId: convertLsnToInt(event.sequenceId),
+      // We have to handle this because the data received in replication service
+      // is a multiple of number of replication slots
+      const existingActionEvent = await this.prisma.actionEvent.findFirst({
+        where: {
+          sequenceId,
+          modelId: event.modelId,
+          modelName: event.modelName,
         },
       });
 
-      const processedIds = await this.triggerActions(actionEvent);
+      if (!existingActionEvent) {
+        const actionEvent = await this.prisma.actionEvent.create({
+          data: {
+            ...event,
+            eventType,
+            eventData:
+              eventType === ActionTypesEnum.ON_UPDATE ? event.eventData : {},
+            sequenceId,
+          },
+        });
 
-      this.updateEvent(actionEvent.id, processedIds);
+        const processedIds = await this.triggerActions(actionEvent);
+        this.updateEvent(actionEvent.id, processedIds);
+      }
     }
   }
 

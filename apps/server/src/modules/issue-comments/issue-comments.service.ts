@@ -5,6 +5,7 @@ import {
   IssueComment,
   IssueCommentRequestParamsDto,
   LinkedComment,
+  UpdateIssueCommentDto,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -95,10 +96,11 @@ export default class IssueCommentsService {
 
   async updateIssueComment(
     issueCommentParams: IssueCommentRequestParamsDto,
-    commentData: CreateIssueCommentDto,
+    commentData: UpdateIssueCommentDto,
   ): Promise<IssueComment> {
     const { body, bodyMarkdown, ...otherCommentData } = commentData;
     let updatedBody = body;
+
     if (!body && bodyMarkdown) {
       updatedBody = JSON.stringify(convertMarkdownToTiptapJson(bodyMarkdown));
     }

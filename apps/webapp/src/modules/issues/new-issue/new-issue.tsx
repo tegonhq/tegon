@@ -16,6 +16,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { Key } from 'ts-key-enum';
 import { z } from 'zod';
 
+import { getTiptapJSON } from 'common';
 import { SCOPES } from 'common/scopes';
 import type { IssueType } from 'common/types';
 
@@ -83,10 +84,17 @@ export function NewIssue({ open, setOpen, parentId }: NewIssueProps) {
     const issues = [...values.issues];
     const parentIssue = issues.shift();
 
+    const { json: parentDescription } = getTiptapJSON(parentIssue.description);
+
     createIssue({
       ...parentIssue,
+      description: JSON.stringify(parentDescription),
       parentId,
-      subIssues: issues,
+      subIssues: issues.map((issue) => {
+        const { json: description } = getTiptapJSON(issue.description);
+
+        return { ...issue, description: JSON.stringify(description) };
+      }),
     } as CreateIssueParams);
   };
 

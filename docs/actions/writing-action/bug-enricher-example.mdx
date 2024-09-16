@@ -1,0 +1,239 @@
+---
+title: 'Action: Bug Enricher Example'
+sidebarTitle: "Bug Enricher Example"
+---
+
+
+
+Below is an example to help you understand how you can create a action on any Tegon event. 
+
+## Example Action
+
+#### Bug Enricher
+
+Whenever an issue is created in Tegon and labeled as `bug` then create an action which call OpenAI to search for possible solution and put the solution as a comment of that issue. 
+
+1.  Create a new folder for this action
+
+```bash 
+mkdir bug-resolution
+```
+
+2. Now run our cli command, this will login the cli into Tegon.
+
+```bash
+npx @tegonhq/cli login
+```
+
+3. Let's now initialize the project, this will create the basic folder structure for action.
+
+```bash
+npx @tegonhq/cli init && npm install
+```
+
+4. Let's edit the config.json as below to tell Tegon to trigger the function when issue is created.
+```json bug-resolution/config.json
+{
+  "slug": "bug-resolver",
+  "name": "Bug Resolver",
+  "triggers": [
+    {
+      "type": "on_create",
+      "entities": ["Issue"]
+    }
+  ],
+  "integrations": []
+}
+
+```
+
+5. Then let's edit the `index.ts` with the below content
+
+```ts bug-resolution/index.ts
+import { ActionEventPayload } from '@tegonhq/sdk';
+import {
+  ActionEventPayload,
+  createIssueComment,
+  getLabels,
+  Label,
+  getIssueById,
+  getAIRequest,
+} from '@tegonhq/sdk';
+import axios from 'axios';
+
+export async function run(eventPayload: ActionEventPayload) {
+  const { modelId: issueId, action } = actionPayload;
+  const { data: actionInput } = action;
+
+  const issue = await getIssueById({ issueId });
+
+  // Get all labels for the workspace
+  const labels = await getLabels({
+    workspaceId: issue.team.workspaceId,
+    teamId: issue.teamId,
+  });
+
+  // Map the labels of the issue with all labels
+  const labelMap = Object.fromEntries(
+    labels.map((label: Label) => [label.id, label.name]),
+  );
+
+
+console.log(issue.labelIds);
+  // Check if bug label is assigned to issue
+  const hasBugLabel = issue.labelIds.some(
+    (labelId: string) => labelMap[labelId].toLowerCase() === 'bug',
+  );
+
+  if (!hasBugLabel) {
+    return null;
+  }
+
+  const requestData = {
+    messages: [
+      { role: 'system', content: PARTIAL_SOLUTION_PROMPT },
+      {
+        role: 'user',
+        content: `[INPUT] bug_description: ${issue.description}`,
+      },
+    ],
+    llmModel: LLMMappings.GPT35TURBO,
+    model: 'BugSuggestion',
+    workspaceId: issue.team.workspaceId,
+  };
+
+  const aiResponse = await getAIRequest(requestData);
+
+  const pattern = /\[OUTPUT\]\s*([\s\S]*)/;
+  const match = aiResponse.match(pattern);
+  const [, response] = match;
+
+  return await createIssueComment({
+    issueId,
+    bodyMarkdown: response,
+  });
+}
+
+```
+
+6. Let's create a new file `utils.ts` and add prompt to that.
+
+```ts
+export const PARTIAL_SOLUTION_PROMPT = `[TASK]
+[TASK] Given a bug report related to software development, create a detailed, multi-step resolution guide tailored for developers with intermediate to advanced expertise. The guide should be structured and clear, aiding in both understanding and fixing the issue effectively. Steps should consist of:
+1. **Bug Restatement and Clarification:** Start by explicating the reported bug to ensure its nature is clearly understood.
+2. **Step-by-Step Troubleshooting Guide:**
+   - List the steps for diagnosing the issue.
+   - Describe specific corrective actions, systematically addressing different facets of the bug.
+   - Use bullet points or numbered lists for clarity and sequence.
+3. **Code Modifications and Examples:**
+   - Provide relevant code snippets showing necessary changes.
+   - Ensure the examples reflect commonly used programming libraries or frameworks to illustrate real-world application of the fixes.
+4. **Conclusion:** Summarize the strategy to reassure understanding and provide closure on the troubleshooting process.
+5. **Output Formatting:** Present your solution in a well-structured format encapsulated within markdown syntax to enhance readability and instructional value. This format should facilitate easy application in software development or educational contexts, enabling swift and efficient debugging.
+This detailed guide should maintain a professional tone, focusing on clarity and practical application, serving as a robust resource in advancing debugging skills and software development expertise.
+---
+
+[FORMAT]
+Follow the following format:
+
+[INPUT]
+bug_description: description of the bug encountered in the software
+tech_stack: technologies used in the project where the bug occurred
+[OUTPUT]
+structured formatted solution guide with steps and code snippets to resolve the bug
+
+---
+
+[EXAMPLES]
+
+[Example 1]
+[INPUT]
+bug_description: Bug: Unable to connect to database due to incorrect database credentials.
+tech_stack: Python, Django, PostgreSQL
+[OUTPUT]
+1. **Identify the Database Settings:**
+   - Find the database settings file or function in your Django application where the database credentials are being stored.
+
+2. **Update the Database Credentials:**
+   - Change the incorrect database credentials (OLD_USERNAME, OLD_PASSWORD) to the correct ones (NEW_USERNAME, NEW_PASSWORD).
+
+3. **Refactor the Database Connection:**
+   - Modify the database connection code to use the correct credentials.
+
+### Example Code Update
+
+Here’s an example assuming you are using django.db:
+
+\`\`\`python
+# Before: Incorrect database credentials
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydatabase',
+        'USER': 'OLD_USERNAME',
+        'PASSWORD': 'OLD_PASSWORD',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
+# After: Corrected database credentials
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydatabase',
+        'USER': 'NEW_USERNAME',
+        'PASSWORD': 'NEW_PASSWORD',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}\`\`\`
+---
+[Example 2]
+[INPUT]
+bug_description: Bug: Error occurs when sending email due to incorrect email configuration.
+tech_stack: PHP, Laravel, Mailgun
+[OUTPUT]
+1. **Identify the Email Configuration:**
+   - Find the email configuration file or function in your Laravel application where the email settings are being stored.
+
+2. **Update the Email Configuration:**
+   - Change the incorrect email configuration (OLD_MAILGUN_DOMAIN, OLD_MAILGUN_SECRET) to the correct ones (NEW_MAILGUN_DOMAIN, NEW_MAILGUN_SECRET).
+
+3. **Refactor the Email Sending Code:**
+   - Modify the email sending code to use the correct email configuration.
+
+### Example Code Update
+
+Here’s an example assuming you are using Laravel Mail:
+
+\`\`\`php
+// Before: Incorrect email configuration
+ MAIL_MAILER=smtp
+ MAIL_HOST=smtp.mailgun.org
+ MAIL_PORT=587
+ MAIL_USERNAME=postmaster@$OLD_MAILGUN_DOMAIN
+ MAIL_PASSWORD=$OLD_MAILGUN_SECRET
+ MAIL_ENCRYPTION=tls
+
+// After: Corrected email configuration
+ MAIL_MAILER=smtp
+ MAIL_HOST=smtp.mailgun.org
+ MAIL_PORT=587
+ MAIL_USERNAME=postmaster@$NEW_MAILGUN_DOMAIN
+ MAIL_PASSWORD=$NEW_MAILGUN_SECRET
+ MAIL_ENCRYPTION=tls;\`\`\`
+---
+`;
+```
+
+You can check full prompt [here](https://github.com/tegonhq/tegon/blob/main/actions/bug-enricher/utils.ts).
+
+4. Finally you can deploy the action to your workspace.
+
+```bash
+TOKEN=<your-pat> npx @tegonhq/cli deploy --workspace-id="<workspace-id>"
+```
+
+<Tip>You can find the whole code for this example trigger [here](https://github.com/tegonhq/tegon/tree/main/actions/bug-enricher)</Tip>
