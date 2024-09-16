@@ -15,6 +15,7 @@ import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
 
 import {
+  convertMarkdownToTiptapJson,
   convertTiptapJsonToMarkdown,
   convertTiptapJsonToText,
 } from 'common/utils/tiptap.utils';
@@ -205,6 +206,8 @@ export default class IssuesService {
       subscriberIds = null,
       linkIssueData,
       sourceMetadata,
+      description,
+      descriptionMarkdown,
       ...otherIssueData
     } = issueData;
 
@@ -217,8 +220,16 @@ export default class IssuesService {
       updatedById: userId,
     };
 
+    let updatedDescription = description;
+    if (!description && descriptionMarkdown) {
+      updatedDescription = JSON.stringify(
+        convertMarkdownToTiptapJson(descriptionMarkdown),
+      );
+      issueData.description = updatedDescription;
+    }
     // Prepare the updated issue data
     const updatedIssueData = {
+      ...(updatedDescription ? { description: updatedDescription } : {}),
       subscriberIds: getSubscriberIds(
         userId,
         issueData.assigneeId,
@@ -313,10 +324,11 @@ export default class IssuesService {
       );
     }
 
-    const descriptionMarkdown = convertTiptapJsonToMarkdown(
+    const finalDescriptionMarkdown = convertTiptapJsonToMarkdown(
       updatedIssue.description,
     );
-    return { ...updatedIssue, descriptionMarkdown };
+    console.log(finalDescriptionMarkdown);
+    return { ...updatedIssue, descriptionMarkdown: finalDescriptionMarkdown };
   }
 
   /**

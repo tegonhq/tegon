@@ -411,7 +411,12 @@ export function convertMarkdownToTiptapJson(markdown: string) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function convertTiptapJsonToMarkdown(tiptapJson: string) {
   try {
-    const htmlText = convertTiptapJsonToHtml(JSON.parse(tiptapJson));
+    const parsedTiptapJson = JSON.parse(tiptapJson);
+    let finalJson = parsedTiptapJson;
+    if (parsedTiptapJson.hasOwnProperty('json')) {
+      finalJson = parsedTiptapJson.json;
+    }
+    const htmlText = convertTiptapJsonToHtml(finalJson);
     const turndownService = new TurndownService();
     return turndownService.turndown(htmlText);
   } catch (e) {
