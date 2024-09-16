@@ -109,8 +109,8 @@
       "group": "Writing Action",
       "pages": [
         "actions/writing-action/introduction",
-        "actions/writing-action/general-example",
-        "actions/writing-action/bug-enricher-example"
+        "actions/writing-action/bug-enricher-example",
+        "actions/writing-action/scheduled-actions"
       ]
     },
     {

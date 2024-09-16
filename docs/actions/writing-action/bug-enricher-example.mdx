@@ -79,7 +79,7 @@ export async function run(eventPayload: ActionEventPayload) {
   );
 
 
-console.log(issue.labelIds);
+
   // Check if bug label is assigned to issue
   const hasBugLabel = issue.labelIds.some(
     (labelId: string) => labelMap[labelId].toLowerCase() === 'bug',
@@ -230,10 +230,10 @@ Here’s an example assuming you are using Laravel Mail:
 
 You can check full prompt [here](https://github.com/tegonhq/tegon/blob/main/actions/bug-enricher/utils.ts).
 
-4. Finally you can deploy the action to your workspace.
+7. Run the action in dev mode and create a issue with bug as label
 
 ```bash
-TOKEN=<your-pat> npx @tegonhq/cli deploy --workspace-id="<workspace-id>"
+npx @tegonhq/cli dev
 ```
 
-<Tip>You can find the whole code for this example trigger [here](https://github.com/tegonhq/tegon/tree/main/actions/bug-enricher)</Tip>
+<Tip>You can find the whole code for this example action [here](https://github.com/tegonhq/tegon/tree/main/actions/bug-enricher)</Tip>

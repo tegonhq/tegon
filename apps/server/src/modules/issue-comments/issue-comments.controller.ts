@@ -14,6 +14,7 @@ import {
   IssueComment,
   IssueCommentRequestParamsDto,
   LinkedComment,
+  UpdateIssueCommentDto,
 } from '@tegonhq/types';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
@@ -79,7 +80,7 @@ export class IssueCommentsController {
   @UseGuards(AuthGuard)
   async updateIssueComment(
     @Param() issueCommentParams: IssueCommentRequestParamsDto,
-    @Body() commentData: CreateIssueCommentDto,
+    @Body() commentData: UpdateIssueCommentDto,
   ): Promise<IssueComment> {
     return await this.issueCommentsService.updateIssueComment(
       issueCommentParams,
