@@ -32,7 +32,6 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
     })
   )[0];
 
-  console.log(user.role);
   if (user.role === RoleEnum.BOT) {
     return {
       message: `Ignoring comment created from Bot`,

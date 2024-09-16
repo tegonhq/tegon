@@ -327,7 +327,6 @@ export default class IssuesService {
     const finalDescriptionMarkdown = convertTiptapJsonToMarkdown(
       updatedIssue.description,
     );
-    console.log(finalDescriptionMarkdown);
     return { ...updatedIssue, descriptionMarkdown: finalDescriptionMarkdown };
   }
 

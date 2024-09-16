@@ -155,7 +155,6 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
 }
 
 async function onUpdateLinkedIssue(actionPayload: ActionEventPayload) {
-  console.log(actionPayload);
   const {
     modelId: linkedIssueId,
     changedData,
