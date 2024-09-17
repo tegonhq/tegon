@@ -1,7 +1,9 @@
 import type {
   GetIssuesByFilterDTO,
+  GetIssuesByNumberDTO,
   Issue,
   IssueRequestParamsDto,
+  TeamRequestParamsDto,
 } from '@tegonhq/types';
 
 import axios from 'axios';
@@ -18,6 +20,16 @@ export async function getIssueById({
   issueId,
 }: IssueRequestParamsDto): Promise<Issue> {
   const response = await axios.get(`/api/v1/issues/${issueId}`);
+
+  return response.data;
+}
+
+type GetIssuesByNumber = GetIssuesByNumberDTO & TeamRequestParamsDto;
+
+export async function getIssueByNumber({ number, teamId }: GetIssuesByNumber) {
+  const response = await axios.get(
+    `/api/v1/issues/number/${number}?teamId=${teamId}`,
+  );
 
   return response.data;
 }

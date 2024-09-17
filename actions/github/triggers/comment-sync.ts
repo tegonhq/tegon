@@ -4,11 +4,12 @@ import {
   getIssueById,
   getIssueComment,
   getLinkedIssuesByIssueId,
+  getPersonalIntegrationAccount,
   getUsers,
   RoleEnum,
 } from '@tegonhq/sdk';
 import axios from 'axios';
-import { convertTiptapJsonToMarkdown, getGithubHeaders } from 'utils';
+import { getGithubHeaders } from 'utils';
 
 export const commentSync = async (actionPayload: ActionEventPayload) => {
   const {
@@ -76,23 +77,17 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
   >;
 
   // TODO(new): modify this to service
-  // const userGithubPersonalAccount = await getPersonalIntegrationAccount({
-  //   workspaceId: issue.team.workspaceId,
-  //   userId: issue.assigneeId,
-  //   definitionSlug: integrationAccount.integrationDefinition.slug,
-  // });
-  const userGithubPersonalAccount = (
-    await axios.get(
-      `/api/v1/integration_account/personal?workspaceId=${issue.team.workspaceId}&userId=${issueComment.userId}&definitionSlug=${integrationAccount.integrationDefinition.slug}`,
-    )
-  ).data;
+  const userGithubPersonalAccount = await getPersonalIntegrationAccount({
+    workspaceId: issue.team.workspaceId,
+    userId: issue.assigneeId,
+    definitionSlug: integrationAccount.integrationDefinition.slug,
+  });
 
   const updatedAccessToken = userGithubPersonalAccount ? accessToken : botToken;
 
-  const markdownComment = convertTiptapJsonToMarkdown(issueComment.body);
   const body = userGithubPersonalAccount
-    ? markdownComment
-    : `>${user.fullname}  commented from Tegon \n\n ${markdownComment}`;
+    ? issueComment.bodyMarkdown
+    : `>${user.fullname}  commented from Tegon \n\n ${issueComment.bodyMarkdown}`;
 
   const githubIssueComment = (
     await axios.post(

@@ -163,6 +163,19 @@ async function onUpdateLinkedIssue(actionPayload: ActionEventPayload) {
   if (changedData.sync !== undefined) {
     const linkedIssue = await getLinkedIssue({ linkedIssueId });
 
+    const userRole = (
+      await getUsers({
+        userIds: [linkedIssue.updatedById],
+        workspaceId: integrationAccount.workspaceId,
+      })
+    )[0].role;
+
+    if (userRole === RoleEnum.BOT) {
+      return {
+        message: `Ignoring comment created from Bot`,
+      };
+    }
+
     const sourceData = linkedIssue.sourceData as JsonObject;
 
     const {

@@ -156,6 +156,18 @@ export class IssuesController {
     csvStream.pipe(res);
   }
 
+  @Get('number/:issueNumber')
+  @UseGuards(AuthGuard)
+  async getIssueByNumber(
+    @Query() teamParams: TeamRequestParamsDto,
+    @Param('issueNumber') issueNumber: string,
+  ): Promise<Issue> {
+    return await this.issuesService.getIssueByNumber(
+      issueNumber,
+      teamParams.teamId,
+    );
+  }
+
   @Get(':issueId')
   @UseGuards(AuthGuard)
   async getIssue(@Param() issueParams: IssueRequestParamsDto): Promise<Issue> {

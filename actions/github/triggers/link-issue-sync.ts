@@ -2,14 +2,24 @@ import {
   ActionEventPayload,
   ActionTypesEnum,
   getLinkedIssue,
+  getTeamById,
+  getUsers,
   JsonObject,
   logger,
+  RoleEnum,
 } from '@tegonhq/sdk';
 import axios from 'axios';
-import { getGithubHeaders } from 'utils';
+import {
+  convertToAPIUrl,
+  createLinkIssueComment,
+  getGithubHeaders,
+} from 'utils';
 
 export const linkIssueSync = async (actionPayload: ActionEventPayload) => {
   switch (actionPayload.event) {
+    case ActionTypesEnum.ON_CREATE:
+      return await onCreateLinkedIssue(actionPayload);
+
     case ActionTypesEnum.ON_UPDATE:
       return await onUpdateLinkedIssue(actionPayload);
 
@@ -19,6 +29,118 @@ export const linkIssueSync = async (actionPayload: ActionEventPayload) => {
       };
   }
 };
+
+async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
+  const {
+    integrationAccounts: { github: integrationAccount },
+    modelId: linkIssueId,
+  } = actionPayload;
+
+  let linkedIssue = await getLinkedIssue({ linkedIssueId: linkIssueId });
+
+  const userRole = (
+    await getUsers({
+      userIds: [linkedIssue.updatedById],
+      workspaceId: integrationAccount.workspaceId,
+    })
+  )[0].role;
+
+  if (userRole === RoleEnum.BOT) {
+    return {
+      message: `Ignoring comment created from Bot`,
+    };
+  }
+
+  const { botToken } = integrationAccount.integrationConfiguration;
+
+  const githubIssueRegex =
+    /^https:\/\/github\.com\/(?<repository>[^/]+\/[^/]+)\/issues\/\d+$/;
+
+  const githubPRRegex =
+    /^https:\/\/github\.com\/(?<repository>[^/]+\/[^/]+)\/pull\/\d+$/;
+
+  const githubIssueMatch = linkedIssue.url.match(githubIssueRegex);
+  const githubPRMatch = linkedIssue.url.match(githubPRRegex);
+
+  let isGithubPR = false;
+
+  if (githubPRMatch) {
+    isGithubPR = true;
+  } else if (githubIssueMatch) {
+    isGithubPR = false;
+  } else {
+    return {
+      message: `Invalid GitHub URL: ${linkedIssue.url}`,
+    };
+  }
+
+  const githubUrlMatch = isGithubPR ? githubPRMatch : githubIssueMatch;
+  const repositoryName = githubUrlMatch?.groups?.repository;
+
+  if (!githubUrlMatch) {
+    return {
+      message: `Invalid GitHub URL: ${linkedIssue.url}`,
+    };
+  }
+
+  const response =
+    (
+      await axios.get(
+        convertToAPIUrl(linkedIssue.url),
+        getGithubHeaders(botToken),
+      )
+    ).data ?? {};
+
+  const sourceData: Record<string, string> = isGithubPR
+    ? {
+        branch: response.head.ref,
+        id: response.id.toString(),
+        closedAt: response.closed_at,
+        createdAt: response.created_at,
+        updatedAt: response.updated_at,
+        issueNumber: response.number,
+        state: response.state,
+        title: `#${response.number} - ${response.title}`,
+        apiUrl: response.url,
+        commentApiUrl: response.comments_url,
+        mergedAt: response.merged_at,
+        displayName: response.user.login,
+        githubType: 'PR',
+        type: integrationAccount.integrationDefinition.slug,
+      }
+    : {
+        id: response.id.toString(),
+        issueNumber: response.number,
+        title: `#${response.number} - ${response.title}`,
+        apiUrl: response.url,
+        htmlUrl: response.html_url,
+        type: integrationAccount.integrationDefinition.slug,
+        displayName: response.user.login,
+        commentApiUrl: response.comments_url,
+        githubType: 'ISSUE',
+      };
+
+  const team = await getTeamById({ teamId: linkedIssue.issue.teamId });
+
+  const linkIssueInput = {
+    url: response.html_url,
+    sourceId: response.id.toString(),
+    issueId: linkedIssue.issueId,
+    sourceData,
+    teamId: team.id,
+  };
+  linkedIssue = await createLinkIssueComment(
+    linkIssueInput,
+    linkedIssue.issue,
+    repositoryName,
+    response.comments_url,
+    botToken,
+    sourceData,
+    linkedIssue.id,
+  );
+
+  return linkedIssue;
+}
 
 async function onUpdateLinkedIssue(actionPayload: ActionEventPayload) {
   const {
@@ -31,6 +153,19 @@ async function onUpdateLinkedIssue(actionPayload: ActionEventPayload) {
 
   if (changedData.sync !== undefined) {
     const linkedIssue = await getLinkedIssue({ linkedIssueId });
+
+    const userRole = (
+      await getUsers({
+        userIds: [linkedIssue.updatedById],
+        workspaceId: integrationAccount.workspaceId,
+      })
+    )[0].role;
+
+    if (userRole === RoleEnum.BOT) {
+      return {
+        message: `Ignoring comment created from Bot`,
+      };
+    }
 
     const sourceData = linkedIssue.sourceData as JsonObject;
 

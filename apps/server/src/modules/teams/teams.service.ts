@@ -39,14 +39,27 @@ export default class TeamsService {
     });
   }
 
-  async getTeamByName(workspaceId: string, name: string): Promise<Team | null> {
+  async getTeamByName(
+    workspaceId: string,
+    nameOrIdentifier: string,
+  ): Promise<Team | null> {
     return await this.prisma.team.findFirst({
       where: {
         workspaceId,
-        name: {
-          equals: name,
-          mode: 'insensitive',
-        },
+        OR: [
+          {
+            name: {
+              equals: nameOrIdentifier,
+              mode: 'insensitive',
+            },
+          },
+          {
+            identifier: {
+              equals: nameOrIdentifier,
+              mode: 'insensitive',
+            },
+          },
+        ],
       },
       include: {
         workspace: true,

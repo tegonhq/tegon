@@ -6,7 +6,8 @@ import {
   JsonObject,
   logger,
 } from '@tegonhq/sdk';
-import { convertMarkdownToTiptapJson } from 'utils';
+import axios from 'axios';
+import { getGithubHeaders } from 'utils';
 
 export const commentEvent = async (actionPayload: ActionEventPayload) => {
   const {
@@ -14,10 +15,26 @@ export const commentEvent = async (actionPayload: ActionEventPayload) => {
     userId,
     integrationAccounts: { github: integrationAccount },
   } = actionPayload;
+
+  const { botToken } = integrationAccount.integrationConfiguration;
   // Get the linked issue by the GitHub issue ID
-  const linkedIssue = await getLinkedIssueBySource({
+  let linkedIssue = await getLinkedIssueBySource({
     sourceId: eventBody.issue.id.toString(),
   });
+
+  if (!linkedIssue && eventBody.issue.pull_request) {
+    const pullRequest = (
+      await axios.get(
+        eventBody.issue.pull_request.url,
+        getGithubHeaders(botToken),
+      )
+    ).data;
+
+    linkedIssue = await getLinkedIssueBySource({
+      sourceId: pullRequest.id.toString(),
+    });
+  }
+
   if (!linkedIssue) {
     logger.log(
       `No linked issue found for GitHub issue ID: ${eventBody.issue.id}`,
@@ -72,7 +89,7 @@ export const commentEvent = async (actionPayload: ActionEventPayload) => {
       return await createIssueComment({
         issueId,
         parentId,
-        body: convertMarkdownToTiptapJson(eventBody.comment.body),
+        bodyMarkdown: eventBody.comment.body,
         sourceMetadata,
         linkCommentMetadata,
       });

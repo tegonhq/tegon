@@ -70,6 +70,19 @@ export default class IssuesService {
     return { descriptionMarkdown, ...issue };
   }
 
+  async getIssueByNumber(issueNumber: string, teamId: string): Promise<Issue> {
+    const issue = await this.prisma.issue.findFirst({
+      where: { number: Number(issueNumber), teamId },
+      include: {
+        team: true,
+      },
+    });
+
+    const descriptionMarkdown = convertTiptapJsonToMarkdown(issue.description);
+
+    return { descriptionMarkdown, ...issue };
+  }
+
   /**
    * Creates a new issue using the provided issue data and performs related operations.
    * @param teamRequestParams The team request parameters.
