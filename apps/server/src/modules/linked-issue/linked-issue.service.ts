@@ -56,6 +56,7 @@ export default class LinkedIssueService {
           sourceData: {
             ...(linkData.title ? { title: linkData.title } : {}),
           },
+          ...(linkData.sync ? { sync: linkData.sync } : {}),
         },
         include: { issue: { include: { team: true } } },
       });

@@ -101,19 +101,17 @@
       "group": "Getting started",
       "pages": [
         "actions/overview",
-        "actions/config",
-        "actions/regular-actions",
-        "actions/integration-based-actions",
-        "actions/scheduled-actions"
+        "actions/core-concepts",
+        "actions/config"
       ]
     },
     {
-      "group": "Actions",
-      "pages": [ "actions/marketplace/overview", "actions/marketplace/bug-enricher", "actions/marketplace/issue-view-summary", "actions/marketplace/slack-actions", "actions/marketplace/email-actions" ]
-    },
-    {
-      "group": "Deployment",
-      "pages": [ "actions/deployment/deploying-actions" ]
+      "group": "Writing Action",
+      "pages": [
+        "actions/writing-action/introduction",
+        "actions/writing-action/bug-enricher-example",
+        "actions/writing-action/scheduled-actions"
+      ]
     },
     {
       "group": "API reference",

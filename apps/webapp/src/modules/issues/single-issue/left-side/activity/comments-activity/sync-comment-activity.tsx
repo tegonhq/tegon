@@ -38,7 +38,7 @@ export function SyncCommentActivity({
   getUserData,
   user,
 }: CommentActivityProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(true);
 
   return (
     <TimelineItem

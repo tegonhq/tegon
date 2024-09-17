@@ -3,6 +3,7 @@ import {
   createIssueComment,
   getLinkedComment,
   getLinkedIssueBySource,
+  JsonObject,
   logger,
 } from '@tegonhq/sdk';
 import { convertMarkdownToTiptapJson } from 'utils';
@@ -22,6 +23,15 @@ export const commentEvent = async (actionPayload: ActionEventPayload) => {
       `No linked issue found for GitHub issue ID: ${eventBody.issue.id}`,
     );
     return undefined;
+  }
+
+  const sourceData = linkedIssue.sourceData as JsonObject;
+  const syncingLinkedIssue =
+    sourceData.type === integrationAccount.integrationDefinition.slug &&
+    linkedIssue.sync === true;
+
+  if (!syncingLinkedIssue) {
+    return { message: 'Linked issue is not sync with source' };
   }
 
   const { issueId, sourceData: linkedIssueSource } = linkedIssue;

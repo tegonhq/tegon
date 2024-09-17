@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Team, UsersOnWorkspaces } from '@tegonhq/types';
+import { RoleEnum, Team, UsersOnWorkspaces } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { UserIdParams } from 'modules/users/users.interface';
@@ -67,7 +67,20 @@ export default class TeamsService {
       },
     });
 
-    await this.addTeamMember(team.id, workspaceId, userId);
+    const botUsers = await this.prisma.usersOnWorkspaces.findMany({
+      where: { workspaceId, role: RoleEnum.BOT },
+      select: { userId: true },
+    });
+
+    const userIds = botUsers.map(({ userId }) => userId);
+
+    userIds.push(userId);
+
+    await Promise.all(
+      userIds.map(async (userId: string) => {
+        await this.addTeamMember(team.id, workspaceId, userId);
+      }),
+    );
 
     return team;
   }

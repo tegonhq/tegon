@@ -8,6 +8,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { useEditorSuggestionItems } from 'modules/issues/components/use-editor-suggestion-items';
 
+import { getTiptapJSON } from 'common';
 import { type WorkflowType } from 'common/types';
 
 import { useIssueData } from 'hooks/issues';
@@ -38,8 +39,10 @@ export const LeftSide = observer(() => {
   const { suggestionItems } = useEditorSuggestionItems();
 
   const onDescriptionChange = useDebouncedCallback((content: string) => {
+    const { json: description } = getTiptapJSON(content);
+
     updateIssue({
-      description: content,
+      description: JSON.stringify(description),
       teamId: issue.teamId,
       id: issue.id,
     });

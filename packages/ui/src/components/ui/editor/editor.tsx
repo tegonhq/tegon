@@ -182,7 +182,7 @@ export const Editor = ({
 
             handleDOMEvents: {
               keydown: (_view, event) => {
-                if (event.keyCode === 13 && event.metaKey) {
+                if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
                   onSubmit && onSubmit();
                   event.preventDefault();
                   return false;

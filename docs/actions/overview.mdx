@@ -3,18 +3,22 @@ title: 'Actions: Overview'
 sidebarTitle: "Overview"
 ---
 
-<Warning>
-  This feature is currently in private beta, reachout at harshith@tegon.ai to get early access.
-</Warning>
-
 **Tegon Actions** is a powerful framework designed to automate repetitive tasks in issue tracking, streamlining your workflow. 
 Whether it’s automatically labeling issues or creating sub-issues for PR reviews, Tegon Actions helps you eliminate manual processes.
 
-But Tegon Actions doesn’t just stop at basic workflows—it integrates seamlessly with other tools you use in issue tracking. For example, 
-you can automate the creation of issues directly from Slack and sync slack threads by simply using an emoji.
+But Tegon Actions doesn’t just stop at basic workflows—it integrates seamlessly with other tools you use in issue tracking.
 
-What truly sets Tegon Actions apart is its ability to transform your issue tracker into a dynamic system of actions rather than just a static database. 
-Imagine a workflow where, every time a bug is created, an intelligent agent reviews the codebase, conducts a basic web search, and suggests potential solutions as comments in the issue. 
-This kind of agentic workflow is now possible with Tegon Actions which elevates your issue tracking to a new level of efficiency and intelligence.
+<Frame>
+  <img src="/images/actions.png" />
+</Frame>
 
-There are different types of actions including regular triggers, intergration based triggers and scheduled triggers.
+As seen in the image above, actions are initiated based on triggers. A trigger can either be a Tegon event or an event from an external integration you've connected. Examples of triggers include:
+1. An **emoji reaction** to a message in Slack.
+2. A **message** posted in a Discord channel.
+3. An **issue** created in GitHub.
+4. A **comment** added to a Tegon issue.
+
+When an event occurs, a Tegon Action is called—this is a piece of TypeScript code that processes the event. 
+There are several pre-built actions that you can install, but you're also free to customize or create new actions and deploy them on the platform. 
+To simplify this process, we provide a CLI that guides you from action creation to deployment.
+

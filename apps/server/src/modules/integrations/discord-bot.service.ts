@@ -67,6 +67,7 @@ export class DiscordBotService implements OnModuleInit {
         axios.post(url, packet);
       });
     } catch (e) {
+      console.log(e);
       this.logger.error({
         message: `Discord listener: ${e}`,
         where: 'DiscordBotService.onModuleInit',

@@ -1,4 +1,4 @@
-import { IsObject, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsObject, IsOptional, IsString } from 'class-validator';
 
 export class CreateLinkedIssueDto {
   @IsString()
@@ -6,7 +6,11 @@ export class CreateLinkedIssueDto {
 
   @IsOptional()
   @IsString()
-  sourceId: string;
+  sourceId?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  sync?: boolean;
 
   @IsOptional()
   @IsObject()

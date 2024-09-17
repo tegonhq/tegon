@@ -34,6 +34,10 @@ export const WORFKLOW_ICON_FOR_CATEGORY = {
 };
 
 export function getWorkflowIcon(workflow: WorkflowType) {
+  if (!workflow) {
+    return WORFKLOW_ICON_FOR_CATEGORY[WorkflowCategoryEnum.BACKLOG];
+  }
+
   if (workflow.name in WORKFLOW_CATEGORY_ICONS) {
     return WORKFLOW_CATEGORY_ICONS[
       workflow.name as keyof typeof WORKFLOW_CATEGORY_ICONS

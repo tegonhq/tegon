@@ -149,9 +149,11 @@ export async function getEquivalentStateIds(
 ) {
   const sourceStates = await prisma.workflow.findMany({
     where: { teamId: sourceTeamId, deleted: null },
+    orderBy: { position: 'asc' },
   });
   const destinationStates = await prisma.workflow.findMany({
     where: { teamId: destinationTeamId, deleted: null },
+    orderBy: { position: 'asc' },
   });
 
   const equivalentStateIds = sourceStates.reduce(
@@ -164,6 +166,20 @@ export async function getEquivalentStateIds(
 
       if (destinationState) {
         acc[sourceState.id] = destinationState.id;
+      } else {
+        const statesInCategory = destinationStates.filter(
+          (state) => state.category === sourceState.category,
+        );
+        const firstStateInCategory = statesInCategory.reduce(
+          (minState, state) =>
+            minState === null || state.position < minState.position
+              ? state
+              : minState,
+          null,
+        );
+        if (firstStateInCategory) {
+          acc[sourceState.id] = firstStateInCategory.id;
+        }
       }
 
       return acc;

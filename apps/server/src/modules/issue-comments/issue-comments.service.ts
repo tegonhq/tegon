@@ -5,6 +5,7 @@ import {
   IssueComment,
   IssueCommentRequestParamsDto,
   LinkedComment,
+  UpdateIssueCommentDto,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -90,15 +91,17 @@ export default class IssueCommentsService {
       },
     );
 
-    return issueComment;
+    const newBodyMarkdown = convertTiptapJsonToMarkdown(issueComment.body);
+    return { ...issueComment, bodyMarkdown: newBodyMarkdown };
   }
 
   async updateIssueComment(
     issueCommentParams: IssueCommentRequestParamsDto,
-    commentData: CreateIssueCommentDto,
+    commentData: UpdateIssueCommentDto,
   ): Promise<IssueComment> {
     const { body, bodyMarkdown, ...otherCommentData } = commentData;
     let updatedBody = body;
+
     if (!body && bodyMarkdown) {
       updatedBody = JSON.stringify(convertMarkdownToTiptapJson(bodyMarkdown));
     }
@@ -114,7 +117,8 @@ export default class IssueCommentsService {
       },
     });
 
-    return issueComment;
+    const newBodyMarkdown = convertTiptapJsonToMarkdown(issueComment.body);
+    return { ...issueComment, bodyMarkdown: newBodyMarkdown };
   }
 
   async deleteIssueComment(

@@ -2,7 +2,8 @@ import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateIssueCommentDto {
   @IsString()
-  body: string;
+  @IsOptional()
+  body?: string;
 
   @IsString()
   @IsOptional()

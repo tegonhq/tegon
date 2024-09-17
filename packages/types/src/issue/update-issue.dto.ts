@@ -19,6 +19,10 @@ export class UpdateIssueDto {
   @IsString()
   description?: string;
 
+  @IsString()
+  @IsOptional()
+  descriptionMarkdown?: string;
+
   @IsOptional()
   @IsNumber()
   priority?: number;

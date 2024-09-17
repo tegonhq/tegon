@@ -43,6 +43,21 @@ export class ApiClient {
     };
   }
 
+  async getDockerToken() {
+    const response = await axios.get(
+      `${this.apiUrl}/api/v1/triggerdev/docker-token`,
+    );
+
+    const base64Token = response.data.token;
+    const decodedToken = Buffer.from(base64Token, 'base64').toString('utf-8');
+    const { username, pat } = JSON.parse(decodedToken);
+
+    return {
+      username,
+      pat,
+    };
+  }
+
   async getTriggerAccessToken(workspaceId: string): Promise<string> {
     try {
       const response = await axios.get(`${this.apiUrl}/api/v1/triggerdev`, {

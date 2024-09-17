@@ -1,0 +1,72 @@
+---
+title: 'Core Concepts'
+sidebarTitle: "Core Concepts"
+---
+
+Tegon Actions enables you to create workflows to automate your work. This page describes the concepts you need to know to use Tegon Actions.
+
+## Trigger
+
+A Trigger can be an event from an integration (e.g., Slack, Discord, GitHub, Zendesk) or a Tegon-specific event (e.g., a comment on an issue, assigning or labeling an issue). 
+Triggers are configured in a `config.json` file using the `triggers` field.
+
+Here’s an example configuration:
+
+```json
+"triggers": [
+  {
+    "type": "on_create",
+    "entities": [ "Issue" ]
+  },
+  {
+    "type": "source_webhook",
+    "entities": [ "slack" ]
+  }
+],
+```
+
+In this example, the action is set to trigger when:
+- An issue is created in Tegon.
+- A webhook event is received from Slack.
+
+This flexible configuration allows you to define when your actions should run, 
+whether it's based on internal events within Tegon or external events from integrated platforms.
+
+## Entity
+
+An Entity typically refers to either an integration or a model within Tegon. For example, it could be `Issue` or `IssueComment` for Tegon models, or `slack` and `github` when the type is set to `source_webhook`.
+
+
+## Integrations
+
+Integrations are the superpower behind Tegon Actions. They allow you to both receive events from external tools (like Slack, GitHub, Zendesk, etc.) and interact with these platforms by making API calls.
+
+To enable this, you must request access to the integrations you've configured. Tegon checks which integrations are specified for an action and provides the necessary tokens, ensuring seamless communication with these external services.
+
+Integrations are defined in the config.json file using the integrations field:
+
+```json
+"integrations": ["slack", "github"]
+```
+
+In this example, we have requested for access to `slack` and `github`
+
+## Run function
+
+This function is invoked with the details of the triggered event, allowing you to write custom workflows or automations based on the event.
+
+```TypeScript
+export async function run(eventPayload: ActionEventPayload) {
+  switch (eventPayload.event) {
+    case ActionTypesEnum.ON_CREATE:
+      return onCreateHandler(eventPayload);
+
+    default:
+      return {
+        message: `The event payload type "${eventPayload.event}" is not recognized`,
+      };
+  }
+}
+```
+
+In the above example the run function is configured to receive a `on_create` event from Tegon entities. 

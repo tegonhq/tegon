@@ -7,6 +7,7 @@ import {
 import { onLabelHandler } from './on-label-handler';
 import axios from 'axios';
 import { issueSync } from 'triggers/issue-sync';
+import { linkIssueSync } from 'triggers/link-issue-sync';
 
 export const onUpdateHandler = async (actionPayload: ActionEventPayload) => {
   // Handle different event types
@@ -48,7 +49,7 @@ export const onUpdateHandler = async (actionPayload: ActionEventPayload) => {
       return undefined;
 
     case ModelNameEnum.LinkedIssue:
-      return undefined;
+      return linkIssueSync(actionPayload);
 
     default:
       logger.debug('Unhandled Github event type:', actionPayload.type);

@@ -9,6 +9,7 @@ export class LinkedIssue {
   url: string;
   sourceId: string | null;
   sourceData: JsonValue | null;
+  sync: boolean;
   createdById: string | null;
   updatedById: string;
   issue?: Issue;

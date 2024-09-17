@@ -11,6 +11,7 @@ export class LinkIssueInput {
 
   type?: string;
   title?: string;
+  sync?: boolean;
 }
 
 export class LinkedIssueSourceDto {

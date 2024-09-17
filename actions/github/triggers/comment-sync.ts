@@ -3,6 +3,7 @@ import {
   createLinkedIssueComment,
   getIssueById,
   getIssueComment,
+  getLinkedIssuesByIssueId,
   getUsers,
   RoleEnum,
 } from '@tegonhq/sdk';
@@ -51,6 +52,21 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
     return {
       message: 'Parent comment does not exist or has empty source metadata',
     };
+  }
+
+  const linkedIssues = await getLinkedIssuesByIssueId({
+    issueId: issueComment.issueId,
+  });
+
+  const syncingLinkedIssue = linkedIssues.find((linkedIssue) => {
+    const sourceData = linkedIssue.sourceData as Record<string, string>;
+    return (
+      sourceData.type === integrationDefinitionSlug && linkedIssue.sync === true
+    );
+  });
+
+  if (!syncingLinkedIssue) {
+    return { message: 'Linked issue is not sync with source' };
   }
 
   // Extract the source metadata from the parent issue comment
