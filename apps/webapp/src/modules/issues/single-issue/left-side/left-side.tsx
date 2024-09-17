@@ -8,6 +8,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { useEditorSuggestionItems } from 'modules/issues/components/use-editor-suggestion-items';
 
+import { getTiptapJSON } from 'common';
 import { type WorkflowType } from 'common/types';
 
 import { useIssueData } from 'hooks/issues';
@@ -23,7 +24,6 @@ import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
 import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
-import { getTiptapJSON } from 'common';
 
 export const LeftSide = observer(() => {
   const issue = useIssueData();
