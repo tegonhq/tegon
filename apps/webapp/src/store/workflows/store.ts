@@ -33,6 +33,7 @@ export const WorkflowsStore: IAnyStateTreeNode = types
         self.workflows.push(workflow);
       }
     };
+
     const deleteById = (id: string) => {
       const indexToDelete = self.workflows.findIndex((obj) => obj.id === id);
 

@@ -1,3 +1,4 @@
+import type { DraggableProvided } from '@hello-pangea/dnd';
 import type { WorkflowCategoryEnum } from '@tegonhq/types';
 
 import { Button } from '@tegonhq/ui/components/button';
@@ -12,9 +13,11 @@ import { WorkflowEdit } from './workflow-edit';
 
 interface WorkflowItemProps {
   workflow: WorkflowType;
+  isDragging: boolean;
+  provided: DraggableProvided;
 }
 
-export function WorkflowItem({ workflow }: WorkflowItemProps) {
+export function WorkflowItem({ workflow, provided }: WorkflowItemProps) {
   const CategoryIcon = getWorkflowIcon(workflow);
   const [edit, setEdit] = React.useState(false);
 
@@ -31,6 +34,9 @@ export function WorkflowItem({ workflow }: WorkflowItemProps) {
   return (
     <div
       key={workflow.name}
+      ref={provided.innerRef}
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
       className="w-full group flex justify-between mb-2 rounded-md bg-background-3 p-2 px-2"
     >
       <div className="flex items-center">

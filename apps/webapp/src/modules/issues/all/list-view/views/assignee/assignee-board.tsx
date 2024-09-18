@@ -22,7 +22,6 @@ export const AssigneeBoard = observer(
     const { issuesStore } = useContextStore();
 
     const onDragEnd = (result: DropResult) => {
-      console.log(result);
       const issueId = result.draggableId;
 
       const assigneeId = result.destination.droppableId;

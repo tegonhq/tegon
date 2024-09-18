@@ -6,6 +6,7 @@ import {
   GetIssuesByFilterDTO,
   Issue,
   IssueRequestParamsDto,
+  LinkedIssue,
   TeamRequestParamsDto,
   UpdateIssueDto,
   WorkflowCategoryEnum,
@@ -24,6 +25,7 @@ import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { LoggerService } from 'modules/logger/logger.service';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
@@ -52,6 +54,7 @@ export default class IssuesService {
     private issueRelationService: IssueRelationService,
     private notificationsQueue: NotificationsQueue,
     private aiRequestsService: AIRequestsService,
+    private linkedIssueService: LinkedIssueService,
   ) {}
 
   async getIssueById(issueParams: IssueRequestParamsDto): Promise<Issue> {
@@ -220,13 +223,20 @@ export default class IssuesService {
       updatedById: userId,
     };
 
+    let linkedIssues: LinkedIssue[];
+    if (linkIssueData) {
+      linkedIssues = await this.linkedIssueService.getLinkedIssueByUrl(
+        linkIssueData.url,
+      );
+    }
+
     let updatedDescription = description;
     if (!description && descriptionMarkdown) {
       updatedDescription = JSON.stringify(
         convertMarkdownToTiptapJson(descriptionMarkdown),
       );
-      issueData.description = updatedDescription;
     }
+
     // Prepare the updated issue data
     const updatedIssueData = {
       ...(updatedDescription ? { description: updatedDescription } : {}),
@@ -240,19 +250,25 @@ export default class IssuesService {
       ...otherIssueData,
       ...(parentId ? { parent: { connect: { id: parentId } } } : { parentId }),
       ...(linkIssueData && {
-        linkedIssue: {
-          upsert: {
-            where: { url: linkIssueData.url },
-            update: {
-              sourceData: linkIssueData.sourceData,
-              ...updatedIssueInfo,
-            },
-            create: {
-              ...linkIssueData,
-              ...updatedIssueInfo,
-            },
-          },
-        },
+        linkedIssue:
+          linkedIssues.length > 0
+            ? {
+                updateMany: {
+                  where: {
+                    url: linkIssueData.url,
+                  },
+                  data: {
+                    sourceData: linkIssueData.sourceData,
+                    ...updatedIssueInfo,
+                  },
+                },
+              }
+            : {
+                create: {
+                  ...linkIssueData,
+                  ...updatedIssueInfo,
+                },
+              },
       }),
     };
 

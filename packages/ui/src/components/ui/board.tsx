@@ -1,7 +1,10 @@
 import type {
+  Direction,
   DraggableChildrenFn,
+  DragStart,
   DroppableProvided,
   DropResult,
+  ResponderProvided,
 } from '@hello-pangea/dnd';
 
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
@@ -13,7 +16,9 @@ interface BoardProps {
   children: React.ReactElement;
   isCombineEnabled?: boolean;
   onDragEnd: (result: DropResult) => void;
+  onDragStart?: (start: DragStart, provided: ResponderProvided) => void;
   className?: string;
+  direction?: Direction;
 }
 
 export function Board({
@@ -21,13 +26,15 @@ export function Board({
   isCombineEnabled,
   onDragEnd,
   className,
+  onDragStart,
+  direction = 'horizontal',
 }: BoardProps) {
   const board = (
     <Droppable
       droppableId="board"
       type="COLUMN"
-      direction="horizontal"
       ignoreContainerClipping
+      direction={direction}
       isCombineEnabled={isCombineEnabled}
     >
       {(provided: DroppableProvided) => (
@@ -50,7 +57,7 @@ export function Board({
         className,
       )}
     >
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         <div className="overflow-auto overflow-y-hidden h-full w-full">
           {board}
         </div>
@@ -80,6 +87,43 @@ export function BoardColumn({ children, id, renderClone }: BoardColumnProps) {
           </div>
         </div>
       )}
+    </Droppable>
+  );
+}
+
+interface BoardRowProps {
+  children: React.ReactElement;
+  id: string;
+  renderClone?: DraggableChildrenFn | null;
+  isDropDisabled?: boolean;
+  mode?: 'standard' | 'virtual';
+}
+
+export function BoardRow({
+  children,
+  id,
+  renderClone,
+  isDropDisabled,
+  mode = 'standard',
+}: BoardRowProps) {
+  return (
+    <Droppable
+      droppableId={id}
+      type="BoardColumn"
+      ignoreContainerClipping
+      mode={mode}
+      isDropDisabled={isDropDisabled}
+      renderClone={renderClone}
+    >
+      {(dropProvided: DroppableProvided) => {
+        return (
+          <div ref={dropProvided.innerRef}>
+            <div className="rounded-md w-full flex flex-col h-full">
+              {children}
+            </div>
+          </div>
+        );
+      }}
     </Droppable>
   );
 }

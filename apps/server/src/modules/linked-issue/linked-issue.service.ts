@@ -85,6 +85,10 @@ export default class LinkedIssueService {
     });
   }
 
+  async getLinkedIssueByUrl(url: string): Promise<LinkedIssue[]> {
+    return this.prisma.linkedIssue.findMany({ where: { url } });
+  }
+
   async updateLinkIssue(
     linkedIssueIdParams: LinkedIssueRequestParamsDto,
     linkedIssueData: UpdateLinkedIssueDto,

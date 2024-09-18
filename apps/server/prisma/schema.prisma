@@ -413,8 +413,6 @@ model LinkedIssue {
 
   issue   Issue  @relation(fields: [issueId], references: [id])
   issueId String
-
-  @@unique([url])
 }
 
 model Notification {
