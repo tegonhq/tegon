@@ -18,7 +18,7 @@ const categorySequence = [
   WorkflowCategoryEnum.TRIAGE,
 ];
 
-function workflowSort(a: WorkflowType, b: WorkflowType): number {
+export function workflowSort(a: WorkflowType, b: WorkflowType): number {
   // Compare categories based on their sequence
   const categoryAIndex = categorySequence.indexOf(
     a.category as WorkflowCategoryEnum,

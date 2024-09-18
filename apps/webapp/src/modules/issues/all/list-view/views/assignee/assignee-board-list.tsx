@@ -74,8 +74,6 @@ export const AssigneeBoardList = observer(
                       dragProvided: DraggableProvided,
                       dragSnapshot: DraggableStateSnapshot,
                     ) => {
-                      console.log(dragSnapshot);
-
                       return (
                         <BoardIssueItem
                           issueId={issue.id}

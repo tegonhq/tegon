@@ -1,7 +1,9 @@
 import type { Workflow } from '@tegonhq/types';
 
-import { updateWorkflow } from '@tegonhq/services';
+import { updateWorkflow, type UpdateWorkflowInput } from '@tegonhq/services';
 import { useMutation } from 'react-query';
+
+import { useContextStore } from 'store/global-context-provider';
 
 interface MutationParams {
   onMutate?: () => void;
@@ -14,6 +16,24 @@ export function useUpdateWorkflowMutation({
   onSuccess,
   onError,
 }: MutationParams) {
+  const { workflowsStore } = useContextStore();
+
+  const update = ({ workflowId, ...otherParams }: UpdateWorkflowInput) => {
+    const workflow = workflowsStore.getWorkflowWithId(workflowId);
+
+    try {
+      workflowsStore.update(
+        { ...workflow, position: otherParams.position },
+        workflowId,
+      );
+
+      return updateWorkflow({ ...otherParams, workflowId });
+    } catch (e) {
+      workflowsStore.update(workflow, workflowId);
+      return undefined;
+    }
+  };
+
   const onMutationTriggered = () => {
     onMutate && onMutate();
   };
@@ -29,7 +49,7 @@ export function useUpdateWorkflowMutation({
     onSuccess && onSuccess(data);
   };
 
-  return useMutation(updateWorkflow, {
+  return useMutation(update, {
     onError: onMutationError,
     onMutate: onMutationTriggered,
     onSuccess: onMutationSuccess,

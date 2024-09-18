@@ -1,5 +1,11 @@
 import type { WorkflowCategoryEnum } from '@tegonhq/types';
 
+import {
+  Draggable,
+  type DraggableProvided,
+  type DraggableStateSnapshot,
+} from '@hello-pangea/dnd';
+import { BoardItem } from '@tegonhq/ui/components/board';
 import { Button } from '@tegonhq/ui/components/button';
 import { AddLine } from '@tegonhq/ui/icons';
 import React from 'react';
@@ -37,8 +43,24 @@ export function WorkflowCategory({
         </Button>
       </div>
 
-      {workflows.map((workflow: WorkflowType) => (
-        <WorkflowItem key={workflow.name} workflow={workflow} />
+      {workflows.map((workflow: WorkflowType, index: number) => (
+        <BoardItem key={workflow.id} id={workflow.id}>
+          <Draggable key={workflow.id} draggableId={workflow.id} index={index}>
+            {(
+              dragProvided: DraggableProvided,
+              dragSnapshot: DraggableStateSnapshot,
+            ) => {
+              return (
+                <WorkflowItem
+                  key={workflow.name}
+                  workflow={workflow}
+                  isDragging={dragSnapshot.isDragging}
+                  provided={dragProvided}
+                />
+              );
+            }}
+          </Draggable>
+        </BoardItem>
       ))}
 
       {showNewWorkflowCreation && (
