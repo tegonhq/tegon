@@ -24,7 +24,6 @@ import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
 import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
-import { getTiptapJSON } from 'common';
 
 export const LeftSide = observer(() => {
   const issue = useIssueData();
