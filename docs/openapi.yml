@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Tegon
   description: AI First Project Management Tool
-  version: 0.3.4
+  version: 0.3.6
 
 servers:
   - url: https://app.tegon.ai

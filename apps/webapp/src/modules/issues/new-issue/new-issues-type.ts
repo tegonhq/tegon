@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const BaseIssueSchema = z.object({
-  description: z.string(),
+  description: z.optional(z.string()),
   title: z.string(),
 
   stateId: z.string(),

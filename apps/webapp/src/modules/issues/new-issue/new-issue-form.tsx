@@ -110,7 +110,6 @@ export function NewIssueForm({
                   <Editor
                     {...field}
                     className="new-issue-editor min-h-[200px]"
-                    autoFocus
                     editorClassName="min-h-[300px]"
                     extensions={[AiWritingExtension]}
                   >

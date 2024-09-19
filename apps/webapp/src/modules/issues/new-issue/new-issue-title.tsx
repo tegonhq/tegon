@@ -85,6 +85,7 @@ export function NewIssueTitle({ form, index, isSubIssue }: NewIssueTitleProps) {
                   className="border-0 py-0 resize-none bg-transparent no-scrollbar overflow-hidden outline-none focus-visible:ring-0"
                   rows={1}
                   cols={1}
+                  autoFocus
                   placeholder="Issue title"
                   {...field}
                 />
