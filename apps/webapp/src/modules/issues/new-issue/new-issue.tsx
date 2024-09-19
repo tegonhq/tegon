@@ -42,7 +42,7 @@ export function NewIssue({ open, setOpen, parentId }: NewIssueProps) {
   const form = useForm<z.infer<typeof NewIssueSchema>>({
     resolver: zodResolver(NewIssueSchema),
     defaultValues: {
-      issues: [{ parentId, title: 'New Issue' }],
+      issues: [{ parentId }],
     },
   });
 

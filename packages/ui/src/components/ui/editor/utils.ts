@@ -133,6 +133,7 @@ export const createFileUpload =
               src: response.publicURL,
               alt: response.originalName,
               size: response.size,
+              type: response.fileType,
             },
           },
           {
