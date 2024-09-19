@@ -15,7 +15,7 @@ export const FileComponent = (props: any) => {
   return (
     <NodeViewWrapper className="react-component-with-content">
       <div className="content">
-        {type.includes('video/') ? (
+        {type && type.includes('video/') ? (
           <div className="flex w-fit items-center p-3 bg-grayAlpha-100 rounded-lg gap-2 my-1 hover:border-border hover:border">
             <Player src={props.node.attrs.src} />
           </div>
