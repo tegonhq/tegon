@@ -48,7 +48,7 @@ const AddMemberDialogSchema = z.object({
   teamIds: z
     .array(z.string())
     .min(1, { message: 'At least one team should be selected' }),
-  role: z.enum(Object.values(RoleEnum) as [RoleEnum, ...RoleEnum[]]), // Ensure it's cast as a tuple of RoleEnum values
+  role: z.string(), // Ensure it's cast as a tuple of RoleEnum values
 });
 
 export function AddMemberDialog({ setDialogOpen }: AddMemberDialogProps) {
