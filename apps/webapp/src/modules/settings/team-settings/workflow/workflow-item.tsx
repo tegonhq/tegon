@@ -17,6 +17,12 @@ interface WorkflowItemProps {
   provided: DraggableProvided;
 }
 
+function getStyle(provided: DraggableProvided) {
+  // Index signature for type '`--${string}`' is missing in type 'DraggingStyle'.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return provided.draggableProps.style as any;
+}
+
 export function WorkflowItem({ workflow, provided }: WorkflowItemProps) {
   const CategoryIcon = getWorkflowIcon(workflow);
   const [edit, setEdit] = React.useState(false);
@@ -36,6 +42,7 @@ export function WorkflowItem({ workflow, provided }: WorkflowItemProps) {
       key={workflow.name}
       ref={provided.innerRef}
       {...provided.draggableProps}
+      style={getStyle(provided)}
       {...provided.dragHandleProps}
       className="w-full group flex justify-between mb-2 rounded-md bg-background-3 p-2 px-2"
     >

@@ -30,7 +30,9 @@ interface BoardIssueItemProps {
 }
 
 function getStyle(provided: DraggableProvided) {
-  return provided.draggableProps.style;
+  // Index signature for type '`--${string}`' is missing in type 'DraggingStyle'.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return provided.draggableProps.style as any;
 }
 
 function formatDateToDayMonth(isoString: string): string {
