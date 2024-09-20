@@ -1,5 +1,6 @@
 import { ActionEventPayload, logger } from '@tegonhq/sdk';
 import { commentEvent } from 'triggers/comment-event';
+import { prSync } from 'triggers/pr-sync';
 
 export const webhookHandler = async (
   payload: ActionEventPayload,
@@ -23,7 +24,7 @@ export const webhookHandler = async (
       return await commentEvent(payload);
 
     case 'pull_request':
-      return undefined;
+      return await prSync(payload);
 
     case 'installation':
       return undefined;

@@ -2,10 +2,10 @@ import {
   ActionEventPayload,
   LinkedIssue,
   ModelNameEnum,
+  getLinkedIssuesByIssueId,
   logger,
 } from '@tegonhq/sdk';
 import { onLabelHandler } from './on-label-handler';
-import axios from 'axios';
 import { issueSync } from 'triggers/issue-sync';
 import { linkIssueSync } from 'triggers/link-issue-sync';
 
@@ -14,12 +14,9 @@ export const onUpdateHandler = async (actionPayload: ActionEventPayload) => {
   switch (actionPayload.type) {
     case ModelNameEnum.Issue:
       // TODO(new): Modify this to service
-      // const linkedIssue = await getLinkedIssuesByIssueId({issueId: actionPayload.modelId})
-      const linkedIssues = (
-        await axios.get(
-          `/api/v1/linked_issues/issue?issueId=${actionPayload.modelId}`,
-        )
-      ).data;
+      const linkedIssues = await getLinkedIssuesByIssueId({
+        issueId: actionPayload.modelId,
+      });
       if (linkedIssues.length > 0) {
         const githubLinkedIssues = linkedIssues.filter(
           (linkedIssue: LinkedIssue) => {

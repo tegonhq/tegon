@@ -10,11 +10,7 @@ import {
   WorkflowCategory,
 } from '@tegonhq/sdk';
 import axios from 'axios';
-import {
-  convertTiptapJsonToMarkdown,
-  createLinkIssueComment,
-  getGithubHeaders,
-} from 'utils';
+import { createLinkIssueComment, getGithubHeaders } from 'utils';
 
 export const issueSync = async (actionPayload: ActionEventPayload) => {
   const {
@@ -89,9 +85,7 @@ export const issueSync = async (actionPayload: ActionEventPayload) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const issueBody: any = {
     title: issue.title,
-    ...(issue.description
-      ? { body: convertTiptapJsonToMarkdown(issue.description) }
-      : {}),
+    ...(issue.description ? { body: issue.descriptionMarkdown } : {}),
     labels: [...issueLabels, 'Tegon'],
     state:
       stateCategory === WorkflowCategory.COMPLETED ||
@@ -148,6 +142,7 @@ export const issueSync = async (actionPayload: ActionEventPayload) => {
       title: `#${githubIssue.number} - ${githubIssue.title}`,
       apiUrl: githubIssue.url,
       htmlUrl: githubIssue.html_url,
+      commentApiUrl: githubIssue.comments_url,
       type: integrationAccount.integrationDefinition.slug,
       displayName: githubIssue.user.login,
     },
@@ -164,7 +159,7 @@ export const issueSync = async (actionPayload: ActionEventPayload) => {
     linkIssueData,
     issue,
     repoFullName,
-    githubIssue.url,
+    githubIssue.comments_url,
     botToken,
   );
 
