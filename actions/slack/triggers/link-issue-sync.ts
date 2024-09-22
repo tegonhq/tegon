@@ -9,6 +9,7 @@ import {
   RoleEnum,
   ActionTypesEnum,
   JsonObject,
+  getLinkedIssueBySource,
 } from '@tegonhq/sdk';
 
 import { slackLinkRegex } from '../types';
@@ -90,6 +91,17 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
       message,
     },
   };
+
+  const linkedIssues = await getLinkedIssueBySource({
+    sourceId: linkIssueData.sourceId,
+  });
+  // Check if there are multiple linked issues with the same sourceId
+  // This can happen if the same thread is linked to multiple issues by mistake
+  // We want to prevent this scenario and ensure that each thread is linked to only one issue
+  // If there are multiple linked issues, return an error message
+  if (linkedIssues.length > 0) {
+    return { message: 'This thread is already in sync with another issue' };
+  }
 
   linkedIssue = await updateLinkedIssue({
     linkedIssueId: linkIssueId,

@@ -99,12 +99,14 @@ export async function createLinkIssueComment(
     });
   }
 
-  return await updateLinkedIssue({
-    linkedIssueId,
-    url: linkIssueInput.url,
-    sourceId: linkIssueInput.sourceId,
-    sourceData: linkIssueInput.sourceData,
-  });
+  return [
+    await updateLinkedIssue({
+      linkedIssueId,
+      url: linkIssueInput.url,
+      sourceId: linkIssueInput.sourceId,
+      sourceData: linkIssueInput.sourceData,
+    }),
+  ];
 }
 
 export async function getState(

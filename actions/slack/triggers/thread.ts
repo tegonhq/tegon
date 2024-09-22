@@ -49,15 +49,16 @@ export const slackThread = async (
 
   logger.debug(`Handling Slack thread with ID: ${threadId}`);
 
-  const linkedIssue = await getLinkedIssueBySource({
+  const linkedIssues = await getLinkedIssueBySource({
     sourceId: parentThreadId,
   });
 
   // If no linked issue is found, log and return undefined
-  if (!linkedIssue) {
+  if (linkedIssues.length < 1) {
     logger.debug(`No linked issue found for Slack issue ID: ${parentThreadId}`);
     return undefined;
   }
+  const linkedIssue = linkedIssues[0];
 
   const sourceData = linkedIssue.sourceData as JsonObject;
   const syncingLinkedIssue =

@@ -42,21 +42,21 @@ export default class LinkedIssueService {
     }
   }
 
-  async getLinkedIssue(linkedIssueId: string) {
+  async getLinkedIssue(linkedIssueId: string): Promise<LinkedIssue> {
     return this.prisma.linkedIssue.findUnique({
       where: { id: linkedIssueId },
       include: { issue: { include: { team: true } } },
     });
   }
 
-  async getLinkedIssueBySourceId(sourceId: string) {
-    return this.prisma.linkedIssue.findFirst({
+  async getLinkedIssueBySourceId(sourceId: string): Promise<LinkedIssue[]> {
+    return this.prisma.linkedIssue.findMany({
       where: { sourceId, deleted: null },
       include: { issue: true },
     });
   }
 
-  async getLinkedIssueByIssueId(issueId: string) {
+  async getLinkedIssueByIssueId(issueId: string): Promise<LinkedIssue[]> {
     return this.prisma.linkedIssue.findMany({
       where: { issueId, deleted: null },
     });
@@ -103,19 +103,23 @@ export default class LinkedIssueService {
     sourceId: string,
     linkedIssueData: UpdateLinkedIssueDto,
     userId: string,
-  ) {
-    const linkedIssue = await this.prisma.linkedIssue.findFirst({
+  ): Promise<LinkedIssue[]> {
+    const linkedIssues = await this.prisma.linkedIssue.findMany({
       where: { sourceId, deleted: null },
     });
 
-    if (!linkedIssue) {
+    if (linkedIssues.length < 1) {
       return undefined;
     }
 
-    return await this.updateLinkIssue(
-      { linkedIssueId: linkedIssue.id },
-      linkedIssueData,
-      userId,
+    return await Promise.all(
+      linkedIssues.map(async (linkedIssue: LinkedIssue) => {
+        return await this.updateLinkIssue(
+          { linkedIssueId: linkedIssue.id },
+          linkedIssueData,
+          userId,
+        );
+      }),
     );
   }
 

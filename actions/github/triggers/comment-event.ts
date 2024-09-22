@@ -15,16 +15,17 @@ export const commentEvent = async (actionPayload: ActionEventPayload) => {
   } = actionPayload;
 
   // Get the linked issue by the GitHub issue ID
-  const linkedIssue = await getLinkedIssueBySource({
+  const linkedIssues = await getLinkedIssueBySource({
     sourceId: eventBody.issue.id.toString(),
   });
 
-  if (!linkedIssue) {
+  if (linkedIssues.length < 1) {
     logger.log(
       `No linked issue found for GitHub issue ID: ${eventBody.issue.id}`,
     );
     return undefined;
   }
+  const linkedIssue = linkedIssues[0];
 
   const sourceData = linkedIssue.sourceData as JsonObject;
   const syncingLinkedIssue =

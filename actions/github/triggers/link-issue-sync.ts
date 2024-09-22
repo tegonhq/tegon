@@ -38,7 +38,7 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
     modelId: linkIssueId,
   } = actionPayload;
 
-  let linkedIssue = await getLinkedIssue({ linkedIssueId: linkIssueId });
+  const linkedIssue = await getLinkedIssue({ linkedIssueId: linkIssueId });
 
   const userRole = (
     await getUsers({
@@ -95,7 +95,7 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
 
   const stateDate = response.closed_at
     ? response.closed_at
-    : response.updated_at;
+    : response.created_at;
 
   const sourceData: Record<string, string> = isGithubPR
     ? {
@@ -129,11 +129,14 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
   const team = await getTeamById({ teamId: linkedIssue.issue.teamId });
 
   if (!isGithubPR) {
-    const linkedIssue = await getLinkedIssueBySource({
+    const linkedIssues = await getLinkedIssueBySource({
       sourceId: response.id.toString(),
     });
-
-    if (linkedIssue) {
+    // Check if there are multiple linked issues with the same sourceId
+    // This can happen if the same thread is linked to multiple issues by mistake
+    // We want to prevent this scenario and ensure that each thread is linked to only one issue
+    // If there are multiple linked issues, return an error message
+    if (linkedIssues.length > 0) {
       return { message: 'Not a PR, Ignoring to update linked issue' };
     }
   }
@@ -144,7 +147,7 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
     sourceData,
     teamId: team.id,
   };
-  linkedIssue = await createLinkIssueComment(
+  const linkedIssues = await createLinkIssueComment(
     linkIssueInput,
     linkedIssue.issue,
     repositoryName,
@@ -155,7 +158,7 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
     false,
   );
 
-  return linkedIssue;
+  return linkedIssues;
 }
 
 async function onUpdateLinkedIssue(actionPayload: ActionEventPayload) {

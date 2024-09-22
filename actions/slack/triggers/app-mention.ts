@@ -84,17 +84,18 @@ export const appMention = async (
   const mainTs = parentTs;
 
   // Check if the thread is already linked to an existing issue
-  const [linkedIssue, workflowStates] = await Promise.all([
+  const [linkedIssues, workflowStates] = await Promise.all([
     getLinkedIssueBySource({ sourceId }),
     getWorkflowsByTeam({ teamId }),
   ]);
 
   // if the thread is already linked to an issue, update the title
-  if (linkedIssue) {
+  if (linkedIssues.length > 0) {
     logger.debug(
       `Thread already linked to an existing issue. Skipping issue creation.`,
     );
 
+    const linkedIssue = linkedIssues[0];
     const title = event.text.replace(/<@\w+>/g, '').trim();
     if (title.length < 1) {
       // Send an ephemeral message to the user indicating that the title is null

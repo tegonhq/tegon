@@ -145,6 +145,7 @@ export const issueSync = async (actionPayload: ActionEventPayload) => {
       commentApiUrl: githubIssue.comments_url,
       type: integrationAccount.integrationDefinition.slug,
       displayName: githubIssue.user.login,
+      githubType: 'ISSUE',
     },
     createdById: userId,
   };
