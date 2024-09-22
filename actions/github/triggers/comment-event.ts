@@ -6,8 +6,6 @@ import {
   JsonObject,
   logger,
 } from '@tegonhq/sdk';
-import axios from 'axios';
-import { getGithubHeaders } from 'utils';
 
 export const commentEvent = async (actionPayload: ActionEventPayload) => {
   const {
@@ -16,24 +14,10 @@ export const commentEvent = async (actionPayload: ActionEventPayload) => {
     integrationAccounts: { github: integrationAccount },
   } = actionPayload;
 
-  const { botToken } = integrationAccount.integrationConfiguration;
   // Get the linked issue by the GitHub issue ID
-  let linkedIssue = await getLinkedIssueBySource({
+  const linkedIssue = await getLinkedIssueBySource({
     sourceId: eventBody.issue.id.toString(),
   });
-
-  if (!linkedIssue && eventBody.issue.pull_request) {
-    const pullRequest = (
-      await axios.get(
-        eventBody.issue.pull_request.url,
-        getGithubHeaders(botToken),
-      )
-    ).data;
-
-    linkedIssue = await getLinkedIssueBySource({
-      sourceId: pullRequest.id.toString(),
-    });
-  }
 
   if (!linkedIssue) {
     logger.log(

@@ -2,6 +2,7 @@ import {
   ActionEventPayload,
   ActionTypesEnum,
   getLinkedIssue,
+  getLinkedIssueBySource,
   getTeamById,
   getUsers,
   JsonObject,
@@ -9,6 +10,7 @@ import {
   RoleEnum,
 } from '@tegonhq/sdk';
 import axios from 'axios';
+import { formatDistanceToNow } from 'date-fns';
 import {
   convertToAPIUrl,
   createLinkIssueComment,
@@ -91,6 +93,10 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
       )
     ).data ?? {};
 
+  const stateDate = response.closed_at
+    ? response.closed_at
+    : response.updated_at;
+
   const sourceData: Record<string, string> = isGithubPR
     ? {
         branch: response.head.ref,
@@ -100,7 +106,7 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
         updatedAt: response.updated_at,
         issueNumber: response.number,
         state: response.state,
-        title: `#${response.number} - ${response.title}`,
+        title: `#${response.number} - ${response.title}    -- ${response.state} ${formatDistanceToNow(new Date(stateDate), { addSuffix: true })}`,
         apiUrl: response.url,
         commentApiUrl: response.comments_url,
         mergedAt: response.merged_at,
@@ -122,6 +128,15 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
 
   const team = await getTeamById({ teamId: linkedIssue.issue.teamId });
 
+  if (!isGithubPR) {
+    const linkedIssue = await getLinkedIssueBySource({
+      sourceId: response.id.toString(),
+    });
+
+    if (linkedIssue) {
+      return { message: 'Not a PR, Ignoring to update linked issue' };
+    }
+  }
   const linkIssueInput = {
     url: response.html_url,
     sourceId: response.id.toString(),
@@ -137,6 +152,7 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
     botToken,
     sourceData,
     linkedIssue.id,
+    false,
   );
 
   return linkedIssue;
@@ -151,7 +167,7 @@ async function onUpdateLinkedIssue(actionPayload: ActionEventPayload) {
 
   const { botToken } = integrationAccount.integrationConfiguration;
 
-  if (changedData.sync !== undefined) {
+  if (changedData.sync !== undefined || changedData.deleted) {
     const linkedIssue = await getLinkedIssue({ linkedIssueId });
 
     const userRole = (

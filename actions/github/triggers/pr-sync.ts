@@ -9,7 +9,8 @@ import {
   updateIssue,
   updateLinkedIssue,
 } from '@tegonhq/sdk';
-import { createLinkIssueComment, getState } from 'utils';
+import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
+import { getState, sendGithubComment } from 'utils';
 
 export const prSync = async (actionPayload: ActionEventPayload) => {
   const {
@@ -64,6 +65,10 @@ export const prSync = async (actionPayload: ActionEventPayload) => {
   }
 
   const pullRequestId = pullRequest.id.toString();
+  const stateDate = pullRequest.closed_at
+    ? pullRequest.closed_at
+    : pullRequest.updated_at;
+
   // Preparing source data for linked issue
   const sourceData = {
     branch: pullRequest.head.ref,
@@ -73,19 +78,13 @@ export const prSync = async (actionPayload: ActionEventPayload) => {
     updatedAt: pullRequest.updated_at,
     issueNumber: pullRequest.number,
     state: pullRequest.state,
-    title: `#${pullRequest.number} - ${pullRequest.title}`,
+    title: `#${pullRequest.number} - ${pullRequest.title}    -- ${pullRequest.state} ${formatDistanceToNow(new Date(stateDate), { addSuffix: true })}`,
     apiUrl: pullRequest.url,
+    htmlUrl: pullRequest.html_url,
+    commentApiUrl: pullRequest.comments_url,
     mergedAt: pullRequest.merged_at,
     githubType: 'PR',
     type: integrationAccount.integrationDefinition.slug,
-  };
-
-  const linkIssueInput = {
-    url: pullRequest.html_url,
-    sourceId: pullRequestId,
-    issueId: issue.id,
-    sourceData,
-    teamId: team.id,
   };
 
   switch (action) {
@@ -101,15 +100,15 @@ export const prSync = async (actionPayload: ActionEventPayload) => {
       logger.log(`Created linked issue: linkedIssue=${linkedIssue.id}`);
 
       // Sending linked message to the PR
-      await createLinkIssueComment(
-        linkIssueInput,
-        issue,
-        pullRequest.base.repo.name,
-        pullRequest.url,
-        botToken,
-        sourceData,
-      );
+      // Create the GitHub comment body with a link to the issue
+      const githubCommentBody = `[${team.identifier}-${issue.number} ${issue.title}](https://app.tegon.ai/${team.workspace.slug}/issue/${team.identifier}-${issue.number})`;
 
+      // Send the comment to GitHub
+      await sendGithubComment(
+        pullRequest.comments_url,
+        botToken,
+        githubCommentBody,
+      );
       return linkedIssue;
     }
 
