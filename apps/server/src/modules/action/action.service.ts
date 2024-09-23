@@ -15,6 +15,7 @@ import {
   ActionTypesEnum,
   ActionScheduleStatusEnum,
   ActionScheduleDto,
+  User,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 import { v4 as uuidv4 } from 'uuid';
@@ -88,6 +89,7 @@ export default class ActionService {
     const config = actionCreateResource.config;
     const workspaceId = actionCreateResource.workspaceId;
 
+    let workflowUser: User;
     // Use a transaction to ensure atomicity
     await this.prisma.$transaction(async (prisma) => {
       await this.checkIfActionCanBeDeployed(
@@ -98,19 +100,12 @@ export default class ActionService {
 
       if (!actionCreateResource.isDev && !actionCreateResource.isPersonal) {
         // Upsert a workflow user for the action
-        const workflowUser = await this.upsertWorkflowUser(
+        workflowUser = await this.upsertWorkflowUser(
           prisma,
           config.name,
           config.slug,
           workspaceId,
           config.icon,
-        );
-
-        // Create a personal access token for the trigger
-        await this.createPersonalTokenForTrigger(
-          prisma,
-          workflowUser.id,
-          workspaceId,
         );
 
         // Upsert the workflow user on the workspace
@@ -133,6 +128,15 @@ export default class ActionService {
       // Recreate the action entities
       await this.recreateActionEntities(prisma, action.id, entities);
     });
+
+    if (workflowUser) {
+      // Create a personal access token for the trigger
+      await this.createPersonalTokenForTrigger(
+        this.prisma,
+        workflowUser.id,
+        workspaceId,
+      );
+    }
   }
 
   private async checkIfActionCanBeDeployed(
@@ -201,7 +205,7 @@ export default class ActionService {
     workspaceId: string,
     icon?: string,
   ) {
-    const email = `${name}_${workspaceId}@tegon.ai`;
+    const email = `${username}_${workspaceId}@tegon.ai`;
     return await prisma.user.upsert({
       where: { email },
       create: {
