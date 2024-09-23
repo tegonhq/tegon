@@ -6,11 +6,10 @@ import React from 'react';
 
 import { getWorkflowColor } from 'common/status-color';
 import { IssueRelationEnum } from 'common/types';
-import type { IssueType } from 'common/types';
+import type { IssueType, WorkflowType } from 'common/types';
 import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useTeamWithId } from 'hooks/teams';
-import { useTeamWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -19,9 +18,9 @@ interface IssueRelationsProps {
 }
 
 export const IssueRelations = observer(({ issue }: IssueRelationsProps) => {
-  const { issueRelationsStore, issuesStore } = useContextStore();
+  const { issueRelationsStore, issuesStore, workflowsStore } =
+    useContextStore();
   const team = useTeamWithId(issue.teamId);
-  const workflows = useTeamWorkflows(team.identifier);
 
   const blockedIssues = issueRelationsStore.getIssueRelationForType(
     issue.id,
@@ -39,6 +38,10 @@ export const IssueRelations = observer(({ issue }: IssueRelationsProps) => {
   }
 
   function getParentComponent() {
+    const workflows = workflowsStore.getWorkflowsForTeam(
+      parentIssue.teamId,
+    ) as WorkflowType[];
+
     const parentWorkflow =
       parentIssue &&
       workflows.find((workflow) => workflow.id === parentIssue.stateId);
@@ -51,11 +54,11 @@ export const IssueRelations = observer(({ issue }: IssueRelationsProps) => {
           'text-xs flex gap-1',
         )}
       >
-        Parent task{' '}
+        Parent task
         <CategoryIcon
           size={12}
           color={getWorkflowColor(parentWorkflow).color}
-        />{' '}
+        />
         <span>
           {team.identifier}-{parentIssue.number}
         </span>
