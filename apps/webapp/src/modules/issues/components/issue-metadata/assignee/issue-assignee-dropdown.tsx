@@ -10,6 +10,7 @@ import { AssigneeLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 
+import { UserAvatar } from 'common/user-avatar';
 import { getUserFromUsersData } from 'common/user-util';
 
 import { useUsersData } from 'hooks/users/use-users-data';
@@ -54,10 +55,7 @@ export function IssueAssigneeDropdown({
         >
           {value ? (
             <>
-              <AvatarText
-                text={getUserFromUsersData(users, value).fullname}
-                className="text-[9px]"
-              />
+              <UserAvatar user={getUserFromUsersData(users, value)} />
             </>
           ) : (
             <div className="flex items-center justify-center">
