@@ -98,7 +98,7 @@ export const workflowSeedData = [
   {
     name: 'Canceled',
     category: WorkflowCategoryEnum.CANCELED,
-    color: '7',
+    color: '3',
     position: 0,
   },
 ];
