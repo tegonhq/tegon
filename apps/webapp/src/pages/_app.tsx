@@ -51,7 +51,7 @@ export const MyApp: NextComponentType<
           disableTransitionOnChange
         >
           <HotkeysProvider initiallyActiveScopes={[SCOPES.Global]}>
-            <TooltipProvider delayDuration={1000}>
+            <TooltipProvider delayDuration={500}>
               <StoreContext.Provider value={storeContextStore}>
                 <QueryClientProvider client={queryClientRef.current}>
                   <Hydrate state={dehydratedState}>

@@ -24,11 +24,11 @@ export const CategoryView = observer(() => {
   const categorySequence =
     view === ViewEnum.list
       ? [
-          WorkflowCategoryEnum.STARTED,
           WorkflowCategoryEnum.UNSTARTED,
+          WorkflowCategoryEnum.STARTED,
+          WorkflowCategoryEnum.COMPLETED,
           WorkflowCategoryEnum.BACKLOG,
           WorkflowCategoryEnum.TRIAGE,
-          WorkflowCategoryEnum.COMPLETED,
           WorkflowCategoryEnum.CANCELED,
         ]
       : [
