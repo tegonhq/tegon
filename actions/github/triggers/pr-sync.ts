@@ -95,8 +95,9 @@ export const prSync = async (actionPayload: ActionEventPayload) => {
       // On opening a PR, it's creating a link to the issue
       const linkedIssue = await createLinkedIssue({
         url: pullRequest.html_url,
-        sourceId: pullRequestId,
+        sourceId: pullRequestId.toString(),
         issueId: issue.id,
+        title: sourceData.title,
         sourceData,
         teamId: team.id,
       });

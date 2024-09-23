@@ -89,6 +89,7 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
       parentTs,
       slackTeamDomain,
       message,
+      type: integrationAccount.integrationDefinition.slug,
     },
   };
 

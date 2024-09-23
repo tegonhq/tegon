@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import {
+  CreateLinkedIssueDto,
   IssueRequestParamsDto,
-  LinkIssueInput,
   LinkedIssue,
   LinkedIssueRequestParamsDto,
   UpdateLinkedIssueDto,
@@ -15,7 +15,7 @@ export default class LinkedIssueService {
   constructor(private prisma: PrismaService) {}
 
   async createLinkIssue(
-    linkData: LinkIssueInput,
+    linkData: CreateLinkedIssueDto,
     issueParams: IssueRequestParamsDto,
     userId: string,
   ): Promise<ApiResponse | LinkedIssue> {
@@ -31,8 +31,10 @@ export default class LinkedIssueService {
           url: linkData.url,
           issueId: issueParams.issueId,
           sourceData: {
+            ...linkData.sourceData,
             ...(linkData.title ? { title: linkData.title } : {}),
           },
+          ...(linkData.sourceId ? { sourceId: linkData.sourceId } : {}),
           ...(linkData.sync ? { sync: linkData.sync } : {}),
         },
         include: { issue: { include: { team: true } } },

@@ -168,6 +168,7 @@ export async function createLinkIssueComment(
   // Merge provided metadata with message-specific details
   const commentSourceMetadata = {
     ...sourceMetadata,
+    type: integrationAccount.integrationDefinition.slug,
     parentTs,
     idTs: messageTs,
     channelType,
@@ -186,6 +187,8 @@ export async function createLinkIssueComment(
   // Update the linked issue input with the new comment ID and message timestamp
   linkIssueInput.sourceData.messageTs = messageTs;
   linkIssueInput.sourceData.syncedCommentId = issueComment.id;
+  linkIssueInput.sourceData.type =
+    integrationAccount.integrationDefinition.slug;
 
   // Update the linked issue source with the new data
   await updateLinkedIssueBySource({
