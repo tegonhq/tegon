@@ -16,7 +16,7 @@ export async function getLinkedIssue({
 
 export async function getLinkedIssueBySource({
   sourceId,
-}: LinkedIssueSourceDto): Promise<LinkedIssue> {
+}: LinkedIssueSourceDto): Promise<LinkedIssue[]> {
   const response = await axios.get(
     `/api/v1/linked_issues/source?sourceId=${sourceId}`,
   );

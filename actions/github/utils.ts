@@ -39,6 +39,7 @@ export async function createLinkIssueComment(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sourceMetadata?: any,
   linkedIssueId?: string,
+  createComment: boolean = true,
 ) {
   const team = await getTeamById({ teamId: issue.teamId });
   // Create the GitHub comment body with a link to the issue
@@ -51,41 +52,43 @@ export async function createLinkIssueComment(
     githubCommentBody,
   );
 
-  const commentBody = {
-    type: 'doc',
-    content: [
-      {
-        type: 'paragraph',
-        content: [
-          {
-            type: 'text',
-            text: `Thread of issue #${linkIssueInput.sourceData.issueNumber} in ${repoName} is connected`,
-          },
-        ],
-      },
-    ],
-  };
-  // Merge provided metadata with message-specific details
-  const commentSourceMetadata = {
-    ...sourceMetadata,
-    id: commentResponse.id,
-    type: linkIssueInput.sourceData.type,
-    url: commentResponse.url,
-    commentApiUrl: githubCommentUrl,
-  };
+  if (createComment) {
+    const commentBody = {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: `Thread of issue #${linkIssueInput.sourceData.issueNumber} in ${repoName} is connected`,
+            },
+          ],
+        },
+      ],
+    };
+    // Merge provided metadata with message-specific details
+    const commentSourceMetadata = {
+      ...sourceMetadata,
+      id: commentResponse.id,
+      type: linkIssueInput.sourceData.type,
+      url: commentResponse.url,
+      commentApiUrl: githubCommentUrl,
+    };
 
-  // Post the comment to the backend and capture the response
-  const issueComment = await createIssueComment({
-    issueId: issue.id,
-    body: JSON.stringify(commentBody),
-    sourceMetadata: commentSourceMetadata,
-  });
+    // Post the comment to the backend and capture the response
+    const issueComment = await createIssueComment({
+      issueId: issue.id,
+      body: JSON.stringify(commentBody),
+      sourceMetadata: commentSourceMetadata,
+    });
 
-  // Log the successful creation of the issue comment
-  logger.info('Issue comment created successfully', { issueComment });
+    // Log the successful creation of the issue comment
+    logger.info('Issue comment created successfully', { issueComment });
 
-  // Update the linked issue input with the new comment ID and message timestamp
-  linkIssueInput.sourceData.syncedCommentId = issueComment.id;
+    // Update the linked issue input with the new comment ID and message timestamp
+    linkIssueInput.sourceData.syncedCommentId = issueComment.id;
+  }
 
   logger.info('Updating Linked issue');
   // Update the linked issue source with the new data
@@ -96,12 +99,14 @@ export async function createLinkIssueComment(
     });
   }
 
-  return await updateLinkedIssue({
-    linkedIssueId,
-    url: linkIssueInput.url,
-    sourceId: linkIssueInput.sourceId,
-    sourceData: linkIssueInput.sourceData,
-  });
+  return [
+    await updateLinkedIssue({
+      linkedIssueId,
+      url: linkIssueInput.url,
+      sourceId: linkIssueInput.sourceId,
+      sourceData: linkIssueInput.sourceData,
+    }),
+  ];
 }
 
 export async function getState(

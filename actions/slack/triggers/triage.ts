@@ -82,13 +82,13 @@ export const slackTriage = async (
   const sourceId = `${channelId}_${mainTs}`;
 
   // Check if the thread is already linked to an existing issue
-  const [linkedIssue, workflowStates] = await Promise.all([
+  const [linkedIssues, workflowStates] = await Promise.all([
     getLinkedIssueBySource({ sourceId }),
     getWorkflowsByTeam({ teamId }),
   ]);
 
   // // If the thread is already linked to an issue, send an ephemeral message and return
-  if (linkedIssue) {
+  if (linkedIssues.length > 0) {
     await sendEphemeralMessage(
       integrationAccount,
       channelId,

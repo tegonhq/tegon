@@ -13,6 +13,10 @@ export class CreateLinkedIssueDto {
   sync?: boolean;
 
   @IsOptional()
+  @IsString()
+  title?: string;
+
+  @IsOptional()
   @IsObject()
   sourceData?: Record<string, string | number>;
 }

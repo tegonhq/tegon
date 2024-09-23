@@ -22,7 +22,9 @@ export const onUpdateHandler = async (actionPayload: ActionEventPayload) => {
           (linkedIssue: LinkedIssue) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const sourceData = linkedIssue.sourceData as Record<string, any>;
-            return sourceData.type === 'github';
+            return (
+              sourceData.type === 'github' && sourceData.githubType !== 'PR'
+            );
           },
         );
 
