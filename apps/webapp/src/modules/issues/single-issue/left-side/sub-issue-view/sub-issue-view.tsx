@@ -8,6 +8,7 @@ import { AddLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import * as React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
+import { useSortIssues } from 'modules/issues/components/issue-list-item/utils';
 import { NewIssue } from 'modules/issues/new-issue';
 
 import type { IssueType } from 'common/types';
@@ -22,6 +23,7 @@ export function SubIssueView({ childIssues, issueId }: SubIssueViewProps) {
   const [isOpen, setOpen] = React.useState(
     childIssues.length === 0 ? false : true,
   );
+  const issues = useSortIssues(childIssues);
 
   return (
     <>
@@ -41,7 +43,7 @@ export function SubIssueView({ childIssues, issueId }: SubIssueViewProps) {
 
                 {!isOpen && (
                   <div className="px-2 ml-1 rounded-sm bg-grayAlpha-100 text-foreground">
-                    {childIssues.length}
+                    {issues.length}
                   </div>
                 )}
               </div>
@@ -61,12 +63,12 @@ export function SubIssueView({ childIssues, issueId }: SubIssueViewProps) {
         </div>
         <CollapsibleContent>
           <div className="pt-1 px-3">
-            {childIssues.map((issue: IssueType, index: number) => (
+            {issues.map((issue: IssueType, index: number) => (
               <IssueListItem
                 issueId={issue.id}
                 subIssueView
                 key={issue.id}
-                noBorder={index === childIssues.length - 1}
+                noBorder={index === issues.length - 1}
               />
             ))}
           </div>

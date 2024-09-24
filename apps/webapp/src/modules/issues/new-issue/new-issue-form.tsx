@@ -10,7 +10,7 @@ import {
   type UseFieldArrayRemove,
 } from 'react-hook-form';
 
-import { AiWritingExtension } from 'common/ai-writing';
+import { AiWritingExtension } from 'common/editor/ai-writing';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -109,8 +109,8 @@ export function NewIssueForm({
                 <FormControl>
                   <Editor
                     {...field}
-                    className="new-issue-editor min-h-[200px]"
-                    editorClassName="min-h-[300px]"
+                    className="new-issue-editor min-h-[100px]"
+                    editorClassName="min-h-[100px]"
                     extensions={[AiWritingExtension]}
                   >
                     <EditorExtensions suggestionItems={suggestionItems} />

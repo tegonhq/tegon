@@ -25,7 +25,7 @@ import { useContextStore } from 'store/global-context-provider';
 
 import { IssueLabels } from './issue-labels';
 import { IssueRelations, View } from './issue-relations';
-import { getRelationIssues } from './utils';
+import { getRelationIssues, useSortIssues } from './utils';
 
 interface IssueListItemProps {
   issueId: string;
@@ -53,12 +53,14 @@ export const IssueRelationIssues = observer(
   ({ view, issue }: IssueRelationIssuesProps) => {
     const { issuesStore, issueRelationsStore } = useContextStore();
 
-    const issues = getRelationIssues({
+    let issues = getRelationIssues({
       issueRelationsStore,
       issuesStore,
       issue,
       view,
     });
+
+    issues = useSortIssues(issues);
 
     return (
       <div className="pl-14 pr-6">
