@@ -25,10 +25,12 @@ import { Separator } from '../separator';
 
 interface EditorExtensionsProps {
   suggestionItems: SuggestionItem[];
+  children?: React.ReactNode;
 }
 
 export const EditorExtensions = ({
   suggestionItems,
+  children,
 }: EditorExtensionsProps) => {
   const [openNode, setOpenNode] = React.useState(false);
   const [openLink, setOpenLink] = React.useState(false);
@@ -73,6 +75,12 @@ export const EditorExtensions = ({
         <LinkSelector open={openLink} onOpenChange={setOpenLink} />
         <Separator orientation="vertical" />
         <TextButtons />
+        {children && (
+          <>
+            <Separator orientation="vertical" />
+            {children}
+          </>
+        )}
       </EditorBubble>
     </>
   );

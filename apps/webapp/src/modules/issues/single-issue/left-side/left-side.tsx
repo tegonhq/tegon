@@ -9,6 +9,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { useEditorSuggestionItems } from 'modules/issues/components/use-editor-suggestion-items';
 
 import { getTiptapJSON } from 'common';
+import { SubIssueSelector } from 'common/editor';
 import { type WorkflowType } from 'common/types';
 
 import { useIssueData } from 'hooks/issues';
@@ -77,7 +78,9 @@ export const LeftSide = observer(() => {
               onChange={onDescriptionChange}
               className="min-h-[50px] mb-8 px-6 mt-3 text-md"
             >
-              <EditorExtensions suggestionItems={suggestionItems} />
+              <EditorExtensions suggestionItems={suggestionItems}>
+                <SubIssueSelector />
+              </EditorExtensions>
             </Editor>
 
             <div className="mx-6">

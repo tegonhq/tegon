@@ -78,7 +78,7 @@ export const IssueActivity = observer(() => {
             {getUserIcon(issueCreatedUser)}
 
             <div className="flex items-center">
-              <span className="text-foreground mr-2 font-medium">
+              <span className="text-foreground mr-2">
                 {issueCreatedUser.fullname}
               </span>
               created the issue

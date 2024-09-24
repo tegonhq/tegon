@@ -2,6 +2,7 @@ import { WorkflowCategoryEnum } from '@tegonhq/types';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
+import { workflowSort } from 'common/sorting';
 import { type WorkflowType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
@@ -40,21 +41,9 @@ export const CategoryView = observer(() => {
           WorkflowCategoryEnum.CANCELED,
         ];
 
-  function workflowSort(a: WorkflowType, b: WorkflowType): number {
-    // Compare categories based on their sequence
-    const categoryAIndex = categorySequence.indexOf(
-      a.category as WorkflowCategoryEnum,
-    );
-    const categoryBIndex = categorySequence.indexOf(
-      b.category as WorkflowCategoryEnum,
-    );
-    if (categoryAIndex !== categoryBIndex) {
-      return categoryAIndex - categoryBIndex;
-    }
-
-    // If categories are the same, compare by position
-    return a.position - b.position;
-  }
+  const sorting = (a: WorkflowType, b: WorkflowType) => {
+    return workflowSort(a, b, categorySequence);
+  };
 
   const workflows = useTeamWorkflows(currentTeam.identifier)
     .filter((workflow: WorkflowType) => {
@@ -71,7 +60,7 @@ export const CategoryView = observer(() => {
 
       return true;
     })
-    .sort(workflowSort);
+    .sort(sorting);
 
   return view === ViewEnum.list ? (
     <CategoryList workflows={workflows} />
