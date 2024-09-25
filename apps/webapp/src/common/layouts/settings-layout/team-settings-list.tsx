@@ -56,7 +56,9 @@ export const TeamSettingsList = observer(() => {
                     </div>
 
                     <div className="flex justify-center items-center gap-1">
-                      {team?.name}
+                    {team?.name?.length > 15
+                    ? `${team.name.substring(0, 15)}...`
+                    : team.name}
                       <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200" />
                     </div>
                   </div>
