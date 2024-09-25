@@ -7,6 +7,11 @@ import {
 } from '@tegonhq/ui/components/accordion';
 import { buttonVariants } from '@tegonhq/ui/components/button';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@tegonhq/ui/components/ui/tooltip';
 import { ChevronRight, TeamLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
@@ -56,9 +61,16 @@ export const TeamSettingsList = observer(() => {
                     </div>
 
                     <div className="flex justify-center items-center gap-1">
-                    {team?.name?.length > 15
-                    ? `${team.name.substring(0, 15)}...`
-                    : team.name}
+                      <Tooltip>
+                        <TooltipTrigger>
+                          {team?.name?.length > 15
+                            ? `${team.name.substring(0, 15)}...`
+                            : team.name}
+                        </TooltipTrigger>
+                        <TooltipContent className="p-2">
+                          <p className="text-xs">{team?.name}</p>
+                        </TooltipContent>
+                      </Tooltip>
                       <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200" />
                     </div>
                   </div>
