@@ -45,24 +45,29 @@ export function IssueAssigneeDropdown({
   function getTrigger() {
     if (variant === IssueAssigneeDropdownVariant.NO_BACKGROUND) {
       return (
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className={cn(
-            'h-5 w-5 flex items-center justify-between !bg-transparent shadow-none p-0 border-0 focus-visible:ring-1 focus-visible:border-primary',
-          )}
-        >
-          {value ? (
-            <>
-              <UserAvatar user={getUserFromUsersData(users, value)} />
-            </>
-          ) : (
-            <div className="flex items-center justify-center">
-              <AssigneeLine size={20} className="mr-1 text-muted-foreground" />
-            </div>
-          )}
-        </Button>
+        <>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className={cn(
+              'h-5 w-5 flex items-center justify-between !bg-transparent shadow-none p-0 border-0 focus-visible:ring-1 focus-visible:border-primary',
+            )}
+          >
+            {value ? (
+              <>
+                <UserAvatar user={getUserFromUsersData(users, value)} />
+              </>
+            ) : (
+              <div className="flex items-center justify-center">
+                <AssigneeLine
+                  size={20}
+                  className="mr-1 text-muted-foreground"
+                />
+              </div>
+            )}
+          </Button>
+        </>
       );
     }
 

@@ -79,7 +79,6 @@ export function NewIssueForm({
   const onChange = (id: string, value: string) => {
     if (id === 'create-sub-issue') {
       subIssueOperations.append({
-        title: 'Sub Issue',
         teamId: team.id,
       });
     } else {

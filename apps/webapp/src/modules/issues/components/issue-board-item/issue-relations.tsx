@@ -54,7 +54,7 @@ export const IssueRelations = observer(({ issue }: IssueRelationsProps) => {
           'text-xs flex gap-1',
         )}
       >
-        Parent task
+        Parent
         <CategoryIcon
           size={12}
           color={getWorkflowColor(parentWorkflow).color}

@@ -80,11 +80,12 @@ export const IssuesStore: IAnyStateTreeNode = types
         return !issue.assigneeId && isTeamIssues;
       });
     },
-    getIssuesForTeam(teamId: string) {
+    getIssuesForTeam(teamId: string, showSubIssues: boolean = true) {
       return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
         const isTeamIssues = teamId ? issue.teamId === teamId : true;
+        const isSubIssue = showSubIssues ? !issue.parentId : true;
 
-        return isTeamIssues;
+        return isTeamIssues && isSubIssue;
       });
     },
     getIssuesForPriority(

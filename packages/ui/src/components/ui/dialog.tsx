@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'fixed inset-0 overflow-auto font-sans data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      'fixed inset-0 overflow-auto backdrop-blur-sm bg-grayAlpha-50 font-sans',
       className,
     )}
     {...props}
@@ -44,13 +44,13 @@ const DialogContent = React.forwardRef<
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          'font-sans flex justify-center p-[calc(0.07px_+_13vh)_12px_13vh] items-start !max-w-[100%] !w-[100vw] h-full duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
+          'font-sans flex justify-center p-[calc(0.07px_+_13vh)_12px_13vh] items-start !max-w-[100%] !w-[100vw] h-full duration-200',
         )}
         {...props}
       >
         <div
           className={cn(
-            '!max-w-[500px] min-w-[500px] z-50 bg-background-2 shadow-1 border-[#ffffff38] overflow-hidden max-h-full flex flex-col gap-4 sm:rounded-lg',
+            '!max-w-[500px] min-w-[500px] z-50 bg-background-2 shadow-1 border-border overflow-hidden max-h-full flex flex-col gap-4 sm:rounded-lg',
             className,
           )}
         >
