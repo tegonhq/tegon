@@ -83,7 +83,7 @@ export const IssueRelations = observer(
             );
           }}
         >
-          Parent task
+          Parent
           <CategoryIcon
             size={16}
             color={getWorkflowColor(parentWorkflow).color}

@@ -6,11 +6,13 @@ export function getWorkflowColor(workflow: WorkflowType) {
 
 export function getWorkflowColorWithNumber(color: string) {
   if (/^#[0-9A-F]{6}[0-9a-f]{0,2}$/i.test(color as string)) {
-    return { background: `${color}99`, color };
+    return { background: `${color}26`, color };
   }
 
+  const cssVar = `var(--status-pill-${color})`;
+
   return {
-    background: `var(--status-pill-${color})`,
+    background: cssVar,
     color: `var(--status-icon-${color})`,
   };
 }

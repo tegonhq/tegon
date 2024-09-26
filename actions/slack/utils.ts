@@ -307,10 +307,13 @@ const handleRichTextSection = (sectionElement: any): TiptapNode[] => {
     if (text === '') {
       return [];
     }
+    // Define the list of supported Tiptap marks
+    const supportedMarks = ['bold', 'italic', 'underline', 'strike', 'code'];
+
     // Create marks based on the text style
+    // Filter the styles from Slack to only include the supported marks
     const marks: TiptapMarks[] = Object.entries(sectionElement.style || {})
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .filter(([_, value]) => value)
+      .filter(([type]) => supportedMarks.includes(type))
       .map(([type]) => ({ type }));
     return [{ type: 'text', text, marks }];
   } else if (sectionElement.type === 'link') {

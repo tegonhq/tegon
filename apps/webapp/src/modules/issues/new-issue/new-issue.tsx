@@ -20,6 +20,8 @@ import { getTiptapJSON } from 'common';
 import { SCOPES } from 'common/scopes';
 import type { IssueType } from 'common/types';
 
+import { useScope } from 'hooks';
+
 import {
   type CreateIssueParams,
   useCreateIssueMutation,
@@ -36,6 +38,7 @@ interface NewIssueProps {
 }
 
 export function NewIssue({ open, setOpen, parentId }: NewIssueProps) {
+  useScope(SCOPES.NewIssue);
   const { toast } = useToast();
 
   // The form has a array of issues where first issue is the parent and the later sub issues
@@ -99,9 +102,23 @@ export function NewIssue({ open, setOpen, parentId }: NewIssueProps) {
   };
 
   // Shortcuts
-  useHotkeys(`${Key.Meta}+${Key.Enter}`, () => form.handleSubmit(onSubmit)(), [
-    SCOPES.NewIssue,
-  ]);
+  useHotkeys(
+    `${Key.Meta}+${Key.Enter}`,
+    () => form.handleSubmit(onSubmit)(),
+    {
+      enableOnFormTags: true,
+    },
+    [SCOPES.NewIssue],
+  );
+
+  React.useEffect(() => {
+    const exists = fields.find((field) => field.id === collapseId);
+
+    if (!exists) {
+      setCollapseId(fields[0].id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fields]);
 
   return (
     <>
@@ -119,7 +136,7 @@ export function NewIssue({ open, setOpen, parentId }: NewIssueProps) {
                 type="single"
                 collapsible={false}
                 onValueChange={(value) => setCollapseId(value)}
-                value={collapseId}
+                value={collapseId ? collapseId : fields[0].id}
                 className="flex flex-col overflow-hidden h-full"
               >
                 {fields.map((field, index) => {

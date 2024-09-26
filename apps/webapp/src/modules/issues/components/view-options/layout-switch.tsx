@@ -1,5 +1,6 @@
 import { Button } from '@tegonhq/ui/components/button';
 import { BoardLine, ListLine } from '@tegonhq/ui/icons';
+import { Grid3X3 } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 
 import { ViewEnum } from 'store/application';
@@ -29,6 +30,14 @@ export const LayoutSwitch = observer(() => {
         className="rounded-sm py-1 px-2 h-6"
       >
         <BoardLine size={20} />
+      </Button>
+      <Button
+        onClick={() => updateView(ViewEnum.sheet)}
+        variant="link"
+        isActive={applicationStore.displaySettings.view === ViewEnum.sheet}
+        className="rounded-sm py-1 px-2 h-6"
+      >
+        <Grid3X3 size={16} />
       </Button>
     </div>
   );

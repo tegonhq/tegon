@@ -27,25 +27,25 @@
     --grayAlpha-950: 0% 0 0 / 87.45%;
 
     /* Colors for different status */
-    --status-pill-0: #fd865c;
+    --status-pill-0: #d94b0e26;
     --status-icon-0: #d94b0e;
 
-    --status-pill-1: #d9befa;
+    --status-pill-1: #9f3def26;
     --status-icon-1: #9f3def;
 
-    --status-pill-2: #a9a67b;
+    --status-pill-2: #8e862c26;
     --status-icon-2: #8e862c;
 
-    --status-pill-3: #d8d8d8;
+    --status-pill-3: #5c5c5c26;
     --status-icon-3: #5c5c5c;
 
-    --status-pill-4: #f2c062;
+    --status-pill-4: #c28c1126;
     --status-icon-4: #c28c11;
 
-    --status-pill-5: #96c3fe;
+    --status-pill-5: #3f8ef726;
     --status-icon-5: #3f8ef7;
 
-    --status-pill-6: #79cc68;
+    --status-pill-6: #3caf2026;
     --status-icon-6: #3caf20;
 
     /* Avatar colors */

@@ -80,4 +80,5 @@ export enum OrderingEnum {
 export enum ViewEnum {
   list = 'list',
   board = 'board',
+  sheet = 'sheet',
 }
