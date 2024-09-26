@@ -5,14 +5,16 @@ import {
   getLinkedIssueBySource,
   getLinkedIssuesByIssueId,
   getTeamByName,
+  IntegrationAccount,
   JsonObject,
   LinkedIssue,
   logger,
   updateIssue,
   updateLinkedIssue,
 } from '@tegonhq/sdk';
+import axios from 'axios';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
-import { getState, sendGithubComment } from 'utils';
+import { getGithubHeaders, getState, sendGithubComment } from 'utils';
 
 export const prSync = async (actionPayload: ActionEventPayload) => {
   const {
@@ -62,7 +64,14 @@ export const prSync = async (actionPayload: ActionEventPayload) => {
         logger.log(
           `Branch name ${branchName} does not match the expected format`,
         );
-        return undefined;
+
+        logger.log(`Checking for commits message to link PR`);
+        return await handleCommits(
+          pullRequest,
+          botToken,
+          sourceData,
+          integrationAccount,
+        );
       }
 
       // Extracting username, team name and issue number from the regex match
@@ -186,8 +195,107 @@ export const prSync = async (actionPayload: ActionEventPayload) => {
       );
     }
 
+    case 'synchronize': {
+      return await handleCommits(
+        pullRequest,
+        botToken,
+        sourceData,
+        integrationAccount,
+      );
+    }
+
     default:
       logger.debug(`Unhandled pull request action: ${action}`);
       return undefined;
   }
 };
+
+async function handleCommits(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pullRequest: any,
+  accessToken: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  sourceData: any,
+  integrationAccount: IntegrationAccount,
+) {
+  const commits = (
+    await axios.get(pullRequest.commits_url, getGithubHeaders(accessToken))
+  ).data;
+
+  const pullRequestId = pullRequest.id.toString();
+  return await Promise.all(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    commits.map(async (commit: any) => {
+      const commitMessage = commit.commit.message;
+      const issueKeyRegex = /\(([a-zA-Z0-9_-]+)-(\d+)\)/; // Regular expression to match issue key pattern
+      const issueKeyMatch = commitMessage.match(issueKeyRegex);
+
+      if (!issueKeyMatch) {
+        return { message: 'No matched issue identifier' };
+      }
+      // Extracting username, team name and issue number from the regex match
+      const [, teamSlug, issueNumber] = issueKeyMatch;
+      // Getting user and team models using names of team and users
+      const [team] = await Promise.all([
+        getTeamByName({
+          slug: teamSlug,
+          workspaceId: integrationAccount.workspaceId,
+        }),
+      ]);
+
+      let issue;
+      try {
+        issue = await getIssueByNumber({
+          number: Number(issueNumber),
+          teamId: team.id,
+        });
+      } catch (error) {
+        logger.error(`Failed to fetch issue: ${error}`);
+        return { message: 'Failed to fetch issue' };
+      }
+
+      if (!team || !issue) {
+        logger.log(
+          `User, team, or issue not found: team=${team}, issue=${issue}`,
+        );
+        return undefined;
+      }
+
+      const linkedIssues = await getLinkedIssueBySource({
+        sourceId: pullRequestId,
+      });
+
+      const linkedIssuesForIssue = linkedIssues.filter(
+        (linkedIssue) => linkedIssue.issueId === issue.id,
+      );
+
+      if (linkedIssuesForIssue.length > 0) {
+        return { message: 'This PR is already linked with the same issue' };
+      }
+
+      // On opening a PR, it's creating a link to the issue
+      const linkedIssue = await createLinkedIssue({
+        url: pullRequest.html_url,
+        sourceId: pullRequestId,
+        issueId: issue.id,
+        title: sourceData.title,
+        sourceData,
+        teamId: team.id,
+      });
+      logger.log(`Created linked issue: linkedIssue=${linkedIssue.id}`);
+
+      // Sending linked message to the PR
+      // Create the GitHub comment body with a link to the issue
+      const githubCommentBody = `[${team.identifier}-${issue.number} ${issue.title}](https://app.tegon.ai/${team.workspace.slug}/issue/${team.identifier}-${issue.number})`;
+
+      // Send the comment to GitHub
+      await sendGithubComment(
+        pullRequest.comments_url,
+        accessToken,
+        githubCommentBody,
+      );
+      return linkedIssue;
+      // You can perform additional operations with the extracted issue key
+    }),
+  );
+}
