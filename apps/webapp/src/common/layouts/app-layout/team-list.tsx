@@ -53,18 +53,16 @@ export const TeamList = observer(() => {
       >
         {teams.map((team: TeamType) => (
           <AccordionItem value={team.id} key={team.identifier} className="mb-1">
-            <AccordionTrigger className="flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 w-fit rounded-md">
+            <AccordionTrigger className="flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 w-fit rounded-md min-w-0">
               <div className="w-full justify-start flex items-center gap-1">
                 <div>
                   <TeamIcon name={team.name} />
                 </div>
 
-                <div className="flex justify-center items-center gap-1">
+                <div className="flex justify-center items-center gap-1 min-w-0">
                   <Tooltip>
-                    <TooltipTrigger>
-                      {team?.name?.length > 15
-                        ? `${team.name.substring(0, 15)}...`
-                        : team.name}
+                    <TooltipTrigger className="truncate">
+                      {team?.name}
                     </TooltipTrigger>
 
                     <TooltipContent className="p-2">
