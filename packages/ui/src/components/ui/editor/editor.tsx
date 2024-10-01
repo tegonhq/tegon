@@ -13,7 +13,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { defaultExtensions, getPlaceholder } from './editor-extensions';
 import { LinkSelector, NodeSelector, TextButtons } from './selectors';
 import { slashCommand } from './slash-command';
-import { handlePaste, uploadFn } from './utils';
+import { handleMarkAndImagePaste, uploadFn } from './utils';
 import {
   EditorRoot,
   EditorCommand,
@@ -98,6 +98,7 @@ interface EditorProps {
   onBlur?: () => void;
   onSubmit?: () => void;
   onCreate?: (editor: EditorT) => void;
+  handlePaste?: (editor: EditorT, event: ClipboardEvent) => boolean;
 
   readonly children: React.ReactNode;
   extensions?: Array<Mark<any, any> | Node<any, any> | Extension<any, any>>;
@@ -117,6 +118,7 @@ export const Editor = ({
   children,
   extensions = [],
   editable = true,
+  handlePaste,
 }: EditorProps) => {
   const [editor, setEditor] = React.useState<EditorT>();
 
@@ -186,7 +188,15 @@ export const Editor = ({
             autoFocus && editor.commands.focus();
           }}
           editorProps={{
-            handlePaste: (_, event) => handlePaste(editor, event, uploadFn),
+            handlePaste: (_, event) => {
+              const pasteResponse = handlePaste && handlePaste(editor, event);
+
+              if (!pasteResponse) {
+                return handleMarkAndImagePaste(editor, event, uploadFn);
+              }
+
+              return pasteResponse;
+            },
 
             handleDOMEvents: {
               keydown: (_view, event) => {

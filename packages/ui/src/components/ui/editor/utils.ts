@@ -69,7 +69,7 @@ export const uploadFn = createImageUpload({
   },
 });
 
-export const handlePaste = (
+export const handleMarkAndImagePaste = (
   editor: Editor,
   event: ClipboardEvent,
   uploadFn: UploadFileFn,
@@ -106,6 +106,7 @@ export const handleImagePaste = (
   if (file) {
     uploadFn(file, editor, pos);
   }
+
   return true;
 };
 

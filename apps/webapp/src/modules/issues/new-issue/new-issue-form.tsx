@@ -48,6 +48,7 @@ export function NewIssueForm({
   index,
   isLoading,
   onClose,
+  parentId,
   subIssueOperations,
 }: NewIssueFormProps) {
   const issue = useWatch({
@@ -96,7 +97,9 @@ export function NewIssueForm({
 
   return (
     <div className="flex flex-col overflow-hidden">
-      <NewIssueTitle isSubIssue={isSubIssue} form={form} index={index} />
+      <div className="flex flex-wrap gap-2">
+        <NewIssueTitle isSubIssue={isSubIssue} form={form} index={index} />
+      </div>
 
       <div className="flex flex-col gap-2 p-4 pt-0 overflow-hidden">
         <FormField

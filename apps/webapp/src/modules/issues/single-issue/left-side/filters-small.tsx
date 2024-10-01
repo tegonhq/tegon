@@ -38,7 +38,7 @@ export const FilterSmall = observer(() => {
   };
 
   return (
-    <div className="my-1 flex gap-2">
+    <div className="my-2 flex gap-2 bg-background-3 rounded p-2">
       <IssueStatusDropdown
         value={issue.stateId}
         onChange={statusChange}
