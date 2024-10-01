@@ -53,7 +53,7 @@ export const TableC = observer(({ issues }: TableCProps) => {
   return (
     <div className="mx-6 h-full overflow-y-auto">
       <div className="h-full relative overflow-auto">
-        <Table>
+        <Table style={{ width: table.getTotalSize() }}>
           <TableHeader className="sticky top-0 bg-background-2">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -64,6 +64,8 @@ export const TableC = observer(({ issues }: TableCProps) => {
                       colSpan={header.colSpan}
                       className="relative"
                       style={{
+                        minWidth:
+                          header.id === 'title' ? 400 : header.getSize(),
                         width: header.getSize(),
                       }}
                     >

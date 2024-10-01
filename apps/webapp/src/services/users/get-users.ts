@@ -7,7 +7,7 @@ import { type XHRErrorResponse, ajaxPost } from 'services/utils';
 /**
  * Query Key for Get user.
  */
-const GetUserQuery = 'getUserQuery';
+const GetUsersQuery = 'getUsersQuery';
 
 export function getUsers(userIds: string[]) {
   return ajaxPost({
@@ -21,9 +21,9 @@ export function getUsers(userIds: string[]) {
 export function useGetUsersQuery(
   userIds: string[],
 ): UseQueryResult<User[], XHRErrorResponse> {
-  return useQuery([GetUserQuery, userIds], () => getUsers(userIds), {
+  return useQuery([GetUsersQuery, userIds], () => getUsers(userIds), {
     retry: 1,
-    staleTime: 1,
+    staleTime: Infinity,
     refetchOnWindowFocus: false, // Frequency of Change would be Low
   });
 }

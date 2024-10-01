@@ -1,12 +1,19 @@
 import { RoleEnum } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@tegonhq/ui/components/dropdown-menu';
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from '@tegonhq/ui/components/command';
 import { Loader } from '@tegonhq/ui/components/loader';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@tegonhq/ui/components/popover';
+import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { useToast } from '@tegonhq/ui/components/ui/use-toast';
 import React from 'react';
 
@@ -24,6 +31,8 @@ import { AddMemberDialog } from '../workspace-settings/members/add-member-dialog
 
 export function ShowMembersDropdown() {
   const currentTeam = useCurrentTeam();
+  const [open, setOpen] = React.useState(false);
+
   const { toast } = useToast();
   const { workspaceStore } = useContextStore();
   const [newMemberDialog, setNewMemberDialog] = React.useState(false);
@@ -50,28 +59,41 @@ export function ShowMembersDropdown() {
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
           <Button variant="secondary">Add member</Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          {isLoading && <Loader />}
-          {!isLoading &&
-            getMembersNotInTeam().map((user: UsersOnWorkspaceType) => (
-              <DropdownMenuItem
-                key={user.id}
-                onClick={() =>
-                  addTeamMember({ userId: user.userId, teamId: currentTeam.id })
-                }
-              >
-                {getUserFromUsersData(users, user.userId).fullname}
-              </DropdownMenuItem>
-            ))}
-          <DropdownMenuItem onClick={() => setNewMemberDialog(true)}>
-            Invite people
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </PopoverTrigger>
+        <PopoverContent className="w-72 p-0" align="end">
+          <Command>
+            <CommandInput placeholder="Choose member" autoFocus />
+            <ScrollArea className="max-h-48 overflow-auto">
+              <CommandGroup>
+                {isLoading && <Loader />}
+                {!isLoading &&
+                  getMembersNotInTeam().map((user: UsersOnWorkspaceType) => (
+                    <CommandItem
+                      key={user.id}
+                      value={getUserFromUsersData(users, user.userId).fullname}
+                      onSelect={() => {
+                        addTeamMember({
+                          userId: user.userId,
+                          teamId: currentTeam.id,
+                        });
+                      }}
+                    >
+                      {getUserFromUsersData(users, user.userId).fullname}
+                    </CommandItem>
+                  ))}
+                <CommandItem onSelect={() => setNewMemberDialog(true)}>
+                  Invite people
+                </CommandItem>
+                <CommandEmpty>No results found.</CommandEmpty>
+              </CommandGroup>
+            </ScrollArea>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
       {newMemberDialog && (
         <AddMemberDialog setDialogOpen={setNewMemberDialog} />
       )}
