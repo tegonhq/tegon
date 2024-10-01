@@ -38,6 +38,7 @@ import { useCurrentWorkspace } from 'hooks/workspace';
 import { useInviteUsersMutation } from 'services/workspace';
 
 import { useContextStore } from 'store/global-context-provider';
+import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 
 interface AddMemberDialogProps {
   setDialogOpen: (value: boolean) => void;

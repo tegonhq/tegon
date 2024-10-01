@@ -2,9 +2,6 @@
 
 module.exports = {
   reactStrictMode: false,
-  experimental: {
-    scrollRestoration: true,
-  },
   transpilePackages: ['geist', '@tegonhq/ui'],
   async redirects() {
     return [

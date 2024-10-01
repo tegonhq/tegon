@@ -103,7 +103,7 @@ export function NewIssue({ open, setOpen, parentId }: NewIssueProps) {
 
   // Shortcuts
   useHotkeys(
-    `${Key.Meta}+${Key.Enter}`,
+    [`${Key.Meta}+${Key.Enter}`, `${Key.Control}+${Key.Enter}`],
     () => form.handleSubmit(onSubmit)(),
     {
       enableOnFormTags: true,
