@@ -59,6 +59,13 @@ export const TeamsStore: IAnyStateTreeNode = types
 
       return team;
     },
+    getTeamWithIdentifier(teamIdentifier: string) {
+      const team = self.teams.find((team: TeamType) => {
+        return team.identifier === teamIdentifier;
+      });
+
+      return team;
+    },
     get getTeams() {
       return self.teams;
     },

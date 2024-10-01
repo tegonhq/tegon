@@ -31,21 +31,27 @@ import { IssueCollapseView } from './issue-collapse-view';
 import { NewIssueForm } from './new-issue-form';
 import { NewIssueSchema } from './new-issues-type';
 
-interface NewIssueProps {
+export interface IssueDefaultValues {
   parentId?: string;
+  description?: string;
+}
+
+interface NewIssueProps {
+  defaultValues?: IssueDefaultValues;
   open: boolean;
   setOpen: (value: boolean) => void;
 }
 
-export function NewIssue({ open, setOpen, parentId }: NewIssueProps) {
+export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
   useScope(SCOPES.NewIssue);
   const { toast } = useToast();
+  const { parentId, description } = defaultValues;
 
   // The form has a array of issues where first issue is the parent and the later sub issues
   const form = useForm<z.infer<typeof NewIssueSchema>>({
     resolver: zodResolver(NewIssueSchema),
     defaultValues: {
-      issues: [{ parentId }],
+      issues: [{ parentId, description }],
     },
   });
 

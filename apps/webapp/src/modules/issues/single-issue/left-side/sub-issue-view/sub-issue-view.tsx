@@ -77,7 +77,7 @@ export function SubIssueView({ childIssues, issueId }: SubIssueViewProps) {
       <NewIssue
         open={newIssueDialog}
         setOpen={setNewIssueDialog}
-        parentId={issueId}
+        defaultValues={{ parentId: issueId }}
       />
     </>
   );

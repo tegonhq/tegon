@@ -19,12 +19,13 @@ import { useTeamWorkflows } from 'hooks/workflows';
 import { useUpdateIssueMutation } from 'services/issues';
 
 import { Activity } from './activity';
-import { FilterSmall } from './filters-small';
 import { IssueTitle } from './issue-title';
 import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
 import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
+import { tegonIssueExtension } from 'common/editor/tegon-issue-extension';
+import { useEditorPasteHandler } from 'hooks/use-editor-paste-handler';
 
 export const LeftSide = observer(() => {
   const issue = useIssueData();
@@ -57,13 +58,15 @@ export const LeftSide = observer(() => {
     });
   }, 1000);
 
+  const { handlePaste } = useEditorPasteHandler();
+
   return (
     <ScrollArea className="grow flex h-full justify-center w-full">
       <div className="flex h-full justify-center w-full">
         <div className="grow flex flex-col gap-2 h-full max-w-[97ch]">
-          <div className="flex xl:hidden px-6 py-2 border-b">
+          {/* <div className="flex xl:hidden px-6 py-2 border-b">
             <FilterSmall />
-          </div>
+          </div> */}
           <div className="py-6 flex flex-col">
             {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
@@ -76,6 +79,8 @@ export const LeftSide = observer(() => {
             <Editor
               value={issue.description}
               onChange={onDescriptionChange}
+              handlePaste={handlePaste}
+              extensions={[tegonIssueExtension]}
               className="min-h-[50px] mb-8 px-6 mt-3 text-md"
             >
               <EditorExtensions suggestionItems={suggestionItems}>

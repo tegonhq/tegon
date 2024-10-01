@@ -11,7 +11,7 @@ import {
   EditorExtensions,
   suggestionItems,
 } from '@tegonhq/ui/components/editor/index';
-import { EditLine, MoreLine } from '@tegonhq/ui/icons';
+import { EditLine, MoreLine, NewIssueLine, SubIssue } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
@@ -24,6 +24,8 @@ import { UserContext } from 'store/user-context';
 import { EditComment } from './edit-comment';
 import { ReplyComment } from './reply-comment';
 import { getUserDetails } from '../issue-activity/user-activity-utils';
+import { NewIssue } from 'modules/issues/new-issue';
+import { useIssueData } from 'hooks/issues';
 
 export interface GenericCommentActivityProps {
   comment: IssueCommentType;
@@ -44,11 +46,16 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
     getUserData,
   } = props;
   const currentUser = React.useContext(UserContext);
+  const issue = useIssueData();
+
   const sourceMetadata = comment.sourceMetadata
     ? JSON.parse(comment.sourceMetadata)
     : undefined;
 
   const [edit, setEdit] = React.useState(false);
+  const [defaultIssueCreationValues, setDefaultIssueCreationValues] =
+    React.useState(undefined);
+  const [newIssueDialog, setNewIssueDialog] = React.useState(false);
 
   return (
     <div className="flex items-start">
@@ -76,24 +83,53 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           </div>
 
           <div className="flex gap-2 items-center">
-            {!sourceMetadata && user.id === currentUser.id && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="px-2 py-0 h-5">
-                    <MoreLine size={16} className="text-muted-foreground" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuGroup>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="px-2 py-0 h-5">
+                  <MoreLine size={16} className="text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuGroup>
+                  {!sourceMetadata && user.id === currentUser.id && (
                     <DropdownMenuItem onClick={() => setEdit(true)}>
                       <div className="flex items-center gap-1">
                         <EditLine size={16} className="mr-1" /> Edit
                       </div>
                     </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+                  )}
+
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setDefaultIssueCreationValues({
+                        description: comment.body,
+                      });
+                      setNewIssueDialog(true);
+                    }}
+                  >
+                    <div className="flex items-center gap-1">
+                      <NewIssueLine size={16} className="mr-1" /> New issue from
+                      comment
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setDefaultIssueCreationValues({
+                        parentId: issue.id,
+                        description: comment.body,
+                      });
+                      setNewIssueDialog(true);
+                    }}
+                  >
+                    <div className="flex items-center gap-1">
+                      <SubIssue size={16} className="mr-1" /> Sub issue from
+                      comment
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <div>
               <ReactTimeAgo
                 date={new Date(comment.updatedAt)}
@@ -152,6 +188,14 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
 
         {allowReply && <ReplyComment issueCommentId={comment.id} />}
       </div>
+
+      {newIssueDialog && (
+        <NewIssue
+          open={newIssueDialog}
+          setOpen={setNewIssueDialog}
+          defaultValues={defaultIssueCreationValues}
+        />
+      )}
     </div>
   );
 }
