@@ -48,7 +48,6 @@ export function NewIssueForm({
   index,
   isLoading,
   onClose,
-  parentId,
   subIssueOperations,
 }: NewIssueFormProps) {
   const issue = useWatch({
