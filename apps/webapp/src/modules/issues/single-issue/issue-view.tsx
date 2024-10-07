@@ -2,6 +2,7 @@ import { WorkflowCategoryEnum } from '@tegonhq/types';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
+import { ContentBox } from 'common/layouts/content-box';
 import type { WorkflowType } from 'common/types';
 
 import { useIssueData } from 'hooks/issues';
@@ -49,14 +50,16 @@ export const IssueView = observer(() => {
     <IssueStoreInit>
       <div className="flex flex-col h-[100vh]">
         <Header />
-        <main className="grid grid-cols-5 h-[calc(100vh_-_53px)] bg-background-2 rounded-tl-3xl">
-          <div className="col-span-4 flex flex-col h-[calc(100vh_-_55px)]">
-            <LeftSide />
-          </div>
-          <div className="border-l border-border flex-col flex">
-            <RightSide />
-          </div>
-        </main>
+        <ContentBox>
+          <main className="grid grid-cols-5 h-[calc(100vh_-_53px)]">
+            <div className="col-span-4 flex flex-col h-[calc(100vh_-_55px)]">
+              <LeftSide />
+            </div>
+            <div className="border-l border-border flex-col flex">
+              <RightSide />
+            </div>
+          </main>
+        </ContentBox>
       </div>
     </IssueStoreInit>
   );

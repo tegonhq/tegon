@@ -5,7 +5,8 @@ import { TegonIssueComponent } from './tegon-issue-component';
 
 export const tegonIssueExtension = Node.create({
   name: 'tegonIssueExtension',
-  group: 'block',
+  group: 'inline',
+  inline: true,
   atom: true,
 
   addAttributes() {
@@ -29,6 +30,9 @@ export const tegonIssueExtension = Node.create({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(TegonIssueComponent);
+    return ReactNodeViewRenderer(TegonIssueComponent, {
+      contentDOMElementTag: 'span',
+      as: 'span',
+    });
   },
 });

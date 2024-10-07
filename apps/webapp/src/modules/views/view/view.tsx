@@ -5,6 +5,7 @@ import React from 'react';
 import { FiltersView } from 'modules/issues/filters-view/filters-view';
 
 import { AppLayout } from 'common/layouts/app-layout';
+import { ContentBox } from 'common/layouts/content-box';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -26,11 +27,11 @@ export const View = withApplicationStore(
     return (
       <main className="flex flex-col h-[100vh]">
         <Header title={view.name} view={view} />
-        <div className="bg-background-2 rounded-tl-3xl flex flex-col h-[calc(100vh_-_53px)]">
+        <ContentBox>
           <FiltersView Actions={<ViewDisplayOptions view={view} />} />
 
           <ViewList view={view} />
-        </div>
+        </ContentBox>
       </main>
     );
   }),

@@ -11,6 +11,7 @@ import { AI, CrossLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
+import { useScope } from 'hooks';
 import { useCurrentTeam } from 'hooks/teams';
 import { useFiltersFromAI } from 'hooks/use-filters-from-ai';
 import { useCurrentWorkspace } from 'hooks/workspace';
@@ -29,6 +30,7 @@ import {
   IssuePriorityFilter,
 } from './filter-dropdowns';
 import { isEmpty } from './filter-utils';
+import { useFilterShorcuts } from './use-filter-shortcuts';
 
 const ContentMap = {
   status: IssueStatusFilter,
@@ -43,7 +45,11 @@ interface FiltersProps {
   onClose: () => void;
 }
 
+const LOCAL_SCOPE = 'FILTERS';
+
 export const Filters = observer(({ onClose }: FiltersProps) => {
+  useScope(LOCAL_SCOPE);
+
   const {
     applicationStore,
     applicationStore: { filters },
@@ -67,6 +73,28 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
       setValue('');
     },
   });
+
+  function onEscape() {
+    if (filter) {
+      setFilter(undefined);
+      inputRef.current.blur();
+      return;
+    }
+
+    if (showOption) {
+      setShowOptions(false);
+      inputRef.current.blur();
+    }
+  }
+
+  // Shortcuts
+  useFilterShorcuts(
+    {
+      onEscape,
+      onF: () => inputRef.current.focus(),
+    },
+    [filter, showOption],
+  );
 
   const onSelect = (value: string) => {
     clearTimeoutValue();
@@ -98,6 +126,8 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
       setFilter(value as KeyType);
       inputRef.current.focus();
     }
+
+    setValue('');
   };
 
   const ContentComponent = filter ? ContentMap[filter] : ContentMap.status;

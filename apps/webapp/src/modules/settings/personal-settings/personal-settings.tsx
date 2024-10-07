@@ -3,6 +3,7 @@ import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
+import { ContentBox } from 'common/layouts/content-box';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { UserContext } from 'store/user-context';
@@ -28,11 +29,13 @@ export function PersonalSettings() {
     <div className="h-[100vh] flex flex-col w-full">
       <Header title={SECTION_TITLES[settingsSection]} />
 
-      <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
-        <div className="w-full p-6">
-          {userData ? <SectionComponent /> : <Loader />}
-        </div>
-      </ScrollArea>
+      <ContentBox>
+        <ScrollArea className="flex grow h-full">
+          <div className="w-full p-6">
+            {userData ? <SectionComponent /> : <Loader />}
+          </div>
+        </ScrollArea>
+      </ContentBox>
     </div>
   );
 }

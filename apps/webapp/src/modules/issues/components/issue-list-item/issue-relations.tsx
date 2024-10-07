@@ -88,9 +88,10 @@ export const IssueRelations = observer(
             size={16}
             color={getWorkflowColor(parentWorkflow).color}
           />
-          <span className="font-mono">
+          <span className="font-mono text-muted-foreground">
             {team.identifier}-{parentIssue.number}
           </span>
+          <span className="max-w-[200px] truncate">{parentIssue.title}</span>
         </a>
       );
     }

@@ -17,6 +17,7 @@ import { useParams } from 'next/navigation';
 import { Header } from 'modules/settings/header';
 import { SettingSection } from 'modules/settings/setting-section';
 
+import { ContentBox } from 'common/layouts/content-box';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 import { ActionAccessGuard } from 'common/wrappers/action-access-guard';
 
@@ -48,62 +49,64 @@ export const Action = () => {
   return (
     <>
       <Header title="Actions" />
-      <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
-        <div className="w-full p-6">
-          <SettingSection
-            title={action.name}
-            description={action.description}
-            metadata={metadata}
-          >
-            <Tabs defaultValue="overview">
-              <TabsList className="bg-transparent flex gap-2 justify-start px-0">
-                <>
-                  <TabsTrigger
-                    value="overview"
-                    className={cn(
-                      buttonVariants({
-                        variant: 'secondary',
-                      }),
-                    )}
-                  >
-                    Overview
-                  </TabsTrigger>
-
-                  <TabsTrigger
-                    value="configuration"
-                    className={cn(
-                      buttonVariants({
-                        variant: 'secondary',
-                      }),
-                    )}
-                  >
-                    Configuration
-                  </TabsTrigger>
-                </>
-              </TabsList>
-              <TabsContent value="overview">
-                <div className="flex gap-2 bg-background-3 p-6 rounded-md">
-                  <div>
-                    <Editor
-                      className="new-issue-editor min-h-[200px] text-base"
-                      value={latestAction?.guide}
-                      editable={false}
-                      editorClassName="min-h-[300px]"
-                      extensions={[]}
+      <ContentBox>
+        <ScrollArea className="flex grow h-full">
+          <div className="w-full p-6">
+            <SettingSection
+              title={action.name}
+              description={action.description}
+              metadata={metadata}
+            >
+              <Tabs defaultValue="overview">
+                <TabsList className="bg-transparent flex gap-2 justify-start px-0">
+                  <>
+                    <TabsTrigger
+                      value="overview"
+                      className={cn(
+                        buttonVariants({
+                          variant: 'secondary',
+                        }),
+                      )}
                     >
-                      <EditorExtensions suggestionItems={suggestionItems} />
-                    </Editor>
-                  </div>
-                </div>
-              </TabsContent>
+                      Overview
+                    </TabsTrigger>
 
-              <TabsContent value="configuration">
-                <Configuration />
-              </TabsContent>
-            </Tabs>
-          </SettingSection>
-        </div>
-      </ScrollArea>
+                    <TabsTrigger
+                      value="configuration"
+                      className={cn(
+                        buttonVariants({
+                          variant: 'secondary',
+                        }),
+                      )}
+                    >
+                      Configuration
+                    </TabsTrigger>
+                  </>
+                </TabsList>
+                <TabsContent value="overview">
+                  <div className="flex gap-2 bg-background-3 p-6 rounded-md">
+                    <div>
+                      <Editor
+                        className="new-issue-editor min-h-[200px] text-base"
+                        value={latestAction?.guide}
+                        editable={false}
+                        editorClassName="min-h-[300px]"
+                        extensions={[]}
+                      >
+                        <EditorExtensions suggestionItems={suggestionItems} />
+                      </Editor>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="configuration">
+                  <Configuration />
+                </TabsContent>
+              </Tabs>
+            </SettingSection>
+          </div>
+        </ScrollArea>
+      </ContentBox>
     </>
   );
 };

@@ -10,10 +10,12 @@ import { useEditorSuggestionItems } from 'modules/issues/components/use-editor-s
 
 import { getTiptapJSON } from 'common';
 import { SubIssueSelector } from 'common/editor';
+import { tegonIssueExtension } from 'common/editor/tegon-issue-extension';
 import { type WorkflowType } from 'common/types';
 
 import { useIssueData } from 'hooks/issues';
 import { useTeamWithId } from 'hooks/teams';
+import { useEditorPasteHandler } from 'hooks/use-editor-paste-handler';
 import { useTeamWorkflows } from 'hooks/workflows';
 
 import { useUpdateIssueMutation } from 'services/issues';
@@ -24,8 +26,6 @@ import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
 import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
-import { tegonIssueExtension } from 'common/editor/tegon-issue-extension';
-import { useEditorPasteHandler } from 'hooks/use-editor-paste-handler';
 
 export const LeftSide = observer(() => {
   const issue = useIssueData();

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
+import { ContentBox } from 'common/layouts/content-box';
 import { SCOPES } from 'common/scopes';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
@@ -17,10 +18,10 @@ export const AllIssues = withApplicationStore(() => {
   return (
     <main className="flex flex-col h-[100vh]">
       <Header title="All issues" />
-      <div className="bg-background-2 rounded-tl-3xl flex flex-col h-[calc(100vh_-_53px)]">
+      <ContentBox>
         <FiltersView Actions={<IssuesViewOptions />} />
         <ListView />
-      </div>
+      </ContentBox>
     </main>
   );
 });

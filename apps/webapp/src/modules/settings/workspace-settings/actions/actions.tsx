@@ -9,6 +9,7 @@ import { AddLine } from '@tegonhq/ui/icons';
 
 import { Header } from 'modules/settings/header';
 
+import { ContentBox } from 'common/layouts/content-box';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 import { ActionAccessGuard } from 'common/wrappers/action-access-guard';
 
@@ -54,11 +55,14 @@ Actions.getLayout = function getLayout(page: React.ReactElement) {
     <SettingsLayout>
       <div className="h-[100vh] flex flex-col w-full">
         <Header title="Actions" />
-        <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
-          <div className="w-full p-6">
-            <ActionAccessGuard>{page} </ActionAccessGuard>
-          </div>
-        </ScrollArea>
+
+        <ContentBox>
+          <ScrollArea className="flex grow h-full">
+            <div className="w-full p-6">
+              <ActionAccessGuard>{page} </ActionAccessGuard>
+            </div>
+          </ScrollArea>
+        </ContentBox>
       </div>
     </SettingsLayout>
   );
