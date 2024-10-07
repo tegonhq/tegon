@@ -1,7 +1,7 @@
 import { WorkflowCategoryEnum } from '@tegonhq/types';
 
 import { workflowSort } from 'common/sorting';
-import type { IssueType, WorkflowType } from 'common/types';
+import type { IssueRelationType, IssueType, WorkflowType } from 'common/types';
 import { IssueRelationEnum } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -22,21 +22,25 @@ export function getRelationIssues({
   issue: IssueType;
 }) {
   if (view === View.BLOCKED) {
-    const blockedIssues = issueRelationsStore.getIssueRelationForType(
+    const blockedIssueRelations = issueRelationsStore.getIssueRelationForType(
       issue.id,
       IssueRelationEnum.BLOCKED,
     );
 
-    return blockedIssues;
+    return blockedIssueRelations.map((relationAct: IssueRelationType) =>
+      issuesStore.getIssueById(relationAct.relatedIssueId),
+    );
   }
 
   if (view === View.BLOCKS) {
-    const blocksIssues = issueRelationsStore.getIssueRelationForType(
+    const blocksIssueRelations = issueRelationsStore.getIssueRelationForType(
       issue.id,
       IssueRelationEnum.BLOCKS,
     );
 
-    return blocksIssues;
+    return blocksIssueRelations.map((relationAct: IssueRelationType) =>
+      issuesStore.getIssueById(relationAct.relatedIssueId),
+    );
   }
 
   if (view === View.SUB_ISSUES) {

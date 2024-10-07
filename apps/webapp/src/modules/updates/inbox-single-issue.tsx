@@ -9,6 +9,7 @@ import { LeftSide } from 'modules/issues/single-issue/left-side/left-side';
 import { RightSide } from 'modules/issues/single-issue/right-side/right-side';
 
 import { AppLayout } from 'common/layouts/app-layout';
+import { ContentBox } from 'common/layouts/content-box';
 
 import { IssueStoreInit } from 'store/issue-store-provider';
 
@@ -19,7 +20,7 @@ export function InboxSingleIssue() {
   return (
     <main className="flex flex-col h-[100vh]">
       <Header />
-      <div className="bg-background-2 rounded-tl-3xl flex h-[calc(100vh_-_53px)]">
+      <ContentBox>
         <ResizablePanelGroup direction="horizontal" className="">
           <ResizablePanel
             maxSize={50}
@@ -49,7 +50,7 @@ export function InboxSingleIssue() {
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
-      </div>
+      </ContentBox>
     </main>
   );
 }

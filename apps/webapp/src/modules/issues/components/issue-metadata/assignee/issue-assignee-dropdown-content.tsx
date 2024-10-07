@@ -51,6 +51,8 @@ export function IssueAssigneeDropdownContent({
           if (!multiple) {
             onChange && onChange(null);
             onClose();
+          } else {
+            onValueChange(!value.includes('no-user'), 'no-user');
           }
         }}
       >
@@ -83,6 +85,8 @@ export function IssueAssigneeDropdownContent({
               if (!multiple) {
                 onChange && onChange(currentValue);
                 onClose();
+              } else {
+                onValueChange(!value.includes(currentValue), user.id);
               }
             }}
           >

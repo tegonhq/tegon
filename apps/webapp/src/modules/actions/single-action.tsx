@@ -33,48 +33,43 @@ export function SingleAction() {
   }
   return (
     <div className="flex flex-col h-[100vh]">
-      <main className=" h-[calc(100vh_-_53px)] bg-background-2 rounded-tl-3xl">
-        <ScrollArea className="grow flex flex-col p-6 h-full gap-2">
-          <div className="flex gap-1 justify-between">
-            <div className="flex gap-1">
-              <h2 className="text-xl">{convertToTitleCase(action.name)}</h2>
-              {action.status === ActionStatusEnum.NEEDS_CONFIGURATION && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link
-                      className={cn(buttonVariants({ variant: 'link' }))}
-                      href={`/${workspaceSlug}/settings/actions/${actionSlug}`}
-                    >
-                      <Warning size={20} className="text-warning" />
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    This action is not configured. You can configure in
-                    settings.
-                  </TooltipContent>
-                </Tooltip>
-              )}
-            </div>
-            <Link
-              className={cn(
-                buttonVariants({ variant: 'secondary', size: 'lg' }),
-              )}
-              href={`/${workspaceSlug}/settings/actions/${actionSlug}`}
-            >
-              Edit configuration
-            </Link>
+      <ScrollArea className="grow flex flex-col p-6 h-full gap-2">
+        <div className="flex gap-1 justify-between">
+          <div className="flex gap-1">
+            <h2 className="text-xl">{convertToTitleCase(action.name)}</h2>
+            {action.status === ActionStatusEnum.NEEDS_CONFIGURATION && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    className={cn(buttonVariants({ variant: 'link' }))}
+                    href={`/${workspaceSlug}/settings/actions/${actionSlug}`}
+                  >
+                    <Warning size={20} className="text-warning" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  This action is not configured. You can configure in settings.
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
-          <p className=" text-muted-foreground">{latestAction?.description}</p>
+          <Link
+            className={cn(buttonVariants({ variant: 'secondary', size: 'lg' }))}
+            href={`/${workspaceSlug}/settings/actions/${actionSlug}`}
+          >
+            Edit configuration
+          </Link>
+        </div>
+        <p className=" text-muted-foreground">{latestAction?.description}</p>
 
-          <div className="mt-6 flex justify-between flex-wrap items-center">
-            <div className="flex flex-col">
-              <div className="text-md">All runs</div>
-              <p className="text-muted-foreground"> last 25 runs</p>
-            </div>
+        <div className="mt-6 flex justify-between flex-wrap items-center">
+          <div className="flex flex-col">
+            <div className="text-md">All runs</div>
+            <p className="text-muted-foreground"> last 25 runs</p>
           </div>
-          <RunsTable action={action} />
-        </ScrollArea>
-      </main>
+        </div>
+        <RunsTable action={action} />
+      </ScrollArea>
     </div>
   );
 }

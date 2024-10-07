@@ -81,7 +81,6 @@ export const TeamList = observer(() => {
                     icon: TriageLine,
                     href: `/${workspace.slug}/team/${team.identifier}/triage`,
                   },
-
                   {
                     title: 'Issues',
                     icon: IssuesLine,

@@ -16,16 +16,18 @@ import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
+import { NewIssue } from 'modules/issues/new-issue';
+
 import { type IssueCommentType, type User } from 'common/types';
 import { getUserIcon } from 'common/user-util';
+
+import { useIssueData } from 'hooks/issues';
 
 import { UserContext } from 'store/user-context';
 
 import { EditComment } from './edit-comment';
 import { ReplyComment } from './reply-comment';
 import { getUserDetails } from '../issue-activity/user-activity-utils';
-import { NewIssue } from 'modules/issues/new-issue';
-import { useIssueData } from 'hooks/issues';
 
 export interface GenericCommentActivityProps {
   comment: IssueCommentType;

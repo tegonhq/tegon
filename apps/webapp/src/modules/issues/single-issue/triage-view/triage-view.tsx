@@ -7,6 +7,8 @@ import * as React from 'react';
 
 import { TriageIssues } from 'modules/issues/triage/left-side/triage-issues';
 
+import { ContentBox } from 'common/layouts/content-box';
+
 import { IssueStoreInit } from 'store/issue-store-provider';
 
 import { Header } from '../header';
@@ -17,7 +19,7 @@ export function TriageView() {
     <main className="flex flex-col h-[100vh]">
       <Header isTriageView />
 
-      <div className="bg-background-2 rounded-tl-3xl flex h-[calc(100vh_-_53px)]">
+      <ContentBox>
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel
             maxSize={50}
@@ -38,7 +40,7 @@ export function TriageView() {
             </IssueStoreInit>
           </ResizablePanel>
         </ResizablePanelGroup>
-      </div>
+      </ContentBox>
     </main>
   );
 }

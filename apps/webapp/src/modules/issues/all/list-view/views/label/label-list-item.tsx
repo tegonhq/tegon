@@ -46,7 +46,7 @@ export const LabelListItem = observer(({ label }: LabelListItemProps) => {
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="flex flex-col gap-2 h-full"
+      className="flex flex-col gap-2"
     >
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>
@@ -108,7 +108,7 @@ export const NoLabelList = observer(() => {
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="flex flex-col gap-2 h-full"
+      className="flex flex-col gap-2"
     >
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>

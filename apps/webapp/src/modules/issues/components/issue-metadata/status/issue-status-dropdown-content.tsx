@@ -51,6 +51,8 @@ export function IssueStatusDropdownContent({
               if (!multiple) {
                 onChange && onChange(currentValue);
                 onClose();
+              } else {
+                onValueChange(!value.includes(currentValue), workflow.id);
               }
             }}
           >

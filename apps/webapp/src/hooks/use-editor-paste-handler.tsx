@@ -1,4 +1,5 @@
 import type { EditorT } from '@tegonhq/ui/components/editor/index';
+
 import { useContextStore } from 'store/global-context-provider';
 
 // Updates the height of a <textarea> when the value changes.
@@ -27,15 +28,6 @@ export const useEditorPasteHandler = () => {
               attrs: {
                 url: pastedText,
               },
-            },
-            {
-              type: 'paragraph',
-              content: [
-                {
-                  type: 'text',
-                  text: '\n',
-                },
-              ],
             },
           ])
           .exitCode()

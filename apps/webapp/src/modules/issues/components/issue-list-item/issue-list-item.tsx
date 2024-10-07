@@ -14,7 +14,6 @@ import {
   IssueStatusDropdownVariant,
 } from 'modules/issues/components';
 
-import type { IssueRelationType } from 'common/types';
 import type { IssueType } from 'common/types';
 
 import { useTeamWithId } from 'hooks/teams/use-current-team';
@@ -64,13 +63,10 @@ export const IssueRelationIssues = observer(
 
     return (
       <div className="pl-14 pr-6">
-        {issues.map((issueRelation: IssueRelationType | IssueType) => {
-          const id =
-            view === View.SUB_ISSUES
-              ? (issueRelation as IssueType).id
-              : (issueRelation as IssueRelationType).relatedIssueId;
-
-          return <IssueListItem key={id} subIssueView issueId={id} />;
+        {issues.map((issue: IssueType) => {
+          return (
+            <IssueListItem key={issue.id} subIssueView issueId={issue.id} />
+          );
         })}
       </div>
     );

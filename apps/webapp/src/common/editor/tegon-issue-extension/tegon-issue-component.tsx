@@ -1,10 +1,13 @@
 import { NodeViewWrapper } from '@tiptap/react';
-import { getWorkflowColor } from 'common/status-color';
-import { getWorkflowIcon } from 'common/workflow-icons';
-import { useTeamWorkflows } from 'hooks/workflows';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import React from 'react';
+
+import { getWorkflowColor } from 'common/status-color';
+import { getWorkflowIcon } from 'common/workflow-icons';
+
+import { useTeamWorkflows } from 'hooks/workflows';
+
 import { useContextStore } from 'store/global-context-provider';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +29,7 @@ export const TegonIssueComponent = (props: any) => {
   if (!issue) {
     return (
       <NodeViewWrapper className="react-component-with-content">
-        <div className="content">{url}</div>
+        <span className="content">{url}</span>
       </NodeViewWrapper>
     );
   }
@@ -35,16 +38,19 @@ export const TegonIssueComponent = (props: any) => {
 
   const CategoryIcon = getWorkflowIcon(workflow);
   return (
-    <NodeViewWrapper className="react-component-with-content">
-      <div className="content">
+    <NodeViewWrapper className="react-component-with-content" as="span">
+      <span className="content inline-flex text-sm" contentEditable={false}>
         <Link
-          className="flex gap-1 bg-grayAlpha-100 p-1 px-2 w-fit rounded items-center"
+          className="flex gap-1 bg-grayAlpha-100 p-0.5 px-1 w-fit rounded items-center"
           href={`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`}
         >
-          <CategoryIcon size={20} color={getWorkflowColor(workflow).color} />
+          <CategoryIcon size={16} color={getWorkflowColor(workflow).color} />
+          <span className="font-mono text-muted-foreground">
+            {`${team.identifier}-${issue.number}`}
+          </span>
           {issue.title}
         </Link>
-      </div>
+      </span>
     </NodeViewWrapper>
   );
 };

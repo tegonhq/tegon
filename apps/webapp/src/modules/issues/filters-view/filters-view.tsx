@@ -2,6 +2,9 @@ import { Button } from '@tegonhq/ui/components/button';
 import { Filter } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
+
+import { SCOPES } from 'common/scopes';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -30,6 +33,19 @@ export const FiltersView = observer(({ Actions }: FilterViewProps) => {
     applicationStore.clearFilters();
     setFiltersShow(false);
   };
+
+  // Shortcuts
+  useHotkeys(
+    ['f'],
+    (e) => {
+      setFiltersShow(true);
+      e.preventDefault();
+    },
+    {
+      enableOnFormTags: true,
+    },
+    [SCOPES.AllIssues],
+  );
 
   return (
     <div className="py-3 pt-6 pr-4 pl-6 flex flex-col gap-2">
