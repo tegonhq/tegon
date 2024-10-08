@@ -40,11 +40,11 @@ export type CallbackParams = Record<string, string>;
 
 export interface SentryCallbackBody {
   workspaceId: string;
-  integrationDefinitionId: string;
   installationId: string;
   code: string;
   orgSlug: string;
 }
+
 export interface ProviderConfig {
   client_id: string;
   client_secret: string;
