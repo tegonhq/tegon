@@ -47,13 +47,13 @@ export class WebhookController {
     @Param('sourceName') sourceName: string,
     @Param('action') action: string,
     @Res() response: Response,
-    @Query() { installationId }: { installationId: string },
+    @Query() params: any,
   ) {
     const eventResponse = await this.webhookService.handleEvents(
       response,
       sourceName,
       eventHeaders,
-      { installationId, action },
+      { action, ...params },
     );
     return eventResponse;
   }

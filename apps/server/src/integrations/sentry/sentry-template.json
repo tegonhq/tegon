@@ -3,12 +3,20 @@
     {
       "type": "issue-link",
       "link": {
-        "uri": "/api/v1/webhook/sentry/get-issues",
+        "uri": "/v1/webhook/sentry?action=link-issue",
         "required_fields": [
           {
             "type": "text",
+            "label": "Task Name",
+            "name": "title",
+            "default": "issue.title"
+          },
+          {
+            "type": "select",
             "label": "Select Issue Id To Link with",
-            "name": "issueId"
+            "name": "issueId",
+            "uri": "/v1/webhook/sentry/get-issues/",
+            "skip_load_on_open": true
           }
         ]
       },
