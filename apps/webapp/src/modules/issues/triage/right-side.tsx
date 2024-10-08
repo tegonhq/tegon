@@ -24,6 +24,12 @@ export const RightSide = observer(() => {
     false,
   );
 
+  // Optionally handle refresh after Accept or Decline
+  const refreshTriageIssues = () => {
+    // Trigger a refresh in the issuesStore or refetch issues
+    issuesStore.fetchIssues(currentTeam.id);
+  };
+
   return (
     <div className="p-6 flex flex-col items-center justify-center gap-2">
       <TriageFill size={32} color={getWorkflowColorWithNumber('0').color} />
