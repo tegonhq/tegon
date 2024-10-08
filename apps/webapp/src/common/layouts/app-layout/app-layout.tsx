@@ -1,5 +1,5 @@
 import { Button } from '@tegonhq/ui/components/button';
-import { Actions, Inbox, SidebarLine } from '@tegonhq/ui/icons';
+import { Actions, Inbox, SidebarLine, StackLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
@@ -69,12 +69,12 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
                     href: `/${workspaceSlug}/inbox`,
                     count: notificationsStore.unReadCount,
                   },
-                  // {
-                  //   title: 'Notes',
-                  //   icon: DocumentLine,
-                  //   href: `/${workspaceSlug}/settings/overview`,
-                  // },
                   ...actionsLink,
+                  {
+                    title: 'Views',
+                    icon: StackLine,
+                    href: `/${workspaceSlug}/views`,
+                  },
                 ]}
               />
               <TeamList />

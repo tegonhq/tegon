@@ -18,7 +18,7 @@ export function withApplicationStore(
         applicationStore.load(pathname);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [pathname]);
 
     return <Component {...props} />;
   };

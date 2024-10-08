@@ -48,7 +48,7 @@ export const PriorityViewList = observer(
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
-        className="flex flex-col gap-2 h-full"
+        className="flex flex-col gap-2"
       >
         <div className="flex gap-1 items-center">
           <CollapsibleTrigger asChild>

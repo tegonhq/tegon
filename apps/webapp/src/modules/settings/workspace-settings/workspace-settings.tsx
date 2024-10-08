@@ -1,6 +1,7 @@
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { useRouter } from 'next/router';
 
+import { ContentBox } from 'common/layouts/content-box';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import {
@@ -21,11 +22,13 @@ export function WorkspaceSettings() {
   return (
     <div className="h-[100vh] flex flex-col w-full">
       <Header title={SECTION_TITLES[settingsSection]} />
-      <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
-        <div className="w-full p-6">
-          <SectionComponent />
-        </div>
-      </ScrollArea>
+      <ContentBox>
+        <ScrollArea className="flex grow h-full">
+          <div className="w-full p-6">
+            <SectionComponent />
+          </div>
+        </ScrollArea>
+      </ContentBox>
     </div>
   );
 }

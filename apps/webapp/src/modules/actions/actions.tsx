@@ -10,6 +10,7 @@ import { useParams } from 'next/navigation';
 import { Header } from 'modules/settings/header';
 
 import { AppLayout } from 'common/layouts/app-layout';
+import { ContentBox } from 'common/layouts/content-box';
 import { ActionAccessGuard } from 'common/wrappers/action-access-guard';
 
 import { AllActionsList } from './all-actions-list';
@@ -22,7 +23,8 @@ export function Actions() {
   return (
     <main className="flex flex-col h-[100vh]">
       <Header title="Actions" />
-      <div className="bg-background-2 rounded-tl-3xl flex flex-col h-[calc(100vh_-_53px)]">
+
+      <ContentBox>
         <ActionAccessGuard>
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
@@ -49,7 +51,7 @@ export function Actions() {
             </ResizablePanel>
           </ResizablePanelGroup>
         </ActionAccessGuard>
-      </div>
+      </ContentBox>
     </main>
   );
 }

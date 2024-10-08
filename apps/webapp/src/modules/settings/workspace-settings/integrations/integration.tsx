@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { Header } from 'modules/settings/header';
 import { SettingSection } from 'modules/settings/setting-section';
 
+import { ContentBox } from 'common/layouts/content-box';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { useGetIntegrationDefinition } from 'services/integration-definition';
@@ -19,22 +20,24 @@ export function Integration() {
   return (
     <>
       {!isLoading && <Header title={integrationDefinition.name} />}
-      <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
-        <div className="w-full p-6">
-          {!isLoading && (
-            <SettingSection
-              title={integrationDefinition.name}
-              description={integrationDefinition.description}
-            >
-              <WorkspaceAuth integrationDefinition={integrationDefinition} />
-            </SettingSection>
-          )}
+      <ContentBox>
+        <ScrollArea className="flex grow h-full">
+          <div className="w-full p-6">
+            {!isLoading && (
+              <SettingSection
+                title={integrationDefinition.name}
+                description={integrationDefinition.description}
+              >
+                <WorkspaceAuth integrationDefinition={integrationDefinition} />
+              </SettingSection>
+            )}
 
-          {isLoading && (
-            <Loader text="Fetching specification (Currently optimizing for faster performance.)" />
-          )}
-        </div>
-      </ScrollArea>
+            {isLoading && (
+              <Loader text="Fetching specification (Currently optimizing for faster performance.)" />
+            )}
+          </div>
+        </ScrollArea>
+      </ContentBox>
     </>
   );
 }

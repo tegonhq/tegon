@@ -7,6 +7,7 @@ import { Header } from 'modules/settings/header';
 import { SettingSection } from 'modules/settings/setting-section';
 
 import { getIcon, toProperCase, type IconType } from 'common';
+import { ContentBox } from 'common/layouts/content-box';
 import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { useCurrentWorkspace } from 'hooks/workspace';
@@ -89,9 +90,11 @@ Integrations.getLayout = function getLayout(page: React.ReactElement) {
     <SettingsLayout>
       <div className="h-[100vh] flex flex-col w-full">
         <Header title="Integrations" />
-        <ScrollArea className="flex grow bg-background-2 rounded-tl-3xl">
-          <div className="w-full p-6">{page} </div>
-        </ScrollArea>
+        <ContentBox>
+          <ScrollArea className="flex grow h-full">
+            <div className="w-full p-6">{page} </div>
+          </ScrollArea>
+        </ContentBox>
       </div>
     </SettingsLayout>
   );
