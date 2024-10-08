@@ -18,6 +18,7 @@ import { useCurrentTeam } from 'hooks/teams';
 import { IssueOptionsDropdown } from './issue-actions/issue-options-dropdown';
 import { TriageAcceptModal } from './triage-view/triage-accept-modal';
 import { TriageDeclineModal } from './triage-view/triage-decline-modal';
+import { useTriageShortcuts } from '../triage/use-triage-shortcuts';
 
 interface HeaderProps {
   isTriageView?: boolean;
@@ -25,13 +26,9 @@ interface HeaderProps {
 
 export const Header = observer(({ isTriageView = false }: HeaderProps) => {
   const team = useCurrentTeam();
-  const [triageAction, setTriageAction] = React.useState<
-    'Accept' | 'Decline' | 'Duplicate'
-  >(undefined);
+  const [triageAction, setTriageAction] = React.useState<'Accept' | 'Decline' | 'Duplicate'>(undefined);
 
-  const {
-    query: { issueId, workspaceSlug },
-  } = useRouter();
+  const { query: { issueId, workspaceSlug } } = useRouter();
 
   const onClose = (value: boolean) => {
     if (!value) {
@@ -39,9 +36,26 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
     }
   };
 
-  const chooseTriageAction = (action: 'Accept' | 'Decline' | 'Duplicate') => {
+  const chooseTriageAction = (action: 'Accept' | 'Decline') => {
     setTriageAction(action);
   };
+
+  // Define the Accept action
+  const acceptTriage = () => {
+    console.log('Triage Accepted');
+    chooseTriageAction('Accept');
+    // Add your accept logic here (e.g., API call, state update)
+  };
+
+  // Define the Decline action
+  const declineTriage = () => {
+    console.log('Triage Declined');
+    chooseTriageAction('Decline');
+    // Add your decline logic here (e.g., API call, state update)
+  };
+
+  // Use the keyboard shortcuts hook for Accept (A) and Decline (D)
+  useTriageShortcuts({ onAccept: acceptTriage, onDecline: declineTriage });
 
   return (
     <header className="flex px-6 w-full gap-2 justify-between items-center">
@@ -55,7 +69,6 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
               href={`/${workspaceSlug}/team/${team.identifier}/all`}
             >
               <TeamIcon name={team.name} />
-
               <span className="inline-block">{team.name}</span>
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -67,6 +80,7 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
         </Breadcrumb>
         {!isTriageView && <IssueOptionsDropdown />}
       </div>
+      
       {isTriageView && (
         <div className="flex justify-end gap-3 py-2">
           <Button
