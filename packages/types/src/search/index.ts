@@ -1,1 +1,1 @@
-export * from './search-issues.dto';
+export * from './search.dto';
