@@ -13,22 +13,28 @@ import React from 'react';
 
 import { SidebarExpand } from 'common/sidebar-expand';
 
+import { useScope } from 'hooks';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { IssueOptionsDropdown } from './issue-actions/issue-options-dropdown';
 import { TriageAcceptModal } from './triage-view/triage-accept-modal';
 import { TriageDeclineModal } from './triage-view/triage-decline-modal';
-import { useTriageShortcuts } from '../triage/use-triage-shortcuts';
+import { TRIAGE_LOCAL_SCOPE, useTriageShortcuts } from './use-triage-shortcuts';
 
 interface HeaderProps {
   isTriageView?: boolean;
 }
 
 export const Header = observer(({ isTriageView = false }: HeaderProps) => {
+  useScope(TRIAGE_LOCAL_SCOPE);
   const team = useCurrentTeam();
-  const [triageAction, setTriageAction] = React.useState<'Accept' | 'Decline' | 'Duplicate'>(undefined);
+  const [triageAction, setTriageAction] = React.useState<
+    'Accept' | 'Decline' | 'Duplicate'
+  >(undefined);
 
-  const { query: { issueId, workspaceSlug } } = useRouter();
+  const {
+    query: { issueId, workspaceSlug },
+  } = useRouter();
 
   const onClose = (value: boolean) => {
     if (!value) {
@@ -42,14 +48,12 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
 
   // Define the Accept action
   const acceptTriage = () => {
-    console.log('Triage Accepted');
     chooseTriageAction('Accept');
     // Add your accept logic here (e.g., API call, state update)
   };
 
   // Define the Decline action
   const declineTriage = () => {
-    console.log('Triage Declined');
     chooseTriageAction('Decline');
     // Add your decline logic here (e.g., API call, state update)
   };
@@ -80,7 +84,7 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
         </Breadcrumb>
         {!isTriageView && <IssueOptionsDropdown />}
       </div>
-      
+
       {isTriageView && (
         <div className="flex justify-end gap-3 py-2">
           <Button
