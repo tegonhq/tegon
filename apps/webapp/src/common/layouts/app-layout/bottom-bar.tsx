@@ -1,5 +1,6 @@
 import { Button } from '@tegonhq/ui/components/button';
 import { CreateIssueLine, HelpLine, SearchLine } from '@tegonhq/ui/icons';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@tegonhq/ui/components/tooltip';
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
@@ -8,16 +9,39 @@ import { SearchDialog } from 'modules/search';
 
 import { SCOPES } from 'common/scopes';
 
+interface BottomBarButtonProps {
+  icon: React.ReactElement;
+  tooltip: string;
+  onClick: () => void;
+  isActive?: boolean;
+}
+
+const BottomBarButton: React.FC<BottomBarButtonProps> = ({ icon, tooltip, onClick, isActive }) => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button
+        variant="link"
+        onClick={onClick}
+        isActive={isActive}
+        className="px-3"
+      >
+        {icon}
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>
+      <p>{tooltip}</p>
+    </TooltipContent>
+  </Tooltip>
+);
+
 export function BottomBar() {
   const [newIssue, setNewIssue] = React.useState(false);
   const [search, setSearch] = React.useState(false);
 
   useHotkeys(
     'c',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (e: any) => {
       setNewIssue(true);
-
       e.preventDefault();
     },
     { scopes: [SCOPES.Global] },
@@ -25,34 +49,30 @@ export function BottomBar() {
 
   return (
     <div className="w-full flex justify-between px-6 py-4">
-      <Button
-        variant="link"
+      <BottomBarButton
+        icon={<HelpLine size={20} />}
+        tooltip="Help from docs"
         onClick={() => {
           window.open('https://docs.tegon.ai', '_blank');
         }}
-      >
-        <HelpLine size={20} />
-      </Button>
+      />
 
-      <Button
-        variant="link"
-        isActive
-        className="px-3"
+      <BottomBarButton
+        icon={<CreateIssueLine size={20} />}
+        tooltip="Create New Issue (C)"
         onClick={() => {
           setNewIssue(true);
         }}
-      >
-        <CreateIssueLine size={20} />
-      </Button>
+        isActive
+      />
 
-      <Button
-        variant="link"
+      <BottomBarButton
+        icon={<SearchLine size={20} />}
+        tooltip="Search Workspace (⌘ + /)"
         onClick={() => {
           setSearch(true);
         }}
-      >
-        <SearchLine size={20} />
-      </Button>
+      />
 
       <NewIssue open={newIssue} setOpen={setNewIssue} />
       <SearchDialog open={search} setOpen={setSearch} />
