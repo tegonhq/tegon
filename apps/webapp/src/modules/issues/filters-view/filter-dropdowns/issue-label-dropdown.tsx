@@ -26,6 +26,7 @@ export function IssueLabelDropdown({
   teamIdentifier,
 }: IssueLabelDropdownProps) {
   const [open, setOpen] = React.useState(false);
+
   const labels = useTeamLabels(teamIdentifier);
   const [labelSearch, setLabelSearch] = React.useState('');
 

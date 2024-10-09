@@ -1,6 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
+import { useCurrentTeam } from 'hooks/teams';
+
 import { ViewEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
@@ -12,13 +14,18 @@ import { TableView } from './views/table-view';
 
 export const ListView = observer(() => {
   const { applicationStore } = useContextStore();
+  const team = useCurrentTeam();
   const {
     displaySettings: { view },
   } = applicationStore;
   const grouping = applicationStore.displaySettings.grouping;
 
-  if (view === ViewEnum.sheet) {
+  if (!team) {
     return <TableView />;
+  }
+
+  if (view === ViewEnum.sheet) {
+    return <TableView teamId={team.id} />;
   }
 
   if (grouping === 'assignee') {

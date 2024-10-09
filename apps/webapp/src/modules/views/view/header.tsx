@@ -47,18 +47,20 @@ export const Header = observer(({ title, view }: HeaderProps) => {
       <div className="flex py-4 items-center">
         <SidebarExpand />
         <Breadcrumb>
-          <BreadcrumbItem>
-            <BreadcrumbLink
-              as={Link}
-              className="flex items-center gap-1 font-medium"
-              href={`/${workspaceSlug}/team/${team.identifier}/views`}
-            >
-              <div className={`p-[2px] w-5 h-5 rounded-sm`}>
-                <StackLine size={16} />
-              </div>
-              <span className="inline-block">Views</span>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
+          {team && (
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                as={Link}
+                className="flex items-center gap-1 font-medium"
+                href={`/${workspaceSlug}/team/${team.identifier}/views`}
+              >
+                <div className={`p-[2px] w-5 h-5 rounded-sm`}>
+                  <StackLine size={16} />
+                </div>
+                <span className="inline-block">Views</span>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          )}
           <BreadcrumbItem>
             <BreadcrumbLink>{title}</BreadcrumbLink>
           </BreadcrumbItem>

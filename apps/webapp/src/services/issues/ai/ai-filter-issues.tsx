@@ -6,7 +6,7 @@ import { ajaxPost } from 'services/utils';
 
 export interface AIFilterIssuesParams {
   text: string;
-  teamId: string;
+  teamId?: string;
 
   workspaceId: string;
 }

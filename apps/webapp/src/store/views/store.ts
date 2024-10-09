@@ -59,6 +59,13 @@ export const ViewsStore: IAnyStateTreeNode = types
 
       return view;
     },
+    getWorkspaceViews() {
+      const view = self.views.filter((view) => {
+        return !view.teamId;
+      });
+
+      return view;
+    },
     getViewsForTeam(teamId: string) {
       return self.views.filter((view) => {
         return view.teamId === teamId;

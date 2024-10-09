@@ -14,14 +14,13 @@ export function useTeamLabels(teamIdentifier: string) {
   const team = useTeam(teamIdentifier);
 
   const getLabels = () => {
-    const labelsForTeam = labelsStore.getLabelsForTeam(team.id);
-
     let labels = labelsStore.labels.filter(
       (label: LabelType) =>
         label.workspaceId === currentWorkspace.id && label.teamId === null,
     );
 
     if (team) {
+      const labelsForTeam = labelsStore.getLabelsForTeam(team.id);
       labels = [
         ...labels,
         ...labelsForTeam.filter(

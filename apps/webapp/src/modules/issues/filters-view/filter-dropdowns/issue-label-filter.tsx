@@ -20,7 +20,8 @@ export const IssueLabelFilter = observer(
     const [labelSearch, setLabelSearch] = React.useState('');
 
     const currentTeam = useCurrentTeam();
-    const labels = useTeamLabels(currentTeam.identifier);
+    const labels = useTeamLabels(currentTeam?.identifier);
+
     const { applicationStore } = useContextStore();
 
     const labelFilters = applicationStore.filters.label

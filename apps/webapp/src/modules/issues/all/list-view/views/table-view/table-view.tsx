@@ -2,22 +2,25 @@ import { observer } from 'mobx-react-lite';
 
 import { useFilterIssues } from 'modules/issues/issues-utils';
 
-import { useCurrentTeam } from 'hooks/teams';
-
 import { useContextStore } from 'store/global-context-provider';
 
 import { TableC } from './table';
 
-export const TableView = observer(() => {
+interface TableView {
+  teamId?: string;
+}
+
+export const TableView = observer(({ teamId }: TableView) => {
   const { issuesStore, applicationStore } = useContextStore();
-  const team = useCurrentTeam();
 
-  const issues = issuesStore.getIssuesForTeam(
-    team.id,
-    applicationStore.displaySettings.showSubIssues,
-  );
+  const issues = teamId
+    ? issuesStore.getIssuesForTeam(
+        teamId,
+        applicationStore.displaySettings.showSubIssues,
+      )
+    : issuesStore.getIssues();
 
-  const computedIssues = useFilterIssues(issues, team.id);
+  const computedIssues = useFilterIssues(issues, teamId);
 
   return <TableC issues={computedIssues} />;
 });

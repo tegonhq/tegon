@@ -9,16 +9,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { SidebarExpand } from 'common/sidebar-expand';
-
-import { useCurrentTeam } from 'hooks/teams';
+import type { TeamType } from 'common/types';
 
 interface HeaderProps {
   title: string;
+  team?: TeamType;
 }
 
-export const Header = observer(({ title }: HeaderProps) => {
-  const team = useCurrentTeam();
-
+export const Header = observer(({ title, team }: HeaderProps) => {
   const {
     query: { workspaceSlug },
   } = useRouter();
@@ -29,17 +27,19 @@ export const Header = observer(({ title }: HeaderProps) => {
         <SidebarExpand />
 
         <Breadcrumb>
-          <BreadcrumbItem>
-            <BreadcrumbLink
-              as={Link}
-              className="flex items-center gap-2"
-              href={`/${workspaceSlug}/team/${team.identifier}/all`}
-            >
-              <TeamIcon name={team.name} />
+          {team && (
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                as={Link}
+                className="flex items-center gap-2"
+                href={`/${workspaceSlug}/team/${team.identifier}/all`}
+              >
+                <TeamIcon name={team.name} />
 
-              <span className="inline-block">{team.name}</span>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
+                <span className="inline-block">{team.name}</span>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          )}
           <BreadcrumbItem>
             <BreadcrumbLink>{title}</BreadcrumbLink>
           </BreadcrumbItem>

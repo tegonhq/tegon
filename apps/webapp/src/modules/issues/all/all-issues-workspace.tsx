@@ -6,23 +6,21 @@ import { SCOPES } from 'common/scopes';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
 import { useScope } from 'hooks';
-import { useCurrentTeam } from 'hooks/teams';
 
 import { Header } from './header';
-import { IssuesViewOptions } from './issues-view-options';
-import { ListView } from './list-view';
+import { IssuesViewOptions } from './issues-view-options-workspace';
+import { TableView } from './list-view/views/table-view';
 import { FiltersView } from '../filters-view/filters-view';
 
 export const AllIssues = withApplicationStore(() => {
-  const team = useCurrentTeam();
   useScope(SCOPES.AllIssues);
 
   return (
     <main className="flex flex-col h-[100vh]">
-      <Header title="All issues" team={team} />
+      <Header title="All issues" />
       <ContentBox>
         <FiltersView Actions={<IssuesViewOptions />} />
-        <ListView />
+        <TableView />
       </ContentBox>
     </main>
   );
