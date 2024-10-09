@@ -1,4 +1,5 @@
 import { Button } from '@tegonhq/ui/components/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@tegonhq/ui/components/tooltip';
 import { Filter } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -26,8 +27,7 @@ export const FiltersView = observer(({ Actions }: FilterViewProps) => {
     if (!isEmpty(filters)) {
       setFiltersShow(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEmpty(filters)]);
+  }, [filters]);
 
   const onClose = () => {
     applicationStore.clearFilters();
@@ -51,14 +51,21 @@ export const FiltersView = observer(({ Actions }: FilterViewProps) => {
   return (
     <div className="py-3 pt-6 pr-4 pl-6 flex flex-col gap-2">
       <div className="flex justify-between">
-        <Button
-          variant="secondary"
-          isActive={filtersShow}
-          onClick={() => setFiltersShow(true)}
-        >
-          <Filter size={16} className="mr-1" />
-          Filter
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="secondary"
+              isActive={filtersShow}
+              onClick={() => setFiltersShow(true)}
+            >
+              <Filter size={16} className="mr-1" />
+              Filter
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Filter (F)</p>
+          </TooltipContent>
+        </Tooltip>
 
         <div>{Actions}</div>
       </div>
