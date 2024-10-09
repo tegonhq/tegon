@@ -11,13 +11,10 @@ export interface AIFilterIssuesParams {
   workspaceId: string;
 }
 
-export function aiFilterIssues({
-  teamId,
-  ...otherParams
-}: AIFilterIssuesParams) {
+export function aiFilterIssues(data: AIFilterIssuesParams) {
   return ajaxPost({
-    url: `/api/v1/issues/ai/ai_filters?teamId=${teamId}`,
-    data: otherParams,
+    url: `/api/v1/issues/ai/ai_filters`,
+    data,
   });
 }
 
