@@ -69,7 +69,11 @@ export const NewViewDialog = observer(
         });
 
         setOpen(false);
-        push(`/${workspaceSlug}/team/${team.identifier}/views/${data.id}`);
+        if (team) {
+          push(`/${workspaceSlug}/team/${team.identifier}/views/${data.id}`);
+        } else {
+          push(`/${workspaceSlug}/views/${data.id}`);
+        }
       },
     });
 
@@ -83,7 +87,7 @@ export const NewViewDialog = observer(
       createView({
         workspaceId: workspace.id,
         filters,
-        teamId: team.id,
+        teamId: team?.id,
         name,
         description,
       });

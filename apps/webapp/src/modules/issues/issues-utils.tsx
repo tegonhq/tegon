@@ -1,6 +1,5 @@
 import { WorkflowCategoryEnum } from '@tegonhq/types';
 import { sort } from 'fast-sort';
-import { usePathname } from 'next/navigation';
 import React from 'react';
 
 import { type WorkflowType } from 'common/types';
@@ -153,7 +152,6 @@ export function getSortArray(displaySettings: DisplaySettingsModelType) {
 export function getFilters(
   applicationStore: ApplicationStoreType,
   workflows: WorkflowType[],
-  pathname: string,
 ) {
   const { status, assignee, label, priority } = applicationStore.filters;
   const { showSubIssues, completedFilter, showTriageIssues } =
@@ -238,18 +236,6 @@ export function getFilters(
     });
   }
 
-  if (pathname.includes('/backlog')) {
-    const filteredWorkflows = workflows.filter(
-      (workflow) => workflow.category === WorkflowCategoryEnum.BACKLOG,
-    );
-
-    filters.push({
-      key: 'stateId',
-      filterType: FilterTypeEnum.IS,
-      value: filteredWorkflows.map((workflow) => workflow.id),
-    });
-  }
-
   for (const filterKey of [
     'isParent',
     'isSubIssue',
@@ -279,13 +265,12 @@ export function useFilterIssues(
     issuesStore,
     issueRelationsStore,
   } = useContextStore();
-  const pathname = usePathname();
   const workflows = teamId
     ? workflowsStore.getWorkflowsForTeam(teamId)
     : workflowsStore.workflows;
 
   return React.useMemo(() => {
-    const filters = getFilters(applicationStore, workflows, pathname);
+    const filters = getFilters(applicationStore, workflows);
     const filteredIssues = filterIssues(issues, filters, {
       linkedIssuesStore,
       issuesStore,

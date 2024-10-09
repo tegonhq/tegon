@@ -29,7 +29,7 @@ export class ViewsService {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         filters: filters as any,
         workspace: { connect: { id: workspaceId } },
-        team: { connect: { id: teamId } },
+        team: teamId ? { connect: { id: teamId } } : undefined,
         isBookmarked: false,
         createdById,
         description: description ?? '',

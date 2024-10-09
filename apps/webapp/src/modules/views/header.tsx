@@ -31,17 +31,19 @@ export const Header = observer(({ title }: HeaderProps) => {
         <SidebarExpand />
 
         <Breadcrumb>
-          <BreadcrumbItem>
-            <BreadcrumbLink
-              as={Link}
-              className="flex items-center gap-2 font-medium"
-              href={`/${workspaceSlug}/team/${team.identifier}/all`}
-            >
-              <TeamIcon name={team.name} />
+          {team && (
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                as={Link}
+                className="flex items-center gap-2 font-medium"
+                href={`/${workspaceSlug}/team/${team.identifier}/all`}
+              >
+                <TeamIcon name={team.name} />
 
-              <span className="inline-block">{team.name}</span>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
+                <span className="inline-block">{team.name}</span>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          )}
           <BreadcrumbItem>
             <BreadcrumbLink>{title}</BreadcrumbLink>
           </BreadcrumbItem>
@@ -50,7 +52,11 @@ export const Header = observer(({ title }: HeaderProps) => {
 
       <div className="py-2">
         <Link
-          href={`/${workspaceSlug}/team/${team.identifier}/all`}
+          href={
+            team
+              ? `/${workspaceSlug}/team/${team?.identifier}/all`
+              : `/${workspaceSlug}/all`
+          }
           className={cn(buttonVariants({ variant: 'secondary' }))}
         >
           New view

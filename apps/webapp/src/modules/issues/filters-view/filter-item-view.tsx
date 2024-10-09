@@ -79,7 +79,7 @@ export const FilterItemView = observer(
           <Component
             value={value}
             onChange={onChange}
-            teamIdentifier={team.identifier}
+            teamIdentifier={team?.identifier}
           />
         </div>
         <Separator className="bg-background-2 w-[1px]" orientation="vertical" />
