@@ -80,12 +80,15 @@ export default class TeamsService {
       },
     });
 
-    const botUsers = await this.prisma.usersOnWorkspaces.findMany({
-      where: { workspaceId, role: RoleEnum.BOT },
+    const botAdminUsers = await this.prisma.usersOnWorkspaces.findMany({
+      where: {
+        workspaceId,
+        OR: [{ role: RoleEnum.BOT }, { role: RoleEnum.ADMIN }],
+      },
       select: { userId: true },
     });
 
-    const userIds = botUsers.map(({ userId }) => userId);
+    const userIds = botAdminUsers.map(({ userId }) => userId);
 
     userIds.push(userId);
 

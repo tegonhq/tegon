@@ -69,6 +69,16 @@ export const getInputs = async (payload: ActionEventPayload) => {
           },
         },
       },
+      reactionEmoji: {
+        type: 'select',
+        title: 'Reaction Emoji',
+        description: 'Select the emoji to use for creating issues',
+        default: 'eyes',
+        options: [
+          { label: '👀 - Eyes', value: 'eyes' },
+          { label: '🎫 - Ticket', value: 'ticket' },
+        ],
+      },
     },
   };
 };

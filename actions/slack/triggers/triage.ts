@@ -47,14 +47,15 @@ export const slackTriage = async (
       mappedChannelId === channelId,
   );
 
+  const reactionEmoji = action.data.inputs.reactionEmoji;
   // If the reaction is not 'eyes' or the channel mapping doesn't exist, ignore the event
-  if (reaction !== 'eyes' || !channelMapping) {
-    logger.debug(`Ignoring reaction event with reaction: ${reaction}`);
+  if ((reaction !== 'eyes' && reaction !== reactionEmoji) || !channelMapping) {
+    logger.info(`Ignoring reaction event with reaction: ${reaction}`);
     return undefined;
   }
 
   if (!channelMapping) {
-    logger.debug(`The channel is not connected`);
+    logger.info(`The channel is not connected`);
     return undefined;
   }
 
