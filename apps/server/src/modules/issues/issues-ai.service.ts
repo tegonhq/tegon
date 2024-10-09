@@ -29,7 +29,6 @@ import {
   IssueWithRelations,
   SubIssueInput,
 } from './issues.interface';
-import { getWorkspace } from './issues.utils';
 
 @Injectable()
 export default class IssuesAIService {
@@ -357,17 +356,26 @@ export default class IssuesAIService {
    * @returns The generated AI filter.
    */
   async aiFilters(
-    teamRequestParams: TeamRequestParamsDto,
     filterInput: FilterInput,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<Record<string, any>> {
     // Retrieve labels based on the provided workspace and team IDs
+    let teamIds = [filterInput.teamId];
+    if (!filterInput.teamId) {
+      const teams = await this.prisma.team.findMany({
+        where: { workspaceId: filterInput.workspaceId, deleted: null },
+        select: { id: true },
+      });
+
+      teamIds = teams.map((team) => team.id);
+    }
+
     const labels = await this.prisma.label.findMany({
       where: {
         OR: [
           { workspaceId: filterInput.workspaceId },
-          { teamId: teamRequestParams.teamId },
-        ],
+          filterInput.teamId ? { teamId: filterInput.teamId } : {},
+        ].filter(Boolean),
       },
     });
 
@@ -380,7 +388,11 @@ export default class IssuesAIService {
 
     // Retrieve assignees based on the team ID
     const assignee = await this.prisma.usersOnWorkspaces.findMany({
-      where: { teamIds: { has: teamRequestParams.teamId } },
+      where: {
+        teamIds: filterInput.teamId
+          ? { has: filterInput.teamId }
+          : { hasSome: teamIds },
+      },
       include: { user: true },
     });
 
@@ -393,7 +405,12 @@ export default class IssuesAIService {
 
     // Retrieve workflows based on the team ID
     const workflow = await this.prisma.workflow.findMany({
-      where: { teamId: teamRequestParams.teamId },
+      where: {
+        ...(filterInput.teamId
+          ? { teamId: filterInput.teamId }
+          : { team: { workspaceId: filterInput.workspaceId } }),
+        deleted: null,
+      },
     });
 
     // Extract workflow names from the retrieved workflows
@@ -404,7 +421,9 @@ export default class IssuesAIService {
     });
 
     // Retrieve the workspace based on the team ID
-    const workspace = await getWorkspace(this.prisma, teamRequestParams.teamId);
+    const workspace = await this.prisma.workspace.findUnique({
+      where: { id: filterInput.workspaceId },
+    });
     this.logger.debug({
       message: `Retrieved workspace: ${workspace.name}`,
       where: `IssuesAIService.aiFilters`,

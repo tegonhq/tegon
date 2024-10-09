@@ -7,7 +7,7 @@ import {
   Team,
   User,
 } from '@tegonhq/types';
-import { IsArray, IsEnum, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export interface ApiResponse {
   status: number;
@@ -48,6 +48,10 @@ export class FilterInput {
 
   @IsString()
   workspaceId: string;
+
+  @IsString()
+  @IsOptional()
+  teamId?: string;
 }
 
 export class SubIssueInput extends AIInput {
