@@ -103,7 +103,7 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
     if (value.includes('ai:')) {
       setLoading(true);
       aiFilterIssues({
-        teamId: team.id,
+        teamId: team?.id,
         workspaceId: workspace.id,
         text: value.replace('ai: ', ''),
       });
