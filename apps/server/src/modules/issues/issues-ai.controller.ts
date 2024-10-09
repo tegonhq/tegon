@@ -42,11 +42,8 @@ export class IssuesAIController {
 
   @Post('ai_filters')
   @UseGuards(AuthGuard)
-  async aiFilters(
-    @Query() teamRequestParams: TeamRequestParamsDto,
-    @Body() filterInput: FilterInput,
-  ) {
-    return await this.issuesAiService.aiFilters(teamRequestParams, filterInput);
+  async aiFilters(@Body() filterInput: FilterInput) {
+    return await this.issuesAiService.aiFilters(filterInput);
   }
 
   @Post('ai_title')
