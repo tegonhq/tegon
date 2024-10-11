@@ -23,7 +23,19 @@ import { IssueRelatedProperties } from './issue-related-properties';
 
 export const RightSide = observer(() => {
   const issue = useIssueData();
-  const { mutate: updateIssue } = useUpdateIssueMutation({});
+  const { mutate: updateIssue } = useUpdateIssueMutation({
+    onMutate: (variables) => {
+      console.log('UpdateIssueMutation: Starting mutation with variables:', variables);
+    },
+    onSuccess: (data, variables) => {
+      console.log('UpdateIssueMutation: Success. Updated data:', data);
+      console.log('UpdateIssueMutation: Variables used:', variables);
+    },
+    onError: (error, variables) => {
+      console.error('UpdateIssueMutation: Error updating issue:', error);
+      console.error('UpdateIssueMutation: Variables used:', variables);
+    },
+  });
   const currentTeam = useCurrentTeam();
   const statusChange = (stateId: string) => {
     updateIssue({ id: issue.id, stateId, teamId: issue.teamId });
@@ -45,9 +57,26 @@ export const RightSide = observer(() => {
     });
   };
 
-  const dueDateChange = (dueDate: Date) => {
-    updateIssue({ id: issue.id, dueDate, teamId: issue.teamId });
+  const dueDateChange = (date: Date | null) => {
+    console.log('RightSide: Updating due date to:', date);
+    const isoDate = date ? date.toISOString() : null;
+    console.log('RightSide: Converted ISO date:', isoDate);
+    updateIssue(
+      { id: issue.id, dueDate: isoDate, teamId: issue.teamId },
+      {
+        onSuccess: (data) => {
+          console.log('RightSide: updateIssue succeeded with data:', data);
+        },
+        onError: (error) => {
+          console.error('RightSide: updateIssue failed with error:', error);
+        },
+      }
+    );
   };
+
+  React.useEffect(() => {
+    console.log('RightSide: Issue data changed:', issue);
+  }, [issue]);
 
   return (
     <>

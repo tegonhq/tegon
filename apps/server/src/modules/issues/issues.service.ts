@@ -227,6 +227,9 @@ export default class IssuesService {
       ...otherIssueData
     } = issueData;
 
+    console.log('Received issue data:', issueData);
+    console.log('Due date from issue data:', issueData.dueDate);
+
     // Find the current issue
     const currentIssue = await this.prisma.issue.findUnique({
       where: { id: issueParams.issueId },
@@ -285,6 +288,8 @@ export default class IssuesService {
       }),
     };
 
+    console.log('Updated issue data:', updatedIssueData);
+
     // Update the issue in the database
     const updatedIssue = await this.prisma.issue.update({
       where: {
@@ -296,6 +301,8 @@ export default class IssuesService {
         team: true,
       },
     });
+
+    console.log('Updated issue:', updatedIssue);
 
     this.logger.info({
       message: `Issue with ID ${issueParams.issueId} updated successfully`,
