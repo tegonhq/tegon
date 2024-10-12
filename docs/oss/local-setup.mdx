@@ -57,12 +57,18 @@ cp .env.example .env
 ```
 
 
-3. Run Migrations and Start Development Server:
+3. Install [pnpm](https://pnpm.io/installation)
+
+4. Run Migrations and Start Development Server:
 
 ```bash
 pnpm migrate
 pnpm dev
 ```
+
+5. The first time you set this up, you will be greeted with a login screen. Unless you have SMTP credentials in your `.env` file
+  - Enter your email and click `Send Magic Link`. 
+  - Navigate to server logs from the previous step to find the magic link. Copy and paste that url to override local authentication
 
 ## FAQ
 
