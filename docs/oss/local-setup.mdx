@@ -3,9 +3,9 @@ title: "Local Setup"
 description: "Run tegon in local for development"
 ---
 
-###  Cloning the docker Repository
+### Cloning the docker Repository
 
-To streamline your setup, we recommend using our Docker repository, which comes pre-configured with essential services like Supertokens, Typesense, Redis, and PostgreSQL. 
+To streamline your setup, we recommend using our Docker repository, which comes pre-configured with essential services like Supertokens, Typesense, Redis, and PostgreSQL.
 This setup also includes the server and webapp, making it easier to manage everything in one place.
 
 #### Steps:
@@ -31,13 +31,13 @@ cp .env.example .env
 ./start.sh
 ```
 
+Once all docker images are running, your terminal will be like below:
 
-<Note>
-If you plan to work on the server or frontend locally, you can comment out the corresponding services in the Docker setup or adjust the ports as needed.
-</Note>
+<Frame>
+  <img src="/images/docker-running.png" />
+</Frame>
 
-
-###  Cloning the Tegon Repository
+### Cloning the Tegon Repository
 
 Once Docker is set up, you can proceed with cloning the Tegon repository to start development.
 
@@ -56,15 +56,50 @@ cd tegon
 cp .env.example .env
 ```
 
+3. Install [pnpm](https://pnpm.io/installation)
 
-3. Run Migrations and Start Development Server:
+4. Start Development Server:
 
 ```bash
-pnpm migrate
 pnpm dev
 ```
+
+Upon successful execution, you should see a screen similar to this:
+
+<Frame>
+  <img src="/images/terminal-view.png" />
+</Frame>
+
+5. **Access the application:** Navigate to [http://localhost:3000](http://localhost:3000). You'll be greeted with a login screen. Enter your email and click `Send Magic Link`.
+
+<Frame>
+  <img src="/images/enter-email.png" />
+</Frame>
+
+6. **Retrieve the magic link:** If you haven't provided SMTP credentials in your `.env` file, you won't receive the magic link via email. Instead, find it in the server logs from the previous step.
+
+<Frame>
+  <img src="/images/sent-magic-link.png" />
+</Frame>
+
+Copy the URL indicated by the red arrow (press 'c' to copy) and paste it into your browser to bypass local authentication.
+
+<Frame>
+  <img src="/images/copy-magic-link.png" />
+</Frame>
+
+7. Provide your details to setup the your account
+
+<Frame>
+  <img src="/images/account-setup.png" />
+</Frame>
+
+8. **Create your first issue:** Your workspace should now look like this, type 'C' to create your first issue in your local setup.
+
+<Frame>
+  <img src="/images/default-workspace.png" />
+</Frame>
 
 ## FAQ
 
 If there are any questions that we couldn't answer here, we'd love to help you get started. [Join our Slack](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2i1e781ip-zwauijRV9TRtRKoJi3tqng) and feel free to ask your questions in the #support channel.
-
