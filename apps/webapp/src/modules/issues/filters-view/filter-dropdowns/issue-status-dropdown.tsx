@@ -30,7 +30,7 @@ export function IssueStatusDropdown({
   const workflows = useTeamWorkflows(teamIdentifier);
 
   const getWorkflowData = (workflowId: string) => {
-    const workflow = value
+    const workflow = workflowId
       ? workflows.find((workflow) => workflow.id === workflowId)
       : workflows[0];
 
