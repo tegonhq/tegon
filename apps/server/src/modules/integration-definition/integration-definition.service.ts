@@ -43,8 +43,17 @@ export class IntegrationDefinitionService {
     });
   }
 
+  async getIntegrationDefinitionWithSlug(
+    slug: string,
+    workspaceId: string,
+  ): Promise<IntegrationDefinition> {
+    return await this.prisma.integrationDefinitionV2.findFirst({
+      where: { AND: { slug, workspaceId } },
+    });
+  }
+
   async getIntegrationDefinitionWithSpec(
-    integrationDefinitionId: string,
+    integrationDefinitionId?: string,
   ): Promise<IntegrationDefinition> {
     const integrationDefinition = await this.getIntegrationDefinitionWithId({
       integrationDefinitionId,

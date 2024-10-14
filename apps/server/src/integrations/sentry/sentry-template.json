@@ -1,0 +1,48 @@
+{
+  "elements": [
+    {
+      "type": "issue-link",
+      "link": {
+        "uri": "/v1/webhook/sentry?action=link-issue",
+        "required_fields": [
+          {
+            "type": "text",
+            "label": "Task Name",
+            "name": "title",
+            "default": "issue.title"
+          },
+          {
+            "type": "select",
+            "label": "Select Issue Id To Link with",
+            "name": "issueId",
+            "uri": "/v1/webhook/sentry/get-issues/",
+            "skip_load_on_open": true
+          }
+        ]
+      },
+      "create": {
+        "uri": "/v1/webhook/sentry?action=create-issue",
+        "required_fields": [
+          {
+            "type": "text",
+            "label": "Task Name",
+            "name": "title",
+            "default": "issue.title"
+          },
+          {
+            "type": "textarea",
+            "label": "Task Description",
+            "name": "description",
+            "default": "issue.description"
+          },
+          {
+            "type": "select",
+            "label": "Which team would in which you like to link to create Issue?",
+            "name": "teamId",
+            "uri": "/v1/webhook/sentry/get-teams/"
+          }
+        ]
+      }
+    }
+  ]
+}

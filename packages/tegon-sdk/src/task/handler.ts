@@ -26,6 +26,10 @@ axios.interceptors.request.use((axiosConfig) => {
   return axiosConfig;
 });
 
+export function setAccessToken(accessToken: string) {
+  global.accessToken = accessToken;
+}
+
 export function handler(name: string, run: RunFunction, init?: InitFunction) {
   const id = name;
 

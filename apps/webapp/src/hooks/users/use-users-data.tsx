@@ -73,7 +73,7 @@ export function useUserData(
       }
 
       return uOW.userId === userId;
-    }).userId,
+    })?.userId,
   ]);
 
   React.useEffect(() => {
