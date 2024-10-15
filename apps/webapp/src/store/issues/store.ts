@@ -23,9 +23,16 @@ export const IssuesStore: IAnyStateTreeNode = types
 
     const updateIssue = (updateProps: Partial<IssueType>, id: string) => {
       const issue = self.issuesMap.get(id);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const issueJson = (issue as any).toJSON();
-      self.issuesMap.set(id, { ...issueJson, ...updateProps });
+      if (issue) {
+        const updatedIssue = {
+          ...issue.toJSON(),
+          ...updateProps,
+          labelIds: updateProps.labelIds
+            ? [...updateProps.labelIds]
+            : issue.labelIds,
+        };
+        self.issuesMap.set(id, Issue.create(updatedIssue));
+      }
     };
 
     const deleteById = (id: string) => {

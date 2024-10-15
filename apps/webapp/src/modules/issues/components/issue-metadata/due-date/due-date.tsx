@@ -11,19 +11,24 @@ import { format } from 'date-fns';
 import React from 'react';
 
 interface DueDateProps {
-  dueDate?: Date | string;
-  dueDateChange: (date: Date) => void;
+  dueDate?: Date | string | null;
+  dueDateChange: (date: Date | null) => void;
 }
 
 export function DueDate({
   dueDateChange,
   dueDate: initialDueDate,
 }: DueDateProps) {
-  const [dueDate, setDueDate] = React.useState<Date>(
-    initialDueDate ? new Date(initialDueDate) : undefined,
+  const [dueDate, setDueDate] = React.useState<Date | null>(
+    initialDueDate ? new Date(initialDueDate) : null
   );
 
-  const onDateChange = (date: Date) => {
+  React.useEffect(() => {
+    setDueDate(initialDueDate ? new Date(initialDueDate) : null);
+  }, [initialDueDate]);
+
+  const onDateChange = (date: Date | null) => {
+    console.log('DueDate: onDateChange called with:', date);
     setDueDate(date);
     dueDateChange(date);
   };
