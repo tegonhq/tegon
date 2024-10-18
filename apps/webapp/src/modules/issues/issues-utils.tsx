@@ -65,7 +65,7 @@ export function filterTimeBasedIssue(issue: IssueType, filter: FilterType) {
   const fieldValue = (issue as any)[key];
 
   // Handle time-based filters
-  if (filterType in TimeBasedFilterEnum) {
+  if (Object.values(TimeBasedFilterEnum).includes(filterType)) {
     const now = new Date().getTime();
 
     switch (filterType) {
@@ -83,6 +83,7 @@ export function filterIssues(
   issues: IssueType[],
   filters: FilterType[],
   { issuesStore, issueRelationsStore }: Partial<StoreContextInstanceType>,
+  isCompleted: (stateId: string) => boolean,
 ) {
   return issues.filter((issue: IssueType) => {
     return filters.every((filter) => {
@@ -107,6 +108,17 @@ export function filterIssues(
 
         case 'updatedAt': {
           return filterTimeBasedIssue(issue, filter);
+        }
+
+        case 'completed_updatedAt': {
+          if (!isCompleted(issue.stateId)) {
+            return true;
+          }
+
+          return (
+            isCompleted(issue.stateId) &&
+            filterTimeBasedIssue(issue, { ...filter, key: 'updatedAt' })
+          );
         }
 
         default:
@@ -205,7 +217,7 @@ export function getFilters(
       completedFilter === TimeBasedFilterEnum.None)
   ) {
     filters.push({
-      key: 'updatedAt',
+      key: 'completed_updatedAt',
       filterType: completedFilter,
     });
   }
@@ -269,13 +281,30 @@ export function useFilterIssues(
     ? workflowsStore.getWorkflowsForTeam(teamId)
     : workflowsStore.workflows;
 
+  const isCompleted = (stateId: string) => {
+    const filteredWorkflows = workflows.filter(
+      (workflow: WorkflowType) =>
+        workflow.category === WorkflowCategoryEnum.COMPLETED ||
+        workflow.category === WorkflowCategoryEnum.CANCELED,
+    );
+
+    return filteredWorkflows.find(
+      (workflow: WorkflowType) => workflow.id === stateId,
+    );
+  };
+
   return React.useMemo(() => {
     const filters = getFilters(applicationStore, workflows);
-    const filteredIssues = filterIssues(issues, filters, {
-      linkedIssuesStore,
-      issuesStore,
-      issueRelationsStore,
-    });
+    const filteredIssues = filterIssues(
+      issues,
+      filters,
+      {
+        linkedIssuesStore,
+        issuesStore,
+        issueRelationsStore,
+      },
+      isCompleted,
+    );
 
     return sort(filteredIssues).by(
       getSortArray(applicationStore.displaySettings),
