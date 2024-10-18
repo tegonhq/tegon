@@ -63,7 +63,7 @@ export const IssueLabelDropdown = observer(
               <Button
                 variant="link"
                 role="combobox"
-                size="sm"
+                size="xs"
                 aria-expanded={open}
                 className={cn(
                   'flex items-center justify-between font-normal border-0 shadow-none',
