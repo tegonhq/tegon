@@ -9,7 +9,7 @@ export const SummarizeIssue = 'summarizeIssue';
 
 export function getSummarizeIssue(issueId: string) {
   return ajaxGet({
-    url: `/api/v1/issues/${issueId}/summarize`,
+    url: `/api/v1/issues/ai/${issueId}/summarize`,
   });
 }
 
