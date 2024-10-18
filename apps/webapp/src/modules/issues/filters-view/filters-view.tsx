@@ -37,14 +37,15 @@ export const FiltersView = observer(({ Actions }: FilterViewProps) => {
   // Shortcuts
   useHotkeys(
     ['f'],
-    (e) => {
+    () => {
       setFiltersShow(true);
-      e.preventDefault();
     },
     {
       enableOnFormTags: true,
+      scopes: [SCOPES.AllIssues],
+      preventDefault: !filtersShow,
     },
-    [SCOPES.AllIssues],
+    [filtersShow],
   );
 
   return (
