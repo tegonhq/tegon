@@ -75,7 +75,12 @@ async function createTegonIssue(eventBody: any): Promise<any> {
   }
 
   const personalAccessToken = await prisma.personalAccessToken.findFirst({
-    where: { workspaceId: integrationAccount.workspaceId, deleted: null },
+    where: {
+      workspaceId: integrationAccount.workspaceId,
+      deleted: null,
+      type: 'trigger',
+      user: { username: 'sentry' },
+    },
   });
 
   if (!personalAccessToken) {
@@ -126,7 +131,12 @@ async function getTegonIssues(eventBody: any): Promise<any> {
   }
 
   const personalAccessToken = await prisma.personalAccessToken.findFirst({
-    where: { workspaceId: integrationAccount.workspaceId, deleted: null },
+    where: {
+      workspaceId: integrationAccount.workspaceId,
+      type: 'trigger',
+      user: { username: 'sentry' },
+      deleted: null,
+    },
   });
 
   if (!personalAccessToken) {
@@ -167,7 +177,12 @@ async function createTegonLinkedIssue(eventBody: any): Promise<any> {
   }
 
   const personalAccessToken = await prisma.personalAccessToken.findFirst({
-    where: { workspaceId: integrationAccount.workspaceId, deleted: null },
+    where: {
+      workspaceId: integrationAccount.workspaceId,
+      type: 'trigger',
+      user: { username: 'sentry' },
+      deleted: null,
+    },
   });
 
   if (!personalAccessToken) {

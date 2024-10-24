@@ -22,6 +22,12 @@ export default async function run(eventPayload: IntegrationEventPayload) {
     case IntegrationPayloadEventType.IS_ACTION_SUPPORTED_EVENT:
       return isActionSupportedEvent(eventPayload.eventBody);
 
+    case IntegrationPayloadEventType.GET_CONNECTED_ACCOUNT_ID:
+      return (
+        eventPayload.data.eventBody.installationId ??
+        eventPayload.data.eventBody.installation?.uuid
+      );
+
     default:
       return {
         message: `The event payload type is ${eventPayload.event}`,

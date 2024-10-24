@@ -1,4 +1,4 @@
-const SUPPORTED_TYPES = ['assigned'];
+const SUPPORTED_TYPES = ['assigned', 'triggered'];
 
 interface Payload {
   action: string;

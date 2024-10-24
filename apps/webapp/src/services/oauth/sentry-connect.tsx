@@ -45,7 +45,6 @@ export function useSentryConnectMutation({
   };
 
   const onMutationSuccess = (data: SentryConnectResponse) => {
-    console.log(data);
     onSuccess && onSuccess(data);
   };
 
