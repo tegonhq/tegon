@@ -12,3 +12,4 @@ export * from './workspace';
 export * from './user';
 export * from './application';
 export * from './action';
+export * from './project';

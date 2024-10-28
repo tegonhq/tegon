@@ -60,6 +60,7 @@ export * from './book-line';
 export * from './document-line';
 export * from './fullscreen-line';
 export * from './more-line';
+export * from './project';
 
 export * from './team-line';
 export * from './issues-fill';

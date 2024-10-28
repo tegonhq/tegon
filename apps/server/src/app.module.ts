@@ -41,6 +41,7 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ProjectsModule } from 'modules/projects/projects.module';
 
 @Module({
   imports: [
@@ -104,6 +105,7 @@ import { AppService } from './app.service';
     TriggerdevModule,
     ActionModule,
     AIRequestsModule,
+    ProjectsModule,
 
     WebhookModule,
 

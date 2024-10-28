@@ -434,6 +434,44 @@ model Notification {
   workspaceId String
 }
 
+model Project {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name               String
+  description        String?
+  status             String?
+  startDate          String?
+  endDate            String?
+  leadUserId         String?
+  teams              String[]
+
+  milestones ProjectMilestone[]
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+
+  @@unique([name, workspaceId])
+}
+
+model ProjectMilestone {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name               String
+  description        String?
+  endDate            String?
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+
+  @@unique([name, projectId])
+}
+
 model Prompt {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
@@ -639,6 +677,7 @@ model Workspace {
   aiRequests            AIRequest[]
   prompts               Prompt[]
   action                Action[]
+  projects              Project[]
 
   ActionEvent ActionEvent[]
 }
@@ -695,6 +734,8 @@ enum ModelName {
   LinkedComment
   LinkedIssue
   Notification
+  Project
+  ProjectMilestone
   Prompt
   Reaction
   SyncAction

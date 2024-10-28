@@ -140,6 +140,19 @@ export async function getWorkspaceId(
       });
       return issueSuggested.team.workspaceId;
 
+    case ModelName.Project:
+      const project = await prisma.project.findUnique({
+        where: { id: modelId },
+      });
+      return project.workspaceId;
+
+    case ModelName.Project:
+      const projectMilestone = await prisma.projectMilestone.findUnique({
+        where: { id: modelId },
+        include: { project: true },
+      });
+      return projectMilestone.project.workspaceId;
+
     default:
       return undefined;
   }
@@ -216,6 +229,8 @@ export async function getModelData(
     },
     View: prisma.view,
     IssueSuggestion: prisma.issueSuggestion,
+    Project: prisma.project,
+    ProjectMilestone: prisma.projectMilestone,
   };
 
   const model = modelMap[modelName];
