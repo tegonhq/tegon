@@ -11,7 +11,11 @@ import { z } from 'zod';
 import { SCOPES } from 'common/scopes';
 
 import { useScope } from 'hooks';
+import { useTeams } from 'hooks/teams';
 
+import { useCreateProjectMutation } from 'services/projects';
+
+import { NewProjectForm } from './new-project-dialog-form';
 import { NewProjectSchema } from './new-project-dialog.type';
 
 interface NewProjectProps {
@@ -19,18 +23,41 @@ interface NewProjectProps {
   setOpen: (value: boolean) => void;
 }
 
-export function NewProject({ open, setOpen }: NewProjectProps) {
+interface FormValues extends z.infer<typeof NewProjectSchema> {
+  name: string;
+}
+
+export function NewProjectDialog({ open, setOpen }: NewProjectProps) {
   useScope(SCOPES.NewProject);
+
+  const teams = useTeams();
 
   const { toast } = useToast();
 
   // The form has a array of issues where first issue is the parent and the later sub issues
   const form = useForm<z.infer<typeof NewProjectSchema>>({
     resolver: zodResolver(NewProjectSchema),
-    defaultValues: {},
+    defaultValues: {
+      status: 'Backlog',
+      teams: [teams[0].id],
+    },
   });
 
-  const onSubmit = () => {};
+  const { mutate: createProject } = useCreateProjectMutation({
+    onSuccess: () => {
+      toast({
+        variant: 'success',
+        title: 'Success!',
+        description: 'Project created successfully',
+      });
+      form.reset();
+      setOpen(false);
+    },
+  });
+
+  const onSubmit = (values: FormValues) => {
+    createProject(values);
+  };
 
   // Shortcuts
   useHotkeys(
@@ -51,9 +78,15 @@ export function NewProject({ open, setOpen }: NewProjectProps) {
         >
           <Form {...form}>
             <form
-              className="new-issue-form flex flex-col overflow-hidden h-full"
+              className="new-issue-form"
               onSubmit={form.handleSubmit(onSubmit)}
-            ></form>
+            >
+              <NewProjectForm
+                form={form}
+                onClose={() => setOpen(false)}
+                isLoading={false}
+              />
+            </form>
           </Form>
         </DialogContent>
       </Dialog>

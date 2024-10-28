@@ -5,7 +5,7 @@ import {
   flow,
 } from 'mobx-state-tree';
 
-import type { LinkedIssueType } from 'common/types';
+import type { ProjectType } from 'common/types';
 
 import { tegonDatabase } from 'store/database';
 
@@ -17,19 +17,19 @@ export const ProjectsStore: IAnyStateTreeNode = types
     workspaceId: types.union(types.string, types.undefined),
   })
   .actions((self) => {
-    const update = (linkedIssue: LinkedIssueType, id: string) => {
+    const update = (project: ProjectType, id: string) => {
       const indexToUpdate = self.projects.findIndex((obj) => obj.id === id);
 
       if (indexToUpdate !== -1) {
         // Update the object at the found index with the new data
         self.projects[indexToUpdate] = {
           ...self.projects[indexToUpdate],
-          ...linkedIssue,
+          ...project,
           // TODO fix the any and have a type with Issuetype
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any;
       } else {
-        self.projects.push(linkedIssue);
+        self.projects.push(project);
       }
     };
     const deleteById = (id: string) => {
@@ -47,6 +47,15 @@ export const ProjectsStore: IAnyStateTreeNode = types
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    getProjectWithId(id: string) {
+      return self.projects.find((project) => project.id === id);
+    },
+
+    get getProjects() {
+      return self.projects;
+    },
+  }));
 
 export type ProjectsStoreType = Instance<typeof ProjectsStore>;
