@@ -48,6 +48,7 @@ export const getColumns = (
     {
       accessorKey: 'title',
       header: () => <span>Issue</span>,
+
       cell: ({ row }: RowType) => {
         const team = teamsStore.getTeamWithId(row.original.teamId);
 

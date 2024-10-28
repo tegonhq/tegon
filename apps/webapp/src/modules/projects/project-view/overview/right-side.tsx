@@ -10,8 +10,39 @@ import { TeamsDropdown } from 'modules/projects/dropdowns/teams';
 
 import { useProject } from 'hooks/projects';
 
+import { useUpdateProjectMutation } from 'services/projects';
+
 export const RightSide = observer(() => {
   const project = useProject();
+  const { mutate: updateProject } = useUpdateProjectMutation({});
+
+  const onStatusUpdate = (status: string) => {
+    updateProject({
+      status,
+      projectId: project.id,
+    });
+  };
+
+  const onEndDateUpdate = (endDate: string) => {
+    updateProject({
+      endDate,
+      projectId: project.id,
+    });
+  };
+
+  const onStartDateUpdate = (startDate: string) => {
+    updateProject({
+      startDate,
+      projectId: project.id,
+    });
+  };
+
+  const onTeamChange = (teams: string[]) => {
+    updateProject({
+      teams,
+      projectId: project.id,
+    });
+  };
 
   return (
     <>
@@ -21,6 +52,7 @@ export const RightSide = observer(() => {
           <ProjectStatusDropdown
             value={project.status}
             variant={ProjectDropdownVariant.LINK}
+            onChange={onStatusUpdate}
           />
         </div>
 
@@ -30,6 +62,7 @@ export const RightSide = observer(() => {
           <ProjectDatePicker
             value={project.startDate}
             variant={ProjectDropdownVariant.LINK}
+            onChange={onStartDateUpdate}
           />
         </div>
 
@@ -39,6 +72,7 @@ export const RightSide = observer(() => {
           <ProjectDatePicker
             value={project.endDate}
             variant={ProjectDropdownVariant.LINK}
+            onChange={onEndDateUpdate}
           />
         </div>
 
@@ -47,6 +81,7 @@ export const RightSide = observer(() => {
 
           <TeamsDropdown
             value={project.teams}
+            onChange={onTeamChange}
             variant={ProjectDropdownVariant.LINK}
           />
         </div>

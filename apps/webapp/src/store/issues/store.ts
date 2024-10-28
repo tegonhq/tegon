@@ -46,14 +46,12 @@ export const IssuesStore: IAnyStateTreeNode = types
     getIssues() {
       return Array.from(self.issuesMap.values());
     },
-    getIssuesForState(stateId: string, teamId: string, showSubIssues: boolean) {
-      return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
-        showSubIssues
-          ? issue.teamId === teamId && issue.stateId === stateId
-          : issue.teamId === teamId &&
-            issue.stateId === stateId &&
-            !issue.parentId,
-      );
+    getIssuesForState(stateIds: string[], showSubIssues: boolean) {
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
+        const isSubIssue = showSubIssues ? !issue.parentId : true;
+
+        return stateIds.includes(issue.stateId) && isSubIssue;
+      });
     },
     getIssuesForUser(
       showSubIssues: boolean,
@@ -90,8 +88,8 @@ export const IssuesStore: IAnyStateTreeNode = types
     },
     getIssuesForPriority(
       priority: number,
-      teamId: string,
       showSubIssues: boolean,
+      teamId?: string,
     ) {
       return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
         const isSubIssue = showSubIssues ? !issue.parentId : true;
@@ -102,8 +100,8 @@ export const IssuesStore: IAnyStateTreeNode = types
     },
     getIssuesForLabel(
       labelId: string | undefined,
-      teamId: string,
       showSubIssues: boolean,
+      teamId?: string,
     ) {
       if (!labelId) {
         return Array.from(self.issuesMap.values()).filter(

@@ -3,6 +3,8 @@ import React from 'react';
 
 import type { IssueType } from 'common/types';
 
+import { useComputedWorkflows } from 'hooks/workflows';
+
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
 
@@ -12,9 +14,11 @@ import { useFilterIssues } from '../issues-utils';
 export const MyIssuesView = observer(() => {
   const user = React.useContext(UserContext);
   const { issuesStore } = useContextStore();
+  const { workflows } = useComputedWorkflows();
+
   const issues = useFilterIssues(
     issuesStore.getIssuesForUser(true, { userId: user.id }),
-    undefined,
+    workflows,
   );
 
   return (

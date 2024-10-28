@@ -4,6 +4,7 @@ import {
   BreadcrumbLink,
 } from '@tegonhq/ui/components/breadcrumb';
 import { Button } from '@tegonhq/ui/components/button';
+import { AddLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
@@ -43,8 +44,10 @@ export const Header = observer(({ title, isProjectView }: HeaderProps) => {
           <div>
             <Button
               variant="secondary"
+              className="gap-1"
               onClick={() => setNewProjectDialog(true)}
             >
+              <AddLine size={14} />
               Create project
             </Button>
           </div>

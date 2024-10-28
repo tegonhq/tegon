@@ -13,7 +13,11 @@ export function CategoryList({ workflows }: CategoryListProps) {
     <ScrollArea className="w-full h-full">
       <div className="flex flex-col gap-4 h-full pb-[100px]">
         {workflows.map((workflow: WorkflowType) => (
-          <CategoryViewList key={workflow.id} workflow={workflow} />
+          <CategoryViewList
+            key={workflow.name}
+            workflow={workflow}
+            workflows={workflows}
+          />
         ))}
       </div>
     </ScrollArea>

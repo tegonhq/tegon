@@ -54,7 +54,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
       <div className="h-[100vh] w-[100vw] flex">
         {!applicationStore.sidebarCollapsed && (
           <div className="min-w-[220px] flex flex-col">
-            <div className="flex flex-col py-4 px-6">
+            <div className="flex flex-col py-3 px-6">
               <div className="flex justify-between items-center">
                 <WorkspaceDropdown />
                 <Button

@@ -44,7 +44,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
 
   return (
     <header className="flex px-6  w-full items-center gap-2">
-      <div className="flex py-4 items-center">
+      <div className="flex py-3 items-center">
         <SidebarExpand />
         <Breadcrumb>
           {team && (

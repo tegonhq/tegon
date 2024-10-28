@@ -15,6 +15,7 @@ import type { LabelType } from 'common/types';
 import type { IssueType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
+import { useComputedWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -30,10 +31,12 @@ export const LabelListItem = observer(({ label }: LabelListItemProps) => {
   const [isOpen, setIsOpen] = React.useState(true);
   const issues = issuesStore.getIssuesForLabel(
     label.id,
-    currentTeam.id,
     applicationStore.displaySettings.showSubIssues,
+    currentTeam.id,
   );
-  const computedIssues = useFilterIssues(issues);
+  const { workflows } = useComputedWorkflows();
+
+  const computedIssues = useFilterIssues(issues, workflows);
 
   if (
     computedIssues.length === 0 &&
@@ -90,12 +93,13 @@ export const NoLabelList = observer(() => {
   const { issuesStore, applicationStore } = useContextStore();
   const team = useCurrentTeam();
   const [isOpen, setIsOpen] = React.useState(true);
+  const { workflows } = useComputedWorkflows();
 
   const issues = issuesStore.getIssuesForNoLabel(
     applicationStore.displaySettings.showSubIssues,
-    team.id,
+    team?.id,
   );
-  const computedIssues = useFilterIssues(issues);
+  const computedIssues = useFilterIssues(issues, workflows);
 
   if (
     computedIssues.length === 0 &&

@@ -18,11 +18,7 @@ export const RightSide = observer(() => {
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,
   );
-  const issues = issuesStore.getIssuesForState(
-    triageWorkflow.id,
-    currentTeam.id,
-    false,
-  );
+  const issues = issuesStore.getIssuesForState([triageWorkflow.id], false);
 
   return (
     <div className="p-6 flex flex-col items-center justify-center gap-2">

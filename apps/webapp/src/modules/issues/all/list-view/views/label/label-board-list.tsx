@@ -13,6 +13,7 @@ import type { LabelType } from 'common/types';
 import type { IssueType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
+import { useComputedWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -29,8 +30,9 @@ export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
     label.id,
     applicationStore.displaySettings.showSubIssues,
   );
-  const team = useCurrentTeam();
-  const computedIssues = useFilterIssues(issues, team.id);
+  const { workflows } = useComputedWorkflows();
+
+  const computedIssues = useFilterIssues(issues, workflows);
 
   if (
     computedIssues.length === 0 &&
@@ -87,9 +89,11 @@ export const NoLabelBoardList = observer(() => {
   const team = useCurrentTeam();
   const issues = issuesStore.getIssuesForNoLabel(
     applicationStore.displaySettings.showSubIssues,
-    team.id,
+    team?.id,
   );
-  const computedIssues = useFilterIssues(issues, team.id);
+  const { workflows } = useComputedWorkflows();
+
+  const computedIssues = useFilterIssues(issues, workflows);
 
   if (
     computedIssues.length === 0 &&

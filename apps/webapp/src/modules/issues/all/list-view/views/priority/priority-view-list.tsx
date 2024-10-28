@@ -14,6 +14,7 @@ import { PriorityIcons } from 'modules/issues/components';
 import { Priorities, type IssueType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
+import { useComputedWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -27,13 +28,15 @@ export const PriorityViewList = observer(
   ({ priority }: PriorityViewListProps) => {
     const { issuesStore, applicationStore } = useContextStore();
     const [isOpen, setIsOpen] = React.useState(true);
+    const { workflows } = useComputedWorkflows();
+
     const team = useCurrentTeam();
     const issues = issuesStore.getIssuesForPriority(
       priority,
-      team.id,
       applicationStore.displaySettings.showSubIssues,
+      team?.id,
     );
-    const computedIssues = useFilterIssues(issues, team.id);
+    const computedIssues = useFilterIssues(issues, workflows);
 
     if (
       computedIssues.length === 0 &&

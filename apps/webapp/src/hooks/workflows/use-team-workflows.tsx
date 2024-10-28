@@ -7,7 +7,7 @@ import { type WorkflowType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 
-import { useTeam } from '../teams/use-current-team';
+import { useCurrentTeam, useTeam } from '../teams/use-current-team';
 
 const categorySequence = [
   WorkflowCategoryEnum.BACKLOG,
@@ -96,4 +96,70 @@ export function useAllWorkflows(): WorkflowType[] | undefined {
   ).get();
 
   return workflows;
+}
+
+export function useComputedWorkflows(): {
+  workflowMap: Record<string, { teamId: string; workflow: WorkflowType }>;
+  uniqueWorkflowsByName: Record<string, WorkflowType>;
+  workflows: WorkflowType[];
+} {
+  const { workflowsStore } = useContextStore();
+  const team = useCurrentTeam();
+  const workflowCategories = Object.values(WorkflowCategoryEnum);
+
+  const getWorkflows = () => {
+    const workflowMap: Record<
+      string,
+      { teamId: string; workflow: WorkflowType }
+    > = {};
+    const uniqueWorkflowsByName: Record<string, WorkflowType> = {};
+
+    workflowsStore.workflows
+      .filter((workflow: WorkflowType) => {
+        return (
+          workflowCategories.includes(
+            workflow.category as WorkflowCategoryEnum,
+          ) &&
+          (!team || workflow.teamId === team.id) // Filter by team if defined
+        );
+      })
+      .forEach((workflow: WorkflowType) => {
+        // Use the workflow ID as the key for fast access
+        workflowMap[workflow.id] = {
+          teamId: workflow.teamId,
+          workflow, // Store the entire workflow object
+        };
+
+        // Group by workflow name while combining IDs
+        if (!uniqueWorkflowsByName[workflow.name]) {
+          uniqueWorkflowsByName[workflow.name] = {
+            ids: [],
+            ...workflow,
+            id: '',
+          }; // Store the first workflow object
+        }
+        if (!uniqueWorkflowsByName[workflow.name].ids.includes(workflow.id)) {
+          uniqueWorkflowsByName[workflow.name].ids.push(workflow.id);
+          uniqueWorkflowsByName[workflow.name].id =
+            uniqueWorkflowsByName[workflow.name].ids.join('_');
+        }
+      });
+
+    return {
+      workflowMap,
+      uniqueWorkflowsByName,
+      workflows: Object.values(uniqueWorkflowsByName),
+    };
+  };
+
+  const { workflowMap, uniqueWorkflowsByName } = React.useMemo(
+    () => computed(() => getWorkflows()),
+    [workflowsStore, team],
+  ).get();
+
+  return {
+    workflowMap,
+    uniqueWorkflowsByName,
+    workflows: Object.values(uniqueWorkflowsByName),
+  };
 }

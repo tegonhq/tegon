@@ -8,6 +8,7 @@ import {
 import { useFilterIssues } from 'modules/issues/issues-utils';
 
 import { useCurrentTeam } from 'hooks/teams';
+import { useComputedWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -23,9 +24,11 @@ interface OverviewInsightsProps {
 export function OverviewInsights({ title }: OverviewInsightsProps) {
   const { issuesStore } = useContextStore();
   const team = useCurrentTeam();
+  const { workflows } = useComputedWorkflows();
+
   const computedIssues = useFilterIssues(
     issuesStore.getIssuesForTeam(team.id),
-    team.id,
+    workflows,
   );
 
   return (
