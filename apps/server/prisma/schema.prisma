@@ -235,6 +235,12 @@ model Issue {
   team   Team   @relation(fields: [teamId], references: [id])
   teamId String
 
+  project      Project?   @relation(fields: [projectId], references: [id])
+  projectId    String?
+
+  projectMilestone      ProjectMilestone?   @relation(fields: [projectMilestoneId], references: [id])
+  projectMilestoneId    String?
+
   createdById String?
   updatedById String?
 
@@ -449,6 +455,7 @@ model Project {
   teams              String[]
 
   milestones ProjectMilestone[]
+  issues     Issue[]
 
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   workspaceId String
@@ -468,6 +475,8 @@ model ProjectMilestone {
 
   project   Project @relation(fields: [projectId], references: [id])
   projectId String
+
+  issues Issue[]
 
   @@unique([name, projectId])
 }

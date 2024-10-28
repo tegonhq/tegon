@@ -12,13 +12,20 @@ export function withApplicationStore(
   const ComponentWithApplicationStore = (props: any) => {
     const pathname = usePathname();
     const { applicationStore } = useContextStore();
+    const [loading, setLoading] = React.useState(false);
 
     React.useEffect(() => {
       if (pathname) {
+        setLoading(true);
         applicationStore.load(pathname);
+        setLoading(false);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
+
+    if (loading) {
+      return null;
+    }
 
     return <Component {...props} />;
   };
