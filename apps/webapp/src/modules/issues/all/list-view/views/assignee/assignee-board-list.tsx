@@ -15,6 +15,7 @@ import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 import type { UsersOnWorkspaceType } from 'common/types';
 import type { IssueType } from 'common/types';
 
+import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUserData } from 'hooks/users';
 import { useComputedWorkflows } from 'hooks/workflows';
@@ -22,7 +23,6 @@ import { useComputedWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { useProject } from 'hooks/projects';
 
 interface AssigneeBoardListProps {
   userOnWorkspace: UsersOnWorkspaceType;

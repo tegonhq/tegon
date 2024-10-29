@@ -23,6 +23,7 @@ import * as React from 'react';
 
 import { docsConfig } from './docs';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function CommandMenu({ ...props }: any) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);

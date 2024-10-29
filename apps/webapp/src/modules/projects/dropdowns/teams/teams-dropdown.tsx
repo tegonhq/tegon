@@ -10,7 +10,6 @@ import {
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
-import { TeamLine } from '@tegonhq/ui/icons';
 import * as React from 'react';
 
 import type { TeamType } from 'common/types';

@@ -13,13 +13,13 @@ import { PriorityIcons } from 'modules/issues/components';
 
 import { Priorities, type IssueType } from 'common/types';
 
+import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
 import { useComputedWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import { useProject } from 'hooks/projects';
 
 interface PriorityViewListProps {
   priority: number;
