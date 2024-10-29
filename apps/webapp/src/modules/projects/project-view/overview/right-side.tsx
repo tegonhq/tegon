@@ -1,6 +1,4 @@
-import { Button } from '@tegonhq/ui/components/button';
 import { Separator } from '@tegonhq/ui/components/separator';
-import { AddLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
@@ -14,6 +12,7 @@ import { TeamsDropdown } from 'modules/projects/dropdowns/teams';
 import { useProject } from 'hooks/projects';
 
 import { useUpdateProjectMutation } from 'services/projects';
+
 import { Milestones } from './milestones';
 
 export const RightSide = observer(() => {

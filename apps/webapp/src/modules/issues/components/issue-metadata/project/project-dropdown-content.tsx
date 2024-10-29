@@ -1,7 +1,6 @@
-import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
 import { CommandGroup } from '@tegonhq/ui/components/command';
-import { AssigneeLine, Project } from '@tegonhq/ui/icons';
+import { Project } from '@tegonhq/ui/icons';
 
 import type { ProjectType } from 'common/types';
 

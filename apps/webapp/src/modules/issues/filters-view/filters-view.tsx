@@ -1,5 +1,9 @@
 import { Button } from '@tegonhq/ui/components/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@tegonhq/ui/components/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@tegonhq/ui/components/tooltip';
 import { Filter } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';

@@ -4,11 +4,13 @@ import {
   BreadcrumbLink,
 } from '@tegonhq/ui/components/breadcrumb';
 import { Button } from '@tegonhq/ui/components/button';
-import { AddLine } from '@tegonhq/ui/icons';
+import { AddLine, DocumentLine, IssuesLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { SidebarExpand } from 'common/sidebar-expand';
+
+import { useProject } from 'hooks/projects';
 
 import { NewProjectDialog } from './new-project-dialog';
 
@@ -22,6 +24,7 @@ interface HeaderProps {
 export const Header = observer(
   ({ title, isProjectView, view, setView }: HeaderProps) => {
     const [newProjectDialog, setNewProjectDialog] = React.useState(false);
+    const project = useProject();
 
     return (
       <header className="flex px-6 w-full items-center gap-2">
@@ -32,21 +35,30 @@ export const Header = observer(
               <BreadcrumbItem>
                 <BreadcrumbLink>{title}</BreadcrumbLink>
               </BreadcrumbItem>
+              {isProjectView && (
+                <BreadcrumbItem>
+                  <BreadcrumbLink>{project.name}</BreadcrumbLink>
+                </BreadcrumbItem>
+              )}
             </Breadcrumb>
             {isProjectView && (
-              <div className="flex items-center ml-2 gap-1">
+              <div className="flex items-center ml-4 gap-1">
                 <Button
                   variant="secondary"
+                  className="gap-1"
                   isActive={view === 'overview'}
                   onClick={() => setView('overview')}
                 >
+                  <DocumentLine />
                   Overview
                 </Button>
                 <Button
                   variant="secondary"
+                  className="gap-1"
                   isActive={view === 'issues'}
                   onClick={() => setView('issues')}
                 >
+                  <IssuesLine />
                   Issues
                 </Button>
               </div>

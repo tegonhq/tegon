@@ -1,6 +1,10 @@
 import { Button } from '@tegonhq/ui/components/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@tegonhq/ui/components/tooltip';
 import { CreateIssueLine, HelpLine, SearchLine } from '@tegonhq/ui/icons';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@tegonhq/ui/components/tooltip';
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
@@ -16,7 +20,12 @@ interface BottomBarButtonProps {
   isActive?: boolean;
 }
 
-const BottomBarButton: React.FC<BottomBarButtonProps> = ({ icon, tooltip, onClick, isActive }) => (
+const BottomBarButton: React.FC<BottomBarButtonProps> = ({
+  icon,
+  tooltip,
+  onClick,
+  isActive,
+}) => (
   <Tooltip>
     <TooltipTrigger asChild>
       <Button
@@ -40,6 +49,7 @@ export function BottomBar() {
 
   useHotkeys(
     'c',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (e: any) => {
       setNewIssue(true);
       e.preventDefault();
