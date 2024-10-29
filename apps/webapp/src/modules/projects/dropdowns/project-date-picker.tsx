@@ -25,6 +25,18 @@ export function ProjectDatePicker({
   variant,
 }: ProjectDatePickerProps) {
   function getTrigger() {
+    if (variant === ProjectDropdownVariant.NO_ICON) {
+      return (
+        <Button
+          variant="link"
+          role="combobox"
+          className="flex items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary text-xs"
+        >
+          {value ? format(value, 'PP') : <CalendarLine className="mr-1" />}
+        </Button>
+      );
+    }
+
     if (variant === ProjectDropdownVariant.LINK) {
       return (
         <Button
@@ -33,7 +45,7 @@ export function ProjectDatePicker({
           className="flex items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary"
         >
           <CalendarLine className="mr-1" />
-          {value ? format(value, 'PPP') : text}
+          {value ? format(value, 'PP') : text}
         </Button>
       );
     }
@@ -41,7 +53,7 @@ export function ProjectDatePicker({
     return (
       <Button variant="link" className="gap-2 py-2">
         <CalendarLine />
-        {value ? format(value, 'PPP') : text}
+        {value ? format(value, 'PP') : text}
       </Button>
     );
   }
@@ -53,7 +65,9 @@ export function ProjectDatePicker({
         <Calendar
           mode="single"
           selected={new Date(value)}
-          onSelect={(date: Date) => onChange && onChange(date.toISOString())}
+          onSelect={(date: Date) =>
+            onChange && onChange(date ? date.toISOString() : undefined)
+          }
           initialFocus
         />
       </PopoverContent>

@@ -14,6 +14,7 @@ import { TeamsDropdown } from 'modules/projects/dropdowns/teams';
 import { useProject } from 'hooks/projects';
 
 import { useUpdateProjectMutation } from 'services/projects';
+import { Milestones } from './milestones';
 
 export const RightSide = observer(() => {
   const project = useProject();
@@ -93,12 +94,7 @@ export const RightSide = observer(() => {
 
         <Separator className="mt-4 mb-2" />
 
-        <div className="flex justify-between px-6 items-center">
-          <h3> Milestones</h3>
-          <Button variant="ghost" size="sm">
-            <AddLine size={14} />
-          </Button>
-        </div>
+        <Milestones />
       </div>
     </>
   );

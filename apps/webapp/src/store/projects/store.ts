@@ -53,6 +53,17 @@ export const ProjectsStore: IAnyStateTreeNode = types
       return self.projects.find((project) => project.id === id);
     },
 
+    getProjectWithTeamId(teamId: string) {
+      return self.projects.filter((project) => project.teams.includes(teamId));
+    },
+
+    hasProjects(teamId: string) {
+      return (
+        self.projects.filter((project) => project.teams.includes(teamId))
+          .length > 0
+      );
+    },
+
     get getProjects() {
       return self.projects;
     },

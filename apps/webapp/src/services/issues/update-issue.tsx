@@ -19,6 +19,8 @@ export interface UpdateIssueParams {
   teamId: string;
 
   parentId?: string;
+  projectId?: string;
+  projectMilestoneId?: string;
 
   issueRelation?: {
     issueId: string;

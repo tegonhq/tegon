@@ -18,6 +18,8 @@ export const Issue = types.model('Issue', {
   parentId: types.union(types.string, types.null),
   stateId: types.string,
   subscriberIds: types.array(types.string),
+  projectId: types.union(types.string, types.null, types.undefined),
+  projectMilestoneId: types.union(types.string, types.null, types.undefined),
   sourceMetadata: types.union(types.string, types.null, types.undefined),
 });
 

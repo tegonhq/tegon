@@ -46,7 +46,19 @@ export const ProjectMilestonesStore: IAnyStateTreeNode = types
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    getMilestonesForProject(projectId: string) {
+      return self.milestones.filter(
+        (milestone) => milestone.projectId === projectId,
+      );
+    },
+    getMilestonesForProjects(projectIds: string[]) {
+      return self.milestones.filter((milestone) =>
+        projectIds.includes(milestone.projectId),
+      );
+    },
+  }));
 
 export type ProjectMilestonesStoreType = Instance<
   typeof ProjectMilestonesStore

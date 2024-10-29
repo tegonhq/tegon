@@ -1,15 +1,15 @@
-import type { Project } from '@tegonhq/types';
+import type { ProjectMilestone } from '@tegonhq/types';
 
-import { updateProject } from '@tegonhq/services';
+import { createProjectMilestone } from '@tegonhq/services';
 import { useMutation } from 'react-query';
 
 interface MutationParams {
   onMutate?: () => void;
-  onSuccess?: (data: Project) => void;
+  onSuccess?: (data: ProjectMilestone) => void;
   onError?: (error: string) => void;
 }
 
-export function useUpdateProjectMutation({
+export function useCreateProjectMilestoneMutation({
   onMutate,
   onSuccess,
   onError,
@@ -25,11 +25,11 @@ export function useUpdateProjectMutation({
     onError && onError(errorText);
   };
 
-  const onMutationSuccess = (data: Project) => {
+  const onMutationSuccess = (data: ProjectMilestone) => {
     onSuccess && onSuccess(data);
   };
 
-  return useMutation(updateProject, {
+  return useMutation(createProjectMilestone, {
     onError: onMutationError,
     onMutate: onMutationTriggered,
     onSuccess: onMutationSuccess,

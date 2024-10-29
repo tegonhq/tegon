@@ -21,6 +21,7 @@ import {
 export enum ProjectDropdownVariant {
   DEFAULT = 'DEFAULT',
   LINK = 'LINK',
+  NO_ICON = 'NO_ICON',
 }
 
 interface ProjectStatusProps {

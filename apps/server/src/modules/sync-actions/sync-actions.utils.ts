@@ -146,7 +146,7 @@ export async function getWorkspaceId(
       });
       return project.workspaceId;
 
-    case ModelName.Project:
+    case ModelName.ProjectMilestone:
       const projectMilestone = await prisma.projectMilestone.findUnique({
         where: { id: modelId },
         include: { project: true },

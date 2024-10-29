@@ -252,8 +252,6 @@ export default class IssuesService {
       );
     }
 
-    console.log(otherIssueData);
-
     // Prepare the updated issue data
     const updatedIssueData = {
       ...(updatedDescription ? { description: updatedDescription } : {}),
