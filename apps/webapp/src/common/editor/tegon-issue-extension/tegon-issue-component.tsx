@@ -1,4 +1,5 @@
 import { NodeViewWrapper } from '@tiptap/react';
+import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import React from 'react';
@@ -11,7 +12,7 @@ import { useTeamWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const TegonIssueComponent = (props: any) => {
+export const TegonIssueComponent = observer((props: any) => {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { issuesStore, teamsStore } = useContextStore();
 
@@ -53,4 +54,4 @@ export const TegonIssueComponent = (props: any) => {
       </span>
     </NodeViewWrapper>
   );
-};
+});

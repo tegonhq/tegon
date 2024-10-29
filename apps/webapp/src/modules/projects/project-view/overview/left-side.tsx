@@ -9,7 +9,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { useEditorSuggestionItems } from 'modules/issues/components/use-editor-suggestion-items';
 
 import { getTiptapJSON } from 'common';
-import { SubIssueSelector } from 'common/editor';
+import { AiWritingExtension, SubIssueSelector } from 'common/editor';
 import { tegonIssueExtension } from 'common/editor/tegon-issue-extension';
 
 import { useProject } from 'hooks/projects';
@@ -45,7 +45,7 @@ export const LeftSide = observer(() => {
               value={project.description}
               onChange={onDescriptionChange}
               handlePaste={handlePaste}
-              extensions={[tegonIssueExtension]}
+              extensions={[tegonIssueExtension, AiWritingExtension]}
               className="min-h-[50px] mb-8 px-6 mt-3 text-md"
             >
               <EditorExtensions suggestionItems={suggestionItems}>

@@ -1,3 +1,4 @@
+import { WorkflowCategoryEnum } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { useEditor } from '@tegonhq/ui/components/editor/index';
 import {
@@ -6,6 +7,16 @@ import {
   TooltipTrigger,
 } from '@tegonhq/ui/components/tooltip';
 import { SubIssue } from '@tegonhq/ui/icons';
+import { useRouter } from 'next/router';
+
+import type { IssueType, WorkflowType } from 'common/types';
+
+import { useProject } from 'hooks/projects';
+import { useCurrentTeam, useTeamWithId } from 'hooks/teams';
+
+import { useCreateIssueMutation } from 'services/issues';
+
+import { useContextStore } from 'store/global-context-provider';
 
 export function isValidUrl(url: string) {
   try {
@@ -33,14 +44,57 @@ export function getUrlFromString(str: string) {
 
 export const SubIssueSelector = () => {
   const { editor } = useEditor();
+  const { query } = useRouter();
+  const cTeam = useCurrentTeam();
+  const project = useProject();
+  const teamId = cTeam ? cTeam.id : project.teams[0];
+  const team = useTeamWithId(teamId);
+  const { workflowsStore } = useContextStore();
+
+  const { mutate: createIssue } = useCreateIssueMutation({
+    onSuccess: (issue: IssueType) => {
+      const url = `http://app.tegon.ai/${query.workspaceSlug}/issue/${team.identifier}-${issue.number}`;
+
+      const selection = editor.view.state.selection;
+      editor
+        .chain()
+        .focus()
+        .insertContentAt(
+          {
+            from: selection.from,
+            to: selection.to,
+          },
+          {
+            type: 'tegonIssueExtension',
+            attrs: {
+              url,
+            },
+          },
+        )
+        .run();
+    },
+  });
 
   if (!editor) {
     return null;
   }
 
   const createSubIssue = () => {
-    // const selection = editor.state.selection;
-    // const text = editor.state.doc.cut(selection.from, selection.to);
+    const selection = editor.view.state.selection;
+    const text = editor.state.doc.textBetween(selection.from, selection.to);
+
+    const workflows = workflowsStore.getWorkflowsForTeam(team.id);
+    const backlog = workflows.find(
+      (workflow: WorkflowType) =>
+        workflow.category === WorkflowCategoryEnum.BACKLOG,
+    );
+
+    createIssue({
+      description: text,
+      teamId: team.id,
+      stateId: backlog.id,
+      projectId: project?.id,
+    });
   };
 
   return (

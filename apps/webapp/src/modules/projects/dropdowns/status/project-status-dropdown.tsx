@@ -50,7 +50,7 @@ export function ProjectStatusDropdown({
           <status.Icon
             size={18}
             color={getWorkflowColorWithNumber(status.color).color}
-            className="mr-2"
+            className="mr-1"
           />
           {status.name}
         </Button>

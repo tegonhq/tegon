@@ -46,7 +46,11 @@ export const RightSide = observer(() => {
   };
 
   const dueDateChange = (dueDate: Date) => {
-    updateIssue({ id: issue.id, dueDate, teamId: issue.teamId });
+    updateIssue({
+      id: issue.id,
+      dueDate: dueDate ? dueDate.toISOString() : undefined,
+      teamId: issue.teamId,
+    });
   };
 
   return (

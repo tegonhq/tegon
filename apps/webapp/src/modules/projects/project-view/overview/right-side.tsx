@@ -1,3 +1,6 @@
+import { Button } from '@tegonhq/ui/components/button';
+import { Separator } from '@tegonhq/ui/components/separator';
+import { AddLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
@@ -46,8 +49,10 @@ export const RightSide = observer(() => {
 
   return (
     <>
-      <div className="grow p-6 flex flex-col gap-4">
-        <div className="flex flex-col items-start">
+      <div className="grow py-6 flex flex-col gap-4">
+        <h3 className="px-6"> Project details </h3>
+
+        <div className="flex flex-col items-start px-6">
           <label className="text-xs">Status</label>
           <ProjectStatusDropdown
             value={project.status}
@@ -56,7 +61,7 @@ export const RightSide = observer(() => {
           />
         </div>
 
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start px-6">
           <label className="text-xs">Start Date</label>
 
           <ProjectDatePicker
@@ -66,7 +71,7 @@ export const RightSide = observer(() => {
           />
         </div>
 
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start px-6">
           <label className="text-xs">End Date</label>
 
           <ProjectDatePicker
@@ -76,7 +81,7 @@ export const RightSide = observer(() => {
           />
         </div>
 
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start px-6">
           <label className="text-xs">Teams</label>
 
           <TeamsDropdown
@@ -84,6 +89,15 @@ export const RightSide = observer(() => {
             onChange={onTeamChange}
             variant={ProjectDropdownVariant.LINK}
           />
+        </div>
+
+        <Separator className="mt-4 mb-2" />
+
+        <div className="flex justify-between px-6 items-center">
+          <h3> Milestones</h3>
+          <Button variant="ghost" size="sm">
+            <AddLine size={14} />
+          </Button>
         </div>
       </div>
     </>

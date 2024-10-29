@@ -8,8 +8,8 @@ import { useCurrentTeam } from 'hooks/teams';
 import { ViewEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
-import { LabelBoard } from './label-board-view';
-import { LabelListView } from './label-list-view';
+import { LabelBoard } from './label-board';
+import { LabelList } from './label-list';
 
 export const LabelView = observer(() => {
   const team = useCurrentTeam();
@@ -25,7 +25,7 @@ export const LabelView = observer(() => {
     : labels;
 
   return view === ViewEnum.list ? (
-    <LabelListView labels={labels} />
+    <LabelList labels={labels} />
   ) : (
     <LabelBoard labels={labels} />
   );

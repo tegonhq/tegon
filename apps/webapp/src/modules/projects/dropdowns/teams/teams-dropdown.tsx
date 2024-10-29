@@ -9,6 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
+import { TeamIcon } from '@tegonhq/ui/components/team-icon';
 import { TeamLine } from '@tegonhq/ui/icons';
 import * as React from 'react';
 
@@ -42,7 +43,7 @@ export function TeamsDropdown({ value, onChange, variant }: TeamsProps) {
           aria-expanded={open}
           className="flex items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary"
         >
-          <TeamLine size={16} className="mr-2" />
+          <TeamIcon name={teams[0].name} className="mr-1" />
           {teams.length > 1
             ? `${teams.map((team) => team.identifier).join(', ')}`
             : `${teams[0].name}`}
@@ -57,7 +58,8 @@ export function TeamsDropdown({ value, onChange, variant }: TeamsProps) {
         aria-expanded={open}
         className="flex items-center gap-1 justify-between shadow-none focus-visible:ring-1 focus-visible:border-primary "
       >
-        <TeamLine size={16} />
+        <TeamIcon name={teams[0].name} />
+
         {teams.length > 1
           ? `${teams.map((team) => team.identifier).join(', ')}`
           : `${teams[0].name}`}

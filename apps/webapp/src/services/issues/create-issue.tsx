@@ -5,7 +5,7 @@ import type { IssueType } from 'common/types';
 import { ajaxPost } from 'services/utils';
 
 export interface CreateIssueParams {
-  title: string;
+  title?: string;
   description: string;
   // Used while creating new issue
   descriptionString?: string;
@@ -16,6 +16,7 @@ export interface CreateIssueParams {
   assigneeId?: string;
   teamId: string;
   parentId?: string;
+  projectId?: string;
 }
 
 export function createIssue({ teamId, ...otherParams }: CreateIssueParams) {

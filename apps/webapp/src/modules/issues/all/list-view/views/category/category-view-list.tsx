@@ -15,6 +15,8 @@ import type { WorkflowType } from 'common/types';
 import type { IssueType } from 'common/types';
 import { getWorkflowIcon } from 'common/workflow-icons';
 
+import { useProject } from 'hooks/projects';
+
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
@@ -29,9 +31,12 @@ export const CategoryViewList = observer(
     const CategoryIcon = getWorkflowIcon(workflow);
     const [isOpen, setIsOpen] = React.useState(true);
     const { issuesStore, applicationStore } = useContextStore();
+    const project = useProject();
+
     const issues = issuesStore.getIssuesForState(
       workflow.ids,
       applicationStore.displaySettings.showSubIssues,
+      project?.id,
     );
     const computedIssues = useFilterIssues(issues, workflows);
 

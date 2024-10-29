@@ -43,27 +43,58 @@ export const IssuesStore: IAnyStateTreeNode = types
     return { update, deleteById, load, updateIssue };
   })
   .views((self) => ({
-    getIssues() {
-      return Array.from(self.issuesMap.values());
+    getIssues({
+      subIssue,
+      teamId,
+      projectId,
+    }: {
+      subIssue?: boolean;
+      teamId?: string;
+      projectId?: string;
+    }) {
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
+        const isSubIssue = subIssue ? !issue.parentId : true;
+        const isFromProject = projectId ? issue.projectId === projectId : true;
+        const isTeamIssues = teamId ? issue.teamId === teamId : true;
+
+        return isTeamIssues && isSubIssue && isFromProject;
+      });
     },
-    getIssuesForState(stateIds: string[], showSubIssues: boolean) {
+    getIssuesForState(
+      stateIds: string[],
+      showSubIssues: boolean,
+      projectId?: string,
+    ) {
       return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
         const isSubIssue = showSubIssues ? !issue.parentId : true;
+        const isFromProject = projectId ? issue.projectId === projectId : true;
 
-        return stateIds.includes(issue.stateId) && isSubIssue;
+        return stateIds.includes(issue.stateId) && isSubIssue && isFromProject;
       });
     },
     getIssuesForUser(
       showSubIssues: boolean,
-      { userId, teamId }: { userId?: string; teamId?: string },
+      {
+        userId,
+        teamId,
+        projectId,
+      }: { userId?: string; teamId?: string; projectId?: string },
     ) {
       if (userId) {
         return Array.from(self.issuesMap.values()).filter(
           (issue: IssueType) => {
             const isTeamIssues = teamId ? issue.teamId === teamId : true;
             const isSubIssue = showSubIssues ? !issue.parentId : true;
+            const isFromProject = projectId
+              ? issue.projectId === projectId
+              : true;
 
-            return issue.assigneeId === userId && isSubIssue && isTeamIssues;
+            return (
+              issue.assigneeId === userId &&
+              isSubIssue &&
+              isTeamIssues &&
+              isFromProject
+            );
           },
         );
       }
@@ -89,27 +120,41 @@ export const IssuesStore: IAnyStateTreeNode = types
     getIssuesForPriority(
       priority: number,
       showSubIssues: boolean,
-      teamId?: string,
+      { teamId, projectId }: { teamId?: string; projectId?: string },
     ) {
       return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
         const isSubIssue = showSubIssues ? !issue.parentId : true;
         const isTeamIssues = teamId ? issue.teamId === teamId : true;
+        const isFromProject = projectId ? issue.projectId === projectId : true;
 
-        return issue.priority === priority && isTeamIssues && isSubIssue;
+        return (
+          issue.priority === priority &&
+          isTeamIssues &&
+          isSubIssue &&
+          isFromProject
+        );
       });
     },
     getIssuesForLabel(
       labelId: string | undefined,
       showSubIssues: boolean,
-      teamId?: string,
+      { teamId, projectId }: { teamId?: string; projectId?: string },
     ) {
       if (!labelId) {
         return Array.from(self.issuesMap.values()).filter(
           (issue: IssueType) => {
             const isSubIssue = showSubIssues ? !issue.parentId : true;
             const isTeamIssues = teamId ? issue.teamId === teamId : true;
+            const isFromProject = projectId
+              ? issue.projectId === projectId
+              : true;
 
-            return issue.labelIds.length === 0 && isSubIssue && isTeamIssues;
+            return (
+              issue.labelIds.length === 0 &&
+              isSubIssue &&
+              isTeamIssues &&
+              isFromProject
+            );
           },
         );
       }

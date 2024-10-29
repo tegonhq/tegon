@@ -32,7 +32,7 @@ export function ProjectDatePicker({
           role="combobox"
           className="flex items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary"
         >
-          <CalendarLine className="mr-2" />
+          <CalendarLine className="mr-1" />
           {value ? format(value, 'PPP') : text}
         </Button>
       );

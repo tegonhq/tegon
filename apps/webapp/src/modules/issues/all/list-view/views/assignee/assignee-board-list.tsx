@@ -22,6 +22,7 @@ import { useComputedWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
+import { useProject } from 'hooks/projects';
 
 interface AssigneeBoardListProps {
   userOnWorkspace: UsersOnWorkspaceType;
@@ -32,10 +33,15 @@ export const AssigneeBoardList = observer(
     const { issuesStore, applicationStore } = useContextStore();
     const team = useCurrentTeam();
     const { workflows } = useComputedWorkflows();
+    const project = useProject();
 
     const issues = issuesStore.getIssuesForUser(
       applicationStore.displaySettings.showSubIssues,
-      { userId: userOnWorkspace.userId, teamId: team?.id },
+      {
+        userId: userOnWorkspace.userId,
+        teamId: team?.id,
+        projectId: project?.id,
+      },
     );
     const { user, isLoading } = useUserData(userOnWorkspace.userId);
     const computedIssues = useFilterIssues(issues, workflows);
@@ -100,10 +106,11 @@ export const NoAssigneeView = observer(() => {
   const { issuesStore, applicationStore } = useContextStore();
   const team = useCurrentTeam();
   const { workflows } = useComputedWorkflows();
+  const project = useProject();
 
   const issues = issuesStore.getIssuesForUser(
     applicationStore.displaySettings.showSubIssues,
-    { userId: undefined, teamId: team?.id },
+    { userId: undefined, teamId: team?.id, projectId: project?.id },
   );
   const computedIssues = useFilterIssues(issues, workflows);
 

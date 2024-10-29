@@ -15,51 +15,65 @@ import { NewProjectDialog } from './new-project-dialog';
 interface HeaderProps {
   title: string;
   isProjectView?: boolean;
+  view?: string;
+  setView: (view: string) => void;
 }
 
-export const Header = observer(({ title, isProjectView }: HeaderProps) => {
-  const [newProjectDialog, setNewProjectDialog] = React.useState(false);
+export const Header = observer(
+  ({ title, isProjectView, view, setView }: HeaderProps) => {
+    const [newProjectDialog, setNewProjectDialog] = React.useState(false);
 
-  return (
-    <header className="flex px-6 w-full items-center gap-2">
-      <div className="flex gap-2 py-3 items-center w-full">
-        <div className="flex grow justify-start items-center">
-          <SidebarExpand />
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <BreadcrumbLink>{title}</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
-          {isProjectView && (
-            <div className="flex items-center ml-2 gap-1">
-              <Button variant="secondary" isActive>
-                Overview
+    return (
+      <header className="flex px-6 w-full items-center gap-2">
+        <div className="flex gap-2 py-3 items-center w-full">
+          <div className="flex grow justify-start items-center">
+            <SidebarExpand />
+            <Breadcrumb>
+              <BreadcrumbItem>
+                <BreadcrumbLink>{title}</BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
+            {isProjectView && (
+              <div className="flex items-center ml-2 gap-1">
+                <Button
+                  variant="secondary"
+                  isActive={view === 'overview'}
+                  onClick={() => setView('overview')}
+                >
+                  Overview
+                </Button>
+                <Button
+                  variant="secondary"
+                  isActive={view === 'issues'}
+                  onClick={() => setView('issues')}
+                >
+                  Issues
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {!isProjectView && (
+            <div>
+              <Button
+                variant="secondary"
+                className="gap-1"
+                onClick={() => setNewProjectDialog(true)}
+              >
+                <AddLine size={14} />
+                Create project
               </Button>
-              <Button variant="secondary"> Issues</Button>
             </div>
           )}
         </div>
 
-        {!isProjectView && (
-          <div>
-            <Button
-              variant="secondary"
-              className="gap-1"
-              onClick={() => setNewProjectDialog(true)}
-            >
-              <AddLine size={14} />
-              Create project
-            </Button>
-          </div>
+        {newProjectDialog && (
+          <NewProjectDialog
+            open={newProjectDialog}
+            setOpen={setNewProjectDialog}
+          />
         )}
-      </div>
-
-      {newProjectDialog && (
-        <NewProjectDialog
-          open={newProjectDialog}
-          setOpen={setNewProjectDialog}
-        />
-      )}
-    </header>
-  );
-});
+      </header>
+    );
+  },
+);

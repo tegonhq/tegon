@@ -26,6 +26,9 @@ export interface IssueType {
   subscriberIds: string[];
   sourceMetadata?: string;
 
+  projectId?: string;
+  projectMilestoneId?: string;
+
   // for frontend usage
   children?: IssueType[];
   parent?: IssueType;

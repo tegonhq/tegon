@@ -13,7 +13,7 @@ export interface UpdateIssueParams {
   priority?: number;
 
   labelIds?: string[];
-  dueDate?: Date;
+  dueDate?: string;
   stateId?: string;
   assigneeId?: string;
   teamId: string;
