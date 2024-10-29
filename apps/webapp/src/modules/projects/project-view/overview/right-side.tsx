@@ -1,4 +1,5 @@
 import { Separator } from '@tegonhq/ui/components/separator';
+import { useToast } from '@tegonhq/ui/components/use-toast';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
@@ -18,6 +19,7 @@ import { Milestones } from './milestones';
 export const RightSide = observer(() => {
   const project = useProject();
   const { mutate: updateProject } = useUpdateProjectMutation({});
+  const { toast } = useToast();
 
   const onStatusUpdate = (status: string) => {
     updateProject({
@@ -41,6 +43,14 @@ export const RightSide = observer(() => {
   };
 
   const onTeamChange = (teams: string[]) => {
+    if (teams.length === 0) {
+      toast({
+        title: 'Error!',
+        description: 'Atleast one team should be there',
+      });
+      return;
+    }
+
     updateProject({
       teams,
       projectId: project.id,

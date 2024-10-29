@@ -5,6 +5,8 @@ import * as React from 'react';
 
 import { type WorkflowType } from 'common/types';
 
+import { useProject } from 'hooks/projects';
+
 import { useContextStore } from 'store/global-context-provider';
 
 import { useCurrentTeam, useTeam } from '../teams/use-current-team';
@@ -105,7 +107,7 @@ export function useComputedWorkflows(): {
 } {
   const { workflowsStore } = useContextStore();
   const team = useCurrentTeam();
-  const workflowCategories = Object.values(WorkflowCategoryEnum);
+  const project = useProject();
 
   const getWorkflows = () => {
     const workflowMap: Record<
@@ -117,10 +119,10 @@ export function useComputedWorkflows(): {
     workflowsStore.workflows
       .filter((workflow: WorkflowType) => {
         return (
-          workflowCategories.includes(
-            workflow.category as WorkflowCategoryEnum,
-          ) &&
-          (!team || workflow.teamId === team.id) // Filter by team if defined
+          !team ||
+          (project
+            ? project.teams.includes(workflow.teamId)
+            : workflow.teamId === team.id) // Check team.id or project.teams
         );
       })
       .forEach((workflow: WorkflowType) => {
