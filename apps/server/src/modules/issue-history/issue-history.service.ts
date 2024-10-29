@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
-import { IssueHistory } from '@tegonhq/types';
+import { IssueHistory, IssueHistoryData } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
-
-import { IssueHistoryData } from './issue-history.interface';
 
 @Injectable()
 export default class IssuesHistoryService {
@@ -40,8 +38,17 @@ export default class IssuesHistoryService {
         where: { id: lastIssueHistory.id },
         data: {
           ...Object.fromEntries(
-            // TODO (harshith): Check this unused var
-            Object.entries(otherData).filter(([_, value]) => {
+            Object.entries(otherData).filter(([key, value]) => {
+              const isToField = key.startsWith('to');
+              const isFromField = key.startsWith('from');
+              if (isToField) {
+                const fromField =
+                  `from${key.slice(2)}` as keyof typeof otherData;
+                return value !== null || otherData[fromField] !== null;
+              } else if (isFromField) {
+                const toField = `to${key.slice(4)}` as keyof typeof otherData;
+                return value !== null || otherData[toField] !== null;
+              }
               return value !== null;
             }),
           ),

@@ -313,6 +313,10 @@ model IssueHistory {
   toParentId      String?
   fromTeamId      String?
   toTeamId        String?
+  fromProjectId    String?
+  toProjectId      String?
+  fromProjectMilestoneId  String?
+  toProjectMilestoneId    String?
   relationChanges Json?
 }
 
