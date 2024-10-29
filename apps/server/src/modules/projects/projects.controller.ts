@@ -72,12 +72,6 @@ export class ProjectsController {
     );
   }
 
-  @Delete(':projectId')
-  @UseGuards(AuthGuard)
-  async deleteProject(@Param() projectParams: ProjectRequestParamsDto) {
-    return await this.projects.deleteProject(projectParams.projectId);
-  }
-
   @Delete('milestone/:projectMilestoneId')
   @UseGuards(AuthGuard)
   async deleteProjectMilestone(
@@ -86,5 +80,11 @@ export class ProjectsController {
     return await this.projects.deleteProjectMilestone(
       projectMilestoneParams.projectMilestoneId,
     );
+  }
+
+  @Delete(':projectId')
+  @UseGuards(AuthGuard)
+  async deleteProject(@Param() projectParams: ProjectRequestParamsDto) {
+    return await this.projects.deleteProject(projectParams.projectId);
   }
 }

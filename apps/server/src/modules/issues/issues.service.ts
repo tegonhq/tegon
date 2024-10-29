@@ -273,13 +273,13 @@ export default class IssuesService {
           : { parent: { connect: { id: parentId } } }
         : {}),
 
-      ...(projectId
+      ...('projectId' in issueData
         ? projectId === null
           ? { project: { disconnect: true } }
           : { project: { connect: { id: projectId } } }
         : {}),
 
-      ...(projectMilestoneId
+      ...('projectMilestoneId' in issueData
         ? projectMilestoneId === null
           ? { projectMilestone: { disconnect: true } }
           : { projectMilestone: { connect: { id: projectMilestoneId } } }

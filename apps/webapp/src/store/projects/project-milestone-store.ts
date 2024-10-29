@@ -48,6 +48,9 @@ export const ProjectMilestonesStore: IAnyStateTreeNode = types
     return { update, deleteById, load };
   })
   .views((self) => ({
+    getMilestoneWithId(milestoneId: string) {
+      return self.milestones.find((milestone) => milestone.id === milestoneId);
+    },
     getMilestonesForProject(projectId: string) {
       return self.milestones.filter(
         (milestone) => milestone.projectId === projectId,

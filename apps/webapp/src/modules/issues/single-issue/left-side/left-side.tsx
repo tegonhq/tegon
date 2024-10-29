@@ -84,7 +84,7 @@ export const LeftSide = observer(() => {
               className="min-h-[50px] mb-8 px-6 mt-3 text-md"
             >
               <EditorExtensions suggestionItems={suggestionItems}>
-                <SubIssueSelector />
+                <SubIssueSelector parentId={issue.id} />
               </EditorExtensions>
             </Editor>
 

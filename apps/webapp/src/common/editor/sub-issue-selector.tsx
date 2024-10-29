@@ -42,7 +42,11 @@ export function getUrlFromString(str: string) {
   return null;
 }
 
-export const SubIssueSelector = () => {
+interface SubIssueSelectorProps {
+  parentId?: string;
+}
+
+export const SubIssueSelector = ({ parentId }: SubIssueSelectorProps) => {
   const { editor } = useEditor();
   const { query } = useRouter();
   const cTeam = useCurrentTeam();
@@ -94,6 +98,7 @@ export const SubIssueSelector = () => {
       teamId: team.id,
       stateId: backlog.id,
       projectId: project?.id,
+      parentId,
     });
   };
 
@@ -109,7 +114,9 @@ export const SubIssueSelector = () => {
             <SubIssue size={16} />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom">Create sub-issues</TooltipContent>
+        <TooltipContent side="bottom">
+          Create {parentId ? 'sub-issue' : 'issue'}
+        </TooltipContent>
       </Tooltip>
     </div>
   );

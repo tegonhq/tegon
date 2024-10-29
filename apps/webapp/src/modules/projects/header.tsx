@@ -12,13 +12,14 @@ import { SidebarExpand } from 'common/sidebar-expand';
 
 import { useProject } from 'hooks/projects';
 
+import { ProjectDetailsDropdown } from './dropdowns/project-details-dropdown';
 import { NewProjectDialog } from './new-project-dialog';
 
 interface HeaderProps {
   title: string;
   isProjectView?: boolean;
   view?: string;
-  setView: (view: string) => void;
+  setView?: (view: string) => void;
 }
 
 export const Header = observer(
@@ -41,8 +42,9 @@ export const Header = observer(
                 </BreadcrumbItem>
               )}
             </Breadcrumb>
+            <ProjectDetailsDropdown />
             {isProjectView && (
-              <div className="flex items-center ml-4 gap-1">
+              <div className="flex items-center ml-2 gap-1">
                 <Button
                   variant="secondary"
                   className="gap-1"

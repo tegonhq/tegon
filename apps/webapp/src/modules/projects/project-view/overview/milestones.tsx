@@ -36,7 +36,10 @@ import type { ProjectMilestoneType } from 'common/types';
 
 import { useProject } from 'hooks/projects';
 
-import { useCreateProjectMilestoneMutation } from 'services/projects';
+import {
+  useCreateProjectMilestoneMutation,
+  useDeleteProjectMilestoneMutation,
+} from 'services/projects';
 import { useUpdateProjectMilestoneMutation } from 'services/projects/update-project-milestone';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -52,6 +55,7 @@ export const MilestoneItem = observer(
     const [deleteOpen, setDeleteOpen] = React.useState(false);
 
     const { mutate: updateMilestone } = useUpdateProjectMilestoneMutation({});
+    const { mutate: deleteMilestone } = useDeleteProjectMilestoneMutation({});
 
     const onChangeDate = (date: string) => {
       updateMilestone({
@@ -112,7 +116,11 @@ export const MilestoneItem = observer(
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => {}}>
+                <AlertDialogAction
+                  onClick={() => {
+                    deleteMilestone(milestone.id);
+                  }}
+                >
                   Continue
                 </AlertDialogAction>
               </AlertDialogFooter>

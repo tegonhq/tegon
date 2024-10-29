@@ -4,6 +4,8 @@ import { AppLayout } from 'common/layouts/app-layout';
 import { ContentBox } from 'common/layouts/content-box';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
+import { useProject } from 'hooks/projects';
+
 import { ProjectIssues } from './issues';
 import { Overview } from './overview';
 import { RightSide } from './overview/right-side';
@@ -11,6 +13,11 @@ import { Header } from '../header';
 
 export const ProjectView = withApplicationStore(() => {
   const [view, setView] = React.useState('overview');
+  const project = useProject();
+
+  if (!project) {
+    return <h2>No project found</h2>;
+  }
 
   return (
     <main className="flex flex-col h-[100vh]">
