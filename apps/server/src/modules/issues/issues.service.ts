@@ -224,6 +224,8 @@ export default class IssuesService {
       sourceMetadata,
       description,
       descriptionMarkdown,
+      projectId,
+      projectMilestoneId,
       ...otherIssueData
     } = issueData;
 
@@ -261,7 +263,10 @@ export default class IssuesService {
       ),
       updatedById: userId,
       ...otherIssueData,
-      ...(parentId ? { parent: { connect: { id: parentId } } } : { parentId }),
+      ...(projectId ? { project: { connect: { id: projectId } } } : {}),
+      ...(projectMilestoneId
+        ? { projectMilestone: { connect: { id: projectMilestoneId } } }
+        : {}),
       ...(linkIssueData && {
         linkedIssue:
           linkedIssues.length > 0
