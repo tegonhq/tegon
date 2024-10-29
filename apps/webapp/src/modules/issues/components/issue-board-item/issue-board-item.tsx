@@ -22,6 +22,7 @@ import { useContextStore } from 'store/global-context-provider';
 
 import { IssueRelations } from './issue-relations';
 import { IssueLabels } from '../issue-list-item/issue-labels';
+import { IssueProject } from '../issue-list-item/issue-project';
 
 interface BoardIssueItemProps {
   issueId: string;
@@ -103,6 +104,10 @@ export const BoardIssueItem = observer(
         </div>
 
         <IssueLabels labelIds={issue.labelIds} />
+        <IssueProject
+          projectId={issue.projectId}
+          projectMilestoneId={issue.projectMilestoneId}
+        />
 
         <IssueRelations issue={issue} />
 

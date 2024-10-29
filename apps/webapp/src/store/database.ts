@@ -2,7 +2,12 @@
 
 import Dexie from 'dexie';
 
-import type { ActionType, IntegrationAccountType } from 'common/types';
+import type {
+  ActionType,
+  IntegrationAccountType,
+  ProjectMilestoneType,
+  ProjectType,
+} from 'common/types';
 import type {
   IssueType,
   IssueHistoryType,
@@ -35,11 +40,13 @@ export class TegonDatabase extends Dexie {
   notifications: Dexie.Table<NotificationType, string>;
   views: Dexie.Table<ViewType, string>;
   issueSuggestions: Dexie.Table<IssueSuggestionType, string>;
+  projects: Dexie.Table<ProjectType, string>;
+  projectMilestones: Dexie.Table<ProjectMilestoneType, string>;
 
   constructor(databaseName: string) {
     super(databaseName);
 
-    this.version(7).stores({
+    this.version(9).stores({
       [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug',
       [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',
@@ -47,7 +54,7 @@ export class TegonDatabase extends Dexie {
       [MODELS.Workflow]:
         'id,createdAt,updatedAt,name,position,color,category,teamId,description',
       [MODELS.Issue]:
-        'id,createdAt,updatedAt,title,number,description,priority,dueDate,sortOrder,estimate,teamId,createdById,assigneeId,labelIds,parentId,stateId,sourceMetadata',
+        'id,createdAt,updatedAt,title,number,description,priority,dueDate,sortOrder,estimate,teamId,createdById,assigneeId,labelIds,parentId,stateId,sourceMetadata.projectId,projectMilestoneId',
       [MODELS.UsersOnWorkspaces]:
         'id,createdAt,updatedAt,userId,workspaceId,teamIds',
       [MODELS.IssueHistory]:
@@ -68,6 +75,10 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,issueId,suggestedLabelIds,suggestedAssigneeId',
       [MODELS.Action]:
         'id,createdAt,updatedAt,workspaceId,config,data,status,version,name,description,integrations,createdById,slug,isDev,isPersonal',
+      [MODELS.Project]:
+        'id,createdAt,updatedAt,workspaceId,name,description,status,startDate,endDate,leadUserId,teams',
+      [MODELS.ProjectMilestone]:
+        'id,createdAt,updatedAt,projectId,name,description,endDate',
     });
 
     this.workspaces = this.table(MODELS.Workspace);
@@ -85,6 +96,8 @@ export class TegonDatabase extends Dexie {
     this.views = this.table(MODELS.View);
     this.issueSuggestions = this.table(MODELS.IssueSuggestion);
     this.actions = this.table(MODELS.Action);
+    this.projects = this.table(MODELS.Project);
+    this.projectMilestones = this.table(MODELS.ProjectMilestone);
   }
 }
 

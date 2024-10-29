@@ -15,7 +15,7 @@ import type { WorkflowType } from 'common/types';
 import type { IssueType } from 'common/types';
 import { getWorkflowIcon } from 'common/workflow-icons';
 
-import { useCurrentTeam } from 'hooks/teams';
+import { useProject } from 'hooks/projects';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -23,19 +23,21 @@ import { useFilterIssues } from '../../../../issues-utils';
 
 interface CategoryBoardItemProps {
   workflow: WorkflowType;
+  workflows: WorkflowType[];
 }
 
 export const CategoryBoardList = observer(
-  ({ workflow }: CategoryBoardItemProps) => {
+  ({ workflow, workflows }: CategoryBoardItemProps) => {
     const CategoryIcon = getWorkflowIcon(workflow);
-    const currentTeam = useCurrentTeam();
     const { issuesStore, applicationStore } = useContextStore();
+    const project = useProject();
+
     const issues = issuesStore.getIssuesForState(
-      workflow.id,
-      currentTeam.id,
+      workflow.ids,
       applicationStore.displaySettings.showSubIssues,
+      project?.id,
     );
-    const computedIssues = useFilterIssues(issues, currentTeam.id);
+    const computedIssues = useFilterIssues(issues, workflows);
 
     if (
       computedIssues.length === 0 &&
@@ -45,7 +47,7 @@ export const CategoryBoardList = observer(
     }
 
     return (
-      <BoardColumn key={workflow.id} id={workflow.id}>
+      <BoardColumn key={workflow.name} id={workflow.name}>
         <div className="flex flex-col max-h-[100%]">
           <div className="flex gap-1 items-center mb-2">
             <div

@@ -23,6 +23,7 @@ import { useUpdateIssueMutation } from 'services/issues';
 import { useContextStore } from 'store/global-context-provider';
 
 import { IssueLabels } from './issue-labels';
+import { IssueProject } from './issue-project';
 import { IssueRelations, View } from './issue-relations';
 import { getRelationIssues, useSortIssues } from './utils';
 
@@ -183,12 +184,16 @@ export const IssueListItem = observer(
                           {formatDateToDayMonth(issue.dueDate)}
                         </div>
                       )}
+                      <IssueProject
+                        projectId={issue.projectId}
+                        projectMilestoneId={issue.projectMilestoneId}
+                      />
                       <IssueLabels labelIds={issue.labelIds} />
                     </div>
                   </div>
 
-                  <div className="flex shrink-0 items-center gap-8">
-                    <div className="w-[80px]">
+                  <div className="flex shrink-0 items-center">
+                    <div className="w-[80px] mr-8">
                       <IssuePriorityDropdown
                         value={issue.priority ?? 0}
                         onChange={priorityChange}

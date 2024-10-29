@@ -93,7 +93,7 @@ export function IssueLabelDropdownContent({
                     style={{ backgroundColor: label.color }}
                     className="w-2 h-2"
                   />
-                  {label.name}
+                  <span className="grow">{label.name}</span>
                 </label>
               </div>
             </DropdownItem>

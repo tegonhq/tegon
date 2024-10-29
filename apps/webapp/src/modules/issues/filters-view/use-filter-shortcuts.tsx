@@ -10,6 +10,7 @@ const LOCAL_SCOPE = 'FILTERS';
 
 export const useFilterShorcuts = (
   { onEscape, onF }: UseFiltershorcutsProps,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dependencies: any[],
 ) => {
   // Shortcuts

@@ -6,6 +6,7 @@ import {
   FilterValue,
   GetIssuesByFilterDTO,
   Issue,
+  IssueHistoryData,
   WorkflowCategory,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
@@ -13,7 +14,6 @@ import { PrismaService } from 'nestjs-prisma';
 import { convertMarkdownToTiptapJson } from 'common/utils/tiptap.utils';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
-import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
 import { NotificationsQueue } from 'modules/notifications/notifications.queue';
 
@@ -34,6 +34,8 @@ export async function getIssueDiff(
     'stateId',
     'estimate',
     'teamId',
+    'projectId',
+    'projectMilestoneId',
   ];
 
   if (currentIssueData) {

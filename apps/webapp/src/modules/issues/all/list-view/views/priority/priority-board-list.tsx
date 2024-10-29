@@ -13,7 +13,9 @@ import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
 import { Priorities, type IssueType } from 'common/types';
 
+import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
+import { useComputedWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -27,12 +29,15 @@ export const PriorityBoardList = observer(
   ({ priority }: PriorityBoardListProps) => {
     const { issuesStore, applicationStore } = useContextStore();
     const team = useCurrentTeam();
+    const { workflows } = useComputedWorkflows();
+    const project = useProject();
+
     const issues = issuesStore.getIssuesForPriority(
       priority,
-      team.id,
       applicationStore.displaySettings.showSubIssues,
+      { teamId: team?.id, projectId: project?.id },
     );
-    const computedIssues = useFilterIssues(issues, team.id);
+    const computedIssues = useFilterIssues(issues, workflows);
 
     if (
       computedIssues.length === 0 &&

@@ -10,7 +10,6 @@ import {
   SubIssue,
   UnscopedLine,
 } from '@tegonhq/ui/icons';
-import { useRouter } from 'next/router';
 import * as React from 'react';
 
 export function DefaultFilterDropdown({
@@ -18,26 +17,6 @@ export function DefaultFilterDropdown({
 }: {
   onSelect: (value: string) => void;
 }) {
-  const {
-    query: { teamIdentifier },
-  } = useRouter();
-
-  if (!teamIdentifier) {
-    return (
-      <CommandGroup>
-        <CommandItem
-          key="Label"
-          value="Label"
-          className="flex items-center"
-          onSelect={onSelect}
-        >
-          <LabelLine size={16} className="mr-2" />
-          Label
-        </CommandItem>
-      </CommandGroup>
-    );
-  }
-
   return (
     <CommandGroup>
       <CommandItem

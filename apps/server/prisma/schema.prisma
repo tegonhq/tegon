@@ -235,6 +235,12 @@ model Issue {
   team   Team   @relation(fields: [teamId], references: [id])
   teamId String
 
+  project      Project?   @relation(fields: [projectId], references: [id])
+  projectId    String?
+
+  projectMilestone      ProjectMilestone?   @relation(fields: [projectMilestoneId], references: [id])
+  projectMilestoneId    String?
+
   createdById String?
   updatedById String?
 
@@ -307,6 +313,10 @@ model IssueHistory {
   toParentId      String?
   fromTeamId      String?
   toTeamId        String?
+  fromProjectId    String?
+  toProjectId      String?
+  fromProjectMilestoneId  String?
+  toProjectMilestoneId    String?
   relationChanges Json?
 }
 
@@ -432,6 +442,47 @@ model Notification {
   snoozedUntil DateTime?
 
   workspaceId String
+}
+
+model Project {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name               String
+  description        String?
+  status             String?
+  startDate          String?
+  endDate            String?
+  leadUserId         String?
+  teams              String[]
+
+  milestones ProjectMilestone[]
+  issues     Issue[]
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+
+  @@unique([name, workspaceId])
+}
+
+model ProjectMilestone {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name               String
+  description        String?
+  endDate            String?
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+
+  issues Issue[]
+
+  @@unique([name, projectId])
 }
 
 model Prompt {
@@ -639,6 +690,7 @@ model Workspace {
   aiRequests            AIRequest[]
   prompts               Prompt[]
   action                Action[]
+  projects              Project[]
 
   ActionEvent ActionEvent[]
 }
@@ -695,6 +747,8 @@ enum ModelName {
   LinkedComment
   LinkedIssue
   Notification
+  Project
+  ProjectMilestone
   Prompt
   Reaction
   SyncAction

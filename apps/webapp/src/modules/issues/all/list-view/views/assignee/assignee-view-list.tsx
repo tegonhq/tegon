@@ -15,8 +15,10 @@ import type { UsersOnWorkspaceType } from 'common/types';
 import type { IssueType } from 'common/types';
 import { getUserFromUsersData } from 'common/user-util';
 
+import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
+import { useComputedWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -26,17 +28,24 @@ interface AssigneeListItemProps {
   userOnWorkspace: UsersOnWorkspaceType;
 }
 
-export const AssigneeListSection = observer(
+export const AssigneeViewList = observer(
   ({ userOnWorkspace }: AssigneeListItemProps) => {
     const { issuesStore, applicationStore } = useContextStore();
     const [isOpen, setIsOpen] = React.useState(true);
     const team = useCurrentTeam();
+    const { workflows } = useComputedWorkflows();
+    const project = useProject();
+
     const issues = issuesStore.getIssuesForUser(
       applicationStore.displaySettings.showSubIssues,
-      { userId: userOnWorkspace.userId, teamId: team.id },
+      {
+        userId: userOnWorkspace.userId,
+        teamId: team?.id,
+        projectId: project?.id,
+      },
     );
     const { users, isLoading } = useUsersData();
-    const computedIssues = useFilterIssues(issues, team.id);
+    const computedIssues = useFilterIssues(issues, workflows);
 
     if (isLoading) {
       return null;
@@ -100,13 +109,17 @@ export const NoAssigneeView = observer(() => {
   const { issuesStore, applicationStore } = useContextStore();
   const [isOpen, setIsOpen] = React.useState(true);
   const team = useCurrentTeam();
+  const project = useProject();
+  const { workflows } = useComputedWorkflows();
 
   const issues = issuesStore.getIssuesForUser(
     applicationStore.displaySettings.showSubIssues,
-    { userId: undefined, teamId: team.id },
+    { userId: undefined, teamId: team?.id, projectId: project?.id },
   );
 
-  if (issues.length === 0) {
+  const computedIssues = useFilterIssues(issues, workflows);
+
+  if (computedIssues.length === 0) {
     return null;
   }
 
@@ -131,12 +144,12 @@ export const NoAssigneeView = observer(() => {
           </Button>
         </CollapsibleTrigger>
         <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
-          {issues.length}
+          {computedIssues.length}
         </div>
       </div>
 
       <CollapsibleContent>
-        {issues.map((issue: IssueType) => (
+        {computedIssues.map((issue: IssueType) => (
           <IssueListItem key={issue.id} issueId={issue.id} />
         ))}
       </CollapsibleContent>

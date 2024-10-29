@@ -11,11 +11,11 @@ import {
 import { ChevronDown } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
+import posthog from 'posthog-js';
 import React from 'react';
 import { signOut } from 'supertokens-auth-react/recipe/session';
 
 import { useContextStore } from 'store/global-context-provider';
-import posthog from 'posthog-js';
 
 export const WorkspaceDropdown = observer(() => {
   const { workspaceStore } = useContextStore();

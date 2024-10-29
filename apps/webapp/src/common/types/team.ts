@@ -17,4 +17,7 @@ export interface WorkflowType {
   color: string;
   category: string;
   teamId: string;
+
+  // For processed purpose
+  ids?: string[];
 }

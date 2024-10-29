@@ -20,7 +20,7 @@ export const Header = observer(({ title }: HeaderProps) => {
 
   return (
     <header className="flex px-6 w-full items-center gap-2">
-      <div className="flex gap-2 py-4 items-center">
+      <div className="flex gap-2 py-3 items-center">
         <SidebarExpand />
 
         <Breadcrumb>

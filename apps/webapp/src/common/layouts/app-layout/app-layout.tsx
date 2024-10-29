@@ -1,5 +1,11 @@
 import { Button } from '@tegonhq/ui/components/button';
-import { Actions, Inbox, SidebarLine, StackLine } from '@tegonhq/ui/icons';
+import {
+  Actions,
+  Inbox,
+  Project,
+  SidebarLine,
+  StackLine,
+} from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
@@ -48,7 +54,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
       <div className="h-[100vh] w-[100vw] flex">
         {!applicationStore.sidebarCollapsed && (
           <div className="min-w-[220px] flex flex-col">
-            <div className="flex flex-col py-4 px-6">
+            <div className="flex flex-col py-3 px-6">
               <div className="flex justify-between items-center">
                 <WorkspaceDropdown />
                 <Button
@@ -74,6 +80,11 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
                     title: 'Views',
                     icon: StackLine,
                     href: `/${workspaceSlug}/views`,
+                  },
+                  {
+                    title: 'Projects',
+                    icon: Project,
+                    href: `/${workspaceSlug}/projects`,
                   },
                 ]}
               />

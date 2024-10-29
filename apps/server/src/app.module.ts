@@ -26,6 +26,7 @@ import { LabelsModule } from 'modules/labels/labels.module';
 import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
 import { NotificationsModule } from 'modules/notifications/notifications.module';
 import { OAuthCallbackModule } from 'modules/oauth-callback/oauth-callback.module';
+import { ProjectsModule } from 'modules/projects/projects.module';
 import { ReplicationModule } from 'modules/replication/replication.module';
 import { SearchModule } from 'modules/search/search.module';
 import { SyncModule } from 'modules/sync/sync.module';
@@ -104,6 +105,7 @@ import { AppService } from './app.service';
     TriggerdevModule,
     ActionModule,
     AIRequestsModule,
+    ProjectsModule,
 
     WebhookModule,
 

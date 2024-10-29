@@ -5,7 +5,7 @@ import { ViewEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
 import { AssigneeBoard } from './assignee-board';
-import { AssigneeListView } from './assignee-list-view';
+import { AssigneeList } from './assignee-list';
 
 export const AssigneeView = observer(() => {
   const {
@@ -16,7 +16,7 @@ export const AssigneeView = observer(() => {
   } = useContextStore();
 
   return view === ViewEnum.list ? (
-    <AssigneeListView usersOnWorkspaces={usersOnWorkspaces} />
+    <AssigneeList usersOnWorkspaces={usersOnWorkspaces} />
   ) : (
     <AssigneeBoard usersOnWorkspaces={usersOnWorkspaces} />
   );

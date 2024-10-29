@@ -12,6 +12,7 @@ import { IssuesStore } from './issues';
 import { LabelsStore } from './labels';
 import { LinkedIssuesStore } from './linked-issues';
 import { NotificationsStore } from './notifications';
+import { ProjectMilestonesStore, ProjectsStore } from './projects';
 import { TeamsStore } from './teams';
 import { ViewsStore } from './views';
 import { WorkflowsStore } from './workflows';
@@ -33,6 +34,8 @@ const StoreContextModel = types.model({
   viewsStore: ViewsStore,
   actionsStore: ActionsStore,
   issueSuggestionsStore: IssueSuggestionsStore,
+  projectsStore: ProjectsStore,
+  projectMilestonesStore: ProjectMilestonesStore,
 });
 
 export const storeContextStore = StoreContextModel.create({
@@ -91,6 +94,13 @@ export const storeContextStore = StoreContextModel.create({
   actionsStore: {
     workspaceId: undefined,
     actions: [],
+  },
+  projectsStore: {
+    projects: [],
+    workspaceId: undefined,
+  },
+  projectMilestonesStore: {
+    milestones: [],
   },
 });
 

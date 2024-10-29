@@ -172,10 +172,15 @@ export function getFilters(
   const filters: FilterType[] = [];
 
   if (status) {
+    const ids = status.value.flatMap(
+      (value: string) =>
+        workflows.find((workflow) => workflow.name === value)?.ids || [],
+    );
+
     filters.push({
       key: 'stateId',
       filterType: status.filterType,
-      value: status.value,
+      value: ids,
     });
   }
 
@@ -268,18 +273,14 @@ export function getFilters(
 
 export function useFilterIssues(
   issues: IssueType[],
-  teamId?: string,
+  workflows?: WorkflowType[],
 ): IssueType[] {
   const {
     applicationStore,
-    workflowsStore,
     linkedIssuesStore,
     issuesStore,
     issueRelationsStore,
   } = useContextStore();
-  const workflows = teamId
-    ? workflowsStore.getWorkflowsForTeam(teamId)
-    : workflowsStore.workflows;
 
   const isCompleted = (stateId: string) => {
     const filteredWorkflows = workflows.filter(
@@ -288,7 +289,7 @@ export function useFilterIssues(
         workflow.category === WorkflowCategoryEnum.CANCELED,
     );
 
-    return filteredWorkflows.find(
+    return !!filteredWorkflows.find(
       (workflow: WorkflowType) => workflow.id === stateId,
     );
   };

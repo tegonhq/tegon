@@ -33,6 +33,8 @@ export const tablesToSendMessagesFor = new Map([
   [ModelNameEnum.IssueSuggestion, true],
   [ModelNameEnum.Action, true],
   [ModelNameEnum.ActionEntity, true],
+  [ModelNameEnum.Project, true],
+  [ModelNameEnum.ProjectMilestone, true],
 ]);
 
 export const tablesToTrigger = new Map([

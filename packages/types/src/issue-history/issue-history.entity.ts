@@ -24,5 +24,9 @@ export class IssueHistory {
   toParentId: string | null;
   fromTeamId: string | null;
   toTeamId: string | null;
+  fromProjectId: string | null;
+  toProjectId: string | null;
+  fromProjectMilestoneId: string | null;
+  toProjectMilestoneId: string | null;
   relationChanges: JsonValue | null;
 }

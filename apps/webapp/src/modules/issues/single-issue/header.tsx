@@ -63,7 +63,7 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
 
   return (
     <header className="flex px-6 w-full gap-2 justify-between items-center">
-      <div className="flex gap-2 py-4 items-center">
+      <div className="flex gap-2 py-3 items-center">
         <SidebarExpand />
         <Breadcrumb>
           <BreadcrumbItem>

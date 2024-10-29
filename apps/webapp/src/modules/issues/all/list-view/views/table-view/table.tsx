@@ -65,7 +65,7 @@ export const TableC = observer(({ issues }: TableCProps) => {
                       className="relative"
                       style={{
                         minWidth:
-                          header.id === 'title' ? 400 : header.getSize(),
+                          header.id === 'title' ? 1000 : header.getSize(),
                         width: header.getSize(),
                       }}
                     >

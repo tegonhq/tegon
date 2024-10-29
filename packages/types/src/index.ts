@@ -37,3 +37,4 @@ export * from './action-entity';
 export * from './action-event';
 export * from './action-schedule';
 export * from './search';
+export * from './project';

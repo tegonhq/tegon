@@ -5,6 +5,7 @@ import {
   CreateIssueRelationDto,
   GetIssuesByFilterDTO,
   Issue,
+  IssueHistoryData,
   IssueRequestParamsDto,
   LinkedIssue,
   TeamRequestParamsDto,
@@ -22,7 +23,6 @@ import {
 } from 'common/utils/tiptap.utils';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
-import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
@@ -147,14 +147,18 @@ export default class IssuesService {
 
       // Create issues recursively
       for (const issueData of createIssuesData) {
-        const { parentId, ...otherData } = issueData;
+        const { parentId, projectId, projectMilestoneId, ...otherData } =
+          issueData;
         const issueInput = await getCreateIssueInput(
           this.prisma,
           this.aiRequestsService,
           {
             ...otherData,
-
             ...(parentId ? { parentId } : { parentId: mainIssueId }),
+            ...(projectId ? { project: { connect: { id: projectId } } } : {}),
+            ...(projectMilestoneId
+              ? { projectMilestone: { connect: { id: projectMilestoneId } } }
+              : {}),
           },
           workspace.id,
           userId,
@@ -224,6 +228,8 @@ export default class IssuesService {
       sourceMetadata,
       description,
       descriptionMarkdown,
+      projectId,
+      projectMilestoneId,
       ...otherIssueData
     } = issueData;
 
@@ -261,7 +267,24 @@ export default class IssuesService {
       ),
       updatedById: userId,
       ...otherIssueData,
-      ...(parentId ? { parent: { connect: { id: parentId } } } : { parentId }),
+      ...('parentId' in issueData
+        ? parentId === null
+          ? { parent: { disconnect: true } }
+          : { parent: { connect: { id: parentId } } }
+        : {}),
+
+      ...('projectId' in issueData
+        ? projectId === null
+          ? { project: { disconnect: true } }
+          : { project: { connect: { id: projectId } } }
+        : {}),
+
+      ...('projectMilestoneId' in issueData
+        ? projectMilestoneId === null
+          ? { projectMilestone: { disconnect: true } }
+          : { projectMilestone: { connect: { id: projectMilestoneId } } }
+        : {}),
+
       ...(linkIssueData && {
         linkedIssue:
           linkedIssues.length > 0
