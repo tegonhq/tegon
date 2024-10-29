@@ -1,4 +1,11 @@
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import {
   CreateProjectDto,
   CreateProjectMilestoneDto,
@@ -62,6 +69,22 @@ export class ProjectsController {
     return await this.projects.updateProject(
       projectData,
       projectParams.projectId,
+    );
+  }
+
+  @Delete(':projectId')
+  @UseGuards(AuthGuard)
+  async deleteProject(@Param() projectParams: ProjectRequestParamsDto) {
+    return await this.projects.deleteProject(projectParams.projectId);
+  }
+
+  @Delete('milestone/:projectMilestoneId')
+  @UseGuards(AuthGuard)
+  async deleteProjectMilestone(
+    @Param() projectMilestoneParams: ProjectMilestoneRequestParamsDto,
+  ) {
+    return await this.projects.deleteProjectMilestone(
+      projectMilestoneParams.projectMilestoneId,
     );
   }
 }
