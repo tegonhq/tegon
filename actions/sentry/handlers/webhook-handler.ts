@@ -6,53 +6,59 @@ import {
 } from '@tegonhq/sdk';
 
 export const webhookHandler = async (payload: ActionEventPayload) => {
-  // const { eventBody, integrationAccounts, userId, action } = payload;
-  logger.log('Processing Sentry event:', payload);
+  const { eventBody } = payload;
 
-  // if(eventBody)
+  if (eventBody.action === 'triggered') {
+    return createTegonIssue(payload);
+  }
 };
 
-// async function createTegonIssue(eventBody: any): Promise<any> {
-//   const [{ type, value }] = eventBody.data.event.exception.values;
-//   const { project } = eventBody.data.event;
-//   // Find the channel mapping for the given channel ID
-//   const projectMapping =
-//     eventBody.data.action.data.inputs.projectTeamMappings.find(
-//       ({ projectId: mappedProjectId }: { projectId: string }) =>
-//         mappedProjectId === project,
-//     );
+async function createTegonIssue(payload: ActionEventPayload): Promise<any> {
+  const { eventBody, integrationAccounts, action } = payload;
 
-//   if (!projectMapping) {
-//     logger.debug(`The projectMapping is not connected`);
-//     return undefined;
-//   }
+  const { project, issue_url, title, exception, issue_id, user } = eventBody
+    .data.event as any;
 
-//   const teamId = projectMapping.teamId;
+  // Find the channel mapping for the given channel ID
+  const projectMapping = action.data.inputs.projectTeamMappings.find(
+    ({ projectId: mappedProjectId }: { projectId: string }) =>
+      mappedProjectId.toString() === project.toString(),
+  );
 
-//   const workflows = await getWorkflowsByTeam({
-//     teamId,
-//   });
+  if (!projectMapping) {
+    logger.debug(`The projectMapping is not connected`);
+    return undefined;
+  }
 
-//   const todoWorkflow = workflows.find(
-//     (workflow) => workflow.category === 'BACKLOG',
-//   );
+  const teamId = projectMapping.teamId;
 
-//   // await createIssue({
-//   //   teamId,
-//   //   title,
-//   //   description,
-//   //   stateId: todoWorkflow.id,
-//   //   linkIssueData: {
-//   //     url: webUrl,
-//   //     sourceId: integrationAccount.integrationDefinitionId,
-//   //     sourceData: {
-//   //       title,
-//   //       issueId,
-//   //       project,
-//   //       actor,
-//   //     },
-//   //   },
-//   // });
+  const workflows = (await getWorkflowsByTeam({
+    teamId,
+  })) as any[];
 
-//   return;
-// }
+  const todoWorkflow = workflows.find(
+    (workflow) => workflow.category === 'BACKLOG',
+  );
+
+  logger.info('todoWorkflow', todoWorkflow);
+  const resp = await createIssue({
+    teamId,
+    title,
+    description: JSON.stringify(exception),
+    stateId: todoWorkflow.id,
+    linkIssueData: {
+      url: issue_url,
+      sourceId: integrationAccounts.sentry.integrationDefinitionId,
+      sourceData: {
+        title,
+        issueId: issue_id,
+        project,
+        actor: user,
+      },
+    },
+  });
+
+  logger.info('resp', { resp });
+
+  return;
+}

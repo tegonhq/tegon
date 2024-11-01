@@ -5,6 +5,7 @@ import {
 import { webhookResponse } from './webhook-response';
 import { isActionSupportedEvent } from './is_action_supported_event';
 import { integrationCreate } from './account-create';
+import { getToken } from './get-token';
 
 export default async function run(eventPayload: IntegrationEventPayload) {
   switch (eventPayload.event) {
@@ -27,6 +28,9 @@ export default async function run(eventPayload: IntegrationEventPayload) {
         eventPayload.data.eventBody.installationId ??
         eventPayload.data.eventBody.installation?.uuid
       );
+
+    case IntegrationPayloadEventType.GET_TOKEN:
+      return getToken(eventPayload.integrationAccountId);
 
     default:
       return {

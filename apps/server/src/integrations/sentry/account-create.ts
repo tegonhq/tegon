@@ -44,6 +44,7 @@ export const integrationCreate = async (
   const integrationConfiguration = {
     accessToken: tokenResponse.data.token,
     refreshToken: tokenResponse.data.refreshToken,
+    orgSlug,
   };
 
   const accountId = oauthResponse.installationId as string;
