@@ -16,8 +16,8 @@ export const webhookHandler = async (payload: ActionEventPayload) => {
 async function createTegonIssue(payload: ActionEventPayload): Promise<any> {
   const { eventBody, integrationAccounts, action } = payload;
 
-  const { project, issue_url, title, exception, issue_id, user } = eventBody
-    .data.event as any;
+  const { project, issue_url, title, exception, web_url, user } = eventBody.data
+    .event as any;
 
   // Find the channel mapping for the given channel ID
   const projectMapping = action.data.inputs.projectTeamMappings.find(
@@ -40,8 +40,7 @@ async function createTegonIssue(payload: ActionEventPayload): Promise<any> {
     (workflow) => workflow.category === 'BACKLOG',
   );
 
-  logger.info('todoWorkflow', todoWorkflow);
-  const resp = await createIssue({
+  await createIssue({
     teamId,
     title,
     description: JSON.stringify(exception),
@@ -51,14 +50,12 @@ async function createTegonIssue(payload: ActionEventPayload): Promise<any> {
       sourceId: integrationAccounts.sentry.integrationDefinitionId,
       sourceData: {
         title,
-        issueId: issue_id,
+        issueId: web_url,
         project,
         actor: user,
       },
     },
   });
-
-  logger.info('resp', { resp });
 
   return;
 }
