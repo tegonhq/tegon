@@ -1,4 +1,5 @@
 import {
+  ActionTypesEnum,
   CreateIssueDto,
   CreateLinkedIssueDto,
   FilterKey,
@@ -7,6 +8,8 @@ import {
   GetIssuesByFilterDTO,
   Issue,
   IssueHistoryData,
+  NotificationData,
+  NotificationEventFrom,
   WorkflowCategory,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
@@ -14,8 +17,8 @@ import { PrismaService } from 'nestjs-prisma';
 import { convertMarkdownToTiptapJson } from 'common/utils/tiptap.utils';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
-import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
-import { NotificationsQueue } from 'modules/notifications/notifications.queue';
+import { Env } from 'modules/triggerdev/triggerdev.interface';
+import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { getIssueTitle } from './issues-ai.utils';
 import { filterKeyReplacers, SubscribeType } from './issues.interface';
@@ -202,25 +205,31 @@ export async function getWorkspace(prisma: PrismaService, teamId: string) {
 
 export async function handlePostCreateIssue(
   prisma: PrismaService,
-  notificationsQueue: NotificationsQueue,
+  triggerdevService: TriggerdevService,
   issuesQueue: IssuesQueue,
   issue: Issue,
   linkMetaData: Record<string, string>,
 ) {
   // Add the issue to the notification queue if there are subscribers
   if (issue.subscriberIds) {
-    notificationsQueue.addToNotification(
-      NotificationEventFrom.IssueCreated,
-      issue.createdById,
+    await triggerdevService.triggerTaskAsync(
+      'common',
+      'notification',
       {
-        issueId: issue.id,
-        subscriberIds: issue.subscriberIds,
-        toStateId: issue.stateId,
-        toPriority: issue.priority,
-        toAssigneeId: issue.assigneeId,
-        sourceMetadata: linkMetaData,
-        workspaceId: issue.team.workspaceId,
+        event: ActionTypesEnum.ON_CREATE,
+        notificationType: NotificationEventFrom.IssueCreated,
+        notificationData: {
+          issueId: issue.id,
+          subscriberIds: issue.subscriberIds,
+          toStateId: issue.stateId,
+          toPriority: issue.priority,
+          toAssigneeId: issue.assigneeId,
+          sourceMetadata: linkMetaData,
+          workspaceId: issue.team.workspaceId,
+          userId: issue.createdById,
+        } as NotificationData,
       },
+      Env.PROD,
     );
   }
 

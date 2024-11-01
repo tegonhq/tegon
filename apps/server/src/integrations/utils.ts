@@ -12,6 +12,7 @@ export async function createIntegrationAccount(
     accountId,
     integrationDefinitionId,
     workspaceId,
+    personal,
   } = createIntegrationAccountDto;
   // Update the integration account with the new configuration in the database
   const integrationAccount = await prisma.integrationAccount.upsert({
@@ -29,11 +30,15 @@ export async function createIntegrationAccount(
       integratedById: userId,
       workspaceId,
       integrationDefinitionId,
+      personal,
+      isActive: true,
     },
     update: {
       deleted: null,
       integrationConfiguration,
       settings,
+      personal,
+      isActive: true,
     },
   });
 

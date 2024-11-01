@@ -1,10 +1,10 @@
-import { IsDateString, IsOptional, IsString } from 'class-validator';
-
 export enum NotificationEventFrom {
   IssueCreated,
   IssueUpdated,
   NewComment,
   IssueBlocks,
+  DeleteIssue,
+  DeleteByEvent,
 }
 
 export interface NotificationData {
@@ -20,19 +20,5 @@ export interface NotificationData {
   sourceMetadata?: Record<string, string>;
   issueRelationId?: string;
   workspaceId: string;
-}
-
-export class NotificationIdRequestParams {
-  @IsString()
-  notificationId: string;
-}
-
-export class updateNotificationBody {
-  @IsOptional()
-  @IsDateString()
-  readAt?: Date;
-
-  @IsOptional()
-  @IsDateString()
-  snoozedUntil?: Date;
+  userId: string;
 }

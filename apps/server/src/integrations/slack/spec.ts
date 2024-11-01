@@ -32,5 +32,12 @@ export function spec() {
         ],
       },
     },
+    personal_auth: {
+      OAuth2: {
+        token_url: 'https://slack.com/api/oauth.v2.access',
+        authorization_url: 'https://slack.com/oauth/v2/authorize',
+        scopes: ['chat:write', 'im:write', 'im:history', 'reactions:read'],
+      },
+    },
   };
 }
