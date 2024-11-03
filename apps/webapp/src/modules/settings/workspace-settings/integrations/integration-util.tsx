@@ -4,6 +4,7 @@ import { useContextStore } from 'store/global-context-provider';
 
 export function useIntegrationAccount(
   integrationDefinitionId: string,
+  personal: boolean = false,
 ): IntegrationAccount | undefined {
   const {
     integrationAccountsStore: { integrationAccounts: allIntegrationAccounts },
@@ -12,7 +13,7 @@ export function useIntegrationAccount(
   const integrationAccount = allIntegrationAccounts.find(
     (integrationAccount: IntegrationAccount) =>
       integrationAccount.integrationDefinitionId === integrationDefinitionId &&
-      integrationAccount.personal === false,
+      integrationAccount.personal === personal,
   );
 
   return integrationAccount;
