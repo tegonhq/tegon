@@ -136,45 +136,39 @@ export const IssuesStore: IAnyStateTreeNode = types
       });
     },
     getIssuesForLabel(
-      labelId: string | undefined,
+      labelIds: string[] | undefined,
       showSubIssues: boolean,
       { teamId, projectId }: { teamId?: string; projectId?: string },
     ) {
-      if (!labelId) {
-        return Array.from(self.issuesMap.values()).filter(
-          (issue: IssueType) => {
-            const isSubIssue = showSubIssues ? !issue.parentId : true;
-            const isTeamIssues = teamId ? issue.teamId === teamId : true;
-            const isFromProject = projectId
-              ? issue.projectId === projectId
-              : true;
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
+        const isSubIssue = showSubIssues ? !issue.parentId : true;
+        const isFromProject = projectId ? issue.projectId === projectId : true;
+        const isTeamIssues = teamId ? issue.teamId === teamId : true;
 
-            return (
-              issue.labelIds.length === 0 &&
-              isSubIssue &&
-              isTeamIssues &&
-              isFromProject
-            );
-          },
+        return (
+          labelIds.some((labelId) => issue.labelIds.includes(labelId)) &&
+          isTeamIssues &&
+          isSubIssue &&
+          isFromProject
         );
-      }
-
-      return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
-        showSubIssues
-          ? issue.labelIds.includes(labelId) && issue.teamId === teamId
-          : issue.labelIds.includes(labelId) &&
-            issue.teamId === teamId &&
-            !issue.parentId,
-      );
+      });
     },
-    getIssuesForNoLabel(showSubIssues: boolean, teamId: string) {
-      return Array.from(self.issuesMap.values()).filter((issue: IssueType) =>
-        showSubIssues
-          ? issue.labelIds.length === 0 && issue.teamId === teamId
-          : issue.labelIds.length === 0 &&
-            issue.teamId === teamId &&
-            !issue.parentId,
-      );
+    getIssuesForNoLabel(
+      showSubIssues: boolean,
+      { teamId, projectId }: { teamId?: string; projectId?: string },
+    ) {
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
+        const isSubIssue = showSubIssues ? !issue.parentId : true;
+        const isFromProject = projectId ? issue.projectId === projectId : true;
+        const isTeamIssues = teamId ? issue.teamId === teamId : true;
+
+        return (
+          issue.labelIds.length === 0 &&
+          isTeamIssues &&
+          isSubIssue &&
+          isFromProject
+        );
+      });
     },
     getIssueById(issueId: string): IssueType {
       const issue = self.issuesMap.get(issueId);

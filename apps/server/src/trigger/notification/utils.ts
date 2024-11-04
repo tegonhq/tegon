@@ -124,7 +124,7 @@ export async function getSlackNotificationData(
         where: { id: issueCommentId },
         include: { issue: { include: { team: true } } },
       });
-      console.log(issueComment);
+
       actionData = { issueComment };
       break;
 

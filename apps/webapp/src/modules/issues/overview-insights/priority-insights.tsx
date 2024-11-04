@@ -17,12 +17,12 @@ export function PriorityInsights({ issues }: PriorityInsightsProps) {
 
         return (
           <div key={key} className="flex justify-between py-1">
-            <div className="text-xs flex gap-2 items-center">
+            <div className="flex gap-2 items-center">
               <PriorityIcon.icon size={16} className="text-muted-foreground" />
               {Priorities[key]}
             </div>
 
-            <div className="text-xs text-muted-foreground">
+            <div className="text-muted-foreground">
               {groupedByIssues.get(key).length}
             </div>
           </div>

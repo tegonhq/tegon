@@ -8,4 +8,7 @@ export interface LabelType {
   workspaceId: string;
   teamId: string | null;
   groupId: string | null;
+
+  // For processed purpose
+  ids?: string[];
 }
