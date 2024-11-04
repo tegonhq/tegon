@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import {
+  ActionTypesEnum,
   CreateIssueDto,
   CreateIssueRelationDto,
   GetIssuesByFilterDTO,
@@ -8,6 +9,8 @@ import {
   IssueHistoryData,
   IssueRequestParamsDto,
   LinkedIssue,
+  NotificationData,
+  NotificationEventFrom,
   TeamRequestParamsDto,
   UpdateIssueDto,
   WorkflowCategoryEnum,
@@ -27,8 +30,8 @@ import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { LoggerService } from 'modules/logger/logger.service';
-import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
-import { NotificationsQueue } from 'modules/notifications/notifications.queue';
+import { Env } from 'modules/triggerdev/triggerdev.interface';
+import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { SubscribeType } from './issues.interface';
 import { IssuesQueue } from './issues.queue';
@@ -52,9 +55,9 @@ export default class IssuesService {
     private issueHistoryService: IssuesHistoryService,
     private issuesQueue: IssuesQueue,
     private issueRelationService: IssueRelationService,
-    private notificationsQueue: NotificationsQueue,
     private aiRequestsService: AIRequestsService,
     private linkedIssueService: LinkedIssueService,
+    private triggerdevService: TriggerdevService,
   ) {}
 
   async getIssueById(issueParams: IssueRequestParamsDto): Promise<Issue> {
@@ -188,7 +191,7 @@ export default class IssuesService {
 
         handlePostCreateIssue(
           this.prisma,
-          this.notificationsQueue,
+          this.triggerdevService,
           this.issuesQueue,
           issue,
           sourceMetadata,
@@ -339,16 +342,22 @@ export default class IssuesService {
 
     // Add the updated issue to the notifications queue if it has subscribers
     if (updatedIssue.subscriberIds) {
-      this.notificationsQueue.addToNotification(
-        NotificationEventFrom.IssueUpdated,
-        userId,
+      this.triggerdevService.triggerTaskAsync(
+        'common',
+        'notification',
         {
-          issueId: updatedIssue.id,
-          ...issueDiff,
-          sourceMetadata,
-          subscriberIds: updatedIssue.subscriberIds,
-          workspaceId: updatedIssue.team.workspaceId,
+          event: ActionTypesEnum.ON_UPDATE,
+          notificationType: NotificationEventFrom.IssueUpdated,
+          notificationData: {
+            issueId: updatedIssue.id,
+            ...issueDiff,
+            sourceMetadata,
+            subscriberIds: updatedIssue.subscriberIds,
+            workspaceId: updatedIssue.team.workspaceId,
+            userId,
+          } as NotificationData,
         },
+        Env.PROD,
       );
     }
 
@@ -424,7 +433,21 @@ export default class IssuesService {
 
     // Delete the issue history associated with the deleted issue
     await this.deleteIssueHistory(deleteIssue.id);
-    await this.notificationsQueue.deleteNotificationsByIssue(deleteIssue.id);
+
+    this.triggerdevService.triggerTaskAsync(
+      'common',
+      'notification',
+      {
+        event: ActionTypesEnum.ON_DELETE,
+        notificationType: NotificationEventFrom.DeleteIssue,
+        notificationData: {
+          issueId: deleteIssue.id,
+          userId: deleteIssue.updatedById,
+        } as NotificationData,
+      },
+      Env.PROD,
+    );
+    // await this.notificationsQueue.deleteNotificationsByIssue(deleteIssue.id);
 
     this.logger.info({
       message: `Issue history deleted for issue ${deleteIssue.id}`,

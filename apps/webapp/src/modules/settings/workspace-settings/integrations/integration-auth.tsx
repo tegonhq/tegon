@@ -12,14 +12,18 @@ import {
 
 import { useIntegrationAccount } from './integration-util';
 
-interface WorkspaceAuthProps {
+interface IntegrationAuthProps {
   integrationDefinition: IntegrationDefinition;
+  personal?: boolean;
 }
 
-export const WorkspaceAuth = observer(
-  ({ integrationDefinition }: WorkspaceAuthProps) => {
+export const IntegrationAuth = observer(
+  ({ integrationDefinition, personal }: IntegrationAuthProps) => {
     const workspace = useCurrentWorkspace();
-    const integrationAccount = useIntegrationAccount(integrationDefinition.id);
+    const integrationAccount = useIntegrationAccount(
+      integrationDefinition.id,
+      personal,
+    );
 
     const { mutate: createRedirectURL, isLoading: redirectURLLoading } =
       useCreateRedirectURLMutation({
@@ -38,21 +42,40 @@ export const WorkspaceAuth = observer(
         <div className="flex flex-col items-start justify-center">
           {integrationAccount ? (
             <>
-              <p className="font-medium"> Connected organization account</p>
+              <p className="font-medium">
+                Connected {personal ? 'Personal' : 'Organisation'} account
+              </p>
               <p className="text-muted-foreground">
-                Your organization{' '}
-                <span className="mx-1 font-medium">
-                  {integrationDefinition.name}
-                </span>
-                account is connected
+                {personal ? (
+                  <>
+                    Your personal
+                    <span className="mx-1 font-medium">
+                      {integrationDefinition.name}
+                    </span>
+                    account is connected
+                  </>
+                ) : (
+                  <>
+                    Your organization
+                    <span className="mx-1 font-medium">
+                      {integrationDefinition.name}
+                    </span>
+                    account is connected
+                  </>
+                )}
               </p>
             </>
           ) : (
             <>
-              <p className="font-medium"> Connect organization account</p>
+              <p className="font-medium">
+                Connect {personal ? 'Personal' : 'Organisation'} account
+              </p>
               <p className="text-muted-foreground">
-                Connect your {integrationDefinition.name} account to use the
-                integration
+                {personal
+                  ? `Connect your personal ${integrationDefinition.name} account to use the
+                integration`
+                  : `Connect your ${integrationDefinition.name} account to use the
+                integration`}
               </p>
             </>
           )}
@@ -80,6 +103,7 @@ export const WorkspaceAuth = observer(
                   redirectURL: window.location.href,
                   integrationDefinitionId: integrationDefinition.id,
                   workspaceId: workspace.id,
+                  personal,
                 });
               }}
               isLoading={redirectURLLoading}

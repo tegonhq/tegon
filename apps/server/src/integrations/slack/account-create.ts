@@ -44,6 +44,7 @@ export const integrationCreate = async (
     config: integrationConfiguration,
     workspaceId,
     integrationDefinitionId: integrationDefinition.id,
+    personal,
   });
 
   return {

@@ -1,4 +1,4 @@
-import { IsObject, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsObject, IsOptional, IsString } from 'class-validator';
 
 import { type JsonObject } from '../common';
 import { WorkspaceRequestParamsDto } from '../workspace';
@@ -12,7 +12,7 @@ export class CreateIntegrationAccountDto extends WorkspaceRequestParamsDto {
 
   @IsString()
   @IsOptional()
-  accountId: string;
+  accountId?: string;
 
   @IsObject()
   @IsOptional()
@@ -20,5 +20,9 @@ export class CreateIntegrationAccountDto extends WorkspaceRequestParamsDto {
 
   @IsString()
   @IsOptional()
-  userId: string;
+  userId?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  personal?: boolean;
 }

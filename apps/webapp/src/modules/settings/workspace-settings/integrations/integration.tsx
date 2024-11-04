@@ -10,7 +10,7 @@ import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { useGetIntegrationDefinition } from 'services/integration-definition';
 
-import { WorkspaceAuth } from './workspace-auth';
+import { IntegrationAuth } from './integration-auth';
 
 export function Integration() {
   const { integrationDefinitionId } = useParams();
@@ -28,7 +28,17 @@ export function Integration() {
                 title={integrationDefinition.name}
                 description={integrationDefinition.description}
               >
-                <WorkspaceAuth integrationDefinition={integrationDefinition} />
+                <>
+                  <IntegrationAuth
+                    integrationDefinition={integrationDefinition}
+                  />
+                  {integrationDefinition.spec.personal_auth && (
+                    <IntegrationAuth
+                      integrationDefinition={integrationDefinition}
+                      personal
+                    />
+                  )}
+                </>
               </SettingSection>
             )}
 

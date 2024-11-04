@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import {
+  ActionTypesEnum,
   CreateIssueCommentDto,
   CreateIssueCommentRequestParamsDto,
   IssueComment,
   IssueCommentRequestParamsDto,
   LinkedComment,
+  NotificationEventFrom,
   UpdateIssueCommentDto,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
@@ -15,8 +17,8 @@ import {
 } from 'common/utils/tiptap.utils';
 
 import IssuesService from 'modules/issues/issues.service';
-import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
-import { NotificationsQueue } from 'modules/notifications/notifications.queue';
+import { Env } from 'modules/triggerdev/triggerdev.interface';
+import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import {
   ReactionInput,
@@ -29,8 +31,8 @@ import {
 export default class IssueCommentsService {
   constructor(
     private prisma: PrismaService,
-    private notificationsQueue: NotificationsQueue,
     private issuesService: IssuesService,
+    private triggerdevService: TriggerdevService,
   ) {}
 
   async getIssueComment(issueCommentParams: IssueCommentRequestParamsDto) {
@@ -80,15 +82,21 @@ export default class IssueCommentsService {
 
     this.issuesService.updateSubscribers(issueRequestParams.issueId, [userId]);
 
-    this.notificationsQueue.addToNotification(
-      NotificationEventFrom.NewComment,
-      userId,
+    this.triggerdevService.triggerTaskAsync(
+      'common',
+      'notification',
       {
-        subscriberIds: issueComment.issue.subscriberIds,
-        issueCommentId: issueComment.id,
-        issueId: issueComment.issueId,
-        workspaceId: issueComment.issue.team.workspaceId,
+        event: ActionTypesEnum.ON_CREATE,
+        notificationType: NotificationEventFrom.NewComment,
+        notificationData: {
+          subscriberIds: issueComment.issue.subscriberIds,
+          issueCommentId: issueComment.id,
+          issueId: issueComment.issueId,
+          workspaceId: issueComment.issue.team.workspaceId,
+          userId,
+        },
       },
+      Env.PROD,
     );
 
     const newBodyMarkdown = convertTiptapJsonToMarkdown(issueComment.body);
