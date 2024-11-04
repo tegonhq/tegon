@@ -35,7 +35,6 @@ export const tegonHandler = async (payload: ActionEventPayload) => {
           notificationData,
         );
 
-      console.log(type, actionData, subscriberIds, sourceMetadata, workspaceId);
       if (subscriberIds.length > 0 && type) {
         const notificationPromises = subscriberIds
           .filter((userId) => userId !== createdById)

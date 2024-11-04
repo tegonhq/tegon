@@ -12,27 +12,40 @@ import { IssueLabelDropdownContent } from 'modules/issues/components';
 
 import type { LabelType } from 'common/types';
 
-import { useTeamLabels } from 'hooks/labels';
+import { useComputedLabels } from 'hooks/labels';
 
 interface IssueLabelDropdownProps {
   value?: string[];
   onChange?: (assigneeIds: string[]) => void;
-  teamIdentifier: string;
 }
 
 export function IssueLabelDropdown({
   value,
   onChange,
-  teamIdentifier,
 }: IssueLabelDropdownProps) {
   const [open, setOpen] = React.useState(false);
+  const { labels } = useComputedLabels();
 
-  const labels = useTeamLabels(teamIdentifier);
   const [labelSearch, setLabelSearch] = React.useState('');
 
-  const getLabel = (labelId: string) => {
-    return labels.find((label: LabelType) => label.id === labelId);
+  const getLabel = (labelName: string) => {
+    return labels.find((label: LabelType) => label.name === labelName);
   };
+
+  const change = (value: string[]) => {
+    const names = value.map((val: string) => {
+      const label = labels.find((label) => label.id === val);
+
+      return label.name;
+    });
+    onChange(names);
+  };
+
+  const computedValues = value.map((val: string) => {
+    const label = labels.find((label) => label.name === val);
+
+    return label.id;
+  });
 
   return (
     <div>
@@ -64,8 +77,8 @@ export function IssueLabelDropdown({
             />
             <IssueLabelDropdownContent
               labels={labels}
-              onChange={onChange}
-              value={value}
+              onChange={change}
+              value={computedValues}
               labelSearch={labelSearch}
               setLabelSearch={setLabelSearch}
             />

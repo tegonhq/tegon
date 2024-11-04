@@ -34,7 +34,7 @@ export const LabelViewList = observer(({ label }: LabelViewListProps) => {
   const { workflows } = useComputedWorkflows();
 
   const issues = issuesStore.getIssuesForLabel(
-    label.id,
+    label.ids,
     applicationStore.displaySettings.showSubIssues,
     { teamId: team?.id, projectId: project?.id },
   );

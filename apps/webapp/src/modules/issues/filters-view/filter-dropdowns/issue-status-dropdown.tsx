@@ -18,7 +18,6 @@ import { useComputedWorkflows } from 'hooks/workflows/use-team-workflows';
 interface IssueStatusProps {
   value?: string[];
   onChange?: (newStatus: string[]) => void;
-  teamIdentifier: string;
 }
 
 export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {

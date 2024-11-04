@@ -3,7 +3,9 @@ import { sort } from 'fast-sort';
 import React from 'react';
 
 import { type WorkflowType } from 'common/types';
-import type { IssueType } from 'common/types';
+import type { IssueType, LabelType } from 'common/types';
+
+import { useComputedLabels } from 'hooks/labels';
 
 import {
   TimeBasedFilterEnum,
@@ -164,6 +166,7 @@ export function getSortArray(displaySettings: DisplaySettingsModelType) {
 export function getFilters(
   applicationStore: ApplicationStoreType,
   workflows: WorkflowType[],
+  labels: LabelType[],
 ) {
   const { status, assignee, label, priority } = applicationStore.filters;
   const { showSubIssues, completedFilter, showTriageIssues } =
@@ -193,10 +196,15 @@ export function getFilters(
   }
 
   if (label) {
+    const ids = label.value.flatMap(
+      (value: string) =>
+        labels.find((label) => label.name === value)?.ids || [],
+    );
+
     filters.push({
       key: 'labelIds',
       filterType: label.filterType,
-      value: label.value,
+      value: ids,
     });
   }
 
@@ -281,6 +289,7 @@ export function useFilterIssues(
     issuesStore,
     issueRelationsStore,
   } = useContextStore();
+  const { labels } = useComputedLabels();
 
   const isCompleted = (stateId: string) => {
     const filteredWorkflows = workflows.filter(
@@ -295,7 +304,7 @@ export function useFilterIssues(
   };
 
   return React.useMemo(() => {
-    const filters = getFilters(applicationStore, workflows);
+    const filters = getFilters(applicationStore, workflows, labels);
     const filteredIssues = filterIssues(
       issues,
       filters,

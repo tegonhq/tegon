@@ -93,16 +93,19 @@ export function IssueAssigneeDropdownContent({
             <div className="flex gap-2 items-center">
               {multiple && (
                 <Checkbox
-                  id={userData.fullname}
+                  id={userData.id}
                   checked={value.includes(user.id)}
                   onCheckedChange={(value: boolean) => {
                     onValueChange(value, user.id);
                   }}
                 />
               )}
-              <label htmlFor={user.fullname} className="flex gap-2 grow">
+              <label
+                htmlFor={multiple ? userData.id : undefined}
+                className="flex gap-2 grow"
+              >
                 <AvatarText
-                  text={user.fullname}
+                  text={userData.fullname}
                   className="h-5 w-5 text-[9px]"
                 />
 

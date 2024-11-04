@@ -118,12 +118,15 @@ export function useComputedWorkflows(): {
 
     workflowsStore.workflows
       .filter((workflow: WorkflowType) => {
-        return (
-          !team ||
-          (project
-            ? project.teams.includes(workflow.teamId)
-            : workflow.teamId === team.id) // Check team.id or project.teams
-        );
+        if (team) {
+          return workflow.teamId === team.id;
+        }
+
+        if (project) {
+          return project.teams.includes(workflow.teamId);
+        }
+
+        return true;
       })
       .forEach((workflow: WorkflowType) => {
         // Use the workflow ID as the key for fast access

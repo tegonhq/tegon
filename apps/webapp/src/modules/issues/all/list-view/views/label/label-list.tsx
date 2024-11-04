@@ -13,7 +13,7 @@ export function LabelList({ labels }: LabelListProps) {
     <ScrollArea className="w-full h-full">
       <div className="flex flex-col gap-4 h-full pb-[100px]">
         {labels.map((label: LabelType) => (
-          <LabelViewList key={label.id} label={label} />
+          <LabelViewList key={label.name} label={label} />
         ))}
         <NoLabelList />
       </div>
