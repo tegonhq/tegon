@@ -55,54 +55,60 @@ export default class WorkspacesService {
       throw new BadRequestException('Already workspace exist');
     }
 
-    return await this.prisma.$transaction(async (prisma) => {
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          fullname: workspaceData.fullname,
-        },
-      });
+    return await this.prisma.$transaction(
+      async (prisma) => {
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            fullname: workspaceData.fullname,
+          },
+        });
 
-      const workspace = await prisma.workspace.create({
-        data: {
-          name: workspaceData.workspaceName,
-          slug: workspaceData.workspaceName
-            .toLowerCase()
-            .replace(/[^a-z0-9]/g, ''),
-          preferences: {
-            actionCount: 2,
-          },
-          usersOnWorkspaces: {
-            create: { userId },
-          },
-          team: {
-            create: {
-              name: workspaceData.teamName,
-              identifier: workspaceData.teamIdentifier,
-              workflow: { create: workflowSeedData },
+        const workspace = await prisma.workspace.create({
+          data: {
+            name: workspaceData.workspaceName,
+            slug: workspaceData.workspaceName
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, ''),
+            preferences: {
+              actionCount: 2,
+            },
+            usersOnWorkspaces: {
+              create: { userId },
+            },
+            team: {
+              create: {
+                name: workspaceData.teamName,
+                identifier: workspaceData.teamIdentifier,
+                workflow: { create: workflowSeedData },
+              },
+            },
+            label: { create: labelSeedData },
+            prompts: {
+              createMany: {
+                data: promptsSeedData,
+                skipDuplicates: true,
+              },
             },
           },
-          label: { create: labelSeedData },
-          prompts: {
-            createMany: {
-              data: promptsSeedData,
-              skipDuplicates: true,
-            },
+          include: {
+            team: true,
+            usersOnWorkspaces: true,
           },
-        },
-        include: {
-          team: true,
-          usersOnWorkspaces: true,
-        },
-      });
+        });
 
-      await prisma.usersOnWorkspaces.update({
-        where: { userId_workspaceId: { userId, workspaceId: workspace.id } },
-        data: { teamIds: [workspace.team[0].id] },
-      });
+        await prisma.usersOnWorkspaces.update({
+          where: { userId_workspaceId: { userId, workspaceId: workspace.id } },
+          data: { teamIds: [workspace.team[0].id] },
+        });
 
-      return workspace;
-    });
+        return workspace;
+      },
+      {
+        maxWait: 20000,
+        timeout: 60000,
+      },
+    );
   }
 
   async createWorkspace(
