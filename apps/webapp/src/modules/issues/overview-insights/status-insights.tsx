@@ -28,7 +28,7 @@ export const StatusInsights = observer(({ issues }: StatusInsightsProps) => {
     : [];
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col px-6 gap-1 mt-2">
       {workflows.map((workflow: WorkflowType) => {
         const CategoryIcon = getWorkflowIcon(workflow);
         const isActive = statusFilter.includes(workflow.name);
@@ -36,7 +36,7 @@ export const StatusInsights = observer(({ issues }: StatusInsightsProps) => {
         return (
           <Button
             key={workflow.id}
-            className="flex justify-between p-3 h-auto group"
+            className="flex justify-between p-2.5 h-auto group"
             variant="link"
             isActive={isActive}
             onClick={() =>

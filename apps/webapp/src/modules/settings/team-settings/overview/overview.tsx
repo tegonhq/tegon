@@ -14,20 +14,39 @@ import { Separator } from '@tegonhq/ui/components/separator';
 import { useToast } from '@tegonhq/ui/components/use-toast';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { SettingSection } from 'modules/settings/setting-section';
 
+import type { TeamType } from 'common/types';
+
 import { useCurrentTeam } from 'hooks/teams/use-current-team';
+
+import { useUpdateTeamMutation } from 'services/team';
 
 import { OverviewSchema } from './overview.interface';
 
 export const Overview = observer(() => {
   const currentTeam = useCurrentTeam();
-  const teamEmail = `triage+${currentTeam.id}@tegon.ai`;
+  const teamEmail = `triage+${currentTeam?.id}@tegon.ai`;
   const { toast } = useToast();
+  const {
+    replace,
+    query: { workspaceSlug },
+  } = useRouter();
+  const { mutate: updateTeam, isLoading } = useUpdateTeamMutation({
+    onSuccess: (data: TeamType) => {
+      replace(`/${workspaceSlug}/settings/teams/${data.identifier}/overview`);
+
+      toast({
+        title: 'Team updated',
+        description: 'Team details updated successfully',
+      });
+    },
+  });
 
   const form = useForm<z.infer<typeof OverviewSchema>>({
     resolver: zodResolver(OverviewSchema),
@@ -38,13 +57,20 @@ export const Overview = observer(() => {
   });
 
   React.useEffect(() => {
-    form.setValue('name', currentTeam.name);
-    form.setValue('identifier', currentTeam.identifier);
+    form.setValue('name', currentTeam?.name);
+    form.setValue('identifier', currentTeam?.identifier);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTeam]);
 
   async function onSubmit(values: z.infer<typeof OverviewSchema>) {
-    console.log(values);
+    updateTeam({
+      ...values,
+      teamId: currentTeam.id,
+    });
+  }
+
+  if (!currentTeam) {
+    return null;
   }
 
   return (
@@ -138,7 +164,11 @@ export const Overview = observer(() => {
             so below.
           </p>
 
-          <Button className="w-fit mt-2" variant="destructive">
+          <Button
+            className="w-fit mt-2"
+            variant="destructive"
+            isLoading={isLoading}
+          >
             Delete this team
           </Button>
         </div>

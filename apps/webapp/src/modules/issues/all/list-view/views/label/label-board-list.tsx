@@ -31,11 +31,10 @@ export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
   const { workflows } = useComputedWorkflows();
   const team = useCurrentTeam();
 
-  const issues = issuesStore.getIssuesForLabel(
-    label.id,
-    applicationStore.displaySettings.showSubIssues,
-    { teamId: team?.id, projectId: project?.id },
-  );
+  const issues = issuesStore.getIssuesForLabel(label.ids, {
+    teamId: team?.id,
+    projectId: project?.id,
+  });
 
   const computedIssues = useFilterIssues(issues, workflows);
 
@@ -95,10 +94,10 @@ export const NoLabelBoardList = observer(() => {
   const { workflows } = useComputedWorkflows();
   const project = useProject();
 
-  const issues = issuesStore.getIssuesForNoLabel(
-    applicationStore.displaySettings.showSubIssues,
-    { teamId: team?.id, projectId: project?.id },
-  );
+  const issues = issuesStore.getIssuesForNoLabel({
+    teamId: team?.id,
+    projectId: project?.id,
+  });
 
   const computedIssues = useFilterIssues(issues, workflows);
 

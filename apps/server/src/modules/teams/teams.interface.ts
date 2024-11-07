@@ -13,20 +13,6 @@ export class CreateTeamInput {
   icon?: string;
 }
 
-export class UpdateTeamInput {
-  @IsOptional()
-  @IsString()
-  name?: string;
-
-  @IsOptional()
-  @IsString()
-  identifier?: string;
-
-  @IsOptional()
-  @IsString()
-  icon?: string;
-}
-
 export class TeamRequestParams {
   @IsString()
   teamId: string;

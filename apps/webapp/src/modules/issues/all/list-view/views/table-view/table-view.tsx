@@ -11,7 +11,7 @@ import { useContextStore } from 'store/global-context-provider';
 import { TableC } from './table';
 
 export const TableView = observer(() => {
-  const { issuesStore, applicationStore } = useContextStore();
+  const { issuesStore } = useContextStore();
   const team = useCurrentTeam();
   const project = useProject();
   const { workflows } = useComputedWorkflows();
@@ -19,7 +19,6 @@ export const TableView = observer(() => {
   const issues = issuesStore.getIssues({
     projectId: project?.id,
     teamId: team?.id,
-    subIssue: applicationStore.displaySettings.showSubIssues,
   });
 
   const computedIssues = useFilterIssues(issues, workflows);

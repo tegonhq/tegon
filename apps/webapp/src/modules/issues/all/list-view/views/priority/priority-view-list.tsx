@@ -33,11 +33,10 @@ export const PriorityViewList = observer(
     const project = useProject();
 
     const team = useCurrentTeam();
-    const issues = issuesStore.getIssuesForPriority(
-      priority,
-      applicationStore.displaySettings.showSubIssues,
-      { teamId: team?.id, projectId: project?.id },
-    );
+    const issues = issuesStore.getIssuesForPriority(priority, {
+      teamId: team?.id,
+      projectId: project?.id,
+    });
     const computedIssues = useFilterIssues(issues, workflows);
 
     if (

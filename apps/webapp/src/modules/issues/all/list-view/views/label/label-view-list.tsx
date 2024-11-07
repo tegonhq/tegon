@@ -33,11 +33,10 @@ export const LabelViewList = observer(({ label }: LabelViewListProps) => {
   const project = useProject();
   const { workflows } = useComputedWorkflows();
 
-  const issues = issuesStore.getIssuesForLabel(
-    label.ids,
-    applicationStore.displaySettings.showSubIssues,
-    { teamId: team?.id, projectId: project?.id },
-  );
+  const issues = issuesStore.getIssuesForLabel(label.ids, {
+    teamId: team?.id,
+    projectId: project?.id,
+  });
 
   const computedIssues = useFilterIssues(issues, workflows);
 
@@ -99,10 +98,10 @@ export const NoLabelList = observer(() => {
   const { workflows } = useComputedWorkflows();
   const project = useProject();
 
-  const issues = issuesStore.getIssuesForNoLabel(
-    applicationStore.displaySettings.showSubIssues,
-    { teamId: team?.id, projectId: project?.id },
-  );
+  const issues = issuesStore.getIssuesForNoLabel({
+    teamId: team?.id,
+    projectId: project?.id,
+  });
   const computedIssues = useFilterIssues(issues, workflows);
 
   if (

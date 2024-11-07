@@ -7,7 +7,12 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Team, TeamPreference, UsersOnWorkspaces } from '@tegonhq/types';
+import {
+  Team,
+  TeamPreference,
+  UpdateTeamDto,
+  UsersOnWorkspaces,
+} from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { UserId, Workspace } from 'modules/auth/session.decorator';
@@ -15,7 +20,6 @@ import { AdminGuard } from 'modules/users/admin.guard';
 import { UserIdParams } from 'modules/users/users.interface';
 
 import {
-  UpdateTeamInput,
   TeamRequestParams,
   PreferenceInput,
   CreateTeamInput,
@@ -90,12 +94,27 @@ export class TeamsController {
     );
   }
 
+  @Post(':teamId/remove-member')
+  @UseGuards(AuthGuard)
+  async removeTeamMemeber(
+    @Param()
+    teamRequestParams: TeamRequestParams,
+    @Workspace() workspaceId: string,
+    @Body() teamMemberData: UserIdParams,
+  ): Promise<UsersOnWorkspaces> {
+    return await this.teamsService.removeTeamMember(
+      teamRequestParams,
+      workspaceId,
+      teamMemberData,
+    );
+  }
+
   @Post(':teamId')
   @UseGuards(AuthGuard)
   async updateTeam(
     @Param()
     teamRequestParams: TeamRequestParams,
-    @Body() teamData: UpdateTeamInput,
+    @Body() teamData: UpdateTeamDto,
   ): Promise<Team> {
     return await this.teamsService.updateTeam(teamRequestParams, teamData);
   }
@@ -116,21 +135,5 @@ export class TeamsController {
     teamRequestParams: TeamRequestParams,
   ): Promise<UsersOnWorkspaces[]> {
     return await this.teamsService.getTeamMembers(teamRequestParams);
-  }
-
-  @Delete(':teamId/remove_member')
-  @UseGuards(AuthGuard)
-  async removeTeamMemeber(
-    @Param()
-    teamRequestParams: TeamRequestParams,
-    @Workspace() workspaceId: string,
-
-    @Body() teamMemberData: UserIdParams,
-  ): Promise<UsersOnWorkspaces> {
-    return await this.teamsService.removeTeamMember(
-      teamRequestParams,
-      workspaceId,
-      teamMemberData,
-    );
   }
 }

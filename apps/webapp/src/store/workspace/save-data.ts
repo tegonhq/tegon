@@ -26,7 +26,8 @@ export async function saveWorkspaceData(
 
         // Update the store
         return (
-          workspaceStore && (await workspaceStore.updateUsers(userOnWorkspace))
+          workspaceStore &&
+          (await workspaceStore.updateUsers(userOnWorkspace, record.data.id))
         );
       }
 
