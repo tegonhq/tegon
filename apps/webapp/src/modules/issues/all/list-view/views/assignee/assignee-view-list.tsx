@@ -36,14 +36,11 @@ export const AssigneeViewList = observer(
     const { workflows } = useComputedWorkflows();
     const project = useProject();
 
-    const issues = issuesStore.getIssuesForUser(
-      applicationStore.displaySettings.showSubIssues,
-      {
-        userId: userOnWorkspace.userId,
-        teamId: team?.id,
-        projectId: project?.id,
-      },
-    );
+    const issues = issuesStore.getIssuesForUser({
+      userId: userOnWorkspace.userId,
+      teamId: team?.id,
+      projectId: project?.id,
+    });
     const { users, isLoading } = useUsersData();
     const computedIssues = useFilterIssues(issues, workflows);
 
@@ -106,16 +103,17 @@ export const AssigneeViewList = observer(
 );
 
 export const NoAssigneeView = observer(() => {
-  const { issuesStore, applicationStore } = useContextStore();
+  const { issuesStore } = useContextStore();
   const [isOpen, setIsOpen] = React.useState(true);
   const team = useCurrentTeam();
   const project = useProject();
   const { workflows } = useComputedWorkflows();
 
-  const issues = issuesStore.getIssuesForUser(
-    applicationStore.displaySettings.showSubIssues,
-    { userId: undefined, teamId: team?.id, projectId: project?.id },
-  );
+  const issues = issuesStore.getIssuesForUser({
+    userId: undefined,
+    teamId: team?.id,
+    projectId: project?.id,
+  });
 
   const computedIssues = useFilterIssues(issues, workflows);
 

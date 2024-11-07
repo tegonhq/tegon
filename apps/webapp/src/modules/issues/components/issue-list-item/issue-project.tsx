@@ -23,9 +23,9 @@ export const IssueProject = observer(
           projectMilestonesStore.getMilestoneWithId(projectMilestoneId);
 
         return (
-          <div className="inline-flex items-center gap-1 flex-wrap border-l border-border pl-1">
+          <div className="inline-flex items-center gap-1 border-l border-border pl-1 min-w-[0px]">
             <LabelLine size={14} />
-            {milestone.name}
+            <div className="truncate"> {milestone.name}</div>
           </div>
         );
       }
@@ -40,10 +40,10 @@ export const IssueProject = observer(
         <Badge
           variant="secondary"
           key={project.name}
-          className="flex items-center gap-1"
+          className="flex items-center gap-1 shrink min-w-[0px]"
         >
-          <Project size={14} />
-          {project.name}
+          <Project size={14} className="shrink-0" />
+          <div className="truncate"> {project.name}</div>
           {getMilestone()}
         </Badge>
       </div>

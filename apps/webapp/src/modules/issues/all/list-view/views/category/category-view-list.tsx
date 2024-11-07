@@ -33,11 +33,7 @@ export const CategoryViewList = observer(
     const { issuesStore, applicationStore } = useContextStore();
     const project = useProject();
 
-    const issues = issuesStore.getIssuesForState(
-      workflow.ids,
-      applicationStore.displaySettings.showSubIssues,
-      project?.id,
-    );
+    const issues = issuesStore.getIssuesForState(workflow.ids, project?.id);
     const computedIssues = useFilterIssues(issues, workflows);
 
     if (

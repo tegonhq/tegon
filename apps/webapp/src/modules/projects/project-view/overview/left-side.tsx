@@ -34,12 +34,19 @@ export const LeftSide = observer(() => {
     });
   }, 1000);
 
+  const onTitleChange = useDebouncedCallback((content: string) => {
+    updateProject({
+      name: content,
+      projectId: project.id,
+    });
+  }, 1000);
+
   return (
     <ScrollArea className="grow flex h-full justify-center w-full">
       <div className="flex h-full justify-center w-full">
         <div className="grow flex flex-col gap-2 h-full max-w-[97ch]">
           <div className="py-6 flex flex-col">
-            <ProjectTitle value={project.name} />
+            <ProjectTitle value={project.name} onChange={onTitleChange} />
 
             <Editor
               value={project.description}

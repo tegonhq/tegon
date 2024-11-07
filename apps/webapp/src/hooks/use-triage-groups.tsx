@@ -19,9 +19,9 @@ export function useTriageGroups() {
       workflow.category === WorkflowCategoryEnum.TRIAGE,
   );
 
-  const issues = sort(
-    issuesStore.getIssuesForState([triageWorkflow.id], true),
-  ).desc((issue: IssueType) => new Date(issue.updatedAt)) as IssueType[];
+  const issues = sort(issuesStore.getIssuesForState([triageWorkflow.id])).desc(
+    (issue: IssueType) => new Date(issue.updatedAt),
+  ) as IssueType[];
 
   return React.useMemo(() => {
     const allIssueSuggestions: IssueSuggestionType[] = [];

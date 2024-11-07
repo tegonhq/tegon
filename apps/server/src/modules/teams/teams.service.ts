@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { RoleEnum, Team, UsersOnWorkspaces } from '@tegonhq/types';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  RoleEnum,
+  Team,
+  UpdateTeamDto,
+  UsersOnWorkspaces,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { UserIdParams } from 'modules/users/users.interface';
 
 import {
-  UpdateTeamInput,
   TeamRequestParams,
   PreferenceInput,
   CreateTeamInput,
@@ -103,7 +107,7 @@ export default class TeamsService {
 
   async updateTeam(
     teamRequestParams: TeamRequestParams,
-    teamData: UpdateTeamInput,
+    teamData: UpdateTeamDto,
   ): Promise<Team> {
     return await this.prisma.team.update({
       data: {
@@ -203,6 +207,14 @@ export default class TeamsService {
         },
       },
     });
+
+    const issues = await this.prisma.issue.findMany({
+      where: { assigneeId: userOnWorkspace.userId },
+    });
+
+    if (issues.length > 0) {
+      throw new BadRequestException('There are issues assigned to this user');
+    }
 
     const updatedTeamIds = userOnWorkspace.teamIds.filter(
       (id) => id !== teamRequestParams.teamId,

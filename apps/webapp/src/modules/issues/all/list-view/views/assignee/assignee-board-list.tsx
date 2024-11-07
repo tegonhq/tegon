@@ -35,14 +35,11 @@ export const AssigneeBoardList = observer(
     const { workflows } = useComputedWorkflows();
     const project = useProject();
 
-    const issues = issuesStore.getIssuesForUser(
-      applicationStore.displaySettings.showSubIssues,
-      {
-        userId: userOnWorkspace.userId,
-        teamId: team?.id,
-        projectId: project?.id,
-      },
-    );
+    const issues = issuesStore.getIssuesForUser({
+      userId: userOnWorkspace.userId,
+      teamId: team?.id,
+      projectId: project?.id,
+    });
     const { user, isLoading } = useUserData(userOnWorkspace.userId);
     const computedIssues = useFilterIssues(issues, workflows);
 
@@ -103,15 +100,16 @@ export const AssigneeBoardList = observer(
 );
 
 export const NoAssigneeView = observer(() => {
-  const { issuesStore, applicationStore } = useContextStore();
+  const { issuesStore } = useContextStore();
   const team = useCurrentTeam();
   const { workflows } = useComputedWorkflows();
   const project = useProject();
 
-  const issues = issuesStore.getIssuesForUser(
-    applicationStore.displaySettings.showSubIssues,
-    { userId: undefined, teamId: team?.id, projectId: project?.id },
-  );
+  const issues = issuesStore.getIssuesForUser({
+    userId: undefined,
+    teamId: team?.id,
+    projectId: project?.id,
+  });
   const computedIssues = useFilterIssues(issues, workflows);
 
   if (computedIssues.length === 0) {

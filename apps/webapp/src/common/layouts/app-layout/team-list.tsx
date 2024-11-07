@@ -42,7 +42,7 @@ export const TeamList = observer(() => {
   const workspace = useCurrentWorkspace();
 
   return (
-    <div ref={containerRef} className="h-full overflow-y-auto mt-4">
+    <div ref={containerRef} className="mt-4">
       <div className="mb-2">Your teams</div>
 
       <Accordion

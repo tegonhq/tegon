@@ -23,7 +23,7 @@ export function PriorityInsights({ issues }: PriorityInsightsProps) {
             </div>
 
             <div className="text-muted-foreground">
-              {groupedByIssues.get(key).length}
+              {groupedByIssues.get(key)?.length}
             </div>
           </div>
         );

@@ -26,9 +26,9 @@ export function OverviewInsights() {
   });
 
   return (
-    <div className="flex flex-col">
-      <Tabs className="p-2" defaultValue="status">
-        <TabsList className="grid w-full grid-cols-3 bg-transparent gap-2 p-0">
+    <div className="flex flex-col overflow-hidden">
+      <Tabs className="overflow-hidden" defaultValue="status">
+        <TabsList className="grid w-full grid-cols-3 bg-transparent gap-2 p-6">
           <TabsTrigger value="status" className="bg-grayAlpha-100">
             Status
           </TabsTrigger>
@@ -40,15 +40,15 @@ export function OverviewInsights() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="status">
+        <TabsContent value="status" className="overflow-auto h-full">
           <StatusInsights issues={issues} />
         </TabsContent>
 
-        <TabsContent value="label">
+        <TabsContent value="label" className="overflow-auto h-full">
           <LabelInsights issues={issues} />
         </TabsContent>
 
-        <TabsContent value="assignee">
+        <TabsContent value="assignee" className="overflow-auto h-full">
           <AssigneeInsights issues={issues} />
         </TabsContent>
       </Tabs>

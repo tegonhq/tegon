@@ -41,7 +41,7 @@ export const AssigneeInsights = observer(
       : [];
 
     return (
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col px-6 gap-1 mt-2">
         {usersOnWorkspaces
           .filter(
             (uOw: UsersOnWorkspaceType) =>
@@ -54,7 +54,7 @@ export const AssigneeInsights = observer(
             return (
               <Button
                 key={user.id}
-                className="flex justify-between p-3 h-auto group"
+                className="flex justify-between p-2.5 h-auto group"
                 variant="link"
                 isActive={isActive}
                 onClick={() =>
@@ -76,7 +76,7 @@ export const AssigneeInsights = observer(
                   <span className="group-hover:block hidden">
                     {isActive ? 'Clear filter' : 'Apply filter'}
                   </span>
-                  {groupedByIssues.get(user.id).length}
+                  {groupedByIssues.get(user.id)?.length ?? 0}
                 </div>
               </Button>
             );
@@ -107,7 +107,7 @@ export const AssigneeInsights = observer(
                 ? 'Clear filter'
                 : 'Apply filter'}
             </span>
-            {groupedByIssues.get(null).length}
+            {groupedByIssues.get(null)?.length ?? 0}
           </div>
         </Button>
       </div>
