@@ -68,7 +68,7 @@ Please note that by contributing to this project, you're expected to follow Tego
 
 ## Reporting Issues
 
-If you encounter any issues or have suggestions for improvements, please feel free to (create an issue on Tegon's GitHub repository)[https://github.com/tegonhq/tegon/issues/new]. When reporting issues, please provide as much detail as possible to help in understanding and addressing the problem effectively.
+If you encounter any issues or have suggestions for improvements, please feel free to [create an issue on Tegon's GitHub repository](https://github.com/tegonhq/tegon/issues/new). When reporting issues, please provide as much detail as possible to help in understanding and addressing the problem effectively.
 
 ---
 
