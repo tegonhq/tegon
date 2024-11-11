@@ -1,5 +1,4 @@
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
-import { CalendarLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
@@ -22,6 +21,7 @@ import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { IssueDueDate } from './issue-duedate';
 import { IssueLabels } from './issue-labels';
 import { IssueProject } from './issue-project';
 import { IssueRelations, View } from './issue-relations';
@@ -36,17 +36,6 @@ interface IssueListItemProps {
 interface IssueRelationIssuesProps {
   view: View;
   issue: IssueType;
-}
-
-function formatDateToDayMonth(isoString: string): string {
-  const date = new Date(isoString);
-
-  const options: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'short',
-  };
-
-  return date.toLocaleDateString('en-GB', options);
 }
 
 export const IssueRelationIssues = observer(
@@ -178,12 +167,8 @@ export const IssueListItem = observer(
                     </span>
 
                     <div className="flex items-center gap-2">
-                      {issue.dueDate && (
-                        <div className="inline-flex min-w-[70px] text-xs gap-1 items-center">
-                          <CalendarLine /> &nbsp;
-                          {formatDateToDayMonth(issue.dueDate)}
-                        </div>
-                      )}
+                      <IssueDueDate dueDate={issue.dueDate} />
+
                       <IssueProject
                         projectId={issue.projectId}
                         projectMilestoneId={issue.projectMilestoneId}

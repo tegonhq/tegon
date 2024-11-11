@@ -19,7 +19,7 @@ interface HeaderProps {
   title: string;
   isProjectView?: boolean;
   view?: string;
-  setView?: (view: string) => void;
+  setView?: (view: 'overview' | 'issues') => void;
 }
 
 export const Header = observer(

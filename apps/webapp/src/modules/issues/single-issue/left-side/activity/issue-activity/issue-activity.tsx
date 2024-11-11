@@ -111,6 +111,7 @@ export const IssueActivity = observer(() => {
                 <ActivityItem
                   issueHistory={activity}
                   key={activity.id}
+                  issue={issue}
                   user={getUserDetails(
                     sourceMetadata,
                     getUserData(activity.userId),

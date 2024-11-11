@@ -77,9 +77,7 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <BreadcrumbLink as={Link} href="/docs/primitives/accordion">
-              {issueId}
-            </BreadcrumbLink>
+            <BreadcrumbLink>{issueId}</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
         {!isTriageView && <IssueOptionsDropdown />}

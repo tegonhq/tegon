@@ -17,6 +17,7 @@ export interface CreateIssueParams {
   teamId: string;
   parentId?: string;
   projectId?: string;
+  projectMilestoneId?: string;
 }
 
 export function createIssue({ teamId, ...otherParams }: CreateIssueParams) {

@@ -9,7 +9,6 @@ import { useDebouncedCallback } from 'use-debounce';
 import { useEditorSuggestionItems } from 'modules/issues/components/use-editor-suggestion-items';
 
 import { getTiptapJSON } from 'common';
-import { SubIssueSelector } from 'common/editor';
 import { tegonIssueExtension } from 'common/editor/tegon-issue-extension';
 import { type WorkflowType } from 'common/types';
 
@@ -21,6 +20,7 @@ import { useTeamWorkflows } from 'hooks/workflows';
 import { useUpdateIssueMutation } from 'services/issues';
 
 import { Activity } from './activity';
+import { IssueSubIssueSelector } from './issue-sub-issue-selector';
 import { IssueTitle } from './issue-title';
 import { LinkedIssuesView } from './linked-issues-view';
 import { ParentIssueView } from './parent-issue-view';
@@ -84,7 +84,7 @@ export const LeftSide = observer(() => {
               className="min-h-[50px] mb-8 px-6 mt-3 text-md"
             >
               <EditorExtensions suggestionItems={suggestionItems}>
-                <SubIssueSelector parentId={issue.id} />
+                <IssueSubIssueSelector />
               </EditorExtensions>
             </Editor>
 

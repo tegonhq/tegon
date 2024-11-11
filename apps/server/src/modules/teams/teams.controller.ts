@@ -7,23 +7,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import {
-  Team,
-  TeamPreference,
-  UpdateTeamDto,
-  UsersOnWorkspaces,
-} from '@tegonhq/types';
+import { Team, UpdateTeamDto, UsersOnWorkspaces } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { UserId, Workspace } from 'modules/auth/session.decorator';
 import { AdminGuard } from 'modules/users/admin.guard';
 import { UserIdParams } from 'modules/users/users.interface';
 
-import {
-  TeamRequestParams,
-  PreferenceInput,
-  CreateTeamInput,
-} from './teams.interface';
+import { TeamRequestParams, CreateTeamInput } from './teams.interface';
 import TeamsService from './teams.service';
 
 @Controller({
@@ -67,19 +58,6 @@ export class TeamsController {
     return await this.teamsService.createTeam(workspaceId, userId, teamData);
   }
 
-  @Post(':teamId/preference')
-  @UseGuards(AuthGuard)
-  async createUpdatePreference(
-    @Param()
-    teamRequestParams: TeamRequestParams,
-    @Body() preferenceData: PreferenceInput,
-  ): Promise<TeamPreference> {
-    return await this.teamsService.createUpdatePreference(
-      teamRequestParams,
-      preferenceData,
-    );
-  }
-
   @Post(':teamId/add-member')
   @UseGuards(AuthGuard, AdminGuard)
   async addTeamMember(
@@ -95,7 +73,7 @@ export class TeamsController {
   }
 
   @Post(':teamId/remove-member')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, AdminGuard)
   async removeTeamMemeber(
     @Param()
     teamRequestParams: TeamRequestParams,

@@ -10,7 +10,7 @@ interface LabelListProps {
 
 export function LabelList({ labels }: LabelListProps) {
   return (
-    <ScrollArea className="w-full h-full">
+    <ScrollArea className="w-full h-full" id="label-list">
       <div className="flex flex-col gap-4 h-full pb-[100px]">
         {labels.map((label: LabelType) => (
           <LabelViewList key={label.name} label={label} />

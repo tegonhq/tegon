@@ -59,7 +59,7 @@ export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
           </div>
         </div>
 
-        <ScrollArea className="pr-3 mr-2">
+        <ScrollArea className="pr-3 mr-2" id="label-board-list">
           <div className="flex flex-col gap-3 grow pb-10 pt-2">
             {computedIssues.map((issue: IssueType, index: number) => {
               const id = `${label.name}__${issue.id}`;
@@ -122,7 +122,7 @@ export const NoLabelBoardList = observer(() => {
           </div>
         </div>
 
-        <ScrollArea className="pr-3 mr-2">
+        <ScrollArea className="pr-3 mr-2" id="no-label-board-list">
           <div className="flex flex-col gap-3 grow pb-10 pt-2">
             {computedIssues.map((issue: IssueType, index: number) => {
               return (

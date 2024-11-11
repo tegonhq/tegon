@@ -1,7 +1,7 @@
 import { Button } from '@tegonhq/ui/components/button';
 import {
-  Actions,
   Inbox,
+  MyIssues,
   Project,
   SidebarLine,
   StackLine,
@@ -16,7 +16,6 @@ import { GlobalShortcuts, IssueShortcutDialogs } from 'modules/shortcuts';
 import { AllProviders } from 'common/wrappers/all-providers';
 
 import { useCurrentTeam } from 'hooks/teams';
-import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -32,22 +31,11 @@ interface LayoutProps {
 
 export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   const { applicationStore, notificationsStore } = useContextStore();
-  const workspace = useCurrentWorkspace();
 
   const {
     query: { workspaceSlug },
   } = useRouter();
   const team = useCurrentTeam();
-
-  const actionsLink = workspace.actionsEnabled
-    ? [
-        {
-          title: 'Actions',
-          icon: Actions,
-          href: `/${workspaceSlug}/actions`,
-        },
-      ]
-    : [];
 
   return (
     <>
@@ -75,7 +63,11 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
                     href: `/${workspaceSlug}/inbox`,
                     count: notificationsStore.unReadCount,
                   },
-                  ...actionsLink,
+                  {
+                    title: 'My issues',
+                    icon: MyIssues,
+                    href: `/${workspaceSlug}/my-issues`,
+                  },
                   {
                     title: 'Views',
                     icon: StackLine,

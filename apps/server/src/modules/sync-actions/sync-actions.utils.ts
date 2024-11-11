@@ -54,13 +54,6 @@ export async function getWorkspaceId(
       });
       return team.workspaceId;
 
-    case ModelName.TeamPreference:
-      const teamPreference = await prisma.teamPreference.findUnique({
-        where: { id: modelId },
-        include: { team: true },
-      });
-      return teamPreference.team.workspaceId;
-
     case ModelName.Issue:
       const issue = await prisma.issue.findUnique({
         where: { id: modelId },
@@ -171,7 +164,6 @@ export async function getModelData(
     ActionEntity: prisma.actionEntity,
     UsersOnWorkspaces: prisma.usersOnWorkspaces,
     Team: prisma.team,
-    TeamPreference: prisma.teamPreference,
     Issue: prisma.issue,
     Label: prisma.label,
     Workflow: prisma.workflow,

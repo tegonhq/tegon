@@ -11,7 +11,6 @@ import { UserIdParams } from 'modules/users/users.interface';
 
 import {
   TeamRequestParams,
-  PreferenceInput,
   CreateTeamInput,
   workflowSeedData,
 } from './teams.interface';
@@ -130,28 +129,6 @@ export default class TeamsService {
     });
   }
 
-  async createUpdatePreference(
-    teamRequestParams: TeamRequestParams,
-    preferenceData: PreferenceInput,
-  ) {
-    return await this.prisma.teamPreference.upsert({
-      where: {
-        teamId_preference: {
-          teamId: teamRequestParams.teamId,
-          preference: preferenceData.preference,
-        },
-      },
-      update: {
-        value: preferenceData.value.toString(),
-      },
-      create: {
-        teamId: teamRequestParams.teamId,
-        preference: preferenceData.preference,
-        value: preferenceData.value.toString(),
-      },
-    });
-  }
-
   async addTeamMember(
     teamId: string,
     workspaceId: string,
@@ -209,7 +186,10 @@ export default class TeamsService {
     });
 
     const issues = await this.prisma.issue.findMany({
-      where: { assigneeId: userOnWorkspace.userId },
+      where: {
+        assigneeId: userOnWorkspace.userId,
+        teamId: teamRequestParams.teamId,
+      },
     });
 
     if (issues.length > 0) {

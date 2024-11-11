@@ -1,5 +1,6 @@
 import { WorkflowCategoryEnum } from '@tegonhq/types';
 import { sort } from 'fast-sort';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
 import { type WorkflowType } from 'common/types';
@@ -21,6 +22,7 @@ import {
   useContextStore,
   type StoreContextInstanceType,
 } from 'store/global-context-provider';
+import { UserContext } from 'store/user-context';
 
 interface FilterNormalType extends FilterModelType {
   key: string;
@@ -167,6 +169,7 @@ export function getFilters(
   applicationStore: ApplicationStoreType,
   workflows: WorkflowType[],
   labels: LabelType[],
+  userId?: string,
 ) {
   const { status, assignee, label, priority } = applicationStore.filters;
   const { showSubIssues, completedFilter, showTriageIssues } =
@@ -192,6 +195,14 @@ export function getFilters(
       key: 'assigneeId',
       filterType: assignee.filterType,
       value: assignee.value,
+    });
+  }
+
+  if (!assignee && userId) {
+    filters.push({
+      key: 'assigneeId',
+      filterType: FilterTypeEnum.IS,
+      value: [userId],
     });
   }
 
@@ -283,6 +294,9 @@ export function useFilterIssues(
   issues: IssueType[],
   workflows?: WorkflowType[],
 ): IssueType[] {
+  const pathname = usePathname();
+  const user = React.useContext(UserContext);
+
   const {
     applicationStore,
     linkedIssuesStore,
@@ -304,7 +318,12 @@ export function useFilterIssues(
   };
 
   return React.useMemo(() => {
-    const filters = getFilters(applicationStore, workflows, labels);
+    const filters = getFilters(
+      applicationStore,
+      workflows,
+      labels,
+      pathname.includes('my-issues') ? user.id : undefined,
+    );
     const filteredIssues = filterIssues(
       issues,
       filters,

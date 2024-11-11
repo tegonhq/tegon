@@ -45,6 +45,9 @@ export const ImageComponent = (props: any) => {
           <img
             src={props.node.attrs.src}
             alt={props.node.attrs.alt}
+            onClick={() => {
+              setOpen(true);
+            }}
             className="max-w-[400px] rounded"
           />
           <div className="flex bg-background-3 rounded absolute right-4 top-4 p-1">

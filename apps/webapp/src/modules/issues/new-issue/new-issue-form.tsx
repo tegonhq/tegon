@@ -18,6 +18,7 @@ import { useSuggestionItems } from './hooks';
 import { NewIssueMetadata } from './new-issue-metadata';
 import { NewIssueTitle } from './new-issue-title';
 import { setDefaultValuesAgain, useTeamForNewIssue } from './new-issue-utils';
+import { SubIssueSelectorNI } from './sub-issue-selector-ni';
 import { TeamDropdown } from './team-dropdown';
 import { AddIssueMetadata } from '../components/add-issue-metadata';
 
@@ -114,7 +115,12 @@ export function NewIssueForm({
                     editorClassName="min-h-[100px]"
                     extensions={[AiWritingExtension]}
                   >
-                    <EditorExtensions suggestionItems={suggestionItems} />
+                    <EditorExtensions suggestionItems={suggestionItems}>
+                      <SubIssueSelectorNI
+                        subIssueOperations={subIssueOperations}
+                        teamId={team.id}
+                      />
+                    </EditorExtensions>
                   </Editor>
                 </FormControl>
               </FormItem>
@@ -122,27 +128,23 @@ export function NewIssueForm({
           }}
         />
 
-        <div className="bg-background-3 rounded p-3 w-full flex justify-between flex-wrap gap-1">
-          <div className="flex gap-2">
-            <TeamDropdown
-              value={team.identifier}
-              onChange={(value: string) => setTeam(value)}
-            />
-            <NewIssueMetadata
-              index={index}
-              form={form}
-              teamIdentifier={team.identifier}
-            />
-          </div>
-          <div className="flex items-center">
-            <AddIssueMetadata
-              teamIdentifier={team.identifier}
-              form={form}
-              index={index}
-              onChange={onChange}
-              hideCommands={getCommandsToHide()}
-            />
-          </div>
+        <div className="bg-background-3 rounded p-3 w-full flex flex-wrap gap-2 items-center">
+          <TeamDropdown
+            value={team.identifier}
+            onChange={(value: string) => setTeam(value)}
+          />
+          <NewIssueMetadata
+            index={index}
+            form={form}
+            teamIdentifier={team.identifier}
+          />
+          <AddIssueMetadata
+            teamIdentifier={team.identifier}
+            form={form}
+            index={index}
+            onChange={onChange}
+            hideCommands={getCommandsToHide()}
+          />
         </div>
 
         <div className="flex items-center p-3 pr-0 pb-0 shrink-0 justify-end">
