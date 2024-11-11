@@ -93,3 +93,39 @@ export function useUserData(
 
   return { isLoading, user: usersData ? usersData[0] : undefined };
 }
+
+export function useAllUsers(bot = true): {
+  isLoading: boolean;
+  users: User[];
+} {
+  const { workspaceStore } = useContextStore();
+  const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
+
+  const {
+    data: usersData,
+    isLoading,
+    refetch,
+  } = useGetUsersQuery(
+    usersOnWorkspace.map((uOW: UsersOnWorkspaceType) => uOW.userId),
+  );
+
+  React.useEffect(() => {
+    refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workspaceStore]);
+
+  const users = React.useMemo(() => {
+    if (usersData) {
+      return usersData.filter((user) =>
+        bot ? true : user.role !== RoleEnum.BOT,
+      );
+    }
+
+    return [];
+  }, [bot, usersData]);
+
+  return {
+    isLoading,
+    users,
+  };
+}
