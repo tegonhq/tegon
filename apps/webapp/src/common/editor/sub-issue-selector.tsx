@@ -1,4 +1,3 @@
-import { WorkflowCategoryEnum } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import { useEditor } from '@tegonhq/ui/components/editor/index';
 import {
@@ -7,16 +6,6 @@ import {
   TooltipTrigger,
 } from '@tegonhq/ui/components/tooltip';
 import { SubIssue } from '@tegonhq/ui/icons';
-import { useRouter } from 'next/router';
-
-import type { IssueType, WorkflowType } from 'common/types';
-
-import { useProject } from 'hooks/projects';
-import { useCurrentTeam, useTeamWithId } from 'hooks/teams';
-
-import { useCreateIssueMutation } from 'services/issues';
-
-import { useContextStore } from 'store/global-context-provider';
 
 export function isValidUrl(url: string) {
   try {
@@ -42,42 +31,19 @@ export function getUrlFromString(str: string) {
   return null;
 }
 
-interface SubIssueSelectorProps {
-  parentId?: string;
+export interface IssueContent {
+  text: string;
+  start: number;
+  end: number;
 }
 
-export const SubIssueSelector = ({ parentId }: SubIssueSelectorProps) => {
+interface SubIssueSelectorProps {
+  text: string;
+  onCreate: (issues: IssueContent[]) => void;
+}
+
+export const SubIssueSelector = ({ text, onCreate }: SubIssueSelectorProps) => {
   const { editor } = useEditor();
-  const { query } = useRouter();
-  const cTeam = useCurrentTeam();
-  const project = useProject();
-  const teamId = cTeam ? cTeam.id : project.teams[0];
-  const team = useTeamWithId(teamId);
-  const { workflowsStore } = useContextStore();
-
-  const { mutate: createIssue } = useCreateIssueMutation({
-    onSuccess: (issue: IssueType) => {
-      const url = `http://app.tegon.ai/${query.workspaceSlug}/issue/${team.identifier}-${issue.number}`;
-
-      const selection = editor.view.state.selection;
-      editor
-        .chain()
-        .focus()
-        .insertContentAt(
-          {
-            from: selection.from,
-            to: selection.to,
-          },
-          {
-            type: 'tegonIssueExtension',
-            attrs: {
-              url,
-            },
-          },
-        )
-        .run();
-    },
-  });
 
   if (!editor) {
     return null;
@@ -85,21 +51,46 @@ export const SubIssueSelector = ({ parentId }: SubIssueSelectorProps) => {
 
   const createSubIssue = () => {
     const selection = editor.view.state.selection;
-    const text = editor.state.doc.textBetween(selection.from, selection.to);
+    let textContent;
+    // Get the selection content and examine its structure
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fragment = (selection.content().content as any).content[0];
 
-    const workflows = workflowsStore.getWorkflowsForTeam(team.id);
-    const backlog = workflows.find(
-      (workflow: WorkflowType) =>
-        workflow.category === WorkflowCategoryEnum.BACKLOG,
-    );
-
-    createIssue({
-      description: text,
-      teamId: team.id,
-      stateId: backlog.id,
-      projectId: project?.id,
-      parentId,
+    // Get the resolved position and check parent nodes
+    let isFullBulletList = true;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    fragment.forEach((node: any) => {
+      if (node.type.name !== 'listItem') {
+        isFullBulletList = false;
+      }
     });
+
+    if (isFullBulletList) {
+      const items: Array<{ text: string; start: number; end: number }> = [];
+      let currentPos = selection.from;
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      fragment.forEach((node: any) => {
+        const nodeSize = node.nodeSize;
+        items.push({
+          text: node.textContent,
+          start: currentPos,
+          end: currentPos + nodeSize,
+        });
+        currentPos += nodeSize;
+      });
+      textContent = items;
+    } else {
+      textContent = [
+        {
+          text: editor.state.doc.textBetween(selection.from, selection.to),
+          start: selection.from,
+          end: selection.to,
+        },
+      ];
+    }
+
+    onCreate && onCreate(textContent);
   };
 
   return (
@@ -114,9 +105,7 @@ export const SubIssueSelector = ({ parentId }: SubIssueSelectorProps) => {
             <SubIssue size={16} />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom">
-          Create {parentId ? 'sub-issue' : 'issue'}
-        </TooltipContent>
+        <TooltipContent side="bottom">{text}</TooltipContent>
       </Tooltip>
     </div>
   );

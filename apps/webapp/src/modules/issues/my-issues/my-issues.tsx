@@ -1,24 +1,26 @@
-import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import * as React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
-
-// import { Header } from '../all/header';
+import { ContentBox } from 'common/layouts/content-box';
+import { withApplicationStore } from 'common/wrappers/with-application-store';
 
 import { Header } from './my-issues-header';
-import { MyIssuesView } from './my-issues-view';
+import { IssuesViewOptions } from '../all/issues-view-options';
+import { ListView } from '../all/list-view';
+import { FiltersView } from '../filters-view/filters-view';
 
-export function MyIssues() {
+export const MyIssues = withApplicationStore(() => {
   return (
     <main className="flex flex-col overflow-hidden h-[100vh]">
       <Header />
 
-      <ScrollArea className="grow">
-        <MyIssuesView />
-      </ScrollArea>
+      <ContentBox>
+        <FiltersView Actions={<IssuesViewOptions />} />
+        <ListView />
+      </ContentBox>
     </main>
   );
-}
+});
 
 MyIssues.getLayout = function getLayout(page: React.ReactElement) {
   return <AppLayout>{page}</AppLayout>;

@@ -11,6 +11,8 @@ export const BaseIssueSchema = z.object({
   assigneeId: z.optional(z.string()),
   parentId: z.optional(z.string()),
   teamId: z.optional(z.string()),
+  projectId: z.optional(z.string()),
+  projectMilestoneId: z.optional(z.string()),
 });
 
 export const NewIssueSchema = z.object({

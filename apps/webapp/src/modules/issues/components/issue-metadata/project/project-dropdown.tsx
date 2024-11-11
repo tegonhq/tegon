@@ -100,15 +100,15 @@ export function ProjectDropdown({
         role="combobox"
         aria-expanded={open}
         className={cn(
-          'flex items-center justify-between focus-visible:ring-1 focus-visible:border-primary gap-1',
+          'flex items-center justify-between focus-visible:ring-1 focus-visible:border-primary gap-1 flex-wrap max-w-[200px]',
         )}
       >
         {value ? (
-          <>
-            <Project className="w-5 h-5 text-[9px]" />
+          <div className="flex items-center gap-1 shrink min-w-[0px]">
+            <Project className="w-5 h-5 text-[9px] shrink-0" />
 
-            {getProject(value).name}
-          </>
+            <div className="truncate"> {getProject(value).name}</div>
+          </div>
         ) : (
           <>
             <Project size={20} className="mr-1" /> No Project

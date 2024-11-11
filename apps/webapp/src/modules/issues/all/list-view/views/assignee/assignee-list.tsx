@@ -11,7 +11,7 @@ interface AssigneeListProps {
 
 export function AssigneeList({ usersOnWorkspaces }: AssigneeListProps) {
   return (
-    <ScrollArea className="h-full w-full">
+    <ScrollArea className="h-full w-full" id="assignee-list">
       <div className="flex flex-col gap-4 h-full pb-[100px]">
         {usersOnWorkspaces
           .filter(

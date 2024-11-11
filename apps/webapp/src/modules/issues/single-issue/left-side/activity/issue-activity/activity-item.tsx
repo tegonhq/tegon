@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import type { User } from 'common/types';
+import type { IssueType, User } from 'common/types';
 import type { IssueHistoryType } from 'common/types';
 
 import { LabelActivity } from './label-activity';
@@ -12,10 +12,11 @@ import { StatusActivity } from './status-activity';
 interface ActivityItemProps {
   issueHistory: IssueHistoryType;
   user: User;
+  issue: IssueType;
 }
 
 export const ActivityItem = observer(
-  ({ issueHistory, user }: ActivityItemProps) => {
+  ({ issueHistory, user, issue }: ActivityItemProps) => {
     const [items, setItems] = React.useState([]);
 
     React.useEffect(() => {
@@ -78,6 +79,7 @@ export const ActivityItem = observer(
             issueHistory={issueHistory}
             showTime={setShowTime}
             key={index}
+            teamId={issue.teamId}
           />,
         );
         index = index + 1;

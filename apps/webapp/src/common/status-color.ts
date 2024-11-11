@@ -1,7 +1,7 @@
 import type { WorkflowType } from 'common/types';
 
 export function getWorkflowColor(workflow: WorkflowType) {
-  return getWorkflowColorWithNumber(workflow.color);
+  return getWorkflowColorWithNumber(workflow?.color ?? '1');
 }
 
 export function getWorkflowColorWithNumber(color: string) {

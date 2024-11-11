@@ -548,25 +548,10 @@ model Team {
   label          Label[]
   template       Template[]
   workflow       Workflow[]
-  teamPreference TeamPreference[]
+  preferences    Json  @default("{}")
   View           View[]
 
   @@unique([name, identifier, workspaceId])
-}
-
-model TeamPreference {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  team   Team?  @relation(fields: [teamId], references: [id])
-  teamId String
-
-  preference Preference
-  value      String
-
-  @@unique([teamId, preference])
 }
 
 model Template {
@@ -753,7 +738,6 @@ enum ModelName {
   Reaction
   SyncAction
   Team
-  TeamPreference
   Template
   TriggerProject
   User

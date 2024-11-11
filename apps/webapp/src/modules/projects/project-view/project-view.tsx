@@ -5,6 +5,7 @@ import { ContentBox } from 'common/layouts/content-box';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
 import { useProject } from 'hooks/projects';
+import { useLocalState } from 'hooks/use-local-state';
 
 import { ProjectIssues } from './issues';
 import { Overview } from './overview';
@@ -12,7 +13,10 @@ import { RightSide } from './overview/right-side';
 import { Header } from '../header';
 
 export const ProjectView = withApplicationStore(() => {
-  const [view, setView] = React.useState('overview');
+  const [view, setView] = useLocalState<'overview' | 'issues'>(
+    'project_tab',
+    'overview',
+  );
   const project = useProject();
 
   if (!project) {

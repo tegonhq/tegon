@@ -29,7 +29,7 @@ export function InboxSingleIssue() {
             collapsible
             collapsedSize={16}
           >
-            <div className="flex flex-col">
+            <div className="flex flex-col h-full">
               <h2 className="text-lg pl-6 pt-6 font-medium"> Inbox </h2>
               <NotificationsList />
             </div>
@@ -42,7 +42,7 @@ export function InboxSingleIssue() {
                   <div className="col-span-4 xl:col-span-3 flex flex-col h-[calc(100vh_-_52px)]">
                     <LeftSide />
                   </div>
-                  <div className="border-l hidden flex-col xl:col-span-1 xl:flex">
+                  <div className="border-l border-border hidden flex-col xl:col-span-1 xl:flex">
                     <RightSide />
                   </div>
                 </main>

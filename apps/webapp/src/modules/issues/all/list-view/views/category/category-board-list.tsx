@@ -61,7 +61,7 @@ export const CategoryBoardList = observer(
             </div>
           </div>
 
-          <ScrollArea className="pr-3 mr-2">
+          <ScrollArea className="pr-3 mr-2" id="category-board-list">
             <div className="flex flex-col gap-2 grow pb-10">
               {computedIssues.map((issue: IssueType, index: number) => (
                 <BoardItem key={issue.id} id={issue.id}>

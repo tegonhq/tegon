@@ -6,7 +6,7 @@ import { PriorityViewList } from './priority-view-list';
 
 export function PriorityList() {
   return (
-    <ScrollArea className="w-full h-full">
+    <ScrollArea className="w-full h-full" id="priority-list">
       <div className="flex flex-col gap-4 h-full pb-[100px]">
         {Priorities.map((priority: string, index: number) => (
           <PriorityViewList key={priority} priority={index} />
