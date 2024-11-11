@@ -29,7 +29,7 @@ export const IssueActivity = observer(() => {
     ? JSON.parse(issue.sourceMetadata)
     : undefined;
 
-  const { users, isLoading } = useUsersData(true, issue.teamId);
+  const { users, isLoading } = useUsersData(true);
 
   const {
     issuesHistoryStore,

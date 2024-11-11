@@ -14,6 +14,7 @@ export const FiltersModel = types.model({
   status: types.union(types.undefined, FilterModel),
   label: types.union(types.undefined, FilterModel),
   priority: types.union(types.undefined, FilterModel),
+  project: types.union(types.undefined, FilterModel),
 
   // For issues coming from Slack, Github
   source: types.union(types.undefined, FilterModel),
@@ -26,7 +27,14 @@ export const FiltersModel = types.model({
 
 export const DisplaySettingsModel = types.model({
   view: types.enumeration(['list', 'board', 'sheet']),
-  grouping: types.enumeration(['assignee', 'priority', 'status', 'label']),
+  grouping: types.enumeration([
+    'assignee',
+    'priority',
+    'status',
+    'label',
+    'project',
+    'team',
+  ]),
   ordering: types.enumeration([
     'assignee',
     'priority',

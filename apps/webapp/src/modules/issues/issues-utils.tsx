@@ -171,7 +171,8 @@ export function getFilters(
   labels: LabelType[],
   userId?: string,
 ) {
-  const { status, assignee, label, priority } = applicationStore.filters;
+  const { status, assignee, label, priority, project } =
+    applicationStore.filters;
   const { showSubIssues, completedFilter, showTriageIssues } =
     applicationStore.displaySettings;
 
@@ -224,6 +225,14 @@ export function getFilters(
       key: 'priority',
       filterType: priority.filterType,
       value: priority.value,
+    });
+  }
+
+  if (project) {
+    filters.push({
+      key: 'projectId',
+      filterType: project.filterType,
+      value: project.value,
     });
   }
 

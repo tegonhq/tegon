@@ -4,7 +4,8 @@ import * as React from 'react';
 import type { User } from 'common/types';
 import type { UsersOnWorkspaceType } from 'common/types';
 
-import { useTeamWithId } from 'hooks/teams';
+import { useProject } from 'hooks/projects';
+import { useCurrentTeam, useTeamWithId } from 'hooks/teams';
 
 import { useGetUsersQuery } from 'services/users';
 
@@ -12,6 +13,11 @@ import { useContextStore } from 'store/global-context-provider';
 
 export function useUsersData(bot = true, teamId?: string) {
   const { workspaceStore } = useContextStore();
+  const currentTeam = useCurrentTeam();
+  const teamWithId = useTeamWithId(teamId);
+  const team = teamWithId ? teamWithId : currentTeam;
+  const project = useProject();
+
   const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
   const {
     data: usersData,
@@ -20,10 +26,14 @@ export function useUsersData(bot = true, teamId?: string) {
   } = useGetUsersQuery(
     usersOnWorkspace
       .filter((uOW: UsersOnWorkspaceType) => {
-        if (teamId) {
-          return uOW.teamIds.includes(teamId);
+        if (team?.id) {
+          return uOW.teamIds.includes(team.id);
         }
-
+        if (project?.teams) {
+          return project.teams.some((teamId: string) =>
+            uOW.teamIds.includes(teamId),
+          );
+        }
         return true;
       })
       .map((uOW: UsersOnWorkspaceType) => uOW.userId),
