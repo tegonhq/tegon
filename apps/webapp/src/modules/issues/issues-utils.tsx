@@ -265,7 +265,9 @@ export function getFilters(
     filters.push({
       key: 'stateId',
       filterType: FilterTypeEnum.IS_NOT,
-      value: filteredWorkflows.map((workflow) => workflow.id),
+      value: filteredWorkflows.flatMap((workflow: WorkflowType) =>
+        workflow.ids ? workflow.ids : workflow.id,
+      ),
     });
   }
 
@@ -277,7 +279,9 @@ export function getFilters(
     filters.push({
       key: 'stateId',
       filterType: FilterTypeEnum.IS_NOT,
-      value: filteredWorkflows.map((workflow) => workflow.id),
+      value: filteredWorkflows.flatMap((workflow: WorkflowType) =>
+        workflow.ids ? workflow.ids : workflow.id,
+      ),
     });
   }
 
