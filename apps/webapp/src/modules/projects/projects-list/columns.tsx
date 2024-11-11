@@ -50,7 +50,6 @@ export const useProjectColumns = (): Array<ColumnDef<ProjectType>> => {
       header: () => {
         return <span className="px-2">Target date</span>;
       },
-
       cell: ({ row }) => (
         <ProjectWrapper
           id={row.original.id}

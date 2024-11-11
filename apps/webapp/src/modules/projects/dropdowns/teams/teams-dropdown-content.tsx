@@ -4,6 +4,8 @@ import { TeamLine } from '@tegonhq/ui/icons';
 
 import { DropdownItem } from 'modules/issues/components/issue-metadata/dropdown-item';
 
+import type { TeamType } from 'common/types';
+
 import { useTeams } from 'hooks/teams';
 
 interface TeamsDropdownContentProps {
@@ -37,7 +39,7 @@ export function TeamsDropdownContent({
 
   return (
     <CommandGroup>
-      {teams.map((team, index) => {
+      {teams.map((team: TeamType, index: number) => {
         return (
           <DropdownItem
             key={team.name}
