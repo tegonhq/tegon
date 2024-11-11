@@ -8,7 +8,9 @@ import { AssigneeView } from './views/assignee';
 import { CategoryView } from './views/category';
 import { LabelView } from './views/label';
 import { PriorityView } from './views/priority';
+import { ProjectView } from './views/projects';
 import { TableView } from './views/table-view';
+import { TeamView } from './views/team';
 
 export const ListView = observer(() => {
   const { applicationStore } = useContextStore();
@@ -32,6 +34,14 @@ export const ListView = observer(() => {
 
   if (grouping === 'label') {
     return <LabelView />;
+  }
+
+  if (grouping === 'project') {
+    return <ProjectView />;
+  }
+
+  if (grouping === 'team') {
+    return <TeamView />;
   }
 
   return <CategoryView />;

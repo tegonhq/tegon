@@ -1,4 +1,3 @@
-import { RoleEnum } from '@tegonhq/types';
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';
@@ -7,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 
 import { groupBy } from 'common/lib/common';
 import { FilterTypeEnum, type IssueType } from 'common/types';
-import type { User, UsersOnWorkspaceType } from 'common/types';
+import type { User } from 'common/types';
 
 import { useUsersData } from 'hooks/users';
 
@@ -21,19 +20,12 @@ interface AssigneeInsightsProps {
 
 export const AssigneeInsights = observer(
   ({ issues }: AssigneeInsightsProps) => {
-    const {
-      workspaceStore: { usersOnWorkspaces },
-    } = useContextStore();
-    const { users, isLoading } = useUsersData();
+    const { users, isLoading } = useUsersData(false);
     const { applicationStore } = useContextStore();
     const groupedByIssues = groupBy(issues, 'assigneeId');
 
     if (isLoading) {
       return <Loader />;
-    }
-
-    function getUserData(userId: string) {
-      return users.find((userData: User) => userData.id === userId);
     }
 
     const assigneeFilter = applicationStore.filters.assignee
@@ -42,45 +34,39 @@ export const AssigneeInsights = observer(
 
     return (
       <div className="flex flex-col px-6 gap-1 mt-2">
-        {usersOnWorkspaces
-          .filter(
-            (uOw: UsersOnWorkspaceType) =>
-              ![RoleEnum.BOT, RoleEnum.AGENT].includes(uOw.role as RoleEnum),
-          )
-          .map((uOW: UsersOnWorkspaceType) => {
-            const user = getUserData(uOW.userId);
-            const isActive = assigneeFilter.includes(user.id);
+        {users.map((user: User) => {
+          const isActive = assigneeFilter.includes(user.id);
 
-            return (
-              <Button
-                key={user.id}
-                className="flex justify-between p-2.5 h-auto group"
-                variant="link"
-                isActive={isActive}
-                onClick={() =>
-                  applyFilters(
-                    FilterTypeEnum.IS,
-                    'assignee',
-                    user.id,
-                    assigneeFilter,
-                    applicationStore,
-                  )
-                }
-              >
-                <div className="flex gap-2 items-center">
-                  <AvatarText text={user?.fullname} className="text-[9px]" />
-                  {user?.fullname}
-                </div>
+          return (
+            <Button
+              key={user.id}
+              className="flex justify-between p-2.5 h-auto group"
+              variant="link"
+              isActive={isActive}
+              onClick={() =>
+                applyFilters(
+                  FilterTypeEnum.IS,
+                  'assignee',
+                  user.id,
+                  assigneeFilter,
+                  applicationStore,
+                )
+              }
+            >
+              <div className="flex gap-2 items-center">
+                <AvatarText text={user?.fullname} className="text-[9px]" />
+                {user?.fullname}
+              </div>
 
-                <div className="text-muted-foreground flex gap-2 items-center">
-                  <span className="group-hover:block hidden">
-                    {isActive ? 'Clear filter' : 'Apply filter'}
-                  </span>
-                  {groupedByIssues.get(user.id)?.length ?? 0}
-                </div>
-              </Button>
-            );
-          })}
+              <div className="text-muted-foreground flex gap-2 items-center">
+                <span className="group-hover:block hidden">
+                  {isActive ? 'Clear filter' : 'Apply filter'}
+                </span>
+                {groupedByIssues.get(user.id)?.length ?? 0}
+              </div>
+            </Button>
+          );
+        })}
         <Button
           key="no-user"
           className="flex justify-between p-3 h-auto group"

@@ -7,6 +7,7 @@ import {
   LabelLine,
   ParentIssueLine,
   PriorityHigh,
+  Project,
   SubIssue,
   UnscopedLine,
 } from '@tegonhq/ui/icons';
@@ -54,6 +55,15 @@ export function DefaultFilterDropdown({
       >
         <PriorityHigh size={16} className="mr-2" />
         Priority
+      </CommandItem>
+      <CommandItem
+        key="Project"
+        value="Project"
+        className="flex items-center"
+        onSelect={onSelect}
+      >
+        <Project size={16} className="mr-2" />
+        Project
       </CommandItem>
       <Separator className="my-1" />
       <CommandItem

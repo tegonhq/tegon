@@ -10,10 +10,15 @@ import {
 import { BulletListLine, StackLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 
+import { useProject } from 'hooks/projects';
+import { useCurrentTeam } from 'hooks/teams';
+
 import { useContextStore } from 'store/global-context-provider';
 
 export const GroupingOrderingOptions = observer(() => {
   const { applicationStore } = useContextStore();
+  const project = useProject();
+  const team = useCurrentTeam();
 
   return (
     <div className="flex items-center gap-2">
@@ -36,6 +41,8 @@ export const GroupingOrderingOptions = observer(() => {
             <SelectItem value="assignee">Assignee</SelectItem>
             <SelectItem value="priority">Priority</SelectItem>
             <SelectItem value="label">Label</SelectItem>
+            {!project && <SelectItem value="project">Project</SelectItem>}
+            {!team && <SelectItem value="team">Team</SelectItem>}
           </SelectGroup>
         </SelectContent>
       </Select>

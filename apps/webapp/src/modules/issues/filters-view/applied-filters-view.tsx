@@ -8,6 +8,7 @@ import {
   IssueAssigneeDropdown,
   IssueLabelDropdown,
   IssuePriorityDropdown,
+  IssueProjectDropdown,
 } from './filter-dropdowns';
 import { FilterItemView } from './filter-item-view';
 import { isEmpty } from './filter-utils';
@@ -47,6 +48,13 @@ export const AppliedFiltersView = observer(() => {
             filterKey="priority"
             filter={filters.priority}
             Component={IssuePriorityDropdown}
+          />
+
+          <FilterItemView
+            name="Project"
+            filterKey="project"
+            filter={filters.project}
+            Component={IssueProjectDropdown}
           />
 
           <FilterItemView

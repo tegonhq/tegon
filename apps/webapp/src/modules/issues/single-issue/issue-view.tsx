@@ -1,8 +1,12 @@
 import { WorkflowCategoryEnum } from '@tegonhq/types';
 import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 import React from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { Key } from 'ts-key-enum';
 
 import { ContentBox } from 'common/layouts/content-box';
+import { SCOPES } from 'common/scopes';
 import type { WorkflowType } from 'common/types';
 
 import { useIssueData } from 'hooks/issues';
@@ -21,6 +25,7 @@ export const IssueView = observer(() => {
   const currentTeam = useCurrentTeam();
   const workflows = useTeamWorkflows(currentTeam.identifier);
   const { applicationStore } = useContextStore();
+  const router = useRouter();
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,
@@ -37,6 +42,15 @@ export const IssueView = observer(() => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useHotkeys(
+    Key.Escape,
+    (e) => {
+      router.back();
+      e.preventDefault();
+    },
+    { scopes: [SCOPES.SingleIssues] },
+  );
 
   if (!issue) {
     return null;

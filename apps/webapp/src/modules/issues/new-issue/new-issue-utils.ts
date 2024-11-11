@@ -4,8 +4,9 @@ import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-import type { TeamType, WorkflowType } from 'common/types';
+import type { IssueType, TeamType, WorkflowType } from 'common/types';
 
+import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -35,22 +36,33 @@ export function getDefaultValues(
 export function setDefaultValuesAgain({
   form,
   index,
-  workflows,
-  teamId,
+  defaultValues,
 }: {
   form: UseFormReturn;
   index: number;
-  workflows: WorkflowType[];
-  teamId: string;
+  defaultValues: Partial<IssueType>;
 }) {
-  const defaultValues = getDefaultValues(teamId, workflows);
-
   const defaultValuesKeys = Object.keys(defaultValues);
 
   defaultValuesKeys.forEach((key: keyof DefaultValues) => {
     form.setValue(`issues.${index}.${key}`, defaultValues[key]);
   });
 }
+
+export const useDefaultValues = (parentId?: string, description?: string) => {
+  const team = useCurrentTeam();
+  const project = useProject();
+
+  return {
+    teamId: team?.id,
+    projectId: project?.id,
+
+    parentId,
+    description,
+
+    priority: 0,
+  };
+};
 
 export function useTeamForNewIssue(defaultTeamId: string): {
   team: TeamType;

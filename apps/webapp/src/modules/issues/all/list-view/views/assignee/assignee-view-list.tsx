@@ -41,7 +41,7 @@ export const AssigneeViewList = observer(
       teamId: team?.id,
       projectId: project?.id,
     });
-    const { users, isLoading } = useUsersData();
+    const { users, isLoading } = useUsersData(false);
     const computedIssues = useFilterIssues(issues, workflows);
 
     if (isLoading) {

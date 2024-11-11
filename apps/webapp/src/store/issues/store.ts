@@ -87,12 +87,40 @@ export const IssuesStore: IAnyStateTreeNode = types
         return !issue.assigneeId && isTeamIssues;
       });
     },
-    getIssuesForTeam(teamId: string, showSubIssues: boolean = true) {
+    getIssuesForProject({
+      teamId,
+      projectId,
+    }: {
+      teamId?: string;
+      projectId?: string;
+    }) {
       return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
         const isTeamIssues = teamId ? issue.teamId === teamId : true;
-        const isSubIssue = showSubIssues ? !issue.parentId : true;
 
-        return isTeamIssues && isSubIssue;
+        const isFromProject = projectId ? issue.projectId === projectId : true;
+
+        return isTeamIssues && isFromProject;
+      });
+    },
+    getIssuesForNoProject({ teamId }: { teamId?: string }) {
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
+        const isTeamIssues = teamId ? issue.teamId === teamId : true;
+
+        return isTeamIssues && !issue.projectId;
+      });
+    },
+    getIssuesForTeam({
+      teamId,
+      projectId,
+    }: {
+      teamId: string;
+      projectId: string;
+    }) {
+      return Array.from(self.issuesMap.values()).filter((issue: IssueType) => {
+        const isTeamIssues = teamId ? issue.teamId === teamId : true;
+        const isFromProject = projectId ? issue.projectId === projectId : true;
+
+        return isTeamIssues && isFromProject;
       });
     },
     getIssuesForPriority(
@@ -135,6 +163,7 @@ export const IssuesStore: IAnyStateTreeNode = types
         return issue.labelIds.length === 0 && isTeamIssues && isFromProject;
       });
     },
+
     getIssueById(issueId: string): IssueType {
       const issue = self.issuesMap.get(issueId);
 

@@ -28,6 +28,7 @@ import {
   IssueStatusFilter,
   IssueLabelFilter,
   IssuePriorityFilter,
+  IssueProjectFilter,
 } from './filter-dropdowns';
 import { isEmpty } from './filter-utils';
 import { useFilterShorcuts } from './use-filter-shortcuts';
@@ -37,6 +38,7 @@ const ContentMap = {
   assignee: IssueAssigneeFilter,
   label: IssueLabelFilter,
   priority: IssuePriorityFilter,
+  project: IssueProjectFilter,
 };
 
 export type KeyType = keyof typeof ContentMap;

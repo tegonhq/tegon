@@ -17,25 +17,8 @@ function useScrollRestoration(
   ref: React.RefObject<HTMLDivElement>,
 ) {
   React.useEffect(() => {
-    if (!id || !ref.current) {
-      return null;
-    }
     const element = ref.current;
 
-    // Initialize window storage if it doesn't exist
-    if (!(window as any).__scrollPositions) {
-      (window as any).__scrollPositions = {};
-    }
-
-    // Restore scroll position on mount
-    const savedPosition = (window as any).__scrollPositions[id];
-    if (savedPosition) {
-      const { scrollTop, scrollLeft } = savedPosition;
-      element.scrollTop = scrollTop;
-      element.scrollLeft = scrollLeft;
-    }
-
-    // Add scroll event listener to save position while scrolling
     const handleScroll = () => {
       (window as any).__scrollPositions[id] = {
         scrollTop: element.scrollTop,
@@ -43,7 +26,24 @@ function useScrollRestoration(
       };
     };
 
-    element.addEventListener('scroll', handleScroll);
+    if (id && ref.current) {
+      // Initialize window storage if it doesn't exist
+      if (!(window as any).__scrollPositions) {
+        (window as any).__scrollPositions = {};
+      }
+
+      // Restore scroll position on mount
+      const savedPosition = (window as any).__scrollPositions[id];
+      if (savedPosition) {
+        const { scrollTop, scrollLeft } = savedPosition;
+        element.scrollTop = scrollTop;
+        element.scrollLeft = scrollLeft;
+      }
+
+      // Add scroll event listener to save position while scrolling
+
+      element.addEventListener('scroll', handleScroll);
+    }
 
     // Cleanup: remove event listener and save final position
     return () => {
