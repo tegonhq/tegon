@@ -15,6 +15,8 @@ import { ALSModule } from 'modules/als/als.module';
 import { AttachmentModule } from 'modules/attachments/attachments.module';
 import { AuthModule } from 'modules/auth/auth.module';
 import { BullConfigModule } from 'modules/bull/bull.module';
+import { ConversationModule } from 'modules/conversation/conversation.module';
+import { ConversationHistoryModule } from 'modules/conversation-history/conversation-history.module';
 import { IntegrationAccountModule } from 'modules/integration-account/integration-account.module';
 import { IntegrationDefinitionModule } from 'modules/integration-definition/integration-definition.module';
 import { IntegrationsModule } from 'modules/integrations/integrations.module';
@@ -119,6 +121,9 @@ import { AppService } from './app.service';
     IntegrationsModule,
 
     BullConfigModule,
+
+    ConversationModule,
+    ConversationHistoryModule,
   ],
   controllers: [AppController],
   providers: [
