@@ -41,6 +41,7 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
       actionsStore,
       projectsStore,
       projectMilestonesStore,
+      cyclesStore,
     } = useContextStore();
     const user = React.useContext(UserContext);
     const hashKey = `${workspace.id}__${user.id}`;
@@ -90,6 +91,7 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
         [MODELS.Action]: actionsStore,
         [MODELS.Project]: projectsStore,
         [MODELS.ProjectMilestone]: projectMilestonesStore,
+        [MODELS.Cycle]: cyclesStore,
       };
 
       socket.on('message', (newMessage: string) => {

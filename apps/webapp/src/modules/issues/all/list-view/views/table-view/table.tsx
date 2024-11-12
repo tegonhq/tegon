@@ -51,7 +51,7 @@ export const TableC = observer(({ issues }: TableCProps) => {
   });
 
   return (
-    <div className="ml-6 h-full overflow-y-auto">
+    <div className="ml-4 h-full overflow-y-auto">
       <div className="h-full relative overflow-auto">
         <Table style={{ width: table.getTotalSize() }}>
           <TableHeader className="sticky top-0 bg-background-2">

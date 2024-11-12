@@ -57,7 +57,7 @@ export const LabelBoard = observer(({ labels }: LabelBoardProps) => {
   };
 
   return (
-    <Board onDragEnd={onDragEnd} className="pl-6">
+    <Board onDragEnd={onDragEnd} className="pl-4">
       <>
         {labels.map((label: LabelType) => {
           return <LabelBoardList key={label.id} label={label} />;

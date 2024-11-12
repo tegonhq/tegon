@@ -45,6 +45,7 @@ export function BootstrapWrapper({ children }: Props) {
     actionsStore,
     projectsStore,
     projectMilestonesStore,
+    cyclesStore,
   } = useContextStore();
 
   const MODEL_STORE_MAP = {
@@ -65,6 +66,7 @@ export function BootstrapWrapper({ children }: Props) {
     [MODELS.Action]: actionsStore,
     [MODELS.Project]: projectsStore,
     [MODELS.ProjectMilestone]: projectMilestonesStore,
+    [MODELS.Cycle]: cyclesStore,
   };
 
   React.useEffect(() => {

@@ -4,6 +4,7 @@ import React from 'react';
 import { ActionsStore } from './action';
 import { ApplicationStore, defaultApplicationStoreValue } from './application';
 import { CommentsStore } from './comments';
+import { CyclesStore } from './cycle';
 import { IntegrationAccountsStore } from './integration-accounts';
 import { IssueHistoryStore } from './issue-history';
 import { IssueRelationsStore } from './issue-relation';
@@ -36,6 +37,7 @@ const StoreContextModel = types.model({
   issueSuggestionsStore: IssueSuggestionsStore,
   projectsStore: ProjectsStore,
   projectMilestonesStore: ProjectMilestonesStore,
+  cyclesStore: CyclesStore,
 });
 
 export const storeContextStore = StoreContextModel.create({
@@ -101,6 +103,9 @@ export const storeContextStore = StoreContextModel.create({
   },
   projectMilestonesStore: {
     milestones: [],
+  },
+  cyclesStore: {
+    cycles: [],
   },
 });
 

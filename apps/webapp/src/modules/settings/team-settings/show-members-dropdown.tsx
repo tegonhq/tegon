@@ -22,7 +22,7 @@ import type { UsersOnWorkspaceType } from 'common/types';
 import { getUserFromUsersData } from 'common/user-util';
 
 import { useCurrentTeam } from 'hooks/teams';
-import { useUsersData } from 'hooks/users';
+import { useAllUsers } from 'hooks/users';
 
 import { useAddTeamMemberMutation } from 'services/team';
 
@@ -46,7 +46,7 @@ export const ShowMembersDropdown = observer(() => {
     },
   });
 
-  const { users, isLoading } = useUsersData();
+  const { users, isLoading } = useAllUsers();
 
   const getMembersNotInTeam = () => {
     return workspaceStore.usersOnWorkspaces.filter(

@@ -26,7 +26,7 @@ export const LabelInsights = observer(({ issues }: LabelInsightsProps) => {
     : [];
 
   return (
-    <div className="flex flex-col px-6 gap-1 mt-2">
+    <div className="flex flex-col px-4 gap-1 mt-2">
       {labels.map((label: LabelType) => {
         const isActive = labelFilter.includes(label.name);
 

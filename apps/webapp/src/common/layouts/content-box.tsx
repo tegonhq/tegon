@@ -8,19 +8,22 @@ interface ContentBoxProps {
   className?: string;
 }
 
-export const ContentBox = observer(({ children }: ContentBoxProps) => {
-  const { applicationStore } = useContextStore();
+export const ContentBox = observer(
+  ({ children, className }: ContentBoxProps) => {
+    const { applicationStore } = useContextStore();
 
-  return (
-    <main
-      className={cn(
-        'p-3 pt-0 pl-0 flex flex-col h-[calc(100vh_-_53px)]',
-        applicationStore.sidebarCollapsed && 'pl-3',
-      )}
-    >
-      <div className="bg-background-2 h-full rounded-lg overflow-hidden shadow flex flex-col">
-        {children}
-      </div>
-    </main>
-  );
-});
+    return (
+      <main
+        className={cn(
+          'p-3 pt-0 pl-0 flex flex-col h-[calc(100vh_-_48px)]',
+          className,
+          applicationStore.sidebarCollapsed && 'pl-3',
+        )}
+      >
+        <div className="bg-background-2 h-full rounded-lg overflow-hidden shadow flex flex-col">
+          {children}
+        </div>
+      </main>
+    );
+  },
+);

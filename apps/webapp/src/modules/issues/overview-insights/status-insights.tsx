@@ -28,7 +28,7 @@ export const StatusInsights = observer(({ issues }: StatusInsightsProps) => {
     : [];
 
   return (
-    <div className="flex flex-col px-6 gap-1 mt-2">
+    <div className="flex flex-col px-4 gap-1 mt-2">
       {workflows.map((workflow: WorkflowType) => {
         const CategoryIcon = getWorkflowIcon(workflow);
         const isActive = statusFilter.includes(workflow.name);

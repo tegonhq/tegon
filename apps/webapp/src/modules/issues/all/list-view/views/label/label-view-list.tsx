@@ -56,7 +56,7 @@ export const LabelViewList = observer(({ label }: LabelViewListProps) => {
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>
           <Button
-            className="flex items-center group ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+            className="flex items-center group ml-4 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
             size="lg"
           >
@@ -120,7 +120,7 @@ export const NoLabelList = observer(() => {
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>
           <Button
-            className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+            className="flex group items-center ml-4 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
             size="lg"
           >

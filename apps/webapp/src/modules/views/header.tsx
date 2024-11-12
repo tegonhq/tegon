@@ -10,6 +10,7 @@ import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { HeaderLayout } from 'common/header-layout';
 import { SidebarExpand } from 'common/sidebar-expand';
 
 import { useCurrentTeam } from 'hooks/teams';
@@ -25,43 +26,41 @@ export const Header = observer(({ title }: HeaderProps) => {
     query: { workspaceSlug },
   } = useRouter();
 
+  const actions = (
+    <Link
+      href={
+        team
+          ? `/${workspaceSlug}/team/${team?.identifier}/all`
+          : `/${workspaceSlug}/all`
+      }
+      className={cn(buttonVariants({ variant: 'secondary' }))}
+    >
+      New view
+    </Link>
+  );
+
   return (
-    <header className="flex px-6 w-full items-center gap-2 justify-between">
-      <div className="flex gap-2 3">
-        <SidebarExpand />
+    <HeaderLayout actions={actions}>
+      <SidebarExpand />
 
-        <Breadcrumb>
-          {team && (
-            <BreadcrumbItem>
-              <BreadcrumbLink
-                as={Link}
-                className="flex items-center gap-2 font-medium"
-                href={`/${workspaceSlug}/team/${team.identifier}/all`}
-              >
-                <TeamIcon name={team.name} />
-
-                <span className="inline-block">{team.name}</span>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          )}
+      <Breadcrumb>
+        {team && (
           <BreadcrumbItem>
-            <BreadcrumbLink>{title}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
-      </div>
+            <BreadcrumbLink
+              as={Link}
+              className="flex items-center gap-2 font-medium"
+              href={`/${workspaceSlug}/team/${team.identifier}/all`}
+            >
+              <TeamIcon name={team.name} />
 
-      <div className="py-2">
-        <Link
-          href={
-            team
-              ? `/${workspaceSlug}/team/${team?.identifier}/all`
-              : `/${workspaceSlug}/all`
-          }
-          className={cn(buttonVariants({ variant: 'secondary' }))}
-        >
-          New view
-        </Link>
-      </div>
-    </header>
+              <span className="inline-block">{team.name}</span>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        )}
+        <BreadcrumbItem>
+          <BreadcrumbLink>{title}</BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
+    </HeaderLayout>
   );
 });

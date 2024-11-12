@@ -147,6 +147,27 @@ model AuthorizationCode {
   code                  String
 }
 
+model Cycle {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name                  String
+  description           String?
+  number                Int
+
+  team   Team   @relation(fields: [teamId], references: [id])
+  teamId String
+
+  startDate DateTime
+  endDate   DateTime
+
+  preferences Json @default("{}")
+
+  issues Issue[]
+}
+
 model Emoji {
   id        String     @id @default(uuid())
   name      String
@@ -240,6 +261,9 @@ model Issue {
 
   projectMilestone      ProjectMilestone?   @relation(fields: [projectMilestoneId], references: [id])
   projectMilestoneId    String?
+
+  cycle      Cycle?   @relation(fields: [cycleId], references: [id])
+  cycleId    String?
 
   createdById String?
   updatedById String?
@@ -542,9 +566,12 @@ model Team {
   identifier String
   icon       String?
 
+  currentCycle   Int?
+
   workspace      Workspace        @relation(fields: [workspaceId], references: [id])
   workspaceId    String
   issue          Issue[]
+  cycles         Cycle[]
   label          Label[]
   template       Template[]
   workflow       Workflow[]
@@ -718,6 +745,7 @@ enum ModelName {
   ActionEntity
   Attachment
   AIRequest
+  Cycle
   Emoji
   IntegrationAccount
   IntegrationDefinition
