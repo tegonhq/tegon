@@ -1,8 +1,5 @@
+import { Editor, EditorExtensions } from '@tegonhq/ui/components/editor/index';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
-import {
-  Editor,
-  EditorExtensions,
-} from '@tegonhq/ui/components/ui/editor/index';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useDebouncedCallback } from 'use-debounce';

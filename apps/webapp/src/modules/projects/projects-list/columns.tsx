@@ -11,6 +11,7 @@ import { useUpdateProjectMutation } from 'services/projects';
 import { ProjectWrapper } from './project-wrapper';
 import { ProjectDatePicker } from '../dropdowns/project-date-picker';
 import { ProjectStatusDropdown } from '../dropdowns/status';
+import { ProjectProgress } from '../project-view/project-progress';
 
 export const useProjectColumns = (): Array<ColumnDef<ProjectType>> => {
   const { mutate: updateProject } = useUpdateProjectMutation({});
@@ -44,7 +45,13 @@ export const useProjectColumns = (): Array<ColumnDef<ProjectType>> => {
         );
       },
     },
-
+    {
+      accessorKey: 'progress',
+      header: () => {
+        return <span className="px-2">Progress</span>;
+      },
+      cell: ({ row }) => <ProjectProgress id={row.original.id} onlyGraph />,
+    },
     {
       accessorKey: 'endDate',
       header: () => {

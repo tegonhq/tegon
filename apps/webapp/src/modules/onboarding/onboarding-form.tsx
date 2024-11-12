@@ -35,7 +35,7 @@ export function OnboardingForm() {
         toast({
           variant: 'destructive',
           title: 'Error!',
-          description: e.message,
+          description: e,
         });
       },
     });
