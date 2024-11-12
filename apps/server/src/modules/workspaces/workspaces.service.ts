@@ -15,6 +15,7 @@ import {
   createNewSession,
   SessionContainer,
 } from 'supertokens-node/recipe/session';
+import Session from 'supertokens-node/recipe/session';
 
 import { createMagicLink } from 'common/utils/login';
 
@@ -46,7 +47,9 @@ export default class WorkspacesService {
   async createInitialResources(
     userId: string,
     workspaceData: CreateInitialResourcesDto,
-  ): Promise<Workspace> {
+    res: Response,
+    req: Request,
+  ) {
     const workspace = await this.prisma.usersOnWorkspaces.findFirst({
       where: { userId },
     });
@@ -55,7 +58,7 @@ export default class WorkspacesService {
       throw new BadRequestException('Already workspace exist');
     }
 
-    return await this.prisma.$transaction(
+    await this.prisma.$transaction(
       async (prisma) => {
         await prisma.user.update({
           where: { id: userId },
@@ -109,6 +112,15 @@ export default class WorkspacesService {
         timeout: 60000,
       },
     );
+
+    await Session.createNewSession(
+      req,
+      res,
+      'public',
+      supertokens.convertToRecipeUserId(userId),
+    );
+
+    res.send({ status: 200, message: 'impersonate' });
   }
 
   async createWorkspace(

@@ -42,11 +42,15 @@ export class WorkspacesController {
   async createIntialResources(
     @SessionDecorator() session: SessionContainer,
     @Body() workspaceData: CreateInitialResourcesDto,
-  ): Promise<Workspace> {
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
     const userId = session.getUserId();
-    return await this.workspacesService.createInitialResources(
+    await this.workspacesService.createInitialResources(
       userId,
       workspaceData,
+      res,
+      req,
     );
   }
 

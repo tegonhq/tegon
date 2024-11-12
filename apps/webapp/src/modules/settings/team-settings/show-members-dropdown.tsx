@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
-import { useToast } from '@tegonhq/ui/components/ui/use-toast';
+import { useToast } from '@tegonhq/ui/components/use-toast';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
@@ -22,7 +22,7 @@ import type { UsersOnWorkspaceType } from 'common/types';
 import { getUserFromUsersData } from 'common/user-util';
 
 import { useCurrentTeam } from 'hooks/teams';
-import { useAllUsers } from 'hooks/users';
+import { useUsersData } from 'hooks/users';
 
 import { useAddTeamMemberMutation } from 'services/team';
 
@@ -46,7 +46,7 @@ export const ShowMembersDropdown = observer(() => {
     },
   });
 
-  const { users, isLoading } = useAllUsers(false);
+  const { users, isLoading } = useUsersData();
 
   const getMembersNotInTeam = () => {
     return workspaceStore.usersOnWorkspaces.filter(

@@ -16,7 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
-import { Input } from '@tegonhq/ui/components/ui/input';
+import { Input } from '@tegonhq/ui/components/input';
 import {
   AddLine,
   CheckLine,

@@ -40,7 +40,10 @@ export function useCreateInitialResourcesMutation({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onMutationError = (errorResponse: any) => {
-    const errorText = errorResponse?.errors?.message || 'Error occured';
+    let errorText = 'Error occured';
+    if (errorResponse.errors.statusCode === 409) {
+      errorText = 'Workspace with the name already exist';
+    }
 
     onError && onError(errorText);
   };

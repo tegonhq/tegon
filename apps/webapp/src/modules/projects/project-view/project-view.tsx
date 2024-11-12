@@ -10,6 +10,7 @@ import { useLocalState } from 'hooks/use-local-state';
 import { ProjectIssues } from './issues';
 import { Overview } from './overview';
 import { RightSide } from './overview/right-side';
+import { ProjectProgress } from './project-progress';
 import { Header } from '../header';
 
 export const ProjectView = withApplicationStore(() => {
@@ -29,6 +30,7 @@ export const ProjectView = withApplicationStore(() => {
       <ContentBox>
         <main className="grid grid-cols-5 h-[calc(100vh_-_53px)]">
           <div className="col-span-4 flex flex-col h-[calc(100vh_-_55px)]">
+            <ProjectProgress id={project.id} />
             {view === 'overview' && <Overview />}
             {view === 'issues' && <ProjectIssues />}
           </div>
