@@ -31,7 +31,7 @@ export const ProjectBoard = observer(({ projects }: ProjectBoardProps) => {
   };
 
   return (
-    <Board onDragEnd={onDragEnd} className="pl-6">
+    <Board onDragEnd={onDragEnd} className="pl-4">
       <>
         {projects.map((project: ProjectType) => {
           return <ProjectBoardList key={project.id} project={project} />;

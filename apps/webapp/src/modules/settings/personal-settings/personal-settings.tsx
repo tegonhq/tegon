@@ -31,7 +31,7 @@ export function PersonalSettings() {
 
       <ContentBox>
         <ScrollArea className="flex grow h-full">
-          <div className="w-full p-6">
+          <div className="w-full p-4">
             {userData ? <SectionComponent /> : <Loader />}
           </div>
         </ScrollArea>

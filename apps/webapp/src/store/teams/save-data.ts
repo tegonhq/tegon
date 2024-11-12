@@ -17,6 +17,8 @@ export async function saveTeamData(
         name: record.data.name,
         identifier: record.data.identifier,
         workspaceId: record.data.workspaceId,
+        preferences: record.data.preferences,
+        currentCycle: record.data.currentCycle,
       };
 
       switch (record.action) {

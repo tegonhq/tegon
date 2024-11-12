@@ -53,7 +53,7 @@ export const FiltersView = observer(({ Actions }: FilterViewProps) => {
   );
 
   return (
-    <div className="py-3 pt-6 pr-4 pl-6 flex flex-col gap-2">
+    <div className="px-4 py-4 pr-2 flex flex-col gap-2">
       <div className="flex justify-between">
         <Tooltip>
           <TooltipTrigger asChild>

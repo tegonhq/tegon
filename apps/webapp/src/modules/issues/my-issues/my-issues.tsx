@@ -4,7 +4,7 @@ import { AppLayout } from 'common/layouts/app-layout';
 import { ContentBox } from 'common/layouts/content-box';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
-import { Header } from './my-issues-header';
+import { Header } from './header';
 import { IssuesViewOptions } from '../all/issues-view-options';
 import { ListView } from '../all/list-view';
 import { FiltersView } from '../filters-view/filters-view';

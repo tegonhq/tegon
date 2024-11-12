@@ -33,7 +33,7 @@ export const AssigneeBoard = observer(
     };
 
     return (
-      <Board onDragEnd={onDragEnd} className="pl-6">
+      <Board onDragEnd={onDragEnd} className="pl-4">
         <>
           {usersOnWorkspaces
             .filter(

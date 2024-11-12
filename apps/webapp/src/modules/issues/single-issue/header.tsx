@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
+import { HeaderLayout } from 'common/header-layout';
 import { SidebarExpand } from 'common/sidebar-expand';
 
 import { useScope } from 'hooks';
@@ -61,28 +62,8 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
   // Use the keyboard shortcuts hook for Accept (A) and Decline (D)
   useTriageShortcuts({ onAccept: acceptTriage, onDecline: declineTriage });
 
-  return (
-    <header className="flex px-6 w-full gap-2 justify-between items-center">
-      <div className="flex gap-2 py-3 items-center">
-        <SidebarExpand />
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <BreadcrumbLink
-              as={Link}
-              className="flex items-center gap-2"
-              href={`/${workspaceSlug}/team/${team.identifier}/all`}
-            >
-              <TeamIcon name={team.name} />
-              <span className="inline-block">{team.name}</span>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbLink>{issueId}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
-        {!isTriageView && <IssueOptionsDropdown />}
-      </div>
-
+  const actions = (
+    <>
       {isTriageView && (
         <div className="flex justify-end gap-3 py-2">
           <Button
@@ -102,6 +83,28 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
           </Button>
         </div>
       )}
+    </>
+  );
+
+  return (
+    <HeaderLayout actions={actions}>
+      <SidebarExpand />
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            as={Link}
+            className="flex items-center gap-2"
+            href={`/${workspaceSlug}/team/${team.identifier}/all`}
+          >
+            <TeamIcon name={team.name} />
+            <span className="inline-block">{team.name}</span>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink>{issueId}</BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
+      {!isTriageView && <IssueOptionsDropdown />}
 
       {triageAction === 'Accept' && (
         <TriageAcceptModal setDialogOpen={onClose} />
@@ -109,6 +112,6 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
       {triageAction === 'Decline' && (
         <TriageDeclineModal setDialogOpen={onClose} />
       )}
-    </header>
+    </HeaderLayout>
   );
 });

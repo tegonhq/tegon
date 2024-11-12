@@ -98,7 +98,7 @@ export const IssueListItem = observer(
             push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
           }}
           className={cn(
-            'pl-3 pr-4 flex group cursor-default gap-2',
+            'pl-1 pr-4 flex group cursor-default gap-2',
             subIssueView && 'pl-0 pr-0',
           )}
           onMouseOver={() => {

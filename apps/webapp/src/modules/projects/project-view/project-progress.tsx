@@ -86,7 +86,7 @@ export const ProjectProgress = observer(
     }
 
     return (
-      <div className="p-6 pb-0 flex w-full gap-10">
+      <div className="pt-4 px-4 pb-0 flex w-full gap-10">
         <div className="flex flex-col grow gap-1">
           <h2>Project Progress</h2>
           <Progress
@@ -106,13 +106,13 @@ export const ProjectProgress = observer(
         <div className="flex flex-col">
           <h2 className="font-mono">Started</h2>
           <p>
-            {startedIssues.length} . {startedPercentage}%
+            {startedPercentage}% ({startedIssues.length} issues)
           </p>
         </div>
         <div className="flex flex-col">
           <h2 className="font-mono">Done</h2>
           <p>
-            {totalCompletedIssues.length} . {completedPercentage}%
+            {completedPercentage}% ({totalCompletedIssues.length} issues)
           </p>
         </div>
       </div>

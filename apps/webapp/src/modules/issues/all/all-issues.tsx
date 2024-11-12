@@ -22,8 +22,8 @@ import { FiltersView } from '../filters-view/filters-view';
 import { OverviewInsights } from '../overview-insights';
 
 export const AllIssues = withApplicationStore(() => {
-  const team = useCurrentTeam();
   useScope(SCOPES.AllIssues);
+  const team = useCurrentTeam();
   const [overview, setOverview] = React.useState(false);
 
   return (
@@ -67,9 +67,8 @@ export const AllIssues = withApplicationStore(() => {
               defaultSize={25}
               order={2}
               id="rightScreen"
-              className=""
             >
-              <ContentBox>
+              <ContentBox className="!pl-0">
                 <OverviewInsights />
               </ContentBox>
             </ResizablePanel>

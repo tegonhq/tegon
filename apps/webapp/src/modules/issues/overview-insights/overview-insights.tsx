@@ -28,7 +28,7 @@ export function OverviewInsights() {
   return (
     <div className="flex flex-col overflow-hidden">
       <Tabs className="overflow-hidden" defaultValue="status">
-        <TabsList className="grid w-full grid-cols-3 bg-transparent gap-2 p-6">
+        <TabsList className="grid w-full grid-cols-3 bg-transparent gap-2 p-4">
           <TabsTrigger value="status" className="bg-grayAlpha-100">
             Status
           </TabsTrigger>

@@ -53,7 +53,7 @@ export const ProjectViewList = observer(({ project }: ProjectListItemProps) => {
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>
           <Button
-            className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+            className="flex group items-center ml-4 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
             size="lg"
           >
@@ -104,7 +104,7 @@ export const NoProjectView = observer(() => {
       <div className="flex gap-1 items-center">
         <CollapsibleTrigger asChild>
           <Button
-            className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+            className="flex group items-center ml-4 w-fit rounded-2xl bg-grayAlpha-100"
             variant="ghost"
             size="lg"
           >

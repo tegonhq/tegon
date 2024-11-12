@@ -27,7 +27,7 @@ export function Inbox() {
             collapsedSize={16}
           >
             <div className="flex flex-col h-full">
-              <h2 className="text-lg pl-6 pt-6 font-medium"> Inbox </h2>
+              <h2 className="text-lg pl-4 pt-4 font-medium"> Inbox </h2>
               <NotificationsList />
             </div>
           </ResizablePanel>

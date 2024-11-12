@@ -33,7 +33,7 @@ export const AssigneeInsights = observer(
       : [];
 
     return (
-      <div className="flex flex-col px-6 gap-1 mt-2">
+      <div className="flex flex-col px-4 gap-1 mt-2">
         {users.map((user: User) => {
           const isActive = assigneeFilter.includes(user.id);
 

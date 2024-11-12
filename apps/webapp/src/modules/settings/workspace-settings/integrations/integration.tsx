@@ -22,7 +22,7 @@ export function Integration() {
       {!isLoading && <Header title={integrationDefinition.name} />}
       <ContentBox>
         <ScrollArea className="flex grow h-full">
-          <div className="w-full p-6">
+          <div className="w-full p-4">
             {!isLoading && (
               <SettingSection
                 title={integrationDefinition.name}

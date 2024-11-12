@@ -42,6 +42,13 @@ export async function getWorkspaceId(
       });
       return actionEntity.action.workspaceId;
 
+    case ModelName.Cycle:
+      const cycleEntity = await prisma.cycle.findUnique({
+        where: { id: modelId },
+        include: { team: true },
+      });
+      return cycleEntity.team.workspaceId;
+
     case ModelName.UsersOnWorkspaces:
       const usersOnWorkspace = await prisma.usersOnWorkspaces.findUnique({
         where: { id: modelId },
@@ -162,6 +169,7 @@ export async function getModelData(
     Workspace: prisma.workspace,
     Action: prisma.action,
     ActionEntity: prisma.actionEntity,
+    Cycle: prisma.cycle,
     UsersOnWorkspaces: prisma.usersOnWorkspaces,
     Team: prisma.team,
     Issue: prisma.issue,

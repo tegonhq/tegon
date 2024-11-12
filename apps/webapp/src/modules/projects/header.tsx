@@ -8,6 +8,7 @@ import { AddLine, DocumentLine, IssuesLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
+import { HeaderLayout } from 'common/header-layout';
 import { SidebarExpand } from 'common/sidebar-expand';
 
 import { useProject } from 'hooks/projects';
@@ -27,59 +28,63 @@ export const Header = observer(
     const [newProjectDialog, setNewProjectDialog] = React.useState(false);
     const project = useProject();
 
-    return (
-      <header className="flex px-6 w-full items-center gap-2">
-        <div className="flex gap-2 py-3 items-center w-full">
-          <div className="flex grow justify-start items-center">
-            <SidebarExpand />
-            <Breadcrumb>
-              <BreadcrumbItem>
-                <BreadcrumbLink>{title}</BreadcrumbLink>
-              </BreadcrumbItem>
-              {isProjectView && (
-                <BreadcrumbItem>
-                  <BreadcrumbLink>{project.name}</BreadcrumbLink>
-                </BreadcrumbItem>
-              )}
-            </Breadcrumb>
-            <ProjectDetailsDropdown />
-            {isProjectView && (
-              <div className="flex items-center ml-2 gap-1">
-                <Button
-                  variant="secondary"
-                  className="gap-1"
-                  isActive={view === 'overview'}
-                  onClick={() => setView('overview')}
-                >
-                  <DocumentLine />
-                  Overview
-                </Button>
-                <Button
-                  variant="secondary"
-                  className="gap-1"
-                  isActive={view === 'issues'}
-                  onClick={() => setView('issues')}
-                >
-                  <IssuesLine />
-                  Issues
-                </Button>
-              </div>
-            )}
+    const actions = (
+      <>
+        {!isProjectView && (
+          <div>
+            <Button
+              variant="secondary"
+              className="gap-1"
+              size="sm"
+              onClick={() => setNewProjectDialog(true)}
+            >
+              <AddLine size={14} />
+              Create project
+            </Button>
           </div>
+        )}
+      </>
+    );
 
-          {!isProjectView && (
-            <div>
-              <Button
-                variant="secondary"
-                className="gap-1"
-                onClick={() => setNewProjectDialog(true)}
-              >
-                <AddLine size={14} />
-                Create project
-              </Button>
-            </div>
+    return (
+      <HeaderLayout actions={actions}>
+        <SidebarExpand />
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <BreadcrumbLink>{title}</BreadcrumbLink>
+          </BreadcrumbItem>
+          {isProjectView && (
+            <>
+              <BreadcrumbItem>
+                <BreadcrumbLink>{project.name}</BreadcrumbLink>
+              </BreadcrumbItem>
+              <ProjectDetailsDropdown />
+            </>
           )}
-        </div>
+        </Breadcrumb>
+
+        {isProjectView && (
+          <div className="flex items-center ml-2 gap-1">
+            <Button
+              variant="secondary"
+              className="gap-1"
+              isActive={view === 'overview'}
+              onClick={() => setView('overview')}
+            >
+              <DocumentLine />
+              Overview
+            </Button>
+            <Button
+              variant="secondary"
+              className="gap-1"
+              isActive={view === 'issues'}
+              onClick={() => setView('issues')}
+            >
+              <IssuesLine />
+              Issues
+            </Button>
+          </div>
+        )}
 
         {newProjectDialog && (
           <NewProjectDialog
@@ -87,7 +92,7 @@ export const Header = observer(
             setOpen={setNewProjectDialog}
           />
         )}
-      </header>
+      </HeaderLayout>
     );
   },
 );

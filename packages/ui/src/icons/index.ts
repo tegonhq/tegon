@@ -65,6 +65,7 @@ export * from './right-sidebar-closed';
 export * from './right-sidebar-open';
 export * from './my-issues';
 export * from './fire';
+export * from './cycle';
 
 export * from './team-line';
 export * from './issues-fill';

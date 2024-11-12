@@ -31,7 +31,7 @@ export const TeamBoard = observer(({ teams }: TeamBoardProps) => {
   };
 
   return (
-    <Board onDragEnd={onDragEnd} className="pl-6">
+    <Board onDragEnd={onDragEnd} className="pl-4">
       <>
         {teams.map((team: TeamType) => {
           return <TeamBoardList key={team.id} team={team} />;

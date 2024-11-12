@@ -19,4 +19,5 @@ export enum MODELS {
   IssueSuggestion = 'IssueSuggestion',
   Project = 'Project',
   ProjectMilestone = 'ProjectMilestone',
+  Cycle = 'Cycle',
 }

@@ -5,7 +5,13 @@ export const Team = types.model({
   createdAt: types.string,
   updatedAt: types.string,
   name: types.string,
+
   identifier: types.string,
+  workspaceId: types.string,
+  currentCycle: types.union(types.string, types.null, types.undefined),
+  preferences: types.model({
+    cyclesEnabled: types.union(types.boolean, types.undefined),
+  }),
 });
 
 export const Teams = types.array(Team);

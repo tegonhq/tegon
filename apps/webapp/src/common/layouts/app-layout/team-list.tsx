@@ -12,6 +12,7 @@ import {
 } from '@tegonhq/ui/components/tooltip';
 import {
   ChevronRight,
+  Cycle,
   IssuesLine,
   StackLine,
   TriageLine,
@@ -51,54 +52,66 @@ export const TeamList = observer(() => {
         defaultValue={team?.id ?? teams[0].id}
         className="w-full flex flex-col gap-4"
       >
-        {teams.map((team: TeamType) => (
-          <AccordionItem value={team.id} key={team.identifier} className="mb-1">
-            <AccordionTrigger className="flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 w-fit rounded-md min-w-0">
-              <div className="w-full justify-start flex items-center gap-1">
-                <div>
-                  <TeamIcon name={team.name} />
-                </div>
+        {teams.map((team: TeamType) => {
+          const links = [
+            {
+              title: 'Triage',
+              icon: TriageLine,
+              href: `/${workspace.slug}/team/${team.identifier}/triage`,
+            },
+            {
+              title: 'Issues',
+              icon: IssuesLine,
+              href: `/${workspace.slug}/team/${team.identifier}/all`,
+              activePaths: [`/${workspace.slug}/issue/${team.identifier}-`],
+            },
+            {
+              title: 'Views',
+              icon: StackLine,
+              href: `/${workspace.slug}/team/${team.identifier}/views`,
+            },
+          ];
 
-                <div className="flex justify-center items-center gap-1 min-w-0">
-                  <Tooltip>
-                    <TooltipTrigger className="truncate">
-                      {team?.name}
-                    </TooltipTrigger>
+          if (team.preferences.cyclesEnabled) {
+            links.push({
+              title: 'Cycles',
+              icon: Cycle,
+              href: `/${workspace.slug}/team/${team.identifier}/cycles`,
+            });
+          }
 
-                    <TooltipContent className="p-2">
-                      <p className="text-xs">{team?.name}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200" />
+          return (
+            <AccordionItem
+              value={team.id}
+              key={team.identifier}
+              className="mb-1"
+            >
+              <AccordionTrigger className="flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 w-fit rounded-md min-w-0">
+                <div className="w-full justify-start flex items-center gap-1">
+                  <div>
+                    <TeamIcon name={team.name} />
+                  </div>
+
+                  <div className="flex justify-center items-center gap-1 min-w-0">
+                    <Tooltip>
+                      <TooltipTrigger className="truncate">
+                        {team?.name}
+                      </TooltipTrigger>
+
+                      <TooltipContent className="p-2">
+                        <p className="text-xs">{team?.name}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    <ChevronRight className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                  </div>
                 </div>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent className="flex flex-col justify-center items-start w-full my-2">
-              <Nav
-                links={[
-                  {
-                    title: 'Triage',
-                    icon: TriageLine,
-                    href: `/${workspace.slug}/team/${team.identifier}/triage`,
-                  },
-                  {
-                    title: 'Issues',
-                    icon: IssuesLine,
-                    href: `/${workspace.slug}/team/${team.identifier}/all`,
-                    activePaths: [
-                      `/${workspace.slug}/issue/${team.identifier}-`,
-                    ],
-                  },
-                  {
-                    title: 'Views',
-                    icon: StackLine,
-                    href: `/${workspace.slug}/team/${team.identifier}/views`,
-                  },
-                ]}
-              />
-            </AccordionContent>
-          </AccordionItem>
-        ))}
+              </AccordionTrigger>
+              <AccordionContent className="flex flex-col justify-center items-start w-full my-2">
+                <Nav links={links} />
+              </AccordionContent>
+            </AccordionItem>
+          );
+        })}
       </Accordion>
     </div>
   );

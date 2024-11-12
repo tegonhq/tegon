@@ -2,6 +2,7 @@ import type { SyncActionRecord } from 'common/types';
 
 import { saveActionData } from 'store/action';
 import { saveCommentsData } from 'store/comments';
+import { saveCyclesData } from 'store/cycle';
 import { saveIntegrationAccountData } from 'store/integration-accounts';
 import { saveIssueHistoryData } from 'store/issue-history';
 import { saveIssueRelationData } from 'store/issue-relation';
@@ -131,6 +132,10 @@ export async function saveSocketData(
             [record],
             MODEL_STORE_MAP[MODELS.ProjectMilestone],
           );
+        }
+
+        case MODELS.Cycle: {
+          return await saveCyclesData([record], MODEL_STORE_MAP[MODELS.Cycle]);
         }
       }
     }),
