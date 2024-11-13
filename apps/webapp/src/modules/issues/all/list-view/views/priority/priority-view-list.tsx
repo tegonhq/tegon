@@ -11,8 +11,9 @@ import React from 'react';
 import { IssueListItem } from 'modules/issues/components';
 import { PriorityIcons } from 'modules/issues/components';
 
-import { Priorities, type IssueType } from 'common/types';
+import { type IssueType } from 'common/types';
 
+import { usePriorities } from 'hooks/priorities';
 import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
 import { useComputedWorkflows } from 'hooks/workflows';
@@ -38,6 +39,7 @@ export const PriorityViewList = observer(
       projectId: project?.id,
     });
     const computedIssues = useFilterIssues(issues, workflows);
+    const Priorities = usePriorities();
 
     if (
       computedIssues.length === 0 &&

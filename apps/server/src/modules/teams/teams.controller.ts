@@ -7,7 +7,12 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Team, UpdateTeamDto, UsersOnWorkspaces } from '@tegonhq/types';
+import {
+  Team,
+  UpdateTeamDto,
+  UpdateTeamPreferencesDto,
+  UsersOnWorkspaces,
+} from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { UserId, Workspace } from 'modules/auth/session.decorator';
@@ -84,6 +89,19 @@ export class TeamsController {
       teamRequestParams,
       workspaceId,
       teamMemberData,
+    );
+  }
+
+  @Post(':teamId/preferences')
+  @UseGuards(AuthGuard)
+  async updateTeamPreferences(
+    @Param()
+    teamRequestParams: TeamRequestParams,
+    @Body() updateTeamPreferences: UpdateTeamPreferencesDto,
+  ): Promise<Team> {
+    return await this.teamsService.updateTeamPreferences(
+      teamRequestParams,
+      updateTeamPreferences,
     );
   }
 

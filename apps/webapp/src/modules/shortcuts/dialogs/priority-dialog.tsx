@@ -3,8 +3,7 @@ import React from 'react';
 
 import { PriorityIcons } from 'modules/issues/components';
 
-import { Priorities } from 'common/types';
-
+import { usePriorities } from 'hooks/priorities';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useUpdateIssueMutation } from 'services/issues';
@@ -23,6 +22,7 @@ export const PriorityDialog = observer(
     const { applicationStore, issuesStore } = useContextStore();
     const { mutate: updateIssue } = useUpdateIssueMutation({});
     const team = useCurrentTeam();
+    const Priorities = usePriorities();
 
     if (
       applicationStore.selectedIssues.length === 0 &&

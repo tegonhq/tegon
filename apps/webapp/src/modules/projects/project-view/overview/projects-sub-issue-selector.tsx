@@ -3,7 +3,8 @@ import { useEditor } from '@tegonhq/ui/components/editor/index';
 import { useRouter } from 'next/router';
 
 import { SubIssueSelector, type IssueContent } from 'common/editor';
-import type { IssueType, WorkflowType } from 'common/types';
+import { delay } from 'common/lib/common';
+import type { WorkflowType } from 'common/types';
 
 import { useProject } from 'hooks/projects';
 import { useTeamWithId } from 'hooks/teams';
@@ -24,42 +25,45 @@ export const ProjectSubIssueSelector = () => {
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.BACKLOG,
   );
-  const { mutate: createIssue } = useCreateIssueMutation({});
+  const { mutate: createIssue } = useCreateIssueMutation({
+    onSuccess: (data, variables) => {
+      const url = `http://app.tegon.ai/${query.workspaceSlug}/issue/${team.identifier}-${data.number}`;
 
-  const onCreateIssues = (issueContents: IssueContent[]) => {
-    issueContents.forEach((issueContent) => {
-      createIssue(
-        {
-          description: issueContent.text,
-          teamId: team.id,
-          stateId: backlog.id,
-          projectId: project?.id,
-        },
-        {
-          onSuccess: (issue: IssueType) => {
-            const url = `http://app.tegon.ai/${query.workspaceSlug}/issue/${team.identifier}-${issue.number}`;
-
-            editor
-              .chain()
-              .focus()
-              .insertContentAt(
-                {
-                  from: issueContent.start,
-                  to: issueContent.end,
-                },
-                {
-                  type: 'tegonIssueExtension',
-                  attrs: {
-                    url,
-                  },
-                },
-              )
-              .run();
+      editor
+        .chain()
+        .focus()
+        .insertContentAt(
+          {
+            from: variables.start,
+            to: variables.end,
           },
-        },
-      );
-    });
+          {
+            type: 'tegonIssueExtension',
+            attrs: {
+              url,
+            },
+          },
+        )
+        .exitCode()
+        .run();
+    },
+  });
+
+  const onCreateIssues = async (issueContents: IssueContent[]) => {
+    for (const issueContent of issueContents.reverse()) {
+      createIssue({
+        description: issueContent.text,
+        teamId: team.id,
+        title: issueContent.text,
+        stateId: backlog.id,
+        projectId: project?.id,
+        start: issueContent.start,
+        end: issueContent.end,
+      });
+
+      await delay(200);
+    }
   };
 
-  return <SubIssueSelector text="Create issue" onCreate={onCreateIssues} />;
+  return <SubIssueSelector onCreate={onCreateIssues} />;
 };

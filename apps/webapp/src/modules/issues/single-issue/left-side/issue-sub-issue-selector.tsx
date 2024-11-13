@@ -62,7 +62,5 @@ export const IssueSubIssueSelector = () => {
     });
   };
 
-  return (
-    <SubIssueSelector text="Create sub issues" onCreate={onCreateIssues} />
-  );
+  return <SubIssueSelector subIssue onCreate={onCreateIssues} />;
 };

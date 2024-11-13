@@ -11,8 +11,9 @@ import React from 'react';
 import { PriorityIcons } from 'modules/issues/components';
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
-import { Priorities, type IssueType } from 'common/types';
+import { type IssueType } from 'common/types';
 
+import { usePriorities } from 'hooks/priorities';
 import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
 import { useComputedWorkflows } from 'hooks/workflows';
@@ -31,6 +32,7 @@ export const PriorityBoardList = observer(
     const team = useCurrentTeam();
     const { workflows } = useComputedWorkflows();
     const project = useProject();
+    const Priorities = usePriorities();
 
     const issues = issuesStore.getIssuesForPriority(priority, {
       teamId: team?.id,

@@ -22,7 +22,6 @@ export * from './prompt';
 export * from './reaction';
 export * from './sync-action';
 export * from './team';
-export * from './team-preference';
 export * from './template';
 export * from './trigger-project';
 export * from './user';

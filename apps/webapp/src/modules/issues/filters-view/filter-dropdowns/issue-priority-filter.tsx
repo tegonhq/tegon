@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 
 import { IssuePriorityDropdownContent } from 'modules/issues/components';
 
-import { Priorities } from 'common/types';
+import { usePriorities } from 'hooks/priorities';
 
 import { FilterTypeEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
@@ -15,6 +15,7 @@ interface IssuePriorityFilterProps {
 export const IssuePriorityFilter = observer(
   ({ onChange, onClose }: IssuePriorityFilterProps) => {
     const { applicationStore } = useContextStore();
+    const Priorities = usePriorities();
 
     const priorityFilters = applicationStore.filters.priority
       ? applicationStore.filters.priority.value

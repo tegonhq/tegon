@@ -1,4 +1,4 @@
-import type { Role } from '@tegonhq/types';
+import type { PriorityType, Role } from '@tegonhq/types';
 
 interface Workspace {
   name: string;
@@ -6,6 +6,9 @@ interface Workspace {
   icon: string;
   id: string;
   actionsEnabled: boolean;
+  preferences: {
+    priorityType?: PriorityType;
+  };
 }
 
 export interface Invite {

@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { RiClipboardLine } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,
@@ -12,7 +11,6 @@ import {
 import { Input } from '@tegonhq/ui/components/input';
 import { Separator } from '@tegonhq/ui/components/separator';
 import { useToast } from '@tegonhq/ui/components/use-toast';
-import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import * as React from 'react';
@@ -28,10 +26,10 @@ import { useCurrentTeam } from 'hooks/teams/use-current-team';
 import { useUpdateTeamMutation } from 'services/team';
 
 import { OverviewSchema } from './overview.interface';
+import { Preferences } from './preferences';
 
 export const Overview = observer(() => {
   const currentTeam = useCurrentTeam();
-  const teamEmail = `triage+${currentTeam?.id}@tegon.ai`;
   const { toast } = useToast();
   const {
     replace,
@@ -122,36 +120,7 @@ export const Overview = observer(() => {
       </SettingSection>
 
       <Separator className="my-4" />
-
-      <SettingSection
-        title="Team preferences"
-        description="Manage your team preferences"
-      >
-        <div className="flex flex-col">
-          <h3 className="text-lg"> Create by email </h3>
-
-          <p className="text-muted-foreground">
-            With the unique email created for your team, you can send or forward
-            emails and we will automatically create issues in triage from them.
-          </p>
-
-          <div className="flex gap-1 max-w-[500px] mt-2">
-            <Input value={teamEmail} />
-            <Button
-              variant="ghost"
-              onClick={() => {
-                copy(teamEmail);
-                toast({
-                  description: 'Email is copied to clipboard',
-                });
-              }}
-            >
-              <RiClipboardLine size={16} className="text-muted-foreground" />
-            </Button>
-          </div>
-        </div>
-      </SettingSection>
-
+      <Preferences />
       <Separator className="my-4" />
 
       <SettingSection title="Danger zone" description="proceed with caution">

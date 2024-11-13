@@ -5,7 +5,6 @@ import { allCommands } from './add-issue-metadata-interface';
 import {
   IssueAssigneeDropdownWithoutContext,
   IssueLabelDropdownWithoutContext,
-  IssuePriorityDropdownWithoutContext,
 } from '../issue-metadata';
 
 export function DefaultPopoverContent({
@@ -47,7 +46,6 @@ export function DefaultPopoverContent({
 export const ContentMap = {
   Assignee: IssueAssigneeDropdownWithoutContext,
   Label: IssueLabelDropdownWithoutContext,
-  Priority: IssuePriorityDropdownWithoutContext,
 };
 
 export type KeyType = keyof typeof ContentMap;

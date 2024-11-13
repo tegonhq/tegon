@@ -1,3 +1,4 @@
+import { PrismaClient } from '@prisma/client';
 import {
   ActionTypesEnum,
   CreateIssueDto,
@@ -97,7 +98,7 @@ function capitalize(s: string) {
 }
 
 export async function getLastIssueNumber(
-  prisma: PrismaService,
+  prisma: Partial<PrismaClient>,
   teamId: string,
 ): Promise<number> {
   const lastIssue = await prisma.issue.findFirst({

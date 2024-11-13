@@ -3,6 +3,7 @@ import {
   RoleEnum,
   Team,
   UpdateTeamDto,
+  UpdateTeamPreferencesDto,
   UsersOnWorkspaces,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
@@ -116,6 +117,31 @@ export default class TeamsService {
         id: teamRequestParams.teamId,
       },
     });
+  }
+
+  async updateTeamPreferences(
+    teamRequestParams: TeamRequestParams,
+    preferencesDto: UpdateTeamPreferencesDto,
+  ): Promise<Team> {
+    const team = await this.prisma.team.findUniqueOrThrow({
+      where: {
+        id: teamRequestParams.teamId,
+      },
+    });
+
+    await this.prisma.team.update({
+      where: {
+        id: team.id,
+      },
+      data: {
+        preferences: {
+          ...(team.preferences as Record<string, string | boolean>),
+          ...preferencesDto,
+        },
+      },
+    });
+
+    return team;
   }
 
   async deleteTeam(teamRequestParams: TeamRequestParams): Promise<Team> {

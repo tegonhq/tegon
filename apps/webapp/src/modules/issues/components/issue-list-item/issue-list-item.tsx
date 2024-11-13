@@ -52,7 +52,7 @@ export const IssueRelationIssues = observer(
     issues = useSortIssues(issues);
 
     return (
-      <div className="pl-14 pr-6">
+      <div className="pl-12 pr-2">
         {issues.map((issue: IssueType) => {
           return (
             <IssueListItem key={issue.id} subIssueView issueId={issue.id} />
@@ -98,7 +98,7 @@ export const IssueListItem = observer(
             push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
           }}
           className={cn(
-            'pl-1 pr-4 flex group cursor-default gap-2',
+            'pl-1 pr-2 flex group cursor-default gap-2',
             subIssueView && 'pl-0 pr-0',
           )}
           onMouseOver={() => {
@@ -140,7 +140,7 @@ export const IssueListItem = observer(
             )}
             <div
               className={cn(
-                'flex w-full items-start gap-2 pl-2 ml-1 pr-4 group-hover:bg-grayAlpha-100 rounded-xl',
+                'flex w-full items-start gap-2 pl-2 ml-1 pr-2 group-hover:bg-grayAlpha-100 rounded-xl',
                 issueSelected && !subIssueView && 'bg-primary/10',
                 subIssueView && 'pl-2 pr-2',
               )}

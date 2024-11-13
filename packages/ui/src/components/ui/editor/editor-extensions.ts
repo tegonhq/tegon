@@ -84,14 +84,14 @@ const starterKit = StarterKit.configure({
   codeBlock: {
     HTMLAttributes: {
       class: cx(
-        'rounded-sm bg-grayAlpha-100 text-[#BF4594] px-1.5 py-1 font-mono font-medium border-none',
+        'rounded-sm bg-grayAlpha-100 text-[#BF4594] px-1.5 py-1 font-mono font-medium border-none box-decoration-clone',
       ),
     },
   },
   code: {
     HTMLAttributes: {
       class: cx(
-        'rounded-md bg-grayAlpha-100 text-[#BF4594] px-1.5 py-1 font-mono font-medium border-none',
+        'rounded-md bg-grayAlpha-100 text-[#BF4594] px-1.5 py-1 font-mono font-medium border-none box-decoration-clone',
       ),
       spellcheck: 'false',
     },

@@ -11,6 +11,8 @@ import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { getBacklogWorkflow } from '../single-issue/triage-view/utils';
+
 interface DefaultValues {
   labelIds: string[];
   priority: number;
@@ -49,17 +51,22 @@ export function setDefaultValuesAgain({
   });
 }
 
-export const useDefaultValues = (parentId?: string, description?: string) => {
-  const team = useCurrentTeam();
+export const useDefaultValues = (
+  team: TeamType,
+  parentId?: string,
+  description?: string,
+) => {
   const project = useProject();
+  const { workflowsStore } = useContextStore();
+  const workflows = workflowsStore.getWorkflowsForTeam(team.id);
 
   return {
     teamId: team?.id,
     projectId: project?.id,
-
     parentId,
+    labelIds: [] as string[],
+    stateId: getBacklogWorkflow(workflows).id,
     description,
-
     priority: 0,
   };
 };
