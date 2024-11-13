@@ -12,7 +12,6 @@ import {
 } from '@tegonhq/ui/components/tooltip';
 import {
   ChevronRight,
-  Cycle,
   IssuesLine,
   StackLine,
   TriageLine,
@@ -72,13 +71,13 @@ export const TeamList = observer(() => {
             },
           ];
 
-          if (team.preferences.cyclesEnabled) {
-            links.push({
-              title: 'Cycles',
-              icon: Cycle,
-              href: `/${workspace.slug}/team/${team.identifier}/cycles`,
-            });
-          }
+          // if (team.preferences.cyclesEnabled) {
+          //   links.push({
+          //     title: 'Cycles',
+          //     icon: Cycle,
+          //     href: `/${workspace.slug}/team/${team.identifier}/cycles`,
+          //   });
+          // }
 
           return (
             <AccordionItem

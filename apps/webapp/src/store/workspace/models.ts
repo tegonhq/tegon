@@ -1,3 +1,4 @@
+import { PriorityType } from '@tegonhq/types';
 import { types } from 'mobx-state-tree';
 
 export const Workspace = types.model({
@@ -6,6 +7,20 @@ export const Workspace = types.model({
   updatedAt: types.string,
   name: types.string,
   slug: types.string,
+  preferences: types.union(
+    types.model({
+      priorityType: types.union(
+        types.enumeration([
+          PriorityType.DescriptivePriority,
+          PriorityType.ShorthandPriority,
+        ]),
+        types.undefined,
+        types.null,
+      ),
+    }),
+    types.undefined,
+    types.null,
+  ),
 });
 
 export const UsersOnWorkspace = types.model({

@@ -116,66 +116,71 @@ export default class IssuesService {
     };
 
     // Create the issues in the database within a transaction
-    const issues = await this.prisma.$transaction(async (prisma) => {
-      // Get the last issue number for the team
-      let lastNumber = await getLastIssueNumber(this.prisma, teamId);
+    const issues = await this.prisma.$transaction(
+      async (prisma) => {
+        // Get the last issue number for the team
+        let lastNumber = await getLastIssueNumber(prisma, teamId);
 
-      // Helper function to create an issue
-      const createIssue = async (
-        data: Prisma.IssueCreateInput,
-      ): Promise<Issue> => {
-        lastNumber++;
-        return prisma.issue.create({
-          data: {
-            ...data,
-            ...createdByInfo,
-            title: data.title,
-            number: lastNumber,
-            team: { connect: { id: issueData.teamId } },
-            ...(linkIssueData && {
-              linkedIssue: {
-                create: { ...linkIssueData, ...createdByInfo },
-              },
-            }),
-            ...(sourceMetadata && { sourceMetadata }),
-          },
-          include: { team: true },
-        });
-      };
+        // Helper function to create an issue
+        const createIssue = async (
+          data: Prisma.IssueCreateInput,
+        ): Promise<Issue> => {
+          lastNumber++;
+          return prisma.issue.create({
+            data: {
+              ...data,
+              ...createdByInfo,
+              title: data.title,
+              number: lastNumber,
+              team: { connect: { id: issueData.teamId } },
+              ...(linkIssueData && {
+                linkedIssue: {
+                  create: { ...linkIssueData, ...createdByInfo },
+                },
+              }),
+              ...(sourceMetadata && { sourceMetadata }),
+            },
+            include: { team: true },
+          });
+        };
 
-      // Create one list with both issue data and respective subissues
-      const createIssuesData = [issueData, ...(issueData.subIssues ?? [])];
-      const createdIssues: Issue[] = [];
-      let mainIssueId: string;
+        // Create one list with both issue data and respective subissues
+        const createIssuesData = [issueData, ...(issueData.subIssues ?? [])];
+        const createdIssues: Issue[] = [];
+        let mainIssueId: string;
 
-      // Create issues recursively
-      for (const issueData of createIssuesData) {
-        const { parentId, projectId, projectMilestoneId, ...otherData } =
-          issueData;
-        const issueInput = await getCreateIssueInput(
-          this.prisma,
-          this.aiRequestsService,
-          {
-            ...otherData,
-            ...(parentId ? { parentId } : { parentId: mainIssueId }),
-            ...(projectId ? { project: { connect: { id: projectId } } } : {}),
-            ...(projectMilestoneId
-              ? { projectMilestone: { connect: { id: projectMilestoneId } } }
-              : {}),
-          },
-          workspace.id,
-          userId,
-        );
+        // Create issues recursively
+        for (const issueData of createIssuesData) {
+          const { parentId, projectId, projectMilestoneId, ...otherData } =
+            issueData;
+          const issueInput = await getCreateIssueInput(
+            this.prisma,
+            this.aiRequestsService,
+            {
+              ...otherData,
+              ...(parentId ? { parentId } : { parentId: mainIssueId }),
+              ...(projectId ? { project: { connect: { id: projectId } } } : {}),
+              ...(projectMilestoneId
+                ? { projectMilestone: { connect: { id: projectMilestoneId } } }
+                : {}),
+            },
+            workspace.id,
+            userId,
+          );
 
-        createdIssues.push(await createIssue(issueInput));
-        // Assign first issue Id as parent id for rest of the issues
-        if (createdIssues.length === 1) {
-          mainIssueId = createdIssues[0].id;
+          createdIssues.push(await createIssue(issueInput));
+          // Assign first issue Id as parent id for rest of the issues
+          if (createdIssues.length === 1) {
+            mainIssueId = createdIssues[0].id;
+          }
         }
-      }
 
-      return createdIssues;
-    });
+        return createdIssues;
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
 
     // Process each created issue
     await Promise.all(

@@ -49,8 +49,23 @@ export class IssuesController {
     @SessionDecorator() session: SessionContainer,
     @Body() issueData: CreateIssueDto,
   ): Promise<Issue> {
-    const userId = session.getUserId();
-    return await this.issuesService.createIssueAPI(issueData, userId);
+    const MAX_RETRIES = 5;
+    let retries = 0;
+
+    while (retries < MAX_RETRIES) {
+      try {
+        const userId = session.getUserId();
+        return await this.issuesService.createIssueAPI(issueData, userId);
+      } catch (error) {
+        if (error.code === 'P2034') {
+          retries++;
+          continue;
+        }
+        throw error;
+      }
+    }
+
+    return undefined;
   }
 
   @Post('filter')

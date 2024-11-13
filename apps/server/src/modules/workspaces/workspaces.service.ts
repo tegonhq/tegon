@@ -3,6 +3,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import {
   InviteStatusEnum,
   RoleEnum,
+  UpdateWorkspacePreferencesDto,
   UsersOnWorkspaces,
   Workspace,
   WorkspaceRequestParamsDto,
@@ -214,6 +215,31 @@ export default class WorkspacesService {
         id: WorkspaceIdRequestBody.workspaceId,
       },
     });
+  }
+
+  async updateWorkspacePreferences(
+    workspaceId: string,
+    workspaceData: UpdateWorkspacePreferencesDto,
+  ): Promise<Workspace> {
+    const workspace = await this.prisma.workspace.findUniqueOrThrow({
+      where: {
+        id: workspaceId,
+      },
+    });
+
+    await this.prisma.workspace.update({
+      where: {
+        id: workspaceId,
+      },
+      data: {
+        preferences: {
+          ...(workspace.preferences as Record<string, string | boolean>),
+          ...workspaceData,
+        },
+      },
+    });
+
+    return workspace;
   }
 
   async deleteWorkspace(

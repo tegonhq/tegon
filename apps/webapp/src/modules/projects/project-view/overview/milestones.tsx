@@ -67,7 +67,7 @@ export const MilestoneItem = observer(
 
     return (
       <div className="px-3">
-        <div className="flex gap-2 items-center px-3 hover:bg-grayAlpha-100 py-2 rounded">
+        <div className="flex gap-1 items-center px-3 hover:bg-grayAlpha-100 py-2 rounded">
           <LabelLine size={18} className="flex-shrink-0" />
           <div className="grow">{milestone.name}</div>
           <ProjectDatePicker

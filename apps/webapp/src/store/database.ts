@@ -48,8 +48,8 @@ export class TegonDatabase extends Dexie {
   constructor(databaseName: string) {
     super(databaseName);
 
-    this.version(11).stores({
-      [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug',
+    this.version(12).stores({
+      [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug,preferences',
       [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',
       [MODELS.Team]:

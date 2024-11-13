@@ -13,12 +13,14 @@ import {
   UsersOnWorkspaces,
   Workspace,
   WorkspaceRequestParamsDto,
+  UpdateWorkspacePreferencesDto,
 } from '@tegonhq/types';
 import { Request, Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import { Workspace as WorkspaceD } from 'modules/auth/session.decorator';
 import { AdminGuard } from 'modules/users/admin.guard';
 
 import {
@@ -105,6 +107,18 @@ export class WorkspacesController {
     workspaceId: WorkspaceRequestParamsDto,
   ): Promise<Workspace> {
     return await this.workspacesService.getWorkspace(workspaceId);
+  }
+
+  @Post('preferences')
+  @UseGuards(AuthGuard)
+  async updateWorkspacePreferences(
+    @WorkspaceD() workspaceId: string,
+    @Body() workspaceData: UpdateWorkspacePreferencesDto,
+  ): Promise<Workspace> {
+    return await this.workspacesService.updateWorkspacePreferences(
+      workspaceId,
+      workspaceData,
+    );
   }
 
   @Post(':workspaceId')

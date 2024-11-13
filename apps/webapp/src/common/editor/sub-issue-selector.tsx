@@ -6,6 +6,7 @@ import {
   TooltipTrigger,
 } from '@tegonhq/ui/components/tooltip';
 import { SubIssue } from '@tegonhq/ui/icons';
+import React from 'react';
 
 export function isValidUrl(url: string) {
   try {
@@ -38,58 +39,31 @@ export interface IssueContent {
 }
 
 interface SubIssueSelectorProps {
-  text: string;
+  subIssue?: boolean;
   onCreate: (issues: IssueContent[]) => void;
 }
 
-export const SubIssueSelector = ({ text, onCreate }: SubIssueSelectorProps) => {
+export const SubIssueSelector = ({
+  subIssue = false,
+  onCreate,
+}: SubIssueSelectorProps) => {
   const { editor } = useEditor();
 
-  if (!editor) {
-    return null;
-  }
+  const processNodes = () => {
+    const selection = editor.view.state.selection;
+    const textContent = [
+      {
+        text: editor.state.doc.textBetween(selection.from, selection.to),
+        start: selection.from,
+        end: selection.to,
+      },
+    ];
+
+    return textContent;
+  };
 
   const createSubIssue = () => {
-    const selection = editor.view.state.selection;
-    let textContent;
-    // Get the selection content and examine its structure
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fragment = (selection.content().content as any).content[0];
-
-    // Get the resolved position and check parent nodes
-    let isFullBulletList = true;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    fragment.forEach((node: any) => {
-      if (node.type.name !== 'listItem') {
-        isFullBulletList = false;
-      }
-    });
-
-    if (isFullBulletList) {
-      const items: Array<{ text: string; start: number; end: number }> = [];
-      let currentPos = selection.from;
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      fragment.forEach((node: any) => {
-        const nodeSize = node.nodeSize;
-        items.push({
-          text: node.textContent,
-          start: currentPos,
-          end: currentPos + nodeSize,
-        });
-        currentPos += nodeSize;
-      });
-      textContent = items;
-    } else {
-      textContent = [
-        {
-          text: editor.state.doc.textBetween(selection.from, selection.to),
-          start: selection.from,
-          end: selection.to,
-        },
-      ];
-    }
-
+    const textContent = processNodes();
     onCreate && onCreate(textContent);
   };
 
@@ -105,7 +79,9 @@ export const SubIssueSelector = ({ text, onCreate }: SubIssueSelectorProps) => {
             <SubIssue size={16} />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom">{text}</TooltipContent>
+        <TooltipContent side="bottom">
+          {subIssue ? `Create sub issue` : `Create issue`}
+        </TooltipContent>
       </Tooltip>
     </div>
   );

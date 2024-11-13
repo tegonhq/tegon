@@ -10,7 +10,7 @@ export const Team = types.model({
   workspaceId: types.string,
   currentCycle: types.union(types.string, types.null, types.undefined),
   preferences: types.model({
-    cyclesEnabled: types.union(types.boolean, types.undefined),
+    cyclesEnabled: types.union(types.boolean, types.undefined, types.null),
   }),
 });
 

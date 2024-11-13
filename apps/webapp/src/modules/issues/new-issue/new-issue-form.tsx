@@ -66,7 +66,7 @@ export const NewIssueForm = observer(
     const { suggestionItems, isLoading: aiLoading } =
       useSuggestionItems(subIssueOperations);
 
-    const defaultValuesForForm = useDefaultValues();
+    const defaultValuesForForm = useDefaultValues(team);
 
     // This is to change the default value for the workflow
     React.useEffect(() => {

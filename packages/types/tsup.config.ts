@@ -4,6 +4,7 @@ const options: Options = {
   name: 'main',
   config: 'tsconfig.json',
   entry: ['./src/index.ts'],
+  external: ['class-validator', 'class-transformer'], // Optional: externalize these libraries
   outDir: './dist',
   platform: 'node',
   format: ['cjs', 'esm'],

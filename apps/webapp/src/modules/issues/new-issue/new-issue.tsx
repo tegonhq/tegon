@@ -29,7 +29,6 @@ import {
 
 import { IssueCollapseView } from './issue-collapse-view';
 import { NewIssueForm } from './new-issue-form';
-import { useDefaultValues } from './new-issue-utils';
 import { NewIssueSchema } from './new-issues-type';
 
 export interface IssueDefaultValues {
@@ -49,13 +48,11 @@ export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
   const { toast } = useToast();
   const { parentId, description } = defaultValues;
 
-  const defaultValuesForForm = useDefaultValues(parentId, description);
-
   // The form has a array of issues where first issue is the parent and the later sub issues
   const form = useForm<z.infer<typeof NewIssueSchema>>({
     resolver: zodResolver(NewIssueSchema),
     defaultValues: {
-      issues: [defaultValuesForForm],
+      issues: [{ parentId, description }],
     },
   });
 

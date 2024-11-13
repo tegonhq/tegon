@@ -1,6 +1,5 @@
 import { Issue } from '../issue';
 import { Label } from '../label';
-import { TeamPreference } from '../team-preference';
 import { Template } from '../template';
 import { View } from '../view';
 import { Workflow } from '../workflow';
@@ -20,6 +19,5 @@ export class Team {
   label?: Label[];
   template?: Template[];
   workflow?: Workflow[];
-  teamPreference?: TeamPreference[];
   View?: View[];
 }
