@@ -2,6 +2,7 @@ import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { AssigneeLine } from '@tegonhq/ui/icons';
+import { sort } from 'fast-sort';
 import { observer } from 'mobx-react-lite';
 
 import { groupBy } from 'common/lib/common';
@@ -32,9 +33,13 @@ export const AssigneeInsights = observer(
       ? applicationStore.filters.assignee.value
       : [];
 
+    const sortedAssignees = sort(users).desc(
+      (user: User) => groupedByIssues.get(user.id)?.length ?? 0,
+    );
+
     return (
       <div className="flex flex-col px-4 gap-1 mt-2">
-        {users.map((user: User) => {
+        {sortedAssignees.map((user: User) => {
           const isActive = assigneeFilter.includes(user.id);
 
           return (
