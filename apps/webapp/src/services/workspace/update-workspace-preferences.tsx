@@ -1,7 +1,9 @@
 import { updateWorkspacePreferences } from '@tegonhq/services';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 import type { WorkspaceType } from 'common/types';
+
+import { GetUserQuery } from 'services/users';
 
 interface MutationParams {
   onMutate?: () => void;
@@ -14,6 +16,8 @@ export function useUpdateWorkspacePreferencesMutation({
   onSuccess,
   onError,
 }: MutationParams) {
+  const queryClient = useQueryClient();
+
   const onMutationTriggered = () => {
     onMutate && onMutate();
   };
@@ -26,6 +30,8 @@ export function useUpdateWorkspacePreferencesMutation({
   };
 
   const onMutationSuccess = (team: WorkspaceType) => {
+    queryClient.invalidateQueries({ queryKey: [GetUserQuery] });
+
     onSuccess && onSuccess(team);
   };
 

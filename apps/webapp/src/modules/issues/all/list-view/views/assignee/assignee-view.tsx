@@ -1,6 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
+import { useUsersData } from 'hooks/users';
+
 import { ViewEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
@@ -9,15 +11,19 @@ import { AssigneeList } from './assignee-list';
 
 export const AssigneeView = observer(() => {
   const {
-    workspaceStore: { usersOnWorkspaces },
     applicationStore: {
       displaySettings: { view },
     },
   } = useContextStore();
+  const { users, isLoading } = useUsersData(false);
+
+  if (isLoading) {
+    return null;
+  }
 
   return view === ViewEnum.list ? (
-    <AssigneeList usersOnWorkspaces={usersOnWorkspaces} />
+    <AssigneeList users={users} />
   ) : (
-    <AssigneeBoard usersOnWorkspaces={usersOnWorkspaces} />
+    <AssigneeBoard users={users} />
   );
 });

@@ -1,5 +1,6 @@
 import { BadgeColor } from '@tegonhq/ui/components/badge';
 import { Button } from '@tegonhq/ui/components/button';
+import { sort } from 'fast-sort';
 import { observer } from 'mobx-react-lite';
 
 import { groupByKeyArray } from 'common/lib/common';
@@ -25,9 +26,13 @@ export const LabelInsights = observer(({ issues }: LabelInsightsProps) => {
     ? applicationStore.filters.label.value
     : [];
 
+  const sortedLabels = sort(labels).desc(
+    (label: LabelType) => groupedByIssues.get(label.id)?.length ?? 0,
+  );
+
   return (
     <div className="flex flex-col px-4 gap-1 mt-2">
-      {labels.map((label: LabelType) => {
+      {sortedLabels.map((label: LabelType) => {
         const isActive = labelFilter.includes(label.name);
 
         return (

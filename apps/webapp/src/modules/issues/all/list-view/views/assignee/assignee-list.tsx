@@ -1,26 +1,20 @@
-import { RoleEnum } from '@tegonhq/types';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 
-import type { UsersOnWorkspaceType } from 'common/types';
+import type { User } from 'common/types';
 
 import { AssigneeViewList, NoAssigneeView } from './assignee-view-list';
 
 interface AssigneeListProps {
-  usersOnWorkspaces: UsersOnWorkspaceType[];
+  users: User[];
 }
 
-export function AssigneeList({ usersOnWorkspaces }: AssigneeListProps) {
+export function AssigneeList({ users }: AssigneeListProps) {
   return (
     <ScrollArea className="h-full w-full" id="assignee-list">
       <div className="flex flex-col gap-4 h-full pb-[100px]">
-        {usersOnWorkspaces
-          .filter(
-            (uOw: UsersOnWorkspaceType) =>
-              ![RoleEnum.BOT, RoleEnum.AGENT].includes(uOw.role as RoleEnum),
-          )
-          .map((uOW: UsersOnWorkspaceType) => (
-            <AssigneeViewList key={uOW.id} userOnWorkspace={uOW} />
-          ))}
+        {users.map((user: User) => (
+          <AssigneeViewList key={user.id} user={user} />
+        ))}
         <NoAssigneeView />
       </div>
     </ScrollArea>

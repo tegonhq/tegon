@@ -28,14 +28,14 @@ export const Preferences = observer(() => {
   return (
     <SettingSection
       title="Team preferences"
-      description="Manage your team preferences"
+      description="Manage your workspace preferences"
     >
       <div className="flex flex-col">
         <h3 className="text-lg"> Priority preference </h3>
         <p className="text-muted-foreground">
-          With your teams preferred priority settings, you can automatically
-          assign issue priorities such as High, Medium, Low, or Urgent based on
-          your defined rules.
+          With your preferred priority settings, you can automatically assign
+          issue priorities such as High, Medium, Low, or Urgent based on your
+          defined rules.
         </p>
 
         <div className="flex gap-1 max-w-[500px] mt-2">
