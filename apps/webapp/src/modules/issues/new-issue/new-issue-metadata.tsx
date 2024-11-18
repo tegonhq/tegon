@@ -8,6 +8,10 @@ import {
   IssuePriorityDropdown,
   IssueStatusDropdown,
 } from '../components';
+import {
+  ProjectDropdown,
+  ProjectMilestoneDropdown,
+} from '../components/issue-metadata/project';
 
 interface NewIssueMetadataProps {
   form: UseFormReturn;
@@ -29,18 +33,8 @@ export function NewIssueMetadata({
     return `issues.${index}.${name}`;
   }
 
-  const toShow = (id: string) => {
-    if (id.includes('labelIds')) {
-      const value = values[id];
-      return typeof value === 'object' ? value && value.length > 0 : !!value;
-    }
-
-    return !!values[id];
-    // return !!values[id];
-  };
-
   return (
-    <div className="flex gap-2">
+    <>
       <FormField
         control={form.control}
         name={inputName('stateId')}
@@ -88,22 +82,55 @@ export function NewIssueMetadata({
         )}
       />
 
-      {toShow('priority') && (
+      <FormField
+        control={form.control}
+        name={inputName('priority')}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl className="max-w-[200px]">
+              <IssuePriorityDropdown
+                value={field.value}
+                onChange={field.onChange}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name={inputName('projectId')}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <ProjectDropdown
+                value={field.value}
+                onChange={field.onChange}
+                teamIdentifier={teamIdentifier}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+
+      {values.projectId && (
         <FormField
           control={form.control}
-          name={inputName('priority')}
+          name={inputName('projectMilestoneId')}
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <IssuePriorityDropdown
+                <ProjectMilestoneDropdown
                   value={field.value}
                   onChange={field.onChange}
+                  teamIdentifier={teamIdentifier}
+                  projectId={values.projectId}
                 />
               </FormControl>
             </FormItem>
           )}
         />
       )}
-    </div>
+    </>
   );
 }

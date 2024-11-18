@@ -12,7 +12,7 @@ interface IssueAssigneeDropdownWithoutContextProps {
 
 export const IssueAssigneeDropdownWithoutContext = observer(
   ({ onChange, onClose, value }: IssueAssigneeDropdownWithoutContextProps) => {
-    const { users } = useUsersData();
+    const { users } = useUsersData(false);
 
     return (
       <IssueAssigneeDropdownContent

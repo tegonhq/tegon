@@ -80,3 +80,7 @@ export function getUniqueValuesForKeys<T extends Record<string, any>>(
   }
   return uniqueValuesMap;
 }
+
+export function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

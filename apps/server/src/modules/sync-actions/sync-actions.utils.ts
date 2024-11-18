@@ -42,6 +42,13 @@ export async function getWorkspaceId(
       });
       return actionEntity.action.workspaceId;
 
+    case ModelName.Cycle:
+      const cycleEntity = await prisma.cycle.findUnique({
+        where: { id: modelId },
+        include: { team: true },
+      });
+      return cycleEntity.team.workspaceId;
+
     case ModelName.UsersOnWorkspaces:
       const usersOnWorkspace = await prisma.usersOnWorkspaces.findUnique({
         where: { id: modelId },
@@ -53,13 +60,6 @@ export async function getWorkspaceId(
         where: { id: modelId },
       });
       return team.workspaceId;
-
-    case ModelName.TeamPreference:
-      const teamPreference = await prisma.teamPreference.findUnique({
-        where: { id: modelId },
-        include: { team: true },
-      });
-      return teamPreference.team.workspaceId;
 
     case ModelName.Issue:
       const issue = await prisma.issue.findUnique({
@@ -140,6 +140,19 @@ export async function getWorkspaceId(
       });
       return issueSuggested.team.workspaceId;
 
+    case ModelName.Project:
+      const project = await prisma.project.findUnique({
+        where: { id: modelId },
+      });
+      return project.workspaceId;
+
+    case ModelName.ProjectMilestone:
+      const projectMilestone = await prisma.projectMilestone.findUnique({
+        where: { id: modelId },
+        include: { project: true },
+      });
+      return projectMilestone.project.workspaceId;
+
     default:
       return undefined;
   }
@@ -156,9 +169,9 @@ export async function getModelData(
     Workspace: prisma.workspace,
     Action: prisma.action,
     ActionEntity: prisma.actionEntity,
+    Cycle: prisma.cycle,
     UsersOnWorkspaces: prisma.usersOnWorkspaces,
     Team: prisma.team,
-    TeamPreference: prisma.teamPreference,
     Issue: prisma.issue,
     Label: prisma.label,
     Workflow: prisma.workflow,
@@ -216,6 +229,8 @@ export async function getModelData(
     },
     View: prisma.view,
     IssueSuggestion: prisma.issueSuggestion,
+    Project: prisma.project,
+    ProjectMilestone: prisma.projectMilestone,
   };
 
   const model = modelMap[modelName];

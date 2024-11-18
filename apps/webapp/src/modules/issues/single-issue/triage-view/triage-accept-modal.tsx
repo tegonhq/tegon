@@ -38,6 +38,8 @@ import {
 
 import { UserContext } from 'store/user-context';
 
+import { getBacklogWorkflow } from './utils';
+
 interface TriageAcceptModalProps {
   setDialogOpen: (value: boolean) => void;
 }
@@ -76,7 +78,7 @@ export function TriageAcceptModal({ setDialogOpen }: TriageAcceptModalProps) {
       labelIds: issue.labelIds,
       priority: issue.priority ?? 0,
       assigneeId: issue.assigneeId,
-      stateId: workflows[0].id,
+      stateId: getBacklogWorkflow(workflows).id,
     },
   });
 

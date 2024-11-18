@@ -52,7 +52,7 @@ export const TriageCategory = observer(
           <CollapsibleTrigger asChild>
             <Button
               size="lg"
-              className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100 px-4"
+              className="flex group items-center ml-4 w-fit rounded-2xl bg-grayAlpha-100 px-4"
               variant="ghost"
             >
               <div>

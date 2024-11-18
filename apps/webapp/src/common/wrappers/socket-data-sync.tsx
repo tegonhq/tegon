@@ -4,6 +4,10 @@ import getConfig from 'next/config';
 import * as React from 'react';
 import { Socket, io } from 'socket.io-client';
 
+import { hash } from 'common/common-utils';
+
+import { useCurrentWorkspace } from 'hooks/workspace';
+
 import { useContextStore } from 'store/global-context-provider';
 import { MODELS } from 'store/models';
 import { UserContext } from 'store/user-context';
@@ -18,6 +22,7 @@ interface Props {
 export const SocketDataSyncWrapper: React.FC<Props> = observer(
   (props: Props) => {
     const { children } = props;
+    const workspace = useCurrentWorkspace();
 
     const {
       commentsStore,
@@ -34,8 +39,12 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
       viewsStore,
       issueSuggestionsStore,
       actionsStore,
+      projectsStore,
+      projectMilestonesStore,
+      cyclesStore,
     } = useContextStore();
     const user = React.useContext(UserContext);
+    const hashKey = `${workspace.id}__${user.id}`;
 
     const [socket, setSocket] = React.useState<Socket | undefined>(undefined);
 
@@ -80,10 +89,19 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
         [MODELS.View]: viewsStore,
         [MODELS.IssueSuggestion]: issueSuggestionsStore,
         [MODELS.Action]: actionsStore,
+        [MODELS.Project]: projectsStore,
+        [MODELS.ProjectMilestone]: projectMilestonesStore,
+        [MODELS.Cycle]: cyclesStore,
       };
 
       socket.on('message', (newMessage: string) => {
-        saveSocketData([JSON.parse(newMessage)], MODEL_STORE_MAP);
+        const data = JSON.parse(newMessage);
+
+        saveSocketData([data], MODEL_STORE_MAP);
+        localStorage.setItem(
+          `lastSequenceId_${hash(hashKey)}`,
+          `${data.sequenceId}`,
+        );
       });
     }
 

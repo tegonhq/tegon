@@ -3,8 +3,7 @@ import React from 'react';
 
 import { IssueLabelDropdownContent } from 'modules/issues/components';
 
-import { useTeamLabels } from 'hooks/labels';
-import { useCurrentTeam } from 'hooks/teams';
+import { useComputedLabels } from 'hooks/labels';
 
 import { FilterTypeEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
@@ -18,9 +17,8 @@ interface IssueLabelFilterProps {
 export const IssueLabelFilter = observer(
   ({ onChange }: IssueLabelFilterProps) => {
     const [labelSearch, setLabelSearch] = React.useState('');
+    const { labels } = useComputedLabels();
 
-    const currentTeam = useCurrentTeam();
-    const labels = useTeamLabels(currentTeam.identifier);
     const { applicationStore } = useContextStore();
 
     const labelFilters = applicationStore.filters.label
@@ -28,7 +26,13 @@ export const IssueLabelFilter = observer(
       : [];
 
     const change = (value: string[]) => {
-      onChange(value, FilterTypeEnum.INCLUDES);
+      const names = value.map((val: string) => {
+        const label = labels.find((labels) => labels.id === val);
+
+        return label.name;
+      });
+
+      onChange(names, FilterTypeEnum.INCLUDES);
     };
 
     return (

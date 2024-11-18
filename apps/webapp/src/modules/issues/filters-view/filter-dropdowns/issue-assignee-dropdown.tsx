@@ -13,7 +13,7 @@ import { IssueAssigneeDropdownContent } from 'modules/issues/components';
 
 import type { User } from 'common/types';
 
-import { useUsersData } from 'hooks/users/use-users-data';
+import { useUsersData } from 'hooks/users';
 
 interface IssueAssigneeDropdownProps {
   value?: string[];
@@ -25,7 +25,6 @@ export function IssueAssigneeDropdown({
   onChange,
 }: IssueAssigneeDropdownProps) {
   const [open, setOpen] = React.useState(false);
-
   const { users, isLoading } = useUsersData(false);
 
   function getUserData(userId: string) {

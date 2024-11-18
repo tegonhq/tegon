@@ -1,4 +1,5 @@
 import { NodeViewWrapper } from '@tiptap/react';
+import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import React from 'react';
@@ -11,7 +12,7 @@ import { useTeamWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const TegonIssueComponent = (props: any) => {
+export const TegonIssueComponent = observer((props: any) => {
   const { workspaceSlug } = useParams<{ workspaceSlug: string }>();
   const { issuesStore, teamsStore } = useContextStore();
 
@@ -39,18 +40,24 @@ export const TegonIssueComponent = (props: any) => {
   const CategoryIcon = getWorkflowIcon(workflow);
   return (
     <NodeViewWrapper className="react-component-with-content" as="span">
-      <span className="content inline-flex text-sm" contentEditable={false}>
-        <Link
-          className="flex gap-1 bg-grayAlpha-100 p-0.5 px-1 w-fit rounded items-center"
-          href={`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`}
-        >
-          <CategoryIcon size={16} color={getWorkflowColor(workflow).color} />
+      <Link
+        className="gap-1 bg-grayAlpha-100 p-0.5 px-1 rounded box-decoration-clone"
+        contentEditable={false}
+        href={`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`}
+      >
+        <span>
+          <span className="inline-flex items-bottom justify-bottom top-1 relative">
+            <CategoryIcon
+              color={getWorkflowColor(workflow).color}
+              className="mr-1"
+            />
+          </span>
           <span className="font-mono text-muted-foreground">
             {`${team.identifier}-${issue.number}`}
           </span>
-          {issue.title}
-        </Link>
-      </span>
+        </span>
+        <span> {issue.title}</span>
+      </Link>
     </NodeViewWrapper>
   );
-};
+});

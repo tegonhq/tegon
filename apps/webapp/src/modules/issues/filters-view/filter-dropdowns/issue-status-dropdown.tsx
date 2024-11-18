@@ -13,29 +13,39 @@ import * as React from 'react';
 
 import { IssueStatusDropdownContent } from 'modules/issues/components';
 
-import { useTeamWorkflows } from 'hooks/workflows/use-team-workflows';
+import { useComputedWorkflows } from 'hooks/workflows/use-team-workflows';
 
 interface IssueStatusProps {
   value?: string[];
   onChange?: (newStatus: string[]) => void;
-  teamIdentifier: string;
 }
 
-export function IssueStatusDropdown({
-  value,
-  onChange,
-  teamIdentifier,
-}: IssueStatusProps) {
+export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {
   const [open, setOpen] = React.useState(false);
-  const workflows = useTeamWorkflows(teamIdentifier);
+  const { workflows } = useComputedWorkflows();
 
-  const getWorkflowData = (workflowId: string) => {
-    const workflow = value
-      ? workflows.find((workflow) => workflow.id === workflowId)
+  const getWorkflowData = (name: string) => {
+    const workflow = name
+      ? workflows.find((workflow) => workflow.name === name)
       : workflows[0];
 
     return workflow;
   };
+
+  const change = (value: string[]) => {
+    const names = value.map((val: string) => {
+      const workflow = workflows.find((workflow) => workflow.id === val);
+
+      return workflow.name;
+    });
+    onChange(names);
+  };
+
+  const computedValues = value.map((val: string) => {
+    const workfow = workflows.find((workflow) => workflow.name === val);
+
+    return workfow.id;
+  });
 
   return (
     <div>
@@ -57,10 +67,10 @@ export function IssueStatusDropdown({
           <Command shouldFilter={false}>
             <CommandInput placeholder="Set status..." autoFocus />
             <IssueStatusDropdownContent
-              onChange={onChange}
+              onChange={change}
               onClose={() => setOpen(false)}
               workflows={workflows}
-              value={value}
+              value={computedValues}
               multiple
             />
           </Command>

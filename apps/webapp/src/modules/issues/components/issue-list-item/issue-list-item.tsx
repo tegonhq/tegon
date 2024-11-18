@@ -1,5 +1,4 @@
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
-import { CalendarLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
@@ -22,7 +21,9 @@ import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { IssueDueDate } from './issue-duedate';
 import { IssueLabels } from './issue-labels';
+import { IssueProject } from './issue-project';
 import { IssueRelations, View } from './issue-relations';
 import { getRelationIssues, useSortIssues } from './utils';
 
@@ -35,17 +36,6 @@ interface IssueListItemProps {
 interface IssueRelationIssuesProps {
   view: View;
   issue: IssueType;
-}
-
-function formatDateToDayMonth(isoString: string): string {
-  const date = new Date(isoString);
-
-  const options: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'short',
-  };
-
-  return date.toLocaleDateString('en-GB', options);
 }
 
 export const IssueRelationIssues = observer(
@@ -62,7 +52,7 @@ export const IssueRelationIssues = observer(
     issues = useSortIssues(issues);
 
     return (
-      <div className="pl-14 pr-6">
+      <div className="pl-12 pr-2">
         {issues.map((issue: IssueType) => {
           return (
             <IssueListItem key={issue.id} subIssueView issueId={issue.id} />
@@ -108,7 +98,7 @@ export const IssueListItem = observer(
             push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
           }}
           className={cn(
-            'pl-3 pr-4 flex group cursor-default gap-2',
+            'pl-1 pr-2 flex group cursor-default gap-2',
             subIssueView && 'pl-0 pr-0',
           )}
           onMouseOver={() => {
@@ -150,7 +140,7 @@ export const IssueListItem = observer(
             )}
             <div
               className={cn(
-                'flex w-full items-start gap-2 pl-2 ml-1 pr-4 group-hover:bg-grayAlpha-100 rounded-xl',
+                'flex w-full items-start gap-2 pl-2 ml-1 pr-2 group-hover:bg-grayAlpha-100 rounded-xl',
                 issueSelected && !subIssueView && 'bg-primary/10',
                 subIssueView && 'pl-2 pr-2',
               )}
@@ -177,18 +167,18 @@ export const IssueListItem = observer(
                     </span>
 
                     <div className="flex items-center gap-2">
-                      {issue.dueDate && (
-                        <div className="inline-flex min-w-[70px] text-xs gap-1 items-center">
-                          <CalendarLine /> &nbsp;
-                          {formatDateToDayMonth(issue.dueDate)}
-                        </div>
-                      )}
+                      <IssueDueDate dueDate={issue.dueDate} />
+
+                      <IssueProject
+                        projectId={issue.projectId}
+                        projectMilestoneId={issue.projectMilestoneId}
+                      />
                       <IssueLabels labelIds={issue.labelIds} />
                     </div>
                   </div>
 
-                  <div className="flex shrink-0 items-center gap-8">
-                    <div className="w-[80px]">
+                  <div className="flex shrink-0 items-center">
+                    <div className="w-[80px] mr-8">
                       <IssuePriorityDropdown
                         value={issue.priority ?? 0}
                         onChange={priorityChange}

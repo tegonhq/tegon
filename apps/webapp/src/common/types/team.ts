@@ -5,6 +5,9 @@ export interface TeamType {
   name: string;
   identifier: string;
   workspaceId: string;
+  preferences: {
+    cyclesEnabled?: boolean;
+  };
 }
 
 export interface WorkflowType {
@@ -17,4 +20,7 @@ export interface WorkflowType {
   color: string;
   category: string;
   teamId: string;
+
+  // For processed purpose
+  ids?: string[];
 }

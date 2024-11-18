@@ -1,5 +1,5 @@
+import { getPriorities } from 'common/priority';
 import type { User } from 'common/types';
-import { Priorities } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -45,7 +45,7 @@ export function useFiltersFromAI() {
       case 'priority': {
         return value
           .map((priority: string) => {
-            const index = Priorities.indexOf(priority);
+            const index = getPriorities().indexOf(priority);
 
             return index < 0 ? undefined : index;
           })

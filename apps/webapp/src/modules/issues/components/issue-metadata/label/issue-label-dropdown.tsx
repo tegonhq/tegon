@@ -63,7 +63,7 @@ export const IssueLabelDropdown = observer(
               <Button
                 variant="link"
                 role="combobox"
-                size="sm"
+                size="xs"
                 aria-expanded={open}
                 className={cn(
                   'flex items-center justify-between font-normal border-0 shadow-none',
@@ -110,7 +110,7 @@ export const IssueLabelDropdown = observer(
         const label = labels.find((label: LabelType) => label.id === value[0]);
         return (
           <>
-            <LabelLine size={14} className="text-muted-foreground mr-2" />
+            <LabelLine size={20} className="text-muted-foreground mcr-2" />
             {label?.name}
           </>
         );
@@ -119,14 +119,14 @@ export const IssueLabelDropdown = observer(
       if (value.length > 1) {
         return (
           <>
-            <LabelLine size={14} className="text-muted-foreground mr-2" />
+            <LabelLine size={20} className="text-muted-foreground mr-2" />
             {value.length} Labels
           </>
         );
       }
 
       return (
-        <div className="flex items-center">
+        <div className="flex items-center text-muted-foreground ">
           <AddLine size={16} className="mr-2" />
           Add Label
         </div>

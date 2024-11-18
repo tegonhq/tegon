@@ -12,34 +12,35 @@ import React from 'react';
 
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
-import type { UsersOnWorkspaceType } from 'common/types';
+import type { User } from 'common/types';
 import type { IssueType } from 'common/types';
 
+import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
-import { useUserData } from 'hooks/users';
+import { useComputedWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
 
 interface AssigneeBoardListProps {
-  userOnWorkspace: UsersOnWorkspaceType;
+  user: User;
 }
 
 export const AssigneeBoardList = observer(
-  ({ userOnWorkspace }: AssigneeBoardListProps) => {
+  ({ user }: AssigneeBoardListProps) => {
     const { issuesStore, applicationStore } = useContextStore();
     const team = useCurrentTeam();
-    const issues = issuesStore.getIssuesForUser(
-      applicationStore.displaySettings.showSubIssues,
-      { userId: userOnWorkspace.userId, teamId: team.id },
-    );
-    const { user, isLoading } = useUserData(userOnWorkspace.userId);
-    const computedIssues = useFilterIssues(issues, team.id);
+    const { workflows } = useComputedWorkflows();
+    const project = useProject();
 
-    if (isLoading) {
-      return null;
-    }
+    const issues = issuesStore.getIssuesForUser({
+      userId: user.id,
+      teamId: team?.id,
+      projectId: project?.id,
+    });
+
+    const computedIssues = useFilterIssues(issues, workflows);
 
     if (
       computedIssues.length === 0 &&
@@ -48,7 +49,7 @@ export const AssigneeBoardList = observer(
       return null;
     }
     return (
-      <BoardColumn key={userOnWorkspace.userId} id={userOnWorkspace.userId}>
+      <BoardColumn key={user.id} id={user.id}>
         <div className="flex flex-col max-h-[100%]">
           <div className="flex gap-1 items-center mb-2">
             <div className="flex items-center w-fit h-8 rounded-2xl px-4 py-2 bg-grayAlpha-100">
@@ -61,7 +62,7 @@ export const AssigneeBoardList = observer(
             </div>
           </div>
 
-          <ScrollArea className="pr-3 mr-2">
+          <ScrollArea className="pr-3 mr-2" id="assignee-board-list">
             <div className="flex flex-col gap-3 grow pb-10 pt-2">
               {computedIssues.map((issue: IssueType, index: number) => (
                 <BoardItem key={issue.id} id={issue.id}>
@@ -96,13 +97,20 @@ export const AssigneeBoardList = observer(
 export const NoAssigneeView = observer(() => {
   const { issuesStore, applicationStore } = useContextStore();
   const team = useCurrentTeam();
-  const issues = issuesStore.getIssuesForUser(
-    applicationStore.displaySettings.showSubIssues,
-    { userId: undefined, teamId: team.id },
-  );
-  const computedIssues = useFilterIssues(issues, team.id);
+  const { workflows } = useComputedWorkflows();
+  const project = useProject();
 
-  if (computedIssues.length === 0) {
+  const issues = issuesStore.getIssuesForUser({
+    userId: undefined,
+    teamId: team?.id,
+    projectId: project?.id,
+  });
+  const computedIssues = useFilterIssues(issues, workflows);
+
+  if (
+    computedIssues.length === 0 &&
+    !applicationStore.displaySettings.showEmptyGroups
+  ) {
     return null;
   }
 
@@ -120,7 +128,7 @@ export const NoAssigneeView = observer(() => {
           </div>
         </div>
 
-        <ScrollArea className="pr-3 mr-2">
+        <ScrollArea className="pr-3 mr-2" id="no-assignee-board-list">
           <div className="flex flex-col gap-3 grow pb-10 pt-2">
             {computedIssues.map((issue: IssueType, index: number) => (
               <BoardItem key={issue.id} id={issue.id}>

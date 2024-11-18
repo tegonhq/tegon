@@ -26,6 +26,9 @@ export interface IssueType {
   subscriberIds: string[];
   sourceMetadata?: string;
 
+  projectId?: string;
+  projectMilestoneId?: string;
+
   // for frontend usage
   children?: IssueType[];
   parent?: IssueType;
@@ -56,8 +59,6 @@ export interface IssueHistoryType {
     type: IssueRelationEnum;
   };
 }
-
-export const Priorities = ['No priority', 'Urgent', 'High', 'Medium', 'Low'];
 
 export interface IssueCommentType {
   id: string;

@@ -3,6 +3,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import {
   InviteStatusEnum,
   RoleEnum,
+  UpdateWorkspacePreferencesDto,
   UsersOnWorkspaces,
   Workspace,
   WorkspaceRequestParamsDto,
@@ -15,6 +16,7 @@ import {
   createNewSession,
   SessionContainer,
 } from 'supertokens-node/recipe/session';
+import Session from 'supertokens-node/recipe/session';
 
 import { createMagicLink } from 'common/utils/login';
 
@@ -46,7 +48,9 @@ export default class WorkspacesService {
   async createInitialResources(
     userId: string,
     workspaceData: CreateInitialResourcesDto,
-  ): Promise<Workspace> {
+    res: Response,
+    req: Request,
+  ) {
     const workspace = await this.prisma.usersOnWorkspaces.findFirst({
       where: { userId },
     });
@@ -55,54 +59,69 @@ export default class WorkspacesService {
       throw new BadRequestException('Already workspace exist');
     }
 
-    return await this.prisma.$transaction(async (prisma) => {
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          fullname: workspaceData.fullname,
-        },
-      });
+    await this.prisma.$transaction(
+      async (prisma) => {
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            fullname: workspaceData.fullname,
+          },
+        });
 
-      const workspace = await prisma.workspace.create({
-        data: {
-          name: workspaceData.workspaceName,
-          slug: workspaceData.workspaceName
-            .toLowerCase()
-            .replace(/[^a-z0-9]/g, ''),
-          preferences: {
-            actionCount: 2,
-          },
-          usersOnWorkspaces: {
-            create: { userId },
-          },
-          team: {
-            create: {
-              name: workspaceData.teamName,
-              identifier: workspaceData.teamIdentifier,
-              workflow: { create: workflowSeedData },
+        const workspace = await prisma.workspace.create({
+          data: {
+            name: workspaceData.workspaceName,
+            slug: workspaceData.workspaceName
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, ''),
+            preferences: {
+              actionCount: 2,
+            },
+            usersOnWorkspaces: {
+              create: { userId },
+            },
+            team: {
+              create: {
+                name: workspaceData.teamName,
+                identifier: workspaceData.teamIdentifier,
+                workflow: { create: workflowSeedData },
+              },
+            },
+            label: { create: labelSeedData },
+            prompts: {
+              createMany: {
+                data: promptsSeedData,
+                skipDuplicates: true,
+              },
             },
           },
-          label: { create: labelSeedData },
-          prompts: {
-            createMany: {
-              data: promptsSeedData,
-              skipDuplicates: true,
-            },
+          include: {
+            team: true,
+            usersOnWorkspaces: true,
           },
-        },
-        include: {
-          team: true,
-          usersOnWorkspaces: true,
-        },
-      });
+        });
 
-      await prisma.usersOnWorkspaces.update({
-        where: { userId_workspaceId: { userId, workspaceId: workspace.id } },
-        data: { teamIds: [workspace.team[0].id] },
-      });
+        await prisma.usersOnWorkspaces.update({
+          where: { userId_workspaceId: { userId, workspaceId: workspace.id } },
+          data: { teamIds: [workspace.team[0].id] },
+        });
 
-      return workspace;
-    });
+        return workspace;
+      },
+      {
+        maxWait: 20000,
+        timeout: 60000,
+      },
+    );
+
+    await Session.createNewSession(
+      req,
+      res,
+      'public',
+      supertokens.convertToRecipeUserId(userId),
+    );
+
+    res.send({ status: 200, message: 'impersonate' });
   }
 
   async createWorkspace(
@@ -196,6 +215,31 @@ export default class WorkspacesService {
         id: WorkspaceIdRequestBody.workspaceId,
       },
     });
+  }
+
+  async updateWorkspacePreferences(
+    workspaceId: string,
+    workspaceData: UpdateWorkspacePreferencesDto,
+  ): Promise<Workspace> {
+    const workspace = await this.prisma.workspace.findUniqueOrThrow({
+      where: {
+        id: workspaceId,
+      },
+    });
+
+    await this.prisma.workspace.update({
+      where: {
+        id: workspaceId,
+      },
+      data: {
+        preferences: {
+          ...(workspace.preferences as Record<string, string | boolean>),
+          ...workspaceData,
+        },
+      },
+    });
+
+    return workspace;
   }
 
   async deleteWorkspace(

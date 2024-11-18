@@ -11,9 +11,12 @@ import React from 'react';
 import { IssueListItem } from 'modules/issues/components';
 import { PriorityIcons } from 'modules/issues/components';
 
-import { Priorities, type IssueType } from 'common/types';
+import { type IssueType } from 'common/types';
 
+import { usePriorities } from 'hooks/priorities';
+import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
+import { useComputedWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -27,13 +30,16 @@ export const PriorityViewList = observer(
   ({ priority }: PriorityViewListProps) => {
     const { issuesStore, applicationStore } = useContextStore();
     const [isOpen, setIsOpen] = React.useState(true);
+    const { workflows } = useComputedWorkflows();
+    const project = useProject();
+
     const team = useCurrentTeam();
-    const issues = issuesStore.getIssuesForPriority(
-      priority,
-      team.id,
-      applicationStore.displaySettings.showSubIssues,
-    );
-    const computedIssues = useFilterIssues(issues, team.id);
+    const issues = issuesStore.getIssuesForPriority(priority, {
+      teamId: team?.id,
+      projectId: project?.id,
+    });
+    const computedIssues = useFilterIssues(issues, workflows);
+    const Priorities = usePriorities();
 
     if (
       computedIssues.length === 0 &&
@@ -53,7 +59,7 @@ export const PriorityViewList = observer(
         <div className="flex gap-1 items-center">
           <CollapsibleTrigger asChild>
             <Button
-              className="flex group items-center ml-6 w-fit rounded-2xl bg-grayAlpha-100"
+              className="flex group items-center ml-4 w-fit rounded-2xl bg-grayAlpha-100"
               variant="ghost"
               size="lg"
             >

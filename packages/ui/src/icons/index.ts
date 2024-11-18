@@ -60,6 +60,12 @@ export * from './book-line';
 export * from './document-line';
 export * from './fullscreen-line';
 export * from './more-line';
+export * from './project';
+export * from './right-sidebar-closed';
+export * from './right-sidebar-open';
+export * from './my-issues';
+export * from './fire';
+export * from './cycle';
 
 export * from './team-line';
 export * from './issues-fill';

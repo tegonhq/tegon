@@ -6,6 +6,7 @@ export interface CreateRedirectURLParams {
   workspaceId?: string;
   integrationDefinitionId: string;
   redirectURL: string;
+  personal?: boolean;
 }
 
 export interface RedirectURLResponse {

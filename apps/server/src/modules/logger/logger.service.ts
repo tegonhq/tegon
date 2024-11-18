@@ -89,19 +89,20 @@ export class LoggerService {
       const workspaceId = ALS_SERVICE_INSTANCE.get<string>('workspaceId');
 
       const loggerPrintFormat: LoggerPrintFormat = {
-        timestamp,
+        timestamp: timestamp as string,
         lvl: level.toUpperCase(),
-        ctx: this.context,
-        msg: message,
-        wId: workspaceId,
+        ctx: this.context ?? '',
+        msg: message as string,
+        wId: workspaceId ?? '',
       };
 
       if (err) {
-        loggerPrintFormat.error = err.stack || err;
+        loggerPrintFormat.error =
+          err instanceof Error ? err : new Error(String(err));
       }
 
       if (metadata?.error && Object.keys(metadata?.error).length) {
-        loggerPrintFormat.error = metadata?.error;
+        loggerPrintFormat.error = metadata.error as Error;
       }
 
       if (metadata?.payload && Object.keys(metadata?.payload).length) {

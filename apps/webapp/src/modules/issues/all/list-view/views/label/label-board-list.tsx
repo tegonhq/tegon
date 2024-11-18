@@ -12,7 +12,9 @@ import React from 'react';
 import type { LabelType } from 'common/types';
 import type { IssueType } from 'common/types';
 
+import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
+import { useComputedWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -25,12 +27,16 @@ interface LabelBoardItemProps {
 
 export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
   const { issuesStore, applicationStore } = useContextStore();
-  const issues = issuesStore.getIssuesForLabel(
-    label.id,
-    applicationStore.displaySettings.showSubIssues,
-  );
+  const project = useProject();
+  const { workflows } = useComputedWorkflows();
   const team = useCurrentTeam();
-  const computedIssues = useFilterIssues(issues, team.id);
+
+  const issues = issuesStore.getIssuesForLabel(label.ids, {
+    teamId: team?.id,
+    projectId: project?.id,
+  });
+
+  const computedIssues = useFilterIssues(issues, workflows);
 
   if (
     computedIssues.length === 0 &&
@@ -53,7 +59,7 @@ export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
           </div>
         </div>
 
-        <ScrollArea className="pr-3 mr-2">
+        <ScrollArea className="pr-3 mr-2" id="label-board-list">
           <div className="flex flex-col gap-3 grow pb-10 pt-2">
             {computedIssues.map((issue: IssueType, index: number) => {
               const id = `${label.name}__${issue.id}`;
@@ -85,11 +91,15 @@ export const LabelBoardList = observer(({ label }: LabelBoardItemProps) => {
 export const NoLabelBoardList = observer(() => {
   const { issuesStore, applicationStore } = useContextStore();
   const team = useCurrentTeam();
-  const issues = issuesStore.getIssuesForNoLabel(
-    applicationStore.displaySettings.showSubIssues,
-    team.id,
-  );
-  const computedIssues = useFilterIssues(issues, team.id);
+  const { workflows } = useComputedWorkflows();
+  const project = useProject();
+
+  const issues = issuesStore.getIssuesForNoLabel({
+    teamId: team?.id,
+    projectId: project?.id,
+  });
+
+  const computedIssues = useFilterIssues(issues, workflows);
 
   if (
     computedIssues.length === 0 &&
@@ -112,7 +122,7 @@ export const NoLabelBoardList = observer(() => {
           </div>
         </div>
 
-        <ScrollArea className="pr-3 mr-2">
+        <ScrollArea className="pr-3 mr-2" id="no-label-board-list">
           <div className="flex flex-col gap-3 grow pb-10 pt-2">
             {computedIssues.map((issue: IssueType, index: number) => {
               return (

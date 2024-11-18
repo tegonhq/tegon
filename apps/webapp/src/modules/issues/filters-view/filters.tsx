@@ -28,6 +28,7 @@ import {
   IssueStatusFilter,
   IssueLabelFilter,
   IssuePriorityFilter,
+  IssueProjectFilter,
 } from './filter-dropdowns';
 import { isEmpty } from './filter-utils';
 import { useFilterShorcuts } from './use-filter-shortcuts';
@@ -37,6 +38,7 @@ const ContentMap = {
   assignee: IssueAssigneeFilter,
   label: IssueLabelFilter,
   priority: IssuePriorityFilter,
+  project: IssueProjectFilter,
 };
 
 export type KeyType = keyof typeof ContentMap;
@@ -103,7 +105,7 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
     if (value.includes('ai:')) {
       setLoading(true);
       aiFilterIssues({
-        teamId: team.id,
+        teamId: team?.id,
         workspaceId: workspace.id,
         text: value.replace('ai: ', ''),
       });

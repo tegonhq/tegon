@@ -44,6 +44,7 @@ interface NewIssueProps {
 
 export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
   useScope(SCOPES.NewIssue);
+
   const { toast } = useToast();
   const { parentId, description } = defaultValues;
 
@@ -116,6 +117,12 @@ export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
     },
     [SCOPES.NewIssue],
   );
+
+  // To prevent f for filters
+  useHotkeys(['f', Key.Escape], () => {}, {
+    enableOnFormTags: true,
+    scopes: [SCOPES.NewIssue],
+  });
 
   React.useEffect(() => {
     const exists = fields.find((field) => field.id === collapseId);

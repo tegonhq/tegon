@@ -5,8 +5,7 @@ import * as React from 'react';
 import { workflowSort } from 'common/sorting';
 import { type WorkflowType } from 'common/types';
 
-import { useCurrentTeam } from 'hooks/teams';
-import { useTeamWorkflows } from 'hooks/workflows';
+import { useComputedWorkflows } from 'hooks/workflows';
 
 import { TimeBasedFilterEnum, ViewEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
@@ -15,7 +14,6 @@ import { CategoryBoard } from './category-board';
 import { CategoryList } from './category-list';
 
 export const CategoryView = observer(() => {
-  const currentTeam = useCurrentTeam();
   const {
     applicationStore: {
       displaySettings: { completedFilter, showTriageIssues, view },
@@ -45,7 +43,8 @@ export const CategoryView = observer(() => {
     return workflowSort(a, b, categorySequence);
   };
 
-  const workflows = useTeamWorkflows(currentTeam.identifier)
+  const { workflows: computedWorkflows } = useComputedWorkflows();
+  const workflows = computedWorkflows
     .filter((workflow: WorkflowType) => {
       if (workflow.category === WorkflowCategoryEnum.TRIAGE) {
         return showTriageIssues;

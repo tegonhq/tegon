@@ -1,6 +1,6 @@
 {
   "name": "tegon",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Tegon is an open-source, AI-first alternative to Jira, Linear",
   "main": "index.js",
   "repository": "https://github.com/tegonhq/tegon.git",
@@ -8,16 +8,16 @@
   "private": true,
   "scripts": {
     "dev-website": "dotenv -- turbo run dev --filter=website",
-    "dev": "dotenv -- turbo run dev --parallel --filter=!website --filter=!server",
+    "dev": "dotenv -- turbo run migrate dev --parallel --filter=!website",
     "build": "dotenv -- turbo run build",
     "lint": "turbo run lint",
-    "generate": "turbo run generate",
-    "start": "turbo run start-prod",
+    "generate": "dotenv -- turbo run generate",
+    "start": "dotenv -- turbo run start-prod",
     "create-resources": "dotenv -- turbo run create-resources --filter=server",
     "trigger-dev": "dotenv -- turbo run trigger-dev",
-    "deploy-trigger-tasks": "dotenv -- turbo run deploy-trigger-tasks --filter=server",
-    "prisma:studio": "turbo run prisma:studio --filter=server",
-    "migrate": "turbo run migrate --filter=server"
+    "deploy-trigger-tasks": "dotenv -- turbo run deploy-trigger-tasks --filter=server --",
+    "prisma:studio": "dotenv -- turbo run prisma:studio --filter=server",
+    "migrate": "dotenv -- turbo run migrate --filter=server"
   },
   "devDependencies": {
     "dotenv-cli": "^7.4.2",

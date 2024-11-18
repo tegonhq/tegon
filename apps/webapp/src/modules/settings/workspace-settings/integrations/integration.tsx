@@ -10,7 +10,7 @@ import { SettingsLayout } from 'common/layouts/settings-layout';
 
 import { useGetIntegrationDefinition } from 'services/integration-definition';
 
-import { WorkspaceAuth } from './workspace-auth';
+import { IntegrationAuth } from './integration-auth';
 
 export function Integration() {
   const { integrationDefinitionId } = useParams();
@@ -22,13 +22,23 @@ export function Integration() {
       {!isLoading && <Header title={integrationDefinition.name} />}
       <ContentBox>
         <ScrollArea className="flex grow h-full">
-          <div className="w-full p-6">
+          <div className="w-full p-4">
             {!isLoading && (
               <SettingSection
                 title={integrationDefinition.name}
                 description={integrationDefinition.description}
               >
-                <WorkspaceAuth integrationDefinition={integrationDefinition} />
+                <>
+                  <IntegrationAuth
+                    integrationDefinition={integrationDefinition}
+                  />
+                  {integrationDefinition.spec.personal_auth && (
+                    <IntegrationAuth
+                      integrationDefinition={integrationDefinition}
+                      personal
+                    />
+                  )}
+                </>
               </SettingSection>
             )}
 

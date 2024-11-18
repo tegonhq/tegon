@@ -8,27 +8,27 @@ import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { HeaderLayout } from 'common/header-layout';
 import { SidebarExpand } from 'common/sidebar-expand';
-
-import { useCurrentTeam } from 'hooks/teams';
+import type { TeamType } from 'common/types';
 
 interface HeaderProps {
   title: string;
+  team?: TeamType;
+  actions?: React.ReactElement;
 }
 
-export const Header = observer(({ title }: HeaderProps) => {
-  const team = useCurrentTeam();
-
+export const Header = observer(({ title, team, actions }: HeaderProps) => {
   const {
     query: { workspaceSlug },
   } = useRouter();
 
   return (
-    <header className="flex px-6 w-full items-center gap-2">
-      <div className="flex gap-2 py-4 items-center">
-        <SidebarExpand />
+    <HeaderLayout actions={actions}>
+      <SidebarExpand />
 
-        <Breadcrumb>
+      <Breadcrumb>
+        {team && (
           <BreadcrumbItem>
             <BreadcrumbLink
               as={Link}
@@ -40,11 +40,11 @@ export const Header = observer(({ title }: HeaderProps) => {
               <span className="inline-block">{team.name}</span>
             </BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbLink>{title}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
-      </div>
-    </header>
+        )}
+        <BreadcrumbItem>
+          <BreadcrumbLink>{title}</BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
+    </HeaderLayout>
   );
 });

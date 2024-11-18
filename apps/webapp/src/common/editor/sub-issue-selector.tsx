@@ -6,6 +6,7 @@ import {
   TooltipTrigger,
 } from '@tegonhq/ui/components/tooltip';
 import { SubIssue } from '@tegonhq/ui/icons';
+import React from 'react';
 
 export function isValidUrl(url: string) {
   try {
@@ -31,16 +32,39 @@ export function getUrlFromString(str: string) {
   return null;
 }
 
-export const SubIssueSelector = () => {
+export interface IssueContent {
+  text: string;
+  start: number;
+  end: number;
+}
+
+interface SubIssueSelectorProps {
+  subIssue?: boolean;
+  onCreate: (issues: IssueContent[]) => void;
+}
+
+export const SubIssueSelector = ({
+  subIssue = false,
+  onCreate,
+}: SubIssueSelectorProps) => {
   const { editor } = useEditor();
 
-  if (!editor) {
-    return null;
-  }
+  const processNodes = () => {
+    const selection = editor.view.state.selection;
+    const textContent = [
+      {
+        text: editor.state.doc.textBetween(selection.from, selection.to),
+        start: selection.from,
+        end: selection.to,
+      },
+    ];
+
+    return textContent;
+  };
 
   const createSubIssue = () => {
-    // const selection = editor.state.selection;
-    // const text = editor.state.doc.cut(selection.from, selection.to);
+    const textContent = processNodes();
+    onCreate && onCreate(textContent);
   };
 
   return (
@@ -55,7 +79,9 @@ export const SubIssueSelector = () => {
             <SubIssue size={16} />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom">Create sub-issues</TooltipContent>
+        <TooltipContent side="bottom">
+          {subIssue ? `Create sub issue` : `Create issue`}
+        </TooltipContent>
       </Tooltip>
     </div>
   );

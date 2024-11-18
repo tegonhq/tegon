@@ -1,66 +1,107 @@
-import {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-} from '@tegonhq/ui/components/avatar';
-import { getInitials } from '@tegonhq/ui/components/avatar';
+import { AvatarText } from '@tegonhq/ui/components/avatar';
+import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';
-import { cn } from '@tegonhq/ui/lib/utils';
+import { AssigneeLine } from '@tegonhq/ui/icons';
+import { sort } from 'fast-sort';
+import { observer } from 'mobx-react-lite';
 
-import { getTailwindColor } from 'common/color-utils';
 import { groupBy } from 'common/lib/common';
-import type { IssueType } from 'common/types';
+import { FilterTypeEnum, type IssueType } from 'common/types';
 import type { User } from 'common/types';
 
 import { useUsersData } from 'hooks/users';
+
+import { useContextStore } from 'store/global-context-provider';
+
+import { applyFilters } from './utils';
 
 interface AssigneeInsightsProps {
   issues: IssueType[];
 }
 
-export function AssigneeInsights({ issues }: AssigneeInsightsProps) {
-  const { users, isLoading } = useUsersData();
-  const groupedByIssues = groupBy(issues, 'assigneeId');
+export const AssigneeInsights = observer(
+  ({ issues }: AssigneeInsightsProps) => {
+    const { users, isLoading } = useUsersData(false);
+    const { applicationStore } = useContextStore();
+    const groupedByIssues = groupBy(issues, 'assigneeId');
 
-  if (isLoading) {
-    return <Loader />;
-  }
+    if (isLoading) {
+      return <Loader />;
+    }
 
-  function getUserData(userId: string) {
-    return users.find((userData: User) => userData.id === userId);
-  }
-  return (
-    <div className="flex flex-col gap-3 p-3">
-      {Array.from(groupedByIssues.keys()).map((key: string) => {
-        const user = getUserData(key);
+    const assigneeFilter = applicationStore.filters.assignee
+      ? applicationStore.filters.assignee.value
+      : [];
 
-        if (!user) {
-          return null;
-        }
+    const sortedAssignees = sort(users).desc(
+      (user: User) => groupedByIssues.get(user.id)?.length ?? 0,
+    );
 
-        return (
-          <div key={key} className="flex justify-between py-1">
-            <div className="text-xs flex gap-2 items-center">
-              <Avatar className="h-[15px] w-[20px] flex items-center">
-                <AvatarImage />
-                <AvatarFallback
-                  className={cn(
-                    'text-[0.55rem] rounded-sm',
-                    getTailwindColor(user?.username),
-                  )}
-                >
-                  {getInitials(user?.fullname)}
-                </AvatarFallback>
-              </Avatar>
-              {user?.fullname}
-            </div>
+    return (
+      <div className="flex flex-col px-4 gap-1 mt-2">
+        {sortedAssignees.map((user: User) => {
+          const isActive = assigneeFilter.includes(user.id);
 
-            <div className="text-xs text-muted-foreground">
-              {groupedByIssues.get(key).length}
-            </div>
+          return (
+            <Button
+              key={user.id}
+              className="flex justify-between p-2.5 h-auto group"
+              variant="link"
+              isActive={isActive}
+              onClick={() =>
+                applyFilters(
+                  FilterTypeEnum.IS,
+                  'assignee',
+                  user.id,
+                  assigneeFilter,
+                  applicationStore,
+                )
+              }
+            >
+              <div className="flex gap-2 items-center">
+                <AvatarText text={user?.fullname} className="text-[9px]" />
+                {user?.fullname}
+              </div>
+
+              <div className="text-muted-foreground flex gap-2 items-center">
+                <span className="group-hover:block hidden">
+                  {isActive ? 'Clear filter' : 'Apply filter'}
+                </span>
+                {groupedByIssues.get(user.id)?.length ?? 0}
+              </div>
+            </Button>
+          );
+        })}
+        <Button
+          key="no-user"
+          className="flex justify-between p-3 h-auto group"
+          variant="link"
+          isActive={assigneeFilter.includes('no-user')}
+          onClick={() =>
+            applyFilters(
+              FilterTypeEnum.IS,
+              'assignee',
+              'no-user',
+              assigneeFilter,
+              applicationStore,
+            )
+          }
+        >
+          <div className="flex gap-2 items-center">
+            <AssigneeLine />
+            No user
           </div>
-        );
-      })}
-    </div>
-  );
-}
+
+          <div className="text-muted-foreground flex gap-2 items-center">
+            <span className="group-hover:block hidden">
+              {assigneeFilter.includes('no-user')
+                ? 'Clear filter'
+                : 'Apply filter'}
+            </span>
+            {groupedByIssues.get(null)?.length ?? 0}
+          </div>
+        </Button>
+      </div>
+    );
+  },
+);

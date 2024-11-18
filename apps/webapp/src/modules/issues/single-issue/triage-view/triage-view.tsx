@@ -29,7 +29,7 @@ export function TriageView() {
             collapsedSize={16}
           >
             <div className="flex flex-col h-full">
-              <h2 className="text-lg pl-6 pt-6 font-medium"> Triage </h2>
+              <h2 className="text-lg pl-4 pt-4 font-medium"> Triage </h2>
               <TriageIssues />
             </div>
           </ResizablePanel>

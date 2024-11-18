@@ -1,4 +1,4 @@
-import { PreferenceEnum, WorkflowCategoryEnum } from '@tegonhq/types';
+import { WorkflowCategoryEnum } from '@tegonhq/types';
 import { IsOptional, IsString } from 'class-validator';
 
 export class CreateTeamInput {
@@ -13,41 +13,19 @@ export class CreateTeamInput {
   icon?: string;
 }
 
-export class UpdateTeamInput {
-  @IsOptional()
-  @IsString()
-  name?: string;
-
-  @IsOptional()
-  @IsString()
-  identifier?: string;
-
-  @IsOptional()
-  @IsString()
-  icon?: string;
-}
-
 export class TeamRequestParams {
   @IsString()
   teamId: string;
 }
 
-export class PreferenceInput {
-  @IsString()
-  preference: PreferenceEnum;
-
-  @IsString()
-  value: IssueEstimateValues | Priorities;
-}
-
-enum IssueEstimateValues {
+export enum IssueEstimateValues {
   EXPONENTIAL,
   FIBONACCI,
   LINEAR,
   T_SHIRT,
 }
 
-enum Priorities {
+export enum Priorities {
   NO_PRIORITY_FIRST,
   NO_PRIORITY_LAST,
 }

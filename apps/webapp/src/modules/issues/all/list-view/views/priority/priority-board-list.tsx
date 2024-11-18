@@ -11,9 +11,12 @@ import React from 'react';
 import { PriorityIcons } from 'modules/issues/components';
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
-import { Priorities, type IssueType } from 'common/types';
+import { type IssueType } from 'common/types';
 
+import { usePriorities } from 'hooks/priorities';
+import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
+import { useComputedWorkflows } from 'hooks/workflows';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -27,12 +30,15 @@ export const PriorityBoardList = observer(
   ({ priority }: PriorityBoardListProps) => {
     const { issuesStore, applicationStore } = useContextStore();
     const team = useCurrentTeam();
-    const issues = issuesStore.getIssuesForPriority(
-      priority,
-      team.id,
-      applicationStore.displaySettings.showSubIssues,
-    );
-    const computedIssues = useFilterIssues(issues, team.id);
+    const { workflows } = useComputedWorkflows();
+    const project = useProject();
+    const Priorities = usePriorities();
+
+    const issues = issuesStore.getIssuesForPriority(priority, {
+      teamId: team?.id,
+      projectId: project?.id,
+    });
+    const computedIssues = useFilterIssues(issues, workflows);
 
     if (
       computedIssues.length === 0 &&
@@ -57,7 +63,7 @@ export const PriorityBoardList = observer(
             </div>
           </div>
 
-          <ScrollArea className="pr-3 mr-2">
+          <ScrollArea className="pr-3 mr-2" id="priority-board-list">
             <div className="flex flex-col gap-3 grow pb-10 pt-2">
               {computedIssues.map((issue: IssueType, index: number) => (
                 <BoardItem key={issue.id} id={issue.id}>

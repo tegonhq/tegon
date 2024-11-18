@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import {
+  ActionTypesEnum,
   CreateIssueDto,
   CreateIssueRelationDto,
   GetIssuesByFilterDTO,
   Issue,
+  IssueHistoryData,
   IssueRequestParamsDto,
   LinkedIssue,
+  NotificationData,
+  NotificationEventFrom,
   TeamRequestParamsDto,
   UpdateIssueDto,
   WorkflowCategoryEnum,
@@ -22,13 +26,12 @@ import {
 } from 'common/utils/tiptap.utils';
 
 import AIRequestsService from 'modules/ai-requests/ai-requests.services';
-import { IssueHistoryData } from 'modules/issue-history/issue-history.interface';
 import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { LoggerService } from 'modules/logger/logger.service';
-import { NotificationEventFrom } from 'modules/notifications/notifications.interface';
-import { NotificationsQueue } from 'modules/notifications/notifications.queue';
+import { Env } from 'modules/triggerdev/triggerdev.interface';
+import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { SubscribeType } from './issues.interface';
 import { IssuesQueue } from './issues.queue';
@@ -52,9 +55,9 @@ export default class IssuesService {
     private issueHistoryService: IssuesHistoryService,
     private issuesQueue: IssuesQueue,
     private issueRelationService: IssueRelationService,
-    private notificationsQueue: NotificationsQueue,
     private aiRequestsService: AIRequestsService,
     private linkedIssueService: LinkedIssueService,
+    private triggerdevService: TriggerdevService,
   ) {}
 
   async getIssueById(issueParams: IssueRequestParamsDto): Promise<Issue> {
@@ -113,62 +116,71 @@ export default class IssuesService {
     };
 
     // Create the issues in the database within a transaction
-    const issues = await this.prisma.$transaction(async (prisma) => {
-      // Get the last issue number for the team
-      let lastNumber = await getLastIssueNumber(this.prisma, teamId);
+    const issues = await this.prisma.$transaction(
+      async (prisma) => {
+        // Get the last issue number for the team
+        let lastNumber = await getLastIssueNumber(prisma, teamId);
 
-      // Helper function to create an issue
-      const createIssue = async (
-        data: Prisma.IssueCreateInput,
-      ): Promise<Issue> => {
-        lastNumber++;
-        return prisma.issue.create({
-          data: {
-            ...data,
-            ...createdByInfo,
-            title: data.title,
-            number: lastNumber,
-            team: { connect: { id: issueData.teamId } },
-            ...(linkIssueData && {
-              linkedIssue: {
-                create: { ...linkIssueData, ...createdByInfo },
-              },
-            }),
-            ...(sourceMetadata && { sourceMetadata }),
-          },
-          include: { team: true },
-        });
-      };
+        // Helper function to create an issue
+        const createIssue = async (
+          data: Prisma.IssueCreateInput,
+        ): Promise<Issue> => {
+          lastNumber++;
+          return prisma.issue.create({
+            data: {
+              ...data,
+              ...createdByInfo,
+              title: data.title,
+              number: lastNumber,
+              team: { connect: { id: issueData.teamId } },
+              ...(linkIssueData && {
+                linkedIssue: {
+                  create: { ...linkIssueData, ...createdByInfo },
+                },
+              }),
+              ...(sourceMetadata && { sourceMetadata }),
+            },
+            include: { team: true },
+          });
+        };
 
-      // Create one list with both issue data and respective subissues
-      const createIssuesData = [issueData, ...(issueData.subIssues ?? [])];
-      const createdIssues: Issue[] = [];
-      let mainIssueId: string;
+        // Create one list with both issue data and respective subissues
+        const createIssuesData = [issueData, ...(issueData.subIssues ?? [])];
+        const createdIssues: Issue[] = [];
+        let mainIssueId: string;
 
-      // Create issues recursively
-      for (const issueData of createIssuesData) {
-        const { parentId, ...otherData } = issueData;
-        const issueInput = await getCreateIssueInput(
-          this.prisma,
-          this.aiRequestsService,
-          {
-            ...otherData,
+        // Create issues recursively
+        for (const issueData of createIssuesData) {
+          const { parentId, projectId, projectMilestoneId, ...otherData } =
+            issueData;
+          const issueInput = await getCreateIssueInput(
+            this.prisma,
+            this.aiRequestsService,
+            {
+              ...otherData,
+              ...(parentId ? { parentId } : { parentId: mainIssueId }),
+              ...(projectId ? { project: { connect: { id: projectId } } } : {}),
+              ...(projectMilestoneId
+                ? { projectMilestone: { connect: { id: projectMilestoneId } } }
+                : {}),
+            },
+            workspace.id,
+            userId,
+          );
 
-            ...(parentId ? { parentId } : { parentId: mainIssueId }),
-          },
-          workspace.id,
-          userId,
-        );
-
-        createdIssues.push(await createIssue(issueInput));
-        // Assign first issue Id as parent id for rest of the issues
-        if (createdIssues.length === 1) {
-          mainIssueId = createdIssues[0].id;
+          createdIssues.push(await createIssue(issueInput));
+          // Assign first issue Id as parent id for rest of the issues
+          if (createdIssues.length === 1) {
+            mainIssueId = createdIssues[0].id;
+          }
         }
-      }
 
-      return createdIssues;
-    });
+        return createdIssues;
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
 
     // Process each created issue
     await Promise.all(
@@ -184,7 +196,7 @@ export default class IssuesService {
 
         handlePostCreateIssue(
           this.prisma,
-          this.notificationsQueue,
+          this.triggerdevService,
           this.issuesQueue,
           issue,
           sourceMetadata,
@@ -224,6 +236,8 @@ export default class IssuesService {
       sourceMetadata,
       description,
       descriptionMarkdown,
+      projectId,
+      projectMilestoneId,
       ...otherIssueData
     } = issueData;
 
@@ -261,7 +275,24 @@ export default class IssuesService {
       ),
       updatedById: userId,
       ...otherIssueData,
-      ...(parentId ? { parent: { connect: { id: parentId } } } : { parentId }),
+      ...('parentId' in issueData
+        ? parentId === null
+          ? { parent: { disconnect: true } }
+          : { parent: { connect: { id: parentId } } }
+        : {}),
+
+      ...('projectId' in issueData
+        ? projectId === null
+          ? { project: { disconnect: true } }
+          : { project: { connect: { id: projectId } } }
+        : {}),
+
+      ...('projectMilestoneId' in issueData
+        ? projectMilestoneId === null
+          ? { projectMilestone: { disconnect: true } }
+          : { projectMilestone: { connect: { id: projectMilestoneId } } }
+        : {}),
+
       ...(linkIssueData && {
         linkedIssue:
           linkedIssues.length > 0
@@ -316,16 +347,22 @@ export default class IssuesService {
 
     // Add the updated issue to the notifications queue if it has subscribers
     if (updatedIssue.subscriberIds) {
-      this.notificationsQueue.addToNotification(
-        NotificationEventFrom.IssueUpdated,
-        userId,
+      this.triggerdevService.triggerTaskAsync(
+        'common',
+        'notification',
         {
-          issueId: updatedIssue.id,
-          ...issueDiff,
-          sourceMetadata,
-          subscriberIds: updatedIssue.subscriberIds,
-          workspaceId: updatedIssue.team.workspaceId,
+          event: ActionTypesEnum.ON_UPDATE,
+          notificationType: NotificationEventFrom.IssueUpdated,
+          notificationData: {
+            issueId: updatedIssue.id,
+            ...issueDiff,
+            sourceMetadata,
+            subscriberIds: updatedIssue.subscriberIds,
+            workspaceId: updatedIssue.team.workspaceId,
+            userId,
+          } as NotificationData,
         },
+        Env.PROD,
       );
     }
 
@@ -401,7 +438,21 @@ export default class IssuesService {
 
     // Delete the issue history associated with the deleted issue
     await this.deleteIssueHistory(deleteIssue.id);
-    await this.notificationsQueue.deleteNotificationsByIssue(deleteIssue.id);
+
+    this.triggerdevService.triggerTaskAsync(
+      'common',
+      'notification',
+      {
+        event: ActionTypesEnum.ON_DELETE,
+        notificationType: NotificationEventFrom.DeleteIssue,
+        notificationData: {
+          issueId: deleteIssue.id,
+          userId: deleteIssue.updatedById,
+        } as NotificationData,
+      },
+      Env.PROD,
+    );
+    // await this.notificationsQueue.deleteNotificationsByIssue(deleteIssue.id);
 
     this.logger.info({
       message: `Issue history deleted for issue ${deleteIssue.id}`,

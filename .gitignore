@@ -4,6 +4,7 @@
 docker/.env
 node_modules
 .turbo
+.idea
 
 out
 docker-compose.prod.yaml

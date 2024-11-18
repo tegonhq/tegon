@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Tegon server",
   "author": "Tegon",
   "private": true,
@@ -57,7 +57,7 @@
     "@nestjs/websockets": "^10.3.1",
     "@prisma/client": "^5.17.0",
     "@prisma/instrumentation": "^5.17.0",
-    "@tegonhq/sdk": "workspace:^",
+    "@tegonhq/sdk": "workspace:*",
     "@tegonhq/types": "workspace:*",
     "@tiptap/core": "^2.3.0",
     "@tiptap/extension-blockquote": "^2.4.0",

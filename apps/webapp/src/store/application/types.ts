@@ -45,6 +45,7 @@ export interface FiltersModelType {
   status?: FilterModelType;
   label?: FilterModelType;
   priority?: FilterModelType;
+  project?: FilterModelType;
 
   // For issues coming from Slack, Github
   source?: FilterModelType;
@@ -60,6 +61,8 @@ export enum GroupingEnum {
   label = 'label',
   status = 'status',
   priority = 'priority',
+  project = 'project',
+  team = 'team',
 }
 
 export enum TimeBasedFilterEnum {

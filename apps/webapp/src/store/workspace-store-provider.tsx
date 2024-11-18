@@ -22,6 +22,9 @@ export const WorkspaceStoreInit = observer(
       viewsStore,
       issueSuggestionsStore,
       actionsStore,
+      projectsStore,
+      projectMilestonesStore,
+      cyclesStore,
     } = useContextStore();
 
     const currentWorkspace = useCurrentWorkspace();
@@ -43,6 +46,7 @@ export const WorkspaceStoreInit = observer(
       await workspaceStore.load(currentWorkspace.id);
       await labelsStore.load();
       await teamsStore.load();
+      await cyclesStore.load();
       await integrationAccountsStore.load();
       await issuesStore.load();
       await workflowsStore.load();
@@ -52,6 +56,8 @@ export const WorkspaceStoreInit = observer(
       await viewsStore.load();
       await issueSuggestionsStore.load();
       await actionsStore.load();
+      await projectsStore.load();
+      await projectMilestonesStore.load();
 
       setLoading(false);
       // eslint-disable-next-line react-hooks/exhaustive-deps

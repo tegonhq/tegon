@@ -31,7 +31,7 @@ export const ModalIssues = observer(
     const { mutate: updateIssue } = useUpdateIssueMutation({});
 
     const issues = React.useMemo(() => {
-      const issues = issuesStore.getIssues();
+      const issues = issuesStore.getIssues({});
 
       if (value) {
         return issues

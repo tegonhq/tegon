@@ -1,6 +1,5 @@
 import type { DraggableProvided } from '@hello-pangea/dnd';
 
-import { CalendarLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -21,7 +20,9 @@ import { useUpdateIssueMutation } from 'services/issues';
 import { useContextStore } from 'store/global-context-provider';
 
 import { IssueRelations } from './issue-relations';
+import { IssueDueDate } from '../issue-list-item/issue-duedate';
 import { IssueLabels } from '../issue-list-item/issue-labels';
+import { IssueProject } from '../issue-list-item/issue-project';
 
 interface BoardIssueItemProps {
   issueId: string;
@@ -33,17 +34,6 @@ function getStyle(provided: DraggableProvided) {
   // Index signature for type '`--${string}`' is missing in type 'DraggingStyle'.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return provided.draggableProps.style as any;
-}
-
-function formatDateToDayMonth(isoString: string): string {
-  const date = new Date(isoString);
-
-  const options: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'short',
-  };
-
-  return date.toLocaleDateString('en-GB', options);
 }
 
 export const BoardIssueItem = observer(
@@ -103,22 +93,21 @@ export const BoardIssueItem = observer(
         </div>
 
         <IssueLabels labelIds={issue.labelIds} />
+        <IssueProject
+          projectId={issue.projectId}
+          projectMilestoneId={issue.projectMilestoneId}
+        />
 
         <IssueRelations issue={issue} />
 
         <div className="flex gap-2 items-center justify-between">
-          <div className="inline-flex gap-2 items-end">
+          <div className="inline-flex gap-2 items-center">
             <IssuePriorityDropdown
               value={issue.priority ?? 0}
               onChange={priorityChange}
               variant={IssuePriorityDropdownVariant.NO_BACKGROUND}
             />
-            {issue.dueDate && (
-              <div className="inline-flex min-w-[70px] text-xs gap-1">
-                <CalendarLine size={18} /> &nbsp;
-                {formatDateToDayMonth(issue.dueDate)}
-              </div>
-            )}
+            <IssueDueDate dueDate={issue.dueDate} />
           </div>
 
           <IssueAssigneeDropdown

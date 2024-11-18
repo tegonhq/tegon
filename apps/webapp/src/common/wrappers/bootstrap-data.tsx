@@ -26,7 +26,8 @@ export function BootstrapWrapper({ children }: Props) {
   const [loading, setLoading] = React.useState(true);
   const hashKey = `${workspace.id}__${user.id}`;
   const lastSequenceId =
-    localStorage && localStorage.getItem(`lastSequenceId_${hashKey}`);
+    localStorage && localStorage.getItem(`lastSequenceId_${hash(hashKey)}`);
+
   const {
     commentsStore,
     issuesHistoryStore,
@@ -42,6 +43,9 @@ export function BootstrapWrapper({ children }: Props) {
     viewsStore,
     issueSuggestionsStore,
     actionsStore,
+    projectsStore,
+    projectMilestonesStore,
+    cyclesStore,
   } = useContextStore();
 
   const MODEL_STORE_MAP = {
@@ -60,6 +64,9 @@ export function BootstrapWrapper({ children }: Props) {
     [MODELS.View]: viewsStore,
     [MODELS.IssueSuggestion]: issueSuggestionsStore,
     [MODELS.Action]: actionsStore,
+    [MODELS.Project]: projectsStore,
+    [MODELS.ProjectMilestone]: projectMilestonesStore,
+    [MODELS.Cycle]: cyclesStore,
   };
 
   React.useEffect(() => {

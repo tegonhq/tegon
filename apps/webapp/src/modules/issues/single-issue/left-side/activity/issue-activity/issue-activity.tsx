@@ -29,7 +29,7 @@ export const IssueActivity = observer(() => {
     ? JSON.parse(issue.sourceMetadata)
     : undefined;
 
-  const { users, isLoading } = useUsersData(true, issue.teamId);
+  const { users, isLoading } = useUsersData(true);
 
   const {
     issuesHistoryStore,
@@ -111,6 +111,7 @@ export const IssueActivity = observer(() => {
                 <ActivityItem
                   issueHistory={activity}
                   key={activity.id}
+                  issue={issue}
                   user={getUserDetails(
                     sourceMetadata,
                     getUserData(activity.userId),

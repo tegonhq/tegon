@@ -6,18 +6,24 @@ import { getWorkflowColor } from 'common/status-color';
 import { type IssueHistoryType } from 'common/types';
 import { getWorkflowIcon } from 'common/workflow-icons';
 
-import { useCurrentTeam } from 'hooks/teams';
+import { useTeamWithId } from 'hooks/teams';
 import { useTeamWorkflows } from 'hooks/workflows';
 
 interface StatusActivityProps {
   issueHistory: IssueHistoryType;
   fullname: string;
   showTime?: boolean;
+  teamId: string;
 }
 export const StatusActivity = observer(
-  ({ issueHistory, fullname, showTime = false }: StatusActivityProps) => {
-    const currentTeam = useCurrentTeam();
-    const workflows = useTeamWorkflows(currentTeam.identifier);
+  ({
+    issueHistory,
+    fullname,
+    showTime = false,
+    teamId,
+  }: StatusActivityProps) => {
+    const team = useTeamWithId(teamId);
+    const workflows = useTeamWorkflows(team.identifier);
 
     const fromWorkflow = workflows.find(
       (workflow) => workflow.id === issueHistory.fromStateId,
@@ -60,7 +66,7 @@ export const StatusActivity = observer(
               </>
             )}
 
-            <span className="text-foreground mx-2">{toWorkflow.name}</span>
+            <span className="text-foreground mx-2">{toWorkflow?.name}</span>
           </div>
         </div>
       </TimelineItem>

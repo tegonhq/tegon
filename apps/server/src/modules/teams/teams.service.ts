@@ -1,13 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { RoleEnum, Team, UsersOnWorkspaces } from '@tegonhq/types';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  RoleEnum,
+  Team,
+  UpdateTeamDto,
+  UpdateTeamPreferencesDto,
+  UsersOnWorkspaces,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
 import { UserIdParams } from 'modules/users/users.interface';
 
 import {
-  UpdateTeamInput,
   TeamRequestParams,
-  PreferenceInput,
   CreateTeamInput,
   workflowSeedData,
 } from './teams.interface';
@@ -80,12 +84,15 @@ export default class TeamsService {
       },
     });
 
-    const botUsers = await this.prisma.usersOnWorkspaces.findMany({
-      where: { workspaceId, role: RoleEnum.BOT },
+    const botAdminUsers = await this.prisma.usersOnWorkspaces.findMany({
+      where: {
+        workspaceId,
+        OR: [{ role: RoleEnum.BOT }, { role: RoleEnum.ADMIN }],
+      },
       select: { userId: true },
     });
 
-    const userIds = botUsers.map(({ userId }) => userId);
+    const userIds = botAdminUsers.map(({ userId }) => userId);
 
     userIds.push(userId);
 
@@ -100,7 +107,7 @@ export default class TeamsService {
 
   async updateTeam(
     teamRequestParams: TeamRequestParams,
-    teamData: UpdateTeamInput,
+    teamData: UpdateTeamDto,
   ): Promise<Team> {
     return await this.prisma.team.update({
       data: {
@@ -112,6 +119,31 @@ export default class TeamsService {
     });
   }
 
+  async updateTeamPreferences(
+    teamRequestParams: TeamRequestParams,
+    preferencesDto: UpdateTeamPreferencesDto,
+  ): Promise<Team> {
+    const team = await this.prisma.team.findUniqueOrThrow({
+      where: {
+        id: teamRequestParams.teamId,
+      },
+    });
+
+    await this.prisma.team.update({
+      where: {
+        id: team.id,
+      },
+      data: {
+        preferences: {
+          ...(team.preferences as Record<string, string | boolean>),
+          ...preferencesDto,
+        },
+      },
+    });
+
+    return team;
+  }
+
   async deleteTeam(teamRequestParams: TeamRequestParams): Promise<Team> {
     return await this.prisma.team.update({
       where: {
@@ -119,28 +151,6 @@ export default class TeamsService {
       },
       data: {
         deleted: new Date().toISOString(),
-      },
-    });
-  }
-
-  async createUpdatePreference(
-    teamRequestParams: TeamRequestParams,
-    preferenceData: PreferenceInput,
-  ) {
-    return await this.prisma.teamPreference.upsert({
-      where: {
-        teamId_preference: {
-          teamId: teamRequestParams.teamId,
-          preference: preferenceData.preference,
-        },
-      },
-      update: {
-        value: preferenceData.value.toString(),
-      },
-      create: {
-        teamId: teamRequestParams.teamId,
-        preference: preferenceData.preference,
-        value: preferenceData.value.toString(),
       },
     });
   }
@@ -200,6 +210,17 @@ export default class TeamsService {
         },
       },
     });
+
+    const issues = await this.prisma.issue.findMany({
+      where: {
+        assigneeId: userOnWorkspace.userId,
+        teamId: teamRequestParams.teamId,
+      },
+    });
+
+    if (issues.length > 0) {
+      throw new BadRequestException('There are issues assigned to this user');
+    }
 
     const updatedTeamIds = userOnWorkspace.teamIds.filter(
       (id) => id !== teamRequestParams.teamId,

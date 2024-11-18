@@ -24,7 +24,7 @@ export function WorkspaceSettings() {
       <Header title={SECTION_TITLES[settingsSection]} />
       <ContentBox>
         <ScrollArea className="flex grow h-full">
-          <div className="w-full p-6">
+          <div className="w-full p-4">
             <SectionComponent />
           </div>
         </ScrollArea>

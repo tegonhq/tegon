@@ -5,63 +5,51 @@ import {
   TabsTrigger,
 } from '@tegonhq/ui/components/tabs';
 
-import { useFilterIssues } from 'modules/issues/issues-utils';
-
+import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { AssigneeInsights } from './assignee-insights';
 import { LabelInsights } from './label-insights';
-import { PriorityInsights } from './priority-insights';
 import { StatusInsights } from './status-insights';
 
-interface OverviewInsightsProps {
-  title: string;
-}
-
-export function OverviewInsights({ title }: OverviewInsightsProps) {
-  const { issuesStore } = useContextStore();
+export function OverviewInsights() {
+  const { issuesStore, applicationStore } = useContextStore();
   const team = useCurrentTeam();
-  const computedIssues = useFilterIssues(
-    issuesStore.getIssuesForTeam(team.id),
-    team.id,
-  );
+  const project = useProject();
+
+  const issues = issuesStore.getIssues({
+    projectId: project?.id,
+    teamId: team?.id,
+    subIssue: applicationStore.displaySettings.showSubIssues,
+  });
 
   return (
-    <div className="flex flex-col">
-      <div className="text-sm p-3 border-b">{title}</div>
-
-      <Tabs className="p-2" defaultValue="status">
-        <TabsList className="flex w-full gap-2 justify-between bg-accent">
-          <TabsTrigger value="status" className="text-xs">
+    <div className="flex flex-col overflow-hidden">
+      <Tabs className="overflow-hidden" defaultValue="status">
+        <TabsList className="grid w-full grid-cols-3 bg-transparent gap-2 p-4">
+          <TabsTrigger value="status" className="bg-grayAlpha-100">
             Status
           </TabsTrigger>
-          <TabsTrigger value="assignee" className="text-xs">
+          <TabsTrigger value="assignee" className="bg-grayAlpha-100">
             Assignee
           </TabsTrigger>
-          <TabsTrigger value="label" className="text-xs">
+          <TabsTrigger value="label" className="bg-grayAlpha-100">
             Labels
-          </TabsTrigger>
-          <TabsTrigger value="priority" className="text-xs">
-            Priority
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="status">
-          <StatusInsights issues={computedIssues} />
+        <TabsContent value="status" className="overflow-auto h-full">
+          <StatusInsights issues={issues} />
         </TabsContent>
 
-        <TabsContent value="label">
-          <LabelInsights issues={computedIssues} />
+        <TabsContent value="label" className="overflow-auto h-full">
+          <LabelInsights issues={issues} />
         </TabsContent>
 
-        <TabsContent value="assignee">
-          <AssigneeInsights issues={computedIssues} />
-        </TabsContent>
-
-        <TabsContent value="priority">
-          <PriorityInsights issues={computedIssues} />
+        <TabsContent value="assignee" className="overflow-auto h-full">
+          <AssigneeInsights issues={issues} />
         </TabsContent>
       </Tabs>
     </div>

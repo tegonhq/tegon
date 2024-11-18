@@ -3,11 +3,7 @@ import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { PrismaModule, PrismaService } from 'nestjs-prisma';
 
-import { UsersService } from 'modules/users/users.service';
-
 import { NotificationsController } from './notifications.controller';
-import { NotificationsProcessor } from './notifications.processor';
-import { NotificationsQueue } from './notifications.queue';
 import NotificationsService from './notifications.service';
 
 @Module({
@@ -17,13 +13,7 @@ import NotificationsService from './notifications.service';
     BullModule.registerQueue({ name: 'notifications' }),
   ],
   controllers: [NotificationsController],
-  providers: [
-    NotificationsService,
-    PrismaService,
-    NotificationsQueue,
-    UsersService,
-    NotificationsProcessor,
-  ],
-  exports: [NotificationsService, NotificationsQueue],
+  providers: [NotificationsService, PrismaService],
+  exports: [NotificationsService],
 })
 export class NotificationsModule {}

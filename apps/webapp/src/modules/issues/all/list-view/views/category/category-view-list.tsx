@@ -15,7 +15,7 @@ import type { WorkflowType } from 'common/types';
 import type { IssueType } from 'common/types';
 import { getWorkflowIcon } from 'common/workflow-icons';
 
-import { useCurrentTeam } from 'hooks/teams';
+import { useProject } from 'hooks/projects';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -23,20 +23,18 @@ import { useFilterIssues } from '../../../../issues-utils';
 
 interface CategoryViewListProps {
   workflow: WorkflowType;
+  workflows: WorkflowType[];
 }
 
 export const CategoryViewList = observer(
-  ({ workflow }: CategoryViewListProps) => {
+  ({ workflow, workflows }: CategoryViewListProps) => {
     const CategoryIcon = getWorkflowIcon(workflow);
-    const currentTeam = useCurrentTeam();
     const [isOpen, setIsOpen] = React.useState(true);
     const { issuesStore, applicationStore } = useContextStore();
-    const issues = issuesStore.getIssuesForState(
-      workflow.id,
-      currentTeam.id,
-      applicationStore.displaySettings.showSubIssues,
-    );
-    const computedIssues = useFilterIssues(issues, currentTeam.id);
+    const project = useProject();
+
+    const issues = issuesStore.getIssuesForState(workflow.ids, project?.id);
+    const computedIssues = useFilterIssues(issues, workflows);
 
     if (
       computedIssues.length === 0 &&
@@ -54,7 +52,7 @@ export const CategoryViewList = observer(
         <div className="flex gap-1 items-center">
           <CollapsibleTrigger asChild>
             <Button
-              className="flex items-center group ml-6 w-fit rounded-2xl text-accent-foreground"
+              className="flex items-center group ml-4 w-fit rounded-2xl text-accent-foreground"
               size="lg"
               style={{ backgroundColor: getWorkflowColor(workflow).background }}
               variant="ghost"

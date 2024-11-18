@@ -2,6 +2,7 @@ import type { SyncActionRecord } from 'common/types';
 
 import { saveActionData } from 'store/action';
 import { saveCommentsData } from 'store/comments';
+import { saveCyclesData } from 'store/cycle';
 import { saveIntegrationAccountData } from 'store/integration-accounts';
 import { saveIssueHistoryData } from 'store/issue-history';
 import { saveIssueRelationData } from 'store/issue-relation';
@@ -11,6 +12,10 @@ import { saveLabelData } from 'store/labels';
 import { saveLinkedIssueData } from 'store/linked-issues';
 import { MODELS } from 'store/models';
 import { saveNotificationData } from 'store/notifications';
+import {
+  saveProjectData,
+  saveProjectMilestoneData,
+} from 'store/projects/save-data';
 import { saveTeamData } from 'store/teams';
 import { saveViewData } from 'store/views';
 import { saveWorkflowData } from 'store/workflows';
@@ -113,6 +118,24 @@ export async function saveSocketData(
 
         case MODELS.Action: {
           return await saveActionData([record], MODEL_STORE_MAP[MODELS.Action]);
+        }
+
+        case MODELS.Project: {
+          return await saveProjectData(
+            [record],
+            MODEL_STORE_MAP[MODELS.Project],
+          );
+        }
+
+        case MODELS.ProjectMilestone: {
+          return await saveProjectMilestoneData(
+            [record],
+            MODEL_STORE_MAP[MODELS.ProjectMilestone],
+          );
+        }
+
+        case MODELS.Cycle: {
+          return await saveCyclesData([record], MODEL_STORE_MAP[MODELS.Cycle]);
         }
       }
     }),

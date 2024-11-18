@@ -10,6 +10,7 @@ import { observer } from 'mobx-react-lite';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { HeaderLayout } from 'common/header-layout';
 import { SidebarExpand } from 'common/sidebar-expand';
 
 import { useCurrentTeam } from 'hooks/teams';
@@ -25,12 +26,25 @@ export const Header = observer(({ title }: HeaderProps) => {
     query: { workspaceSlug },
   } = useRouter();
 
-  return (
-    <header className="flex px-6 w-full items-center gap-2 justify-between">
-      <div className="flex gap-2 py-4 items-center">
-        <SidebarExpand />
+  const actions = (
+    <Link
+      href={
+        team
+          ? `/${workspaceSlug}/team/${team?.identifier}/all`
+          : `/${workspaceSlug}/all`
+      }
+      className={cn(buttonVariants({ variant: 'secondary' }))}
+    >
+      New view
+    </Link>
+  );
 
-        <Breadcrumb>
+  return (
+    <HeaderLayout actions={actions}>
+      <SidebarExpand />
+
+      <Breadcrumb>
+        {team && (
           <BreadcrumbItem>
             <BreadcrumbLink
               as={Link}
@@ -42,20 +56,11 @@ export const Header = observer(({ title }: HeaderProps) => {
               <span className="inline-block">{team.name}</span>
             </BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbLink>{title}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
-      </div>
-
-      <div className="py-2">
-        <Link
-          href={`/${workspaceSlug}/team/${team.identifier}/all`}
-          className={cn(buttonVariants({ variant: 'secondary' }))}
-        >
-          New view
-        </Link>
-      </div>
-    </header>
+        )}
+        <BreadcrumbItem>
+          <BreadcrumbLink>{title}</BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
+    </HeaderLayout>
   );
 });

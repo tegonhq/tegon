@@ -7,19 +7,19 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Team, TeamPreference, UsersOnWorkspaces } from '@tegonhq/types';
+import {
+  Team,
+  UpdateTeamDto,
+  UpdateTeamPreferencesDto,
+  UsersOnWorkspaces,
+} from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { UserId, Workspace } from 'modules/auth/session.decorator';
 import { AdminGuard } from 'modules/users/admin.guard';
 import { UserIdParams } from 'modules/users/users.interface';
 
-import {
-  UpdateTeamInput,
-  TeamRequestParams,
-  PreferenceInput,
-  CreateTeamInput,
-} from './teams.interface';
+import { TeamRequestParams, CreateTeamInput } from './teams.interface';
 import TeamsService from './teams.service';
 
 @Controller({
@@ -63,19 +63,6 @@ export class TeamsController {
     return await this.teamsService.createTeam(workspaceId, userId, teamData);
   }
 
-  @Post(':teamId/preference')
-  @UseGuards(AuthGuard)
-  async createUpdatePreference(
-    @Param()
-    teamRequestParams: TeamRequestParams,
-    @Body() preferenceData: PreferenceInput,
-  ): Promise<TeamPreference> {
-    return await this.teamsService.createUpdatePreference(
-      teamRequestParams,
-      preferenceData,
-    );
-  }
-
   @Post(':teamId/add-member')
   @UseGuards(AuthGuard, AdminGuard)
   async addTeamMember(
@@ -90,12 +77,40 @@ export class TeamsController {
     );
   }
 
+  @Post(':teamId/remove-member')
+  @UseGuards(AuthGuard, AdminGuard)
+  async removeTeamMemeber(
+    @Param()
+    teamRequestParams: TeamRequestParams,
+    @Workspace() workspaceId: string,
+    @Body() teamMemberData: UserIdParams,
+  ): Promise<UsersOnWorkspaces> {
+    return await this.teamsService.removeTeamMember(
+      teamRequestParams,
+      workspaceId,
+      teamMemberData,
+    );
+  }
+
+  @Post(':teamId/preferences')
+  @UseGuards(AuthGuard)
+  async updateTeamPreferences(
+    @Param()
+    teamRequestParams: TeamRequestParams,
+    @Body() updateTeamPreferences: UpdateTeamPreferencesDto,
+  ): Promise<Team> {
+    return await this.teamsService.updateTeamPreferences(
+      teamRequestParams,
+      updateTeamPreferences,
+    );
+  }
+
   @Post(':teamId')
   @UseGuards(AuthGuard)
   async updateTeam(
     @Param()
     teamRequestParams: TeamRequestParams,
-    @Body() teamData: UpdateTeamInput,
+    @Body() teamData: UpdateTeamDto,
   ): Promise<Team> {
     return await this.teamsService.updateTeam(teamRequestParams, teamData);
   }
@@ -116,21 +131,5 @@ export class TeamsController {
     teamRequestParams: TeamRequestParams,
   ): Promise<UsersOnWorkspaces[]> {
     return await this.teamsService.getTeamMembers(teamRequestParams);
-  }
-
-  @Delete(':teamId/remove_member')
-  @UseGuards(AuthGuard)
-  async removeTeamMemeber(
-    @Param()
-    teamRequestParams: TeamRequestParams,
-    @Workspace() workspaceId: string,
-
-    @Body() teamMemberData: UserIdParams,
-  ): Promise<UsersOnWorkspaces> {
-    return await this.teamsService.removeTeamMember(
-      teamRequestParams,
-      workspaceId,
-      teamMemberData,
-    );
   }
 }

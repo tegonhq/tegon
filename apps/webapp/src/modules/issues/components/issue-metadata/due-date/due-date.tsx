@@ -5,9 +5,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
-import { AddLine, CalendarLine } from '@tegonhq/ui/icons';
+import { AddLine, CalendarLine, Fire } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
-import { format } from 'date-fns';
+import { differenceInDays, format } from 'date-fns';
 import React from 'react';
 
 interface DueDateProps {
@@ -36,6 +36,19 @@ export function DueDate({
 
   const getTrigger = () => {
     if (dueDate) {
+      const today = new Date();
+      const dueDateObj = new Date(dueDate);
+
+      if (dueDateObj < today) {
+        const diffDays = differenceInDays(today, dueDateObj);
+
+        return (
+          <div className="inline-flex items-center text-red-600 gap-1">
+            <Fire /> <div>{diffDays}d</div>
+          </div>
+        );
+      }
+
       return (
         <div className="flex items-center">
           <CalendarLine size={20} className="mr-2" />

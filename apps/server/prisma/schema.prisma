@@ -147,6 +147,27 @@ model AuthorizationCode {
   code                  String
 }
 
+model Cycle {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name                  String
+  description           String?
+  number                Int
+
+  team   Team   @relation(fields: [teamId], references: [id])
+  teamId String
+
+  startDate DateTime
+  endDate   DateTime
+
+  preferences Json @default("{}")
+
+  issues Issue[]
+}
+
 model Emoji {
   id        String     @id @default(uuid())
   name      String
@@ -235,6 +256,15 @@ model Issue {
   team   Team   @relation(fields: [teamId], references: [id])
   teamId String
 
+  project      Project?   @relation(fields: [projectId], references: [id])
+  projectId    String?
+
+  projectMilestone      ProjectMilestone?   @relation(fields: [projectMilestoneId], references: [id])
+  projectMilestoneId    String?
+
+  cycle      Cycle?   @relation(fields: [cycleId], references: [id])
+  cycleId    String?
+
   createdById String?
   updatedById String?
 
@@ -307,6 +337,10 @@ model IssueHistory {
   toParentId      String?
   fromTeamId      String?
   toTeamId        String?
+  fromProjectId    String?
+  toProjectId      String?
+  fromProjectMilestoneId  String?
+  toProjectMilestoneId    String?
   relationChanges Json?
 }
 
@@ -434,6 +468,47 @@ model Notification {
   workspaceId String
 }
 
+model Project {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name               String
+  description        String?
+  status             String?
+  startDate          String?
+  endDate            String?
+  leadUserId         String?
+  teams              String[]
+
+  milestones ProjectMilestone[]
+  issues     Issue[]
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+
+  @@unique([name, workspaceId])
+}
+
+model ProjectMilestone {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name               String
+  description        String?
+  endDate            String?
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+
+  issues Issue[]
+
+  @@unique([name, projectId])
+}
+
 model Prompt {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
@@ -491,31 +566,19 @@ model Team {
   identifier String
   icon       String?
 
+  currentCycle   Int?
+
   workspace      Workspace        @relation(fields: [workspaceId], references: [id])
   workspaceId    String
   issue          Issue[]
+  cycles         Cycle[]
   label          Label[]
   template       Template[]
   workflow       Workflow[]
-  teamPreference TeamPreference[]
+  preferences    Json  @default("{}")
   View           View[]
 
   @@unique([name, identifier, workspaceId])
-}
-
-model TeamPreference {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-
-  team   Team?  @relation(fields: [teamId], references: [id])
-  teamId String
-
-  preference Preference
-  value      String
-
-  @@unique([teamId, preference])
 }
 
 model Template {
@@ -639,6 +702,7 @@ model Workspace {
   aiRequests            AIRequest[]
   prompts               Prompt[]
   action                Action[]
+  projects              Project[]
 
   ActionEvent ActionEvent[]
 }
@@ -681,6 +745,7 @@ enum ModelName {
   ActionEntity
   Attachment
   AIRequest
+  Cycle
   Emoji
   IntegrationAccount
   IntegrationDefinition
@@ -695,11 +760,12 @@ enum ModelName {
   LinkedComment
   LinkedIssue
   Notification
+  Project
+  ProjectMilestone
   Prompt
   Reaction
   SyncAction
   Team
-  TeamPreference
   Template
   TriggerProject
   User

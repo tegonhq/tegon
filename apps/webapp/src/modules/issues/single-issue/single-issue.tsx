@@ -7,6 +7,7 @@ import { IssueView } from './issue-view';
 
 export function SingleIssue() {
   useScope(SCOPES.AllIssues);
+  useScope(SCOPES.SingleIssues);
 
   return <IssueView />;
 }

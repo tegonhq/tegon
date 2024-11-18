@@ -4,7 +4,6 @@ import React from 'react';
 
 import type { User } from 'common/types';
 
-import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
 
 import { useUpdateIssueMutation } from 'services/issues';
@@ -22,8 +21,7 @@ export const AssigneeDialog = observer(
   ({ open, setOpen }: AssigneeDialogProps) => {
     const { applicationStore, issuesStore } = useContextStore();
     const { mutate: updateIssue } = useUpdateIssueMutation({});
-    const team = useCurrentTeam();
-    const { users, isLoading } = useUsersData(false, team.id);
+    const { users, isLoading } = useUsersData(false);
 
     if (
       isLoading ||

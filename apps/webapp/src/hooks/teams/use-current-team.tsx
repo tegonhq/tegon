@@ -31,9 +31,9 @@ export function useCurrentTeam(): TeamType | undefined {
   };
 
   const team = React.useMemo(
-    () => computed(() => getTeam()),
+    () => getTeam(),
     [teamIdentifier, issueId, teamsStore],
-  ).get();
+  );
 
   return team;
 }

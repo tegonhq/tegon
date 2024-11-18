@@ -100,4 +100,12 @@ export class CreateIssueDto {
   @IsOptional()
   @IsObject()
   sourceMetadata?: Record<string, string>;
+
+  @IsOptional()
+  @IsString()
+  projectId?: string;
+
+  @IsOptional()
+  @IsString()
+  projectMilestoneId?: string;
 }

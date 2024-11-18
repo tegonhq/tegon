@@ -6,14 +6,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Notification } from '@tegonhq/types';
+import {
+  Notification,
+  NotificationIdRequestParams,
+  updateNotificationBody,
+} from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 
-import {
-  NotificationIdRequestParams,
-  updateNotificationBody,
-} from './notifications.interface';
 import NotificationsService from './notifications.service';
 
 @Controller({

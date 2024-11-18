@@ -4,7 +4,8 @@ import * as React from 'react';
 import type { User } from 'common/types';
 import type { UsersOnWorkspaceType } from 'common/types';
 
-import { useTeamWithId } from 'hooks/teams';
+import { useProject } from 'hooks/projects';
+import { useCurrentTeam, useTeamWithId } from 'hooks/teams';
 
 import { useGetUsersQuery } from 'services/users';
 
@@ -12,6 +13,11 @@ import { useContextStore } from 'store/global-context-provider';
 
 export function useUsersData(bot = true, teamId?: string) {
   const { workspaceStore } = useContextStore();
+  const currentTeam = useCurrentTeam();
+  const teamWithId = useTeamWithId(teamId);
+  const team = teamWithId ? teamWithId : currentTeam;
+  const project = useProject();
+
   const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
   const {
     data: usersData,
@@ -20,10 +26,14 @@ export function useUsersData(bot = true, teamId?: string) {
   } = useGetUsersQuery(
     usersOnWorkspace
       .filter((uOW: UsersOnWorkspaceType) => {
-        if (teamId) {
-          return uOW.teamIds.includes(teamId);
+        if (team?.id) {
+          return uOW.teamIds.includes(team.id);
         }
-
+        if (project?.teams) {
+          return project.teams.some((teamId: string) =>
+            uOW.teamIds.includes(teamId),
+          );
+        }
         return true;
       })
       .map((uOW: UsersOnWorkspaceType) => uOW.userId),
@@ -82,4 +92,40 @@ export function useUserData(
   }, [workspaceStore]);
 
   return { isLoading, user: usersData ? usersData[0] : undefined };
+}
+
+export function useAllUsers(bot = true): {
+  isLoading: boolean;
+  users: User[];
+} {
+  const { workspaceStore } = useContextStore();
+  const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
+
+  const {
+    data: usersData,
+    isLoading,
+    refetch,
+  } = useGetUsersQuery(
+    usersOnWorkspace.map((uOW: UsersOnWorkspaceType) => uOW.userId),
+  );
+
+  React.useEffect(() => {
+    refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workspaceStore]);
+
+  const users = React.useMemo(() => {
+    if (usersData) {
+      return usersData.filter((user) =>
+        bot ? true : user.role !== RoleEnum.BOT,
+      );
+    }
+
+    return [];
+  }, [bot, usersData]);
+
+  return {
+    isLoading,
+    users,
+  };
 }

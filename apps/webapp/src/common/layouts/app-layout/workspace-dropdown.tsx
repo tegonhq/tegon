@@ -11,6 +11,7 @@ import {
 import { ChevronDown } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
+import posthog from 'posthog-js';
 import React from 'react';
 import { signOut } from 'supertokens-auth-react/recipe/session';
 
@@ -65,6 +66,7 @@ export const WorkspaceDropdown = observer(() => {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {
+            posthog.reset(true);
             await signOut();
 
             replace('/auth');

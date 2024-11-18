@@ -1,11 +1,11 @@
 import type { User } from './types';
 
+import { AvatarText } from '@tegonhq/ui/components/avatar';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@tegonhq/ui/components/tooltip';
-import { AvatarText } from '@tegonhq/ui/components/ui/avatar';
 import { cn } from '@tegonhq/ui/lib/utils';
 
 interface UserAvatarProps {

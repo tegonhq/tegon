@@ -1,20 +1,24 @@
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
+import React from 'react';
 
 import type { UsersOnWorkspaceType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
+
+import { MemberOptionsDropdown } from './member-options-dropdown';
 
 interface MemberItemProps {
   className: string;
   name: string;
   email: string;
   id: string;
+  teamId?: string;
 }
 
 export const MemberItem = observer(
-  ({ name, className, email, id }: MemberItemProps) => {
+  ({ name, className, email, id, teamId }: MemberItemProps) => {
     const { workspaceStore } = useContextStore();
 
     const userOnWorkspace = workspaceStore.usersOnWorkspaces.find(
@@ -37,7 +41,16 @@ export const MemberItem = observer(
           </div>
         </div>
 
-        <div className="text-sm"> {userOnWorkspace?.role} </div>
+        <div className="text-sm flex gap-2 items-center">
+          <div>{userOnWorkspace?.role}</div>
+
+          {teamId && (
+            <MemberOptionsDropdown
+              userId={userOnWorkspace.userId}
+              teamId={teamId}
+            />
+          )}
+        </div>
       </div>
     );
   },

@@ -8,7 +8,7 @@ import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { IssueHistoryModule } from 'modules/issue-history/issue-history.module';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
 import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
-import { NotificationsModule } from 'modules/notifications/notifications.module';
+import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 import { UsersService } from 'modules/users/users.service';
 import { VectorModule } from 'modules/vector/vector.module';
 
@@ -25,7 +25,6 @@ import IssuesService from './issues.service';
     HttpModule,
     IssueHistoryModule,
     LinkedIssueModule,
-    NotificationsModule,
     VectorModule,
     BullModule.registerQueue({ name: 'issues' }),
   ],
@@ -40,6 +39,7 @@ import IssuesService from './issues.service';
     AIRequestsService,
     UsersService,
     IssuesAIService,
+    TriggerdevService,
   ],
   exports: [IssuesService, IssuesQueue],
 })

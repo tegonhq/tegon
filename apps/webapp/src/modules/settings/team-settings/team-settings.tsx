@@ -29,7 +29,7 @@ export function TeamSettings() {
 
       <ContentBox>
         <ScrollArea className="flex grow h-full">
-          <div className="w-full p-6">
+          <div className="w-full p-4">
             {currentTeam ? <SectionComponent /> : <Loader />}
           </div>
         </ScrollArea>

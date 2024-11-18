@@ -28,6 +28,8 @@ export async function saveIssuesData(
         parentId: record.data.parentId,
         stateId: record.data.stateId,
         subscriberIds: record.data.subscriberIds,
+        projectId: record.data.projectId,
+        projectMilestoneId: record.data.projectMilestoneId,
         sourceMetadata: JSON.stringify(record.data.sourceMetadata),
       };
 

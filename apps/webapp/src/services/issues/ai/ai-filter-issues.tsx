@@ -6,18 +6,15 @@ import { ajaxPost } from 'services/utils';
 
 export interface AIFilterIssuesParams {
   text: string;
-  teamId: string;
+  teamId?: string;
 
   workspaceId: string;
 }
 
-export function aiFilterIssues({
-  teamId,
-  ...otherParams
-}: AIFilterIssuesParams) {
+export function aiFilterIssues(data: AIFilterIssuesParams) {
   return ajaxPost({
-    url: `/api/v1/issues/ai/ai_filters?teamId=${teamId}`,
-    data: otherParams,
+    url: `/api/v1/issues/ai/ai_filters`,
+    data,
   });
 }
 

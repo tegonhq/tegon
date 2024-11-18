@@ -1,12 +1,15 @@
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
+import { observer } from 'mobx-react-lite';
 
-import { Priorities } from 'common/types';
+import { usePriorities } from 'hooks/priorities';
 
 import { PriorityViewList } from './priority-view-list';
 
-export function PriorityList() {
+export const PriorityList = observer(() => {
+  const Priorities = usePriorities();
+
   return (
-    <ScrollArea className="w-full h-full">
+    <ScrollArea className="w-full h-full" id="priority-list">
       <div className="flex flex-col gap-4 h-full pb-[100px]">
         {Priorities.map((priority: string, index: number) => (
           <PriorityViewList key={priority} priority={index} />
@@ -14,4 +17,4 @@ export function PriorityList() {
       </div>
     </ScrollArea>
   );
-}
+});

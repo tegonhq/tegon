@@ -26,7 +26,11 @@ export function ViewItem({ view }: ViewItemProps) {
 
   return (
     <Link
-      href={`/${workspaceSlug}/team/${teamIdentifier}/views/${view.id}`}
+      href={
+        teamIdentifier
+          ? `/${workspaceSlug}/team/${teamIdentifier}/views/${view.id}`
+          : `/${workspaceSlug}/views/${view.id}`
+      }
       className="flex gap-2 text-foreground items-center pl-8 pr-4 py-2 border-b border-border"
     >
       <div className="min-w-[200px] grow flex flex-col">
@@ -77,7 +81,9 @@ export const ViewsList = observer(() => {
   const { viewsStore } = useContextStore();
   const team = useCurrentTeam();
 
-  const views = viewsStore.getViewsForTeam(team.id);
+  const views = team
+    ? viewsStore.getViewsForTeam(team.id)
+    : viewsStore.getWorkspaceViews();
 
   return (
     <div className="flex flex-col">
