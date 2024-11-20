@@ -1,3 +1,4 @@
+import { AdjustableTextArea } from '@tegonhq/ui/components/adjustable-textarea';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   FormControl,
@@ -5,7 +6,6 @@ import {
   FormItem,
   FormMessage,
 } from '@tegonhq/ui/components/form';
-import { Textarea } from '@tegonhq/ui/components/textarea';
 import {
   Tooltip,
   TooltipContent,
@@ -81,10 +81,8 @@ export function NewIssueTitle({ form, index, isSubIssue }: NewIssueTitleProps) {
             <FormControl>
               <div className="flex items-center">
                 {isSubIssue && <ArrowDownRight size={20} />}
-                <Textarea
-                  className="border-0 py-0 resize-none bg-transparent no-scrollbar overflow-hidden outline-none focus-visible:ring-0"
-                  rows={1}
-                  cols={1}
+                <AdjustableTextArea
+                  className="border-0 py-0 resize-none bg-transparent no-scrollbar overflow-hidden outline-none focus-visible:ring-0 w-full"
                   autoFocus
                   placeholder="Issue title"
                   {...field}

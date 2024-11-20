@@ -14,7 +14,6 @@ export const CycleList = observer(() => {
   const team = useCurrentTeam();
 
   const cycles = cyclesStore.getCyclesForTeam(team.id);
-  console.log(cycles);
 
   return (
     <ScrollArea className="h-full w-full" id="cycles-list">

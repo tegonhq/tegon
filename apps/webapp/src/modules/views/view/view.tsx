@@ -6,6 +6,7 @@ import { FiltersView } from 'modules/issues/filters-view/filters-view';
 
 import { AppLayout } from 'common/layouts/app-layout';
 import { ContentBox } from 'common/layouts/content-box';
+import { MainLayout } from 'common/layouts/main-layout';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -25,14 +26,13 @@ export const View = withApplicationStore(
     }
 
     return (
-      <main className="flex flex-col h-[100vh]">
-        <Header title={view.name} view={view} />
+      <MainLayout header={<Header title={view.name} view={view} />}>
         <ContentBox>
           <FiltersView Actions={<ViewDisplayOptions view={view} />} />
 
           <ViewList view={view} />
         </ContentBox>
-      </main>
+      </MainLayout>
     );
   }),
 );

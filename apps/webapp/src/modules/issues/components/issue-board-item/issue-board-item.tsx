@@ -113,6 +113,7 @@ export const BoardIssueItem = observer(
           <IssueAssigneeDropdown
             value={issue.assigneeId}
             onChange={assigneeChange}
+            teamId={team.id}
             variant={IssueAssigneeDropdownVariant.NO_BACKGROUND}
           />
         </div>

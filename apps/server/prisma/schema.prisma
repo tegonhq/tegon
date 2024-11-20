@@ -163,9 +163,32 @@ model Cycle {
   startDate DateTime
   endDate   DateTime
 
+  history   CycleHistory[]
+
   preferences Json @default("{}")
 
   issues Issue[]
+}
+
+model CycleHistory {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  userId         String?
+  cycle          Cycle   @relation(fields: [cycleId], references: [id])
+  cycleId        String
+
+  issueId        String
+  issue          Issue @relation(fields: [issueId], references: [id])
+
+  changeType  CycleHistoryChangeType
+
+  fromStateId     String?
+  toStateId       String?
+  fromEstimate    Int?
+  toEstimate      Int?
 }
 
 model Emoji {
@@ -281,6 +304,8 @@ model Issue {
   history        IssueHistory[]
   linkedIssue    LinkedIssue[]
   issueRelations IssueRelation[]
+  cycleHistory   CycleHistory[]
+  projectHistory ProjectHistory[]
 
   IssueSuggestion   IssueSuggestion? @relation(fields: [issueSuggestionId], references: [id])
   issueSuggestionId String?          @unique
@@ -341,6 +366,9 @@ model IssueHistory {
   toProjectId      String?
   fromProjectMilestoneId  String?
   toProjectMilestoneId    String?
+
+  fromCycleId  String?
+  toCycleId    String?
   relationChanges Json?
 }
 
@@ -484,11 +512,32 @@ model Project {
 
   milestones ProjectMilestone[]
   issues     Issue[]
+  history    ProjectHistory[]
 
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   workspaceId String
 
   @@unique([name, workspaceId])
+}
+
+model ProjectHistory {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  userId         String?
+  project        Project   @relation(fields: [projectId], references: [id])
+  projectId      String
+  issueId        String
+  issue          Issue @relation(fields: [issueId], references: [id])
+  
+  changeType     ProjectHistoryChangeType
+
+  fromStateId     String?
+  toStateId       String?
+  fromEstimate    Int?
+  toEstimate      Int?
 }
 
 model ProjectMilestone {
@@ -631,6 +680,8 @@ model UsersOnWorkspaces {
   workspaceId             String
   teamIds                 String[]
   status                  Status    @default(ACTIVE)
+  ai                      Boolean   @default(false)
+
   externalAccountMappings Json?
   role                    Role      @default(ADMIN)
   joinedAt                DateTime?
@@ -835,4 +886,19 @@ enum LLMModels {
   LLAMA3
   CLAUDEOPUS
   GPT4O
+}
+
+enum CycleHistoryChangeType {
+  ADDED
+  MOVED
+  UPDATED
+  REMOVED
+}
+
+
+enum ProjectHistoryChangeType {
+  ADDED
+  MOVED
+  UPDATED
+  REMOVED
 }

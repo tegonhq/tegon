@@ -17,7 +17,7 @@ export const IssueLabels = observer(({ labelIds }: IssueLabelsProps) => {
 
   const getLabels = () => {
     return (
-      <div className="inline-flex items-center gap-1 flex-wrap">
+      <div className="inline-flex items-center gap-1">
         {labels.map((label: LabelType) => (
           <Badge
             variant="secondary"

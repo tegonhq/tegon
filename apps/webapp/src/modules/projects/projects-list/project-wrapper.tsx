@@ -17,6 +17,14 @@ export const ProjectWrapper = observer(
     const { projectsStore } = useContextStore();
     const project = projectsStore.getProjectWithId(id);
 
-    return <Component value={project[value]} onChange={onChange} />;
+    return (
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <Component value={project[value]} onChange={onChange} />
+      </div>
+    );
   },
 );

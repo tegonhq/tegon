@@ -7,6 +7,7 @@ import {
 
 import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
+import { useLocalState } from 'hooks/use-local-state';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -18,6 +19,7 @@ export function OverviewInsights() {
   const { issuesStore, applicationStore } = useContextStore();
   const team = useCurrentTeam();
   const project = useProject();
+  const [tab, setTab] = useLocalState('insights-tabs', 'status');
 
   const issues = issuesStore.getIssues({
     projectId: project?.id,
@@ -27,7 +29,11 @@ export function OverviewInsights() {
 
   return (
     <div className="flex flex-col overflow-hidden">
-      <Tabs className="overflow-hidden" defaultValue="status">
+      <Tabs
+        className="overflow-hidden"
+        value={tab}
+        onValueChange={(newValue: string) => setTab(newValue)}
+      >
         <TabsList className="grid w-full grid-cols-3 bg-transparent gap-2 p-4">
           <TabsTrigger value="status" className="bg-grayAlpha-100">
             Status

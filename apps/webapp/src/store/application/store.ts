@@ -25,7 +25,7 @@ export const defaultApplicationStoreValue: {
     ordering: OrderingEnum.updated_at,
     completedFilter: TimeBasedFilterEnum.All,
     showSubIssues: true,
-    showEmptyGroups: true,
+    showEmptyGroups: false,
     showTriageIssues: false,
   },
   sidebarCollapsed: false,

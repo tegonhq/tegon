@@ -77,6 +77,7 @@ export const getColumns = (
               onChange={(assigneeId: string) =>
                 assigneeChange(row.original, assigneeId)
               }
+              teamId={row.original.teamId}
               variant={IssueAssigneeDropdownVariant.LINK}
             />
           </div>

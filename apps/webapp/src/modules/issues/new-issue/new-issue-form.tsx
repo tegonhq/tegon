@@ -138,11 +138,7 @@ export const NewIssueForm = observer(
               value={team.identifier}
               onChange={(value: string) => setTeam(value)}
             />
-            <NewIssueMetadata
-              index={index}
-              form={form}
-              teamIdentifier={team.identifier}
-            />
+            <NewIssueMetadata index={index} form={form} team={team} />
             <AddIssueMetadata
               teamIdentifier={team.identifier}
               form={form}

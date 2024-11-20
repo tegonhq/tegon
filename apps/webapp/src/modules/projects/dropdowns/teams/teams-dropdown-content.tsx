@@ -6,7 +6,7 @@ import { DropdownItem } from 'modules/issues/components/issue-metadata/dropdown-
 
 import type { TeamType } from 'common/types';
 
-import { useTeams } from 'hooks/teams';
+import { useAllTeams } from 'hooks/teams';
 
 interface TeamsDropdownContentProps {
   onChange?: (id: string | string[]) => void;
@@ -21,7 +21,7 @@ export function TeamsDropdownContent({
   multiple = false,
   value,
 }: TeamsDropdownContentProps) {
-  const teams = useTeams();
+  const teams = useAllTeams();
 
   const onValueChange = (checked: boolean, id: string) => {
     if (checked && !value.includes(id)) {
