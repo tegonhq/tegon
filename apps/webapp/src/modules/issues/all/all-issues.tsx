@@ -9,11 +9,13 @@ import React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
 import { ContentBox } from 'common/layouts/content-box';
+import { MainLayout } from 'common/layouts/main-layout';
 import { SCOPES } from 'common/scopes';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
 import { useScope } from 'hooks';
 import { useCurrentTeam } from 'hooks/teams';
+import { useLocalState } from 'hooks/use-local-state';
 
 import { Header } from './header';
 import { IssuesViewOptions } from './issues-view-options';
@@ -24,58 +26,60 @@ import { OverviewInsights } from '../overview-insights';
 export const AllIssues = withApplicationStore(() => {
   useScope(SCOPES.AllIssues);
   const team = useCurrentTeam();
-  const [overview, setOverview] = React.useState(false);
+  const [overview, setOverview] = useLocalState('insightsSidebar', false);
 
   return (
-    <main className="flex flex-col h-[100vh]">
-      <Header
-        title="All issues"
-        team={team}
-        actions={
-          <Button
-            variant="ghost"
-            onClick={() => setOverview(!overview)}
-            size="sm"
+    <MainLayout
+      header={
+        <Header
+          title="All issues"
+          team={team}
+          actions={
+            <Button
+              variant="ghost"
+              onClick={() => setOverview(!overview)}
+              isActive={overview}
+              size="sm"
+            >
+              {overview ? (
+                <RightSidebarOpen size={18} />
+              ) : (
+                <RightSidebarClosed size={18} />
+              )}
+            </Button>
+          }
+        />
+      }
+    >
+      <ContentBox>
+        <ResizablePanelGroup direction="horizontal">
+          <ResizablePanel
+            collapsible={false}
+            order={1}
+            id="issues"
+            className="w-full"
           >
-            {open ? (
-              <RightSidebarOpen size={16} />
-            ) : (
-              <RightSidebarClosed size={16} />
-            )}
-          </Button>
-        }
-      />
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel
-          collapsible={false}
-          order={1}
-          id="issues"
-          className="w-full"
-        >
-          <ContentBox>
             <FiltersView Actions={<IssuesViewOptions />} />
             <ListView />
-          </ContentBox>
-        </ResizablePanel>
-        {overview && (
-          <>
-            <ResizableHandle className="bg-transparent" />
-            <ResizablePanel
-              collapsible={false}
-              maxSize={25}
-              minSize={25}
-              defaultSize={25}
-              order={2}
-              id="rightScreen"
-            >
-              <ContentBox className="!pl-0">
+          </ResizablePanel>
+          {overview && (
+            <>
+              <ResizableHandle />
+              <ResizablePanel
+                collapsible={false}
+                maxSize={25}
+                minSize={25}
+                defaultSize={25}
+                order={2}
+                id="rightScreen"
+              >
                 <OverviewInsights />
-              </ContentBox>
-            </ResizablePanel>
-          </>
-        )}
-      </ResizablePanelGroup>
-    </main>
+              </ResizablePanel>
+            </>
+          )}
+        </ResizablePanelGroup>
+      </ContentBox>
+    </MainLayout>
   );
 });
 

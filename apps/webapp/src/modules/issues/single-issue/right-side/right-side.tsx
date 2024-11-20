@@ -103,6 +103,7 @@ export const RightSide = observer(() => {
 
         <IssueAssigneeDropdown
           value={issue.assigneeId}
+          teamId={team.id}
           onChange={assigneeChange}
           variant={IssueAssigneeDropdownVariant.LINK}
         />

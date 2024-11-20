@@ -58,8 +58,8 @@ export function SyncCommentActivity({
           <CollapsibleTrigger asChild className="cursor-pointer">
             <div
               className={cn(
-                'flex gap-2 justify-between',
-                !comment.parentId && 'p-3',
+                'flex gap-2 justify-between group/collapse',
+                !comment.parentId && 'p-2',
               )}
             >
               <div className="flex gap-1">
@@ -69,18 +69,18 @@ export function SyncCommentActivity({
                   <EditorExtensions suggestionItems={suggestionItems} />
                 </Editor>
               </div>
-              <span>
-                <ReactTimeAgo
-                  date={new Date(comment.updatedAt)}
-                  className="text-muted-foreground text-xs"
-                />
+              <span className="inline-flex gap-2 text-muted-foreground text-xs">
+                <span className="hidden group-hover/collapse:inline">
+                  {isOpen ? 'Collapse' : 'Expand'}
+                </span>
+                <ReactTimeAgo date={new Date(comment.updatedAt)} />
               </span>
             </div>
           </CollapsibleTrigger>
 
           <CollapsibleContent className="space-y-2">
             {childComments.length > 0 && (
-              <div className="w-full border-t border-border p-3 pb-0">
+              <div className="w-full border-t border-border p-2 pb-0">
                 {childComments.map(
                   (subComment: IssueCommentType, index: number) => (
                     <div

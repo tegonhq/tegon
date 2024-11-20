@@ -31,7 +31,7 @@ export function useUpdateTeamMutation({
       teamsStore.update(otherParams, team.id);
       return updateTeam({ ...otherParams, teamId });
     } catch (e) {
-      teamsStore.updateIssue(team, team.id);
+      teamsStore.update(team, team.id);
       return undefined;
     }
   };

@@ -27,16 +27,18 @@ interface IssueAssigneeDropdownProps {
   value?: string;
   onChange?: (assigneeId: string) => void;
   variant?: IssueAssigneeDropdownVariant;
+  teamId: string;
 }
 
 export function IssueAssigneeDropdown({
   value,
   onChange,
   variant = IssueAssigneeDropdownVariant.DEFAULT,
+  teamId,
 }: IssueAssigneeDropdownProps) {
   const [open, setOpen] = React.useState(false);
 
-  const { users, isLoading } = useUsersData(false);
+  const { users, isLoading } = useUsersData(false, teamId);
 
   if (isLoading) {
     return null;

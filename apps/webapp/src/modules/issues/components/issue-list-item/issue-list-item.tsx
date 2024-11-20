@@ -140,12 +140,12 @@ export const IssueListItem = observer(
             )}
             <div
               className={cn(
-                'flex w-full items-start gap-2 pl-2 ml-1 pr-2 group-hover:bg-grayAlpha-100 rounded-xl',
+                'flex grow items-start gap-2 pl-2 ml-1 pr-2 group-hover:bg-grayAlpha-100 rounded-xl shrink min-w-[0px]',
                 issueSelected && !subIssueView && 'bg-primary/10',
                 subIssueView && 'pl-2 pr-2',
               )}
             >
-              <div className="pt-2.5">
+              <div className="pt-2.5 shrink-0">
                 <IssueStatusDropdown
                   value={issue.stateId}
                   onChange={statusChange}
@@ -156,28 +156,23 @@ export const IssueListItem = observer(
 
               <div
                 className={cn(
-                  'flex flex-col w-full py-2.5 border-b border-border',
+                  'flex flex-col w-full py-2.5 border-b border-border shrink min-w-[0px]',
                   noBorder && 'border-none',
                 )}
               >
-                <div className="flex w-full">
-                  <div className="flex flex-wrap shrink w-full gap-2 justify-between pr-4">
-                    <span className="flex items-center justify-start shrink min-w-[0px]">
-                      <span className="text-left">{issue.title}</span>
-                    </span>
-
-                    <div className="flex items-center gap-2">
-                      <IssueDueDate dueDate={issue.dueDate} />
-
-                      <IssueProject
-                        projectId={issue.projectId}
-                        projectMilestoneId={issue.projectMilestoneId}
-                      />
-                      <IssueLabels labelIds={issue.labelIds} />
-                    </div>
+                <div className="flex w-full justify-between gap-4">
+                  <div className="inline-flex items-center justify-start shrink min-w-[0px]">
+                    <div className="text-left truncate">{issue.title}</div>
                   </div>
 
-                  <div className="flex shrink-0 items-center">
+                  <div className="flex items-center gap-2 flex-wrap pr-1 shrink-0">
+                    <IssueDueDate dueDate={issue.dueDate} />
+
+                    <IssueProject
+                      projectId={issue.projectId}
+                      projectMilestoneId={issue.projectMilestoneId}
+                    />
+                    <IssueLabels labelIds={issue.labelIds} />
                     <div className="w-[80px] mr-8">
                       <IssuePriorityDropdown
                         value={issue.priority ?? 0}
@@ -190,6 +185,7 @@ export const IssueListItem = observer(
                     <IssueAssigneeDropdown
                       value={issue.assigneeId}
                       onChange={assigneeChange}
+                      teamId={team.id}
                       variant={IssueAssigneeDropdownVariant.NO_BACKGROUND}
                     />
                   </div>

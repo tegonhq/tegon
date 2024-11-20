@@ -59,9 +59,7 @@ export const RightSide = observer(() => {
 
   return (
     <>
-      <div className="grow py-6 flex flex-col gap-4">
-        <h3 className="px-6"> Project details </h3>
-
+      <div className="grow py-4 flex flex-col gap-4">
         <div className="flex flex-col items-start px-6">
           <label className="text-xs">Status</label>
           <ProjectStatusDropdown

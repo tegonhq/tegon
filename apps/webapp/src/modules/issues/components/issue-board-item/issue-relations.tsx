@@ -2,6 +2,7 @@ import { buttonVariants } from '@tegonhq/ui/components/button';
 import { BlockedFill, BlocksFill, SubIssue } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 import { getWorkflowColor } from 'common/status-color';
@@ -21,7 +22,10 @@ export const IssueRelations = observer(({ issue }: IssueRelationsProps) => {
   const { issueRelationsStore, issuesStore, workflowsStore } =
     useContextStore();
   const team = useTeamWithId(issue.teamId);
-
+  const {
+    push,
+    query: { workspaceSlug },
+  } = useRouter();
   const blockedIssues = issueRelationsStore.getIssueRelationForType(
     issue.id,
     IssueRelationEnum.BLOCKED,
@@ -51,17 +55,24 @@ export const IssueRelations = observer(({ issue }: IssueRelationsProps) => {
       <a
         className={cn(
           buttonVariants({ size: 'sm', variant: 'secondary' }),
-          'text-xs flex gap-1',
+          'text-xs flex gap-1 shrink min-w-[0px]',
         )}
+        onClick={() => {
+          push(
+            `/${workspaceSlug}/issue/${team.identifier}-${parentIssue.number}`,
+          );
+        }}
       >
         Parent
         <CategoryIcon
-          size={12}
+          size={16}
           color={getWorkflowColor(parentWorkflow).color}
+          className="shrink-0"
         />
-        <span>
+        <span className="font-mono text-muted-foreground shrink-0">
           {team.identifier}-{parentIssue.number}
         </span>
+        <span className="truncate">{parentIssue.title}</span>
       </a>
     );
   }

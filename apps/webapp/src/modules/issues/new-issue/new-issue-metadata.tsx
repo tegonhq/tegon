@@ -2,6 +2,8 @@ import { FormField, FormItem, FormControl } from '@tegonhq/ui/components/form';
 import React from 'react';
 import { useWatch, type UseFormReturn } from 'react-hook-form';
 
+import type { TeamType } from 'common/types';
+
 import {
   IssueAssigneeDropdown,
   IssueLabelDropdown,
@@ -15,15 +17,11 @@ import {
 
 interface NewIssueMetadataProps {
   form: UseFormReturn;
-  teamIdentifier: string;
+  team: TeamType;
   index: number;
 }
 
-export function NewIssueMetadata({
-  form,
-  teamIdentifier,
-  index,
-}: NewIssueMetadataProps) {
+export function NewIssueMetadata({ form, team, index }: NewIssueMetadataProps) {
   const values = useWatch({
     control: form.control,
     name: `issues.${index}`,
@@ -44,7 +42,7 @@ export function NewIssueMetadata({
               <IssueStatusDropdown
                 onChange={field.onChange}
                 value={field.value}
-                teamIdentifier={teamIdentifier}
+                teamIdentifier={team.identifier}
               />
             </FormControl>
           </FormItem>
@@ -60,7 +58,7 @@ export function NewIssueMetadata({
               <IssueLabelDropdown
                 value={field.value}
                 onChange={field.onChange}
-                teamIdentifier={teamIdentifier}
+                teamIdentifier={team.identifier}
               />
             </FormControl>
           </FormItem>
@@ -75,6 +73,7 @@ export function NewIssueMetadata({
             <FormControl>
               <IssueAssigneeDropdown
                 value={field.value}
+                teamId={team.id}
                 onChange={field.onChange}
               />
             </FormControl>
@@ -106,7 +105,7 @@ export function NewIssueMetadata({
               <ProjectDropdown
                 value={field.value}
                 onChange={field.onChange}
-                teamIdentifier={teamIdentifier}
+                teamIdentifier={team.identifier}
               />
             </FormControl>
           </FormItem>
@@ -123,7 +122,7 @@ export function NewIssueMetadata({
                 <ProjectMilestoneDropdown
                   value={field.value}
                   onChange={field.onChange}
-                  teamIdentifier={teamIdentifier}
+                  teamIdentifier={team.identifier}
                   projectId={values.projectId}
                 />
               </FormControl>

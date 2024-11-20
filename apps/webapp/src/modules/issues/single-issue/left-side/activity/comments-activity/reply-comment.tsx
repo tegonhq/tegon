@@ -42,7 +42,7 @@ export function ReplyComment({ issueCommentId }: ReplyCommentProps) {
   };
 
   return (
-    <div className="flex items-start w-full border-t border-border px-3 py-2 pb-0">
+    <div className="flex items-start w-full border-t border-border px-3 py-2 pb-0 !mt-0">
       <AvatarText text={currentUser.fullname} className="text-[9px]" />
 
       <div className="w-full relative">

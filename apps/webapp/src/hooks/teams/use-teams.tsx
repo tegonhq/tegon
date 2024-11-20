@@ -14,3 +14,9 @@ export function useTeams() {
       )
     : (teamsStore.teams as TeamType[]);
 }
+
+export function useAllTeams() {
+  const { teamsStore } = useContextStore();
+
+  return teamsStore.teams as TeamType[];
+}

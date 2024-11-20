@@ -34,6 +34,7 @@ export const CategoryViewList = observer(
     const project = useProject();
 
     const issues = issuesStore.getIssuesForState(workflow.ids, project?.id);
+
     const computedIssues = useFilterIssues(issues, workflows);
 
     if (

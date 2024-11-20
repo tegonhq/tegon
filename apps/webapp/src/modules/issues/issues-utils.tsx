@@ -192,11 +192,24 @@ export function getFilters(
   }
 
   if (assignee) {
-    filters.push({
-      key: 'assigneeId',
-      filterType: assignee.filterType,
-      value: assignee.value,
-    });
+    if (assignee.value.includes('no-user')) {
+      filters.push({
+        key: 'assigneeId',
+        filterType: FilterTypeEnum.UNDEFINED,
+      });
+    }
+
+    const restAssigneeValues = assignee.value.filter(
+      (a: string) => a !== 'no-user',
+    );
+
+    if (restAssigneeValues.length > 0) {
+      filters.push({
+        key: 'assigneeId',
+        filterType: assignee.filterType,
+        value: restAssigneeValues,
+      });
+    }
   }
 
   if (!assignee && userId) {
