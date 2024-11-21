@@ -21,4 +21,7 @@ export interface UsersOnWorkspaceType {
   userId: string;
   workspaceId: string;
   teamIds: string[];
+  settings: {
+    ai?: boolean;
+  };
 }

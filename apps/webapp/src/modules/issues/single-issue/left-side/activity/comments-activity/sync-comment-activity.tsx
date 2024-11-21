@@ -87,7 +87,7 @@ export function SyncCommentActivity({
                       key={subComment.id}
                       className={cn(
                         index < childComments.length - 1 &&
-                          'border-b border-border mb-4',
+                          'border-b border-border mb-2',
                       )}
                     >
                       <GenericCommentActivity

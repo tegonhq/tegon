@@ -46,7 +46,16 @@ export class UsersController {
   @UseGuards(AuthGuard)
   async getUser(
     @SessionDecorator() session: SessionContainer,
-  ): Promise<UserWithInvites> {
+    @Query() userIdParams: { userIds: string },
+  ): Promise<UserWithInvites | PublicUser[]> {
+    try {
+      if (userIdParams.userIds && userIdParams.userIds.split(',').length > 0) {
+        return await this.users.getUsersbyId({
+          userIds: userIdParams.userIds.split(','),
+        });
+      }
+    } catch (e) {}
+
     const userId = session.getUserId();
     const user = await this.users.getUser(userId);
 

@@ -19,40 +19,34 @@ export function useUsersData(bot = true, teamId?: string) {
   const project = useProject();
 
   const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
-  const {
-    data: usersData,
-    isLoading,
-    refetch,
-  } = useGetUsersQuery(
-    usersOnWorkspace
-      .filter((uOW: UsersOnWorkspaceType) => {
-        if (team?.id) {
-          return uOW.teamIds.includes(team.id);
-        }
-        if (project?.teams) {
-          return project.teams.some((teamId: string) =>
-            uOW.teamIds.includes(teamId),
-          );
-        }
-        return true;
-      })
-      .map((uOW: UsersOnWorkspaceType) => uOW.userId),
-  );
-
-  React.useEffect(() => {
-    refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workspaceStore]);
+  const { data: usersData, isLoading } = useGetUsersQuery();
 
   const users = React.useMemo(() => {
     if (usersData) {
-      return usersData.filter((user) =>
-        bot ? true : user.role !== RoleEnum.BOT,
-      );
+      return usersData.filter((user) => {
+        const isBot = bot ? true : user.role !== RoleEnum.BOT;
+
+        const uOW = usersOnWorkspace.find(
+          (u: UsersOnWorkspaceType) => u.userId === user.id,
+        );
+
+        if (team?.id) {
+          return uOW.teamIds.includes(team.id) && isBot;
+        }
+        if (project?.teams) {
+          return (
+            project.teams.some((teamId: string) =>
+              uOW.teamIds.includes(teamId),
+            ) && isBot
+          );
+        }
+
+        return isBot;
+      });
     }
 
     return [];
-  }, [bot, usersData]);
+  }, [bot, usersData, usersOnWorkspace, team, project]);
 
   return {
     isLoading,
@@ -60,38 +54,27 @@ export function useUsersData(bot = true, teamId?: string) {
   };
 }
 
-export function useUserData(
-  userId: string,
-  teamId?: string,
-): {
-  isLoading: boolean;
-  user: User | undefined;
-} {
-  const team = useTeamWithId(teamId);
-
+export function useUserData(userId: string) {
   const { workspaceStore } = useContextStore();
+
   const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
+  const { data: usersData, isLoading } = useGetUsersQuery();
 
-  const {
-    data: usersData,
-    isLoading,
-    refetch,
-  } = useGetUsersQuery([
-    usersOnWorkspace.find((uOW: UsersOnWorkspaceType) => {
-      if (team?.id) {
-        return uOW.teamIds.includes(team.id) && uOW.userId === userId;
-      }
+  const user = React.useMemo(() => {
+    if (usersData) {
+      return usersData.find((user) => {
+        const uOW = usersOnWorkspace.find(
+          (u: UsersOnWorkspaceType) => u.userId === user.id,
+        );
 
-      return uOW.userId === userId;
-    }).userId,
-  ]);
+        return uOW.userId === userId;
+      });
+    }
 
-  React.useEffect(() => {
-    refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workspaceStore]);
+    return undefined;
+  }, [usersData, usersOnWorkspace, userId]);
 
-  return { isLoading, user: usersData ? usersData[0] : undefined };
+  return { isLoading, user };
 }
 
 export function useAllUsers(bot = true): {
@@ -99,15 +82,8 @@ export function useAllUsers(bot = true): {
   users: User[];
 } {
   const { workspaceStore } = useContextStore();
-  const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
 
-  const {
-    data: usersData,
-    isLoading,
-    refetch,
-  } = useGetUsersQuery(
-    usersOnWorkspace.map((uOW: UsersOnWorkspaceType) => uOW.userId),
-  );
+  const { data: usersData, isLoading, refetch } = useGetUsersQuery();
 
   React.useEffect(() => {
     refetch();

@@ -152,7 +152,12 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
 
   return (
     <div className="flex justify-between items-start border border-border p-1 rounded-md w-full">
-      <div className="flex gap-2 flex-wrap items-center h-full grow">
+      <div
+        className="flex gap-2 flex-wrap items-center h-full grow"
+        onClick={() => {
+          setShowOptions(true);
+        }}
+      >
         <AppliedFiltersView />
         {isLoading && (
           <div className="flex gap-2 items-center">

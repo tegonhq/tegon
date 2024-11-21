@@ -1,9 +1,9 @@
 import { Button } from '@tegonhq/ui/components/button';
-import { Separator } from '@tegonhq/ui/components/separator';
 import { AI } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import { useCommonStore } from 'hooks/use-common-store';
+import { useUserSettings } from 'hooks/users';
 
 interface HeaderLayoutProps {
   children: React.ReactNode;
@@ -13,6 +13,7 @@ interface HeaderLayoutProps {
 export const HeaderLayout = observer(
   ({ children, actions }: HeaderLayoutProps) => {
     const commonStore = useCommonStore();
+    const settings = useUserSettings();
 
     return (
       <header className="flex px-4 w-full items-center">
@@ -22,20 +23,21 @@ export const HeaderLayout = observer(
             {actions && (
               <>
                 <div className="flex items-center">{actions}</div>
-                <Separator orientation="vertical" className="h-full" />
               </>
             )}
-            <Button
-              size="sm"
-              variant="ghost"
-              isActive={commonStore.chatOpen}
-              className="ml-0.5"
-              onClick={() =>
-                commonStore.update({ chatOpen: !commonStore.chatOpen })
-              }
-            >
-              <AI />
-            </Button>
+            {settings?.ai && (
+              <Button
+                size="sm"
+                variant="ghost"
+                isActive={commonStore.chatOpen}
+                className="ml-0.5"
+                onClick={() =>
+                  commonStore.update({ chatOpen: !commonStore.chatOpen })
+                }
+              >
+                <AI />
+              </Button>
+            )}
           </div>
         </div>
       </header>

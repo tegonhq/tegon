@@ -31,4 +31,11 @@ export const UsersOnWorkspace = types.model({
   workspaceId: types.string,
   role: types.enumeration(['ADMIN', 'USER', 'BOT', 'AGENT']),
   teamIds: types.array(types.string),
+  settings: types.union(
+    types.model({
+      ai: types.union(types.undefined, types.boolean),
+    }),
+    types.null,
+    types.undefined,
+  ),
 });
