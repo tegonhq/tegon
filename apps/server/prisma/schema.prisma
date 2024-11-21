@@ -680,7 +680,7 @@ model UsersOnWorkspaces {
   workspaceId             String
   teamIds                 String[]
   status                  Status    @default(ACTIVE)
-  ai                      Boolean   @default(false)
+  settings                Json      @default("{}")
 
   externalAccountMappings Json?
   role                    Role      @default(ADMIN)

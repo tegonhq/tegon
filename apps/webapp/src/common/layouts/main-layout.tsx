@@ -6,6 +6,8 @@ import {
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 
+import { AI } from 'modules/ai';
+
 import { useContextStore } from 'store/global-context-provider';
 
 import { ContentBox } from './content-box';
@@ -43,7 +45,7 @@ export const MainLayout = observer(
                 id="app-layout-chat"
               >
                 <ContentBox className="pl-0">
-                  <h2></h2>
+                  <AI />
                 </ContentBox>
               </ResizablePanel>
             </>
