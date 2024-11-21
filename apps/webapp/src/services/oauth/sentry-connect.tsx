@@ -11,11 +11,13 @@ export interface SentryConnectParams {
 
 export interface SentryConnectResponse {
   status: boolean;
+  orgSlug: string;
+  appSlug: string;
 }
 
 export function connectSentry(params: SentryConnectParams) {
   return ajaxPost({
-    url: '/api/v1/sentry/callback',
+    url: '/api/v1/oauth/callback/sentry',
     data: params,
   });
 }

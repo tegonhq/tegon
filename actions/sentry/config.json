@@ -1,0 +1,12 @@
+{
+  "slug": "sentry",
+  "name": "sentry",
+  "description": "",
+  "triggers": [
+    {
+      "type": "source_webhook",
+      "entities": ["sentry"]
+    }
+  ],
+  "integrations": ["sentry"]
+}
