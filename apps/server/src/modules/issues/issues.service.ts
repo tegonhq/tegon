@@ -367,8 +367,7 @@ export default class IssuesService {
     }
 
     // Add the updated issue to the vector
-
-    // this.issuesQueue.addIssueToVector(updatedIssue);
+    this.issuesQueue.addIssueToVector(updatedIssue);
 
     // Find the current and updated issue states
     const [currentIssueState, updatedIssueState] = await Promise.all([
