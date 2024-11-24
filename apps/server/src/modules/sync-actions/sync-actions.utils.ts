@@ -42,6 +42,20 @@ export async function getWorkspaceId(
       });
       return actionEntity.action.workspaceId;
 
+    case ModelName.Conversation:
+      const conversationEntity = await prisma.conversation.findUnique({
+        where: { id: modelId },
+      });
+      return conversationEntity.workspaceId;
+
+    case ModelName.ConversationHistory:
+      const conversationHistoryEntity =
+        await prisma.conversationHistory.findUnique({
+          where: { id: modelId },
+          include: { conversation: true },
+        });
+      return conversationHistoryEntity.conversation.workspaceId;
+
     case ModelName.Cycle:
       const cycleEntity = await prisma.cycle.findUnique({
         where: { id: modelId },
@@ -169,6 +183,36 @@ export async function getModelData(
     Workspace: prisma.workspace,
     Action: prisma.action,
     ActionEntity: prisma.actionEntity,
+    Conversation: {
+      findUnique: () => {
+        if (userId) {
+          return prisma.conversation.findFirst({
+            where: {
+              id: modelId,
+              userId,
+            },
+          });
+        }
+        return prisma.conversation.findUnique({ where: { id: modelId } });
+      },
+    },
+    ConversationHistory: {
+      findUnique: () => {
+        if (userId) {
+          return prisma.conversationHistory.findFirst({
+            where: {
+              id: modelId,
+              conversation: {
+                userId,
+              },
+            },
+          });
+        }
+        return prisma.conversationHistory.findUnique({
+          where: { id: modelId },
+        });
+      },
+    },
     Cycle: prisma.cycle,
     UsersOnWorkspaces: prisma.usersOnWorkspaces,
     Team: prisma.team,

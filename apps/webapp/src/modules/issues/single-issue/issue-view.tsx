@@ -24,7 +24,7 @@ import { TriageView } from './triage-view';
 
 export const IssueView = observer(() => {
   const currentTeam = useCurrentTeam();
-  const workflows = useTeamWorkflows(currentTeam.identifier);
+  const workflows = useTeamWorkflows(currentTeam?.identifier);
   const { applicationStore } = useContextStore();
   const router = useRouter();
   const triageWorkflow = workflows.find(
@@ -57,7 +57,7 @@ export const IssueView = observer(() => {
     return null;
   }
 
-  if (issue.stateId === triageWorkflow.id) {
+  if (issue.stateId === triageWorkflow?.id) {
     return <TriageView />;
   }
 

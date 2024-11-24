@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
@@ -13,11 +14,7 @@ import { RightSide } from './overview/right-side';
 import { ProjectProgress } from './project-progress';
 import { Header } from '../header';
 
-export const ProjectView = withApplicationStore(() => {
-  const [view, setView] = useLocalState<'overview' | 'issues'>(
-    'project_tab',
-    'overview',
-  );
+export const Project = observer(({ view }: { view: 'overview' | 'issues' }) => {
   const project = useProject();
 
   if (!project) {
@@ -25,19 +22,30 @@ export const ProjectView = withApplicationStore(() => {
   }
 
   return (
+    <main className="grid grid-cols-5 h-[calc(100vh_-_53px)]">
+      <div className="col-span-4 flex flex-col h-[calc(100vh_-_55px)]">
+        <ProjectProgress id={project.id} />
+        {view === 'overview' && <Overview />}
+        {view === 'issues' && <ProjectIssues />}
+      </div>
+      <div className="border-l border-border flex-col flex">
+        <RightSide />
+      </div>
+    </main>
+  );
+});
+
+export const ProjectView = withApplicationStore(() => {
+  const [view, setView] = useLocalState<'overview' | 'issues'>(
+    'project_tab',
+    'overview',
+  );
+
+  return (
     <main className="flex flex-col h-[100vh]">
       <Header title="Projects" isProjectView view={view} setView={setView} />
       <ContentBox>
-        <main className="grid grid-cols-5 h-[calc(100vh_-_53px)]">
-          <div className="col-span-4 flex flex-col h-[calc(100vh_-_55px)]">
-            <ProjectProgress id={project.id} />
-            {view === 'overview' && <Overview />}
-            {view === 'issues' && <ProjectIssues />}
-          </div>
-          <div className="border-l border-border flex-col flex">
-            <RightSide />
-          </div>
-        </main>
+        <Project view={view} />
       </ContentBox>
     </main>
   );

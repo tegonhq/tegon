@@ -12,7 +12,6 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import { HeaderLayout } from 'common/header-layout';
-import { SidebarExpand } from 'common/sidebar-expand';
 
 import { useCurrentTeam } from 'hooks/teams';
 
@@ -32,17 +31,16 @@ export const Header = observer(
 
     return (
       <HeaderLayout>
-        <SidebarExpand />
         <Breadcrumb>
           <BreadcrumbItem>
             <BreadcrumbLink
               as={Link}
               className="flex items-center gap-2"
-              href={`${query.workspaceSlug}/team/${team.identifier}/cycles`}
+              href={`${query.workspaceSlug}/team/${team?.identifier}/cycles`}
             >
-              <TeamIcon name={team.name} />
+              <TeamIcon name={team?.name} />
 
-              <span className="inline-block">{team.name}</span>
+              <span className="inline-block">{team?.name}</span>
             </BreadcrumbLink>
           </BreadcrumbItem>
           {title && (

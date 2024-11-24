@@ -7,6 +7,7 @@ export interface TeamType {
   workspaceId: string;
   preferences: {
     cyclesEnabled?: boolean;
+    triage?: boolean;
   };
 }
 

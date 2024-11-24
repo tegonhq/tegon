@@ -12,5 +12,5 @@ export const useUserSettings = () => {
     (uOW: UsersOnWorkspaceType) => uOW.userId === user.id,
   );
 
-  return userOnWorkspace.settings;
+  return userOnWorkspace?.settings;
 };

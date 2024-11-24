@@ -104,6 +104,7 @@ export class ConversationHistoryService {
           id: {
             not: conversationHistoryId,
           },
+          deleted: null,
         },
         orderBy: {
           createdAt: 'desc',

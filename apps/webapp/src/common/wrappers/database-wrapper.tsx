@@ -25,7 +25,6 @@ export function DatabaseWrapper(props: Props): React.ReactElement {
     if (workspace) {
       const version = localStorage.getItem('version');
       if (version !== publicRuntimeConfig.NEXT_PUBLIC_VERSION) {
-        localStorage.clear();
         localStorage.setItem(
           'version',
           publicRuntimeConfig.NEXT_PUBLIC_VERSION,

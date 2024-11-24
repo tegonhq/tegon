@@ -24,14 +24,16 @@ export const WorkspaceDropdown = observer(() => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="p-0 hover:bg-transparent">
-          <div className="flex justify-between gap-2 items-center">
-            <AvatarText text={workspaceStore.workspace.name} noOfChar={1} />
+        <Button
+          variant="ghost"
+          size="sm"
+          className="p-0 hover:bg-transparent justify-between gap-2 items-center shrink min-w-[0px] max-w-[150px]"
+        >
+          <AvatarText text={workspaceStore.workspace.name} noOfChar={1} />
 
-            <div> {workspaceStore.workspace.name}</div>
-            <div>
-              <ChevronDown size={16} />
-            </div>
+          <div className="truncate"> {workspaceStore.workspace.name}</div>
+          <div>
+            <ChevronDown size={16} />
           </div>
         </Button>
       </DropdownMenuTrigger>

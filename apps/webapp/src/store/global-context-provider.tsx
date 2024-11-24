@@ -5,6 +5,8 @@ import { ActionsStore } from './action';
 import { ApplicationStore, defaultApplicationStoreValue } from './application';
 import { CommentsStore } from './comments';
 import { CommonStore, defaultCommonStoreValue } from './common';
+import { ConversationHistoryStore } from './conversation-history';
+import { ConversationsStore } from './conversations';
 import { CyclesStore } from './cycle';
 import { IntegrationAccountsStore } from './integration-accounts';
 import { IssueHistoryStore } from './issue-history';
@@ -40,6 +42,8 @@ const StoreContextModel = types.model({
   projectMilestonesStore: ProjectMilestonesStore,
   cyclesStore: CyclesStore,
   commonStore: CommonStore,
+  conversationsStore: ConversationsStore,
+  conversationHistoryStore: ConversationHistoryStore,
 });
 
 export const storeContextStore = StoreContextModel.create({
@@ -108,6 +112,12 @@ export const storeContextStore = StoreContextModel.create({
   },
   cyclesStore: {
     cycles: [],
+  },
+  conversationsStore: {
+    conversations: [],
+  },
+  conversationHistoryStore: {
+    conversationHistory: [],
   },
   commonStore: defaultCommonStoreValue,
 });

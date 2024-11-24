@@ -5,11 +5,17 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@tegonhq/ui/components/collapsible';
-import { AssigneeLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
+import {
+  AddLine,
+  AssigneeLine,
+  ChevronDown,
+  ChevronRight,
+} from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
+import { useNewIssue } from 'modules/issues/new-issue';
 
 import type { User } from 'common/types';
 import type { IssueType } from 'common/types';
@@ -32,6 +38,7 @@ export const AssigneeViewList = observer(({ user }: AssigneeListItemProps) => {
   const team = useCurrentTeam();
   const { workflows } = useComputedWorkflows();
   const project = useProject();
+  const { openNewIssue } = useNewIssue();
 
   const issues = issuesStore.getIssuesForUser({
     userId: user.id,
@@ -75,6 +82,13 @@ export const AssigneeViewList = observer(({ user }: AssigneeListItemProps) => {
         <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
           {computedIssues.length}
         </div>
+
+        <Button
+          variant="ghost"
+          onClick={() => openNewIssue({ assigneeId: user.id })}
+        >
+          <AddLine size={14} />
+        </Button>
       </div>
 
       <CollapsibleContent>

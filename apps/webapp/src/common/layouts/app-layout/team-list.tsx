@@ -37,7 +37,8 @@ export const TeamList = observer(() => {
   const { teamsStore, workspaceStore } = useContextStore();
   // If the team exists in the route path
   const team = useCurrentTeam();
-  const teamAccessList = workspaceStore.getUserData(currentUser.id).teamIds;
+  const teamAccessList =
+    workspaceStore.getUserData(currentUser.id)?.teamIds ?? [];
   const teams = teamsStore.teams.filter((team: TeamType) =>
     teamAccessList.includes(team.id),
   );
@@ -51,8 +52,8 @@ export const TeamList = observer(() => {
       <Accordion
         type="single"
         collapsible
-        defaultValue={team?.id ?? teams[0].id}
-        className="w-full flex flex-col gap-4"
+        defaultValue={team?.id}
+        className="w-full flex flex-col gap-2"
         onValueChange={(value: string) => {
           if (value && value !== team?.id) {
             const newTeam = teams.find((team: TeamType) => team.id === value);
@@ -61,12 +62,7 @@ export const TeamList = observer(() => {
         }}
       >
         {teams.map((team: TeamType) => {
-          const links = [
-            {
-              title: 'Triage',
-              icon: TriageLine,
-              href: `/${workspace.slug}/team/${team.identifier}/triage`,
-            },
+          let links = [
             {
               title: 'Issues',
               icon: IssuesLine,
@@ -86,6 +82,17 @@ export const TeamList = observer(() => {
               icon: Cycle,
               href: `/${workspace.slug}/team/${team.identifier}/cycles`,
             });
+          }
+
+          if (team.preferences.triage) {
+            links = [
+              {
+                title: 'Triage',
+                icon: TriageLine,
+                href: `/${workspace.slug}/team/${team.identifier}/triage`,
+              },
+              ...links,
+            ];
           }
 
           return (

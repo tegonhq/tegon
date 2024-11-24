@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { useAutoSizeTextArea } from '../../hooks';
 import { cn } from '../../lib/utils';
 
 export interface TextareaProps
@@ -13,8 +12,6 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     const id = React.useMemo(() => {
       return `id${Math.random().toString(16).slice(2)}`;
     }, []);
-
-    useAutoSizeTextArea(id, textAreaRef.current, value);
 
     return (
       <textarea

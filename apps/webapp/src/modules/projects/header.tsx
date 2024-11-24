@@ -9,7 +9,6 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { HeaderLayout } from 'common/header-layout';
-import { SidebarExpand } from 'common/sidebar-expand';
 
 import { useProject } from 'hooks/projects';
 
@@ -48,7 +47,6 @@ export const Header = observer(
 
     return (
       <HeaderLayout actions={actions}>
-        <SidebarExpand />
         <Breadcrumb>
           <BreadcrumbItem>
             <BreadcrumbLink>{title}</BreadcrumbLink>
@@ -56,7 +54,7 @@ export const Header = observer(
           {isProjectView && (
             <>
               <BreadcrumbItem>
-                <BreadcrumbLink>{project.name}</BreadcrumbLink>
+                <BreadcrumbLink>{project?.name}</BreadcrumbLink>
               </BreadcrumbItem>
               <ProjectDetailsDropdown />
             </>

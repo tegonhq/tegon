@@ -13,6 +13,7 @@ import {
 } from 'react-hook-form';
 
 import { AiWritingExtension } from 'common/editor/ai-writing';
+import type { IssueType } from 'common/types';
 
 import { useSuggestionItems } from './hooks';
 import { NewIssueMetadata } from './new-issue-metadata';
@@ -30,9 +31,7 @@ interface NewIssueFormProps {
   // Used in subissue workflow
   isSubIssue: boolean;
   index: number;
-  // This is the ID which comes from other components
-  // This is not used in sub-issue workflow
-  parentId: string | undefined;
+  defaultValues: Partial<IssueType>;
   form: UseFormReturn;
 
   // To show loading for buttons
@@ -52,6 +51,7 @@ export const NewIssueForm = observer(
     isSubIssue,
     form,
     index,
+    defaultValues,
     isLoading,
     onClose,
     subIssueOperations,
@@ -66,7 +66,7 @@ export const NewIssueForm = observer(
     const { suggestionItems, isLoading: aiLoading } =
       useSuggestionItems(subIssueOperations);
 
-    const defaultValuesForForm = useDefaultValues(team);
+    const defaultValuesForForm = useDefaultValues(team, defaultValues);
 
     // This is to change the default value for the workflow
     React.useEffect(() => {

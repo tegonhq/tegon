@@ -32,7 +32,7 @@ export const TeamSettingsList = observer(() => {
 
   const { query } = useRouter();
   const { workspaceSlug, settingsSection, teamIdentifier } = query;
-  const teamAccessList = workspaceStore.getUserData(currentUser.id).teamIds;
+  const teamAccessList = workspaceStore.getUserData(currentUser.id)?.teamIds;
   const teams = teamsStore.teams.filter((team: TeamType) =>
     teamAccessList.includes(team.id),
   );
@@ -49,7 +49,7 @@ export const TeamSettingsList = observer(() => {
           <Accordion
             type="single"
             collapsible
-            defaultValue={teams[0].identifier}
+            defaultValue={teams[0]?.identifier}
             className="w-full flex flex-col gap-3"
           >
             {teams.map((team: TeamType) => (
