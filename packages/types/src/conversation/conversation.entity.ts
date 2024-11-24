@@ -11,6 +11,8 @@ export class Conversation {
   user?: User | null;
   userId: string;
 
+  title: string;
+
   workspace?: Workspace | null;
   workspaceId: string;
 

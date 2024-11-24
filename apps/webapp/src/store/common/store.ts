@@ -9,6 +9,7 @@ export const defaultCommonStoreValue: {
 export const CommonStore: IAnyStateTreeNode = types
   .model({
     chatOpen: types.boolean,
+    currentConversationId: types.union(types.undefined, types.string),
   })
   .actions((self) => ({
     update(data: Partial<typeof self>) {

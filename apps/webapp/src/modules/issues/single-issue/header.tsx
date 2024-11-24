@@ -12,7 +12,6 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import { HeaderLayout } from 'common/header-layout';
-import { SidebarExpand } from 'common/sidebar-expand';
 
 import { useScope } from 'hooks';
 import { useCurrentTeam } from 'hooks/teams';
@@ -88,7 +87,6 @@ export const Header = observer(({ isTriageView = false }: HeaderProps) => {
 
   return (
     <HeaderLayout actions={actions}>
-      <SidebarExpand />
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink

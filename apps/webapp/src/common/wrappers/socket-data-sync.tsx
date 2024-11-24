@@ -42,6 +42,8 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
       projectsStore,
       projectMilestonesStore,
       cyclesStore,
+      conversationsStore,
+      conversationHistoryStore,
     } = useContextStore();
     const user = React.useContext(UserContext);
     const hashKey = `${workspace.id}__${user.id}`;
@@ -51,7 +53,7 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
     const { publicRuntimeConfig } = getConfig();
 
     React.useEffect(() => {
-      if (!socket) {
+      if (!socket && workspaceStore.workspace?.id) {
         initSocket();
       }
 
@@ -60,7 +62,7 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
       };
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [workspaceStore.workspace]);
 
     async function initSocket() {
       const socket = io(publicRuntimeConfig.NEXT_PUBLIC_BACKEND_HOST, {
@@ -92,6 +94,8 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
         [MODELS.Project]: projectsStore,
         [MODELS.ProjectMilestone]: projectMilestonesStore,
         [MODELS.Cycle]: cyclesStore,
+        [MODELS.Conversation]: conversationsStore,
+        [MODELS.ConversationHistory]: conversationHistoryStore,
       };
 
       socket.on('message', (newMessage: string) => {

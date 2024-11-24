@@ -7,8 +7,6 @@ import { groupByKeyArray } from 'common/lib/common';
 import { FilterTypeEnum, type IssueType } from 'common/types';
 import type { LabelType } from 'common/types';
 
-import { useComputedLabels } from 'hooks/labels';
-
 import { useContextStore } from 'store/global-context-provider';
 
 import { applyFilters } from './utils';
@@ -19,8 +17,13 @@ interface LabelInsightsProps {
 
 export const LabelInsights = observer(({ issues }: LabelInsightsProps) => {
   const groupedByIssues = groupByKeyArray(issues, 'labelIds');
-  const { applicationStore } = useContextStore();
-  const { labels } = useComputedLabels();
+  const { applicationStore, labelsStore } = useContextStore();
+
+  // TODO: fix this
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const labels = (groupedByIssues.keys() as any)
+    .map((key: string) => labelsStore.getLabelWithId(key) as LabelType)
+    .toArray();
 
   const labelFilter = applicationStore.filters.label
     ? applicationStore.filters.label.value

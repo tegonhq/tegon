@@ -50,7 +50,7 @@ export const AdjustableTextArea = ({
         suppressContentEditableWarning
         className={cn(
           className,
-          'w-full z-10 relative rounded-md resize-none overflow-hidden whitespace-pre-wrap break-words focus:outline-none focus:ring-2 focus:ring-blue-500',
+          'w-full z-10 relative resize-none overflow-hidden whitespace-pre-wrap break-words focus:outline-none focus:ring-2 focus:ring-blue-500',
         )}
         onInput={handleInput}
       />

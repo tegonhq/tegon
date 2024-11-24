@@ -30,8 +30,12 @@ export interface IssueType {
   projectMilestoneId?: string;
 
   // for frontend usage
-  children?: IssueType[];
-  parent?: IssueType;
+  // TODO: fix this circular dependency
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children?: any;
+  // TODO: fix this circular dependency
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  parent?: any;
 }
 
 export interface IssueHistoryType {

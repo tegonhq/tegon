@@ -60,7 +60,7 @@ export function ProjectMilestoneDropdown({
             )}
           >
             {value ? (
-              <>{getProjectMilestone(value).name}</>
+              <>{getProjectMilestone(value)?.name}</>
             ) : (
               <div className="flex items-center justify-center">
                 <LabelLine size={20} className="mr-1 text-muted-foreground" />
@@ -84,7 +84,7 @@ export function ProjectMilestoneDropdown({
           {value ? (
             <>
               <LabelLine className="h-5 w-5 text-[9px] mr-2" />
-              {getProjectMilestone(value).name}
+              {getProjectMilestone(value)?.name}
             </>
           ) : (
             <div className="text-muted-foreground flex">
@@ -109,7 +109,7 @@ export function ProjectMilestoneDropdown({
           <>
             <LabelLine className="w-5 h-5 text-[9px]" />
 
-            {getProjectMilestone(value).name}
+            {getProjectMilestone(value)?.name}
           </>
         ) : (
           <>

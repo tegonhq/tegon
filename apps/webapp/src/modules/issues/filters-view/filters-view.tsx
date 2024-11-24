@@ -45,7 +45,6 @@ export const FiltersView = observer(({ Actions }: FilterViewProps) => {
       setFiltersShow(true);
     },
     {
-      enableOnFormTags: true,
       scopes: [SCOPES.AllIssues],
       preventDefault: !filtersShow,
     },

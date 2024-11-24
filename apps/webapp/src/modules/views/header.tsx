@@ -11,7 +11,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { HeaderLayout } from 'common/header-layout';
-import { SidebarExpand } from 'common/sidebar-expand';
 
 import { useCurrentTeam } from 'hooks/teams';
 
@@ -41,8 +40,6 @@ export const Header = observer(({ title }: HeaderProps) => {
 
   return (
     <HeaderLayout actions={actions}>
-      <SidebarExpand />
-
       <Breadcrumb>
         {team && (
           <BreadcrumbItem>

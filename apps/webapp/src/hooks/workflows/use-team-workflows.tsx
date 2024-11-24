@@ -42,15 +42,6 @@ export function useTeamWorkflows(
   const team = useTeam(teamIdentifier);
   const { workflowsStore } = useContextStore();
 
-  function getWorkflowCategories() {
-    return Object.values(WorkflowCategoryEnum);
-  }
-
-  const workflowCategories = React.useMemo(
-    () => getWorkflowCategories(),
-    [workflowsStore],
-  );
-
   const getWorkflows = () => {
     if (!team) {
       return [];
@@ -58,10 +49,7 @@ export function useTeamWorkflows(
 
     const workflows = workflowsStore.workflows
       .filter((workflow: WorkflowType) => {
-        return (
-          workflow.teamId === team.id &&
-          workflowCategories.includes(workflow.category as WorkflowCategoryEnum)
-        );
+        return workflow.teamId === team.id;
       })
       .sort(workflowSort);
 
@@ -70,7 +58,7 @@ export function useTeamWorkflows(
 
   const workflows = React.useMemo(
     () => computed(() => getWorkflows()),
-    [team, workflowsStore, teamIdentifier],
+    [team, workflowsStore.workflows.length, teamIdentifier],
   ).get();
 
   return workflows;
@@ -78,16 +66,9 @@ export function useTeamWorkflows(
 
 export function useAllWorkflows(): WorkflowType[] | undefined {
   const { workflowsStore } = useContextStore();
-  const workflowCategories = Object.values(WorkflowCategoryEnum);
 
   const getWorkflows = () => {
-    const workflows = workflowsStore.workflows
-      .filter((workflow: WorkflowType) => {
-        return workflowCategories.includes(
-          workflow.category as WorkflowCategoryEnum,
-        );
-      })
-      .sort(workflowSort);
+    const workflows = workflowsStore.workflows.sort(workflowSort);
 
     return workflows;
   };

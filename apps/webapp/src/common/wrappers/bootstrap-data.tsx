@@ -10,6 +10,7 @@ import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { useBootstrapRecords, useDeltaRecords } from 'services/sync';
 
+import { tegonDatabase } from 'store/database';
 import { useContextStore } from 'store/global-context-provider';
 import { MODELS } from 'store/models';
 import { UserContext } from 'store/user-context';
@@ -46,6 +47,8 @@ export function BootstrapWrapper({ children }: Props) {
     projectsStore,
     projectMilestonesStore,
     cyclesStore,
+    conversationsStore,
+    conversationHistoryStore,
   } = useContextStore();
 
   const MODEL_STORE_MAP = {
@@ -67,6 +70,8 @@ export function BootstrapWrapper({ children }: Props) {
     [MODELS.Project]: projectsStore,
     [MODELS.ProjectMilestone]: projectMilestonesStore,
     [MODELS.Cycle]: cyclesStore,
+    [MODELS.Conversation]: conversationsStore,
+    [MODELS.ConversationHistory]: conversationHistoryStore,
   };
 
   React.useEffect(() => {
@@ -77,7 +82,7 @@ export function BootstrapWrapper({ children }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { refetch: bootstrapIssuesRecords } = useBootstrapRecords({
+  const { refetch: bootstrapRecords } = useBootstrapRecords({
     modelNames: Object.values(MODELS),
     workspaceId: workspace?.id,
     userId: user.id,
@@ -90,7 +95,7 @@ export function BootstrapWrapper({ children }: Props) {
     },
   });
 
-  const { refetch: syncIssuesRecords } = useDeltaRecords({
+  const { refetch: syncRecords } = useDeltaRecords({
     modelNames: Object.values(MODELS),
     workspaceId: workspace?.id,
     lastSequenceId,
@@ -105,11 +110,15 @@ export function BootstrapWrapper({ children }: Props) {
   });
 
   const initStore = async () => {
-    if (lastSequenceId) {
+    const storeWorkspace = await tegonDatabase.workspaces.get({
+      id: workspace.id,
+    });
+
+    if (storeWorkspace?.id && lastSequenceId) {
       setLoading(false);
-      await syncIssuesRecords();
+      await syncRecords();
     } else {
-      await bootstrapIssuesRecords();
+      await bootstrapRecords();
       setLoading(false);
     }
   };

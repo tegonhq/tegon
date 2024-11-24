@@ -5,11 +5,12 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@tegonhq/ui/components/collapsible';
-import { ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
+import { AddLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
+import { useNewIssue } from 'modules/issues/new-issue';
 
 import type { LabelType } from 'common/types';
 import type { IssueType } from 'common/types';
@@ -32,6 +33,7 @@ export const LabelViewList = observer(({ label }: LabelViewListProps) => {
   const [isOpen, setIsOpen] = React.useState(true);
   const project = useProject();
   const { workflows } = useComputedWorkflows();
+  const { openNewIssue } = useNewIssue();
 
   const issues = issuesStore.getIssuesForLabel(label.ids, {
     teamId: team?.id,
@@ -80,6 +82,13 @@ export const LabelViewList = observer(({ label }: LabelViewListProps) => {
         <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
           {computedIssues.length}
         </div>
+
+        <Button
+          variant="ghost"
+          onClick={() => openNewIssue({ labelIds: [label.id] })}
+        >
+          <AddLine size={14} />
+        </Button>
       </div>
 
       <CollapsibleContent>

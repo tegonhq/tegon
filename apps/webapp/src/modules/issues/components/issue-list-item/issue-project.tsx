@@ -22,6 +22,10 @@ export const IssueProject = observer(
         const milestone =
           projectMilestonesStore.getMilestoneWithId(projectMilestoneId);
 
+        if (!milestone) {
+          return null;
+        }
+
         return (
           <div className="inline-flex items-center gap-1 border-l border-border pl-1 min-w-[0px]">
             <LabelLine size={14} />
@@ -34,6 +38,10 @@ export const IssueProject = observer(
     }
 
     const project = projectsStore.getProjectWithId(projectId);
+
+    if (!project) {
+      return null;
+    }
 
     return (
       <div className="inline-flex items-center gap-1 flex-wrap">

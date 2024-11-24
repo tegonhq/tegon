@@ -14,12 +14,13 @@ import {
 } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
+import { UserId, Workspace } from 'modules/auth/session.decorator';
 
 import { ConversationService } from './conversation.service';
 
 @Controller({
   version: '1',
-  path: 'conversation',
+  path: 'conversations',
 })
 export class ConversationController {
   constructor(private conversationService: ConversationService) {}
@@ -27,9 +28,15 @@ export class ConversationController {
   @Post()
   @UseGuards(AuthGuard)
   async createConversation(
-    @Body() conversationData: CreateConversationDto,
+    @Workspace() workspaceId: string,
+    @UserId() userId: string,
+    @Body() createConversationDto: CreateConversationDto,
   ): Promise<Conversation> {
-    return await this.conversationService.createConversation(conversationData);
+    return await this.conversationService.createConversation(
+      workspaceId,
+      userId,
+      createConversationDto,
+    );
   }
 
   @Get(':conversationId')

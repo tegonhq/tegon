@@ -9,17 +9,15 @@ export const SidebarExpand = observer(() => {
 
   return (
     <>
-      {applicationStore.sidebarCollapsed && (
-        <Button
-          variant="link"
-          size="sm"
-          onClick={() => {
-            applicationStore.updateSideBar(false);
-          }}
-        >
-          <SidebarLine size={20} />
-        </Button>
-      )}
+      <Button
+        variant="link"
+        size="sm"
+        onClick={() => {
+          applicationStore.updateSideBar(!applicationStore.sidebarCollapsed);
+        }}
+      >
+        <SidebarLine size={20} />
+      </Button>
     </>
   );
 });

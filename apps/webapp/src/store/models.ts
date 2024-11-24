@@ -20,4 +20,6 @@ export enum MODELS {
   Project = 'Project',
   ProjectMilestone = 'ProjectMilestone',
   Cycle = 'Cycle',
+  Conversation = 'Conversation',
+  ConversationHistory = 'ConversationHistory',
 }

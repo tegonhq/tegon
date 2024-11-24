@@ -6,13 +6,10 @@ import {
 import { Inbox } from '@tegonhq/ui/icons';
 
 import { HeaderLayout } from 'common/header-layout';
-import { SidebarExpand } from 'common/sidebar-expand';
 
 export function Header() {
   return (
     <HeaderLayout>
-      <SidebarExpand />
-
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink className="flex items-center gap-2">

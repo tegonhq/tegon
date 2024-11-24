@@ -14,3 +14,4 @@ export * from './ai-request';
 export * from './integration-account';
 export * from './projects';
 export * from './workspace';
+export * from './conversation';

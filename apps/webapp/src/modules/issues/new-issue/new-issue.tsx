@@ -31,13 +31,8 @@ import { IssueCollapseView } from './issue-collapse-view';
 import { NewIssueForm } from './new-issue-form';
 import { NewIssueSchema } from './new-issues-type';
 
-export interface IssueDefaultValues {
-  parentId?: string;
-  description?: string;
-}
-
 interface NewIssueProps {
-  defaultValues?: IssueDefaultValues;
+  defaultValues?: Partial<IssueType>;
   open: boolean;
   setOpen: (value: boolean) => void;
 }
@@ -46,13 +41,12 @@ export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
   useScope(SCOPES.NewIssue);
 
   const { toast } = useToast();
-  const { parentId, description } = defaultValues;
 
   // The form has a array of issues where first issue is the parent and the later sub issues
   const form = useForm<z.infer<typeof NewIssueSchema>>({
     resolver: zodResolver(NewIssueSchema),
     defaultValues: {
-      issues: [{ parentId, description }],
+      issues: [{ ...defaultValues }],
     },
   });
 
@@ -99,7 +93,7 @@ export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
     createIssue({
       ...parentIssue,
       description: JSON.stringify(parentDescription),
-      parentId,
+      parentId: defaultValues.parentId,
       subIssues: issues.map((issue) => {
         const { json: description } = getTiptapJSON(issue.description);
 
@@ -117,12 +111,6 @@ export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
     },
     [SCOPES.NewIssue],
   );
-
-  // To prevent f for filters
-  useHotkeys(['f', Key.Escape], () => {}, {
-    enableOnFormTags: true,
-    scopes: [SCOPES.NewIssue],
-  });
 
   React.useEffect(() => {
     const exists = fields.find((field) => field.id === collapseId);
@@ -188,9 +176,9 @@ export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
                         <NewIssueForm
                           key={field.id}
                           isSubIssue={index > 0}
-                          parentId={index === 0 && parentId}
                           form={form}
                           index={index}
+                          defaultValues={defaultValues}
                           isLoading={isLoading}
                           onClose={onClose}
                           // Sub issue controllers

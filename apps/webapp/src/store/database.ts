@@ -4,6 +4,8 @@ import Dexie from 'dexie';
 
 import type {
   ActionType,
+  ConversationHistoryType,
+  ConversationType,
   CycleType,
   IntegrationAccountType,
   ProjectMilestoneType,
@@ -44,11 +46,13 @@ export class TegonDatabase extends Dexie {
   projects: Dexie.Table<ProjectType, string>;
   projectMilestones: Dexie.Table<ProjectMilestoneType, string>;
   cycles: Dexie.Table<CycleType, string>;
+  conversations: Dexie.Table<ConversationType, string>;
+  conversationHistory: Dexie.Table<ConversationHistoryType, string>;
 
   constructor(databaseName: string) {
     super(databaseName);
 
-    this.version(13).stores({
+    this.version(14).stores({
       [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug,preferences',
       [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',
@@ -84,6 +88,9 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,projectId,name,description,endDate',
       [MODELS.Cycle]:
         'id,createdAt,updatedAt,teamId,name,description,endDate,startDate,preferences,number',
+      [MODELS.Conversation]: 'id,createdAt,updatedAt,title,userId,workspaceId',
+      [MODELS.ConversationHistory]:
+        'id,createdAt,updatedAt,message,userType,context,thoughts,userId,conversationId',
     });
 
     this.workspaces = this.table(MODELS.Workspace);
@@ -104,6 +111,8 @@ export class TegonDatabase extends Dexie {
     this.projects = this.table(MODELS.Project);
     this.projectMilestones = this.table(MODELS.ProjectMilestone);
     this.cycles = this.table(MODELS.Cycle);
+    this.conversations = this.table(MODELS.Conversation);
+    this.conversationHistory = this.table(MODELS.ConversationHistory);
   }
 }
 
