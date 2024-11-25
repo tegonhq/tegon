@@ -52,9 +52,7 @@ export const ConversationItem = observer(
 
     const thoughts = JSON.parse(conversationHistory.thoughts);
 
-    const { task, pendingTasks } = React.useMemo(() => {
-      return getTasks(thoughts);
-    }, [thoughts]);
+    const { task, pendingTasks } = getTasks(thoughts);
 
     const getIcon = () => {
       if (conversationHistory.userType === UserTypeEnum.User) {
@@ -85,7 +83,6 @@ export const ConversationItem = observer(
                   });
                 }}
               >
-                {' '}
                 Execute all
               </Button>
             </div>
