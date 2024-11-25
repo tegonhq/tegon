@@ -191,6 +191,8 @@ model Cycle {
 
   startDate DateTime
   endDate   DateTime
+  closedAt  DateTime?
+  status    String
 
   history   CycleHistory[]
 

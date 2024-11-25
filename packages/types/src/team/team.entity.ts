@@ -13,6 +13,7 @@ export class Team {
   name: string;
   identifier: string;
   icon: string | null;
+  currentCycle?: number | null;
   workspace?: Workspace;
   workspaceId: string;
   issue?: Issue[];
