@@ -57,7 +57,7 @@ export const AllIssues = withApplicationStore(() => {
             collapsible={false}
             order={1}
             id="issues"
-            className="w-full"
+            className="w-full flex flex-col"
           >
             <FiltersView Actions={<IssuesViewOptions />} />
             <ListView />

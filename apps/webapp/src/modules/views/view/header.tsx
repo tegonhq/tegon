@@ -30,9 +30,10 @@ import { EditViewDialog } from './edit-view-dialog';
 interface HeaderProps {
   title: string;
   view: ViewType;
+  actions?: React.ReactElement;
 }
 
-export const Header = observer(({ title, view }: HeaderProps) => {
+export const Header = observer(({ title, view, actions }: HeaderProps) => {
   const team = useCurrentTeam();
 
   const {
@@ -43,7 +44,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
   const { mutate: updateView } = useUpdateViewMutation({});
 
   return (
-    <HeaderLayout>
+    <HeaderLayout actions={actions}>
       <Breadcrumb>
         {team && (
           <BreadcrumbItem>

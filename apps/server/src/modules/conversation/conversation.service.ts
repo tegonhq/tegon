@@ -15,12 +15,16 @@ export class ConversationService {
       data: {
         workspaceId,
         userId,
+        title: conversationData.message.substring(0, 100),
         ConversationHistory: {
           create: {
             userId,
             ...conversationData,
           },
         },
+      },
+      include: {
+        ConversationHistory: true,
       },
     });
   }

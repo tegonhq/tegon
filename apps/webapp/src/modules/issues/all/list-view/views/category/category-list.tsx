@@ -11,7 +11,7 @@ interface CategoryListProps {
 export function CategoryList({ workflows }: CategoryListProps) {
   return (
     <ScrollArea className="w-full h-full" id="category-list">
-      <div className="flex flex-col gap-4 h-full pb-[100px]">
+      <div className="flex flex-col gap-4 pb-[100px]">
         {workflows.map((workflow: WorkflowType) => (
           <CategoryViewList
             key={workflow.name}

@@ -20,7 +20,7 @@ export const AppliedFiltersView = observer(() => {
   return (
     <>
       {!isEmpty(filters) && (
-        <>
+        <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
           <FilterItemView
             name="Status"
             filterKey="status"
@@ -84,7 +84,7 @@ export const AppliedFiltersView = observer(() => {
             filter={filters.isBlocking}
             Component={() => <>blocking</>}
           />
-        </>
+        </div>
       )}
     </>
   );

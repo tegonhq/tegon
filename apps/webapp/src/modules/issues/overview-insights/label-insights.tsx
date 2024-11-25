@@ -25,8 +25,8 @@ export const LabelInsights = observer(({ issues }: LabelInsightsProps) => {
     .map((key: string) => labelsStore.getLabelWithId(key) as LabelType)
     .toArray();
 
-  const labelFilter = applicationStore.filters.label
-    ? applicationStore.filters.label.value
+  const labelFilter = applicationStore.silentFilters.label
+    ? applicationStore.silentFilters.label.value
     : [];
 
   const sortedLabels = sort(labels).desc(

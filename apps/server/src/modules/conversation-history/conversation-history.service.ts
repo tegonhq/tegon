@@ -96,7 +96,7 @@ export class ConversationHistoryService {
     const projects: Project[] = [];
 
     // Get previous conversation history message and response
-    let previousHistory = null;
+    let previousHistory: ConversationHistory[] = null;
     if (conversationHistory.conversationId) {
       const previousMessages = await this.prisma.conversationHistory.findMany({
         where: {
@@ -109,14 +109,9 @@ export class ConversationHistoryService {
         orderBy: {
           createdAt: 'desc',
         },
-        take: 1,
+        take: 2,
       });
-
-      if (previousMessages.length > 0) {
-        previousHistory = {
-          conversation: previousMessages[0],
-        };
-      }
+      previousHistory = previousMessages;
     }
 
     return {

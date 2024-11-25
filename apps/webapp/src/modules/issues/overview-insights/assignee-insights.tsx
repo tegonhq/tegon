@@ -29,8 +29,8 @@ export const AssigneeInsights = observer(
       return <Loader />;
     }
 
-    const assigneeFilter = applicationStore.filters.assignee
-      ? applicationStore.filters.assignee.value
+    const assigneeFilter = applicationStore.silentFilters.assignee
+      ? applicationStore.silentFilters.assignee.value
       : [];
 
     const sortedAssignees = sort(users).desc(

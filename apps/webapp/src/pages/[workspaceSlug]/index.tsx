@@ -16,17 +16,18 @@ export default function WorkspaceHome() {
     push,
     query: { workspaceSlug },
   } = useRouter();
+  const teamAccessList = workspaceStore.getUserData(user.id)?.teamIds;
 
   React.useEffect(() => {
-    const teamAccessList = workspaceStore.getUserData(user.id).teamIds;
+    if (teamAccessList) {
+      const team = teamsStore.teams.filter((team: TeamType) =>
+        teamAccessList.includes(team.id),
+      )[0];
 
-    const team = teamsStore.teams.filter((team: TeamType) =>
-      teamAccessList.includes(team.id),
-    )[0];
-
-    push(`/${workspaceSlug}/team/${team.identifier}/all`);
+      push(`/${workspaceSlug}/team/${team.identifier}/all`);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [teamAccessList]);
 
   return (
     <div className="w-full h-full flex items-center">

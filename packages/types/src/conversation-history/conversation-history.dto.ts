@@ -18,12 +18,8 @@ export class ConversationContextIds {
   activityIds?: string[];
 }
 
-export class PreviousHistory {
-  conversation: ConversationHistory;
-}
-
 export class ConversationContext {
   issues: Issue[];
   projects: Project[];
-  previousHistory: PreviousHistory;
+  previousHistory: ConversationHistory[];
 }

@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import { useMutation } from 'react-query';
 
+import { useContextStore } from 'store/global-context-provider';
+
 export function useStreamConversationMutation() {
-  const [responses, setResponses] = useState('');
+  const [responses, setResponses] = useState([]);
+  const [thoughts, setThoughts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { commonStore } = useContextStore();
+
   const { mutate, isLoading: apiloading } = useMutation({
     mutationFn: async ({
       conversationId,
@@ -14,7 +19,7 @@ export function useStreamConversationMutation() {
       conversationHistoryId: string;
       workspaceId: string;
     }) => {
-      setResponses('');
+      setResponses([]);
 
       const response = await fetch(`http://localhost:2000/chat`, {
         method: 'POST',
@@ -40,6 +45,7 @@ export function useStreamConversationMutation() {
     },
     onSuccess: (reader) => {
       setIsLoading(true);
+      commonStore.update({ conversationStreaming: true });
       readStream(reader);
     },
   });
@@ -51,16 +57,33 @@ export function useStreamConversationMutation() {
         const { done, value } = await reader.read();
         if (done) {
           setIsLoading(false);
+          commonStore.update({ conversationStreaming: false });
+
           return;
         }
 
         const chunk = new TextDecoder('utf-8').decode(value, { stream: true });
+        const thoughts: Array<{ type: string }> = [];
+        const responses: Array<{ type: string }> = [];
+        chunk.split('\n\n').forEach((ch) => {
+          if (ch) {
+            const message = JSON.parse(ch.replace('data: ', ''));
+            if (message.status === 'summary') {
+              responses.push(message);
+            }
 
-        setResponses((prevDescription) => prevDescription + chunk);
+            thoughts.push(message);
+          }
+
+          return undefined;
+        });
+
+        setResponses((prevChunk) => [...prevChunk, ...responses]);
+        setThoughts((prevChunk) => [...prevChunk, ...thoughts]);
       }
     }
     read();
   }
 
-  return { responses, mutate, isLoading: isLoading || apiloading };
+  return { responses, thoughts, mutate, isLoading: isLoading || apiloading };
 }

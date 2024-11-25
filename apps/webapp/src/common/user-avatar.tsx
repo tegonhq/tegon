@@ -19,6 +19,10 @@ export function UserAvatar({
   showFull = false,
   className,
 }: UserAvatarProps) {
+  if (!user) {
+    return null;
+  }
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>

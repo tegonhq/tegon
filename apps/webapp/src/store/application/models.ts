@@ -25,6 +25,8 @@ export const FiltersModel = types.model({
   isBlocking: types.union(types.undefined, FilterBooleanModel),
 });
 
+export const SilentFiltersModel = types.union(types.undefined, FiltersModel);
+
 export const DisplaySettingsModel = types.model({
   view: types.enumeration(['list', 'board', 'sheet']),
   grouping: types.enumeration([

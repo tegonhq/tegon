@@ -156,6 +156,7 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
         className="flex gap-2 flex-wrap items-center h-full grow"
         onClick={() => {
           setShowOptions(true);
+          inputRef.current.focus();
         }}
       >
         <AppliedFiltersView />
