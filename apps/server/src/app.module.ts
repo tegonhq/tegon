@@ -44,6 +44,7 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CyclesModule } from 'modules/cycles/cycles.module';
 
 @Module({
   imports: [
@@ -108,6 +109,7 @@ import { AppService } from './app.service';
     ActionModule,
     AIRequestsModule,
     ProjectsModule,
+    CyclesModule,
 
     WebhookModule,
 
