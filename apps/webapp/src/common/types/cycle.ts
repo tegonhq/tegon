@@ -7,6 +7,8 @@ export interface CycleType {
   description: string;
   teamId: string;
 
+  number: number;
+
   startDate: string;
   endDate: string;
 

@@ -21,6 +21,7 @@ import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 
+import { IssueCycle } from './issue-cycle';
 import { IssueDueDate } from './issue-duedate';
 import { IssueLabels } from './issue-labels';
 import { IssueProject } from './issue-project';
@@ -172,6 +173,7 @@ export const IssueListItem = observer(
                       projectId={issue.projectId}
                       projectMilestoneId={issue.projectMilestoneId}
                     />
+                    <IssueCycle cycleId={issue.cycleId} />
                     <IssueLabels labelIds={issue.labelIds} />
                     <div className="w-[80px] mr-8">
                       <IssuePriorityDropdown

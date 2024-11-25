@@ -172,7 +172,7 @@ export function getFilters(
   labels: LabelType[],
   userId?: string,
 ) {
-  const { status, assignee, label, priority, project } = filters;
+  const { status, assignee, label, priority, project, cycle } = filters;
   const { showSubIssues, completedFilter, showTriageIssues } = displaySettings;
 
   const finalFilters: FilterType[] = [];
@@ -245,6 +245,14 @@ export function getFilters(
       key: 'projectId',
       filterType: project.filterType,
       value: project.value,
+    });
+  }
+
+  if (cycle) {
+    finalFilters.push({
+      key: 'cycleId',
+      filterType: cycle.filterType,
+      value: cycle.value,
     });
   }
 

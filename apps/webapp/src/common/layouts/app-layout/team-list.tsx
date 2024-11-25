@@ -29,7 +29,7 @@ import { useCurrentWorkspace } from 'hooks/workspace';
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
 
-import { Nav } from './nav';
+import { Nav, type Link } from './nav';
 
 export const TeamList = observer(() => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
@@ -62,7 +62,7 @@ export const TeamList = observer(() => {
         }}
       >
         {teams.map((team: TeamType) => {
-          let links = [
+          let links: Link[] = [
             {
               title: 'Issues',
               icon: IssuesLine,
@@ -77,11 +77,22 @@ export const TeamList = observer(() => {
           ];
 
           if (team.preferences.cyclesEnabled) {
-            links.push({
-              title: 'Cycles',
-              icon: Cycle,
-              href: `/${workspace.slug}/team/${team.identifier}/cycles`,
-            });
+            links = [
+              ...links,
+              ...[
+                {
+                  title: 'Cycles',
+                  icon: Cycle,
+                  strict: true,
+                  href: `/${workspace.slug}/team/${team.identifier}/cycles`,
+                },
+                {
+                  title: 'Current cycle',
+                  icon: Cycle,
+                  href: `/${workspace.slug}/team/${team.identifier}/cycles/current`,
+                },
+              ],
+            ];
           }
 
           if (team.preferences.triage) {

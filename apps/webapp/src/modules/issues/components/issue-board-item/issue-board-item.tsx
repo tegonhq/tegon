@@ -20,6 +20,7 @@ import { useUpdateIssueMutation } from 'services/issues';
 import { useContextStore } from 'store/global-context-provider';
 
 import { IssueRelations } from './issue-relations';
+import { IssueCycle } from '../issue-list-item/issue-cycle';
 import { IssueDueDate } from '../issue-list-item/issue-duedate';
 import { IssueLabels } from '../issue-list-item/issue-labels';
 import { IssueProject } from '../issue-list-item/issue-project';
@@ -97,6 +98,7 @@ export const BoardIssueItem = observer(
           projectId={issue.projectId}
           projectMilestoneId={issue.projectMilestoneId}
         />
+        <IssueCycle cycleId={issue.cycleId} />
 
         <IssueRelations issue={issue} />
 

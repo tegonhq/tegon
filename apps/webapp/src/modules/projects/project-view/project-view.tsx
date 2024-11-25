@@ -3,6 +3,7 @@ import React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
 import { ContentBox } from 'common/layouts/content-box';
+import { MainLayout } from 'common/layouts/main-layout';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
 import { useProject } from 'hooks/projects';
@@ -42,12 +43,15 @@ export const ProjectView = withApplicationStore(() => {
   );
 
   return (
-    <main className="flex flex-col h-[100vh]">
-      <Header title="Projects" isProjectView view={view} setView={setView} />
+    <MainLayout
+      header={
+        <Header title="Projects" isProjectView view={view} setView={setView} />
+      }
+    >
       <ContentBox>
         <Project view={view} />
       </ContentBox>
-    </main>
+    </MainLayout>
   );
 });
 

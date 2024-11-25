@@ -3,6 +3,8 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import {
+  CycleDropdown,
+  CycleDropdownVariant,
   DueDate,
   IssueAssigneeDropdown,
   IssueAssigneeDropdownVariant,
@@ -32,9 +34,10 @@ import { IssueRelatedProperties } from './issue-related-properties';
 export const RightSide = observer(() => {
   const issue = useIssueData();
   const { mutate: updateIssue } = useUpdateIssueMutation({});
-  const { projectsStore } = useContextStore();
+  const { projectsStore, teamsStore } = useContextStore();
   const team = useCurrentTeam();
   const hasProjectsForTeam = projectsStore.hasProjects(team.id);
+  const cyclesEnabledForTeam = teamsStore.cyclesEnabledForTeam(team.id);
   const statusChange = (stateId: string) => {
     updateIssue({ id: issue.id, stateId, teamId: issue.teamId });
   };
@@ -56,7 +59,15 @@ export const RightSide = observer(() => {
     });
   };
 
-  const projectMielstoneChange = (projectMilestoneId: string) => {
+  const cycleChange = (cycleId: string) => {
+    updateIssue({
+      id: issue.id,
+      cycleId,
+      teamId: issue.teamId,
+    });
+  };
+
+  const projectMilestoneChange = (projectMilestoneId: string) => {
     updateIssue({ id: issue.id, projectMilestoneId, teamId: issue.teamId });
   };
 
@@ -126,6 +137,19 @@ export const RightSide = observer(() => {
         <DueDate dueDate={issue.dueDate} dueDateChange={dueDateChange} />
       </div>
 
+      {cyclesEnabledForTeam && (
+        <div className={cn('flex flex-col justify-start items-start gap-1')}>
+          <div className="text-xs text-left">Cycle</div>
+
+          <CycleDropdown
+            value={issue.cycleId}
+            onChange={cycleChange}
+            variant={CycleDropdownVariant.LINK}
+            teamIdentifier={team.identifier}
+          />
+        </div>
+      )}
+
       {hasProjectsForTeam && (
         <div className={cn('flex flex-col justify-start items-start gap-1')}>
           <div className="text-xs text-left">Project</div>
@@ -138,13 +162,14 @@ export const RightSide = observer(() => {
           />
         </div>
       )}
+
       {issue.projectId && (
         <div className={cn('flex flex-col justify-start items-start gap-1')}>
           <div className="text-xs text-left">Project Milestone</div>
 
           <ProjectMilestoneDropdown
             value={issue.projectMilestoneId}
-            onChange={projectMielstoneChange}
+            onChange={projectMilestoneChange}
             variant={ProjectMilestoneDropdownVariant.LINK}
             teamIdentifier={team.identifier}
             projectId={issue.projectId}

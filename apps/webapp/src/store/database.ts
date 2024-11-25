@@ -52,7 +52,7 @@ export class TegonDatabase extends Dexie {
   constructor(databaseName: string) {
     super(databaseName);
 
-    this.version(14).stores({
+    this.version(15).stores({
       [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug,preferences',
       [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',
@@ -61,7 +61,7 @@ export class TegonDatabase extends Dexie {
       [MODELS.Workflow]:
         'id,createdAt,updatedAt,name,position,color,category,teamId,description',
       [MODELS.Issue]:
-        'id,createdAt,updatedAt,title,number,description,priority,dueDate,sortOrder,estimate,teamId,createdById,assigneeId,labelIds,parentId,stateId,sourceMetadata.projectId,projectMilestoneId',
+        'id,createdAt,updatedAt,title,number,description,priority,dueDate,sortOrder,estimate,teamId,createdById,assigneeId,labelIds,parentId,stateId,sourceMetadata.projectId,projectMilestoneId,cycleId',
       [MODELS.UsersOnWorkspaces]:
         'id,createdAt,updatedAt,userId,workspaceId,teamIds,settings',
       [MODELS.IssueHistory]:

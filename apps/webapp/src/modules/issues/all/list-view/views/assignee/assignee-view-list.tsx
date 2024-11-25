@@ -20,6 +20,7 @@ import { useNewIssue } from 'modules/issues/new-issue';
 import type { User } from 'common/types';
 import type { IssueType } from 'common/types';
 
+import { useCycle } from 'hooks/cycles';
 import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
 import { useComputedWorkflows } from 'hooks/workflows';
@@ -38,12 +39,14 @@ export const AssigneeViewList = observer(({ user }: AssigneeListItemProps) => {
   const team = useCurrentTeam();
   const { workflows } = useComputedWorkflows();
   const project = useProject();
+  const cycle = useCycle();
   const { openNewIssue } = useNewIssue();
 
   const issues = issuesStore.getIssuesForUser({
     userId: user.id,
     teamId: team?.id,
     projectId: project?.id,
+    cycleId: cycle?.id,
   });
 
   const computedIssues = useFilterIssues(issues, workflows);

@@ -5,6 +5,7 @@ export interface TeamType {
   name: string;
   identifier: string;
   workspaceId: string;
+  currentCycle?: number;
   preferences: {
     cyclesEnabled?: boolean;
     triage?: boolean;

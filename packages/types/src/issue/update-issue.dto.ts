@@ -93,5 +93,9 @@ export class UpdateIssueDto {
 
   @IsOptional()
   @IsString()
+  cycleId?: string;
+
+  @IsOptional()
+  @IsString()
   projectMilestoneId?: string;
 }

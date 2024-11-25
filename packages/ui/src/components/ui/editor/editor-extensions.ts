@@ -48,7 +48,7 @@ const heading = Heading.extend({
     const level: 1 | 2 | 3 = hasLevel
       ? node.attrs.level
       : this.options.levels[0];
-    const levelMap = { 1: 'text-2xl', 2: 'text-xl', 3: 'text-lg' };
+    const levelMap = { 1: 'text-xl', 2: 'text-lg', 3: 'text-md' };
 
     return [
       `h${level}`,

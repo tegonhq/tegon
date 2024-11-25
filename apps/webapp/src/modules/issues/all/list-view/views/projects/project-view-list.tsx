@@ -13,6 +13,7 @@ import { IssueListItem } from 'modules/issues/components';
 import type { ProjectType } from 'common/types';
 import type { IssueType } from 'common/types';
 
+import { useCycle } from 'hooks/cycles';
 import { useCurrentTeam } from 'hooks/teams';
 import { useComputedWorkflows } from 'hooks/workflows';
 
@@ -29,10 +30,12 @@ export const ProjectViewList = observer(({ project }: ProjectListItemProps) => {
   const [isOpen, setIsOpen] = React.useState(true);
   const team = useCurrentTeam();
   const { workflows } = useComputedWorkflows();
+  const cycle = useCycle();
 
   const issues = issuesStore.getIssuesForProject({
     teamId: team?.id,
     projectId: project?.id,
+    cycleId: cycle?.id,
   });
 
   const computedIssues = useFilterIssues(issues, workflows);
@@ -84,9 +87,11 @@ export const NoProjectView = observer(() => {
   const [isOpen, setIsOpen] = React.useState(true);
   const team = useCurrentTeam();
   const { workflows } = useComputedWorkflows();
+  const cycle = useCycle();
 
   const issues = issuesStore.getIssuesForNoProject({
     teamId: team?.id,
+    cycleId: cycle?.id,
   });
 
   const computedIssues = useFilterIssues(issues, workflows);

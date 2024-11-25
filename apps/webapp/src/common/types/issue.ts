@@ -27,6 +27,7 @@ export interface IssueType {
   sourceMetadata?: string;
 
   projectId?: string;
+  cycleId?: string;
   projectMilestoneId?: string;
 
   // for frontend usage
