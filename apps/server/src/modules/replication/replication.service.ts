@@ -250,7 +250,12 @@ export default class ReplicationService {
               );
 
             const recipientId =
-              modelName === ModelNameEnum.Notification
+              modelName in
+              [
+                ModelNameEnum.Notification,
+                ModelNameEnum.Conversation,
+                ModelNameEnum.ConversationHistory,
+              ]
                 ? syncActionData.data.userId
                 : syncActionData.workspaceId;
 
