@@ -11,11 +11,11 @@ export const applyFilters = (
     const newValue = currentFilters.filter((id: string) => id !== value);
 
     if (newValue.length === 0) {
-      return applicationStore.deleteFilter(field);
+      return applicationStore.deleteSilentFilter(field);
     }
 
     // Remove the value from the filter if it already exists
-    applicationStore.updateFilters({
+    applicationStore.updateSilentFilters({
       [field]: {
         filterType,
         value: currentFilters.filter((id: string) => id !== value), // Remove the value
@@ -23,7 +23,7 @@ export const applyFilters = (
     });
   } else {
     // Add the value to the filter if it doesn't exist
-    applicationStore.updateFilters({
+    applicationStore.updateSilentFilters({
       [field]: {
         filterType,
         value: [...currentFilters, value], // Add the value

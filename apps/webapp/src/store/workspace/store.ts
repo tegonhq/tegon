@@ -63,9 +63,13 @@ export const WorkspaceStore: IAnyStateTreeNode = types
   })
   .views((self) => ({
     getUserData(userId: string) {
-      return self.usersOnWorkspaces.find(
-        (uOW: UsersOnWorkspaceType) => uOW.userId === userId,
+      const userWorkspace = self.usersOnWorkspaces.find(
+        (uOW: UsersOnWorkspaceType) => {
+          return uOW.userId === userId;
+        },
       );
+
+      return userWorkspace;
     },
   }));
 

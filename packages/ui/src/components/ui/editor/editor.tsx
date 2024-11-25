@@ -90,6 +90,7 @@ interface EditorProps {
   value?: string;
   onChange?: (value: string, valueString?: string) => void;
   autoFocus?: boolean;
+
   className?: string;
   editorClassName?: string;
   placeholder?: string | Extension;
@@ -116,6 +117,7 @@ export const Editor = ({
   onCreate,
   onSubmit,
   children,
+
   extensions = [],
   editable = true,
   handlePaste,

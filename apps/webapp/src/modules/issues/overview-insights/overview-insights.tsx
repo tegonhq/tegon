@@ -21,7 +21,7 @@ export const OverviewInsights = observer(() => {
   const { issuesStore, applicationStore } = useContextStore();
   const team = useCurrentTeam();
   const project = useProject();
-  const [tab, setTab] = useLocalState('insights-tabs', 'status');
+  const [tab, setTab] = useLocalState('insights-tabs', 'assignee');
 
   const issues = issuesStore.getIssues({
     projectId: project?.id,
@@ -30,12 +30,12 @@ export const OverviewInsights = observer(() => {
   });
   const { workflows } = useComputedWorkflows();
 
-  const computedIssues = useFilterIssues(issues, workflows);
+  const computedIssues = useFilterIssues(issues, workflows, false);
 
   return (
     <div className="flex flex-col overflow-hidden h-full">
       <Tabs
-        className="overflow-hidden"
+        className="overflow-hidden flex flex-col"
         value={tab}
         onValueChange={(newValue: string) => setTab(newValue)}
       >

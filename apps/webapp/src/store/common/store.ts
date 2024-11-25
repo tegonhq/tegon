@@ -10,6 +10,7 @@ export const CommonStore: IAnyStateTreeNode = types
   .model({
     chatOpen: types.boolean,
     currentConversationId: types.union(types.undefined, types.string),
+    conversationStreaming: types.union(types.undefined, types.boolean),
   })
   .actions((self) => ({
     update(data: Partial<typeof self>) {

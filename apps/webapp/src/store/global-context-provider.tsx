@@ -74,6 +74,7 @@ export const storeContextStore = StoreContextModel.create({
   },
   applicationStore: {
     filters: {},
+    silentFilters: {},
     identifier: '',
     displaySettings: defaultApplicationStoreValue.displaySettings,
     sidebarCollapsed: false,

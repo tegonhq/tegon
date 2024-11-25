@@ -5,7 +5,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@tegonhq/ui/components/tabs';
-import { AI } from '@tegonhq/ui/icons';
+import { ActivityLine, AI, SendLine } from '@tegonhq/ui/icons';
 import React from 'react';
 
 import { CommentsActivity } from './comments-activity';
@@ -23,10 +23,18 @@ export function Activity() {
           <div className="flex flex-col gap-1">
             <h2 className="text-md">Activity</h2>
             <TabsList className="grid w-full grid-cols-2 bg-transparent gap-2 p-0">
-              <TabsTrigger value="comments" className="bg-grayAlpha-100 px-2">
+              <TabsTrigger
+                value="comments"
+                className="bg-grayAlpha-100 px-2 flex gap-1"
+              >
+                <SendLine size={16} />
                 Comments
               </TabsTrigger>
-              <TabsTrigger value="activity" className="bg-grayAlpha-100">
+              <TabsTrigger
+                value="activity"
+                className="bg-grayAlpha-100 flex gap-1"
+              >
+                <ActivityLine size={16} />
                 Activity
               </TabsTrigger>
             </TabsList>
