@@ -17,6 +17,7 @@ import { AuthModule } from 'modules/auth/auth.module';
 import { BullConfigModule } from 'modules/bull/bull.module';
 import { ConversationModule } from 'modules/conversation/conversation.module';
 import { ConversationHistoryModule } from 'modules/conversation-history/conversation-history.module';
+import { CyclesModule } from 'modules/cycles/cycles.module';
 import { IntegrationAccountModule } from 'modules/integration-account/integration-account.module';
 import { IntegrationDefinitionModule } from 'modules/integration-definition/integration-definition.module';
 import { IntegrationsModule } from 'modules/integrations/integrations.module';
@@ -44,7 +45,6 @@ import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CyclesModule } from 'modules/cycles/cycles.module';
 
 @Module({
   imports: [

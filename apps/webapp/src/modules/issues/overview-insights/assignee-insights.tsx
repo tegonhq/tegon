@@ -2,7 +2,6 @@ import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { AssigneeLine } from '@tegonhq/ui/icons';
-import { sort } from 'fast-sort';
 import { observer } from 'mobx-react-lite';
 
 import { groupBy } from 'common/lib/common';
@@ -25,6 +24,12 @@ export const AssigneeInsights = observer(
     const { applicationStore } = useContextStore();
     const groupedByIssues = groupBy(issues, 'assigneeId');
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sortedUsers = (groupedByIssues.keys() as any)
+      .map((key: string) => users.find((user) => user.id === key))
+      .toArray()
+      .filter(Boolean);
+
     if (isLoading) {
       return <Loader />;
     }
@@ -33,14 +38,10 @@ export const AssigneeInsights = observer(
       ? applicationStore.silentFilters.assignee.value
       : [];
 
-    const sortedAssignees = sort(users).desc(
-      (user: User) => groupedByIssues.get(user.id)?.length ?? 0,
-    );
-
     return (
       <div className="flex flex-col px-4 gap-1 mt-2">
-        {sortedAssignees.map((user: User) => {
-          const isActive = assigneeFilter.includes(user.id);
+        {sortedUsers.map((user: User) => {
+          const isActive = assigneeFilter.includes(user?.id);
 
           return (
             <Button
