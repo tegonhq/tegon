@@ -61,7 +61,7 @@ export const IssueHistoryStore: IAnyStateTreeNode = types
     return { update, deleteById, load };
   })
   .views((self) => ({
-    getIssueHistories(issueId: string) {
+    getIssueHistories(issueId: string): IssueHistoryType[] {
       return issueId === self.issueId ? self.issueHistories : [];
     },
   }));
