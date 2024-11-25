@@ -1,4 +1,4 @@
-import type { IssueRelationEnum } from './issue-relation';
+import { IssueRelationEnumType } from './issue-relation';
 
 export interface IssueSourceMetadataType {
   type: string;
@@ -43,7 +43,7 @@ export interface IssueHistoryType {
   createdAt: string;
   updatedAt: string;
   userId?: string;
-  issueId: string;
+  issueId?: string;
   addedLabelIds: string[];
   removedLabelIds: string[];
   fromPriority?: number;
@@ -58,9 +58,9 @@ export interface IssueHistoryType {
   toParentId?: string;
   relationChanges?: {
     isDeleted?: boolean;
-    issueId: string;
-    relatedIssueId: string;
-    type: IssueRelationEnum;
+    issueId?: string;
+    relatedIssueId?: string;
+    type?: IssueRelationEnumType;
   };
 }
 
