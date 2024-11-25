@@ -22,6 +22,7 @@
     "@tiptap/react": "^2.5.4",
     "@typeform/embed-react": "^3.17.0",
     "ai": "^3.2.37",
+    "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "copy-to-clipboard": "^3.3.3",

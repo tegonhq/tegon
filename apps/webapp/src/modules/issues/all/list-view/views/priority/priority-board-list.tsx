@@ -13,6 +13,7 @@ import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
 import { type IssueType } from 'common/types';
 
+import { useCycle } from 'hooks/cycles';
 import { usePriorities } from 'hooks/priorities';
 import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
@@ -33,10 +34,12 @@ export const PriorityBoardList = observer(
     const { workflows } = useComputedWorkflows();
     const project = useProject();
     const Priorities = usePriorities();
+    const cycle = useCycle();
 
     const issues = issuesStore.getIssuesForPriority(priority, {
       teamId: team?.id,
       projectId: project?.id,
+      cycleId: cycle?.id,
     });
     const computedIssues = useFilterIssues(issues, workflows);
 

@@ -14,6 +14,7 @@ import { useNewIssue } from 'modules/issues/new-issue';
 
 import { type IssueType } from 'common/types';
 
+import { useCycle } from 'hooks/cycles';
 import { usePriorities } from 'hooks/priorities';
 import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
@@ -34,11 +35,13 @@ export const PriorityViewList = observer(
     const { workflows } = useComputedWorkflows();
     const project = useProject();
     const { openNewIssue } = useNewIssue();
-
+    const cycle = useCycle();
     const team = useCurrentTeam();
+
     const issues = issuesStore.getIssuesForPriority(priority, {
       teamId: team?.id,
       projectId: project?.id,
+      cycleId: cycle?.id,
     });
     const computedIssues = useFilterIssues(issues, workflows);
     const Priorities = usePriorities();

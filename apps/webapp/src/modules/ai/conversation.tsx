@@ -16,6 +16,7 @@ import {
 } from 'services/conversations';
 
 import { useContextStore } from 'store/global-context-provider';
+import { UserContext } from 'store/user-context';
 
 import { ConversationItem } from './conversation-item';
 import { ConversationTextarea } from './conversation-textarea';
@@ -27,6 +28,7 @@ export const Conversation = observer(() => {
     commonStore.currentConversationId,
   );
   const workspace = useCurrentWorkspace();
+  const user = React.useContext(UserContext);
   const {
     mutate: streamConversation,
     isLoading,
@@ -36,6 +38,13 @@ export const Conversation = observer(() => {
   const { mutate: createConversationHistory } =
     useCreateConversationHistoryMutation({});
   const { mutate: createConversation } = useCreateConversationMutation({});
+  const scrollRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [conversationHistory.length]);
 
   const onSend = (text: string) => {
     if (commonStore.currentConversationId) {
@@ -43,6 +52,7 @@ export const Conversation = observer(() => {
         {
           message: text,
           userType: UserTypeEnum.User,
+          userId: user.id,
           conversationId: commonStore.currentConversationId,
         },
         {
@@ -79,7 +89,7 @@ export const Conversation = observer(() => {
 
   return (
     <div className="flex flex-col h-full justify-end overflow-hidden">
-      <ScrollArea>
+      <ScrollArea ref={scrollRef}>
         {conversationHistory.map(
           (conversationHistory: ConversationHistoryType, index: number) => (
             <ConversationItem

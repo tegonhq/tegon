@@ -4,6 +4,7 @@ import {
   AssigneeLine,
   BlockedFill,
   BlocksFill,
+  Cycle,
   LabelLine,
   ParentIssueLine,
   PriorityHigh,
@@ -57,6 +58,15 @@ export const DefaultFilterDropdown = observer(
         >
           <PriorityHigh size={16} className="mr-2" />
           Priority
+        </CommandItem>
+        <CommandItem
+          key="Cycle"
+          value="Cycle"
+          className="flex items-center"
+          onSelect={onSelect}
+        >
+          <Cycle size={16} className="mr-2" />
+          Cycle
         </CommandItem>
         {!project && (
           <CommandItem

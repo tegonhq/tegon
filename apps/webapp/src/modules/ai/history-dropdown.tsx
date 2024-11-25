@@ -44,11 +44,12 @@ export const AIHistoryDropdown = observer(() => {
                   <CommandItem
                     key={conversation.id}
                     value={conversation.id}
-                    onSelect={() =>
+                    onSelect={() => {
                       commonStore.update({
                         currentConversationId: conversation.id,
-                      })
-                    }
+                      });
+                      setOpen(false);
+                    }}
                   >
                     <div className="flex shrink min-w-[0px] w-full gap-1 items-center">
                       <MessageSquare size={16} className="shrink-0" />

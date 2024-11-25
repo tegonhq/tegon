@@ -1,3 +1,3 @@
-import { CycleView } from 'modules/cycles/cycle-view';
+import { CycleViewWrapper } from 'modules/cycles/cycle-view';
 
-export default CycleView;
+export default CycleViewWrapper;

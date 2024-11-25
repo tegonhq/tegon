@@ -35,7 +35,7 @@ const Loader = React.forwardRef<HTMLButtonElement, LoaderProps>(
         className={cn(
           loaderVariants({ size }),
           `h-[${height}px]`,
-          'w-full flex',
+          'w-full flex flex-wrap',
           variant === 'horizontal' ? 'items-center gap-1' : 'flex-col gap-2',
         )}
       >

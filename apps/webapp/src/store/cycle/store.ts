@@ -57,6 +57,11 @@ export const CyclesStore: IAnyStateTreeNode = types
         return cycle.teamId === teamId;
       });
     },
+    getCycleForId(id: string) {
+      return self.cycles.find((cycle) => {
+        return cycle.id === id;
+      });
+    },
   }));
 
 export type CyclesStoreType = Instance<typeof CyclesStore>;

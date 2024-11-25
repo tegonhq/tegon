@@ -1,10 +1,14 @@
 import { FormField, FormItem, FormControl } from '@tegonhq/ui/components/form';
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useWatch, type UseFormReturn } from 'react-hook-form';
 
 import type { TeamType } from 'common/types';
 
+import { useContextStore } from 'store/global-context-provider';
+
 import {
+  CycleDropdown,
   IssueAssigneeDropdown,
   IssueLabelDropdown,
   IssuePriorityDropdown,
@@ -21,115 +25,141 @@ interface NewIssueMetadataProps {
   index: number;
 }
 
-export function NewIssueMetadata({ form, team, index }: NewIssueMetadataProps) {
-  const values = useWatch({
-    control: form.control,
-    name: `issues.${index}`,
-  });
+export const NewIssueMetadata = observer(
+  ({ form, team, index }: NewIssueMetadataProps) => {
+    const { projectsStore } = useContextStore();
 
-  function inputName(name: string) {
-    return `issues.${index}.${name}`;
-  }
+    const hasProjectsForTeam = projectsStore.hasProjects(team.id);
 
-  return (
-    <>
-      <FormField
-        control={form.control}
-        name={inputName('stateId')}
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <IssueStatusDropdown
-                onChange={field.onChange}
-                value={field.value}
-                teamIdentifier={team.identifier}
-              />
-            </FormControl>
-          </FormItem>
-        )}
-      />
+    const values = useWatch({
+      control: form.control,
+      name: `issues.${index}`,
+    });
 
-      <FormField
-        control={form.control}
-        name={inputName('labelIds')}
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <IssueLabelDropdown
-                value={field.value}
-                onChange={field.onChange}
-                teamIdentifier={team.identifier}
-              />
-            </FormControl>
-          </FormItem>
-        )}
-      />
+    function inputName(name: string) {
+      return `issues.${index}.${name}`;
+    }
 
-      <FormField
-        control={form.control}
-        name={inputName('assigneeId')}
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <IssueAssigneeDropdown
-                value={field.value}
-                teamId={team.id}
-                onChange={field.onChange}
-              />
-            </FormControl>
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name={inputName('priority')}
-        render={({ field }) => (
-          <FormItem>
-            <FormControl className="max-w-[200px]">
-              <IssuePriorityDropdown
-                value={field.value}
-                onChange={field.onChange}
-              />
-            </FormControl>
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name={inputName('projectId')}
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <ProjectDropdown
-                value={field.value}
-                onChange={field.onChange}
-                teamIdentifier={team.identifier}
-              />
-            </FormControl>
-          </FormItem>
-        )}
-      />
-
-      {values.projectId && (
+    return (
+      <>
         <FormField
           control={form.control}
-          name={inputName('projectMilestoneId')}
+          name={inputName('stateId')}
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <ProjectMilestoneDropdown
-                  value={field.value}
+                <IssueStatusDropdown
                   onChange={field.onChange}
+                  value={field.value}
                   teamIdentifier={team.identifier}
-                  projectId={values.projectId}
                 />
               </FormControl>
             </FormItem>
           )}
         />
-      )}
-    </>
-  );
-}
+
+        <FormField
+          control={form.control}
+          name={inputName('labelIds')}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <IssueLabelDropdown
+                  value={field.value}
+                  onChange={field.onChange}
+                  teamIdentifier={team.identifier}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name={inputName('assigneeId')}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <IssueAssigneeDropdown
+                  value={field.value}
+                  teamId={team.id}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name={inputName('priority')}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl className="max-w-[200px]">
+                <IssuePriorityDropdown
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        {team.preferences?.cyclesEnabled && (
+          <FormField
+            control={form.control}
+            name={inputName('cycleId')}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <CycleDropdown
+                    value={field.value}
+                    onChange={field.onChange}
+                    teamIdentifier={team.identifier}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        )}
+
+        {hasProjectsForTeam && (
+          <FormField
+            control={form.control}
+            name={inputName('projectId')}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <ProjectDropdown
+                    value={field.value}
+                    onChange={field.onChange}
+                    teamIdentifier={team.identifier}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        )}
+
+        {hasProjectsForTeam && values.projectId && (
+          <FormField
+            control={form.control}
+            name={inputName('projectMilestoneId')}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <ProjectMilestoneDropdown
+                    value={field.value}
+                    onChange={field.onChange}
+                    teamIdentifier={team.identifier}
+                    projectId={values.projectId}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        )}
+      </>
+    );
+  },
+);
