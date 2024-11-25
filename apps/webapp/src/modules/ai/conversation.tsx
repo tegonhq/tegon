@@ -2,6 +2,7 @@ import { UserTypeEnum } from '@tegonhq/types';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { ScrollArea } from '@tegonhq/ui/components/ui/scroll-area';
 import { observer } from 'mobx-react-lite';
+import getConfig from 'next/config';
 import React from 'react';
 
 import type { ConversationHistoryType } from 'common/types';
@@ -21,6 +22,8 @@ import { UserContext } from 'store/user-context';
 import { ConversationItem } from './conversation-item';
 import { ConversationTextarea } from './conversation-textarea';
 
+const { publicRuntimeConfig } = getConfig();
+
 export const Conversation = observer(() => {
   const { commonStore } = useContextStore();
 
@@ -34,7 +37,9 @@ export const Conversation = observer(() => {
     isLoading,
 
     thoughts,
-  } = useStreamConversationMutation();
+  } = useStreamConversationMutation({
+    baseHost: publicRuntimeConfig.NEXT_PUBLIC_AI_HOST,
+  });
   const { mutate: createConversationHistory } =
     useCreateConversationHistoryMutation({});
   const { mutate: createConversation } = useCreateConversationMutation({});
@@ -84,6 +89,8 @@ export const Conversation = observer(() => {
       );
     }
   };
+
+  console.log(commonStore.currentConversationId);
 
   const lastThought = thoughts[thoughts.length - 1];
 

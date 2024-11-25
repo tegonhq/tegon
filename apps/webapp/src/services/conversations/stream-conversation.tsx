@@ -3,7 +3,11 @@ import { useMutation } from 'react-query';
 
 import { useContextStore } from 'store/global-context-provider';
 
-export function useStreamConversationMutation() {
+export function useStreamConversationMutation({
+  baseHost,
+}: {
+  baseHost: string;
+}) {
   const [responses, setResponses] = useState([]);
   const [thoughts, setThoughts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +25,7 @@ export function useStreamConversationMutation() {
     }) => {
       setResponses([]);
 
-      const response = await fetch(`http://localhost:2000/chat`, {
+      const response = await fetch(`${baseHost}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
