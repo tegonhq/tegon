@@ -8,6 +8,7 @@ interface MutationParams {
   onError?: (error: any) => void;
 }
 interface RunTasksProps {
+  basePath: string;
   conversationId: string;
   conversationHistoryId: string;
   taskIds: string[];
@@ -15,13 +16,14 @@ interface RunTasksProps {
 }
 
 const runTasks = async ({
+  basePath,
   conversationId,
   conversationHistoryId,
   taskIds,
   workspaceId,
 }: RunTasksProps) => {
   return axios({
-    url: `http://localhost:2000/chat`,
+    url: `${basePath}/chat`,
     withCredentials: true,
     method: 'Post',
     data: {

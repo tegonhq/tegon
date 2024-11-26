@@ -4,6 +4,7 @@ import { defaultExtensions } from '@tegonhq/ui/components/ui/editor/editor-exten
 import { AI } from '@tegonhq/ui/icons';
 import { Editor } from '@tiptap/core';
 import { observer } from 'mobx-react-lite';
+import getConfig from 'next/config';
 import React, { useEffect, useRef } from 'react';
 
 import type { ConversationHistoryType } from 'common/types';
@@ -19,6 +20,8 @@ import { getTasks, type TaskType } from './conversation-utils';
 interface AIConversationItemProps {
   conversationHistory: ConversationHistoryType;
 }
+
+const { publicRuntimeConfig } = getConfig();
 
 export const ConversationItem = observer(
   ({ conversationHistory }: AIConversationItemProps) => {
@@ -74,6 +77,7 @@ export const ConversationItem = observer(
                 variant="secondary"
                 onClick={() => {
                   runTasks({
+                    basePath: publicRuntimeConfig.NEXT_PUBLIC_AI_HOST,
                     conversationId: conversationHistory.conversationId,
                     conversationHistoryId: conversationHistory.id,
                     workspaceId: workspace.id,
