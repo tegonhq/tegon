@@ -13,18 +13,23 @@ import { useTeamWorkflows } from './workflows';
 export function useTriageGroups() {
   const currentTeam = useCurrentTeam();
   const { issuesStore, issueSuggestionsStore } = useContextStore();
-  const workflows = useTeamWorkflows(currentTeam.identifier);
+  const workflows = useTeamWorkflows(currentTeam?.identifier);
+
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,
   );
 
-  const issues = sort(issuesStore.getIssuesForState([triageWorkflow.id])).desc(
-    (issue: IssueType) => new Date(issue.updatedAt),
-  ) as IssueType[];
-
   return React.useMemo(() => {
     const allIssueSuggestions: IssueSuggestionType[] = [];
+
+    if (!triageWorkflow) {
+      return {};
+    }
+
+    const issues = sort(
+      issuesStore.getIssuesForState([triageWorkflow.id], {}),
+    ).desc((issue: IssueType) => new Date(issue.updatedAt)) as IssueType[];
 
     // Fetch issue suggestions for each issue ID
     for (const issue of issues) {
@@ -89,5 +94,5 @@ export function useTriageGroups() {
 
     return issueCategories;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [issues]);
+  }, [triageWorkflow, issuesStore.getIssues({}).length]);
 }

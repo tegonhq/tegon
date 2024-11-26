@@ -1,4 +1,5 @@
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
+import { observer } from 'mobx-react-lite';
 
 import { useTriageGroups } from 'hooks';
 import { useUsersData } from 'hooks/users';
@@ -6,7 +7,7 @@ import { useUsersData } from 'hooks/users';
 import { TriageCategory } from './triage-category';
 import { TriageOtherCategory } from './triage-other-category';
 
-export const TriageIssues = () => {
+export const TriageIssues = observer(() => {
   const { users, isLoading } = useUsersData();
 
   const issueCategories = useTriageGroups();
@@ -42,4 +43,4 @@ export const TriageIssues = () => {
       </div>
     </ScrollArea>
   );
-};
+});

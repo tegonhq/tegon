@@ -58,7 +58,7 @@ export function useTeamWorkflows(
 
   const workflows = React.useMemo(
     () => computed(() => getWorkflows()),
-    [team, workflowsStore.workflows.length, teamIdentifier],
+    [teamIdentifier, team, workflowsStore.workflows.length],
   ).get();
 
   return workflows;
@@ -68,7 +68,7 @@ export function useAllWorkflows(): WorkflowType[] | undefined {
   const { workflowsStore } = useContextStore();
 
   const getWorkflows = () => {
-    const workflows = workflowsStore.workflows.sort(workflowSort);
+    const workflows = [...workflowsStore.workflows].sort(workflowSort);
 
     return workflows;
   };
