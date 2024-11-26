@@ -90,8 +90,6 @@ export const Conversation = observer(() => {
     }
   };
 
-  console.log(commonStore.currentConversationId);
-
   const lastThought = thoughts[thoughts.length - 1];
 
   return (

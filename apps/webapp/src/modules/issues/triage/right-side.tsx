@@ -13,12 +13,17 @@ import { useContextStore } from 'store/global-context-provider';
 export const RightSide = observer(() => {
   const currentTeam = useCurrentTeam();
   const { issuesStore } = useContextStore();
-  const workflows = useTeamWorkflows(currentTeam.identifier);
+  const workflows = useTeamWorkflows(currentTeam?.identifier);
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,
   );
-  const issues = issuesStore.getIssuesForState([triageWorkflow.id], false);
+
+  if (!triageWorkflow) {
+    return null;
+  }
+
+  const issues = issuesStore.getIssuesForState([triageWorkflow.id], {});
 
   return (
     <div className="p-6 flex flex-col items-center justify-center gap-2">

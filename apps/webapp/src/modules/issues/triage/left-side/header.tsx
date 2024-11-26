@@ -21,7 +21,7 @@ export function Header({ title }: HeaderProps) {
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink className="flex items-center gap-2">
-            <TeamIcon name={team.name} />
+            <TeamIcon name={team?.name} />
 
             <span className="inline-block"> {title}</span>
           </BreadcrumbLink>
