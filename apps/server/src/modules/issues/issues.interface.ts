@@ -72,6 +72,7 @@ export const filterKeyReplacers: Record<FilterKey, string> = {
   [FilterKeyEnum.dueDate]: 'dueDate',
   [FilterKeyEnum.createdAt]: 'createdAt',
   [FilterKeyEnum.updatedAt]: 'updatedAt',
+  [FilterKeyEnum.project]: 'projectId',
   [BooleanFilterKeyEnum.isParent]: 'parent',
   [BooleanFilterKeyEnum.isSubIssue]: 'subIssue',
   [BooleanFilterKeyEnum.isBlocked]: IssueRelationType.BLOCKED,
