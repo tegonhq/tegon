@@ -1,4 +1,5 @@
 import { Loader } from '@tegonhq/ui/components/loader';
+import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -9,7 +10,7 @@ import { useContextStore } from 'store/global-context-provider';
 
 import { UserContext } from '../../store/user-context';
 
-export default function WorkspaceHome() {
+export const WorkspaceRedirect = observer(() => {
   const user = React.useContext(UserContext);
   const { teamsStore, workspaceStore } = useContextStore();
   const {
@@ -24,16 +25,22 @@ export default function WorkspaceHome() {
         teamAccessList.includes(team.id),
       )[0];
 
-      push(`/${workspaceSlug}/team/${team.identifier}/all`);
+      if (team) {
+        push(`/${workspaceSlug}/team/${team.identifier}/all`);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teamAccessList]);
+  }, [teamAccessList, teamsStore.teams.length]);
 
   return (
     <div className="w-full h-full flex items-center">
       <Loader />
     </div>
   );
+});
+
+export default function WorkspaceHome() {
+  return <WorkspaceRedirect />;
 }
 
 WorkspaceHome.getLayout = function getLayout(page: React.ReactElement) {

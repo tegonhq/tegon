@@ -254,7 +254,7 @@ export default class ReplicationService {
               ModelNameEnum.Conversation,
               ModelNameEnum.ConversationHistory,
             ].includes(modelName)
-              ? syncActionData.data.userId
+              ? (syncActionData.data.userId ?? syncActionData.data.receiptId)
               : syncActionData.workspaceId;
 
             this.syncGateway.wss

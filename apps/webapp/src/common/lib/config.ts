@@ -20,7 +20,9 @@ export const frontendConfig = () => {
       Passwordless.init({
         contactMethod: 'EMAIL',
       }),
-      SessionReact.init(),
+      SessionReact.init({
+        sessionTokenBackendDomain: '.tegon.ai',
+      }),
     ],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     windowHandler: (oI: any) => {

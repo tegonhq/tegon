@@ -197,16 +197,25 @@ export async function getModelData(
       },
     },
     ConversationHistory: {
-      findUnique: () => {
+      findUnique: async () => {
         if (userId) {
-          return prisma.conversationHistory.findFirst({
-            where: {
-              id: modelId,
-              conversation: {
-                userId,
+          const conversationHistory =
+            await prisma.conversationHistory.findFirst({
+              where: {
+                id: modelId,
+                conversation: {
+                  userId,
+                },
               },
-            },
-          });
+              include: {
+                conversation: true,
+              },
+            });
+
+          return {
+            ...conversationHistory,
+            receiptId: conversationHistory.conversation.userId,
+          };
         }
         return prisma.conversationHistory.findUnique({
           where: { id: modelId },

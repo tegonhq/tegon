@@ -37,7 +37,7 @@ export class SyncGateway implements OnGatewayInit, OnGatewayConnection {
     });
 
     const { query, headers } = client.handshake;
-    const isValid = isValidAuthentication(headers);
+    const isValid = await isValidAuthentication(headers);
 
     if (!isValid) {
       this.logger.info({

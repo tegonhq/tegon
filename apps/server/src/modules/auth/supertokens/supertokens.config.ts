@@ -31,6 +31,7 @@ export const recipeList = (
     jwt.init(),
     UserRoles.init(),
     Session.init({
+      cookieDomain: '.tegon.ai',
       cookieSecure: true,
       override: {
         functions(originalImplementation) {

@@ -18,7 +18,6 @@ import {
   TriageLine,
 } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
-import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import type { TeamType } from 'common/types';
@@ -43,7 +42,6 @@ export const TeamList = observer(() => {
     teamAccessList.includes(team.id),
   );
   const workspace = useCurrentWorkspace();
-  const router = useRouter();
 
   return (
     <div ref={containerRef} className="mt-4">
@@ -54,12 +52,6 @@ export const TeamList = observer(() => {
         collapsible
         defaultValue={team?.id}
         className="w-full flex flex-col gap-2"
-        onValueChange={(value: string) => {
-          if (value && value !== team?.id) {
-            const newTeam = teams.find((team: TeamType) => team.id === value);
-            router.push(`/${workspace.slug}/team/${newTeam.identifier}/all`);
-          }
-        }}
       >
         {teams.map((team: TeamType) => {
           let links: Link[] = [
