@@ -18,6 +18,7 @@ export enum FilterKeyEnum {
   dueDate = 'dueDate',
   updatedAt = 'updatedAt',
   createdAt = 'createdAt',
+  project = 'project',
 }
 
 export enum BooleanFilterKeyEnum {
