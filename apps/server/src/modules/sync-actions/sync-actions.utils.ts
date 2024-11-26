@@ -15,9 +15,16 @@ export function convertToActionType(action: string): SyncActionTypeEnum {
 }
 
 export function convertLsnToInt(lsn: string) {
+  // Convert timestamp to milliseconds since epoch
+  const timestampMs = new Date().getTime();
+
+  // Use LSN as a secondary sort key for events in the same millisecond
   const [logFileNumber, byteOffset] = lsn.split('/');
-  const hexString = logFileNumber + byteOffset;
-  return parseInt(hexString, 16);
+  const lsnValue = parseInt(logFileNumber + byteOffset, 16);
+
+  // Combine timestamp and LSN
+  // Multiply timestamp by 1000 to leave room for LSN as sub-millisecond ordering
+  return BigInt(timestampMs) * 1000n + BigInt(lsnValue % 1000);
 }
 
 export async function getWorkspaceId(
@@ -197,25 +204,16 @@ export async function getModelData(
       },
     },
     ConversationHistory: {
-      findUnique: async () => {
+      findUnique: () => {
         if (userId) {
-          const conversationHistory =
-            await prisma.conversationHistory.findFirst({
-              where: {
-                id: modelId,
-                conversation: {
-                  userId,
-                },
+          return prisma.conversationHistory.findFirst({
+            where: {
+              id: modelId,
+              conversation: {
+                userId,
               },
-              include: {
-                conversation: true,
-              },
-            });
-
-          return {
-            ...conversationHistory,
-            receiptId: conversationHistory.conversation.userId,
-          };
+            },
+          });
         }
         return prisma.conversationHistory.findUnique({
           where: { id: modelId },
