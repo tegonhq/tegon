@@ -42,7 +42,7 @@ export function ProjectDatePicker({
         <Button
           variant="link"
           role="combobox"
-          className="flex items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary w-full justify-start"
+          className="flex items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary justify-start"
         >
           <CalendarLine className="mr-1" />
           {value ? format(value, 'PP') : text}
@@ -51,7 +51,7 @@ export function ProjectDatePicker({
     }
 
     return (
-      <Button variant="link" className="gap-2 py-2 w-full justify-start">
+      <Button variant="link" className="gap-2 py-2 justify-start">
         <CalendarLine />
         {value ? format(value, 'PP') : text}
       </Button>

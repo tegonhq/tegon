@@ -1,3 +1,3 @@
-import { TeamSettings } from 'modules/settings/team-settings';
+import { TeamSettingsWrapper } from 'modules/settings/team-settings';
 
-export default TeamSettings;
+export default TeamSettingsWrapper;

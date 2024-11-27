@@ -46,7 +46,8 @@ export function useUsersData(bot = true, teamId?: string) {
     }
 
     return [];
-  }, [bot, usersData, usersOnWorkspace, team, project]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bot, usersData, usersOnWorkspace.length, team, project]);
 
   return {
     isLoading,

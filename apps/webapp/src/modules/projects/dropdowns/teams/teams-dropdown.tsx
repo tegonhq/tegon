@@ -10,6 +10,8 @@ import {
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
+import { useToast } from '@tegonhq/ui/components/use-toast';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import type { TeamType } from 'common/types';
@@ -25,24 +27,54 @@ interface TeamsProps {
   variant?: ProjectDropdownVariant;
 }
 
-export function TeamsDropdown({ value, onChange, variant }: TeamsProps) {
-  const [open, setOpen] = React.useState(false);
-  const { teamsStore } = useContextStore();
+export const TeamsDropdown = observer(
+  ({ value, onChange, variant }: TeamsProps) => {
+    const [open, setOpen] = React.useState(false);
+    const { teamsStore } = useContextStore();
+    const { toast } = useToast();
 
-  function getTrigger() {
-    const teams = value.map((team: string) =>
-      teamsStore.getTeamWithId(team),
-    ) as TeamType[];
+    const change = (teams: string[]) => {
+      if (teams.length === 0) {
+        toast({
+          title: 'Error!',
+          description: 'You need atleast one team',
+        });
+        return;
+      }
 
-    if (variant === ProjectDropdownVariant.LINK) {
+      onChange && onChange(teams);
+    };
+
+    function getTrigger() {
+      const teams = value.map((team: string) =>
+        teamsStore.getTeamWithId(team),
+      ) as TeamType[];
+
+      if (variant === ProjectDropdownVariant.LINK) {
+        return (
+          <Button
+            variant="link"
+            role="combobox"
+            aria-expanded={open}
+            className="flex items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary"
+          >
+            <TeamIcon name={teams[0].name} className="mr-1" />
+            {teams.length > 1
+              ? `${teams.map((team) => team.identifier).join(', ')}`
+              : `${teams[0].name}`}
+          </Button>
+        );
+      }
+
       return (
         <Button
           variant="link"
           role="combobox"
           aria-expanded={open}
-          className="flex items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary"
+          className="flex items-center gap-1 justify-between shadow-none focus-visible:ring-1 focus-visible:border-primary "
         >
-          <TeamIcon name={teams[0].name} className="mr-1" />
+          <TeamIcon name={teams[0].name} />
+
           {teams.length > 1
             ? `${teams.map((team) => team.identifier).join(', ')}`
             : `${teams[0].name}`}
@@ -51,47 +83,32 @@ export function TeamsDropdown({ value, onChange, variant }: TeamsProps) {
     }
 
     return (
-      <Button
-        variant="link"
-        role="combobox"
-        aria-expanded={open}
-        className="flex items-center gap-1 justify-between shadow-none focus-visible:ring-1 focus-visible:border-primary "
-      >
-        <TeamIcon name={teams[0].name} />
-
-        {teams.length > 1
-          ? `${teams.map((team) => team.identifier).join(', ')}`
-          : `${teams[0].name}`}
-      </Button>
+      <div>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="link"
+              role="combobox"
+              size="sm"
+              aria-expanded={open}
+              className="flex items-center p-0 justify-between focus-visible:ring-1 focus-visible:border-primary "
+            >
+              {getTrigger()}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-72 p-0" align="start">
+            <Command shouldFilter={false}>
+              <CommandInput placeholder="Set status..." autoFocus />
+              <TeamsDropdownContent
+                onChange={change}
+                onClose={() => setOpen(false)}
+                value={value}
+                multiple
+              />
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
     );
-  }
-
-  return (
-    <div>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="link"
-            role="combobox"
-            size="sm"
-            aria-expanded={open}
-            className="flex items-center p-0 justify-between focus-visible:ring-1 focus-visible:border-primary "
-          >
-            {getTrigger()}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-72 p-0" align="start">
-          <Command shouldFilter={false}>
-            <CommandInput placeholder="Set status..." autoFocus />
-            <TeamsDropdownContent
-              onChange={onChange}
-              onClose={() => setOpen(false)}
-              value={value}
-              multiple
-            />
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-}
+  },
+);
