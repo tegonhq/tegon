@@ -11,7 +11,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@tegonhq/ui/components/tooltip';
-import { AI } from '@tegonhq/ui/icons';
+import { AI, IssuesLine } from '@tegonhq/ui/icons';
 import { ArrowDownRight } from '@tegonhq/ui/icons';
 import { useWatch, type UseFormReturn } from 'react-hook-form';
 
@@ -79,8 +79,12 @@ export function NewIssueTitle({ form, index, isSubIssue }: NewIssueTitleProps) {
         render={({ field }) => (
           <FormItem className="grow">
             <FormControl>
-              <div className="flex items-center">
-                {isSubIssue && <ArrowDownRight size={20} />}
+              <div className="flex items-center gap-1">
+                {isSubIssue ? (
+                  <ArrowDownRight size={16} />
+                ) : (
+                  <IssuesLine size={16} />
+                )}
                 <AdjustableTextArea
                   className="border-0 py-0 resize-none bg-transparent no-scrollbar overflow-hidden outline-none focus-visible:ring-0 w-full"
                   autoFocus

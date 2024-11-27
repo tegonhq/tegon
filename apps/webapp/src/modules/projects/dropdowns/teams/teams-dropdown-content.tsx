@@ -17,7 +17,6 @@ interface TeamsDropdownContentProps {
 
 export function TeamsDropdownContent({
   onChange,
-
   multiple = false,
   value,
 }: TeamsDropdownContentProps) {

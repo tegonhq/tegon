@@ -1,6 +1,6 @@
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
-import { ArrowDownRight, DeleteLine } from '@tegonhq/ui/icons';
+import { ArrowDownRight, DeleteLine, IssuesLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -70,12 +70,15 @@ export const IssueCollapseView = observer(
         <div className="flex gap-2 w-full">
           <p>
             {isSubIssue ? (
-              <div className="flex gap-2">
-                <ArrowDownRight size={20} />
+              <div className="flex gap-2 items-center">
+                <ArrowDownRight size={16} />
                 Sub-issue
               </div>
             ) : (
-              'Issue'
+              <div className="flex gap-2 items-center">
+                <IssuesLine size={16} />
+                Issue
+              </div>
             )}
           </p>
 

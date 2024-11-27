@@ -79,12 +79,26 @@ export function useTeamForNewIssue(defaultTeamId: string): {
 } {
   const { teamsStore } = useContextStore();
   const teams = teamsStore.teams;
-  let currentTeam = useCurrentTeam();
-  currentTeam = defaultTeamId
-    ? teams.find((team: TeamType) => team.id === defaultTeamId)
-    : currentTeam;
+  const currentTeam = useCurrentTeam();
+  const project = useProject();
 
-  const [team, setTeam] = React.useState(currentTeam ?? teams[0]);
+  const getDefaultTeamId = () => {
+    if (defaultTeamId) {
+      return teams.find((team: TeamType) => team.id === defaultTeamId);
+    }
+
+    if (currentTeam) {
+      return currentTeam;
+    }
+
+    if (project) {
+      return teams.find((team: TeamType) => team.id === project.teams[0]);
+    }
+
+    return teams[0];
+  };
+
+  const [team, setTeam] = React.useState(getDefaultTeamId());
 
   const setTeamWithIdentifier = (identifier: string) => {
     setTeam(teams.find((team: TeamType) => team.identifier === identifier));

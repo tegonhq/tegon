@@ -1,5 +1,6 @@
 import { Loader } from '@tegonhq/ui/components/loader';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
+import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 
 import { ContentBox } from 'common/layouts/content-box';
@@ -14,7 +15,7 @@ import {
 } from './team-constants';
 import { Header } from '../header';
 
-export function TeamSettings() {
+const TeamSettings = observer(() => {
   const router = useRouter();
   const currentTeam = useCurrentTeam();
   const settingsSection = router.query
@@ -36,8 +37,12 @@ export function TeamSettings() {
       </ContentBox>
     </div>
   );
+});
+
+export function TeamSettingsWrapper() {
+  return <TeamSettings />;
 }
 
-TeamSettings.getLayout = function getLayout(page: React.ReactElement) {
+TeamSettingsWrapper.getLayout = function getLayout(page: React.ReactElement) {
   return <SettingsLayout>{page}</SettingsLayout>;
 };

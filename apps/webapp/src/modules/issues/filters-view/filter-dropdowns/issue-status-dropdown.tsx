@@ -41,11 +41,13 @@ export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {
     onChange(names);
   };
 
-  const computedValues = value.map((val: string) => {
-    const workfow = workflows.find((workflow) => workflow.name === val);
+  const computedValues = value
+    .map((val: string) => {
+      const workfow = workflows.find((workflow) => workflow.name === val);
 
-    return workfow.id;
-  });
+      return workfow?.id;
+    })
+    .filter(Boolean);
 
   return (
     <div>
