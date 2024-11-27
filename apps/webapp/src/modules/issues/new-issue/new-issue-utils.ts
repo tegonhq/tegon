@@ -10,6 +10,7 @@ import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
+import { UserContext } from 'store/user-context';
 
 import { getBacklogWorkflow } from '../single-issue/triage-view/utils';
 
@@ -57,6 +58,7 @@ export const useDefaultValues = (
 ) => {
   const project = useProject();
   const { workflowsStore } = useContextStore();
+  const user = React.useContext(UserContext);
   const workflows = workflowsStore.getWorkflowsForTeam(team.id);
 
   return React.useMemo(() => {
@@ -67,6 +69,7 @@ export const useDefaultValues = (
       labelIds: [] as string[],
       stateId: getBacklogWorkflow(workflows).id,
       priority: 0,
+      assigneeId: user?.id,
       ...defaultValues,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
