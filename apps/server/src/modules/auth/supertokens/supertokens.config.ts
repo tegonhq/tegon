@@ -31,7 +31,7 @@ export const recipeList = (
   const cookieSettings = isProd
     ? {
         cookieDomain: '.tegon.ai',
-        olderCookieDomain: 'app.tegon.ai',
+        olderCookieDomain: '',
         cookieSecure: true,
       }
     : {};
