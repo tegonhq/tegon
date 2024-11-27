@@ -29,7 +29,11 @@ export const recipeList = (
 ) => {
   const isProd = process.env.NODE_ENV === 'production';
   const cookieSettings = isProd
-    ? { cookieDomain: '.tegon.ai', olderCookieDomain: '', cookieSecure: true }
+    ? {
+        cookieDomain: '.tegon.ai',
+        olderCookieDomain: 'app.tegon.ai',
+        cookieSecure: true,
+      }
     : {};
 
   return [
