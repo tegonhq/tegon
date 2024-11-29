@@ -86,6 +86,17 @@ export default class IssuesService {
     return { descriptionMarkdown, ...issue };
   }
 
+  async getIssues(issueIds: string[]): Promise<Issue[]> {
+    return this.prisma.issue.findMany({
+      where: {
+        id: {
+          in: issueIds,
+        },
+      },
+      include: { team: true },
+    });
+  }
+
   /**
    * Creates a new issue using the provided issue data and performs related operations.
    * @param teamRequestParams The team request parameters.

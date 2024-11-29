@@ -109,7 +109,6 @@ export class ConversationHistoryService {
         orderBy: {
           createdAt: 'desc',
         },
-        take: 2,
       });
       previousHistory = previousMessages;
     }

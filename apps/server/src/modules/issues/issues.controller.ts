@@ -53,6 +53,30 @@ export class IssuesController {
     return await this.issuesService.createIssueAPI(issueData, userId);
   }
 
+  @Post('bulk/update')
+  @UseGuards(AuthGuard)
+  async bulkUpdateIssues(
+    @SessionDecorator() session: SessionContainer,
+    @Query() teamParams: TeamRequestParamsDto,
+    @Body() issueData: { issues: UpdateIssueDto[] },
+  ): Promise<Issue[]> {
+    const userId = session.getUserId();
+    const issues = [];
+
+    for (const issue of issueData.issues) {
+      const { issueId, ...otherData } = issue;
+      const responseIssue = await this.issuesService.updateIssueApi(
+        teamParams,
+        otherData,
+        { issueId },
+        userId,
+      );
+      issues.push(responseIssue);
+    }
+
+    return issues;
+  }
+
   @Post('bulk')
   @UseGuards(AuthGuard)
   async bulkCreateIssues(
@@ -192,5 +216,11 @@ export class IssuesController {
   @UseGuards(AuthGuard)
   async getIssue(@Param() issueParams: IssueRequestParamsDto): Promise<Issue> {
     return await this.issuesService.getIssueById(issueParams);
+  }
+
+  @Get()
+  @UseGuards(AuthGuard)
+  async getIssues(@Query('issueIds') issueIds: string[]): Promise<Issue[]> {
+    return await this.issuesService.getIssues(issueIds);
   }
 }
