@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { TypePasswordlessEmailDeliveryInput } from 'supertokens-node/lib/build/recipe/passwordless/types';
 import jwt from 'supertokens-node/recipe/jwt';
@@ -18,9 +19,7 @@ Log in to Tegon.ai
 Click here to log in with this magic link:
 ${link}\n\n`;
 
-  if (process.env.NODE_ENV !== 'production') {
-    logger.info({ message });
-  }
+  logger.info({ message });
 }
 
 export const recipeList = (
@@ -80,6 +79,12 @@ export const recipeList = (
               codeLifetime,
             }: TypePasswordlessEmailDeliveryInput) {
               logEmail(email, urlWithLinkCode);
+
+              if (!urlWithLinkCode) {
+                throw new BadRequestException(
+                  'Error! Unable to generate magic link. Contact support.',
+                );
+              }
 
               try {
                 await mailerService.sendMail({
