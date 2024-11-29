@@ -23,7 +23,7 @@ export const ProjectWrapper = observer(
           e.stopPropagation();
         }}
       >
-        <Component value={project[value]} onChange={onChange} />
+        <Component value={project && project[value]} onChange={onChange} />
       </div>
     );
   },

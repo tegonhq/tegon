@@ -15,8 +15,6 @@ import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { useRunTasksMutation } from 'services/conversations';
 
-import { getTasks, type TaskType } from './conversation-utils';
-
 interface AIConversationItemProps {
   conversationHistory: ConversationHistoryType;
 }
@@ -55,7 +53,7 @@ export const ConversationItem = observer(
 
     const thoughts = JSON.parse(conversationHistory.thoughts);
 
-    const { task, pendingTasks } = getTasks(thoughts);
+    const pendingTasks = thoughts ?? thoughts?.pendingTasks ?? [];
 
     const getIcon = () => {
       if (conversationHistory.userType === UserTypeEnum.User) {
@@ -66,7 +64,7 @@ export const ConversationItem = observer(
     };
 
     return (
-      <div className="flex px-3 gap-2 border-b border-border py-4 px-5">
+      <div className="flex gap-2 border-b border-border py-4 px-5">
         <div className="shrink-0">{getIcon()}</div>
 
         <div className="flex flex-col">
@@ -81,9 +79,7 @@ export const ConversationItem = observer(
                     conversationId: conversationHistory.conversationId,
                     conversationHistoryId: conversationHistory.id,
                     workspaceId: workspace.id,
-                    taskIds: pendingTasks.map(
-                      (pt: TaskType) => `${task.id}_${pt.id}`,
-                    ),
+                    taskIds: [],
                   });
                 }}
               >

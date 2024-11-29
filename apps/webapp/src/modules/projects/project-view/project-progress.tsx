@@ -19,7 +19,11 @@ export const ProjectProgress = observer(
     const { issuesStore, projectsStore } = useContextStore();
     const project = projectsStore.getProjectWithId(id);
     const { workflows } = useComputedWorkflows();
-    const issues = issuesStore.getIssuesForProject({ projectId: project.id });
+    const issues = issuesStore.getIssuesForProject({ projectId: project?.id });
+
+    if (!project) {
+      return null;
+    }
 
     const totalCompletedIssues = issues.filter((issue: IssueType) => {
       const workflow = workflows.find((workflow: WorkflowType) =>

@@ -35,7 +35,6 @@ export const Conversation = observer(() => {
   const {
     mutate: streamConversation,
     isLoading,
-
     thoughts,
   } = useStreamConversationMutation({
     baseHost: publicRuntimeConfig.NEXT_PUBLIC_AI_HOST,

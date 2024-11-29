@@ -79,7 +79,7 @@ export const TeamList = observer(() => {
                   href: `/${workspace.slug}/team/${team.identifier}/cycles`,
                 },
                 {
-                  title: 'Current cycle',
+                  title: 'Current',
                   icon: Cycle,
                   href: `/${workspace.slug}/team/${team.identifier}/cycles/current`,
                 },
