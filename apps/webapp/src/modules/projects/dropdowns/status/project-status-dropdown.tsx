@@ -38,7 +38,8 @@ export function ProjectStatusDropdown({
   const [open, setOpen] = React.useState(false);
 
   function getTrigger() {
-    const status = statuses.find((status) => status.name === value);
+    const status =
+      statuses.find((status) => status.name === value) ?? statuses[0];
 
     if (variant === ProjectDropdownVariant.LINK) {
       return (
