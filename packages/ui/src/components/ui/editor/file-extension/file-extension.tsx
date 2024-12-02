@@ -19,6 +19,9 @@ export const fileExtension = Node.create({
       size: {
         default: 0,
       },
+      uploading: {
+        default: false,
+      },
       type: {
         default: undefined,
       },

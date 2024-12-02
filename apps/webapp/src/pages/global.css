@@ -53,6 +53,10 @@ strong {
       max-width: 5px;
     }
   }
+
+  .yarl__container {
+    background: oklch(var(--grayAlpha-50));
+  }
 }
 
 @layer utilities {

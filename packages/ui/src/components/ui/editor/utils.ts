@@ -1,5 +1,6 @@
 import type { Editor } from '@tiptap/core';
 
+import axios from 'axios';
 import { type ImageUploadOptions } from 'novel/plugins';
 
 const onUploadFile = async (file: File) => {
@@ -8,18 +9,13 @@ const onUploadFile = async (file: File) => {
   const formData = new FormData();
 
   formData.append('files', file);
-  const response = await fetch(
+  const response: any = await axios.post(
     `/api/v1/attachment/upload?workspaceId=${workspaceId}`,
-    {
-      method: 'POST',
-      body: formData,
-    },
+    formData,
   );
 
-  const responseJSON = await response.json();
-
   // This should return a src of the uploaded image
-  return responseJSON[0];
+  return response.data[0];
 };
 
 export const createImageUpload =
@@ -33,32 +29,40 @@ export const createImageUpload =
 
     const reader = new FileReader();
     reader.readAsDataURL(file);
+    const tempFileURL = URL.createObjectURL(file);
+
+    editor
+      .chain()
+      .insertContentAt(pos, [
+        {
+          type: 'imageExtension',
+          attrs: {
+            src: tempFileURL,
+            alt: file.name,
+            uploading: true,
+            openViewer: false,
+          },
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: '\n',
+            },
+          ],
+        },
+      ])
+      .exitCode()
+      .focus()
+      .run();
 
     onUpload(file).then((response: any) => {
-      editor
-        .chain()
-        .insertContentAt(pos, [
-          {
-            type: 'imageExtension',
-            attrs: {
-              src: response.publicURL,
-              alt: response.originalName,
-              openViewer: false,
-            },
-          },
-          {
-            type: 'paragraph',
-            content: [
-              {
-                type: 'text',
-                text: '\n',
-              },
-            ],
-          },
-        ])
-        .exitCode()
-        .focus()
-        .run();
+      updateNodeAttrs(editor, tempFileURL, {
+        src: response.publicURL,
+        alt: response.originalName,
+        openViewer: false,
+      });
     });
   };
 
@@ -124,32 +128,40 @@ export const createFileUpload =
     const reader = new FileReader();
     reader.readAsDataURL(file);
 
-    onUpload(file).then((response: any) => {
-      editor
-        .chain()
-        .insertContentAt(pos, [
-          {
-            type: 'fileExtension',
-            attrs: {
-              src: response.publicURL,
-              alt: response.originalName,
-              size: response.size,
-              type: response.fileType,
+    const tempFileURL = URL.createObjectURL(file);
+
+    editor
+      .chain()
+      .insertContentAt(pos, [
+        {
+          type: 'fileExtension',
+          attrs: {
+            src: tempFileURL,
+            alt: file.name,
+            uploading: true,
+          },
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: '\n',
             },
-          },
-          {
-            type: 'paragraph',
-            content: [
-              {
-                type: 'text',
-                text: '\n',
-              },
-            ],
-          },
-        ])
-        .exitCode()
-        .focus()
-        .run();
+          ],
+        },
+      ])
+      .exitCode()
+      .focus()
+      .run();
+
+    onUpload(file).then((response: any) => {
+      updateNodeAttrs(editor, tempFileURL, {
+        src: response.publicURL,
+        alt: response.originalName,
+        size: response.size,
+        type: response.fileType,
+      });
     });
   };
 
@@ -159,3 +171,17 @@ export const uploadFileFn = createFileUpload({
     return true;
   },
 });
+
+function updateNodeAttrs(editor: any, url: string, updatedAttrs: any) {
+  editor.view.state.doc.descendants((node: any, pos: number) => {
+    if (node.attrs?.src === url) {
+      const transaction = editor.view.state.tr.setNodeMarkup(
+        pos,
+        undefined, // Keep the same node type
+        updatedAttrs, // Merge new attributes with existing ones
+      );
+      editor.view.dispatch(transaction); // Apply the transaction
+      return false; // Stop traversing once the node is found and updated
+    }
+  });
+}

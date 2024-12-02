@@ -1,5 +1,6 @@
 import { SessionAuth } from 'supertokens-auth-react/recipe/session';
 
+import { deleteCookies } from 'common/common-utils';
 import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
 
 import { WorkspaceStoreInit } from 'store/workspace-store-provider';
@@ -14,7 +15,11 @@ export const AllProviders = ({
   children: React.ReactElement;
 }) => {
   return (
-    <SessionAuth>
+    <SessionAuth
+      onSessionExpired={() => {
+        deleteCookies();
+      }}
+    >
       <UserDataWrapper>
         <DatabaseWrapper>
           <BootstrapWrapper>

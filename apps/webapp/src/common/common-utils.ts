@@ -34,3 +34,11 @@ export const hash = (str: string, seed = 0) => {
 
   return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 };
+
+export function deleteCookies() {
+  document.cookie.split(';').forEach((cookie) => {
+    const eqPos = cookie.indexOf('=');
+    const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+  });
+}

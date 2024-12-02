@@ -25,14 +25,11 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import {
   Session as SessionDecorator,
+  UserId,
   Workspace,
 } from 'modules/auth/session.decorator';
 
-import {
-  UpdateUserBody,
-  UserIdParams,
-  UserWithInvites,
-} from './users.interface';
+import { UpdateUserBody, UserWithInvites } from './users.interface';
 import { UsersService } from './users.service';
 
 @Controller({
@@ -142,14 +139,13 @@ export class UsersController {
     return this.users.authorizeCode(userId, codeBody);
   }
 
-  @Post(':userId')
   @UseGuards(AuthGuard)
   async updateUser(
-    @Param() userIdBody: UserIdParams,
+    @UserId() userId: string,
     @Body()
     updateUserBody: UpdateUserBody,
   ): Promise<User> {
-    const user = await this.users.updateUser(userIdBody.userId, updateUserBody);
+    const user = await this.users.updateUser(userId, updateUserBody);
 
     return user;
   }

@@ -14,7 +14,6 @@ import {
   TeamRequestParamsDto,
   UpdateIssueDto,
   WorkflowCategoryEnum,
-  WorkspaceRequestParamsDto,
 } from '@tegonhq/types';
 import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
@@ -622,12 +621,10 @@ export default class IssuesService {
    * @param workspaceParams The workspace query parameters.
    * @returns A Promise that resolves to the CSV string of exported issues.
    */
-  async exportIssues(
-    workspaceParams: WorkspaceRequestParamsDto,
-  ): Promise<string> {
+  async exportIssues(workspaceId: string): Promise<string> {
     // Find all issues for the given workspace, including related data
     const issues = await this.prisma.issue.findMany({
-      where: { team: { workspaceId: workspaceParams.workspaceId } },
+      where: { team: { workspaceId } },
       include: {
         parent: true,
         team: true,

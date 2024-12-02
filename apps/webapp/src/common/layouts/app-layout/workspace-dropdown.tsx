@@ -15,6 +15,8 @@ import posthog from 'posthog-js';
 import React from 'react';
 import { signOut } from 'supertokens-auth-react/recipe/session';
 
+import { deleteCookies } from 'common/common-utils';
+
 import { useContextStore } from 'store/global-context-provider';
 
 export const WorkspaceDropdown = observer(() => {
@@ -69,6 +71,7 @@ export const WorkspaceDropdown = observer(() => {
         <DropdownMenuItem
           onClick={async () => {
             posthog.reset(true);
+            deleteCookies();
             await signOut();
 
             replace('/auth');

@@ -1,6 +1,6 @@
 import { UserTypeEnum } from '@tegonhq/types';
-import { Loader } from '@tegonhq/ui/components/loader';
 import { ScrollArea } from '@tegonhq/ui/components/ui/scroll-area';
+import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import getConfig from 'next/config';
 import React from 'react';
@@ -103,8 +103,16 @@ export const Conversation = observer(() => {
           ),
         )}
         {isLoading && lastThought && (
-          <div className="bg-grayAlpha-100 flex flex-wrap p-3 gap-1">
-            <Loader text={lastThought.message} variant="horizontal" />
+          <div className="flex flex-wrap p-3 gap-1">
+            <div
+              className={cn('px-4 py-2 w-full flex flex-col items-start gap-1')}
+            >
+              AI is thinking...
+              <p
+                className="text-sm text-muted-foreground flex flex-wrap"
+                dangerouslySetInnerHTML={{ __html: lastThought.message }}
+              />
+            </div>
           </div>
         )}
       </ScrollArea>
