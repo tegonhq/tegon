@@ -181,7 +181,6 @@ function updateNodeAttrs(editor: any, url: string, updatedAttrs: any) {
         updatedAttrs, // Merge new attributes with existing ones
       );
       editor.view.dispatch(transaction); // Apply the transaction
-      return false; // Stop traversing once the node is found and updated
     }
   });
 }
