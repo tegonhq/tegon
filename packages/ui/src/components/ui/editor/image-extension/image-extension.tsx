@@ -16,6 +16,9 @@ export const imageExtension = Node.create({
       alt: {
         default: undefined,
       },
+      uploading: {
+        default: false,
+      },
       openViewer: {
         default: false,
       },

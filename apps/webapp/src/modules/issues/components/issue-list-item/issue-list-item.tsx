@@ -169,11 +169,11 @@ export const IssueListItem = observer(
                   <div className="flex items-center gap-2 flex-wrap pr-1 shrink-0">
                     <IssueDueDate dueDate={issue.dueDate} />
 
+                    <IssueCycle cycleId={issue.cycleId} />
                     <IssueProject
                       projectId={issue.projectId}
                       projectMilestoneId={issue.projectMilestoneId}
                     />
-                    <IssueCycle cycleId={issue.cycleId} />
                     <IssueLabels labelIds={issue.labelIds} />
                     <div className="w-[80px] mr-8">
                       <IssuePriorityDropdown

@@ -38,7 +38,7 @@ export const IssueSubIssueSelector = () => {
         },
         {
           onSuccess: (issue: IssueType) => {
-            const url = `http://app.tegon.ai/${query.workspaceSlug}/issue/${team.identifier}-${issue.number}`;
+            const url = `https://app.tegon.ai/${query.workspaceSlug}/issue/${team.identifier}-${issue.number}`;
 
             editor
               .chain()

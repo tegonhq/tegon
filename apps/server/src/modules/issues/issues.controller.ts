@@ -18,7 +18,6 @@ import {
   IssueRequestParamsDto,
   TeamRequestParamsDto,
   UpdateIssueDto,
-  WorkspaceRequestParamsDto,
   GetIssuesByFilterDTO,
   LinkedIssue,
 } from '@tegonhq/types';
@@ -26,7 +25,10 @@ import { Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import {
+  Session as SessionDecorator,
+  Workspace,
+} from 'modules/auth/session.decorator';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { AdminGuard } from 'modules/users/admin.guard';
 
@@ -179,10 +181,10 @@ export class IssuesController {
   @Get('export')
   @UseGuards(AuthGuard)
   async exportIssues(
-    @Query() workspaceParams: WorkspaceRequestParamsDto,
+    @Workspace() workspaceId: string,
     @Res() res: Response,
   ): Promise<void> {
-    const csvString = await this.issuesService.exportIssues(workspaceParams);
+    const csvString = await this.issuesService.exportIssues(workspaceId);
 
     const csvBuffer = Buffer.from(csvString, 'utf-8');
     const csvStream = new Readable();

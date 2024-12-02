@@ -2,6 +2,8 @@
 
 @layer base {
   :root {
+    --media-brand: 245 245 245;
+    --media-focus: 78 156 246;
     --background: 91.28% 0 0;
     --background-2: 95.21% 0 0;
     --background-3: 100% 0 0;
