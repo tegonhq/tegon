@@ -1,5 +1,6 @@
 import { RiDownloadLine } from '@remixicon/react';
 import { NodeViewWrapper } from '@tiptap/react';
+import axios from 'axios';
 import { filesize } from 'filesize';
 import React from 'react';
 
@@ -7,10 +8,46 @@ import { DocumentLine } from '@tegonhq/ui/icons';
 
 import { Button } from '../../button';
 import { Loader } from '../../loader';
+import { Progress } from '../../progress';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FileComponent = (props: any) => {
   const type = props.node.attrs.type;
+  const [loading, setLoading] = React.useState(false);
+  const [src, setSrc] = React.useState(undefined);
+
+  React.useEffect(() => {
+    if (props.node.attrs.attachmentId) {
+      getData();
+    } else {
+      setSrc(props.node.attrs.src);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getData = async () => {
+    setLoading(true);
+
+    try {
+      const {
+        data: { signedUrl },
+      } = await axios.get(
+        `http://localhost:3000/api/v1/attachment/get-signed-url/${props.node.attrs.attachmentId}`,
+        {
+          withCredentials: true,
+        },
+      );
+      setSrc(signedUrl);
+    } catch (e) {
+      setSrc(props.node.attrs.src);
+    }
+
+    setLoading(false);
+  };
+
+  if (loading || !src) {
+    return null;
+  }
 
   return (
     <NodeViewWrapper className="react-component-with-content">
@@ -21,7 +58,7 @@ export const FileComponent = (props: any) => {
               <div className="">
                 <video
                   controls={true}
-                  src={props.node.attrs.src}
+                  src={src}
                   className="w-full h-full rounded-md"
                 />
               </div>
@@ -32,7 +69,7 @@ export const FileComponent = (props: any) => {
                     size="xs"
                     className="px-1"
                     onClick={() => {
-                      window.open(props.node.attrs.src, '_blank');
+                      window.open(src, '_blank');
                     }}
                   >
                     <RiDownloadLine size={14} />
@@ -42,38 +79,48 @@ export const FileComponent = (props: any) => {
             </>
           ) : (
             <>
-              <DocumentLine size={20} />
+              <div className="flex flex-col">
+                <div className="flex gap-2 items-center">
+                  <DocumentLine size={20} />
 
-              <div className="grow text-sm flex flex-col justify-center">
-                <div>{props.node.attrs.alt}</div>
-                {props.node.attrs.size > 0 && (
-                  <div>
-                    {filesize(props.node.attrs.size, { standard: 'jedec' })}
+                  <div className="grow text-sm flex flex-col justify-center">
+                    <div>{props.node.attrs.alt}</div>
+                    {props.node.attrs.size > 0 && (
+                      <div>
+                        {filesize(props.node.attrs.size, { standard: 'jedec' })}
+                      </div>
+                    )}
+                  </div>
+
+                  <Button
+                    variant="ghost"
+                    className="bg-grayAlpha-100"
+                    onClick={() => {
+                      window.open(src ? src : props.node.attrs.url, '_blank');
+                    }}
+                  >
+                    <RiDownloadLine size={16} />
+                  </Button>
+                </div>
+
+                {props.node.attrs.uploading && (
+                  <div className="w-full mt-2">
+                    <Progress
+                      color="#1a89c5"
+                      segments={[{ value: props.node.attrs.progress }]}
+                    />
                   </div>
                 )}
               </div>
-
-              <Button
-                variant="ghost"
-                className="bg-grayAlpha-100"
-                onClick={() => {
-                  window.open(
-                    props.node.attrs.src
-                      ? props.node.attrs.src
-                      : props.node.attrs.url,
-                    '_blank',
-                  );
-                }}
-              >
-                <RiDownloadLine size={16} />
-              </Button>
             </>
           )}
 
           {props.node.attrs.uploading && (
-            <div className="absolute left-0 top-0 w-full h-full rounded-md bg-grayAlpha-200 flex items-center">
-              <Loader />
-            </div>
+            <>
+              <div className="absolute left-0 top-0 w-full h-full rounded-md bg-grayAlpha-200 flex items-center">
+                <Loader />
+              </div>
+            </>
           )}
         </div>
       </div>

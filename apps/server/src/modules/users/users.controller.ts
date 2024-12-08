@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   Req,
   Res,
@@ -44,12 +45,16 @@ export class UsersController {
   async getUser(
     @SessionDecorator() session: SessionContainer,
     @Query() userIdParams: { userIds: string },
+    @Workspace() workspaceId: string,
   ): Promise<UserWithInvites | PublicUser[]> {
     try {
       if (userIdParams.userIds && userIdParams.userIds.split(',').length > 0) {
-        return await this.users.getUsersbyId({
-          userIds: userIdParams.userIds.split(','),
-        });
+        return await this.users.getUsersbyId(
+          {
+            userIds: userIdParams.userIds.split(','),
+          },
+          workspaceId,
+        );
       }
     } catch (e) {}
 
@@ -61,8 +66,11 @@ export class UsersController {
 
   @Post()
   @UseGuards(AuthGuard)
-  async getUsersById(@Body() getUsersDto: GetUsersDto): Promise<PublicUser[]> {
-    return await this.users.getUsersbyId(getUsersDto);
+  async getUsersById(
+    @Body() getUsersDto: GetUsersDto,
+    @Workspace() workspaceId: string,
+  ): Promise<PublicUser[]> {
+    return await this.users.getUsersbyId(getUsersDto, workspaceId);
   }
 
   @Post('impersonate')
@@ -139,6 +147,7 @@ export class UsersController {
     return this.users.authorizeCode(userId, codeBody);
   }
 
+  @Put()
   @UseGuards(AuthGuard)
   async updateUser(
     @UserId() userId: string,
@@ -146,7 +155,6 @@ export class UsersController {
     updateUserBody: UpdateUserBody,
   ): Promise<User> {
     const user = await this.users.updateUser(userId, updateUserBody);
-
     return user;
   }
 }

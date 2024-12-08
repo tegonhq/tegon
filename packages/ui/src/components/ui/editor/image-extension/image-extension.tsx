@@ -13,6 +13,9 @@ export const imageExtension = Node.create({
       src: {
         default: undefined,
       },
+      attachmentId: {
+        default: undefined,
+      },
       alt: {
         default: undefined,
       },
@@ -21,6 +24,9 @@ export const imageExtension = Node.create({
       },
       openViewer: {
         default: false,
+      },
+      progress: {
+        default: 0,
       },
     };
   },

@@ -2,17 +2,16 @@ import { useMutation } from 'react-query';
 
 import type { User } from 'common/types';
 
-import { ajaxPost } from 'services/utils';
+import { ajaxPut } from 'services/utils';
 
 export interface UpdateUserParams {
   fullname: string;
   username: string;
-  userId: string;
 }
 
-function updateUser({ userId, fullname, username }: UpdateUserParams) {
-  return ajaxPost({
-    url: `/api/v1/users/${userId}`,
+function updateUser({ fullname, username }: UpdateUserParams) {
+  return ajaxPut({
+    url: `/api/v1/users`,
     data: {
       fullname,
       username,

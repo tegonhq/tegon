@@ -96,14 +96,17 @@ export class UsersService {
     return { ...serializeUser, invites };
   }
 
-  async getUsersbyId(getUsersDto: GetUsersDto): Promise<PublicUser[]> {
+  async getUsersbyId(
+    getUsersDto: GetUsersDto,
+    workspaceId: string,
+  ): Promise<PublicUser[]> {
     const where: Prisma.UserWhereInput = {
       id: { in: getUsersDto.userIds },
     };
 
-    if (getUsersDto.workspaceId) {
+    if (workspaceId) {
       where.usersOnWorkspaces = {
-        some: { workspaceId: getUsersDto.workspaceId },
+        some: { workspaceId },
       };
     }
 

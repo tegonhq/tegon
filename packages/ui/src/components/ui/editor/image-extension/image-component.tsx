@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { RiDownloadLine } from '@remixicon/react';
 import { NodeViewWrapper } from '@tiptap/react';
+import axios from 'axios';
 import { ArrowRight, ZoomIn, ZoomOut } from 'lucide-react';
 import React from 'react';
 import Lightbox from 'yet-another-react-lightbox';
@@ -12,11 +13,15 @@ import { ArrowLeft, Close, FullscreenLine } from '@tegonhq/ui/icons';
 import { getNodeTypesWithImageExtension, type AttrType } from './utils';
 import { Button } from '../../button';
 import { Loader } from '../../loader';
+import { Progress } from '../../progress';
 import { useEditor } from '../editor';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ImageComponent = (props: any) => {
   const { editor } = useEditor();
+  const [loading, setLoading] = React.useState(false);
+  const [src, setSrc] = React.useState(undefined);
+
   const setOpen = (openViewer: boolean) => {
     props.updateAttributes({
       openViewer,
@@ -25,42 +30,68 @@ export const ImageComponent = (props: any) => {
 
   React.useEffect(() => {
     setOpen(false);
+
+    if (props.node.attrs.attachmentId) {
+      getData();
+    } else {
+      setSrc(props.node.attrs.src);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      if (event.key === 'Escape') {
-        setOpen(false);
-      }
-    };
+  const getData = async () => {
+    setLoading(true);
 
-    if (props.node.attrs.openViewer) {
-      window.addEventListener('keydown', handleKeyDown);
+    try {
+      const {
+        data: { signedUrl },
+      } = await axios.get(
+        `http://localhost:3000/api/v1/attachment/get-signed-url/${props.node.attrs.attachmentId}`,
+        {
+          withCredentials: true,
+        },
+      );
+      setSrc(signedUrl);
+    } catch (e) {
+      setSrc(props.node.attrs.src);
     }
 
-    // Clean up the event listener when the component unmounts or full screen is closed
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.node.attrs.openViewer]);
+    setLoading(false);
+  };
+
   const images = getNodeTypesWithImageExtension(editor);
+
+  if (loading || !src) {
+    return null;
+  }
 
   return (
     <NodeViewWrapper className="react-component-with-content">
       <div className="content">
         <div className="relative flex w-fit items-center p-2 bg-grayAlpha-100 rounded-lg gap-2 my-1 overflow-hidden">
-          <img
-            src={props.node.attrs.src}
-            alt={props.node.attrs.alt}
-            className="max-w-[400px] rounded"
-          />
+          <div className="flex flex-col">
+            <img
+              src={src}
+              alt={props.node.attrs.alt}
+              className="max-w-[400px] rounded"
+            />
+            {props.node.attrs.uploading && (
+              <div className="w-full mt-2">
+                <Progress
+                  color="#1a89c5"
+                  segments={[{ value: props.node.attrs.progress }]}
+                />
+              </div>
+            )}
+          </div>
 
           {props.node.attrs.uploading && (
-            <div className="absolute left-0 top-0 w-full h-full bg-grayAlpha-200 flex items-center rounded-md">
-              <Loader />
-            </div>
+            <>
+              <div className="absolute left-0 top-0 w-full h-full bg-grayAlpha-200 flex items-center rounded-md">
+                <Loader />
+              </div>
+            </>
           )}
 
           {!props.node.attrs.uploading && (
@@ -70,7 +101,7 @@ export const ImageComponent = (props: any) => {
                 size="xs"
                 className="px-1"
                 onClick={() => {
-                  window.open(props.node.attrs.src, '_blank');
+                  window.open(src, '_blank');
                 }}
               >
                 <RiDownloadLine size={16} />

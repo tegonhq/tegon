@@ -3,23 +3,43 @@ import type { Editor } from '@tiptap/core';
 import axios from 'axios';
 import { type ImageUploadOptions } from 'novel/plugins';
 
-const onUploadFile = async (file: File) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const workspaceId = (window as any).workspaceId;
-  const formData = new FormData();
+interface ImageUploadOptionsExtend extends ImageUploadOptions {
+  onUpload: (
+    file: File,
+    callback?: (progress: number) => void,
+  ) => Promise<unknown>;
+}
 
-  formData.append('files', file);
-  const response: any = await axios.post(
-    `/api/v1/attachment/upload?workspaceId=${workspaceId}`,
-    formData,
-  );
+const onUploadFile = async (
+  file: File,
+  callback?: (progress: number) => void,
+) => {
+  const {
+    data: { url, attachment },
+  } = await axios.post('/api/v1/attachment/get-signed-url', {
+    fileName: file.name,
+    contentType: file.type,
+    mimetype: file.type,
+    size: file.size,
+    originalName: file.name,
+  });
+
+  await axios.put(url, file, {
+    headers: { 'Content-Type': file.type },
+    onUploadProgress: (progressEvent) => {
+      const percentCompleted = Math.round(
+        (progressEvent.loaded * 100) / progressEvent.total,
+      );
+      callback && callback(percentCompleted);
+    },
+  });
 
   // This should return a src of the uploaded image
-  return response.data[0];
+  return attachment;
 };
 
 export const createImageUpload =
-  ({ validateFn, onUpload }: ImageUploadOptions): UploadFileFn =>
+  ({ validateFn, onUpload }: ImageUploadOptionsExtend): UploadFileFn =>
   (file, editor, pos) => {
     // check if the file is an image
     const validated = validateFn?.(file) as unknown as boolean;
@@ -57,11 +77,20 @@ export const createImageUpload =
       .focus()
       .run();
 
-    onUpload(file).then((response: any) => {
+    onUpload(file, (progress) => {
+      updateNodeAttrs(editor, tempFileURL, {
+        src: tempFileURL,
+        uploading: true,
+        progress,
+        openViewer: false,
+        alt: file.name,
+      });
+    }).then((response: any) => {
       updateNodeAttrs(editor, tempFileURL, {
         src: response.publicURL,
         alt: response.originalName,
         openViewer: false,
+        attachmentId: response.id,
       });
     });
   };
@@ -117,7 +146,7 @@ export const handleImagePaste = (
 type UploadFileFn = (file: File, view: Editor, pos: number) => void;
 
 export const createFileUpload =
-  ({ validateFn, onUpload }: ImageUploadOptions): UploadFileFn =>
+  ({ validateFn, onUpload }: ImageUploadOptionsExtend): UploadFileFn =>
   (file, editor, pos) => {
     // check if the file is an image
     const validated = validateFn?.(file) as unknown as boolean;
@@ -139,6 +168,7 @@ export const createFileUpload =
             src: tempFileURL,
             alt: file.name,
             uploading: true,
+            progress: 0,
           },
         },
         {
@@ -155,12 +185,21 @@ export const createFileUpload =
       .focus()
       .run();
 
-    onUpload(file).then((response: any) => {
+    onUpload(file, (progress) => {
+      updateNodeAttrs(editor, tempFileURL, {
+        src: tempFileURL,
+        uploading: true,
+        progress,
+        openViewer: false,
+        alt: file.name,
+      });
+    }).then((response: any) => {
       updateNodeAttrs(editor, tempFileURL, {
         src: response.publicURL,
         alt: response.originalName,
         size: response.size,
         type: response.fileType,
+        attachmentId: response.id,
       });
     });
   };
