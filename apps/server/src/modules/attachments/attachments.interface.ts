@@ -2,9 +2,6 @@ import { IsOptional, IsString } from 'class-validator';
 
 export class AttachmentRequestParams {
   @IsString()
-  workspaceId: string;
-
-  @IsString()
   attachmentId: string;
 }
 

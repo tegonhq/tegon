@@ -19,6 +19,7 @@
     "@tegonhq/types": "workspace:*",
     "@tegonhq/ui": "workspace:*",
     "@tiptap/core": "^2.3.0",
+    "@tiptap/extension-mention": "^2.10.3",
     "@tiptap/react": "^2.5.4",
     "@typeform/embed-react": "^3.17.0",
     "ai": "^3.2.37",
