@@ -54,6 +54,7 @@
     "socket.io-client": "^4.7.4",
     "supertokens-auth-react": "^0.36.1",
     "supertokens-web-js": "^0.8.0",
+    "tippy.js": "^6.3.7",
     "ts-key-enum": "^2.0.12",
     "use-debounce": "^10.0.0",
     "uuid": "^10.0.0",

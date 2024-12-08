@@ -520,6 +520,9 @@ importers:
       supertokens-web-js:
         specifier: ^0.8.0
         version: 0.8.0
+      tippy.js:
+        specifier: ^6.3.7
+        version: 6.3.7
       ts-key-enum:
         specifier: ^2.0.12
         version: 2.0.13

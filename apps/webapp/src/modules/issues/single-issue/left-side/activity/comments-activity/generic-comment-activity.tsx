@@ -21,6 +21,7 @@ import { NewIssue } from 'modules/issues/new-issue';
 import { type IssueCommentType, type User } from 'common/types';
 import { getUserIcon } from 'common/user-util';
 
+import { CustomMention, useMentionSuggestions } from 'components/editor';
 import { useIssueData } from 'hooks/issues';
 
 import { UserContext } from 'store/user-context';
@@ -49,6 +50,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
   } = props;
   const currentUser = React.useContext(UserContext);
   const issue = useIssueData();
+  const suggestion = useMentionSuggestions();
 
   const sourceMetadata = comment.sourceMetadata
     ? JSON.parse(comment.sourceMetadata)
@@ -158,7 +160,16 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
               comment.parentId && 'pb-2',
             )}
           >
-            <Editor value={comment.body} editable={false} className="mb-0">
+            <Editor
+              value={comment.body}
+              extensions={[
+                CustomMention.configure({
+                  suggestion,
+                }),
+              ]}
+              editable={false}
+              className="mb-0"
+            >
               <EditorExtensions suggestionItems={suggestionItems} />
             </Editor>
           </div>

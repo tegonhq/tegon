@@ -10,6 +10,7 @@ import * as React from 'react';
 
 import { getTiptapJSON } from 'common';
 
+import { CustomMention, useMentionSuggestions } from 'components/editor';
 import { useIssueData } from 'hooks/issues';
 
 import { useCreateIssueCommentMutation } from 'services/issues';
@@ -26,6 +27,7 @@ export function ReplyComment({ issueCommentId }: ReplyCommentProps) {
   const [commentValue, setCommentValue] = React.useState('');
   const { mutate: createIssueComment } = useCreateIssueCommentMutation({});
   const [showReplyButton, setShowReplyButton] = React.useState(false);
+  const suggestion = useMentionSuggestions();
 
   const onSubmit = () => {
     if (commentValue !== '') {
@@ -52,6 +54,11 @@ export function ReplyComment({ issueCommentId }: ReplyCommentProps) {
           onFocus={() => {
             setShowReplyButton(true);
           }}
+          extensions={[
+            CustomMention.configure({
+              suggestion,
+            }),
+          ]}
           onSubmit={onSubmit}
           onBlur={() => {
             !commentValue && setShowReplyButton(false);
