@@ -8,6 +8,8 @@ import React from 'react';
 
 import type { IssueCommentType } from 'common/types';
 
+import { CustomMention, useMentionSuggestions } from 'components/editor';
+
 import { useUpdateIssueCommentMutation } from 'services/issues';
 
 interface EditCommentProps {
@@ -18,7 +20,7 @@ interface EditCommentProps {
 
 export function EditComment({ value, onCancel, comment }: EditCommentProps) {
   const [commentValue, setCommentValue] = React.useState(value);
-
+  const suggestion = useMentionSuggestions();
   const { mutate: updateComment } = useUpdateIssueCommentMutation({});
 
   const onSubmit = () => {
@@ -35,6 +37,11 @@ export function EditComment({ value, onCancel, comment }: EditCommentProps) {
       <Editor
         placeholder="Leave a reply..."
         value={commentValue}
+        extensions={[
+          CustomMention.configure({
+            suggestion,
+          }),
+        ]}
         onChange={(e) => setCommentValue(e)}
         className="w-full bg-transparent p-3 pt-0 pl-0"
       >

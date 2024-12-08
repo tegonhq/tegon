@@ -17,6 +17,8 @@ import { type IssueCommentType } from 'common/types';
 import type { User } from 'common/types';
 import { getUserIcon } from 'common/user-util';
 
+import { CustomMention, useMentionSuggestions } from 'components/editor';
+
 import { GenericCommentActivity } from './generic-comment-activity';
 import { ReplyComment } from './reply-comment';
 
@@ -39,6 +41,7 @@ export function SyncCommentActivity({
   user,
 }: CommentActivityProps) {
   const [isOpen, setIsOpen] = React.useState(true);
+  const suggestion = useMentionSuggestions();
 
   return (
     <TimelineItem
@@ -65,7 +68,16 @@ export function SyncCommentActivity({
               <div className="flex gap-1">
                 {getUserIcon(user)}
 
-                <Editor value={comment.body} editable={false} className="mb-0">
+                <Editor
+                  extensions={[
+                    CustomMention.configure({
+                      suggestion,
+                    }),
+                  ]}
+                  value={comment.body}
+                  editable={false}
+                  className="mb-0"
+                >
                   <EditorExtensions suggestionItems={suggestionItems} />
                 </Editor>
               </div>

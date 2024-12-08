@@ -9,6 +9,7 @@ import * as React from 'react';
 
 import { getTiptapJSON } from 'common';
 
+import { CustomMention, useMentionSuggestions } from 'components/editor';
 import { useIssueData } from 'hooks/issues';
 
 import { useCreateIssueCommentMutation } from 'services/issues';
@@ -17,6 +18,7 @@ export function IssueComment() {
   const issueData = useIssueData();
   const [commentValue, setCommentValue] = React.useState('');
   const { mutate: createIssueComment } = useCreateIssueCommentMutation({});
+  const suggestion = useMentionSuggestions();
 
   const onSubmit = () => {
     if (commentValue !== '') {
@@ -40,6 +42,11 @@ export function IssueComment() {
           onChange={(e) => {
             setCommentValue(e);
           }}
+          extensions={[
+            CustomMention.configure({
+              suggestion,
+            }),
+          ]}
           placeholder="Leave your comment..."
           onSubmit={onSubmit}
           className="w-full min-h-[44px] mb-0 p-2 border-border border"
