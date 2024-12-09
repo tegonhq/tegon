@@ -79,8 +79,13 @@ export default class IssueCommentsService {
         parent: true,
       },
     });
+    const mentionedUserIds = extractMentionedUserIds(updatedBody);
+    const subscribersToAdd = [...new Set([userId, ...mentionedUserIds])];
 
-    this.issuesService.updateSubscribers(issueRequestParams.issueId, [userId]);
+    this.issuesService.updateSubscribers(
+      issueRequestParams.issueId,
+      subscribersToAdd,
+    );
 
     this.triggerdevService.triggerTaskAsync(
       'common',
@@ -288,4 +293,27 @@ function isReactionDataTypeArray(obj: unknown): obj is reactionDataType[] {
         ),
     )
   );
+}
+
+function extractMentionedUserIds(body: string): string[] {
+  try {
+    const parsedBody = JSON.parse(body);
+    const mentions: string[] = [];
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const traverse = (node: any) => {
+      if (node.type === 'mention' && node.attrs?.id) {
+        mentions.push(node.attrs.id);
+      }
+      if (node.content && Array.isArray(node.content)) {
+        node.content.forEach(traverse);
+      }
+    };
+
+    traverse(parsedBody);
+    return mentions;
+  } catch (error) {
+    console.error('Error parsing body for mentions:', error);
+    return [];
+  }
 }

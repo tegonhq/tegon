@@ -6,6 +6,24 @@ import {
   NotificationData,
   NotificationEventFrom,
 } from '@tegonhq/types';
+import { Blockquote } from '@tiptap/extension-blockquote';
+import { BulletList } from '@tiptap/extension-bullet-list';
+import { CodeBlock } from '@tiptap/extension-code-block';
+import { Document } from '@tiptap/extension-document';
+import { HardBreak } from '@tiptap/extension-hard-break';
+import { Heading } from '@tiptap/extension-heading';
+import { HorizontalRule } from '@tiptap/extension-horizontal-rule';
+import { Image } from '@tiptap/extension-image';
+import { Link } from '@tiptap/extension-link';
+import { ListItem } from '@tiptap/extension-list-item';
+import { OrderedList } from '@tiptap/extension-ordered-list';
+import { Paragraph } from '@tiptap/extension-paragraph';
+import { TaskItem } from '@tiptap/extension-task-item';
+import { TaskList } from '@tiptap/extension-task-list';
+import { Text } from '@tiptap/extension-text';
+import { Underline } from '@tiptap/extension-underline';
+import { generateHTML } from '@tiptap/html';
+import TurndownService from 'turndown';
 
 async function handleIssueAssignment(
   prisma: PrismaClient,
@@ -125,15 +143,28 @@ export async function getSlackNotificationData(
         include: { issue: { include: { team: true } } },
       });
 
-      actionData = { issueComment };
+      let bodyMarkdown = '';
+      if (issueComment?.body) {
+        bodyMarkdown = await convertTiptapJsonToMarkdown(
+          issueComment.body,
+          prisma,
+        );
+      }
+      actionData = { issueComment: { ...issueComment, bodyMarkdown } };
       break;
 
     case NotificationEventFrom.IssueBlocks:
       type = NotificationActionType.IssueBlocks;
-      issue = await prisma.issue.findUnique({ where: { id: issueId } });
+      issue = await prisma.issue.findUnique({
+        where: { id: issueId },
+        include: { team: true },
+      });
+
       const issueRelation = await prisma.issue.findUnique({
         where: { id: issueRelationId },
+        include: { team: true },
       });
+
       actionData = { issue, issueRelation };
       break;
     default:
@@ -248,4 +279,83 @@ export async function getUnassingedNotification(
     return { issue, fromAssigneeId };
   }
   return undefined;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function convertTiptapJsonToHtml(tiptapJson: Record<string, any>) {
+  const extensions = [
+    Document,
+    Text,
+    Paragraph,
+    Heading,
+    Blockquote,
+    ListItem,
+    OrderedList,
+    BulletList,
+    TaskList,
+    TaskItem,
+    Image,
+    CodeBlock,
+    HardBreak,
+    HorizontalRule,
+    Link,
+    Underline,
+  ];
+  return generateHTML(tiptapJson, extensions);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function convertTiptapJsonToMarkdown(
+  tiptapJson: string,
+  prisma: PrismaClient,
+) {
+  try {
+    const parsedTiptapJson = JSON.parse(tiptapJson);
+    let finalJson = parsedTiptapJson;
+    if (parsedTiptapJson.hasOwnProperty('json')) {
+      finalJson = parsedTiptapJson.json;
+    }
+    // Replace mentions with @username
+    const processedJson = await replaceMentionsWithUsernames(finalJson, prisma);
+
+    const htmlText = convertTiptapJsonToHtml(processedJson);
+    const turndownService = new TurndownService();
+    return turndownService.turndown(htmlText);
+  } catch (e) {
+    return '';
+  }
+}
+
+async function replaceMentionsWithUsernames(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  json: Record<string, any>,
+  prisma: PrismaClient,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<Record<string, any>> {
+  const traverse = async (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    node: Record<string, any>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<Record<string, any>> => {
+    if (node.type === 'mention' && node.attrs?.id) {
+      const user = await prisma.user.findUnique({
+        where: { id: node.attrs.id },
+        select: { fullname: true },
+      });
+
+      // Replace mention node with a text node containing @username
+      return {
+        type: 'text',
+        text: user ? `@${user.fullname}` : '@unknown',
+      };
+    }
+
+    if (node.content && Array.isArray(node.content)) {
+      node.content = await Promise.all(node.content.map(traverse));
+    }
+
+    return node;
+  };
+
+  return await traverse(json);
 }
