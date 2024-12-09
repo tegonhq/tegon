@@ -11,7 +11,13 @@ import {
   EditorExtensions,
   suggestionItems,
 } from '@tegonhq/ui/components/editor/index';
-import { EditLine, MoreLine, NewIssueLine, SubIssue } from '@tegonhq/ui/icons';
+import {
+  DeleteLine,
+  EditLine,
+  MoreLine,
+  NewIssueLine,
+  SubIssue,
+} from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
@@ -26,6 +32,7 @@ import { useIssueData } from 'hooks/issues';
 
 import { UserContext } from 'store/user-context';
 
+import { DeleteCommentDialog } from './delete-comment-alert';
 import { EditComment } from './edit-comment';
 import { ReplyComment } from './reply-comment';
 import { getUserDetails } from '../issue-activity/user-activity-utils';
@@ -57,6 +64,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
     : undefined;
 
   const [edit, setEdit] = React.useState(false);
+  const [deleteComment, setDeleteComment] = React.useState(false);
   const [defaultIssueCreationValues, setDefaultIssueCreationValues] =
     React.useState(undefined);
   const [newIssueDialog, setNewIssueDialog] = React.useState(false);
@@ -99,6 +107,14 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
                     <DropdownMenuItem onClick={() => setEdit(true)}>
                       <div className="flex items-center gap-1">
                         <EditLine size={16} className="mr-1" /> Edit
+                      </div>
+                    </DropdownMenuItem>
+                  )}
+
+                  {!sourceMetadata && user.id === currentUser.id && (
+                    <DropdownMenuItem onClick={() => setDeleteComment(true)}>
+                      <div className="flex items-center gap-1">
+                        <DeleteLine size={16} className="mr-1" /> Delete
                       </div>
                     </DropdownMenuItem>
                   )}
@@ -207,6 +223,13 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           open={newIssueDialog}
           setOpen={setNewIssueDialog}
           defaultValues={defaultIssueCreationValues}
+        />
+      )}
+      {deleteComment && (
+        <DeleteCommentDialog
+          deleteCommentDialog={deleteComment}
+          setDeleteCommentDialog={setDeleteComment}
+          issueCommentId={comment.id}
         />
       )}
     </div>
