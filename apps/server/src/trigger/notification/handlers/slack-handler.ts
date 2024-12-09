@@ -51,13 +51,22 @@ export const slackHandler = async (payload: ActionEventPayload) => {
         const integrationAccount = await getSlackIntegrationAccount(
           unassignedData.fromAssigneeId,
         );
-        const issueIdentifier = getIssueIdentifier(
+        const issueMetadata = await getIssueMetadata(
+          prisma,
           unassignedData.issue,
-          workspace,
         );
+        const messageData = {
+          message: `You have been unassigned from issue by ${createdBy.fullname}`,
+          assignee: issueMetadata.assignee,
+          team: issueMetadata.teamName,
+          state: issueMetadata.state,
+          tittle: getIssueIdentifier(unassignedData.issue, workspace, true),
+          createdAt: unassignedData.issue.updatedAt,
+          workspace,
+        };
         await sendSlackMessage(
           integrationAccount,
-          `You have been unassigned from issue ${issueIdentifier} by ${createdBy.fullname}`,
+          generateIssueSlackBlocks(messageData),
         );
       }
 
@@ -83,7 +92,7 @@ export const slackHandler = async (payload: ActionEventPayload) => {
       // Send notifications in parallel
       await Promise.all(
         integrationAccounts.map(async (account) => {
-          const message = getMessage(
+          const message = await getMessage(
             type,
             actionData,
             account.integratedById,
@@ -105,7 +114,7 @@ export const slackHandler = async (payload: ActionEventPayload) => {
   }
 };
 
-function getMessage(
+async function getMessage(
   type: NotificationActionType,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   actionData: Record<string, any>,
@@ -115,25 +124,73 @@ function getMessage(
 ) {
   let issue: Issue;
   let issueIdentifier: string;
+  let issueMetadata: IssueMetadata;
+  let messageData: MessageMetadata;
   switch (type) {
     case NotificationActionType.IssueAssigned:
       issue = actionData.issue;
-      return `Issue ${getIssueIdentifier(issue, workspace)} is assigned to ${actionData.userId === userId ? 'you' : createdBy.fullname}`;
+      issueMetadata = await getIssueMetadata(prisma, issue);
+      messageData = {
+        message: `${createdBy.fullname} assigned an issue to ${actionData.userId === userId ? 'you' : createdBy.fullname}`,
+        assignee: issueMetadata.assignee,
+        team: issueMetadata.teamName,
+        state: issueMetadata.state,
+        tittle: getIssueIdentifier(issue, workspace, true),
+        createdAt: issue.updatedAt,
+        workspace,
+      };
+      return generateIssueSlackBlocks(messageData);
 
     case NotificationActionType.IssueBlocks:
       issue = actionData.issue;
       const issueRelation = actionData.issueRelation;
-      return `Issue ${getIssueIdentifier(issue, workspace)} is blocked by this issue ${getIssueIdentifier(issueRelation, workspace)}`;
+      issueMetadata = await getIssueMetadata(prisma, issue);
+
+      messageData = {
+        message: `Issue ${getIssueIdentifier(issue, workspace)} is blocked by this issue ${getIssueIdentifier(issueRelation, workspace, true)}`,
+        assignee: issueMetadata.assignee,
+        team: issueMetadata.teamName,
+        state: issueMetadata.state,
+        tittle: getIssueIdentifier(issue, workspace, true),
+        createdAt: issue.updatedAt,
+        workspace,
+      };
+      return generateIssueSlackBlocks(messageData);
 
     case NotificationActionType.IssueNewComment:
       issue = actionData.issueComment.issue;
-      issueIdentifier = getIssueIdentifier(issue, workspace);
-      return `New comment from ${createdBy.fullname} in ${issueIdentifier} `;
+      issueIdentifier = getIssueIdentifier(issue, workspace, true);
+      return {
+        text: `New comment from ${createdBy.fullname} in ${issueIdentifier}`,
+        attachments: [
+          {
+            color: '#1A89C5',
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `${actionData.issueComment.bodyMarkdown}`,
+                },
+              },
+            ],
+          },
+        ],
+      };
 
     case NotificationActionType.IssueStatusChanged:
       issue = actionData.issue;
-      issueIdentifier = getIssueIdentifier(issue, workspace);
-      return `${createdBy.fullname} closed this issue ${issueIdentifier}`;
+      issueMetadata = await getIssueMetadata(prisma, issue);
+      messageData = {
+        message: `${createdBy.fullname} changed issue status to ${issueMetadata.state}`,
+        assignee: issueMetadata.assignee,
+        team: issueMetadata.teamName,
+        state: issueMetadata.state,
+        tittle: getIssueIdentifier(issue, workspace, true),
+        createdAt: issue.updatedAt,
+        workspace,
+      };
+      return generateIssueSlackBlocks(messageData);
 
     default:
       return '';
@@ -142,7 +199,8 @@ function getMessage(
 
 async function sendSlackMessage(
   integrationAccount: IntegrationAccount,
-  message: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  message: Record<string, any>,
 ) {
   const integrationConfiguration =
     integrationAccount.integrationConfiguration as JsonObject;
@@ -152,8 +210,7 @@ async function sendSlackMessage(
     'https://slack.com/api/chat.postMessage',
     {
       channel: integrationAccount.accountId,
-      text: message,
-      mrkdwn: true,
+      ...message,
     },
     {
       headers: {
@@ -176,6 +233,101 @@ async function getSlackIntegrationAccount(userId: string) {
   });
 }
 
-function getIssueIdentifier(issue: Issue, workspace: Workspace) {
-  return `<https://app.tegon.ai/${workspace.slug}/issue/${issue.team.identifier}-${issue.number}|${issue.team.identifier}-${issue.number}>`;
+function getIssueIdentifier(
+  issue: Issue,
+  workspace: Workspace,
+  title: boolean = false,
+) {
+  const baseIdentifier = `${issue.team.identifier}-${issue.number}`;
+  const displayText = title
+    ? `${baseIdentifier} ${issue.title}`
+    : baseIdentifier;
+  return `<https://app.tegon.ai/${workspace.slug}/issue/${baseIdentifier}|${displayText}>`;
+}
+
+interface MessageMetadata {
+  tittle: string;
+  message: string;
+  state?: string;
+  assignee?: string;
+  project?: string;
+  team: string;
+  createdAt: string | Date;
+  workspace: Workspace;
+}
+
+function generateIssueSlackBlocks(metadata: MessageMetadata) {
+  return {
+    text: metadata.message,
+    attachments: [
+      {
+        color: '#1A89C5',
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: metadata.tittle,
+            },
+          },
+          {
+            type: 'context',
+            elements: [
+              {
+                type: 'mrkdwn',
+                text: `*Assignee* ${metadata.assignee}    *State* ${metadata.state}    *Team* ${metadata.team}`,
+              },
+            ],
+          },
+          {
+            type: 'context',
+            elements: [
+              {
+                type: 'mrkdwn',
+                text: `${metadata.workspace.name} | ${formatDate(metadata.createdAt)}`,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+}
+
+function formatDate(date: Date | string): string {
+  return new Date(date).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
+interface IssueMetadata extends Issue {
+  assignee?: string;
+  state?: string;
+  teamName?: string;
+}
+async function getIssueMetadata(
+  prisma: PrismaClient,
+  issue: Issue,
+): Promise<IssueMetadata> {
+  let assignee = 'No Assignee';
+  if (issue.assigneeId) {
+    const assigneeData = await prisma.user.findUnique({
+      where: { id: issue.assigneeId },
+    });
+    assignee = assigneeData.fullname;
+  }
+
+  const state = await prisma.workflow.findUnique({
+    where: { id: issue.stateId },
+  });
+
+  const team = await prisma.team.findUnique({ where: { id: issue.teamId } });
+
+  return {
+    ...issue,
+    assignee,
+    state: state?.name ?? 'No State',
+    teamName: team?.name ?? 'No Team',
+  };
 }
