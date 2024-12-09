@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { RiDownloadLine } from '@remixicon/react';
 import { NodeViewWrapper } from '@tiptap/react';
-import axios from 'axios';
 import { ArrowRight, ZoomIn, ZoomOut } from 'lucide-react';
 import React from 'react';
 import Lightbox from 'yet-another-react-lightbox';
@@ -15,12 +14,15 @@ import { Button } from '../../button';
 import { Loader } from '../../loader';
 import { Progress } from '../../progress';
 import { useEditor } from '../editor';
+import { useSrc } from '../file-extension/use-src';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ImageComponent = (props: any) => {
   const { editor } = useEditor();
-  const [loading, setLoading] = React.useState(false);
-  const [src, setSrc] = React.useState(undefined);
+  const { loading, src } = useSrc(
+    props.node.attrs.src,
+    props.node.attrs.attachmentId,
+  );
 
   const setOpen = (openViewer: boolean) => {
     props.updateAttributes({
@@ -29,36 +31,8 @@ export const ImageComponent = (props: any) => {
   };
 
   React.useEffect(() => {
-    setOpen(false);
-
-    if (props.node.attrs.attachmentId) {
-      getData();
-    } else {
-      setSrc(props.node.attrs.src);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setOpen(false); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const getData = async () => {
-    setLoading(true);
-
-    try {
-      const {
-        data: { signedUrl },
-      } = await axios.get(
-        `http://localhost:3000/api/v1/attachment/get-signed-url/${props.node.attrs.attachmentId}`,
-        {
-          withCredentials: true,
-        },
-      );
-      setSrc(signedUrl);
-    } catch (e) {
-      setSrc(props.node.attrs.src);
-    }
-
-    setLoading(false);
-  };
 
   const images = getNodeTypesWithImageExtension(editor);
 

@@ -4,12 +4,17 @@ import {
   EditorExtensions,
   suggestionItems,
 } from '@tegonhq/ui/components/editor/index';
+import { useToast } from '@tegonhq/ui/components/use-toast';
 import { SendLine } from '@tegonhq/ui/icons';
 import * as React from 'react';
 
 import { getTiptapJSON } from 'common';
 
-import { CustomMention, useMentionSuggestions } from 'components/editor';
+import {
+  CustomMention,
+  pendingUploads,
+  useMentionSuggestions,
+} from 'components/editor';
 import { useIssueData } from 'hooks/issues';
 
 import { useCreateIssueCommentMutation } from 'services/issues';
@@ -19,10 +24,22 @@ export function IssueComment() {
   const [commentValue, setCommentValue] = React.useState('');
   const { mutate: createIssueComment } = useCreateIssueCommentMutation({});
   const suggestion = useMentionSuggestions();
+  const { toast } = useToast();
 
   const onSubmit = () => {
     if (commentValue !== '') {
       const { json, text } = getTiptapJSON(commentValue);
+      if (pendingUploads(json)) {
+        toast({
+          title: 'Uploads pending!',
+          variant: 'destructive',
+          description:
+            'Some uploads are pending, please wait before you comment',
+        });
+
+        return;
+      }
+
       if (text) {
         createIssueComment({
           body: JSON.stringify(json),

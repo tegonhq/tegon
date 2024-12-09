@@ -4,11 +4,17 @@ import {
   EditorExtensions,
   suggestionItems,
 } from '@tegonhq/ui/components/editor/index';
+import { useToast } from '@tegonhq/ui/components/use-toast';
 import React from 'react';
 
+import { getTiptapJSON } from 'common';
 import type { IssueCommentType } from 'common/types';
 
-import { CustomMention, useMentionSuggestions } from 'components/editor';
+import {
+  CustomMention,
+  pendingUploads,
+  useMentionSuggestions,
+} from 'components/editor';
 
 import { useUpdateIssueCommentMutation } from 'services/issues';
 
@@ -22,13 +28,29 @@ export function EditComment({ value, onCancel, comment }: EditCommentProps) {
   const [commentValue, setCommentValue] = React.useState(value);
   const suggestion = useMentionSuggestions();
   const { mutate: updateComment } = useUpdateIssueCommentMutation({});
+  const { toast } = useToast();
 
   const onSubmit = () => {
-    updateComment({
-      body: commentValue,
-      parentId: comment.parentId,
-      issueCommentId: comment.id,
-    });
+    const { json, text } = getTiptapJSON(commentValue);
+
+    if (pendingUploads(json)) {
+      toast({
+        title: 'Uploads pending!',
+        variant: 'destructive',
+        description: 'Some uploads are pending, please wait before you comment',
+      });
+
+      return;
+    }
+
+    if (text) {
+      updateComment({
+        body: commentValue,
+        parentId: comment.parentId,
+        issueCommentId: comment.id,
+      });
+    }
+
     onCancel();
   };
 
