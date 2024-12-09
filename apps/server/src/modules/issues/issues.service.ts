@@ -606,11 +606,19 @@ export default class IssuesService {
    * @returns The updated issue with the new subscriber IDs.
    */
   async updateSubscribers(issueId: string, subscriberIds: string[]) {
+    const issue = await this.prisma.issue.findUnique({
+      where: { id: issueId },
+      select: { subscriberIds: true },
+    });
+
+    const allSubscriberIds = [...(issue.subscriberIds || []), ...subscriberIds];
+    const uniqueSubscriberIds = [...new Set(allSubscriberIds)];
+
     return await this.prisma.issue.update({
       where: { id: issueId },
       data: {
         subscriberIds: {
-          set: subscriberIds,
+          set: uniqueSubscriberIds,
         },
       },
     });
