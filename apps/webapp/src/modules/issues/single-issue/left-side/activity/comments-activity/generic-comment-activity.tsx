@@ -156,7 +156,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           <div
             className={cn(
               'text-base pt-1',
-              !comment.parentId && 'p-3 py-1',
+              !comment.parentId && 'p-3 py-1 pb-2',
               comment.parentId && 'pb-2',
             )}
           >

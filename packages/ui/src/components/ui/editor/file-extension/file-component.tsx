@@ -1,11 +1,11 @@
 import { RiDownloadLine } from '@remixicon/react';
 import { NodeViewWrapper } from '@tiptap/react';
-import axios from 'axios';
 import { filesize } from 'filesize';
 import React from 'react';
 
 import { DocumentLine } from '@tegonhq/ui/icons';
 
+import { useSrc } from './use-src';
 import { Button } from '../../button';
 import { Loader } from '../../loader';
 import { Progress } from '../../progress';
@@ -13,39 +13,12 @@ import { Progress } from '../../progress';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FileComponent = (props: any) => {
   const type = props.node.attrs.type;
-  const [loading, setLoading] = React.useState(false);
-  const [src, setSrc] = React.useState(undefined);
+  const { loading, src } = useSrc(
+    props.node.attrs.src,
+    props.node.attrs.attachmentId,
+  );
 
-  React.useEffect(() => {
-    if (props.node.attrs.attachmentId) {
-      getData();
-    } else {
-      setSrc(props.node.attrs.src);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const getData = async () => {
-    setLoading(true);
-
-    try {
-      const {
-        data: { signedUrl },
-      } = await axios.get(
-        `http://localhost:3000/api/v1/attachment/get-signed-url/${props.node.attrs.attachmentId}`,
-        {
-          withCredentials: true,
-        },
-      );
-      setSrc(signedUrl);
-    } catch (e) {
-      setSrc(props.node.attrs.src);
-    }
-
-    setLoading(false);
-  };
-
-  if (loading || !src) {
+  if (loading) {
     return null;
   }
 
@@ -96,7 +69,7 @@ export const FileComponent = (props: any) => {
                     variant="ghost"
                     className="bg-grayAlpha-100"
                     onClick={() => {
-                      window.open(src ? src : props.node.attrs.url, '_blank');
+                      window.open(src, '_blank');
                     }}
                   >
                     <RiDownloadLine size={16} />
