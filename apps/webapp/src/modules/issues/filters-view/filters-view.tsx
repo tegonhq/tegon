@@ -1,16 +1,11 @@
 import { Button } from '@tegonhq/ui/components/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@tegonhq/ui/components/tooltip';
 import { Filter } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
 import { SCOPES } from 'common/scopes';
-
+import { TooltipWrapper } from 'common/wrappers/tooltip-wrapper';
 import { useContextStore } from 'store/global-context-provider';
 
 import { isEmpty } from './filter-utils';
@@ -54,21 +49,16 @@ export const FiltersView = observer(({ Actions }: FilterViewProps) => {
   return (
     <div className="px-4 py-4 pr-2 flex flex-col gap-2">
       <div className="flex justify-between">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="secondary"
-              isActive={filtersShow}
-              onClick={() => setFiltersShow(true)}
-            >
-              <Filter size={16} className="mr-1" />
-              Filter
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Filter (F)</p>
-          </TooltipContent>
-        </Tooltip>
+        <TooltipWrapper tooltip="Filter Issues (F)">
+          <Button
+            variant="secondary"
+            isActive={filtersShow}
+            onClick={() => setFiltersShow(true)}
+          >
+            <Filter size={16} className="mr-1" />
+            Filter
+          </Button>
+        </TooltipWrapper>
 
         <div>{Actions}</div>
       </div>

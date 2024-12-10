@@ -5,6 +5,7 @@ import React from 'react';
 
 import { useNewIssue } from 'modules/issues/new-issue';
 import { SearchDialog } from 'modules/search';
+import { TooltipWrapper } from 'common/wrappers/tooltip-wrapper';
 
 export const Header = observer(() => {
   const [search, setSearch] = React.useState(false);
@@ -13,27 +14,31 @@ export const Header = observer(() => {
   return (
     <>
       <div className="flex">
-        <Button
-          variant="ghost"
-          className="justify-start w-fit"
-          size="sm"
-          onClick={() => {
-            openNewIssue({});
-          }}
-        >
-          <CreateIssueLine size={18} />
-        </Button>
+        <TooltipWrapper tooltip="Create new issue (C)">
+          <Button
+            variant="ghost"
+            className="justify-start w-fit"
+            size="sm"
+            onClick={() => {
+              openNewIssue({});
+            }}
+          >
+            <CreateIssueLine size={18} />
+          </Button>
+        </TooltipWrapper>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          className="gap-1 justify-start w-fit"
-          onClick={() => {
-            setSearch(true);
-          }}
-        >
-          <SearchLine size={18} />
-        </Button>
+        <TooltipWrapper tooltip="Search issues (CMD + /)">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1 justify-start w-fit"
+            onClick={() => {
+              setSearch(true);
+            }}
+          >
+            <SearchLine size={18} />
+          </Button>
+        </TooltipWrapper>
       </div>
 
       <SearchDialog open={search} setOpen={setSearch} />
