@@ -77,6 +77,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           'group relative w-full flex flex-col text-foreground rounded-md',
           !comment.parentId && 'bg-grayAlpha-100',
         )}
+        key={comment.updatedAt} // Add key to force re-render
       >
         <div
           className={cn(

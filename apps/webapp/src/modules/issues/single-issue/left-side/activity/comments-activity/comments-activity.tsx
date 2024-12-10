@@ -1,5 +1,5 @@
 import { Timeline } from '@tegonhq/ui/components/timeline';
-import { sort } from 'fast-sort';
+// import { sort } from 'fast-sort';
 import { observer } from 'mobx-react-lite';
 
 import type { User } from 'common/types';
@@ -12,39 +12,67 @@ import { useContextStore } from 'store/global-context-provider';
 
 import { CommentActivity } from './comment-activity';
 import { IssueComment } from './issue-comment';
+import { useEffect, useState } from 'react';
 
-export const CommentsActivity = observer(() => {
+interface CommentsActivityProps {
+  commentOrder?: number;
+}
+
+export const CommentsActivity = observer(({ commentOrder = -1 }: CommentsActivityProps) => {
   const issue = useIssueData();
   const { commentsStore } = useContextStore();
 
-  const comments = sort(commentsStore.getComments(issue.id)).asc(
-    (comment: IssueCommentType) => new Date(comment.createdAt),
-  ) as IssueCommentType[];
+  // State to manage sorted comments
+  const [sortedComments, setSortedComments] = useState<IssueCommentType[]>([]);
 
   const { users, isLoading } = useUsersData(true);
 
+  useEffect(() => {
+    // Fetch and sort comments whenever the order or comments change
+    const comments = commentsStore.getComments(issue.id);
+    let sorted = [...comments]
+    if(commentOrder>=0){
+        sorted = [...comments].sort((a, b) => {
+        const dateA = new Date(a.updatedAt).getTime();
+        const dateB = new Date(b.updatedAt).getTime();
+        return commentOrder > 0 ? dateB - dateA : dateA - dateB;
+      });
+    }
+    else{
+        sorted = [...comments].sort((a, b) => {
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return dateA - dateB;
+      });
+    }
+
+    setSortedComments(sorted); // Update state with sorted comments
+  }, [commentOrder,commentsStore, commentsStore.comments.length, issue.id]);
+
   function getUserData(userId: string) {
     return users.find((user: User) => user.id === userId);
+  }
+
+  function getChildComments(issueCommentId: string) {
+    return sortedComments.filter(
+      (comment: IssueCommentType) => comment.parentId === issueCommentId,
+    );
   }
 
   if (isLoading) {
     return null;
   }
 
-  function getChildComments(issueCommentId: string) {
-    return comments.filter(
-      (comment: IssueCommentType) => comment.parentId === issueCommentId,
-    );
-  }
-
   return (
     <div className="my-2 w-full flex flex-col gap-4">
-      <Timeline>
-        {comments
+       {commentOrder==1 && <IssueComment />}
+       <Timeline>
+        {sortedComments
           .filter((comment: IssueCommentType) => !comment.parentId)
           .map((comment: IssueCommentType, index: number) => (
             <CommentActivity
-              comment={comment}
+              issueId={issue.id}
+              commentId={comment.id}
               hasMore={index > 0}
               key={comment.id}
               user={getUserData(comment.userId)}
@@ -55,7 +83,8 @@ export const CommentsActivity = observer(() => {
           ))}
       </Timeline>
 
-      <IssueComment />
+
+      {commentOrder<1 && <IssueComment />}
     </div>
   );
 });
