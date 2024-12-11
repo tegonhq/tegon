@@ -61,7 +61,7 @@ export class IssuesController {
     @SessionDecorator() session: SessionContainer,
     @Query() teamParams: TeamRequestParamsDto,
     @Body() issueData: { issues: UpdateIssueDto[] },
-  ): Promise<Issue[]> {
+  ): Promise<string[]> {
     const userId = session.getUserId();
     const issues = [];
 
@@ -73,7 +73,7 @@ export class IssuesController {
         { issueId },
         userId,
       );
-      issues.push(responseIssue);
+      issues.push(responseIssue.id);
     }
 
     return issues;
@@ -84,7 +84,7 @@ export class IssuesController {
   async bulkCreateIssues(
     @SessionDecorator() session: SessionContainer,
     @Body() issueData: { issues: CreateIssueDto[] },
-  ): Promise<Issue[]> {
+  ): Promise<string[]> {
     const userId = session.getUserId();
     const issues = [];
 
@@ -93,7 +93,7 @@ export class IssuesController {
         issue,
         userId,
       );
-      issues.push(responseIssue);
+      issues.push(responseIssue.id);
     }
 
     return issues;

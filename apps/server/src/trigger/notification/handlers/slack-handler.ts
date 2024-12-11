@@ -11,7 +11,12 @@ import {
 } from '@tegonhq/types';
 import axios from 'axios';
 
-import { getSlackNotificationData, getUnassingedNotification } from '../utils';
+import {
+  getIssueMetadata,
+  getNotificationData,
+  getUnassingedNotification,
+  IssueMetadata,
+} from '../utils';
 
 const prisma = new PrismaClient();
 
@@ -29,13 +34,12 @@ export const slackHandler = async (payload: ActionEventPayload) => {
         where: { id: workspaceId },
       });
 
-      const { type, actionData, subscriberIds } =
-        await getSlackNotificationData(
-          prisma,
-          notificationType,
-          createdById,
-          notificationData,
-        );
+      const { type, actionData, subscriberIds } = await getNotificationData(
+        prisma,
+        notificationType,
+        createdById,
+        notificationData,
+      );
 
       const createdBy = await prisma.user.findUnique({
         where: { id: createdById },
@@ -299,35 +303,4 @@ function formatDate(date: Date | string): string {
     month: 'short',
     day: 'numeric',
   });
-}
-
-interface IssueMetadata extends Issue {
-  assignee?: string;
-  state?: string;
-  teamName?: string;
-}
-async function getIssueMetadata(
-  prisma: PrismaClient,
-  issue: Issue,
-): Promise<IssueMetadata> {
-  let assignee = 'No Assignee';
-  if (issue.assigneeId) {
-    const assigneeData = await prisma.user.findUnique({
-      where: { id: issue.assigneeId },
-    });
-    assignee = assigneeData.fullname;
-  }
-
-  const state = await prisma.workflow.findUnique({
-    where: { id: issue.stateId },
-  });
-
-  const team = await prisma.team.findUnique({ where: { id: issue.teamId } });
-
-  return {
-    ...issue,
-    assignee,
-    state: state?.name ?? 'No State',
-    teamName: team?.name ?? 'No Team',
-  };
 }
