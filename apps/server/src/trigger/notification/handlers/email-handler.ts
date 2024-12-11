@@ -1,6 +1,3 @@
-import * as fs from 'fs';
-import * as path from 'path';
-
 import { PrismaClient } from '@prisma/client';
 import {
   ActionEventPayload,
@@ -10,10 +7,10 @@ import {
   User,
   Workspace,
 } from '@tegonhq/types';
-import * as Handlebars from 'handlebars';
 import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
+import { generateEmailTemplate } from './notificationTemplate';
 import {
   getIssueMetadata,
   getNotificationData,
@@ -21,13 +18,6 @@ import {
 } from '../utils';
 
 const prisma = new PrismaClient();
-
-const templatePath = path.join(
-  __dirname,
-  '../templates/notificationTemplate.hbs',
-);
-const templateSource = fs.readFileSync(templatePath, 'utf-8');
-const template = Handlebars.compile(templateSource);
 
 class MailService {
   private transporter: nodemailer.Transporter;
@@ -132,7 +122,7 @@ export const emailHandler = async (payload: ActionEventPayload) => {
         mailService.sendMail({
           to: user.email,
           subject: `${createdBy.fullname} unassigned an issue from you: [${templateData.issueNumber}]`,
-          html: template(templateData),
+          html: generateEmailTemplate(templateData),
         });
       }
 
@@ -211,7 +201,7 @@ async function getEmailContent(
 
       return {
         subject: `${createdBy.fullname} assigned an issue to you: [${templateData.issueNumber}]`,
-        html: template(templateData),
+        html: generateEmailTemplate(templateData),
       };
 
     case NotificationActionType.IssueBlocks:
@@ -227,7 +217,7 @@ async function getEmailContent(
 
       return {
         subject: `Issue Block Notification: [${blockTemplateData.issueNumber}]`,
-        html: template(blockTemplateData),
+        html: generateEmailTemplate(blockTemplateData),
       };
 
     case NotificationActionType.IssueNewComment:
@@ -242,7 +232,7 @@ async function getEmailContent(
 
       return {
         subject: `New comment on [${commentTemplateData.issueNumber}]`,
-        html: template(commentTemplateData),
+        html: generateEmailTemplate(commentTemplateData),
       };
 
     case NotificationActionType.IssueStatusChanged:
@@ -258,7 +248,7 @@ async function getEmailContent(
 
       return {
         subject: `Status Changed: [${statusTemplateData.issueNumber}]`,
-        html: template(statusTemplateData),
+        html: generateEmailTemplate(statusTemplateData),
       };
 
     case NotificationActionType.IssuePriorityChanged:
@@ -273,7 +263,7 @@ async function getEmailContent(
 
       return {
         subject: `Priority Changed: [${priorityTemplateData.issueNumber}]`,
-        html: template(priorityTemplateData),
+        html: generateEmailTemplate(priorityTemplateData),
       };
 
     default:
