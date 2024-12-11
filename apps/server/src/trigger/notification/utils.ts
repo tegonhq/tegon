@@ -72,7 +72,7 @@ async function handlePriorityChange(toPriority: number) {
   return null;
 }
 
-export async function getSlackNotificationData(
+export async function getNotificationData(
   prisma: PrismaClient,
   eventType: NotificationEventFrom,
   createdById: string,
@@ -150,6 +150,7 @@ export async function getSlackNotificationData(
           prisma,
         );
       }
+      subscriberIds = issueComment.issue.subscriberIds;
       actionData = { issueComment: { ...issueComment, bodyMarkdown } };
       break;
 
@@ -279,6 +280,38 @@ export async function getUnassingedNotification(
     return { issue, fromAssigneeId };
   }
   return undefined;
+}
+
+export interface IssueMetadata extends Issue {
+  assignee?: string;
+  state?: string;
+  teamName?: string;
+}
+
+export async function getIssueMetadata(
+  prisma: PrismaClient,
+  issue: Issue,
+): Promise<IssueMetadata> {
+  let assignee = 'No Assignee';
+  if (issue.assigneeId) {
+    const assigneeData = await prisma.user.findUnique({
+      where: { id: issue.assigneeId },
+    });
+    assignee = assigneeData.fullname;
+  }
+
+  const state = await prisma.workflow.findUnique({
+    where: { id: issue.stateId },
+  });
+
+  const team = await prisma.team.findUnique({ where: { id: issue.teamId } });
+
+  return {
+    ...issue,
+    assignee,
+    state: state?.name ?? 'No State',
+    teamName: team?.name ?? 'No Team',
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

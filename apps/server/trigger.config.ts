@@ -12,6 +12,10 @@ export const resolveEnvVars: ResolveEnvironmentVariablesFunction = async ({
   return {
     variables: {
       DATABASE_URL: env.DATABASE_URL,
+      SMTP_HOST: env.SMTP_HOST,
+      SMTP_PORT: env.SMTP_PORT,
+      SMTP_USER: env.SMTP_USER,
+      SMTP_PASSWORD: env.SMTP_PASSWORD,
     },
   };
 };
