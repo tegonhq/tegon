@@ -1,21 +1,19 @@
 ---
-title: 'Action: Bug Enricher Example'
+title: "Action: Bug Enricher Example"
 sidebarTitle: "Bug Enricher Example"
 ---
 
-
-
-Below is an example to help you understand how you can create a action on any Tegon event. 
+Below is an example to help you understand how you can create a action on any Tegon event.
 
 ## Example Action
 
 #### Bug Enricher
 
-Whenever an issue is created in Tegon and labeled as `bug` then create an action which call OpenAI to search for possible solution and put the solution as a comment of that issue. 
+Whenever an issue is created in Tegon and labeled as `bug` then create an action which call OpenAI to search for possible solution and put the solution as a comment of that issue.
 
 1.  Create a new folder for this action
 
-```bash 
+```bash
 mkdir bug-resolution
 ```
 
@@ -32,6 +30,7 @@ npx @tegonhq/cli init && npm install
 ```
 
 4. Let's edit the config.json as below to tell Tegon to trigger the function when issue is created.
+
 ```json bug-resolution/config.json
 {
   "slug": "bug-resolver",
@@ -44,13 +43,12 @@ npx @tegonhq/cli init && npm install
   ],
   "integrations": []
 }
-
 ```
 
 5. Then let's edit the `index.ts` with the below content
 
 ```ts bug-resolution/index.ts
-import { ActionEventPayload } from '@tegonhq/sdk';
+import { ActionEventPayload } from "@tegonhq/sdk";
 import {
   ActionEventPayload,
   createIssueComment,
@@ -58,8 +56,8 @@ import {
   Label,
   getIssueById,
   getAIRequest,
-} from '@tegonhq/sdk';
-import axios from 'axios';
+} from "@tegonhq/sdk";
+import axios from "axios";
 
 export async function run(eventPayload: ActionEventPayload) {
   const { modelId: issueId, action } = actionPayload;
@@ -75,13 +73,12 @@ export async function run(eventPayload: ActionEventPayload) {
 
   // Map the labels of the issue with all labels
   const labelMap = Object.fromEntries(
-    labels.map((label: Label) => [label.id, label.name]),
+    labels.map((label: Label) => [label.id, label.name])
   );
-
 
   // Check if bug label is assigned to issue
   const hasBugLabel = issue.labelIds.some(
-    (labelId: string) => labelMap[labelId].toLowerCase() === 'bug',
+    (labelId: string) => labelMap[labelId].toLowerCase() === "bug"
   );
 
   if (!hasBugLabel) {
@@ -90,14 +87,14 @@ export async function run(eventPayload: ActionEventPayload) {
 
   const requestData = {
     messages: [
-      { role: 'system', content: PARTIAL_SOLUTION_PROMPT },
+      { role: "system", content: PARTIAL_SOLUTION_PROMPT },
       {
-        role: 'user',
+        role: "user",
         content: `[INPUT] bug_description: ${issue.description}`,
       },
     ],
     llmModel: LLMMappings.GPT35TURBO,
-    model: 'BugSuggestion',
+    model: "BugSuggestion",
     workspaceId: issue.team.workspaceId,
   };
 
@@ -112,7 +109,6 @@ export async function run(eventPayload: ActionEventPayload) {
     bodyMarkdown: response,
   });
 }
-
 ```
 
 6. Let's create a new file `utils.ts` and add prompt to that.
@@ -229,20 +225,13 @@ Here’s an example assuming you are using Laravel Mail:
 
 You can check full prompt [here](https://github.com/tegonhq/tegon/blob/main/actions/bug-enricher/utils.ts).
 
-<<<<<<< HEAD
 7. Run the action in dev mode and create a issue with bug as label
 
 ```bash
 npx @tegonhq/cli dev
 ```
 
-<Tip>You can find the whole code for this example action [here](https://github.com/tegonhq/tegon/tree/main/actions/bug-enricher)</Tip>
-=======
-4. Finally you can deploy the action to your workspace.
-
-```bash
-TOKEN=<your-pat> npx @tegonhq/cli deploy --workspace-id="<workspace-id>"
-```
-
-<Tip>You can find the whole code for this example trigger [here](https://github.com/tegonhq/tegon/tree/main/actions/bug-enricher)</Tip>
->>>>>>> 89eeb897 (Fix: server is broken when there are multiple replication slots)
+<Tip>
+  You can find the whole code for this example action
+  [here](https://github.com/tegonhq/tegon/tree/main/actions/bug-enricher)
+</Tip>

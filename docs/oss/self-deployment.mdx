@@ -10,8 +10,10 @@ This guide outlines a quick way to start self-hosting Tegon. Scaling, security, 
 Should the burden ever get too much, we'd be happy to see you on [Tegon.ai cloud](https://app.tegon.ai) where we deal with these concerns for you.
 
 <Accordion title="Please consider these additional warnings">
-- We use trigger.dev for the background jobs, but there is a little bit of extra work to deploy them
-- We are also restricted by the limitations of trigger.dev in scaling. You can check those in their [documentation](https://trigger.dev/docs/v3/open-source-self-hosting#caveats).
+  - We use trigger.dev for the background jobs, but there is a little bit of
+  extra work to deploy them - We are also restricted by the limitations of
+  trigger.dev in scaling. You can check those in their
+  [documentation](https://trigger.dev/docs/v3/open-source-self-hosting#caveats).
 </Accordion>
 
 ## Requirements
@@ -20,6 +22,69 @@ Should the burden ever get too much, we'd be happy to see you on [Tegon.ai cloud
 - 8 GB RAM
 - Debian or derivative
 - Optional: A separate machine for the worker components
+
+## Important Notes
+
+### Storage
+
+- We currently only support Google Cloud Storage for file attachments
+- Your service account needs Storage Object Admin (`roles/storage.objectAdmin`) permissions
+- Other storage providers are planned for future releases
+
+### Email
+
+- SMTP configuration is required for user authentication
+- Compatible with most SMTP providers (Gmail, Amazon SES, SendGrid, etc.)
+- Used for sending magic links during login and email notifications
+
+### Background Jobs
+
+- We use trigger.dev for notifications and automation
+- Core features work without trigger.dev, but you'll miss:
+  - User notifications
+  - Automated cycle transitions
+  - Scheduled tasks
+- Note: trigger.dev has some scaling limitations in self-hosted environments
+
+### AI Features
+
+#### OpenAI Integration
+
+- Used for enhanced AI features:
+  - Auto-generating issue titles
+  - Elaborating descriptions
+  - Breaking issues into sub-issues
+  - Smart filtering suggestions
+- Optional: Will fallback to local models if not configured
+- Configure by adding to `.env`:
+
+```bash
+OPENAI_API_KEY=your-openai-key
+```
+
+#### Cohere Integration
+
+- Used for semantic search and issue management:
+  - Finding duplicate issues
+  - Semantic search capabilities
+  - Re-ranking search results
+- Optional: Will fallback to Typesense embeddings if not configured
+- Configure by adding to `.env`:
+
+```bash
+COHERE_API_KEY=your-cohere-key
+```
+
+#### Local AI Alternative
+
+- Uses Ollama with open-source models as fallback
+- Decent performance but may not match OpenAI/Cohere quality
+- Configure preferred model in `.env`:
+
+```bash
+LOCAL_MODEL=gemma2:2b  # or other models like phi3, llama3, mistral
+OLLAMA_HOST=http://tegon-ollama:11434
+```
 
 ## Instructions
 
@@ -32,20 +97,107 @@ git clone https://github.com/tegonhq/docker.git
 cd docker
 ```
 
-3. Create a `.env` file. This file contains configuration for all the services used to run Tegon. Please fill in or modify the configurations as needed. 
+3. Create a `.env` file. This file contains configuration for all the services used to run Tegon. Please fill in or modify the configurations as needed.
 
 ```bash
 cp .env.example .env
 ```
 
-4. Run the start script and follow the prompts, We handle 2 major steps in start script setting up trigger.dev and setting up tegon for you. 
+4. Configure the required services:
+
+   #### Storage Configuration
+
+   You'll need to set up Google Cloud Storage for file attachments:
+
+   1. Create a Google Cloud project if you haven't already
+   2. Create a storage bucket in Google Cloud
+   3. Create a service account and download the JSON key file
+   4. Place your service account JSON file in the `certs` directory (this will be mounted to the server container)
+   5. Add the following to your `.env` file:
+
+   ```bash
+   GCP_BUCKET_NAME=your-bucket-name
+   GCP_SERVICE_ACCOUNT_FILE=/path/to/service-account.json
+   PUBLIC_ATTACHMENT_URL=https://your-domain.com/api
+   ```
+
+   #### Email Configuration
+
+   Configure SMTP settings for authentication emails:
+
+   ```bash
+   SMTP_HOST=your-smtp-host
+   SMTP_PORT=587  # or your SMTP port
+   SMTP_USER=your-smtp-username
+   SMTP_PASSWORD=your-smtp-password
+   SMTP_DEFAULT_FROM=noreply@yourdomain.com
+   ```
+
+   #### AI Services Configuration
+
+   Configure AI services for enhanced features:
+
+   ```bash
+   # OpenAI for issue management features
+   OPENAI_API_KEY=your-openai-key
+
+   # Cohere for semantic search
+   COHERE_API_KEY=your-cohere-key
+
+   # Local AI fallback settings (optional)
+   LOCAL_MODEL=gemma2:2b
+   OLLAMA_HOST=http://tegon-ollama:11434
+   ```
+
+   #### Trigger.dev Configuration
+
+   1. Open `init-trigger.sh` in your editor
+   2. Update the following lines with your information:
+
+   ```bash
+   INSERT INTO \"User\" (
+     id, admin, \"authenticationMethod\", \"displayName\", email, name, \"confirmedBasicDetails\", \"updatedAt\"
+   ) VALUES (
+     '$TRIGGER_COMMON_ID', true, 'MAGIC_LINK', 'YourName', 'your-email@domain.com', 'YourName', true, CURRENT_TIMESTAMP
+   );
+   ```
+
+5. Run the start script and follow the prompts, We handle 2 major steps in start script setting up trigger.dev and setting up tegon for you.
 
 ```bash
 ./start.sh
 ```
 
-5. You can now check tegon at `http://localhost:8000`
+6. You can now check tegon at `http://localhost:8000`
 
 ## FAQ
+
+### Storage Configuration
+
+**Q: Can I use a different storage provider?**
+A: Currently, we only support Google Cloud Storage. We're working on adding support for other providers.
+
+**Q: What permissions does the service account need?**
+A: The service account needs Storage Object Admin (`roles/storage.objectAdmin`) permissions on the bucket.
+
+### Email Configuration
+
+**Q: Which SMTP providers can I use?**
+A: You can use any SMTP provider (Gmail, Amazon SES, SendGrid, etc.) that supports SMTP authentication.
+
+### Trigger.dev Configuration
+
+**Q: What is trigger.dev used for in Tegon?**
+A: We use trigger.dev for managing background jobs, specifically:
+
+- Sending notifications to users
+- Automating cycle transitions and updates
+- Running scheduled tasks
+
+**Q: Can I run Tegon without trigger.dev?**
+A: While the core functionality of Tegon will work, features like notifications and automated cycle transitions will not be available without trigger.dev properly configured.
+
+**Q: Are there any limitations with trigger.dev?**
+A: Yes, we are bound by trigger.dev's open-source scaling limitations. You can review these in their [documentation](https://trigger.dev/docs/v3/open-source-self-hosting#caveats).
 
 If there are any questions that we couldn't answer here, we'd love to help you get started. [Join our Slack](https://join.slack.com/t/tegoncommunity/shared_invite/zt-2i1e781ip-zwauijRV9TRtRKoJi3tqng) and feel free to ask your questions in the #support channel.
