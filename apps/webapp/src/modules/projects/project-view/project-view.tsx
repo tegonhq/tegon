@@ -14,6 +14,7 @@ import { Overview } from './overview';
 import { RightSide } from './overview/right-side';
 import { ProjectProgress } from './project-progress';
 import { Header } from '../header';
+import { useRouter } from 'next/router';
 
 export const Project = observer(({ view }: { view: 'overview' | 'issues' }) => {
   const project = useProject();
@@ -42,10 +43,14 @@ export const ProjectView = withApplicationStore(() => {
     'overview',
   );
 
+  const {
+    query: { workspaceSlug },
+  } = useRouter();
+
   return (
     <MainLayout
       header={
-        <Header title="Projects" isProjectView view={view} setView={setView} />
+        <Header title="Projects" isProjectView view={view} setView={setView} href={`/${workspaceSlug}/projects`}  />
       }
     >
       <ContentBox>

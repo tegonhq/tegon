@@ -14,19 +14,21 @@ import { useProject } from 'hooks/projects';
 
 import { ProjectDetailsDropdown } from './dropdowns/project-details-dropdown';
 import { NewProjectDialog } from './new-project-dialog';
+import Link from 'next/link';
 
 interface HeaderProps {
   title: string;
   isProjectView?: boolean;
   view?: string;
   setView?: (view: 'overview' | 'issues') => void;
+  href?:string
 }
 
 export const Header = observer(
-  ({ title, isProjectView, view, setView }: HeaderProps) => {
+  ({ title, isProjectView, view, setView, href }: HeaderProps) => {
     const [newProjectDialog, setNewProjectDialog] = React.useState(false);
     const project = useProject();
-
+    
     const actions = (
       <>
         {!isProjectView && (
@@ -49,7 +51,13 @@ export const Header = observer(
       <HeaderLayout actions={actions}>
         <Breadcrumb>
           <BreadcrumbItem>
-            <BreadcrumbLink>{title}</BreadcrumbLink>
+              {href?
+                <Link href={href}>
+                  <BreadcrumbLink>{title}</BreadcrumbLink>
+                </Link>
+              :
+                <BreadcrumbLink>{title}</BreadcrumbLink>
+              }
           </BreadcrumbItem>
           {isProjectView && (
             <>
