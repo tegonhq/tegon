@@ -13,6 +13,7 @@ import { useContextStore } from 'store/global-context-provider';
 import { CommentActivity } from './comment-activity';
 import { IssueComment } from './issue-comment';
 import { useEffect, useState } from 'react';
+import { sort } from 'fast-sort';
 
 interface CommentsActivityProps {
   commentOrder?: number;
@@ -31,20 +32,18 @@ export const CommentsActivity = observer(({ commentOrder = -1 }: CommentsActivit
     // Fetch and sort comments whenever the order or comments change
     const comments = commentsStore.getComments(issue.id);
     let sorted = [...comments]
-    if(commentOrder>=0){
-        sorted = [...comments].sort((a, b) => {
-        const dateA = new Date(a.updatedAt).getTime();
-        const dateB = new Date(b.updatedAt).getTime();
-        return commentOrder > 0 ? dateB - dateA : dateA - dateB;
-      });
-    }
-    else{
-        sorted = [...comments].sort((a, b) => {
-        const dateA = new Date(a.createdAt).getTime();
-        const dateB = new Date(b.createdAt).getTime();
-        return dateA - dateB;
-      });
-    }
+    sorted = sort(sorted)[
+      commentOrder > 0
+        ? 'desc'
+        : commentOrder === 0
+        ? 'asc'
+        : 'asc'
+    ]((comment) =>
+      commentOrder >= 0
+        ? new Date(comment.updatedAt).getTime()
+        : new Date(comment.createdAt).getTime()
+    );
+    
 
     setSortedComments(sorted); // Update state with sorted comments
   }, [commentOrder,commentsStore, commentsStore.comments.length, issue.id]);
