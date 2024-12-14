@@ -6,23 +6,25 @@ import {
   TabsTrigger,
 } from '@tegonhq/ui/components/tabs';
 import { ActivityLine, AI, SendLine } from '@tegonhq/ui/icons';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 import React from 'react';
 
 import { CommentsActivity } from './comments-activity';
 import { IssueActivity } from './issue-activity';
 import { SubscribeView } from './issue-activity/subscribe-view';
 import { IssueSummary } from './summary';
-import { ArrowDown, ArrowUp } from 'lucide-react';
 
 export function Activity() {
   const [showSummary, setShowSummary] = React.useState(false);
   const [commentsOrder, setCommentsOrder] = React.useState(-1);
-  const [activeTab, setActiveTab] = React.useState('comments');// Track active tab
+  const [activeTab, setActiveTab] = React.useState('comments'); // Track active tab
 
   return (
-    <Tabs defaultValue="comments"
-    onValueChange={(value) => setActiveTab(value)} // Update active tab
-     className="mt-3 p-0 px-6">
+    <Tabs
+      defaultValue="comments"
+      onValueChange={(value) => setActiveTab(value)} // Update active tab
+      className="mt-3 p-0 px-6"
+    >
       <div className="flex flex-col">
         <div className="flex justify-between items-start">
           <div className="flex flex-col gap-1">
@@ -47,19 +49,27 @@ export function Activity() {
           <div className="flex items-end flex-col gap-1">
             <SubscribeView />
             <div className="flex flex-row gap-3">
-             {activeTab === 'comments' && <Button
-                variant="secondary"
-                className="flex gap-1"
-                onClick={() => {
-                  setCommentsOrder(prev=>{
-                    if(prev<=0) return 1;
-                    return 0;
-                  })
-                }}
-              >
-                {commentsOrder>0? <ArrowDown size={16} />:<ArrowUp size={16} />}
-                {commentsOrder>0? 'Newest First':'Oldest First'}
-              </Button>}
+              {activeTab === 'comments' && (
+                <Button
+                  variant="secondary"
+                  className="flex gap-1"
+                  onClick={() => {
+                    setCommentsOrder((prev) => {
+                      if (prev <= 0) {
+                        return 1;
+                      }
+                      return 0;
+                    });
+                  }}
+                >
+                  {commentsOrder > 0 ? (
+                    <ArrowDown size={16} />
+                  ) : (
+                    <ArrowUp size={16} />
+                  )}
+                  {commentsOrder > 0 ? 'Newest First' : 'Oldest First'}
+                </Button>
+              )}
               <Button
                 variant="secondary"
                 className="flex gap-1"
