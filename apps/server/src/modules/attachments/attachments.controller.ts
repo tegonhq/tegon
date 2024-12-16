@@ -79,7 +79,7 @@ export class AttachmentController {
     @Param() attachementRequestParams: AttachmentRequestParams,
   ) {
     try {
-      return await this.attachementService.getFileFromGCSSignedUrl(
+      return await this.attachementService.getFileFromStorageSignedUrl(
         attachementRequestParams,
         workspaceId,
       );
@@ -96,7 +96,7 @@ export class AttachmentController {
     @Res() res: Response,
   ) {
     try {
-      const file = await this.attachementService.getFileFromGCS(
+      const file = await this.attachementService.getFileFromStorage(
         attachementRequestParams,
         workspaceId,
       );

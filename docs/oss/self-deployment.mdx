@@ -27,9 +27,79 @@ Should the burden ever get too much, we'd be happy to see you on [Tegon.ai cloud
 
 ### Storage
 
-- We currently only support Google Cloud Storage for file attachments
-- Your service account needs Storage Object Admin (`roles/storage.objectAdmin`) permissions
-- Other storage providers are planned for future releases
+- We support both Google Cloud Storage and Amazon S3 for file attachments
+- Default storage provider is Google Cloud Storage
+- To configure your preferred storage provider, set in `.env`:
+
+  #### Google Cloud Storage Configuration
+
+  - Create a Google Cloud project if you haven't already
+  - Create a storage bucket in Google Cloud
+  - Create a service account and download the JSON key file
+  - Place your service account JSON file in the `certs` directory
+  - Add to your `.env` file:
+
+  ```bash
+  STORAGE_PROVIDER=GCP
+  BUCKET_NAME=your-bucket-name
+  GCP_SERVICE_ACCOUNT_FILE=/path/to/service-account.json
+  PUBLIC_ATTACHMENT_URL=https://your-domain.com/api
+  ```
+
+  Your service account needs Storage Object Admin (`roles/storage.objectAdmin`) permissions.
+
+  #### Amazon S3 Configuration
+
+  - Create an S3 bucket in your AWS account
+  - Create an IAM user with the following policy:
+
+  ```json
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:DeleteObject",
+          "s3:ListBucket",
+          "s3:GetObjectAttributes",
+          "s3:HeadObject"
+        ],
+        "Resource": [
+          "arn:aws:s3:::your-bucket-name/",
+          "arn:aws:s3:::your-bucket-name"
+        ]
+      }
+    ]
+  }
+  ```
+
+  - Add to your `.env` file:
+
+  ```bash
+  STORAGE_PROVIDER=AWS
+  BUCKET_NAME=your-bucket-name
+  AWS_REGION=your-region
+  AWS_ACCESS_KEY_ID=your-access-key
+  AWS_SECRET_ACCESS_KEY=your-secret-key
+  PUBLIC_ATTACHMENT_URL=https://your-domain.com/api
+  ```
+
+Your bucket needs the following CORS configuration:
+
+```json
+[
+  {
+    "AllowedHeaders": ["*"],
+    "AllowedMethods": ["GET", "PUT", "POST", "DELETE", "HEAD"],
+    "AllowedOrigins": ["https://app.tegon.ai", "http://localhost:3000"],
+    "ExposeHeaders": ["ETag"],
+    "MaxAgeSeconds": 3000
+  }
+]
+```
 
 ### Email
 
