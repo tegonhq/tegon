@@ -62,7 +62,7 @@ export const CommentsActivity = observer(
 
     return (
       <div className="my-2 w-full flex flex-col gap-4">
-        {commentOrder == 1 && <IssueComment />}
+        {commentOrder === 1 && <IssueComment />}
         <Timeline>
           {sortedComments
             .filter((comment: IssueCommentType) => !comment.parentId)

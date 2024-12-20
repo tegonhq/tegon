@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
@@ -14,7 +15,6 @@ import { Overview } from './overview';
 import { RightSide } from './overview/right-side';
 import { ProjectProgress } from './project-progress';
 import { Header } from '../header';
-import { useRouter } from 'next/router';
 
 export const Project = observer(({ view }: { view: 'overview' | 'issues' }) => {
   const project = useProject();
@@ -50,7 +50,13 @@ export const ProjectView = withApplicationStore(() => {
   return (
     <MainLayout
       header={
-        <Header title="Projects" isProjectView view={view} setView={setView} href={`/${workspaceSlug}/projects`}  />
+        <Header
+          title="Projects"
+          isProjectView
+          view={view}
+          setView={setView}
+          href={`/${workspaceSlug}/projects`}
+        />
       }
     >
       <ContentBox>
