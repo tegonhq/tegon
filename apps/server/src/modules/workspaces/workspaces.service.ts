@@ -121,7 +121,7 @@ export default class WorkspacesService {
       supertokens.convertToRecipeUserId(userId),
     );
 
-    res.send({ status: 200, message: 'impersonate' });
+    res.send({ status: 200, message: 'success' });
   }
 
   async createWorkspace(

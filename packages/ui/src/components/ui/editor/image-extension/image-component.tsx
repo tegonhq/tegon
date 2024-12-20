@@ -36,7 +36,7 @@ export const ImageComponent = (props: any) => {
 
   const images = getNodeTypesWithImageExtension(editor);
 
-  if (loading || !src) {
+  if (loading) {
     return null;
   }
 
