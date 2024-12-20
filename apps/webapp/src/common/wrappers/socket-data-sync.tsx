@@ -98,10 +98,10 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
         [MODELS.ConversationHistory]: conversationHistoryStore,
       };
 
-      socket.on('message', (newMessage: string) => {
+      socket.on('message', async (newMessage: string) => {
         const data = JSON.parse(newMessage);
 
-        saveSocketData([data], MODEL_STORE_MAP);
+        await saveSocketData([data], MODEL_STORE_MAP);
         localStorage.setItem(
           `lastSequenceId_${hash(hashKey)}`,
           `${data.sequenceId}`,

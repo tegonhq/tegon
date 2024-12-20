@@ -1,4 +1,4 @@
-FROM node:18-alpine AS pruner
+FROM node:18-alpine3.20 AS pruner
 WORKDIR /app
 
 COPY --chown=node:node . .
@@ -6,7 +6,7 @@ RUN npx -q turbo@1.10.9 prune --scope=server --docker
 RUN find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
 
 # Base strategy to have layer caching
-FROM node:18-alpine AS base
+FROM node:18-alpine3.20 AS base
 RUN apk add openssl dumb-init libc6-compat
 WORKDIR /app
 COPY --chown=node:node .gitignore .gitignore
@@ -45,7 +45,11 @@ COPY --from=pruner --chown=node:node /app/apps/server/prisma/schema.prisma /app/
 RUN pnpm run build --filter=server...
 
 # Runner
-FROM node:18-alpine AS runner
+FROM node:18-alpine3.20 AS runner
+RUN apk update \
+  && apk add --no-cache openssl\
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf /var/cache/apk/*
 RUN apk add --no-cache dumb-init bash
 WORKDIR /app
 RUN corepack enable
