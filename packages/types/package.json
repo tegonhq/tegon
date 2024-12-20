@@ -21,9 +21,10 @@
     "@tegonhq/typescript-config": "workspace:*",
     "@types/node": "^20",
     "class-transformer": "0.5.1",
+    "esbuild": "0.24.0",
+    "reflect-metadata": "^0.2.1",
     "rimraf": "^3.0.2",
     "tsup": "^8.0.1",
-    "reflect-metadata": "^0.2.1",
     "typescript": "^5.4.5"
   },
   ".": {
@@ -35,7 +36,7 @@
     "types": "./dist/index.d.ts"
   },
   "dependencies": {
-    "class-validator": "0.14.1",
-    "ai": "^3.2.37"
+    "ai": "^3.2.37",
+    "class-validator": "0.14.1"
   }
 }
