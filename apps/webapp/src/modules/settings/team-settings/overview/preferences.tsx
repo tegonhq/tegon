@@ -69,11 +69,8 @@ export const Preferences = observer(() => {
           <h3 className="text-lg"> Triage </h3>
 
           <p className="text-muted-foreground">
-            Triage is a special Inbox for your team. When an issue is created by
-            integration or by a workspace member not belonging to your specific
-            Linear team, it will appear here. Triage offers a chance to review,
-            update, and prioritize issues before they are added to your team
-            workflow
+          Triage is your central hub for managing incoming requests. It acts as a one-stop shop, capturing issues from various sources beyond your team. 
+          Integrate with GitHub issues, support platforms, or even capture requests raised directly in Slack by team members.
           </p>
 
           <div className="flex gap-1 max-w-[500px] mt-2">
