@@ -8,6 +8,7 @@ import { SettingsLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 
 import { TooltipWrapper } from 'common/wrappers/tooltip-wrapper';
+
 import { useContextStore } from 'store/global-context-provider';
 
 import { CompletedFilter } from './completed-filter';

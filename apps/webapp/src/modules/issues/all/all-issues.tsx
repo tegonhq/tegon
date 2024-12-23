@@ -20,6 +20,7 @@ import { useLocalState } from 'hooks/use-local-state';
 import { Header } from './header';
 import { IssuesViewOptions } from './issues-view-options';
 import { ListView } from './list-view';
+import { NoTeamContainer } from './no-team-container';
 import { FiltersView } from '../filters-view/filters-view';
 import { OverviewInsights } from '../overview-insights';
 
@@ -52,32 +53,36 @@ export const AllIssues = withApplicationStore(() => {
       }
     >
       <ContentBox>
-        <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel
-            collapsible={false}
-            order={1}
-            id="issues"
-            className="w-full flex flex-col"
-          >
-            <FiltersView Actions={<IssuesViewOptions />} />
-            <ListView />
-          </ResizablePanel>
-          {overview && (
-            <>
-              <ResizableHandle />
-              <ResizablePanel
-                collapsible={false}
-                maxSize={25}
-                minSize={25}
-                defaultSize={25}
-                order={2}
-                id="rightScreen"
-              >
-                <OverviewInsights />
-              </ResizablePanel>
-            </>
-          )}
-        </ResizablePanelGroup>
+        {team ? (
+          <ResizablePanelGroup direction="horizontal">
+            <ResizablePanel
+              collapsible={false}
+              order={1}
+              id="issues"
+              className="w-full flex flex-col"
+            >
+              <FiltersView Actions={<IssuesViewOptions />} />
+              <ListView />
+            </ResizablePanel>
+            {overview && (
+              <>
+                <ResizableHandle />
+                <ResizablePanel
+                  collapsible={false}
+                  maxSize={25}
+                  minSize={25}
+                  defaultSize={25}
+                  order={2}
+                  id="rightScreen"
+                >
+                  <OverviewInsights />
+                </ResizablePanel>
+              </>
+            )}
+          </ResizablePanelGroup>
+        ) : (
+          <NoTeamContainer />
+        )}
       </ContentBox>
     </MainLayout>
   );

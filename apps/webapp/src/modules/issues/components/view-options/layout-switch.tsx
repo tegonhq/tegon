@@ -4,6 +4,7 @@ import { Grid3X3 } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 
 import { TooltipWrapper } from 'common/wrappers/tooltip-wrapper';
+
 import { ViewEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
@@ -26,7 +27,7 @@ export const LayoutSwitch = observer(() => {
           <ListLine size={20} />
         </Button>
       </TooltipWrapper>
-      
+
       <TooltipWrapper tooltip="Kanban View">
         <Button
           onClick={() => updateView(ViewEnum.board)}
@@ -37,7 +38,7 @@ export const LayoutSwitch = observer(() => {
           <BoardLine size={20} />
         </Button>
       </TooltipWrapper>
-      
+
       <TooltipWrapper tooltip="Spreadsheet View">
         <Button
           onClick={() => updateView(ViewEnum.sheet)}

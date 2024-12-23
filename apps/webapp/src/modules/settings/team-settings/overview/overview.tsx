@@ -25,6 +25,7 @@ import { useCurrentTeam } from 'hooks/teams/use-current-team';
 
 import { useUpdateTeamMutation } from 'services/team';
 
+import { DeleteTeamButton } from './delete-team-button';
 import { OverviewSchema } from './overview.interface';
 import { Preferences } from './preferences';
 
@@ -35,7 +36,8 @@ export const Overview = observer(() => {
     replace,
     query: { workspaceSlug },
   } = useRouter();
-  const { mutate: updateTeam, isLoading } = useUpdateTeamMutation({
+
+  const { mutate: updateTeam } = useUpdateTeamMutation({
     onSuccess: (data: TeamType) => {
       replace(`/${workspaceSlug}/settings/teams/${data.identifier}/overview`);
 
@@ -133,13 +135,7 @@ export const Overview = observer(() => {
             so below.
           </p>
 
-          <Button
-            className="w-fit mt-2"
-            variant="destructive"
-            isLoading={isLoading}
-          >
-            Delete this team
-          </Button>
+          <DeleteTeamButton />
         </div>
       </SettingSection>
     </div>

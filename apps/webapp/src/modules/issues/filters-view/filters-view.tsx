@@ -6,6 +6,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 
 import { SCOPES } from 'common/scopes';
 import { TooltipWrapper } from 'common/wrappers/tooltip-wrapper';
+
 import { useContextStore } from 'store/global-context-provider';
 
 import { isEmpty } from './filter-utils';

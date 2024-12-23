@@ -86,8 +86,8 @@ export function BootstrapWrapper({ children }: Props) {
     modelNames: Object.values(MODELS),
     workspaceId: workspace?.id,
     userId: user.id,
-    onSuccess: (data: BootstrapResponse) => {
-      saveSocketData(data.syncActions, MODEL_STORE_MAP);
+    onSuccess: async (data: BootstrapResponse) => {
+      await saveSocketData(data.syncActions, MODEL_STORE_MAP);
       localStorage.setItem(
         `lastSequenceId_${hash(hashKey)}`,
         `${data.lastSequenceId}`,
@@ -100,8 +100,8 @@ export function BootstrapWrapper({ children }: Props) {
     workspaceId: workspace?.id,
     lastSequenceId,
     userId: user.id,
-    onSuccess: (data: BootstrapResponse) => {
-      saveSocketData(data.syncActions, MODEL_STORE_MAP);
+    onSuccess: async (data: BootstrapResponse) => {
+      await saveSocketData(data.syncActions, MODEL_STORE_MAP);
       localStorage.setItem(
         `lastSequenceId_${hash(hashKey)}`,
         `${data.lastSequenceId}`,
