@@ -5,7 +5,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@tegonhq/ui/components/tooltip';
-
 import { cn } from '@tegonhq/ui/lib/utils';
 
 interface TooltipWrapperProps {

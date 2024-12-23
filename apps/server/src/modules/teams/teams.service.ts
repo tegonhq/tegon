@@ -145,6 +145,43 @@ export default class TeamsService {
   }
 
   async deleteTeam(teamRequestParams: TeamRequestParams): Promise<Team> {
+    const teamIssues = await this.prisma.issue.findMany({
+      where: {
+        teamId: teamRequestParams.teamId,
+      },
+    });
+
+    if (teamIssues.length > 0) {
+      throw new BadRequestException(
+        'There are issues in this team, remove them before you delete',
+      );
+    }
+
+    // First, get all users who have this team
+    const usersWithTeam = await this.prisma.usersOnWorkspaces.findMany({
+      where: {
+        teamIds: {
+          has: teamRequestParams.teamId,
+        },
+      },
+    });
+
+    // Update each user to remove the team ID
+    await Promise.all(
+      usersWithTeam.map((user) =>
+        this.prisma.usersOnWorkspaces.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            teamIds: {
+              set: user.teamIds.filter((id) => id !== teamRequestParams.teamId),
+            },
+          },
+        }),
+      ),
+    );
+
     return await this.prisma.team.update({
       where: {
         id: teamRequestParams.teamId,

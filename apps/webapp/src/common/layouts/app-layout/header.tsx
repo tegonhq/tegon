@@ -5,6 +5,7 @@ import React from 'react';
 
 import { useNewIssue } from 'modules/issues/new-issue';
 import { SearchDialog } from 'modules/search';
+
 import { TooltipWrapper } from 'common/wrappers/tooltip-wrapper';
 
 export const Header = observer(() => {
