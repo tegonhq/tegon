@@ -9,6 +9,8 @@ import { ActivityLine, AI, SendLine } from '@tegonhq/ui/icons';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import React from 'react';
 
+import { useLocalCommonState } from 'hooks/use-local-state';
+
 import { CommentsActivity } from './comments-activity';
 import { IssueActivity } from './issue-activity';
 import { SubscribeView } from './issue-activity/subscribe-view';
@@ -16,7 +18,10 @@ import { IssueSummary } from './summary';
 
 export function Activity() {
   const [showSummary, setShowSummary] = React.useState(false);
-  const [commentsOrder, setCommentsOrder] = React.useState(-1);
+  const [commentsOrder, setCommentsOrder] = useLocalCommonState(
+    'issue_comments_order',
+    -1,
+  );
   const [activeTab, setActiveTab] = React.useState('comments'); // Track active tab
 
   return (

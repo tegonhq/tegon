@@ -18,6 +18,8 @@ import {
 
 import { useUpdateIssueCommentMutation } from 'services/issues';
 
+import { FileUpload } from '../../file-upload';
+
 interface EditCommentProps {
   value: string;
   comment: IssueCommentType;
@@ -65,26 +67,28 @@ export function EditComment({ value, onCancel, comment }: EditCommentProps) {
           }),
         ]}
         onChange={(e) => setCommentValue(e)}
-        className="w-full bg-transparent p-3 pt-0 pl-0"
+        className="w-full bg-transparent min-h-[44px] p-2 pt-0 pl-0 relative"
       >
+        <div className="absolute right-1 bottom-2 flex items-center gap-1">
+          <FileUpload withPosition={false} />
+
+          <Button
+            variant="ghost"
+            className="my-2 transition-all duration-500 ease-in-out"
+            onClick={onCancel}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="secondary"
+            className="my-2 transition-all duration-500 ease-in-out"
+            onClick={onSubmit}
+          >
+            Save
+          </Button>
+        </div>
         <EditorExtensions suggestionItems={suggestionItems} />
       </Editor>
-      <div className="flex justify-end items-center gap-2">
-        <Button
-          variant="ghost"
-          className="my-2 transition-all duration-500 ease-in-out"
-          onClick={onCancel}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="secondary"
-          className="my-2 transition-all duration-500 ease-in-out"
-          onClick={onSubmit}
-        >
-          Save
-        </Button>
-      </div>
     </div>
   );
 }

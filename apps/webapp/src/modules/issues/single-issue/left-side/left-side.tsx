@@ -20,6 +20,7 @@ import { useTeamWorkflows } from 'hooks/workflows';
 import { useUpdateIssueMutation } from 'services/issues';
 
 import { Activity } from './activity';
+import { FileUpload } from './file-upload';
 import { IssueSubIssueSelector } from './issue-sub-issue-selector';
 import { IssueTitle } from './issue-title';
 import { LinkedIssuesView } from './linked-issues-view';
@@ -30,6 +31,7 @@ import { SubIssueView } from './sub-issue-view';
 export const LeftSide = observer(() => {
   const issue = useIssueData();
   const team = useTeamWithId(issue.teamId);
+
   const workflows = useTeamWorkflows(team.identifier);
   const triageWorkflow = workflows.find(
     (workflow: WorkflowType) =>
@@ -83,6 +85,7 @@ export const LeftSide = observer(() => {
               extensions={[tegonIssueExtension]}
               className="min-h-[50px] mb-8 px-6 mt-3 text-md"
             >
+              <FileUpload />
               <EditorExtensions suggestionItems={suggestionItems}>
                 <IssueSubIssueSelector />
               </EditorExtensions>
