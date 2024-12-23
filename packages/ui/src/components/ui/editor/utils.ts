@@ -223,3 +223,30 @@ function updateNodeAttrs(editor: any, url: string, updatedAttrs: any) {
     }
   });
 }
+
+export const handleDrop = (
+  editor: Editor,
+  event: DragEvent,
+  moved: boolean,
+) => {
+  if (!moved && event.dataTransfer?.files.length) {
+    event.preventDefault();
+    const [file] = Array.from(event.dataTransfer.files);
+    const coordinates = editor.view.posAtCoords({
+      left: event.clientX,
+      top: event.clientY,
+    });
+    // here we deduct 1 from the pos or else the image will create an extra node
+
+    if (file) {
+      // Check if the file is an image
+      if (file.type.startsWith('image/')) {
+        uploadFn(file, editor, coordinates?.pos ?? 0 - 1);
+      } else {
+        uploadFileFn(file, editor, coordinates?.pos ?? 0 - 1);
+      }
+    }
+    return true;
+  }
+  return false;
+};

@@ -33,9 +33,10 @@ export const CommentsActivity = observer(
 
     useEffect(() => {
       // Fetch and sort comments whenever the order or comments change
-      const comments = commentsStore.getComments(issue.id);
-      let sorted = [...comments];
-      sorted = sort(sorted)[
+      const comments = commentsStore.getComments(
+        issue.id,
+      ) as IssueCommentType[];
+      const sortedComments = sort(comments)[
         commentOrder > 0 ? 'desc' : commentOrder === 0 ? 'asc' : 'asc'
       ]((comment) =>
         commentOrder >= 0
@@ -43,7 +44,7 @@ export const CommentsActivity = observer(
           : new Date(comment.createdAt).getTime(),
       );
 
-      setSortedComments(sorted); // Update state with sorted comments
+      setSortedComments(sortedComments); // Update state with sorted comments
     }, [commentOrder, commentsStore, commentsStore.comments.length, issue.id]);
 
     function getUserData(userId: string) {
@@ -63,6 +64,7 @@ export const CommentsActivity = observer(
     return (
       <div className="my-2 w-full flex flex-col gap-4">
         {commentOrder === 1 && <IssueComment />}
+
         <Timeline>
           {sortedComments
             .filter((comment: IssueCommentType) => !comment.parentId)

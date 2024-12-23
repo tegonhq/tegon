@@ -19,6 +19,8 @@ import { useIssueData } from 'hooks/issues';
 
 import { useCreateIssueCommentMutation } from 'services/issues';
 
+import { FileUpload } from '../../file-upload';
+
 export function IssueComment() {
   const issueData = useIssueData();
   const [commentValue, setCommentValue] = React.useState('');
@@ -53,7 +55,7 @@ export function IssueComment() {
 
   return (
     <div className="flex items-start w-full">
-      <div className="w-full relative">
+      <div className="w-full ">
         <Editor
           value={commentValue}
           onChange={(e) => {
@@ -66,15 +68,16 @@ export function IssueComment() {
           ]}
           placeholder="Leave your comment..."
           onSubmit={onSubmit}
-          className="w-full min-h-[44px] mb-0 p-2 border-border border"
+          className="w-full min-h-[44px] mb-0 p-2 border-border border relative"
         >
+          <div className="absolute right-1 bottom-2 flex items-center gap-1">
+            <FileUpload withPosition={false} />
+            <Button variant="ghost" type="submit" onClick={onSubmit}>
+              <SendLine size={20} />
+            </Button>
+          </div>
           <EditorExtensions suggestionItems={suggestionItems} />
         </Editor>
-        <div className="absolute right-1 bottom-2 flex items-center gap-1">
-          <Button variant="ghost" type="submit" onClick={onSubmit}>
-            <SendLine size={20} />
-          </Button>
-        </div>
       </div>
     </div>
   );

@@ -1,14 +1,15 @@
-import type { Editor } from '@tiptap/core';
-
-import { RiAttachmentLine } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
-import { uploadFileFn } from '@tegonhq/ui/components/editor/utils';
+import { uploadFileFn, uploadFn } from '@tegonhq/ui/components/editor/utils';
+import { useEditor } from '@tegonhq/ui/components/ui/editor/editor';
+import { Paperclip } from 'lucide-react';
 
 interface FileUploadProps {
-  editor: Editor;
+  withPosition?: boolean;
 }
 
-export function FileUpload({ editor }: FileUploadProps) {
+export function FileUpload({ withPosition = true }: FileUploadProps) {
+  const { editor } = useEditor();
+
   const onClick = () => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -16,16 +17,32 @@ export function FileUpload({ editor }: FileUploadProps) {
     input.onchange = async () => {
       if (input.files?.length) {
         const file = input.files[0];
-        const pos = editor.view.state.selection.from;
-        uploadFileFn(file, editor, pos);
+        const pos = editor.state.doc.content.size;
+
+        // Check if the file is an image
+        if (file.type.startsWith('image/')) {
+          uploadFn(file, editor, pos);
+        } else {
+          uploadFileFn(file, editor, pos);
+        }
       }
     };
     input.click();
   };
 
+  if (!withPosition) {
+    return (
+      <Button variant="ghost" onClick={onClick}>
+        <Paperclip size={16} />
+      </Button>
+    );
+  }
+
   return (
-    <Button variant="ghost">
-      <RiAttachmentLine size={16} onClick={onClick} />
-    </Button>
+    <div className="absolute bottom-2 right-2 px-6">
+      <Button variant="secondary" onClick={onClick}>
+        <Paperclip size={16} />
+      </Button>
+    </div>
   );
 }

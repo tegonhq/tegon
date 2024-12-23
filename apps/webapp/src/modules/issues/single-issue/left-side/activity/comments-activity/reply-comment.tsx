@@ -22,6 +22,8 @@ import { useCreateIssueCommentMutation } from 'services/issues';
 
 import { UserContext } from 'store/user-context';
 
+import { FileUpload } from '../../file-upload';
+
 interface ReplyCommentProps {
   issueCommentId: string;
 }
@@ -82,24 +84,26 @@ export function ReplyComment({ issueCommentId }: ReplyCommentProps) {
             !commentValue && setShowReplyButton(false);
           }}
           onChange={(e) => setCommentValue(e)}
-          className="w-full bg-transparent px-3 py-2 pt-0 grow text-foreground"
+          className="w-full min-h-[44px] bg-transparent mb-0 p-2 pt-0 grow text-foreground relative"
         >
+          <div className="absolute right-1 bottom-2 flex items-center gap-1">
+            {showReplyButton && (
+              <>
+                <FileUpload withPosition={false} />
+
+                <Button
+                  variant="ghost"
+                  className="transition-all duration-500 ease-in-out my-2"
+                  type="submit"
+                  onClick={onSubmit}
+                >
+                  <SendLine size={20} />
+                </Button>
+              </>
+            )}
+          </div>
           <EditorExtensions suggestionItems={suggestionItems} />
         </Editor>
-        <div className="flex justify-end items-center">
-          {showReplyButton && (
-            <>
-              <Button
-                variant="ghost"
-                className="transition-all duration-500 ease-in-out my-2"
-                type="submit"
-                onClick={onSubmit}
-              >
-                <SendLine size={20} />
-              </Button>
-            </>
-          )}
-        </div>
       </div>
     </div>
   );
