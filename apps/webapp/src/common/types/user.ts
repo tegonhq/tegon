@@ -4,6 +4,7 @@ interface Workspace {
   name: string;
   slug: string;
   icon: string;
+  status?: string;
   id: string;
   actionsEnabled: boolean;
   preferences: {
