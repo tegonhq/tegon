@@ -39,7 +39,7 @@ export function UserDataWrapper(props: Props): React.ReactElement {
       (work) => work.slug === workspaceSlug,
     );
 
-    if (workspaceRes.status === 'SUSPENDED') {
+    if (workspaceRes?.status === 'SUSPENDED') {
       return (
         <div className="flex flex-col h-[100vh] w-[100vw] items-center justify-center gap-2">
           <Logo width={100} height={100} /> Your account is suspended
