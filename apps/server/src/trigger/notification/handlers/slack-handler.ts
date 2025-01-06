@@ -5,6 +5,7 @@ import {
   IntegrationAccount,
   Issue,
   JsonObject,
+  LinkedIssue,
   NotificationActionType,
   User,
   Workspace,
@@ -25,7 +26,7 @@ export const slackHandler = async (payload: ActionEventPayload) => {
     case ActionTypesEnum.ON_CREATE:
     case ActionTypesEnum.ON_UPDATE:
       const {
-        notificationData: { userId: createdById, workspaceId },
+        notificationData: { userId: createdById, workspaceId, issueId },
         notificationType,
         notificationData,
       } = payload;
@@ -34,16 +35,39 @@ export const slackHandler = async (payload: ActionEventPayload) => {
         where: { id: workspaceId },
       });
 
+      const createdBy = await prisma.user.findUnique({
+        where: { id: createdById },
+      });
+
+      const linkedIssues = await getLinkedIssues(issueId);
+      if (linkedIssues?.length) {
+        const { type, actionData } = await getNotificationData(
+          prisma,
+          notificationType,
+          createdById,
+          notificationData,
+          true,
+        );
+
+        if (type === NotificationActionType.IssueStatusChanged) {
+          const message = await getMessage(
+            type,
+            actionData,
+            createdById,
+            createdBy,
+            workspace,
+          );
+          console.log(message);
+          await handleLinkedIssueStatus(linkedIssues, workspaceId, message);
+        }
+      }
+
       const { type, actionData, subscriberIds } = await getNotificationData(
         prisma,
         notificationType,
         createdById,
         notificationData,
       );
-
-      const createdBy = await prisma.user.findUnique({
-        where: { id: createdById },
-      });
 
       const unassignedData = await getUnassingedNotification(
         prisma,
@@ -104,7 +128,10 @@ export const slackHandler = async (payload: ActionEventPayload) => {
             workspace,
           );
           if (message) {
-            await sendSlackMessage(account, message);
+            await sendSlackMessage(account, {
+              channel: account.accountId,
+              ...message,
+            });
           }
         }),
       );
@@ -204,25 +231,18 @@ async function getMessage(
 async function sendSlackMessage(
   integrationAccount: IntegrationAccount,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  message: Record<string, any>,
+  body: Record<string, any>,
 ) {
   const integrationConfiguration =
     integrationAccount.integrationConfiguration as JsonObject;
   const apiKey = integrationConfiguration.api_key;
 
-  await axios.post(
-    'https://slack.com/api/chat.postMessage',
-    {
-      channel: integrationAccount.accountId,
-      ...message,
+  await axios.post('https://slack.com/api/chat.postMessage', body, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
     },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-    },
-  );
+  });
 }
 
 async function getSlackIntegrationAccount(userId: string) {
@@ -234,6 +254,54 @@ async function getSlackIntegrationAccount(userId: string) {
       integratedById: userId,
     },
     include: { integratedBy: true },
+  });
+}
+
+async function handleLinkedIssueStatus(
+  linkedIssues: LinkedIssue[],
+  workspaceId: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  slackBlocks: any,
+) {
+  return await Promise.all(
+    linkedIssues.map(async (linkedIssue) => {
+      const sourceData = linkedIssue.sourceData as JsonObject;
+      const channelId = sourceData.channelId as string;
+      const ts = sourceData.parentTs as string;
+
+      const integrationAccount = await prisma.integrationAccount.findFirst({
+        where: {
+          workspaceId,
+          settings: {
+            path: ['teamDomain'],
+            equals: sourceData.slackTeamDomain,
+          },
+          deleted: null,
+          integrationDefinition: {
+            slug: 'slack',
+          },
+        },
+      });
+
+      await sendSlackMessage(integrationAccount, {
+        channel: channelId,
+        thread_ts: ts,
+        ...slackBlocks,
+      });
+    }),
+  );
+}
+
+async function getLinkedIssues(issueId: string) {
+  return await prisma.linkedIssue.findMany({
+    where: {
+      issueId,
+      sourceData: {
+        path: ['type'],
+        equals: 'slack',
+      },
+      deleted: null,
+    },
   });
 }
 

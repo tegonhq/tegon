@@ -49,11 +49,12 @@ async function handleStateChange(
   prisma: PrismaClient,
   toStateId: string,
   issue: Issue,
+  allStatus: boolean,
 ) {
   const state = await prisma.workflow.findUnique({
     where: { id: toStateId },
   });
-  if (state.category === 'COMPLETED') {
+  if (state.category === 'COMPLETED' || allStatus) {
     return {
       type: NotificationActionType.IssueStatusChanged,
       actionData: { stateId: state.id, issue },
@@ -77,6 +78,7 @@ export async function getNotificationData(
   eventType: NotificationEventFrom,
   createdById: string,
   notificationData: NotificationData,
+  allStatus: boolean = false,
 ) {
   const {
     issueId,
@@ -123,7 +125,12 @@ export async function getNotificationData(
       if (assignmentResult) {
         ({ type, subscriberIds, actionData } = assignmentResult);
       } else if (toStateId) {
-        const stateResult = await handleStateChange(prisma, toStateId, issue);
+        const stateResult = await handleStateChange(
+          prisma,
+          toStateId,
+          issue,
+          allStatus,
+        );
         if (stateResult) {
           ({ type, actionData } = stateResult);
         }
