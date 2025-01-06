@@ -5,23 +5,31 @@ import { cn } from '@tegonhq/ui/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+export interface Link {
+  title: string;
+  label?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  icon?: any;
+  href: string;
+  count?: number;
+  strict?: boolean;
+  activePaths?: string[];
+}
+
 interface NavProps {
-  links: Array<{
-    title: string;
-    label?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    icon?: any;
-    href: string;
-    count?: number;
-    activePaths?: string[];
-  }>;
+  links: Link[];
 }
 
 export function checkIsActive(
   pathname: string,
   href: string,
   activePaths: string[],
+  strict: boolean = false,
 ): boolean {
+  if (strict) {
+    return pathname.endsWith(href);
+  }
+
   if (pathname.includes(href)) {
     return true;
   }
@@ -43,7 +51,12 @@ export function Nav({ links }: NavProps) {
   return (
     <nav className="grid gap-0.5">
       {links.map((link, index) => {
-        const isActive = checkIsActive(pathname, link.href, link.activePaths);
+        const isActive = checkIsActive(
+          pathname,
+          link.href,
+          link.activePaths,
+          link.strict,
+        );
 
         return (
           <div className="flex gap-1 items-center " key={index}>

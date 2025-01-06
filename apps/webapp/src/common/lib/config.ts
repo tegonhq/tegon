@@ -13,6 +13,7 @@ export const frontendConfig = () => {
     apiBasePath: '/api/auth',
     websiteBasePath: '/auth',
   };
+  const isProd = publicRuntimeConfig.NEXT_PUBLIC_NODE_ENV === 'production';
 
   return {
     appInfo,
@@ -20,7 +21,13 @@ export const frontendConfig = () => {
       Passwordless.init({
         contactMethod: 'EMAIL',
       }),
-      SessionReact.init(),
+      SessionReact.init(
+        isProd
+          ? {
+              sessionTokenBackendDomain: '.tegon.ai',
+            }
+          : {},
+      ),
     ],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     windowHandler: (oI: any) => {

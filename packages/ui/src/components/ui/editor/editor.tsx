@@ -13,7 +13,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { defaultExtensions, getPlaceholder } from './editor-extensions';
 import { LinkSelector, NodeSelector, TextButtons } from './selectors';
 import { slashCommand } from './slash-command';
-import { handleMarkAndImagePaste, uploadFn } from './utils';
+import { handleDrop, handleMarkAndImagePaste, uploadFn } from './utils';
 import {
   EditorRoot,
   EditorCommand,
@@ -90,6 +90,7 @@ interface EditorProps {
   value?: string;
   onChange?: (value: string, valueString?: string) => void;
   autoFocus?: boolean;
+
   className?: string;
   editorClassName?: string;
   placeholder?: string | Extension;
@@ -175,7 +176,7 @@ export const Editor = ({
           initialContent={getInitialValue()}
           extensions={getExtensions()}
           className={cn(
-            'editor-container w-full min-w-full text-base sm:rounded-lg',
+            'editor-container w-full min-w-full text-base sm:rounded-lg relative',
             className,
           )}
           onCreate={({ editor }) => {
@@ -188,6 +189,8 @@ export const Editor = ({
             autoFocus && editor.commands.focus();
           }}
           editorProps={{
+            handleDrop: (_view, event, _slice, moved) =>
+              handleDrop(editor, event, moved),
             handlePaste: (_, event) => {
               const pasteResponse = handlePaste && handlePaste(editor, event);
 

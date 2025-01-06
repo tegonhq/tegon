@@ -1,6 +1,8 @@
 import { Timeline } from '@tegonhq/ui/components/timeline';
+// import { sort } from 'fast-sort';
 import { sort } from 'fast-sort';
 import { observer } from 'mobx-react-lite';
+import { useEffect, useState } from 'react';
 
 import type { User } from 'common/types';
 import type { IssueCommentType } from 'common/types';
@@ -13,49 +15,75 @@ import { useContextStore } from 'store/global-context-provider';
 import { CommentActivity } from './comment-activity';
 import { IssueComment } from './issue-comment';
 
-export const CommentsActivity = observer(() => {
-  const issue = useIssueData();
-  const { commentsStore } = useContextStore();
+interface CommentsActivityProps {
+  commentOrder?: number;
+}
 
-  const comments = sort(commentsStore.getComments(issue.id)).asc(
-    (comment: IssueCommentType) => new Date(comment.createdAt),
-  ) as IssueCommentType[];
+export const CommentsActivity = observer(
+  ({ commentOrder = -1 }: CommentsActivityProps) => {
+    const issue = useIssueData();
+    const { commentsStore } = useContextStore();
 
-  const { users, isLoading } = useUsersData(true);
-
-  function getUserData(userId: string) {
-    return users.find((user: User) => user.id === userId);
-  }
-
-  if (isLoading) {
-    return null;
-  }
-
-  function getChildComments(issueCommentId: string) {
-    return comments.filter(
-      (comment: IssueCommentType) => comment.parentId === issueCommentId,
+    // State to manage sorted comments
+    const [sortedComments, setSortedComments] = useState<IssueCommentType[]>(
+      [],
     );
-  }
 
-  return (
-    <div className="my-2 w-full flex flex-col gap-4">
-      <Timeline>
-        {comments
-          .filter((comment: IssueCommentType) => !comment.parentId)
-          .map((comment: IssueCommentType, index: number) => (
-            <CommentActivity
-              comment={comment}
-              hasMore={index > 0}
-              key={comment.id}
-              user={getUserData(comment.userId)}
-              childComments={getChildComments(comment.id)}
-              allowReply
-              getUserData={getUserData}
-            />
-          ))}
-      </Timeline>
+    const { users, isLoading } = useUsersData(true);
 
-      <IssueComment />
-    </div>
-  );
-});
+    useEffect(() => {
+      // Fetch and sort comments whenever the order or comments change
+      const comments = commentsStore.getComments(
+        issue.id,
+      ) as IssueCommentType[];
+      const sortedComments = sort(comments)[
+        commentOrder > 0 ? 'desc' : commentOrder === 0 ? 'asc' : 'asc'
+      ]((comment) =>
+        commentOrder >= 0
+          ? new Date(comment.updatedAt).getTime()
+          : new Date(comment.createdAt).getTime(),
+      );
+
+      setSortedComments(sortedComments); // Update state with sorted comments
+    }, [commentOrder, commentsStore, commentsStore.comments.length, issue.id]);
+
+    function getUserData(userId: string) {
+      return users.find((user: User) => user.id === userId);
+    }
+
+    function getChildComments(issueCommentId: string) {
+      return sortedComments.filter(
+        (comment: IssueCommentType) => comment.parentId === issueCommentId,
+      );
+    }
+
+    if (isLoading) {
+      return null;
+    }
+
+    return (
+      <div className="my-2 w-full flex flex-col gap-4">
+        {commentOrder === 1 && <IssueComment />}
+
+        <Timeline>
+          {sortedComments
+            .filter((comment: IssueCommentType) => !comment.parentId)
+            .map((comment: IssueCommentType, index: number) => (
+              <CommentActivity
+                issueId={issue.id}
+                commentId={comment.id}
+                hasMore={index > 0}
+                key={comment.id}
+                user={getUserData(comment.userId)}
+                childComments={getChildComments(comment.id)}
+                allowReply
+                getUserData={getUserData}
+              />
+            ))}
+        </Timeline>
+
+        {commentOrder < 1 && <IssueComment />}
+      </div>
+    );
+  },
+);

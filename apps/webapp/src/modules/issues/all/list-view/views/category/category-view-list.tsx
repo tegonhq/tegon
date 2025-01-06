@@ -4,17 +4,19 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@tegonhq/ui/components/collapsible';
-import { ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
+import { AddLine, ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
+import { useNewIssue } from 'modules/issues/new-issue';
 
 import { getWorkflowColor } from 'common/status-color';
 import type { WorkflowType } from 'common/types';
 import type { IssueType } from 'common/types';
 import { getWorkflowIcon } from 'common/workflow-icons';
 
+import { useCycle } from 'hooks/cycles';
 import { useProject } from 'hooks/projects';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -32,8 +34,14 @@ export const CategoryViewList = observer(
     const [isOpen, setIsOpen] = React.useState(true);
     const { issuesStore, applicationStore } = useContextStore();
     const project = useProject();
+    const cycle = useCycle();
+    const { openNewIssue } = useNewIssue();
 
-    const issues = issuesStore.getIssuesForState(workflow.ids, project?.id);
+    const issues = issuesStore.getIssuesForState(workflow.ids, {
+      projectId: project?.id,
+      cycleId: cycle?.id,
+    });
+
     const computedIssues = useFilterIssues(issues, workflows);
 
     if (
@@ -72,6 +80,13 @@ export const CategoryViewList = observer(
           <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
             {computedIssues.length}
           </div>
+
+          <Button
+            variant="ghost"
+            onClick={() => openNewIssue({ stateId: workflow.id })}
+          >
+            <AddLine size={14} />
+          </Button>
         </div>
 
         <CollapsibleContent>

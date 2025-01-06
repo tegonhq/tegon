@@ -7,7 +7,7 @@ export const Cycle = types.model('Cycle', {
 
   name: types.string,
   description: types.union(types.string, types.null),
-  number: types.union(types.string, types.null, types.undefined),
+  number: types.union(types.number, types.null, types.undefined),
   teamId: types.string,
   startDate: types.union(types.string, types.null),
   endDate: types.union(types.string, types.null),

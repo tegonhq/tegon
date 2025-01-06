@@ -10,6 +10,7 @@ import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
+import { UserContext } from 'store/user-context';
 
 import { getBacklogWorkflow } from '../single-issue/triage-view/utils';
 
@@ -53,22 +54,26 @@ export function setDefaultValuesAgain({
 
 export const useDefaultValues = (
   team: TeamType,
-  parentId?: string,
-  description?: string,
+  defaultValues: Partial<IssueType>,
 ) => {
   const project = useProject();
   const { workflowsStore } = useContextStore();
+  const user = React.useContext(UserContext);
   const workflows = workflowsStore.getWorkflowsForTeam(team.id);
 
-  return {
-    teamId: team?.id,
-    projectId: project?.id,
-    parentId,
-    labelIds: [] as string[],
-    stateId: getBacklogWorkflow(workflows).id,
-    description,
-    priority: 0,
-  };
+  return React.useMemo(() => {
+    return {
+      teamId: team?.id,
+      projectId: project?.id,
+      parentId: defaultValues.parentId,
+      labelIds: [] as string[],
+      stateId: getBacklogWorkflow(workflows).id,
+      priority: 0,
+      assigneeId: user?.id,
+      ...defaultValues,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [team, project]);
 };
 
 export function useTeamForNewIssue(defaultTeamId: string): {
@@ -77,12 +82,26 @@ export function useTeamForNewIssue(defaultTeamId: string): {
 } {
   const { teamsStore } = useContextStore();
   const teams = teamsStore.teams;
-  let currentTeam = useCurrentTeam();
-  currentTeam = defaultTeamId
-    ? teams.find((team: TeamType) => team.id === defaultTeamId)
-    : currentTeam;
+  const currentTeam = useCurrentTeam();
+  const project = useProject();
 
-  const [team, setTeam] = React.useState(currentTeam ?? teams[0]);
+  const getDefaultTeamId = () => {
+    if (defaultTeamId) {
+      return teams.find((team: TeamType) => team.id === defaultTeamId);
+    }
+
+    if (currentTeam) {
+      return currentTeam;
+    }
+
+    if (project) {
+      return teams.find((team: TeamType) => team.id === project.teams[0]);
+    }
+
+    return teams[0];
+  };
+
+  const [team, setTeam] = React.useState(getDefaultTeamId());
 
   const setTeamWithIdentifier = (identifier: string) => {
     setTeam(teams.find((team: TeamType) => team.identifier === identifier));

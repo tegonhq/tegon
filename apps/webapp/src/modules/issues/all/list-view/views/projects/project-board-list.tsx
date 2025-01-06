@@ -14,6 +14,7 @@ import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 import type { ProjectType } from 'common/types';
 import type { IssueType } from 'common/types';
 
+import { useCycle } from 'hooks/cycles';
 import { useCurrentTeam } from 'hooks/teams';
 import { useComputedWorkflows } from 'hooks/workflows';
 
@@ -30,10 +31,12 @@ export const ProjectBoardList = observer(
     const { issuesStore, applicationStore } = useContextStore();
     const team = useCurrentTeam();
     const { workflows } = useComputedWorkflows();
+    const cycle = useCycle();
 
     const issues = issuesStore.getIssuesForProject({
       teamId: team?.id,
       projectId: project?.id,
+      cycleId: cycle?.id,
     });
 
     const computedIssues = useFilterIssues(issues, workflows);
@@ -94,9 +97,11 @@ export const NoProjectView = observer(() => {
   const { issuesStore } = useContextStore();
   const team = useCurrentTeam();
   const { workflows } = useComputedWorkflows();
+  const cycle = useCycle();
 
   const issues = issuesStore.getIssuesForNoProject({
     teamId: team?.id,
+    cycleId: cycle?.id,
   });
 
   const computedIssues = useFilterIssues(issues, workflows);

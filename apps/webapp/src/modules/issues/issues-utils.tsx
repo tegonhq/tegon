@@ -12,11 +12,11 @@ import {
   TimeBasedFilterEnum,
   FilterTypeEnum,
   OrderingEnum,
-  type ApplicationStoreType,
   type DisplaySettingsModelType,
   type FilterModelBooleanType,
   type FilterModelType,
   type FilterModelTimeBasedType,
+  type FiltersModelType,
 } from 'store/application';
 import {
   useContextStore,
@@ -166,17 +166,16 @@ export function getSortArray(displaySettings: DisplaySettingsModelType) {
 }
 
 export function getFilters(
-  applicationStore: ApplicationStoreType,
+  filters: FiltersModelType = {},
+  displaySettings: DisplaySettingsModelType,
   workflows: WorkflowType[],
   labels: LabelType[],
   userId?: string,
 ) {
-  const { status, assignee, label, priority, project } =
-    applicationStore.filters;
-  const { showSubIssues, completedFilter, showTriageIssues } =
-    applicationStore.displaySettings;
+  const { status, assignee, label, priority, project, cycle } = filters;
+  const { showSubIssues, completedFilter, showTriageIssues } = displaySettings;
 
-  const filters: FilterType[] = [];
+  const finalFilters: FilterType[] = [];
 
   if (status) {
     const ids = status.value.flatMap(
@@ -184,7 +183,7 @@ export function getFilters(
         workflows.find((workflow) => workflow.name === value)?.ids || [],
     );
 
-    filters.push({
+    finalFilters.push({
       key: 'stateId',
       filterType: status.filterType,
       value: ids,
@@ -192,15 +191,28 @@ export function getFilters(
   }
 
   if (assignee) {
-    filters.push({
-      key: 'assigneeId',
-      filterType: assignee.filterType,
-      value: assignee.value,
-    });
+    if (assignee.value.includes('no-user')) {
+      finalFilters.push({
+        key: 'assigneeId',
+        filterType: FilterTypeEnum.UNDEFINED,
+      });
+    }
+
+    const restAssigneeValues = assignee.value.filter(
+      (a: string) => a !== 'no-user',
+    );
+
+    if (restAssigneeValues.length > 0) {
+      finalFilters.push({
+        key: 'assigneeId',
+        filterType: assignee.filterType,
+        value: restAssigneeValues,
+      });
+    }
   }
 
   if (!assignee && userId) {
-    filters.push({
+    finalFilters.push({
       key: 'assigneeId',
       filterType: FilterTypeEnum.IS,
       value: [userId],
@@ -213,7 +225,7 @@ export function getFilters(
         labels.find((label) => label.name === value)?.ids || [],
     );
 
-    filters.push({
+    finalFilters.push({
       key: 'labelIds',
       filterType: label.filterType,
       value: ids,
@@ -221,7 +233,7 @@ export function getFilters(
   }
 
   if (priority) {
-    filters.push({
+    finalFilters.push({
       key: 'priority',
       filterType: priority.filterType,
       value: priority.value,
@@ -229,15 +241,23 @@ export function getFilters(
   }
 
   if (project) {
-    filters.push({
+    finalFilters.push({
       key: 'projectId',
       filterType: project.filterType,
       value: project.value,
     });
   }
 
+  if (cycle) {
+    finalFilters.push({
+      key: 'cycleId',
+      filterType: cycle.filterType,
+      value: cycle.value,
+    });
+  }
+
   if (!showSubIssues) {
-    filters.push({
+    finalFilters.push({
       key: 'parentId',
       filterType: FilterTypeEnum.UNDEFINED,
       value: undefined,
@@ -246,10 +266,10 @@ export function getFilters(
 
   if (
     completedFilter &&
-    (completedFilter !== TimeBasedFilterEnum.All ||
-      completedFilter === TimeBasedFilterEnum.None)
+    (completedFilter === TimeBasedFilterEnum.PastDay ||
+      completedFilter === TimeBasedFilterEnum.PastWeek)
   ) {
-    filters.push({
+    finalFilters.push({
       key: 'completed_updatedAt',
       filterType: completedFilter,
     });
@@ -262,7 +282,7 @@ export function getFilters(
         workflow.category === WorkflowCategoryEnum.CANCELED,
     );
 
-    filters.push({
+    finalFilters.push({
       key: 'stateId',
       filterType: FilterTypeEnum.IS_NOT,
       value: filteredWorkflows.flatMap((workflow: WorkflowType) =>
@@ -276,7 +296,7 @@ export function getFilters(
       (workflow) => workflow.category === WorkflowCategoryEnum.TRIAGE,
     );
 
-    filters.push({
+    finalFilters.push({
       key: 'stateId',
       filterType: FilterTypeEnum.IS_NOT,
       value: filteredWorkflows.flatMap((workflow: WorkflowType) =>
@@ -292,20 +312,21 @@ export function getFilters(
     'isBlocking',
     'source',
   ]) {
-    if (applicationStore.filters[filterKey]) {
-      filters.push({
+    if (filters[filterKey as keyof FiltersModelType]) {
+      finalFilters.push({
         key: filterKey,
         filterType: FilterTypeEnum.IS,
       });
     }
   }
 
-  return filters;
+  return finalFilters;
 }
 
 export function useFilterIssues(
   issues: IssueType[],
-  workflows?: WorkflowType[],
+  workflows: WorkflowType[],
+  filterSilent: boolean = true,
 ): IssueType[] {
   const pathname = usePathname();
   const user = React.useContext(UserContext);
@@ -332,14 +353,26 @@ export function useFilterIssues(
 
   return React.useMemo(() => {
     const filters = getFilters(
-      applicationStore,
+      applicationStore.filters,
+      applicationStore.displaySettings,
       workflows,
       labels,
       pathname.includes('my-issues') ? user.id : undefined,
     );
+
+    const silentFilters = filterSilent
+      ? getFilters(
+          applicationStore.silentFilters,
+          applicationStore.displaySettings,
+          workflows,
+          labels,
+          pathname.includes('my-issues') ? user.id : undefined,
+        )
+      : [];
+
     const filteredIssues = filterIssues(
       issues,
-      filters,
+      [...filters, ...silentFilters],
       {
         linkedIssuesStore,
         issuesStore,

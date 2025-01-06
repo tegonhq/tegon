@@ -1,5 +1,6 @@
 'use client';
 
+import { Loader } from '@tegonhq/ui/components/loader';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
@@ -45,7 +46,7 @@ export const IssueStoreInit = ({ children }: { children: React.ReactNode }) => {
   }, [issueId]);
 
   if (loading) {
-    return null;
+    return <Loader text="Issue information" />;
   }
 
   return <>{children}</>;

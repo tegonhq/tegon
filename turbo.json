@@ -4,14 +4,11 @@
     "VERSION",
     "NEXT_PUBLIC_VERSION",
     "NODE_ENV",
-
     "LOG_LEVEL",
     "CREATE_LOG_FILE",
-
     "POSTGRES_USER",
     "POSTGRES_PASSWORD",
     "POSTGRES_DB",
-
     "DB_HOST",
     "DB_PORT",
     "DB_SCHEMA",
@@ -19,75 +16,85 @@
     "REPLICATION_DATABASE_URL",
     "SYNC_SERVER",
     "SUPERTOKEN_CONNECTION_URI",
-
     "SENTRY_DSN",
-
     "REDIS_URL",
     "REDIS_PORT",
-
     "PORT",
     "FRONTEND_HOST",
     "BACKEND_HOST",
     "BACKEND_URL",
+    "CHAT_URL",
     "PUBLIC_ATTACHMENT_URL",
     "BASE_HOST",
     "OAUTH_CALLBACK_URL",
     "DOCKER_TOKEN",
-
     "TYPESENSE_HOST",
     "TYPESENSE_PORT",
     "TYPESENSE_PROTOCOL",
     "TYPESENSE_API_KEY",
-
-    "GCP_BUCKET_NAME",
+    "STORAGE_PROVIDER",
+    "BUCKET_NAME",
     "GCP_SERVICE_ACCOUNT_FILE",
-
+    "AWS_REGION",
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
     "SMTP_HOST",
     "SMTP_PORT",
     "SMTP_USER",
     "SMTP_PASSWORD",
     "SMTP_DEFAULT_FROM",
-
     "COHERE_API_KEY",
     "OPENAI_API_KEY",
     "LOCAL_MODEL",
     "OLLAMA_HOST",
-
     "TRIGGER_DB",
     "TRIGGER_DATABASE_URL",
     "TRIGGER_COMMON_ID",
     "TRIGGER_TOKEN",
     "TRIGGER_ACCESS_TOKEN",
     "TRIGGER_API_URL",
-
     "OLLAMA_HOST"
   ],
   "ui": "tui",
   "tasks": {
     "start-prod": {
-      "dependsOn": [ "db:init-resources" ],
+      "dependsOn": [
+        "db:init-resources"
+      ],
       "cache": false
     },
     "generate": {
-      "dependsOn": [ "^generate" ],
+      "dependsOn": [
+        "^generate"
+      ],
       "cache": false
     },
     "dev": {
-      "dependsOn": [ "generate" ],
+      "dependsOn": [
+        "generate"
+      ],
       "interactive": true,
       "cache": false
     },
     "build": {
-      "dependsOn": [ "^build" ],
-      "outputs": [ "dist/**", ".next/**" ]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**"
+      ]
     },
-    "lint": { },
+    "lint": {},
     "create-resources": {
       "interactive": true,
       "cache": false
     },
     "deploy-trigger-tasks": {
-      "env": [ "TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL" ],
+      "env": [
+        "TRIGGER_ACCESS_TOKEN",
+        "TRIGGER_API_URL"
+      ],
       "cache": false
     },
     "trigger-dev": {
@@ -95,10 +102,14 @@
       "cache": false
     },
     "prisma:studio": {
-      "env": [ "DATABASE_URL" ]
+      "env": [
+        "DATABASE_URL"
+      ]
     },
     "migrate": {
-      "env": [ "DATABASE_URL" ],
+      "env": [
+        "DATABASE_URL"
+      ],
       "interactive": true,
       "cache": false
     }

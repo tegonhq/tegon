@@ -18,7 +18,6 @@ import {
   IssueRequestParamsDto,
   TeamRequestParamsDto,
   UpdateIssueDto,
-  WorkspaceRequestParamsDto,
   GetIssuesByFilterDTO,
   LinkedIssue,
 } from '@tegonhq/types';
@@ -26,7 +25,10 @@ import { Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import {
+  Session as SessionDecorator,
+  Workspace,
+} from 'modules/auth/session.decorator';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { AdminGuard } from 'modules/users/admin.guard';
 
@@ -49,23 +51,52 @@ export class IssuesController {
     @SessionDecorator() session: SessionContainer,
     @Body() issueData: CreateIssueDto,
   ): Promise<Issue> {
-    const MAX_RETRIES = 5;
-    let retries = 0;
+    const userId = session.getUserId();
+    return await this.issuesService.createIssueAPI(issueData, userId);
+  }
 
-    while (retries < MAX_RETRIES) {
-      try {
-        const userId = session.getUserId();
-        return await this.issuesService.createIssueAPI(issueData, userId);
-      } catch (error) {
-        if (error.code === 'P2034') {
-          retries++;
-          continue;
-        }
-        throw error;
-      }
+  @Post('bulk/update')
+  @UseGuards(AuthGuard)
+  async bulkUpdateIssues(
+    @SessionDecorator() session: SessionContainer,
+    @Query() teamParams: TeamRequestParamsDto,
+    @Body() issueData: { issues: UpdateIssueDto[] },
+  ): Promise<string[]> {
+    const userId = session.getUserId();
+    const issues = [];
+
+    for (const issue of issueData.issues) {
+      const { issueId, ...otherData } = issue;
+      const responseIssue = await this.issuesService.updateIssueApi(
+        teamParams,
+        otherData,
+        { issueId },
+        userId,
+      );
+      issues.push(responseIssue.id);
     }
 
-    return undefined;
+    return issues;
+  }
+
+  @Post('bulk')
+  @UseGuards(AuthGuard)
+  async bulkCreateIssues(
+    @SessionDecorator() session: SessionContainer,
+    @Body() issueData: { issues: CreateIssueDto[] },
+  ): Promise<string[]> {
+    const userId = session.getUserId();
+    const issues = [];
+
+    for (const issue of issueData.issues) {
+      const responseIssue = await this.issuesService.createIssueAPI(
+        issue,
+        userId,
+      );
+      issues.push(responseIssue.id);
+    }
+
+    return issues;
   }
 
   @Post('filter')
@@ -150,10 +181,10 @@ export class IssuesController {
   @Get('export')
   @UseGuards(AuthGuard)
   async exportIssues(
-    @Query() workspaceParams: WorkspaceRequestParamsDto,
+    @Workspace() workspaceId: string,
     @Res() res: Response,
   ): Promise<void> {
-    const csvString = await this.issuesService.exportIssues(workspaceParams);
+    const csvString = await this.issuesService.exportIssues(workspaceId);
 
     const csvBuffer = Buffer.from(csvString, 'utf-8');
     const csvStream = new Readable();
@@ -187,5 +218,11 @@ export class IssuesController {
   @UseGuards(AuthGuard)
   async getIssue(@Param() issueParams: IssueRequestParamsDto): Promise<Issue> {
     return await this.issuesService.getIssueById(issueParams);
+  }
+
+  @Get()
+  @UseGuards(AuthGuard)
+  async getIssues(@Query('issueIds') issueIds: string[]): Promise<Issue[]> {
+    return await this.issuesService.getIssues(issueIds);
   }
 }

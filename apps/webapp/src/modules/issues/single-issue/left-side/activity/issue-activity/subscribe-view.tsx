@@ -34,16 +34,14 @@ export function SubscribeView() {
   };
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 shrink-0 items-center">
       <div>
-        <Button variant="ghost" onClick={toggleSubscribe}>
+        <Button variant="ghost" onClick={toggleSubscribe} className="mr-1">
           {subscribed ? 'Unsubscribe' : 'Subscribe'}
         </Button>
       </div>
       {issue.subscriberIds.length > 0 && (
-        <div className="flex">
-          <SubscribeDropdown value={issue.subscriberIds} />
-        </div>
+        <SubscribeDropdown value={issue.subscriberIds} />
       )}
     </div>
   );

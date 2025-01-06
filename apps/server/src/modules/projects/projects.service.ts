@@ -16,6 +16,14 @@ export class ProjectsService {
     private issuesService: IssuesService,
   ) {}
 
+  async getProjects(workspaceId: string) {
+    return await this.prisma.project.findMany({
+      where: {
+        workspaceId,
+      },
+    });
+  }
+
   async createProject(createProjectDto: CreateProjectDto, workspaceId: string) {
     return await this.prisma.project.create({
       data: {

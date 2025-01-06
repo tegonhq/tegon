@@ -6,6 +6,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { Key } from 'ts-key-enum';
 
 import { ContentBox } from 'common/layouts/content-box';
+import { MainLayout } from 'common/layouts/main-layout';
 import { SCOPES } from 'common/scopes';
 import type { WorkflowType } from 'common/types';
 
@@ -23,7 +24,7 @@ import { TriageView } from './triage-view';
 
 export const IssueView = observer(() => {
   const currentTeam = useCurrentTeam();
-  const workflows = useTeamWorkflows(currentTeam.identifier);
+  const workflows = useTeamWorkflows(currentTeam?.identifier);
   const { applicationStore } = useContextStore();
   const router = useRouter();
   const triageWorkflow = workflows.find(
@@ -56,14 +57,13 @@ export const IssueView = observer(() => {
     return null;
   }
 
-  if (issue.stateId === triageWorkflow.id) {
+  if (issue.stateId === triageWorkflow?.id) {
     return <TriageView />;
   }
 
   return (
     <IssueStoreInit>
-      <div className="flex flex-col h-[100vh]">
-        <Header />
+      <MainLayout header={<Header />}>
         <ContentBox>
           <main className="grid grid-cols-5 h-[calc(100vh_-_53px)]">
             <div className="col-span-4 flex flex-col h-[calc(100vh_-_55px)]">
@@ -74,7 +74,7 @@ export const IssueView = observer(() => {
             </div>
           </main>
         </ContentBox>
-      </div>
+      </MainLayout>
     </IssueStoreInit>
   );
 });

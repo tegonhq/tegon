@@ -249,10 +249,13 @@ export default class ReplicationService {
                 modelId,
               );
 
-            const recipientId =
-              modelName === ModelNameEnum.Notification
-                ? syncActionData.data.userId
-                : syncActionData.workspaceId;
+            const recipientId = [
+              ModelNameEnum.Notification,
+              ModelNameEnum.Conversation,
+              ModelNameEnum.ConversationHistory,
+            ].includes(modelName)
+              ? (syncActionData.data.recipientId ?? syncActionData.data.userId)
+              : syncActionData.workspaceId;
 
             this.syncGateway.wss
               .to(recipientId)

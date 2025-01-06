@@ -1,4 +1,4 @@
-import { Textarea } from '@tegonhq/ui/components/textarea';
+import { AdjustableTextArea } from '@tegonhq/ui/components/adjustable-textarea';
 import * as React from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -16,16 +16,14 @@ export function IssueTitle({ value, onChange }: IssueTitleProps) {
     onChange && onChange(title);
   }, 500);
 
-  const onInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.currentTarget.value);
-    debouncedUpdates(e.currentTarget.value);
+  const onInputChange = (value: string) => {
+    setInputValue(value);
+    debouncedUpdates(value);
   };
 
   return (
-    <Textarea
+    <AdjustableTextArea
       className="border-0 px-6 py-0 font-medium resize-none bg-transparent no-scrollbar overflow-hidden outline-none focus-visible:ring-0 text-xl"
-      rows={1}
-      cols={1}
       value={inputValue}
       placeholder="Issue title"
       onChange={onInputChange}

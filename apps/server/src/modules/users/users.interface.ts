@@ -43,6 +43,7 @@ export function userSerializer(user: User) {
 
     workspaces: user.usersOnWorkspaces.map((uWorkspace) => ({
       ...uWorkspace.workspace,
+      status: uWorkspace.status,
       role: uWorkspace.role,
     })),
   };

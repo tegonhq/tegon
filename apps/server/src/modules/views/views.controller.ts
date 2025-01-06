@@ -56,7 +56,7 @@ export class ViewsController {
   /**
    * Delete a View
    */
-  @Delete(':view')
+  @Delete(':viewId')
   @UseGuards(AuthGuard)
   async deleteView(
     @Param()

@@ -14,3 +14,4 @@ export * from './application';
 export * from './action';
 export * from './project';
 export * from './cycle';
+export * from './conversation';

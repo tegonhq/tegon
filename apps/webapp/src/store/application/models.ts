@@ -15,6 +15,7 @@ export const FiltersModel = types.model({
   label: types.union(types.undefined, FilterModel),
   priority: types.union(types.undefined, FilterModel),
   project: types.union(types.undefined, FilterModel),
+  cycle: types.union(types.undefined, FilterModel),
 
   // For issues coming from Slack, Github
   source: types.union(types.undefined, FilterModel),
@@ -24,6 +25,8 @@ export const FiltersModel = types.model({
   isBlocked: types.union(types.undefined, FilterBooleanModel),
   isBlocking: types.union(types.undefined, FilterBooleanModel),
 });
+
+export const SilentFiltersModel = types.union(types.undefined, FiltersModel);
 
 export const DisplaySettingsModel = types.model({
   view: types.enumeration(['list', 'board', 'sheet']),

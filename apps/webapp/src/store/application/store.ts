@@ -1,6 +1,10 @@
 import { type IAnyStateTreeNode, type Instance, types } from 'mobx-state-tree';
 
-import { DisplaySettingsModel, FiltersModel } from './models';
+import {
+  DisplaySettingsModel,
+  FiltersModel,
+  SilentFiltersModel,
+} from './models';
 import {
   type UpdateDisplaySettingsBody,
   type UpdateBody,
@@ -14,18 +18,20 @@ import {
 
 export const defaultApplicationStoreValue: {
   filters: FiltersModelType;
+  silentFilters: FiltersModelType;
   displaySettings: DisplaySettingsModelType;
   sidebarCollapsed: boolean;
   selectedIssues: string[];
 } = {
   filters: {},
+  silentFilters: {},
   displaySettings: {
     view: ViewEnum.list,
     grouping: GroupingEnum.status,
     ordering: OrderingEnum.updated_at,
     completedFilter: TimeBasedFilterEnum.All,
     showSubIssues: true,
-    showEmptyGroups: true,
+    showEmptyGroups: false,
     showTriageIssues: false,
   },
   sidebarCollapsed: false,
@@ -35,6 +41,7 @@ export const defaultApplicationStoreValue: {
 export const ApplicationStore: IAnyStateTreeNode = types
   .model({
     filters: FiltersModel,
+    silentFilters: SilentFiltersModel,
     displaySettings: DisplaySettingsModel,
     identifier: types.string,
     sidebarCollapsed: types.boolean,
@@ -67,6 +74,21 @@ export const ApplicationStore: IAnyStateTreeNode = types
         JSON.stringify(self.filters),
       );
     },
+    updateSilentFilters(updateBody: UpdateBody) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const currentFilters = (self.silentFilters as any).toJSON();
+
+      const toUpdateBody = { ...updateBody };
+      const mergedAttributes = {
+        ...currentFilters,
+        ...toUpdateBody,
+      };
+
+      self.silentFilters = FiltersModel.create(mergedAttributes);
+    },
+    deleteSilentFilter(filter: keyof FiltersModelType) {
+      self.silentFilters[filter] = undefined;
+    },
     clearFilters() {
       self.filters = FiltersModel.create({});
 
@@ -75,6 +97,7 @@ export const ApplicationStore: IAnyStateTreeNode = types
         JSON.stringify(self.filters),
       );
     },
+
     updateDisplaySettings(updateBody: UpdateDisplaySettingsBody) {
       self.displaySettings = { ...self.displaySettings, ...updateBody };
 

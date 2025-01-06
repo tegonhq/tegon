@@ -52,6 +52,7 @@ export const FilterSmall = observer(() => {
 
       <IssueAssigneeDropdown
         value={issue.assigneeId}
+        teamId={currentTeam.id}
         onChange={assigneeChange}
       />
 

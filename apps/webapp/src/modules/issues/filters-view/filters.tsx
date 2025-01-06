@@ -29,6 +29,7 @@ import {
   IssueLabelFilter,
   IssuePriorityFilter,
   IssueProjectFilter,
+  IssueCycleFilter,
 } from './filter-dropdowns';
 import { isEmpty } from './filter-utils';
 import { useFilterShorcuts } from './use-filter-shortcuts';
@@ -39,6 +40,7 @@ const ContentMap = {
   label: IssueLabelFilter,
   priority: IssuePriorityFilter,
   project: IssueProjectFilter,
+  cycle: IssueCycleFilter,
 };
 
 export type KeyType = keyof typeof ContentMap;
@@ -152,7 +154,13 @@ export const Filters = observer(({ onClose }: FiltersProps) => {
 
   return (
     <div className="flex justify-between items-start border border-border p-1 rounded-md w-full">
-      <div className="flex gap-2 flex-wrap items-center h-full grow">
+      <div
+        className="flex gap-2 flex-wrap items-center h-full grow"
+        onClick={() => {
+          setShowOptions(true);
+          inputRef.current.focus();
+        }}
+      >
         <AppliedFiltersView />
         {isLoading && (
           <div className="flex gap-2 items-center">

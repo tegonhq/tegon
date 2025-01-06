@@ -40,6 +40,10 @@ export const LeftSide = observer(() => {
     });
   }, 1000);
 
+  if (!project) {
+    return null;
+  }
+
   return (
     <ScrollArea className="grow flex h-full justify-center w-full">
       <div className="flex h-full justify-center w-full">

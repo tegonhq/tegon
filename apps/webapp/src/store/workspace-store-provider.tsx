@@ -1,4 +1,3 @@
-import { Loader } from '@tegonhq/ui/components/loader';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
@@ -8,7 +7,6 @@ import { useContextStore } from './global-context-provider';
 
 export const WorkspaceStoreInit = observer(
   ({ children }: { children: React.ReactNode }) => {
-    const [loading, setLoading] = React.useState(true);
     const {
       workspaceStore,
       teamsStore,
@@ -25,6 +23,8 @@ export const WorkspaceStoreInit = observer(
       projectsStore,
       projectMilestonesStore,
       cyclesStore,
+      conversationsStore,
+      conversationHistoryStore,
     } = useContextStore();
 
     const currentWorkspace = useCurrentWorkspace();
@@ -41,8 +41,6 @@ export const WorkspaceStoreInit = observer(
 
     // All data related to workspace
     const initWorkspaceBasedStores = React.useCallback(async () => {
-      setLoading(true);
-
       await workspaceStore.load(currentWorkspace.id);
       await labelsStore.load();
       await teamsStore.load();
@@ -58,14 +56,11 @@ export const WorkspaceStoreInit = observer(
       await actionsStore.load();
       await projectsStore.load();
       await projectMilestonesStore.load();
+      await conversationsStore.load();
+      await conversationHistoryStore.load();
 
-      setLoading(false);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentWorkspace.id]);
-
-    if (loading) {
-      return <Loader text="Loading workspace" />;
-    }
 
     return <>{children}</>;
   },

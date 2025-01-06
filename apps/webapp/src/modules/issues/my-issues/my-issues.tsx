@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
 import { ContentBox } from 'common/layouts/content-box';
+import { MainLayout } from 'common/layouts/main-layout';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
 import { Header } from './header';
@@ -11,14 +12,12 @@ import { FiltersView } from '../filters-view/filters-view';
 
 export const MyIssues = withApplicationStore(() => {
   return (
-    <main className="flex flex-col overflow-hidden h-[100vh]">
-      <Header />
-
+    <MainLayout header={<Header />} className="overflow-hidden">
       <ContentBox>
         <FiltersView Actions={<IssuesViewOptions />} />
         <ListView />
       </ContentBox>
-    </main>
+    </MainLayout>
   );
 });
 

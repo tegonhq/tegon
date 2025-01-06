@@ -6,10 +6,10 @@ import {
 import { Button } from '@tegonhq/ui/components/button';
 import { AddLine, DocumentLine, IssuesLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
+import Link from 'next/link';
 import React from 'react';
 
 import { HeaderLayout } from 'common/header-layout';
-import { SidebarExpand } from 'common/sidebar-expand';
 
 import { useProject } from 'hooks/projects';
 
@@ -21,10 +21,11 @@ interface HeaderProps {
   isProjectView?: boolean;
   view?: string;
   setView?: (view: 'overview' | 'issues') => void;
+  href?: string;
 }
 
 export const Header = observer(
-  ({ title, isProjectView, view, setView }: HeaderProps) => {
+  ({ title, isProjectView, view, setView, href }: HeaderProps) => {
     const [newProjectDialog, setNewProjectDialog] = React.useState(false);
     const project = useProject();
 
@@ -48,15 +49,20 @@ export const Header = observer(
 
     return (
       <HeaderLayout actions={actions}>
-        <SidebarExpand />
         <Breadcrumb>
           <BreadcrumbItem>
-            <BreadcrumbLink>{title}</BreadcrumbLink>
+            {href ? (
+              <Link href={href}>
+                <BreadcrumbLink>{title}</BreadcrumbLink>
+              </Link>
+            ) : (
+              <BreadcrumbLink>{title}</BreadcrumbLink>
+            )}
           </BreadcrumbItem>
           {isProjectView && (
             <>
               <BreadcrumbItem>
-                <BreadcrumbLink>{project.name}</BreadcrumbLink>
+                <BreadcrumbLink>{project?.name}</BreadcrumbLink>
               </BreadcrumbItem>
               <ProjectDetailsDropdown />
             </>

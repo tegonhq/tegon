@@ -14,7 +14,6 @@ import {
   TeamRequestParamsDto,
   UpdateIssueDto,
   WorkflowCategoryEnum,
-  WorkspaceRequestParamsDto,
 } from '@tegonhq/types';
 import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
@@ -86,6 +85,17 @@ export default class IssuesService {
     return { descriptionMarkdown, ...issue };
   }
 
+  async getIssues(issueIds: string[]): Promise<Issue[]> {
+    return this.prisma.issue.findMany({
+      where: {
+        id: {
+          in: issueIds,
+        },
+      },
+      include: { team: true },
+    });
+  }
+
   /**
    * Creates a new issue using the provided issue data and performs related operations.
    * @param teamRequestParams The team request parameters.
@@ -115,100 +125,125 @@ export default class IssuesService {
       createdById: userId,
     };
 
-    // Create the issues in the database within a transaction
-    const issues = await this.prisma.$transaction(
-      async (prisma) => {
-        // Get the last issue number for the team
-        let lastNumber = await getLastIssueNumber(prisma, teamId);
+    const MAX_RETRIES = 5;
+    let retries = 0;
 
-        // Helper function to create an issue
-        const createIssue = async (
-          data: Prisma.IssueCreateInput,
-        ): Promise<Issue> => {
-          lastNumber++;
-          return prisma.issue.create({
-            data: {
-              ...data,
-              ...createdByInfo,
-              title: data.title,
-              number: lastNumber,
-              team: { connect: { id: issueData.teamId } },
-              ...(linkIssueData && {
-                linkedIssue: {
-                  create: { ...linkIssueData, ...createdByInfo },
+    while (retries < MAX_RETRIES) {
+      try {
+        // Create the issues in the database within a transaction
+        const issues = await this.prisma.$transaction(
+          async (prisma) => {
+            // Get the last issue number for the team
+            let lastNumber = await getLastIssueNumber(prisma, teamId);
+
+            // Helper function to create an issue
+            const createIssue = async (
+              data: Prisma.IssueCreateInput,
+            ): Promise<Issue> => {
+              lastNumber++;
+              return prisma.issue.create({
+                data: {
+                  ...data,
+                  ...createdByInfo,
+                  title: data.title,
+                  number: lastNumber,
+                  team: { connect: { id: issueData.teamId } },
+                  ...(linkIssueData && {
+                    linkedIssue: {
+                      create: { ...linkIssueData, ...createdByInfo },
+                    },
+                  }),
+                  ...(sourceMetadata && { sourceMetadata }),
                 },
-              }),
-              ...(sourceMetadata && { sourceMetadata }),
-            },
-            include: { team: true },
-          });
-        };
+                include: { team: true },
+              });
+            };
 
-        // Create one list with both issue data and respective subissues
-        const createIssuesData = [issueData, ...(issueData.subIssues ?? [])];
-        const createdIssues: Issue[] = [];
-        let mainIssueId: string;
+            // Create one list with both issue data and respective subissues
+            const createIssuesData = [
+              issueData,
+              ...(issueData.subIssues ?? []),
+            ];
+            const createdIssues: Issue[] = [];
+            let mainIssueId: string;
 
-        // Create issues recursively
-        for (const issueData of createIssuesData) {
-          const { parentId, projectId, projectMilestoneId, ...otherData } =
-            issueData;
-          const issueInput = await getCreateIssueInput(
-            this.prisma,
-            this.aiRequestsService,
-            {
-              ...otherData,
-              ...(parentId ? { parentId } : { parentId: mainIssueId }),
-              ...(projectId ? { project: { connect: { id: projectId } } } : {}),
-              ...(projectMilestoneId
-                ? { projectMilestone: { connect: { id: projectMilestoneId } } }
-                : {}),
-            },
-            workspace.id,
-            userId,
-          );
+            // Create issues recursively
+            for (const issueData of createIssuesData) {
+              const { parentId, projectId, projectMilestoneId, ...otherData } =
+                issueData;
+              const issueInput = await getCreateIssueInput(
+                this.prisma,
+                this.aiRequestsService,
+                {
+                  ...otherData,
+                  ...(parentId ? { parentId } : { parentId: mainIssueId }),
+                  ...(projectId
+                    ? { project: { connect: { id: projectId } } }
+                    : {}),
+                  ...(projectMilestoneId
+                    ? {
+                        projectMilestone: {
+                          connect: { id: projectMilestoneId },
+                        },
+                      }
+                    : {}),
+                },
+                workspace.id,
+                userId,
+              );
 
-          createdIssues.push(await createIssue(issueInput));
-          // Assign first issue Id as parent id for rest of the issues
-          if (createdIssues.length === 1) {
-            mainIssueId = createdIssues[0].id;
-          }
+              createdIssues.push(await createIssue(issueInput));
+              // Assign first issue Id as parent id for rest of the issues
+              if (createdIssues.length === 1) {
+                mainIssueId = createdIssues[0].id;
+              }
+            }
+
+            return createdIssues;
+          },
+          {
+            isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+          },
+        );
+
+        // Process each created issue
+        await Promise.all(
+          issues.map(async (issue: Issue) => {
+            // Upsert the issue history with the issue diff and other metadata
+            this.upsertIssueHistory(
+              issue,
+              await getIssueDiff(issue, null),
+              userId,
+              sourceMetadata,
+              issueRelation,
+            );
+
+            handlePostCreateIssue(
+              this.prisma,
+              this.triggerdevService,
+              this.issuesQueue,
+              issue,
+              sourceMetadata,
+            );
+          }),
+        );
+
+        const descriptionMarkdown = convertTiptapJsonToMarkdown(
+          issues[0].description,
+        );
+
+        // Return the main created issue
+        return { ...issues[0], descriptionMarkdown };
+      } catch (error) {
+        if (error.code === 'P2034') {
+          retries++;
+          continue;
         }
+        throw error;
+      }
+    }
 
-        return createdIssues;
-      },
-      {
-        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
-      },
-    );
-
-    // Process each created issue
-    await Promise.all(
-      issues.map(async (issue: Issue) => {
-        // Upsert the issue history with the issue diff and other metadata
-        this.upsertIssueHistory(
-          issue,
-          await getIssueDiff(issue, null),
-          userId,
-          sourceMetadata,
-          issueRelation,
-        );
-
-        handlePostCreateIssue(
-          this.prisma,
-          this.triggerdevService,
-          this.issuesQueue,
-          issue,
-          sourceMetadata,
-        );
-      }),
-    );
-
-    const descriptionMarkdown = convertTiptapJsonToMarkdown(
-      issues[0].description,
-    );
-    // Return the main created issue
-    return { ...issues[0], descriptionMarkdown };
+    return undefined;
   }
 
   /**
@@ -238,6 +273,7 @@ export default class IssuesService {
       descriptionMarkdown,
       projectId,
       projectMilestoneId,
+      cycleId,
       ...otherIssueData
     } = issueData;
 
@@ -291,6 +327,12 @@ export default class IssuesService {
         ? projectMilestoneId === null
           ? { projectMilestone: { disconnect: true } }
           : { projectMilestone: { connect: { id: projectMilestoneId } } }
+        : {}),
+
+      ...('cycleId' in issueData
+        ? cycleId === null
+          ? { cycle: { disconnect: true } }
+          : { cycle: { connect: { id: cycleId } } }
         : {}),
 
       ...(linkIssueData && {
@@ -367,8 +409,7 @@ export default class IssuesService {
     }
 
     // Add the updated issue to the vector
-
-    // this.issuesQueue.addIssueToVector(updatedIssue);
+    this.issuesQueue.addIssueToVector(updatedIssue);
 
     // Find the current and updated issue states
     const [currentIssueState, updatedIssueState] = await Promise.all([
@@ -565,11 +606,19 @@ export default class IssuesService {
    * @returns The updated issue with the new subscriber IDs.
    */
   async updateSubscribers(issueId: string, subscriberIds: string[]) {
+    const issue = await this.prisma.issue.findUnique({
+      where: { id: issueId },
+      select: { subscriberIds: true },
+    });
+
+    const allSubscriberIds = [...(issue.subscriberIds || []), ...subscriberIds];
+    const uniqueSubscriberIds = [...new Set(allSubscriberIds)];
+
     return await this.prisma.issue.update({
       where: { id: issueId },
       data: {
         subscriberIds: {
-          set: subscriberIds,
+          set: uniqueSubscriberIds,
         },
       },
     });
@@ -580,12 +629,10 @@ export default class IssuesService {
    * @param workspaceParams The workspace query parameters.
    * @returns A Promise that resolves to the CSV string of exported issues.
    */
-  async exportIssues(
-    workspaceParams: WorkspaceRequestParamsDto,
-  ): Promise<string> {
+  async exportIssues(workspaceId: string): Promise<string> {
     // Find all issues for the given workspace, including related data
     const issues = await this.prisma.issue.findMany({
-      where: { team: { workspaceId: workspaceParams.workspaceId } },
+      where: { team: { workspaceId } },
       include: {
         parent: true,
         team: true,

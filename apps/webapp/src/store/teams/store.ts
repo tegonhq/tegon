@@ -66,6 +66,13 @@ export const TeamsStore: IAnyStateTreeNode = types
 
       return team;
     },
+    cyclesEnabledForTeam(teamId: string) {
+      const team = self.teams.find((team: TeamType) => {
+        return team.id === teamId;
+      });
+
+      return team?.preferences?.cyclesEnabled;
+    },
     get getTeams() {
       return self.teams;
     },

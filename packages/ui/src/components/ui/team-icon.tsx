@@ -14,7 +14,7 @@ export function TeamIcon({ name, className }: TeamIconProps) {
         `w-5 h-5 rounded-sm flex items-center justify-center text-black`,
         className,
       )}
-      style={{ background: getTeamColor(name) }}
+      style={{ background: name && getTeamColor(name) }}
     >
       <TeamLine className="shrink-0 !h-4 !w-4" />
     </div>

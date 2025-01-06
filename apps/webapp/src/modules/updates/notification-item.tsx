@@ -59,10 +59,7 @@ export const NotificationItem = observer(
 
     const nextIssue =
       nextNotification && issuesStore.getIssueById(nextNotification.issueId);
-    const { user, isLoading } = useUserData(
-      notification.createdById,
-      issue.teamId,
-    );
+    const { user, isLoading } = useUserData(notification.createdById);
     const {
       query: { issueId, workspaceSlug },
       push,
@@ -119,7 +116,7 @@ export const NotificationItem = observer(
 
           <div className="flex justify-between text-xs">
             <div className="flex gap-2 text-muted-foreground">
-              {getNotificationText(user.username, notification.type)}
+              {getNotificationText(user?.username, notification.type)}
             </div>
 
             <div className="text-muted-foreground">

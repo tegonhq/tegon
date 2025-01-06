@@ -15,3 +15,4 @@ export * from './integration-account';
 export * from './search';
 export * from './projects';
 export * from './workspace';
+export * from './conversation';

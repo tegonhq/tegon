@@ -36,6 +36,8 @@ export const tablesToSendMessagesFor = new Map([
   [ModelNameEnum.Project, true],
   [ModelNameEnum.ProjectMilestone, true],
   [ModelNameEnum.Cycle, true],
+  [ModelNameEnum.Conversation, true],
+  [ModelNameEnum.ConversationHistory, true],
 ]);
 
 export const tablesToTrigger = new Map([

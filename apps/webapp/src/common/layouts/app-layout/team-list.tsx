@@ -12,6 +12,7 @@ import {
 } from '@tegonhq/ui/components/tooltip';
 import {
   ChevronRight,
+  Cycle,
   IssuesLine,
   StackLine,
   TriageLine,
@@ -27,7 +28,7 @@ import { useCurrentWorkspace } from 'hooks/workspace';
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
 
-import { Nav } from './nav';
+import { Nav, type Link } from './nav';
 
 export const TeamList = observer(() => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
@@ -35,7 +36,8 @@ export const TeamList = observer(() => {
   const { teamsStore, workspaceStore } = useContextStore();
   // If the team exists in the route path
   const team = useCurrentTeam();
-  const teamAccessList = workspaceStore.getUserData(currentUser.id).teamIds;
+  const teamAccessList =
+    workspaceStore.getUserData(currentUser.id)?.teamIds ?? [];
   const teams = teamsStore.teams.filter((team: TeamType) =>
     teamAccessList.includes(team.id),
   );
@@ -48,16 +50,11 @@ export const TeamList = observer(() => {
       <Accordion
         type="single"
         collapsible
-        defaultValue={team?.id ?? teams[0].id}
-        className="w-full flex flex-col gap-4"
+        defaultValue={team?.id}
+        className="w-full flex flex-col gap-2"
       >
         {teams.map((team: TeamType) => {
-          const links = [
-            {
-              title: 'Triage',
-              icon: TriageLine,
-              href: `/${workspace.slug}/team/${team.identifier}/triage`,
-            },
+          let links: Link[] = [
             {
               title: 'Issues',
               icon: IssuesLine,
@@ -71,13 +68,35 @@ export const TeamList = observer(() => {
             },
           ];
 
-          // if (team.preferences.cyclesEnabled) {
-          //   links.push({
-          //     title: 'Cycles',
-          //     icon: Cycle,
-          //     href: `/${workspace.slug}/team/${team.identifier}/cycles`,
-          //   });
-          // }
+          if (team.preferences.cyclesEnabled) {
+            links = [
+              ...links,
+              ...[
+                {
+                  title: 'Cycles',
+                  icon: Cycle,
+                  strict: true,
+                  href: `/${workspace.slug}/team/${team.identifier}/cycles`,
+                },
+                {
+                  title: 'Current',
+                  icon: Cycle,
+                  href: `/${workspace.slug}/team/${team.identifier}/cycles/current`,
+                },
+              ],
+            ];
+          }
+
+          if (team.preferences.triage) {
+            links = [
+              {
+                title: 'Triage',
+                icon: TriageLine,
+                href: `/${workspace.slug}/team/${team.identifier}/triage`,
+              },
+              ...links,
+            ];
+          }
 
           return (
             <AccordionItem

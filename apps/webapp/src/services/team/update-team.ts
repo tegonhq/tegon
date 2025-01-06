@@ -28,10 +28,10 @@ export function useUpdateTeamMutation({
     const team = teamsStore.getTeamWithId(teamId);
 
     try {
-      teamsStore.update(otherParams, team.id);
+      teamsStore.update({ ...otherParams, preferences: {} }, team.id);
       return updateTeam({ ...otherParams, teamId });
     } catch (e) {
-      teamsStore.updateIssue(team, team.id);
+      teamsStore.update(team, team.id);
       return undefined;
     }
   };

@@ -1,22 +1,81 @@
-import { Storage } from '@google-cloud/storage';
 import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { AttachmentResponse, AttachmentStatusEnum } from '@tegonhq/types';
+import {
+  Attachment,
+  AttachmentResponse,
+  AttachmentStatusEnum,
+  SignedURLBody,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-import { AttachmentRequestParams, ExternalFile } from './attachments.interface';
+import { LoggerService } from 'modules/logger/logger.service';
+
+import { AttachmentRequestParams } from './attachments.interface';
+import { StorageProvider } from './storage-provider.interface';
+import { StorageFactory } from './storage.factory';
 @Injectable()
 export class AttachmentService {
-  private storage: Storage;
-  private bucketName = process.env.GCP_BUCKET_NAME;
+  private readonly logger: LoggerService = new LoggerService(
+    'AttachmentService',
+  );
+  private storageProvider: StorageProvider;
 
-  constructor(private prisma: PrismaService) {
-    this.storage = new Storage({
-      keyFilename: process.env.GCP_SERVICE_ACCOUNT_FILE,
+  constructor(
+    private prisma: PrismaService,
+    private storageFactory: StorageFactory,
+  ) {
+    this.storageProvider = this.storageFactory.createStorageProvider();
+  }
+
+  async uploadGenerateSignedURL(
+    file: SignedURLBody,
+    userId: string,
+    workspaceId: string,
+  ) {
+    const attachment = await this.prisma.attachment.create({
+      data: {
+        fileName: file.fileName,
+        originalName: file.originalName,
+        fileType: file.mimetype,
+        size: file.size,
+        status: AttachmentStatusEnum.Pending,
+        fileExt: file.originalName.split('.').pop(),
+        workspaceId,
+        ...(userId ? { uploadedById: userId } : {}),
+      },
+      include: {
+        workspace: true,
+      },
     });
+
+    try {
+      const filePath = this.getFilePath(workspaceId, attachment);
+      const url = await this.storageProvider.getSignedUrl(filePath, {
+        action: 'write',
+        expires: Date.now() + 15 * 60 * 1000,
+        contentType: file.contentType,
+      });
+
+      const publicURL = `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/${workspaceId}/${attachment.id}`;
+
+      return {
+        url,
+        attachment: {
+          publicURL,
+          id: attachment.id,
+          fileType: attachment.fileType,
+          originalName: attachment.originalName,
+          size: attachment.size,
+        },
+      };
+    } catch (err) {
+      this.logger.error(err);
+
+      return undefined;
+    }
   }
 
   async uploadAttachment(
@@ -25,8 +84,6 @@ export class AttachmentService {
     workspaceId: string,
     sourceMetadata?: Record<string, string>,
   ): Promise<AttachmentResponse[]> {
-    const bucket = this.storage.bucket(this.bucketName);
-
     const attachmentPromises = files.map(async (file) => {
       const attachment = await this.prisma.attachment.create({
         data: {
@@ -45,15 +102,11 @@ export class AttachmentService {
         },
       });
 
-      const blob = bucket.file(
-        `${workspaceId}/${attachment.id}.${attachment.fileExt}`,
-      );
-      await blob.save(file.buffer, {
+      const filePath = this.getFilePath(workspaceId, attachment);
+      await this.storageProvider.uploadFile(filePath, file.buffer, {
+        contentType: file.mimetype,
         resumable: false,
         validation: false,
-        metadata: {
-          contentType: file.mimetype,
-        },
       });
 
       const publicURL = `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/${workspaceId}/${attachment.id}`;
@@ -73,65 +126,21 @@ export class AttachmentService {
     return await Promise.all(attachmentPromises);
   }
 
-  async createExternalAttachment(
-    files: ExternalFile[],
-    userId: string,
+  async getFileFromStorage(
+    attachementRequestParams: AttachmentRequestParams,
     workspaceId: string,
-    sourceMetadata?: Record<string, string>,
   ) {
-    const attachmentPromises = files.map(async (file) => {
-      const attachment = await this.prisma.attachment.create({
-        data: {
-          fileName: file.filename,
-          originalName: file.originalname,
-          fileType: file.mimetype,
-          size: file.size,
-          status: AttachmentStatusEnum.External,
-          fileExt: file.originalname.split('.').pop(),
-          uploadedById: userId,
-          workspaceId,
-          url: file.url,
-          sourceMetadata,
-        },
-        include: {
-          workspace: true,
-        },
-      });
+    const attachment = await this.getAttachment(
+      attachementRequestParams.attachmentId,
+      workspaceId,
+    );
+    const filePath = this.getFilePath(workspaceId, attachment);
 
-      return {
-        publicURL: file.url,
-        fileType: attachment.fileType,
-        originalName: attachment.originalName,
-        size: attachment.size,
-      } as AttachmentResponse;
-    });
-
-    return await Promise.all(attachmentPromises);
-  }
-
-  async getFileFromGCS(attachementRequestParams: AttachmentRequestParams) {
-    const { attachmentId, workspaceId } = attachementRequestParams;
-
-    const attachment = await this.prisma.attachment.findFirst({
-      where: { id: attachmentId, workspaceId },
-    });
-
-    if (!attachment) {
-      throw new BadRequestException(
-        `No attachment found for this id: ${attachmentId}`,
-      );
-    }
-
-    const bucket = this.storage.bucket(this.bucketName);
-    const filePath = `${workspaceId}/${attachment.id}.${attachment.fileExt}`;
-    const [fileExists] = await bucket.file(filePath).exists();
-
-    if (!fileExists) {
+    if (!(await this.storageProvider.fileExists(filePath))) {
       throw new BadRequestException('File not found');
     }
 
-    const [buffer] = await bucket.file(filePath).download();
-
+    const buffer = await this.storageProvider.downloadFile(filePath);
     return {
       buffer,
       contentType: attachment.fileType,
@@ -139,24 +148,51 @@ export class AttachmentService {
     };
   }
 
-  async deleteAttachment(attachementRequestParams: AttachmentRequestParams) {
-    const { attachmentId, workspaceId } = attachementRequestParams;
+  async getFileFromStorageSignedUrl(
+    attachementRequestParams: AttachmentRequestParams,
+    workspaceId: string,
+  ) {
+    const attachment = await this.getAttachment(
+      attachementRequestParams.attachmentId,
+      workspaceId,
+    );
+    const filePath = this.getFilePath(workspaceId, attachment);
 
-    const attachment = await this.prisma.attachment.findFirst({
-      where: { id: attachmentId, workspaceId },
-    });
-
-    if (!attachment) {
-      throw new BadRequestException('Attachment not found');
+    if (!(await this.storageProvider.fileExists(filePath))) {
+      throw new BadRequestException('File not found');
     }
 
-    const filePath = `${workspaceId}/${attachment.id}.${attachment.fileExt}`;
+    const metadata = await this.storageProvider.getMetadata(filePath);
+    const signedUrl = await this.storageProvider.getSignedUrl(filePath, {
+      action: 'read',
+      expires: Date.now() + 60 * 60 * 1000,
+      responseDisposition: 'inline',
+      responseType: attachment.fileType,
+    });
+
+    return {
+      signedUrl,
+      contentType: attachment.fileType,
+      originalName: attachment.originalName,
+      size: metadata.size,
+    };
+  }
+
+  async deleteAttachment(
+    attachementRequestParams: AttachmentRequestParams,
+    workspaceId: string,
+  ) {
+    const attachment = await this.getAttachment(
+      attachementRequestParams.attachmentId,
+      workspaceId,
+    );
+    const filePath = this.getFilePath(workspaceId, attachment);
 
     try {
       await Promise.all([
-        this.storage.bucket(this.bucketName).file(filePath).delete(),
+        this.storageProvider.deleteFile(filePath),
         this.prisma.attachment.update({
-          where: { id: attachmentId },
+          where: { id: attachementRequestParams.attachmentId },
           data: {
             deleted: new Date().toISOString(),
             status: AttachmentStatusEnum.Deleted,
@@ -166,5 +202,21 @@ export class AttachmentService {
     } catch (error) {
       throw new InternalServerErrorException('Error deleting attachment');
     }
+  }
+
+  private async getAttachment(attachmentId: string, workspaceId: string) {
+    const attachment = await this.prisma.attachment.findFirst({
+      where: { id: attachmentId, workspaceId },
+    });
+
+    if (!attachment) {
+      throw new BadRequestException('Attachment not found');
+    }
+
+    return attachment;
+  }
+
+  private getFilePath(workspaceId: string, attachment: Attachment): string {
+    return `${workspaceId}/${attachment.id}.${attachment.fileExt}`;
   }
 }

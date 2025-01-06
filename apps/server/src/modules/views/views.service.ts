@@ -63,9 +63,12 @@ export class ViewsService {
   }
 
   async deleteView(viewId: string) {
-    return await this.prismaService.view.delete({
+    return await this.prismaService.view.update({
       where: {
         id: viewId,
+      },
+      data: {
+        deleted: new Date(),
       },
     });
   }

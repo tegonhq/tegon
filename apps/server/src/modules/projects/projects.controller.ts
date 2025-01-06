@@ -4,6 +4,7 @@ import {
   Delete,
   Param,
   Post,
+  Get,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -26,6 +27,12 @@ import { ProjectsService } from './projects.service';
 })
 export class ProjectsController {
   constructor(private projects: ProjectsService) {}
+
+  @Get()
+  @UseGuards(AuthGuard)
+  async getProjects(@Workspace() workspace: string) {
+    return await this.projects.getProjects(workspace);
+  }
 
   @Post()
   @UseGuards(AuthGuard)

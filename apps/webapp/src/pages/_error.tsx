@@ -5,7 +5,6 @@ import Error from 'next/error';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CustomErrorComponent = (props: any) => {
   const reload = () => {
-    localStorage.clear();
     window.location.reload();
   };
 

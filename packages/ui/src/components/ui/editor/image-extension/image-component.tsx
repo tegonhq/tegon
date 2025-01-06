@@ -1,14 +1,29 @@
 /* eslint-disable @next/next/no-img-element */
 import { RiDownloadLine } from '@remixicon/react';
 import { NodeViewWrapper } from '@tiptap/react';
+import { ArrowRight, ZoomIn, ZoomOut } from 'lucide-react';
 import React from 'react';
+import Lightbox from 'yet-another-react-lightbox';
+import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import 'yet-another-react-lightbox/styles.css';
 
-import { CrossLine, FullscreenLine } from '@tegonhq/ui/icons';
+import { ArrowLeft, Close, FullscreenLine } from '@tegonhq/ui/icons';
 
+import { getNodeTypesWithImageExtension, type AttrType } from './utils';
 import { Button } from '../../button';
+import { Loader } from '../../loader';
+import { Progress } from '../../progress';
+import { useEditor } from '../editor';
+import { useSrc } from '../file-extension/use-src';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ImageComponent = (props: any) => {
+  const { editor } = useEditor();
+  const { loading, src } = useSrc(
+    props.node.attrs.src,
+    props.node.attrs.attachmentId,
+  );
+
   const setOpen = (openViewer: boolean) => {
     props.updateAttributes({
       openViewer,
@@ -16,79 +31,85 @@ export const ImageComponent = (props: any) => {
   };
 
   React.useEffect(() => {
-    setOpen(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setOpen(false); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
-    const handleKeyDown = (event: any) => {
-      if (event.key === 'Escape') {
-        setOpen(false);
-      }
-    };
+  const images = getNodeTypesWithImageExtension(editor);
 
-    if (props.node.attrs.openViewer) {
-      window.addEventListener('keydown', handleKeyDown);
-    }
-
-    // Clean up the event listener when the component unmounts or full screen is closed
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.node.attrs.openViewer]);
+  if (loading) {
+    return null;
+  }
 
   return (
     <NodeViewWrapper className="react-component-with-content">
       <div className="content">
-        <div className="relative flex w-fit items-center p-3 bg-grayAlpha-100 rounded-lg gap-2 my-1">
-          <img
-            src={props.node.attrs.src}
-            alt={props.node.attrs.alt}
-            onClick={() => {
-              setOpen(true);
-            }}
-            className="max-w-[400px] rounded"
-          />
-          <div className="flex bg-background-3 rounded absolute right-4 top-4 p-1">
-            <Button
-              variant="ghost"
-              onClick={() => {
-                window.open(props.node.attrs.src, '_blank');
-              }}
-            >
-              <RiDownloadLine size={16} />
-            </Button>
-
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setOpen(true);
-              }}
-            >
-              <FullscreenLine size={16} />
-            </Button>
+        <div className="relative flex w-fit items-center p-2 bg-grayAlpha-100 rounded-lg gap-2 my-1 overflow-hidden">
+          <div className="flex flex-col">
+            <img
+              src={src}
+              alt={props.node.attrs.alt}
+              className="max-w-[400px] rounded"
+            />
+            {props.node.attrs.uploading && (
+              <div className="w-full mt-2">
+                <Progress
+                  color="#1a89c5"
+                  segments={[{ value: props.node.attrs.progress }]}
+                />
+              </div>
+            )}
           </div>
 
-          {props.node.attrs.openViewer && (
-            <div className="fixed inset-0 bg-background bg-opacity-80 flex justify-center items-center z-50 p-6">
-              <div className="relative">
-                <img
-                  src={props.node.attrs.src}
-                  alt="fullscreen"
-                  style={{
-                    maxWidth: '800px',
-                  }}
-                />
-                <Button
-                  onClick={() => setOpen(false)}
-                  variant="secondary"
-                  className="absolute top-4 right-4 bg-background-3"
-                >
-                  <CrossLine />
-                </Button>
+          {props.node.attrs.uploading && (
+            <>
+              <div className="absolute left-0 top-0 w-full h-full bg-grayAlpha-200 flex items-center rounded-md">
+                <Loader />
               </div>
+            </>
+          )}
+
+          {!props.node.attrs.uploading && (
+            <div className="flex bg-background-3 rounded absolute right-4 top-4 p-1">
+              <Button
+                variant="ghost"
+                size="xs"
+                className="px-1"
+                onClick={() => {
+                  window.open(src, '_blank');
+                }}
+              >
+                <RiDownloadLine size={16} />
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="xs"
+                className="px-1"
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                <FullscreenLine size={16} />
+              </Button>
             </div>
+          )}
+
+          {props.node.attrs.openViewer && (
+            <Lightbox
+              open
+              render={{
+                iconPrev: () => <ArrowLeft />,
+                iconNext: () => <ArrowRight />,
+                iconClose: () => <Close />,
+                iconZoomIn: () => <ZoomIn />,
+                iconZoomOut: () => <ZoomOut />,
+              }}
+              plugins={[Zoom]}
+              close={() => setOpen(false)}
+              slides={images.map((image: AttrType) => ({
+                src: image.src,
+              }))}
+            />
           )}
         </div>
       </div>

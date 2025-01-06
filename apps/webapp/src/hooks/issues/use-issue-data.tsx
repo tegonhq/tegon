@@ -14,5 +14,5 @@ export function useIssueData(): IssueType {
   const { issuesStore } = useContextStore();
   const team = useCurrentTeam();
 
-  return issuesStore.getIssueByNumber(issueId, team.id);
+  return issuesStore.getIssueByNumber(issueId, team?.id);
 }

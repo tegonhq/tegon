@@ -11,12 +11,14 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { SignedURLBody } from '@tegonhq/types';
 import { Response } from 'express';
 import { SessionContainer } from 'supertokens-node/recipe/session';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import {
   Session as SessionDecorator,
+  UserId,
   Workspace,
 } from 'modules/auth/session.decorator';
 
@@ -56,14 +58,47 @@ export class AttachmentController {
     );
   }
 
+  @Post('get-signed-url')
+  @UseGuards(AuthGuard)
+  async getUploadSignedUrl(
+    @Body() attachmentBody: SignedURLBody,
+    @Workspace() workspaceId: string,
+    @UserId() userId: string,
+  ) {
+    return await this.attachementService.uploadGenerateSignedURL(
+      attachmentBody,
+      userId,
+      workspaceId,
+    );
+  }
+
+  @Get('get-signed-url/:attachmentId')
+  @UseGuards(AuthGuard)
+  async getFileFromGCSSignedURL(
+    @Workspace() workspaceId: string,
+    @Param() attachementRequestParams: AttachmentRequestParams,
+  ) {
+    try {
+      return await this.attachementService.getFileFromStorageSignedUrl(
+        attachementRequestParams,
+        workspaceId,
+      );
+    } catch (error) {
+      return undefined;
+    }
+  }
+
   @Get(':workspaceId/:attachmentId')
+  @UseGuards(AuthGuard)
   async getFileFromGCS(
+    @Workspace() workspaceId: string,
     @Param() attachementRequestParams: AttachmentRequestParams,
     @Res() res: Response,
   ) {
     try {
-      const file = await this.attachementService.getFileFromGCS(
+      const file = await this.attachementService.getFileFromStorage(
         attachementRequestParams,
+        workspaceId,
       );
       res.setHeader('Content-Type', file.contentType);
       res.send(file.buffer);
@@ -75,9 +110,13 @@ export class AttachmentController {
   @Delete(':workspaceId/:attachmentId')
   @UseGuards(AuthGuard)
   async deleteAttachment(
+    @Workspace() workspaceId: string,
     @Param() attachementRequestParams: AttachmentRequestParams,
   ) {
-    await this.attachementService.deleteAttachment(attachementRequestParams);
+    await this.attachementService.deleteAttachment(
+      attachementRequestParams,
+      workspaceId,
+    );
     return { message: 'Attachment deleted successfully' };
   }
 }

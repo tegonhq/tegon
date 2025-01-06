@@ -7,6 +7,7 @@ import React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
 import { ContentBox } from 'common/layouts/content-box';
+import { MainLayout } from 'common/layouts/main-layout';
 import { SCOPES } from 'common/scopes';
 
 import { useScope } from 'hooks';
@@ -19,9 +20,7 @@ export function Triage() {
   useScope(SCOPES.AllIssues);
 
   return (
-    <main className="flex flex-col h-[100vh]">
-      <Header title="Triage" />
-
+    <MainLayout header={<Header title="Triage" />}>
       <ContentBox>
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel
@@ -46,7 +45,7 @@ export function Triage() {
           </ResizablePanel>
         </ResizablePanelGroup>
       </ContentBox>
-    </main>
+    </MainLayout>
   );
 }
 

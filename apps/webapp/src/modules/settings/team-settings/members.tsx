@@ -1,5 +1,4 @@
 import { RoleEnum } from '@tegonhq/types';
-import { Loader } from '@tegonhq/ui/components/loader';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 
@@ -36,8 +35,6 @@ export const Members = observer(() => {
         description={`Manage who is a member of the ${team.name} team`}
       >
         <div>
-          {isLoading && <Loader />}
-
           {!isLoading && (
             <div className="flex flex-col">
               <div className="flex justify-between items-center">

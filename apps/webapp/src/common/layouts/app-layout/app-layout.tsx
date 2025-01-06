@@ -1,16 +1,10 @@
-import { Button } from '@tegonhq/ui/components/button';
-import {
-  Inbox,
-  MyIssues,
-  Project,
-  SidebarLine,
-  StackLine,
-} from '@tegonhq/ui/icons';
+import { Inbox, MyIssues, Project, StackLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
+import { NewIssueProvider } from 'modules/issues/new-issue';
 import { GlobalShortcuts, IssueShortcutDialogs } from 'modules/shortcuts';
 
 import { AllProviders } from 'common/wrappers/all-providers';
@@ -20,6 +14,7 @@ import { useCurrentTeam } from 'hooks/teams';
 import { useContextStore } from 'store/global-context-provider';
 
 import { BottomBar } from './bottom-bar';
+import { Header } from './header';
 import { Nav } from './nav';
 import { TeamList } from './team-list';
 import { WorkspaceDropdown } from './workspace-dropdown';
@@ -42,19 +37,12 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
       <div className="h-[100vh] w-[100vw] flex">
         {!applicationStore.sidebarCollapsed && (
           <div className="min-w-[220px] flex flex-col h-full overflow-auto">
-            <div className="flex flex-col py-3 px-6">
-              <div className="flex justify-between items-center">
-                <WorkspaceDropdown />
-                <Button
-                  variant="link"
-                  size="sm"
-                  onClick={() => applicationStore.updateSideBar(true)}
-                >
-                  <SidebarLine size={20} />
-                </Button>
-              </div>
+            <div className="flex py-3 px-4 pr-2 items-center justify-between">
+              <WorkspaceDropdown />
+              <Header />
             </div>
-            <div className="px-6 mt-4 grow">
+
+            <div className="px-4 pr-2 mt-4 grow">
               <Nav
                 links={[
                   {
@@ -98,6 +86,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
       </div>
 
       <GlobalShortcuts />
+
       {team && <IssueShortcutDialogs />}
     </>
   );
@@ -106,7 +95,9 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
 export function AppLayout(props: LayoutProps) {
   return (
     <AllProviders>
-      <AppLayoutChild {...props} />
+      <NewIssueProvider>
+        <AppLayoutChild {...props} />
+      </NewIssueProvider>
     </AllProviders>
   );
 }

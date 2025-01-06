@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   Req,
   Res,
@@ -25,14 +26,11 @@ import { SessionContainer } from 'supertokens-node/recipe/session';
 import { AuthGuard } from 'modules/auth/auth.guard';
 import {
   Session as SessionDecorator,
+  UserId,
   Workspace,
 } from 'modules/auth/session.decorator';
 
-import {
-  UpdateUserBody,
-  UserIdParams,
-  UserWithInvites,
-} from './users.interface';
+import { UpdateUserBody, UserWithInvites } from './users.interface';
 import { UsersService } from './users.service';
 
 @Controller({
@@ -46,7 +44,20 @@ export class UsersController {
   @UseGuards(AuthGuard)
   async getUser(
     @SessionDecorator() session: SessionContainer,
-  ): Promise<UserWithInvites> {
+    @Query() userIdParams: { userIds: string },
+    @Workspace() workspaceId: string,
+  ): Promise<UserWithInvites | PublicUser[]> {
+    try {
+      if (userIdParams.userIds && userIdParams.userIds.split(',').length > 0) {
+        return await this.users.getUsersbyId(
+          {
+            userIds: userIdParams.userIds.split(','),
+          },
+          workspaceId,
+        );
+      }
+    } catch (e) {}
+
     const userId = session.getUserId();
     const user = await this.users.getUser(userId);
 
@@ -55,8 +66,11 @@ export class UsersController {
 
   @Post()
   @UseGuards(AuthGuard)
-  async getUsersById(@Body() getUsersDto: GetUsersDto): Promise<PublicUser[]> {
-    return await this.users.getUsersbyId(getUsersDto);
+  async getUsersById(
+    @Body() getUsersDto: GetUsersDto,
+    @Workspace() workspaceId: string,
+  ): Promise<PublicUser[]> {
+    return await this.users.getUsersbyId(getUsersDto, workspaceId);
   }
 
   @Post('impersonate')
@@ -133,15 +147,14 @@ export class UsersController {
     return this.users.authorizeCode(userId, codeBody);
   }
 
-  @Post(':userId')
+  @Put()
   @UseGuards(AuthGuard)
   async updateUser(
-    @Param() userIdBody: UserIdParams,
+    @UserId() userId: string,
     @Body()
     updateUserBody: UpdateUserBody,
   ): Promise<User> {
-    const user = await this.users.updateUser(userIdBody.userId, updateUserBody);
-
+    const user = await this.users.updateUser(userId, updateUserBody);
     return user;
   }
 }

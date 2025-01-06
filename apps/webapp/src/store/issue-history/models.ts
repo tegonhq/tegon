@@ -7,9 +7,12 @@ export const RelationChangeModel = types.model({
     'RELATED',
     'DUPLICATE',
     'DUPLICATE_OF',
+    'SIMILAR',
+    'SUB_ISSUE',
+    'PARENT',
   ]),
-  relatedIssueId: types.string,
-  issueId: types.string,
+  relatedIssueId: types.union(types.string, types.null),
+  issueId: types.union(types.string, types.null),
   isDeleted: types.union(types.boolean, types.undefined),
 });
 
@@ -18,7 +21,7 @@ export const IssueHistory = types.model({
   createdAt: types.string,
   updatedAt: types.string,
   userId: types.union(types.string, types.null),
-  issueId: types.string,
+  issueId: types.union(types.null, types.undefined, types.string),
 
   addedLabelIds: types.array(types.string),
   removedLabelIds: types.array(types.string),

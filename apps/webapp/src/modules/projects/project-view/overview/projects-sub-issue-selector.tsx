@@ -27,7 +27,7 @@ export const ProjectSubIssueSelector = () => {
   );
   const { mutate: createIssue } = useCreateIssueMutation({
     onSuccess: (data, variables) => {
-      const url = `http://app.tegon.ai/${query.workspaceSlug}/issue/${team.identifier}-${data.number}`;
+      const url = `https://app.tegon.ai/${query.workspaceSlug}/issue/${team.identifier}-${data.number}`;
 
       editor
         .chain()

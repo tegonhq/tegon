@@ -83,8 +83,8 @@ export default class IssueRelationService {
 
       const issueRelationId =
         relationData.type === IssueRelationType.BLOCKS
-          ? issueRelationData.id
-          : inverseRelationData.id;
+          ? issueRelationData.relatedIssueId
+          : inverseRelationData.relatedIssueId;
 
       await this.triggerdevService.triggerTaskAsync(
         'common',

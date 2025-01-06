@@ -11,7 +11,13 @@ import {
   EditorExtensions,
   suggestionItems,
 } from '@tegonhq/ui/components/editor/index';
-import { EditLine, MoreLine, NewIssueLine, SubIssue } from '@tegonhq/ui/icons';
+import {
+  DeleteLine,
+  EditLine,
+  MoreLine,
+  NewIssueLine,
+  SubIssue,
+} from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
@@ -21,10 +27,12 @@ import { NewIssue } from 'modules/issues/new-issue';
 import { type IssueCommentType, type User } from 'common/types';
 import { getUserIcon } from 'common/user-util';
 
+import { CustomMention, useMentionSuggestions } from 'components/editor';
 import { useIssueData } from 'hooks/issues';
 
 import { UserContext } from 'store/user-context';
 
+import { DeleteCommentDialog } from './delete-comment-alert';
 import { EditComment } from './edit-comment';
 import { ReplyComment } from './reply-comment';
 import { getUserDetails } from '../issue-activity/user-activity-utils';
@@ -49,12 +57,14 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
   } = props;
   const currentUser = React.useContext(UserContext);
   const issue = useIssueData();
+  const suggestion = useMentionSuggestions();
 
   const sourceMetadata = comment.sourceMetadata
     ? JSON.parse(comment.sourceMetadata)
     : undefined;
 
   const [edit, setEdit] = React.useState(false);
+  const [deleteComment, setDeleteComment] = React.useState(false);
   const [defaultIssueCreationValues, setDefaultIssueCreationValues] =
     React.useState(undefined);
   const [newIssueDialog, setNewIssueDialog] = React.useState(false);
@@ -67,6 +77,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           'group relative w-full flex flex-col text-foreground rounded-md',
           !comment.parentId && 'bg-grayAlpha-100',
         )}
+        key={comment.updatedAt} // Add key to force re-render
       >
         <div
           className={cn(
@@ -97,6 +108,14 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
                     <DropdownMenuItem onClick={() => setEdit(true)}>
                       <div className="flex items-center gap-1">
                         <EditLine size={16} className="mr-1" /> Edit
+                      </div>
+                    </DropdownMenuItem>
+                  )}
+
+                  {!sourceMetadata && user.id === currentUser.id && (
+                    <DropdownMenuItem onClick={() => setDeleteComment(true)}>
+                      <div className="flex items-center gap-1">
+                        <DeleteLine size={16} className="mr-1" /> Delete
                       </div>
                     </DropdownMenuItem>
                   )}
@@ -153,12 +172,21 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         ) : (
           <div
             className={cn(
-              'text-base pt-2',
-              !comment.parentId && 'p-3 py-2',
+              'text-base pt-1',
+              !comment.parentId && 'p-3 py-1 pb-2',
               comment.parentId && 'pb-2',
             )}
           >
-            <Editor value={comment.body} editable={false} className="mb-0">
+            <Editor
+              value={comment.body}
+              extensions={[
+                CustomMention.configure({
+                  suggestion,
+                }),
+              ]}
+              editable={false}
+              className="mb-0"
+            >
               <EditorExtensions suggestionItems={suggestionItems} />
             </Editor>
           </div>
@@ -172,7 +200,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
                   key={subComment.id}
                   className={cn(
                     index < childComments.length - 1 &&
-                      'border-b border-border mb-4',
+                      'border-b border-border mb-2',
                   )}
                 >
                   <GenericCommentActivity
@@ -196,6 +224,13 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           open={newIssueDialog}
           setOpen={setNewIssueDialog}
           defaultValues={defaultIssueCreationValues}
+        />
+      )}
+      {deleteComment && (
+        <DeleteCommentDialog
+          deleteCommentDialog={deleteComment}
+          setDeleteCommentDialog={setDeleteComment}
+          issueCommentId={comment.id}
         />
       )}
     </div>

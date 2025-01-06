@@ -71,7 +71,7 @@ export function LabelActivity({
           removed label
         </div>
 
-        <div>
+        <div className="flex flex-wrap">
           {issueHistory.removedLabelIds.map((labelId: string) => (
             <Badge variant="secondary" key={labelId} className="ml-2">
               <BadgeColor

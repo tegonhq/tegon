@@ -1,6 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import jwt from 'supertokens-node/lib/build/recipe/jwt';
 import { TypePasswordlessEmailDeliveryInput } from 'supertokens-node/lib/build/recipe/passwordless/types';
+import jwt from 'supertokens-node/recipe/jwt';
 import Passwordless from 'supertokens-node/recipe/passwordless';
 import Session from 'supertokens-node/recipe/session';
 import UserRoles from 'supertokens-node/recipe/userroles';
@@ -27,11 +27,20 @@ export const recipeList = (
   usersService: UsersService,
   mailerService: MailerService,
 ) => {
+  const isProd = process.env.NODE_ENV === 'production';
+  const cookieSettings = isProd
+    ? {
+        cookieDomain: '.tegon.ai',
+        olderCookieDomain: '',
+        cookieSecure: true,
+      }
+    : {};
+
   return [
     jwt.init(),
     UserRoles.init(),
     Session.init({
-      cookieSecure: true,
+      ...cookieSettings,
       override: {
         functions(originalImplementation) {
           return {

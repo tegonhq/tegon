@@ -35,9 +35,15 @@ export const IssueLabelFilter = observer(
       onChange(names, FilterTypeEnum.INCLUDES);
     };
 
+    const computedValues = labelFilters.flatMap((val: string) => {
+      const label = labels.find((label) => label.name === val);
+
+      return label.ids;
+    });
+
     return (
       <IssueLabelDropdownContent
-        value={labelFilters}
+        value={computedValues}
         onChange={change}
         labels={labels}
         labelSearch={labelSearch}

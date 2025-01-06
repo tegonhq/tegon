@@ -20,7 +20,7 @@ import { useContextStore } from 'store/global-context-provider';
 
 interface IssueProjectDropdownProps {
   value?: string[];
-  onChange?: (assigneeIds: string[]) => void;
+  onChange?: (projectIds: string[]) => void;
 }
 
 export const IssueProjectDropdown = observer(
@@ -64,7 +64,7 @@ export const IssueProjectDropdown = observer(
           </PopoverTrigger>
           <PopoverContent className="w-72 p-0" align="start">
             <Command>
-              <CommandInput placeholder="Set assignee..." autoFocus />
+              <CommandInput placeholder="Set project..." autoFocus />
               <ProjectDropdownContent
                 onClose={() => setOpen(false)}
                 projects={projects}

@@ -13,11 +13,20 @@ export const imageExtension = Node.create({
       src: {
         default: undefined,
       },
+      attachmentId: {
+        default: undefined,
+      },
       alt: {
         default: undefined,
       },
+      uploading: {
+        default: false,
+      },
       openViewer: {
         default: false,
+      },
+      progress: {
+        default: 0,
       },
     };
   },

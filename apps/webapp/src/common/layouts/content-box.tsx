@@ -15,12 +15,12 @@ export const ContentBox = observer(
     return (
       <main
         className={cn(
-          'p-3 pt-0 pl-0 flex flex-col h-[calc(100vh_-_48px)]',
-          className,
+          'p-3 pt-0 pl-0 h-[calc(100vh_-_48px)]',
           applicationStore.sidebarCollapsed && 'pl-3',
+          className,
         )}
       >
-        <div className="bg-background-2 h-full rounded-lg overflow-hidden shadow flex flex-col">
+        <div className="bg-background-2 h-full rounded-lg overflow-hidden shadow">
           {children}
         </div>
       </main>

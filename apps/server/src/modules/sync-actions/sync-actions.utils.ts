@@ -15,9 +15,16 @@ export function convertToActionType(action: string): SyncActionTypeEnum {
 }
 
 export function convertLsnToInt(lsn: string) {
+  // Convert timestamp to milliseconds since epoch
+  const timestampMs = new Date().getTime();
+
+  // Use LSN as a secondary sort key for events in the same millisecond
   const [logFileNumber, byteOffset] = lsn.split('/');
-  const hexString = logFileNumber + byteOffset;
-  return parseInt(hexString, 16);
+  const lsnValue = parseInt(logFileNumber + byteOffset, 16);
+
+  // Combine timestamp and LSN
+  // Multiply timestamp by 1000 to leave room for LSN as sub-millisecond ordering
+  return BigInt(timestampMs) * 1000n + BigInt(lsnValue % 1000);
 }
 
 export async function getWorkspaceId(
@@ -41,6 +48,20 @@ export async function getWorkspaceId(
         include: { action: true },
       });
       return actionEntity.action.workspaceId;
+
+    case ModelName.Conversation:
+      const conversationEntity = await prisma.conversation.findUnique({
+        where: { id: modelId },
+      });
+      return conversationEntity.workspaceId;
+
+    case ModelName.ConversationHistory:
+      const conversationHistoryEntity =
+        await prisma.conversationHistory.findUnique({
+          where: { id: modelId },
+          include: { conversation: true },
+        });
+      return conversationHistoryEntity.conversation.workspaceId;
 
     case ModelName.Cycle:
       const cycleEntity = await prisma.cycle.findUnique({
@@ -169,6 +190,56 @@ export async function getModelData(
     Workspace: prisma.workspace,
     Action: prisma.action,
     ActionEntity: prisma.actionEntity,
+    Conversation: {
+      findUnique: () => {
+        if (userId) {
+          return prisma.conversation.findFirst({
+            where: {
+              id: modelId,
+              userId,
+            },
+          });
+        }
+        return prisma.conversation.findUnique({ where: { id: modelId } });
+      },
+    },
+    ConversationHistory: {
+      findUnique: async () => {
+        if (userId) {
+          const conversationHistory =
+            await prisma.conversationHistory.findFirst({
+              where: {
+                id: modelId,
+                conversation: {
+                  userId,
+                },
+              },
+              include: {
+                conversation: true,
+              },
+            });
+
+          return {
+            ...conversationHistory,
+            recipientId: conversationHistory.conversation.userId,
+          };
+        }
+
+        const conversationHistory = await prisma.conversationHistory.findUnique(
+          {
+            where: { id: modelId },
+            include: {
+              conversation: true,
+            },
+          },
+        );
+
+        return {
+          ...conversationHistory,
+          recipientId: conversationHistory.conversation.userId,
+        };
+      },
+    },
     Cycle: prisma.cycle,
     UsersOnWorkspaces: prisma.usersOnWorkspaces,
     Team: prisma.team,

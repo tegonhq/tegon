@@ -41,10 +41,7 @@ export function ProfileForm() {
   });
 
   const onSubmit = (values: UpdateUserParams) => {
-    updateUser({
-      ...values,
-      userId: userData.id,
-    });
+    updateUser(values);
   };
 
   return (

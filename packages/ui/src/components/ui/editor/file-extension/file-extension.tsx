@@ -13,16 +13,25 @@ export const fileExtension = Node.create({
       src: {
         default: undefined,
       },
+      attachmentId: {
+        default: undefined,
+      },
       alt: {
         default: undefined,
       },
       size: {
         default: 0,
       },
+      uploading: {
+        default: false,
+      },
       type: {
         default: undefined,
       },
       url: {
+        default: 0,
+      },
+      progress: {
         default: 0,
       },
     };

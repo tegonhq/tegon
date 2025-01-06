@@ -4,14 +4,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@tegonhq/ui/components/tooltip';
-import { CreateIssueLine, HelpLine, SearchLine } from '@tegonhq/ui/icons';
+import { HelpLine } from '@tegonhq/ui/icons';
 import React from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
-
-import { NewIssue } from 'modules/issues/new-issue';
-import { SearchDialog } from 'modules/search';
-
-import { SCOPES } from 'common/scopes';
 
 interface BottomBarButtonProps {
   icon: React.ReactElement;
@@ -44,19 +38,6 @@ const BottomBarButton: React.FC<BottomBarButtonProps> = ({
 );
 
 export function BottomBar() {
-  const [newIssue, setNewIssue] = React.useState(false);
-  const [search, setSearch] = React.useState(false);
-
-  useHotkeys(
-    'c',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (e: any) => {
-      setNewIssue(true);
-      e.preventDefault();
-    },
-    { scopes: [SCOPES.Global] },
-  );
-
   return (
     <div className="w-full flex justify-between px-6 py-4">
       <BottomBarButton
@@ -66,26 +47,6 @@ export function BottomBar() {
           window.open('https://docs.tegon.ai', '_blank');
         }}
       />
-
-      <BottomBarButton
-        icon={<CreateIssueLine size={20} />}
-        tooltip="Create New Issue (C)"
-        onClick={() => {
-          setNewIssue(true);
-        }}
-        isActive
-      />
-
-      <BottomBarButton
-        icon={<SearchLine size={20} />}
-        tooltip="Search Workspace (⌘ + /)"
-        onClick={() => {
-          setSearch(true);
-        }}
-      />
-
-      <NewIssue open={newIssue} setOpen={setNewIssue} />
-      <SearchDialog open={search} setOpen={setSearch} />
     </div>
   );
 }

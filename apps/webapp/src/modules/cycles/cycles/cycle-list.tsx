@@ -13,8 +13,7 @@ export const CycleList = observer(() => {
   const { cyclesStore } = useContextStore();
   const team = useCurrentTeam();
 
-  const cycles = cyclesStore.getCyclesForTeam(team.id);
-  console.log(cycles);
+  const cycles = cyclesStore.getCyclesForTeam(team?.id);
 
   return (
     <ScrollArea className="h-full w-full" id="cycles-list">

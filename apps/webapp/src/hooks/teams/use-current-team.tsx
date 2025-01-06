@@ -32,7 +32,7 @@ export function useCurrentTeam(): TeamType | undefined {
 
   const team = React.useMemo(
     () => getTeam(),
-    [teamIdentifier, issueId, teamsStore],
+    [teamIdentifier, issueId, teamsStore.teams.length],
   );
 
   return team;

@@ -1,11 +1,13 @@
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import * as bodyParser from 'body-parser';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import supertokens from 'supertokens-node';
 
 import type { CorsConfig } from 'common/configs/config.interface';
 
+import { SupertokensExceptionFilter } from 'modules/auth/auth.filter';
 import { LoggerService } from 'modules/logger/logger.service';
 import ReplicationService from 'modules/replication/replication.service';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
@@ -25,6 +27,8 @@ async function bootstrap() {
   // Validation
   app.useGlobalPipes(new ValidationPipe({}));
 
+  app.use(bodyParser.json({ limit: '50mb' })); // Adjust limit as required
+
   // Initiate replication service
   const replicationService = app.get(ReplicationService);
   replicationService.init();
@@ -38,7 +42,10 @@ async function bootstrap() {
 
   // Prisma Client Exception Filter for unhandled exceptions
   const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+  app.useGlobalFilters(
+    new PrismaClientExceptionFilter(httpAdapter),
+    new SupertokensExceptionFilter(),
+  );
 
   const configService = app.get(ConfigService);
   const corsConfig = configService.get<CorsConfig>('cors');

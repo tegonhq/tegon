@@ -73,7 +73,7 @@ export const ProjectsList = observer(() => {
                 }}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="w-[90%]">
+                  <TableCell key={cell.id} className="w-[90%] py-1">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

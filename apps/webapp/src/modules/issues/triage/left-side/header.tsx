@@ -6,7 +6,6 @@ import {
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
 
 import { HeaderLayout } from 'common/header-layout';
-import { SidebarExpand } from 'common/sidebar-expand';
 
 import { useCurrentTeam } from 'hooks/teams';
 
@@ -19,12 +18,10 @@ export function Header({ title }: HeaderProps) {
 
   return (
     <HeaderLayout>
-      <SidebarExpand />
-
       <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink className="flex items-center gap-2">
-            <TeamIcon name={team.name} />
+            <TeamIcon name={team?.name} />
 
             <span className="inline-block"> {title}</span>
           </BreadcrumbLink>

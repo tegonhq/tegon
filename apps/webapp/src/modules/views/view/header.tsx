@@ -18,7 +18,6 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import { HeaderLayout } from 'common/header-layout';
-import { SidebarExpand } from 'common/sidebar-expand';
 import type { ViewType } from 'common/types';
 
 import { useCurrentTeam } from 'hooks/teams';
@@ -31,9 +30,10 @@ import { EditViewDialog } from './edit-view-dialog';
 interface HeaderProps {
   title: string;
   view: ViewType;
+  actions?: React.ReactElement;
 }
 
-export const Header = observer(({ title, view }: HeaderProps) => {
+export const Header = observer(({ title, view, actions }: HeaderProps) => {
   const team = useCurrentTeam();
 
   const {
@@ -44,8 +44,7 @@ export const Header = observer(({ title, view }: HeaderProps) => {
   const { mutate: updateView } = useUpdateViewMutation({});
 
   return (
-    <HeaderLayout>
-      <SidebarExpand />
+    <HeaderLayout actions={actions}>
       <Breadcrumb>
         {team && (
           <BreadcrumbItem>

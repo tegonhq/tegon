@@ -7,6 +7,8 @@ import {
 import { SettingsLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 
+import { TooltipWrapper } from 'common/wrappers/tooltip-wrapper';
+
 import { useContextStore } from 'store/global-context-provider';
 
 import { CompletedFilter } from './completed-filter';
@@ -18,11 +20,13 @@ export const ViewOptions = observer(() => {
   return (
     <>
       <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="ghost">
-            <SettingsLine size={20} />
-          </Button>
-        </PopoverTrigger>
+        <TooltipWrapper tooltip="Display Options">
+          <PopoverTrigger asChild>
+            <Button variant="ghost">
+              <SettingsLine size={20} />
+            </Button>
+          </PopoverTrigger>
+        </TooltipWrapper>
         <PopoverContent className="w-52 p-0" align="end">
           <div className="w-full">
             <div className="flex flex-col p-3 pb-2">

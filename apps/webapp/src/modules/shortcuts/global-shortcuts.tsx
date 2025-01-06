@@ -22,7 +22,7 @@ export function GlobalShortcuts() {
   const [state, setState] = React.useState<State>(defaultState);
 
   useHotkeys(
-    `${Key.Meta}+/`,
+    [`${Key.Meta}+/`, `${Key.Control}+/`],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (e: any) => {
       stateChange(true, 'search');

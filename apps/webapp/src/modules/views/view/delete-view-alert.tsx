@@ -9,6 +9,9 @@ import {
   AlertDialogFooter,
 } from '@tegonhq/ui/components/alert-dialog';
 import { useToast } from '@tegonhq/ui/components/use-toast';
+import { useRouter } from 'next/router';
+
+import { useCurrentTeam } from 'hooks/teams';
 
 import { useDeleteViewMutation } from 'services/views';
 
@@ -24,12 +27,22 @@ export function DeleteViewAlert({
   viewId,
 }: DeleteViewAlertProps) {
   const { toast } = useToast();
+  const team = useCurrentTeam();
+  const router = useRouter();
 
   const { mutate: deleteViewAPI } = useDeleteViewMutation({
     onSuccess: () => {
       toast({
         title: 'Your view has been successfully deleted',
       });
+
+      if (team) {
+        router.push(
+          `/${router.query.workspaceSlug}/team/${team.identifier}/views`,
+        );
+      } else {
+        router.push(`/${router.query.workspaceSlug}/views`);
+      }
     },
   });
 

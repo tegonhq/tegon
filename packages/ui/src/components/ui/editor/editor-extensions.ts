@@ -1,4 +1,5 @@
 import { Extension, mergeAttributes } from '@tiptap/core';
+import CodeBlock from '@tiptap/extension-code-block';
 import Heading from '@tiptap/extension-heading';
 import { cx } from 'class-variance-authority';
 import {
@@ -47,12 +48,12 @@ const heading = Heading.extend({
     const level: 1 | 2 | 3 = hasLevel
       ? node.attrs.level
       : this.options.levels[0];
-    const levelMap = { 1: 'text-2xl', 2: 'text-xl', 3: 'text-lg' };
+    const levelMap = { 1: 'text-xl', 2: 'text-lg', 3: 'text-md' };
 
     return [
       `h${level}`,
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-        class: `h${node.attrs.level}-style ${levelMap[level]}`,
+        class: `h${node.attrs.level}-style ${levelMap[level]} my-2`,
       }),
       0,
     ];
@@ -61,6 +62,7 @@ const heading = Heading.extend({
 
 const starterKit = StarterKit.configure({
   heading: false,
+  codeBlock: false,
   bulletList: {
     HTMLAttributes: {
       class: cx('list-disc list-outside leading-3 pl-4'),
@@ -81,21 +83,8 @@ const starterKit = StarterKit.configure({
       class: cx('border-l-4 border-gray-400 dark:border-gray-500'),
     },
   },
-  codeBlock: {
-    HTMLAttributes: {
-      class: cx(
-        'rounded-sm bg-grayAlpha-100 text-[#BF4594] px-1.5 py-1 font-mono font-medium border-none box-decoration-clone',
-      ),
-    },
-  },
-  code: {
-    HTMLAttributes: {
-      class: cx(
-        'rounded-md bg-grayAlpha-100 text-[#BF4594] px-1.5 py-1 font-mono font-medium border-none box-decoration-clone',
-      ),
-      spellcheck: 'false',
-    },
-  },
+
+  code: false,
   horizontalRule: false,
   dropcursor: {
     color: '#DBEAFE',
@@ -143,6 +132,14 @@ export const getPlaceholder = (placeholder: string | Extension) => {
   return placeholder;
 };
 
+const codeBlock = CodeBlock.configure({
+  HTMLAttributes: {
+    class: cx(
+      'rounded-md bg-grayAlpha-100 text-[#BF4594] px-1.5 py-1 font-mono font-medium border-none box-decoration-clone',
+    ),
+  },
+});
+
 export const defaultExtensions = [
   starterKit,
   tiptapLink,
@@ -154,5 +151,6 @@ export const defaultExtensions = [
   fileExtension,
   imageExtension,
   markdown,
+  codeBlock,
   HighlightExtension,
 ];

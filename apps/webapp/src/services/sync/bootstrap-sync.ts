@@ -45,7 +45,6 @@ export function useBootstrapRecords({
       staleTime: 1,
       enabled: false,
       onSuccess,
-
       refetchOnWindowFocus: false, // Frequency of Change would be Low
     },
   );

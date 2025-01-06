@@ -7,6 +7,7 @@ import { UsersService } from 'modules/users/users.service';
 
 import { AttachmentController } from './attachments.controller';
 import { AttachmentService } from './attachments.service';
+import { StorageFactory } from './storage.factory';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { AttachmentService } from './attachments.service';
     }),
   ],
   controllers: [AttachmentController],
-  providers: [AttachmentService, PrismaService, UsersService],
+  providers: [AttachmentService, PrismaService, UsersService, StorageFactory],
   exports: [AttachmentService],
 })
 export class AttachmentModule {}

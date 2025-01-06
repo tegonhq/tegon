@@ -474,7 +474,7 @@ export function convertSlackMessageToTiptapJson(
     content.push(
       ...attachmentUrls.map((attachment) => ({
         type: attachment.fileType.startsWith('image/')
-          ? 'image'
+          ? 'imageExtension'
           : 'fileExtension',
         attrs: {
           src: attachment.publicURL,
