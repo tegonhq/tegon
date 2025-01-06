@@ -9,6 +9,7 @@ import { UserDataWrapper } from 'common/wrappers/user-data-wrapper';
 import {
   useSentryConnectMutation,
   type SentryConnectParams,
+  type SentryConnectResponse,
 } from 'services/oauth';
 
 import { UserContext } from 'store/user-context';
@@ -19,7 +20,8 @@ export function Sentry() {
 
   const user = React.useContext(UserContext);
   const { mutate: connectSentry } = useSentryConnectMutation({
-    onSuccess: () => window.close(),
+    onSuccess: (data: SentryConnectResponse) =>
+      (window.location.href = `https://sentry.io/settings/${data.orgSlug}/sentry-apps/${data.appSlug}/`),
     onError: (e) => {
       toast({
         title: 'Error connecting sentry',

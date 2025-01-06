@@ -149,11 +149,15 @@ export class VectorService implements OnModuleInit {
     }
 
     // Define search parameters for Typesense multiSearch
+    let q = '*';
+    if (searchQuery.length) {
+      q = searchQuery;
+    }
     const searchParameters = {
       searches: [
         {
           collection: 'issues',
-          q: '*',
+          q,
           query_by: queryBy,
           filter_by: `workspaceId:=${workspaceId}`,
           sort_by: '_text_match:desc',

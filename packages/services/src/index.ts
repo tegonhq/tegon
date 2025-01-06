@@ -12,6 +12,7 @@ export * from './attachment';
 export * from './team';
 export * from './ai-request';
 export * from './integration-account';
+export * from './search';
 export * from './projects';
 export * from './workspace';
 export * from './conversation';

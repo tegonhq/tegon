@@ -246,8 +246,9 @@ export class OAuthCallbackService {
     callbackData: SentryCallbackBody,
   ) {
     const integrationDefinition =
-      await this.integrationDefinitionService.getIntegrationDefinitionWithSpec(
-        callbackData.integrationDefinitionId,
+      await this.integrationDefinitionService.getIntegrationDefinitionWithSlug(
+        'sentry',
+        callbackData.workspaceId,
       );
 
     const payload: IntegrationEventPayload = {

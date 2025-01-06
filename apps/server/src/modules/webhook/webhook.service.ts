@@ -10,8 +10,8 @@ import {
 import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
 
-import { getActionEnv } from 'modules/action/action.utils';
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
+import { getActionEnv } from 'modules/action/action.utils';
 import { IntegrationsService } from 'modules/integrations/integrations.service';
 import { LoggerService } from 'modules/logger/logger.service';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
