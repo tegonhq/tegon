@@ -68,6 +68,11 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
                     icon: Project,
                     href: `/${workspaceSlug}/projects`,
                   },
+                  {
+                    title: 'Teams',
+                    icon: Project,
+                    href: `/${workspaceSlug}/teams`,
+                  },
                 ]}
               />
               <TeamList />
