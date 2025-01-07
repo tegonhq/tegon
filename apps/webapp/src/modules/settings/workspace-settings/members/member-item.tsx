@@ -8,6 +8,7 @@ import type { UsersOnWorkspaceType } from 'common/types';
 import { useContextStore } from 'store/global-context-provider';
 
 import { MemberOptionsDropdown } from './member-options-dropdown';
+import { WorkspaceOptionsDropdown } from './WorkspaceOptionsDropdown';
 
 interface MemberItemProps {
   className: string;
@@ -15,15 +16,18 @@ interface MemberItemProps {
   email: string;
   id: string;
   teamId?: string;
+  Workspace?: boolean;
 }
 
 export const MemberItem = observer(
-  ({ name, className, email, id, teamId }: MemberItemProps) => {
+  ({ name, className, email, id, teamId, Workspace }: MemberItemProps) => {
     const { workspaceStore } = useContextStore();
 
     const userOnWorkspace = workspaceStore.usersOnWorkspaces.find(
       (uoW: UsersOnWorkspaceType) => uoW.userId === id,
     );
+
+    console.log(userOnWorkspace);
 
     return (
       <div
@@ -48,6 +52,12 @@ export const MemberItem = observer(
             <MemberOptionsDropdown
               userId={userOnWorkspace.userId}
               teamId={teamId}
+            />
+          )}
+          {Workspace && (
+            <WorkspaceOptionsDropdown
+              userId={userOnWorkspace.userId}
+              role={userOnWorkspace.role}
             />
           )}
         </div>
