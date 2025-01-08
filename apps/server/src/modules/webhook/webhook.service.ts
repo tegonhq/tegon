@@ -13,6 +13,9 @@ import { PrismaService } from 'nestjs-prisma';
 import { getActionEnv } from 'modules/action/action.utils';
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
 import { IntegrationsService } from 'modules/integrations/integrations.service';
+import IssueCommentsService from 'modules/issue-comments/issue-comments.service';
+import IssuesService from 'modules/issues/issues.service';
+import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { LoggerService } from 'modules/logger/logger.service';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
@@ -24,6 +27,9 @@ export default class WebhookService {
     private triggerDevService: TriggerdevService,
     private prisma: PrismaService,
     private integrations: IntegrationsService,
+    private issuesService: IssuesService,
+    private issueCommentsService: IssueCommentsService,
+    private linkedIssueService: LinkedIssueService,
   ) {}
 
   async handleEvents(
@@ -116,5 +122,21 @@ export default class WebhookService {
     });
 
     return { status: 200 };
+  }
+
+  async slackEvent(
+    eventHeaders: EventHeaders,
+    eventBody: EventBody,
+    eventType: string,
+  ) {
+    return await this.integrations.loadIntegration('slack', {
+      event: IntegrationPayloadEventType.PLATFORM_EVENT,
+      platformEventType: eventType,
+      eventBody,
+      eventHeaders,
+      issuesService: this.issuesService,
+      issueCommentsService: this.issueCommentsService,
+      linkedIssueService: this.linkedIssueService,
+    });
   }
 }
