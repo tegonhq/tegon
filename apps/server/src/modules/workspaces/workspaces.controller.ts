@@ -65,22 +65,6 @@ export class WorkspacesController {
     return await this.workspacesService.getAllWorkspaces(userId);
   }
 
-  @Get('name/:workspaceName')
-  @UseGuards(AuthGuard)
-  async getWorkspaceByName(
-    @Param('workspaceName') workspaceName: string,
-  ): Promise<Workspace> {
-    return await this.workspacesService.getWorkspaceByName(workspaceName);
-  }
-
-  @Get('slug/:workspaceSlug')
-  @UseGuards(AuthGuard)
-  async getWorkspaceBySlug(
-    @Param('workspaceSlug') workspaceSlug: string,
-  ): Promise<Workspace> {
-    return await this.workspacesService.getWorkspaceBySlug(workspaceSlug);
-  }
-
   @Post('invite_action')
   @UseGuards(AuthGuard)
   async inviteAction(
@@ -100,12 +84,9 @@ export class WorkspacesController {
     );
   }
 
-  @Get(':workspaceId')
+  @Get()
   @UseGuards(AuthGuard)
-  async getWorkspace(
-    @Param()
-    workspaceId: WorkspaceRequestParamsDto,
-  ): Promise<Workspace> {
+  async getWorkspace(@WorkspaceD() workspaceId: string): Promise<Workspace> {
     return await this.workspacesService.getWorkspace(workspaceId);
   }
 
@@ -121,11 +102,22 @@ export class WorkspacesController {
     );
   }
 
-  @Post(':workspaceId')
+  @Post('add_users')
+  @UseGuards(AuthGuard)
+  async addUserToWorkspace(
+    @WorkspaceD() workspaceId: string,
+    @Body() UserBody: UserBody,
+  ): Promise<UsersOnWorkspaces> {
+    return await this.workspacesService.addUserToWorkspace(
+      workspaceId,
+      UserBody.userId,
+    );
+  }
+
+  @Post()
   @UseGuards(AuthGuard)
   async updateWorkspace(
-    @Param()
-    workspaceId: WorkspaceRequestParamsDto,
+    @WorkspaceD() workspaceId: string,
     @Body() workspaceData: UpdateWorkspaceInput,
   ): Promise<Workspace> {
     return await this.workspacesService.updateWorkspace(
@@ -134,28 +126,13 @@ export class WorkspacesController {
     );
   }
 
-  @Delete(':workspaceId')
+  @Delete()
   @UseGuards(AuthGuard)
-  async deleteWorkspace(
-    @Param()
-    workspaceId: WorkspaceRequestParamsDto,
-  ): Promise<Workspace> {
+  async deleteWorkspace(@WorkspaceD() workspaceId: string): Promise<Workspace> {
     return await this.workspacesService.deleteWorkspace(workspaceId);
   }
 
-  @Post(':workspaceId/add_users')
-  @UseGuards(AuthGuard)
-  async addUserToWorkspace(
-    @Param() WorkspaceRequestParamsDto: WorkspaceRequestParamsDto,
-    @Body() UserBody: UserBody,
-  ): Promise<UsersOnWorkspaces> {
-    return await this.workspacesService.addUserToWorkspace(
-      WorkspaceRequestParamsDto.workspaceId,
-      UserBody.userId,
-    );
-  }
-
-  @Get(':workspaceId/invites')
+  @Get('invites')
   @UseGuards(AuthGuard)
   async invitedUsers(
     @Param() WorkspaceRequestParamsDto: WorkspaceRequestParamsDto,

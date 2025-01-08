@@ -18,7 +18,7 @@ export const Header = observer(() => {
         <TooltipWrapper tooltip="Create new issue (C)">
           <Button
             variant="ghost"
-            className="justify-start w-fit"
+            className="justify-start w-fit px-1.5"
             size="sm"
             onClick={() => {
               openNewIssue({});
@@ -32,7 +32,7 @@ export const Header = observer(() => {
           <Button
             variant="ghost"
             size="sm"
-            className="gap-1 justify-start w-fit"
+            className="gap-1 justify-start w-fit px-1.5"
             onClick={() => {
               setSearch(true);
             }}

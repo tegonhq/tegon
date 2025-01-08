@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Template } from '@tegonhq/types';
+import {
+  CreateTemplateDto,
+  Template,
+  TemplateIdDto,
+  UpdateTemplateDto,
+} from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
-import {
-  CreateTemplateInput,
-  UpdateTemplateInput,
-  TemplateRequestIdParams,
-  RequestIdParams,
-} from './templates.interface';
+import { RequestIdParams } from './templates.interface';
 
 @Injectable()
 export default class TemplatesService {
@@ -15,11 +15,13 @@ export default class TemplatesService {
 
   async createTemplate(
     userId: string,
-    templateData: CreateTemplateInput,
+    workspaceId: string,
+    templateData: CreateTemplateDto,
   ): Promise<Template> {
     const template = await this.prisma.template.create({
       data: {
         ...templateData,
+        workspaceId,
         createdById: userId,
       },
     });
@@ -41,31 +43,29 @@ export default class TemplatesService {
     });
   }
 
-  async getTemplate(
-    TemplateRequestIdParams: TemplateRequestIdParams,
-  ): Promise<Template> {
+  async getTemplate(templateRequestIdParams: TemplateIdDto): Promise<Template> {
     return await this.prisma.template.findUnique({
       where: {
-        id: TemplateRequestIdParams.templateId,
+        id: templateRequestIdParams.templateId,
       },
     });
   }
 
   async updateTemplate(
-    TemplateRequestIdParams: TemplateRequestIdParams,
-    templateData: UpdateTemplateInput,
+    templateRequestIdParams: TemplateIdDto,
+    templateData: UpdateTemplateDto,
   ): Promise<Template> {
     return await this.prisma.template.update({
       data: {
         ...templateData,
       },
       where: {
-        id: TemplateRequestIdParams.templateId,
+        id: templateRequestIdParams.templateId,
       },
     });
   }
 
-  async deleteTemplate(templateRequestIdParams: TemplateRequestIdParams) {
+  async deleteTemplate(templateRequestIdParams: TemplateIdDto) {
     return await this.prisma.template.update({
       where: {
         id: templateRequestIdParams.templateId,

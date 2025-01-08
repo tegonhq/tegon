@@ -9,7 +9,7 @@ import * as React from 'react';
 
 import { IssueListItem } from 'modules/issues/components';
 import { useSortIssues } from 'modules/issues/components/issue-list-item/utils';
-import { NewIssue } from 'modules/issues/new-issue';
+import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
 
 import type { IssueType } from 'common/types';
 
@@ -74,7 +74,7 @@ export function SubIssueView({ childIssues, issueId }: SubIssueViewProps) {
           </div>
         </CollapsibleContent>
       </Collapsible>
-      <NewIssue
+      <NewIssueDialog
         open={newIssueDialog}
         setOpen={setNewIssueDialog}
         defaultValues={{ parentId: issueId }}

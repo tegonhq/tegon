@@ -1,3 +1,7 @@
+import {
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@tegonhq/ui/components/resizable';
 import * as React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
@@ -12,10 +16,19 @@ import { FiltersView } from '../filters-view/filters-view';
 
 export const MyIssues = withApplicationStore(() => {
   return (
-    <MainLayout header={<Header />} className="overflow-hidden">
+    <MainLayout header={<Header />}>
       <ContentBox>
-        <FiltersView Actions={<IssuesViewOptions />} />
-        <ListView />
+        <ResizablePanelGroup direction="horizontal">
+          <ResizablePanel
+            collapsible={false}
+            order={1}
+            id="issues"
+            className="w-full flex flex-col"
+          >
+            <FiltersView Actions={<IssuesViewOptions />} />
+            <ListView />
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </ContentBox>
     </MainLayout>
   );

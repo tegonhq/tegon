@@ -6,7 +6,6 @@ import {
   UpdateWorkspacePreferencesDto,
   UsersOnWorkspaces,
   Workspace,
-  WorkspaceRequestParamsDto,
   WorkspaceStatusEnum,
 } from '@tegonhq/types';
 import { Request, Response } from 'express';
@@ -188,12 +187,10 @@ export default class WorkspacesService {
     });
   }
 
-  async getWorkspace(
-    WorkspaceIdRequestBody: WorkspaceRequestParamsDto,
-  ): Promise<Workspace> {
+  async getWorkspace(workspaceId: string): Promise<Workspace> {
     return await this.prisma.workspace.findUnique({
       where: {
-        id: WorkspaceIdRequestBody.workspaceId,
+        id: workspaceId,
       },
       include: {
         usersOnWorkspaces: {
@@ -206,13 +203,13 @@ export default class WorkspacesService {
   }
 
   async updateWorkspace(
-    WorkspaceIdRequestBody: WorkspaceRequestParamsDto,
+    workspaceId: string,
     workspaceData: UpdateWorkspaceInput,
   ): Promise<Workspace> {
     return await this.prisma.workspace.update({
       data: workspaceData,
       where: {
-        id: WorkspaceIdRequestBody.workspaceId,
+        id: workspaceId,
       },
     });
   }
@@ -242,12 +239,10 @@ export default class WorkspacesService {
     return workspace;
   }
 
-  async deleteWorkspace(
-    WorkspaceIdRequestBody: WorkspaceRequestParamsDto,
-  ): Promise<Workspace> {
+  async deleteWorkspace(workspaceId: string): Promise<Workspace> {
     return await this.prisma.workspace.delete({
       where: {
-        id: WorkspaceIdRequestBody.workspaceId,
+        id: workspaceId,
       },
     });
   }
@@ -272,9 +267,7 @@ export default class WorkspacesService {
     inviteUsersBody: InviteUsersBody,
   ): Promise<Record<string, string>> {
     const { emailIds, teamIds, role } = inviteUsersBody;
-    const workspace = await this.getWorkspace({
-      workspaceId,
-    });
+    const workspace = await this.getWorkspace(workspaceId);
     const iniviter = await this.usersService.getUser(session.getUserId());
 
     const emails = emailIds.split(',');

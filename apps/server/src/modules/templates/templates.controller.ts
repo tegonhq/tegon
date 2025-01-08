@@ -8,18 +8,17 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { Template } from '@tegonhq/types';
-import { SessionContainer } from 'supertokens-node/recipe/session';
+import {
+  CreateTemplateDto,
+  Template,
+  TemplateIdDto,
+  UpdateTemplateDto,
+} from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
-import { Session as SessionDecorator } from 'modules/auth/session.decorator';
+import { UserId, Workspace } from 'modules/auth/session.decorator';
 
-import {
-  CreateTemplateInput,
-  UpdateTemplateInput,
-  TemplateRequestIdParams,
-  RequestIdParams,
-} from './templates.interface';
+import { RequestIdParams } from './templates.interface';
 import TemplatesService from './templates.service';
 
 @Controller({
@@ -32,11 +31,15 @@ export class TemplatesController {
   @Post()
   @UseGuards(AuthGuard)
   async createTemplate(
-    @SessionDecorator() session: SessionContainer,
-    @Body() templateData: CreateTemplateInput,
+    @UserId() userId: string,
+    @Workspace() workspaceId: string,
+    @Body() templateData: CreateTemplateDto,
   ): Promise<Template> {
-    const userId = session.getUserId();
-    return await this.templatesService.createTemplate(userId, templateData);
+    return await this.templatesService.createTemplate(
+      userId,
+      workspaceId,
+      templateData,
+    );
   }
 
   @Get()
@@ -51,7 +54,7 @@ export class TemplatesController {
   @UseGuards(AuthGuard)
   async getTemplate(
     @Param()
-    templateId: TemplateRequestIdParams,
+    templateId: TemplateIdDto,
   ): Promise<Template> {
     return await this.templatesService.getTemplate(templateId);
   }
@@ -60,8 +63,8 @@ export class TemplatesController {
   @UseGuards(AuthGuard)
   async updateTemplate(
     @Param()
-    templateId: TemplateRequestIdParams,
-    @Body() templateData: UpdateTemplateInput,
+    templateId: TemplateIdDto,
+    @Body() templateData: UpdateTemplateDto,
   ): Promise<Template> {
     return await this.templatesService.updateTemplate(templateId, templateData);
   }
@@ -70,7 +73,7 @@ export class TemplatesController {
   @UseGuards(AuthGuard)
   async deleteLabel(
     @Param()
-    templateId: TemplateRequestIdParams,
+    templateId: TemplateIdDto,
   ): Promise<Template> {
     return await this.templatesService.deleteTemplate(templateId);
   }

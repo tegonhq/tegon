@@ -3,6 +3,7 @@ import { Editor, EditorExtensions } from '@tegonhq/ui/components/editor/index';
 import { FormControl, FormField, FormItem } from '@tegonhq/ui/components/form';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { DeleteLine } from '@tegonhq/ui/icons';
+import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -16,6 +17,7 @@ import { AiWritingExtension } from 'common/editor/ai-writing';
 import type { IssueType } from 'common/types';
 
 import { useSuggestionItems } from './hooks';
+import { NewIssueHeader } from './new-issue-header';
 import { NewIssueMetadata } from './new-issue-metadata';
 import { NewIssueTitle } from './new-issue-title';
 import {
@@ -38,6 +40,7 @@ interface NewIssueFormProps {
   isLoading: boolean;
 
   onClose: () => void;
+  isTemplate?: boolean;
 
   subIssueOperations: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,6 +58,7 @@ export const NewIssueForm = observer(
     isLoading,
     onClose,
     subIssueOperations,
+    isTemplate,
   }: NewIssueFormProps) => {
     const issue = useWatch({
       control: form.control,
@@ -63,6 +67,7 @@ export const NewIssueForm = observer(
     const pathname = usePathname();
 
     const { team, setTeam } = useTeamForNewIssue(issue.teamId);
+    const [editor, setEditor] = React.useState(undefined);
     const { suggestionItems, isLoading: aiLoading } =
       useSuggestionItems(subIssueOperations);
 
@@ -100,9 +105,29 @@ export const NewIssueForm = observer(
       return [];
     };
 
+    const resetFormValues = (defaultValues: Partial<IssueType>) => {
+      setDefaultValuesAgain({
+        form,
+        index,
+        defaultValues,
+      });
+
+      if (editor && defaultValues.description) {
+        editor.commands.setContent(JSON.parse(defaultValues.description));
+      }
+    };
+
     return (
       <div className="flex flex-col overflow-hidden">
-        <div className="flex flex-wrap gap-2">
+        {!isTemplate && (
+          <NewIssueHeader
+            team={team}
+            setTeam={setTeam}
+            resetFormValues={resetFormValues}
+          />
+        )}
+
+        <div className={cn('flex flex-wrap px-2', isTemplate && 'px-0')}>
           <NewIssueTitle isSubIssue={isSubIssue} form={form} index={index} />
         </div>
 
@@ -112,13 +137,19 @@ export const NewIssueForm = observer(
             name={inputName('description')}
             render={({ field }) => {
               return (
-                <FormItem className="h-full flex flex-col p-3 bg-background-3 rounded overflow-y-auto">
+                <FormItem
+                  className={cn(
+                    'h-full px-2 flex flex-col rounded overflow-y-auto',
+                    isTemplate && 'px-0',
+                  )}
+                >
                   <FormControl>
                     <Editor
                       {...field}
                       className="new-issue-editor min-h-[100px]"
                       editorClassName="min-h-[100px]"
                       extensions={[AiWritingExtension]}
+                      onCreate={(editor) => setEditor(editor)}
                     >
                       <EditorExtensions suggestionItems={suggestionItems}>
                         <SubIssueSelectorNI
@@ -133,11 +164,13 @@ export const NewIssueForm = observer(
             }}
           />
 
-          <div className="bg-background-3 rounded p-3 w-full flex flex-wrap gap-2 items-center">
-            <TeamDropdown
-              value={team.identifier}
-              onChange={(value: string) => setTeam(value)}
-            />
+          <div className="bg-grayAlpha-100 rounded p-1 w-full flex flex-wrap gap-1 items-center">
+            {isTemplate && (
+              <TeamDropdown
+                value={team.identifier}
+                onChange={(value: string) => setTeam(value)}
+              />
+            )}
             <NewIssueMetadata index={index} form={form} team={team} />
             <AddIssueMetadata
               teamIdentifier={team.identifier}
@@ -164,16 +197,18 @@ export const NewIssueForm = observer(
                   <DeleteLine size={16} />
                 </Button>
               )}
-              <Button
-                variant="ghost"
-                type="button"
-                disabled={isLoading}
-                onClick={onClose}
-              >
-                Cancel
-              </Button>
+              {!!onClose && (
+                <Button
+                  variant="ghost"
+                  type="button"
+                  disabled={isLoading}
+                  onClick={onClose}
+                >
+                  Cancel
+                </Button>
+              )}
               <Button type="submit" isLoading={isLoading} variant="secondary">
-                Create issue
+                {isTemplate ? 'Save template' : 'Create issue'}
               </Button>
             </div>
           </div>

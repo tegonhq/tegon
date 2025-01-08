@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
-import { ChevronDown } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import posthog from 'posthog-js';
@@ -29,14 +28,9 @@ export const WorkspaceDropdown = observer(() => {
         <Button
           variant="ghost"
           size="sm"
-          className="p-0 hover:bg-transparent justify-between gap-2 items-center shrink min-w-[0px] max-w-[150px]"
+          className="p-0 justify-between gap-2 items-center shrink min-w-[0px] max-w-[150px]"
         >
           <AvatarText text={workspaceStore.workspace.name} noOfChar={1} />
-
-          <div className="truncate"> {workspaceStore.workspace.name}</div>
-          <div>
-            <ChevronDown size={16} />
-          </div>
         </Button>
       </DropdownMenuTrigger>
 

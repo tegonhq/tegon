@@ -111,19 +111,6 @@ export const handleMarkAndImagePaste = (
     return handleImagePaste(editor, event, uploadFn);
   }
 
-  if (event.clipboardData.getData('text/plain')) {
-    const clipboardText = event.clipboardData.getData('text/plain');
-    // Convert newlines to line breaks
-    const transformedText = clipboardText.replace(/\n/g, '<br>');
-
-    // Manually insert the transformed text
-    editor.commands.insertContent(transformedText);
-
-    // Prevent the default paste action
-    event.preventDefault();
-
-    return true;
-  }
   return false;
 };
 

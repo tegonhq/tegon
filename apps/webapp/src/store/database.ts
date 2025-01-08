@@ -10,6 +10,7 @@ import type {
   IntegrationAccountType,
   ProjectMilestoneType,
   ProjectType,
+  TemplateType,
 } from 'common/types';
 import type {
   IssueType,
@@ -48,11 +49,12 @@ export class TegonDatabase extends Dexie {
   cycles: Dexie.Table<CycleType, string>;
   conversations: Dexie.Table<ConversationType, string>;
   conversationHistory: Dexie.Table<ConversationHistoryType, string>;
+  templates: Dexie.Table<TemplateType, string>;
 
   constructor(databaseName: string) {
     super(databaseName);
 
-    this.version(15).stores({
+    this.version(16).stores({
       [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug,preferences',
       [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',
@@ -91,6 +93,8 @@ export class TegonDatabase extends Dexie {
       [MODELS.Conversation]: 'id,createdAt,updatedAt,title,userId,workspaceId',
       [MODELS.ConversationHistory]:
         'id,createdAt,updatedAt,message,userType,context,thoughts,userId,conversationId',
+      [MODELS.Template]:
+        'id,createdAt,updatedAt,name,category,templateData,workspaceId,teamId',
     });
 
     this.workspaces = this.table(MODELS.Workspace);
@@ -113,6 +117,7 @@ export class TegonDatabase extends Dexie {
     this.cycles = this.table(MODELS.Cycle);
     this.conversations = this.table(MODELS.Conversation);
     this.conversationHistory = this.table(MODELS.ConversationHistory);
+    this.templates = this.table(MODELS.Template);
   }
 }
 

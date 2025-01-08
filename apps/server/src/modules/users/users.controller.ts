@@ -83,13 +83,6 @@ export class UsersController {
     return this.users.impersonate(key, userId, res, req);
   }
 
-  @Get('email')
-  @UseGuards(AuthGuard)
-  async getUserByEmail(@Query('email') email: string): Promise<User> {
-    const user = await this.users.getUserByEmail(email);
-    return user;
-  }
-
   @Post('pat')
   @UseGuards(AuthGuard)
   async createPersonalAccessToken(

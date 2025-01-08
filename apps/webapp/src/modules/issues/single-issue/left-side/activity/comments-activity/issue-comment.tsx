@@ -68,7 +68,7 @@ export function IssueComment() {
           ]}
           placeholder="Leave your comment..."
           onSubmit={onSubmit}
-          className="w-full min-h-[44px] mb-0 p-2 border-border border relative"
+          className="w-full min-h-[60px] mb-0 p-2 border-border border relative"
         >
           <div className="absolute right-1 bottom-2 flex items-center gap-1">
             <FileUpload withPosition={false} />

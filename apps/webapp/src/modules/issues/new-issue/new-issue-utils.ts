@@ -1,5 +1,6 @@
 import type { UseFormReturn } from 'react-hook-form';
 
+import { WorkflowCategory } from '@tegonhq/types';
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
@@ -11,8 +12,6 @@ import { useCurrentTeam } from 'hooks/teams';
 
 import { useContextStore } from 'store/global-context-provider';
 import { UserContext } from 'store/user-context';
-
-import { getBacklogWorkflow } from '../single-issue/triage-view/utils';
 
 interface DefaultValues {
   labelIds: string[];
@@ -62,6 +61,7 @@ export const useDefaultValues = (
   const workflows = workflowsStore.getWorkflowsForTeam(team.id);
 
   return React.useMemo(() => {
+    console.log(defaultValues);
     return {
       teamId: team?.id,
       projectId: project?.id,
@@ -148,4 +148,18 @@ export function useDescriptionChange(
   return {
     prevValue,
   };
+}
+
+export function getBacklogWorkflow(workflows: WorkflowType[]) {
+  const findBacklog = workflows.find((workflow) =>
+    workflow.name.toLowerCase().includes('backlog'),
+  );
+
+  if (findBacklog) {
+    return findBacklog;
+  }
+
+  return workflows.find(
+    (workflow) => workflow.category === WorkflowCategory.BACKLOG,
+  );
 }

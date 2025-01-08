@@ -15,3 +15,4 @@ export * from './action';
 export * from './project';
 export * from './cycle';
 export * from './conversation';
+export * from './template';

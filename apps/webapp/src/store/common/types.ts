@@ -9,7 +9,6 @@ export interface DisplaySettingsModelType {
   completedFilter: TimeBasedFilterEnum;
   showSubIssues: boolean;
   showEmptyGroups: boolean;
-  showTriageIssues: boolean;
 }
 
 export interface UpdateDisplaySettingsBody

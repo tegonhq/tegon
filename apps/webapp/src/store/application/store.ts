@@ -32,7 +32,6 @@ export const defaultApplicationStoreValue: {
     completedFilter: TimeBasedFilterEnum.All,
     showSubIssues: true,
     showEmptyGroups: false,
-    showTriageIssues: false,
   },
   sidebarCollapsed: false,
   selectedIssues: [],

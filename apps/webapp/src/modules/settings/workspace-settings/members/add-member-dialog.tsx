@@ -33,8 +33,6 @@ import { z } from 'zod';
 import { capitalizeFirstLetter } from 'common/lib/common';
 import type { TeamType } from 'common/types';
 
-import { useCurrentWorkspace } from 'hooks/workspace';
-
 import { useInviteUsersMutation } from 'services/workspace';
 
 import { useContextStore } from 'store/global-context-provider';
@@ -62,7 +60,6 @@ export function AddMemberDialog({ setDialogOpen }: AddMemberDialogProps) {
       teamIds: [],
     },
   });
-  const workspace = useCurrentWorkspace();
 
   const onClose = () => {
     setDialogOpen(false);
@@ -94,7 +91,6 @@ export function AddMemberDialog({ setDialogOpen }: AddMemberDialogProps) {
     teamIds: string[];
   }) => {
     inviteUsers({
-      workspaceId: workspace.id,
       teamIds,
       emailIds,
       role,

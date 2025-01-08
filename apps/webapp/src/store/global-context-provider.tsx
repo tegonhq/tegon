@@ -18,6 +18,7 @@ import { LinkedIssuesStore } from './linked-issues';
 import { NotificationsStore } from './notifications';
 import { ProjectMilestonesStore, ProjectsStore } from './projects';
 import { TeamsStore } from './teams';
+import { TemplatesStore } from './templates';
 import { ViewsStore } from './views';
 import { WorkflowsStore } from './workflows';
 import { WorkspaceStore } from './workspace';
@@ -44,6 +45,7 @@ const StoreContextModel = types.model({
   commonStore: CommonStore,
   conversationsStore: ConversationsStore,
   conversationHistoryStore: ConversationHistoryStore,
+  templatesStore: TemplatesStore,
 });
 
 export const storeContextStore = StoreContextModel.create({
@@ -121,6 +123,9 @@ export const storeContextStore = StoreContextModel.create({
     conversationHistory: [],
   },
   commonStore: defaultCommonStoreValue,
+  templatesStore: {
+    templates: [],
+  },
 });
 
 export type StoreContextInstanceType = Instance<typeof StoreContextModel>;

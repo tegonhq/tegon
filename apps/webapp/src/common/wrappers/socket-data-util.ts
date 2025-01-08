@@ -19,6 +19,7 @@ import {
   saveProjectMilestoneData,
 } from 'store/projects/save-data';
 import { saveTeamData } from 'store/teams';
+import { saveTemplateData } from 'store/templates';
 import { saveViewData } from 'store/views';
 import { saveWorkflowData } from 'store/workflows';
 import { saveWorkspaceData } from 'store/workspace';
@@ -151,6 +152,13 @@ export async function saveSocketData(
           return await saveConversationHistorytData(
             [record],
             MODEL_STORE_MAP[MODELS.ConversationHistory],
+          );
+        }
+
+        case MODELS.Template: {
+          return await saveTemplateData(
+            [record],
+            MODEL_STORE_MAP[MODELS.Template],
           );
         }
       }

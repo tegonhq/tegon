@@ -13,7 +13,7 @@ export class ActionGuard implements CanActivate {
       return false;
     }
 
-    const workspace = await this.workspaceService.getWorkspace({ workspaceId });
+    const workspace = await this.workspaceService.getWorkspace(workspaceId);
     return workspace.actionsEnabled;
   }
 }

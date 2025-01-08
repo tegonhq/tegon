@@ -46,7 +46,6 @@ export const Overview = observer(() => {
 
   async function onSubmit(values: z.infer<typeof OverviewSchema>) {
     updateWorkspace({
-      workspaceId: workspaceStore.workspace.id,
       name: values.name,
     });
   }

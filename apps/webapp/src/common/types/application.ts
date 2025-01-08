@@ -8,7 +8,6 @@ export interface DisplaySettingsModelType {
   ordering: OrderingEnum;
   showSubIssues: boolean;
   showEmptyGroups: boolean;
-  showTriageIssues: boolean;
 }
 
 export interface UpdateDisplaySettingsBody

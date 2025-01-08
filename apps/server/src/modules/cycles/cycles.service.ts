@@ -3,7 +3,7 @@ import {
   Cycle,
   CycleStatusEnum,
   TeamPreferenceDto,
-  UpdateCycleDateDto,
+  UpdateCycleDto,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -65,9 +65,13 @@ export class CyclesService {
 
   async updateCycleDates(
     cycleId: string,
-    updateCycleDates: UpdateCycleDateDto,
+    updateCycleDates: UpdateCycleDto,
   ): Promise<Cycle[]> {
-    const { startDate: startDateStr, endDate: endDateStr } = updateCycleDates;
+    const {
+      startDate: startDateStr,
+      endDate: endDateStr,
+      description,
+    } = updateCycleDates;
     const startDate = startDateStr ? new Date(startDateStr) : undefined;
     const endDate = endDateStr ? new Date(endDateStr) : undefined;
 
@@ -83,6 +87,7 @@ export class CyclesService {
         data: {
           ...(startDate && { startDate }),
           ...(endDate && { endDate }),
+          description,
         },
       });
       return [cycle];
@@ -111,6 +116,7 @@ export class CyclesService {
         data: {
           ...(startDate && { startDate }),
           ...(endDate && { endDate }),
+          description,
         },
       }),
       // Update all subsequent cycles
