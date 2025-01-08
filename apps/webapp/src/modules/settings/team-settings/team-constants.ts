@@ -1,6 +1,7 @@
 import { Labels } from './labels';
 import { Members } from './members';
 import { Overview } from './overview';
+import { Templates } from './templates';
 import { Workflow } from './workflow';
 
 export const SECTION_COMPONENTS = {
@@ -8,6 +9,7 @@ export const SECTION_COMPONENTS = {
   workflow: Workflow,
   labels: Labels,
   members: Members,
+  templates: Templates,
 };
 
 export const SECTION_TITLES = {
@@ -15,6 +17,7 @@ export const SECTION_TITLES = {
   workflow: 'Workflow',
   labels: 'Labels',
   members: 'Members',
+  templates: 'Templates',
 };
 
 type StringKeys<T> = {

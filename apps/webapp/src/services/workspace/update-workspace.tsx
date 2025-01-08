@@ -6,12 +6,11 @@ import { ajaxPost } from 'services/utils';
 
 export interface UpdateWorkspaceParams {
   name: string;
-  workspaceId: string;
 }
 
-export function updateWorkspace({ workspaceId, name }: UpdateWorkspaceParams) {
+export function updateWorkspace({ name }: UpdateWorkspaceParams) {
   return ajaxPost({
-    url: `/api/v1/workspaces/${workspaceId}`,
+    url: `/api/v1/workspaces`,
     data: { name },
   });
 }

@@ -25,6 +25,7 @@ export const WorkspaceStoreInit = observer(
       cyclesStore,
       conversationsStore,
       conversationHistoryStore,
+      templatesStore,
     } = useContextStore();
 
     const currentWorkspace = useCurrentWorkspace();
@@ -58,6 +59,7 @@ export const WorkspaceStoreInit = observer(
       await projectMilestonesStore.load();
       await conversationsStore.load();
       await conversationHistoryStore.load();
+      await templatesStore.load();
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentWorkspace.id]);

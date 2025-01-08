@@ -18,20 +18,17 @@ interface TooltipWrapperProps {
 export function TooltipWrapper({
   tooltip,
   children,
-  className,
   tooltipClassName,
   disabled = false,
 }: TooltipWrapperProps) {
   // If no tooltip is provided or wrapper is disabled, return just the children
   if (!tooltip || disabled) {
-    return <div className={cn(className)}>{children}</div>;
+    return <>{children}</>;
   }
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
-        <div className={cn(className)}>{children}</div>
-      </TooltipTrigger>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
       <TooltipContent className={cn('p-2', tooltipClassName)}>
         <span>{tooltip}</span>
       </TooltipContent>

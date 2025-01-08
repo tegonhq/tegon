@@ -18,7 +18,7 @@ export const HeaderLayout = observer(
     const settings = useUserSettings();
 
     return (
-      <header className="flex px-4 w-full items-center">
+      <header className="flex px-2 w-full items-center">
         <div className="flex justify-between w-full py-2.5 h-[48px] items-center">
           <div className="flex gap-1 items-center">
             <SidebarExpand />

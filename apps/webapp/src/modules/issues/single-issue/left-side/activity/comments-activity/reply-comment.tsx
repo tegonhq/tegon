@@ -84,7 +84,7 @@ export function ReplyComment({ issueCommentId }: ReplyCommentProps) {
             !commentValue && setShowReplyButton(false);
           }}
           onChange={(e) => setCommentValue(e)}
-          className="w-full min-h-[44px] bg-transparent mb-0 p-2 pt-0 grow text-foreground relative"
+          className="w-full min-h-[60px] bg-transparent mb-0 p-2 pt-0 grow text-foreground relative"
         >
           <div className="absolute right-1 bottom-2 flex items-center gap-1">
             {showReplyButton && (

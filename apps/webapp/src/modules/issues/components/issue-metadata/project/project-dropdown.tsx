@@ -58,7 +58,9 @@ export function ProjectDropdown({
             )}
           >
             {value ? (
-              <>{getProject(value).name}</>
+              <div className="inline-flex items-center gap-1 pl-1 min-w-[0px]">
+                <div className="truncate"> {getProject(value).name}</div>
+              </div>
             ) : (
               <div className="flex items-center justify-center">
                 <Project size={20} className="mr-1 text-muted-foreground" />
@@ -76,14 +78,15 @@ export function ProjectDropdown({
           role="combobox"
           aria-expanded={open}
           className={cn(
-            'flex items-center bg-transparent px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary',
+            'bg-transparent px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary inline-flex items-center flex-wrap max-w-[200px]',
           )}
         >
           {value ? (
-            <>
-              <Project className="h-5 w-5 text-[9px] mr-2" />
-              {getProject(value).name}
-            </>
+            <div className="inline-flex items-center gap-1 pl-1 min-w-[0px]">
+              <Project className="h-5 w-5 text-[9px] mr-2 shrink-0" />
+
+              <div className="truncate"> {getProject(value).name}</div>
+            </div>
           ) : (
             <div className="text-muted-foreground flex">
               <Project size={20} className="mr-2" />

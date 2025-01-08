@@ -6,7 +6,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { SCOPES } from 'common/scopes';
 import type { IssueType } from 'common/types';
 
-import { NewIssue } from './new-issue';
+import { NewIssueDialog } from './new-issue-dialog';
 
 interface ContextType {
   newIssue: boolean;
@@ -47,7 +47,7 @@ export const NewIssueProvider = observer(
         value={{ newIssue: newIssue.newIssue, openNewIssue, closeNewIssue }}
       >
         {newIssue.newIssue && (
-          <NewIssue
+          <NewIssueDialog
             open={newIssue.newIssue}
             setOpen={(value: boolean) => {
               if (value) {

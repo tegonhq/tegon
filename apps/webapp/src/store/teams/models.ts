@@ -11,7 +11,6 @@ export const Team = types.model({
   currentCycle: types.union(types.number, types.null, types.undefined),
   preferences: types.model({
     cyclesEnabled: types.union(types.boolean, types.undefined, types.null),
-    triage: types.union(types.boolean, types.undefined, types.null),
   }),
 });
 

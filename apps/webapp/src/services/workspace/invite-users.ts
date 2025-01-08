@@ -8,19 +8,18 @@ export type InviteResponse = Record<string, string>;
 
 export interface InviteUsersParams {
   emailIds: string;
-  workspaceId: string;
   teamIds: string[];
   role: RoleEnum;
 }
 
 export function inviteUsers({
   emailIds,
-  workspaceId,
+
   teamIds,
   role,
 }: InviteUsersParams) {
   return ajaxPost({
-    url: `/api/v1/workspaces/${workspaceId}/invite_users`,
+    url: `/api/v1/workspaces/invite_users`,
     data: {
       emailIds,
       teamIds,

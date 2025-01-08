@@ -22,7 +22,7 @@ import { cn } from '@tegonhq/ui/lib/utils';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
-import { NewIssue } from 'modules/issues/new-issue';
+import { NewIssueDialog } from 'modules/issues/new-issue/new-issue-dialog';
 
 import { type IssueCommentType, type User } from 'common/types';
 import { getUserIcon } from 'common/user-util';
@@ -220,7 +220,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
       </div>
 
       {newIssueDialog && (
-        <NewIssue
+        <NewIssueDialog
           open={newIssueDialog}
           setOpen={setNewIssueDialog}
           defaultValues={defaultIssueCreationValues}

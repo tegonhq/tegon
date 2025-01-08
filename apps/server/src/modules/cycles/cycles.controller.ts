@@ -1,5 +1,5 @@
 import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
-import { UpdateCycleDateDto } from '@tegonhq/types';
+import { UpdateCycleDto } from '@tegonhq/types';
 
 import { AuthGuard } from 'modules/auth/auth.guard';
 import { AdminGuard } from 'modules/users/admin.guard';
@@ -21,9 +21,9 @@ export class CyclesController {
 
   @Post(':cycleId')
   @UseGuards(AuthGuard, AdminGuard)
-  async updateCycleDate(
+  async updateCycle(
     @Param('cycleId') cycleId: string,
-    @Body() cycleData: UpdateCycleDateDto,
+    @Body() cycleData: UpdateCycleDto,
   ) {
     return await this.cycles.updateCycleDates(cycleId, cycleData);
   }

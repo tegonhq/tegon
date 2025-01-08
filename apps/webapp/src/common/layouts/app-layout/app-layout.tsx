@@ -17,6 +17,7 @@ import { BottomBar } from './bottom-bar';
 import { Header } from './header';
 import { Nav } from './nav';
 import { TeamList } from './team-list';
+import { useSidebarShortcut } from './use-sidebar-shortcut';
 import { WorkspaceDropdown } from './workspace-dropdown';
 
 interface LayoutProps {
@@ -26,6 +27,7 @@ interface LayoutProps {
 
 export const AppLayoutChild = observer(({ children }: LayoutProps) => {
   const { applicationStore, notificationsStore } = useContextStore();
+  useSidebarShortcut();
 
   const {
     query: { workspaceSlug },
@@ -36,7 +38,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
     <>
       <div className="h-[100vh] w-[100vw] flex">
         {!applicationStore.sidebarCollapsed && (
-          <div className="min-w-[220px] flex flex-col h-full overflow-auto">
+          <div className="w-[190px] flex flex-col h-full overflow-auto">
             <div className="flex py-3 px-4 pr-2 items-center justify-between">
               <WorkspaceDropdown />
               <Header />
@@ -78,7 +80,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
           className={cn(
             'w-full',
             applicationStore.sidebarCollapsed && 'max-w-[100vw]',
-            !applicationStore.sidebarCollapsed && 'max-w-[calc(100vw_-_220px)]',
+            !applicationStore.sidebarCollapsed && 'max-w-[calc(100vw_-_190px)]',
           )}
         >
           {children}

@@ -11,8 +11,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@tegonhq/ui/components/tooltip';
-import { AI, IssuesLine } from '@tegonhq/ui/icons';
-import { ArrowDownRight } from '@tegonhq/ui/icons';
+import { AI } from '@tegonhq/ui/icons';
 import { useWatch, type UseFormReturn } from 'react-hook-form';
 
 import { useCurrentWorkspace } from 'hooks/workspace';
@@ -46,7 +45,7 @@ function getIfTouched(form: UseFormReturn, index: number) {
   return false;
 }
 
-export function NewIssueTitle({ form, index, isSubIssue }: NewIssueTitleProps) {
+export function NewIssueTitle({ form, index }: NewIssueTitleProps) {
   const description = useWatch({
     control: form.control,
     name: `issues.${index}.description`,
@@ -72,36 +71,12 @@ export function NewIssueTitle({ form, index, isSubIssue }: NewIssueTitleProps) {
   });
 
   return (
-    <div className="p-4 text-md font-normal w-full gap-2 flex items-center">
-      <FormField
-        control={form.control}
-        name={`issues.${index}.title`}
-        render={({ field }) => (
-          <FormItem className="grow">
-            <FormControl>
-              <div className="flex items-center gap-1">
-                {isSubIssue ? (
-                  <ArrowDownRight size={16} />
-                ) : (
-                  <IssuesLine size={16} />
-                )}
-                <AdjustableTextArea
-                  className="border-0 py-0 resize-none bg-transparent no-scrollbar overflow-hidden outline-none focus-visible:ring-0 w-full"
-                  autoFocus
-                  placeholder="Issue title"
-                  {...field}
-                />
-              </div>
-            </FormControl>
-
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+    <div className="p-4 py-2 text-lg font-normal w-full gap-2 flex items-center">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            variant="ghost"
+            variant="link"
+            className="px-0"
             isLoading={isLoading}
             onClick={() => {
               if (descriptionString) {
@@ -119,6 +94,27 @@ export function NewIssueTitle({ form, index, isSubIssue }: NewIssueTitleProps) {
           <p>Click to generate title</p>
         </TooltipContent>
       </Tooltip>
+      <FormField
+        control={form.control}
+        name={`issues.${index}.title`}
+        render={({ field }) => (
+          <FormItem className="grow overflow-hidden">
+            <FormControl>
+              <div className="flex items-center gap-1">
+                <AdjustableTextArea
+                  className="border-0 py-0 resize-none bg-transparent no-scrollbar overflow-hidden outline-none focus-visible:ring-0 w-fit"
+                  placeholderClassName="font-medium"
+                  autoFocus
+                  placeholder="Issue title"
+                  {...field}
+                />
+              </div>
+            </FormControl>
+
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   );
 }

@@ -5,7 +5,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@tegonhq/ui/components/accordion';
-import { Dialog, DialogContent } from '@tegonhq/ui/components/dialog';
 import { Form } from '@tegonhq/ui/components/form';
 import { Separator } from '@tegonhq/ui/components/separator';
 import { useToast } from '@tegonhq/ui/components/use-toast';
@@ -29,24 +28,30 @@ import {
 
 import { IssueCollapseView } from './issue-collapse-view';
 import { NewIssueForm } from './new-issue-form';
-import { NewIssueSchema } from './new-issues-type';
+import { NewIssueSchema, NewIssueTemplateSchema } from './new-issues-type';
 
-interface NewIssueProps {
+export interface NewIssueProps {
   defaultValues?: Partial<IssueType>;
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  onClose?: () => void;
+  createOutsideFunction?: (values: CreateIssueParams) => void;
 }
 
-export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
+export function NewIssue({
+  defaultValues = {},
+  createOutsideFunction,
+  onClose,
+}: NewIssueProps) {
   useScope(SCOPES.NewIssue);
 
   const { toast } = useToast();
 
   // The form has a array of issues where first issue is the parent and the later sub issues
   const form = useForm<z.infer<typeof NewIssueSchema>>({
-    resolver: zodResolver(NewIssueSchema),
+    resolver: zodResolver(
+      createOutsideFunction ? NewIssueTemplateSchema : NewIssueSchema,
+    ),
     defaultValues: {
-      issues: [{ ...defaultValues }],
+      issues: [defaultValues],
     },
   });
 
@@ -80,17 +85,12 @@ export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
 
   const [collapseId, setCollapseId] = React.useState(fields[0].id);
 
-  const onClose = () => {
-    setOpen(false);
-  };
-
   const onSubmit = (values: { issues: CreateIssueParams[] }) => {
     const issues = [...values.issues];
     const parentIssue = issues.shift();
 
     const { json: parentDescription } = getTiptapJSON(parentIssue.description);
-
-    createIssue({
+    const createIssueParams = {
       ...parentIssue,
       description: JSON.stringify(parentDescription),
       parentId: defaultValues.parentId,
@@ -99,7 +99,14 @@ export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
 
         return { ...issue, description: JSON.stringify(description) };
       }),
-    } as CreateIssueParams);
+    } as CreateIssueParams;
+
+    if (createOutsideFunction) {
+      createOutsideFunction(createIssueParams);
+      return;
+    }
+
+    createIssue(createIssueParams);
   };
 
   // Shortcuts
@@ -122,80 +129,72 @@ export function NewIssue({ open, setOpen, defaultValues = {} }: NewIssueProps) {
   }, [fields]);
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent
-          closeIcon={false}
-          className="sm:max-w-[600px] min-w-[700px] gap-2"
+    <Form {...form}>
+      <form
+        className="new-issue-form flex flex-col overflow-hidden h-full"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <Accordion
+          type="single"
+          collapsible={false}
+          onValueChange={(value) => setCollapseId(value)}
+          value={collapseId ? collapseId : fields[0].id}
+          className="flex flex-col overflow-hidden h-full"
         >
-          <Form {...form}>
-            <form
-              className="new-issue-form flex flex-col overflow-hidden h-full"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
-              <Accordion
-                type="single"
-                collapsible={false}
-                onValueChange={(value) => setCollapseId(value)}
-                value={collapseId ? collapseId : fields[0].id}
-                className="flex flex-col overflow-hidden h-full"
+          {fields.map((field, index) => {
+            const collapsed = field.id !== collapseId;
+
+            return (
+              <AccordionItem
+                value={field.id}
+                key={field.id}
+                className={cn(
+                  'flex flex-col overflow-hidden h-full',
+                  collapsed && 'shrink-0',
+                )}
               >
-                {fields.map((field, index) => {
-                  const collapsed = field.id !== collapseId;
+                <AccordionTrigger>
+                  {collapsed && (
+                    <div className="flex flex-col w-full">
+                      <Separator />
+                      <IssueCollapseView
+                        index={index}
+                        form={form}
+                        isSubIssue={index > 0}
+                        // Sub issue controllers
+                        subIssueOperations={{
+                          append,
+                          remove,
+                        }}
+                      />
+                      <Separator />
+                    </div>
+                  )}
+                </AccordionTrigger>
+                <AccordionContent className="flex flex-col h-full overflow-hidden">
+                  {index > 0 && <Separator />}
 
-                  return (
-                    <AccordionItem
-                      value={field.id}
-                      key={field.id}
-                      className={cn(
-                        'flex flex-col overflow-hidden h-full',
-                        collapsed && 'shrink-0',
-                      )}
-                    >
-                      <AccordionTrigger>
-                        {collapsed && (
-                          <div className="flex flex-col w-full">
-                            <Separator />
-                            <IssueCollapseView
-                              index={index}
-                              form={form}
-                              isSubIssue={index > 0}
-                              // Sub issue controllers
-                              subIssueOperations={{
-                                append,
-                                remove,
-                              }}
-                            />
-                            <Separator />
-                          </div>
-                        )}
-                      </AccordionTrigger>
-                      <AccordionContent className="flex flex-col h-full overflow-hidden">
-                        {index > 0 && <Separator />}
-
-                        <NewIssueForm
-                          key={field.id}
-                          isSubIssue={index > 0}
-                          form={form}
-                          index={index}
-                          defaultValues={defaultValues}
-                          isLoading={isLoading}
-                          onClose={onClose}
-                          // Sub issue controllers
-                          subIssueOperations={{
-                            append,
-                            remove,
-                          }}
-                        />
-                      </AccordionContent>
-                    </AccordionItem>
-                  );
-                })}
-              </Accordion>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-    </>
+                  <NewIssueForm
+                    key={field.id}
+                    isSubIssue={index > 0}
+                    form={form}
+                    index={index}
+                    defaultValues={defaultValues}
+                    isTemplate={!!createOutsideFunction}
+                    isLoading={isLoading}
+                    onClose={onClose}
+                    // Sub issue controllers
+                    subIssueOperations={{
+                      append,
+                      remove,
+                    }}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      </form>
+    </Form>
   );
 }

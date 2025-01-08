@@ -173,7 +173,7 @@ export function getFilters(
   userId?: string,
 ) {
   const { status, assignee, label, priority, project, cycle } = filters;
-  const { showSubIssues, completedFilter, showTriageIssues } = displaySettings;
+  const { showSubIssues, completedFilter } = displaySettings;
 
   const finalFilters: FilterType[] = [];
 
@@ -280,20 +280,6 @@ export function getFilters(
       (workflow) =>
         workflow.category === WorkflowCategoryEnum.COMPLETED ||
         workflow.category === WorkflowCategoryEnum.CANCELED,
-    );
-
-    finalFilters.push({
-      key: 'stateId',
-      filterType: FilterTypeEnum.IS_NOT,
-      value: filteredWorkflows.flatMap((workflow: WorkflowType) =>
-        workflow.ids ? workflow.ids : workflow.id,
-      ),
-    });
-  }
-
-  if (!showTriageIssues) {
-    const filteredWorkflows = workflows.filter(
-      (workflow) => workflow.category === WorkflowCategoryEnum.TRIAGE,
     );
 
     finalFilters.push({

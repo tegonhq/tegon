@@ -22,4 +22,5 @@ export enum MODELS {
   Cycle = 'Cycle',
   Conversation = 'Conversation',
   ConversationHistory = 'ConversationHistory',
+  Template = 'Template',
 }

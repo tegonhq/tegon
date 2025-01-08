@@ -83,11 +83,10 @@ const starterKit = StarterKit.configure({
       class: cx('border-l-4 border-gray-400 dark:border-gray-500'),
     },
   },
-
   code: false,
   horizontalRule: false,
   dropcursor: {
-    color: '#DBEAFE',
+    color: 'oklch(60% 0.13 240)',
     width: 4,
   },
   gapcursor: false,

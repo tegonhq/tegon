@@ -52,17 +52,6 @@ export const ViewOptions = observer(() => {
               />
 
               <ViewOptionItem
-                text="Show triage issues"
-                id="showTriageIssues"
-                checked={applicationStore.displaySettings.showTriageIssues}
-                onCheckedChange={(value: boolean) =>
-                  applicationStore.updateDisplaySettings({
-                    showTriageIssues: value,
-                  })
-                }
-              />
-
-              <ViewOptionItem
                 text="Show empty groups"
                 id="showEmptyGroups"
                 checked={applicationStore.displaySettings.showEmptyGroups}

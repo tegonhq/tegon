@@ -16,7 +16,7 @@ import { CategoryList } from './category-list';
 export const CategoryView = observer(() => {
   const {
     applicationStore: {
-      displaySettings: { completedFilter, showTriageIssues, view },
+      displaySettings: { completedFilter, view },
     },
   } = useContextStore();
 
@@ -46,10 +46,6 @@ export const CategoryView = observer(() => {
   const { workflows: computedWorkflows } = useComputedWorkflows();
   const workflows = computedWorkflows
     .filter((workflow: WorkflowType) => {
-      if (workflow.category === WorkflowCategoryEnum.TRIAGE) {
-        return showTriageIssues;
-      }
-
       if (
         workflow.category === WorkflowCategoryEnum.COMPLETED ||
         workflow.category === WorkflowCategoryEnum.CANCELED
