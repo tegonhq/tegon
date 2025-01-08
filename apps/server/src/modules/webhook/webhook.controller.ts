@@ -11,8 +11,35 @@ import WebhookService from './webhook.service';
 export class WebhookController {
   constructor(private webhookService: WebhookService) {}
 
+  @Post('slack/slash')
+  async slackSlashEvents(
+    @Headers() eventHeaders: EventHeaders,
+    @Body() eventBody: EventBody,
+  ) {
+    const eventResponse = await this.webhookService.slackEvent(
+      eventHeaders,
+      eventBody,
+      'slashCommand',
+    );
+    return eventResponse;
+  }
+
+  @Post('slack/interaction')
+  async slackInteractionEvents(
+    @Headers() eventHeaders: EventHeaders,
+    @Body() eventBody: EventBody,
+  ) {
+    const eventResponse = await this.webhookService.slackEvent(
+      eventHeaders,
+      eventBody,
+
+      'interaction',
+    );
+    return eventResponse;
+  }
+
   @Post(':sourceName')
-  async slackEvents(
+  async webhookEvents(
     @Headers() eventHeaders: EventHeaders,
     @Param('sourceName') sourceName: string,
     @Body() eventBody: EventBody,

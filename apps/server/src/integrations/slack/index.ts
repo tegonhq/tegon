@@ -3,10 +3,15 @@ import {
   IntegrationPayloadEventType,
 } from '@tegonhq/types';
 
+import { LoggerService } from 'modules/logger/logger.service';
+
 import { integrationCreate } from './account-create';
 import { getToken } from './get-token';
+import { interaction, slashCommand } from './slash-command';
 import { spec } from './spec';
 import { webhookRespose } from './webhook-response';
+
+const logger = new LoggerService('SlackIntegration');
 
 export default async function run(eventPayload: IntegrationEventPayload) {
   switch (eventPayload.event) {
@@ -35,6 +40,27 @@ export default async function run(eventPayload: IntegrationEventPayload) {
 
     case IntegrationPayloadEventType.IS_ACTION_SUPPORTED_EVENT:
       return true;
+
+    case IntegrationPayloadEventType.PLATFORM_EVENT:
+      if (eventPayload.platformEventType === 'slashCommand') {
+        return await slashCommand(logger, eventPayload.eventBody);
+      } else if (eventPayload.platformEventType === 'interaction') {
+        return await interaction(
+          logger,
+          eventPayload.eventBody,
+          eventPayload.issuesService,
+          eventPayload.issueCommentsService,
+          eventPayload.linkedIssueService,
+        );
+      }
+
+      logger.warn({
+        message: `Unhandled platform event type ${eventPayload.platformEventType}`,
+      });
+
+      return {
+        message: `This platform event is not handled ${eventPayload.platformEventType}`,
+      };
 
     default:
       return {

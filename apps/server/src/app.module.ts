@@ -15,6 +15,7 @@ import { ALSModule } from 'modules/als/als.module';
 import { AttachmentModule } from 'modules/attachments/attachments.module';
 import { AuthModule } from 'modules/auth/auth.module';
 import { BullConfigModule } from 'modules/bull/bull.module';
+import { CachceModule } from 'modules/cache/cache.module';
 import { ConversationModule } from 'modules/conversation/conversation.module';
 import { ConversationHistoryModule } from 'modules/conversation-history/conversation-history.module';
 import { CyclesModule } from 'modules/cycles/cycles.module';
@@ -126,6 +127,8 @@ import { AppService } from './app.service';
 
     ConversationModule,
     ConversationHistoryModule,
+
+    CachceModule,
   ],
   controllers: [AppController],
   providers: [

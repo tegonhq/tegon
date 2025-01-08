@@ -24,6 +24,12 @@ export enum IntegrationPayloadEventType {
 
   // Valid and return the response for webhooks
   IS_ACTION_SUPPORTED_EVENT = 'is_action_supported_event',
+
+  /**
+   * Generic event type for platform-specific actions
+   * Example: Slack slash commands, GitHub specific events, etc.
+   */
+  PLATFORM_EVENT = 'platform_event',
 }
 
 export interface IntegrationEventPayload {
