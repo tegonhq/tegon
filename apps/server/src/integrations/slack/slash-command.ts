@@ -174,10 +174,7 @@ export const interaction = async (
         issuesService,
         issueCommentsService,
         linkedIssueService,
-        templateData.title,
-        templateData.assigneeId,
-        templateData.stateId,
-        JSON.stringify(templateData.description),
+        templateData,
         template.teamId,
         sessionData,
       );

@@ -60,15 +60,17 @@ export function convertTemplateToBlocks(
   workflows: Workflow[],
   assignees: User[],
 ) {
-  const safeTemplate = JSON.parse(JSON.stringify(template));
+  const safeTemplateDescription = JSON.parse(template.description);
+
   const blocks = [];
-  const content = safeTemplate.content || [];
+  const content = safeTemplateDescription.content || [];
 
   blocks.push({
     type: 'input',
     element: {
       type: 'plain_text_input',
       action_id: 'title-action',
+      initial_value: template.title || '',
     },
     label: {
       type: 'plain_text',
@@ -84,6 +86,16 @@ export function convertTemplateToBlocks(
         type: 'plain_text',
         text: 'Select a state',
         emoji: true,
+      },
+      initial_option: {
+        text: {
+          type: 'plain_text',
+          text:
+            workflows.find((w) => w.id === template.stateId)?.name ||
+            workflows[0].name,
+          emoji: true,
+        },
+        value: template.stateId || workflows[0].id,
       },
       options: workflows.map((workflow) => ({
         text: {
@@ -109,6 +121,16 @@ export function convertTemplateToBlocks(
         type: 'plain_text',
         text: 'Select an assignee',
         emoji: true,
+      },
+      initial_option: {
+        text: {
+          type: 'plain_text',
+          text:
+            assignees.find((a) => a.id === template.assigneeId)?.fullname ||
+            assignees[0].fullname,
+          emoji: true,
+        },
+        value: template.assigneeId || assignees[0].id,
       },
       options: assignees.map((assignee) => ({
         text: {
@@ -165,6 +187,7 @@ export function convertTemplateToBlocks(
         // For all other headings, create multiline input
         blocks.push({
           type: 'input',
+          optional: true,
           element: {
             type: 'plain_text_input',
             multiline: true,
@@ -208,7 +231,8 @@ export function convertBlockToTemplate(
   viewResponse: Record<string, any>,
 ) {
   const stateValues = viewResponse.view.state.values;
-  const originalContent = template.content || [];
+  const originalDescription = JSON.parse(template.description);
+  const originalContent = originalDescription.content || [];
   const newContent = [];
   let title: string = '';
 
@@ -295,14 +319,14 @@ export function convertBlockToTemplate(
             });
             i++; // Skip original taskList
           }
-        } else if (blockValue['plain_text_input-action']) {
+        } else if (blockValue['plain_text_input-action']?.value) {
           // Handle text input
           newContent.push({
             type: 'paragraph',
             content: [
               {
                 type: 'text',
-                text: blockValue['plain_text_input-action'].value || '',
+                text: blockValue['plain_text_input-action'].value,
               },
             ],
           });
@@ -313,8 +337,9 @@ export function convertBlockToTemplate(
     }
   }
 
-  const finalContent = { ...template, content: newContent };
+  const finalContent = { ...originalDescription, content: newContent };
   return {
+    ...template,
     title,
     stateId,
     assigneeId,
@@ -604,10 +629,8 @@ export async function issueCreate(
   issuesService: IssuesService,
   issueCommentsService: IssueCommentsService,
   linkedIssueService: LinkedIssueService,
-  title: string,
-  assigneeId: string,
-  stateId: string,
-  description: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  templateData: Record<string, any>,
   teamId: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sessionData: Record<string, any>,
@@ -632,11 +655,11 @@ export async function issueCreate(
 
   const createdIssue = await issuesService.createIssueAPI(
     {
-      title,
-      description,
-      stateId,
+      ...templateData,
+      title: templateData.title,
+      stateId: templateData.stateId,
+      description: JSON.stringify(templateData.description),
       teamId,
-      assigneeId,
     },
     userId,
   );
@@ -687,9 +710,9 @@ export async function issueCreate(
         type: integrationAccount.integrationDefinition.slug,
         channelId: sessionData.channelId,
         parentTs: message.ts,
-        title: `Slack message from: ${sessionData.slackUsername}`,
+        title: `Slack message from: ${sessionData.slackChannelName}`,
         slackTeamDomain: sessionData.slackTeamDomain,
-        userDisplayName: sessionData.slackUsername,
+        userDisplayName: sessionData.slackUserName,
       },
       createdById: userId,
     };
@@ -709,7 +732,7 @@ export async function issueCreate(
       messageResponse,
       integrationAccount,
       linkIssueData,
-      sessionData.channelName,
+      sessionData.slackChannelName,
       createdIssue.id,
       userId,
       sourceMetadata,
