@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
 import { useToast } from '@tegonhq/ui/components/use-toast';
-import { DeleteLine, MoreLine } from '@tegonhq/ui/icons';
+import { DeleteLine, MoreLine, UserLine } from '@tegonhq/ui/icons';
 import React from 'react';
 
 import { useRemoveTeamMemberMutation } from 'services/team';
@@ -56,7 +56,7 @@ export function WorkspaceOptionsDropdown({
               // }}
             >
               <div className="flex items-center gap-1">
-                 Make this user as Admin
+              <UserLine size={20} /> Make this user as Admin
               </div>
             </DropdownMenuItem>}
             <DropdownMenuItem
