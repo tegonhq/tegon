@@ -135,7 +135,6 @@ export const Editor = ({
     }
   }
 
-  console.log(value);
   React.useEffect(() => {
     if (value === undefined && editor) {
       editor.commands.clearContent(true);

@@ -61,7 +61,6 @@ export const useDefaultValues = (
   const workflows = workflowsStore.getWorkflowsForTeam(team.id);
 
   return React.useMemo(() => {
-    console.log(defaultValues);
     return {
       teamId: team?.id,
       projectId: project?.id,
