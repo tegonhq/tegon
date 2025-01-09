@@ -1,5 +1,5 @@
-import { AdjustableTextArea } from '@tegonhq/ui/components/ui/adjustable-textarea';
-import { Button } from '@tegonhq/ui/components/ui/button';
+import { AdjustableTextArea } from '@tegonhq/ui/components/adjustable-textarea';
+import { Button } from '@tegonhq/ui/components/button';
 import { SendLine } from '@tegonhq/ui/icons';
 import { useState } from 'react';
 

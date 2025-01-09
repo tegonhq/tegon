@@ -1,4 +1,4 @@
-import { Separator } from '@tegonhq/ui/components/ui/separator';
+import { Separator } from '@tegonhq/ui/components/separator';
 import { observer } from 'mobx-react-lite';
 
 import type { IssueType, TeamType } from 'common/types';

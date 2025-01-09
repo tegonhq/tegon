@@ -62,7 +62,8 @@ export const Labels = observer(() => {
           {labelsStore.labels
             .filter(
               (label: LabelType) =>
-                label.name.includes(searchValue) && !label.teamId,
+                label.name.toLowerCase().includes(searchValue.toLowerCase()) &&
+                !label.teamId,
             )
             .map((label: LabelType) => {
               if (editLabelState === label.id) {

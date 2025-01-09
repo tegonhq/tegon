@@ -15,10 +15,20 @@ interface MemberItemProps {
   email: string;
   id: string;
   teamId?: string;
+  isAdmin?: boolean;
+  isSuspended?: boolean;
 }
 
 export const MemberItem = observer(
-  ({ name, className, email, id, teamId }: MemberItemProps) => {
+  ({
+    name,
+    className,
+    email,
+    id,
+    teamId,
+    isAdmin,
+    isSuspended,
+  }: MemberItemProps) => {
     const { workspaceStore } = useContextStore();
 
     const userOnWorkspace = workspaceStore.usersOnWorkspaces.find(
@@ -29,7 +39,8 @@ export const MemberItem = observer(
       <div
         className={cn(
           className,
-          'flex items-center justify-between bg-background-3 p-3 rounded-lg',
+          'flex items-center justify-between bg-background-3 px-4 py-2 rounded-lg',
+          isSuspended && 'bg-grayAlpha-100',
         )}
       >
         <div className="flex gap-2 items-center">
@@ -44,12 +55,12 @@ export const MemberItem = observer(
         <div className="text-sm flex gap-2 items-center">
           <div>{userOnWorkspace?.role}</div>
 
-          {teamId && (
-            <MemberOptionsDropdown
-              userId={userOnWorkspace.userId}
-              teamId={teamId}
-            />
-          )}
+          <MemberOptionsDropdown
+            userId={userOnWorkspace.userId}
+            teamId={teamId}
+            isAdmin={isAdmin}
+            isSuspended={isSuspended}
+          />
         </div>
       </div>
     );

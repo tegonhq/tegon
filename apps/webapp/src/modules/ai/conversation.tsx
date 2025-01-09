@@ -1,5 +1,5 @@
 import { UserTypeEnum } from '@tegonhq/types';
-import { ScrollArea } from '@tegonhq/ui/components/ui/scroll-area';
+import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import getConfig from 'next/config';

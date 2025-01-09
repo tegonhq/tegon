@@ -367,4 +367,25 @@ export default class WorkspacesService {
     );
     res.status(200).json(invite);
   }
+
+  async suspendUser(workspaceId: string, userId: string) {
+    const userOnWorkspace =
+      await this.prisma.usersOnWorkspaces.findUniqueOrThrow({
+        where: {
+          userId_workspaceId: {
+            workspaceId,
+            userId,
+          },
+        },
+      });
+
+    await this.prisma.usersOnWorkspaces.update({
+      where: {
+        id: userOnWorkspace.id,
+      },
+      data: {
+        status: 'SUSPENDED',
+      },
+    });
+  }
 }

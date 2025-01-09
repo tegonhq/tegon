@@ -20,6 +20,7 @@ export async function saveWorkspaceData(
           workspaceId: record.data.workspaceId,
           teamIds: record.data.teamIds,
           role: record.data.role,
+          status: record.data.status,
           settings: record.data.settings,
         };
 
