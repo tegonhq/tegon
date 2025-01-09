@@ -82,11 +82,7 @@ export const TeamList = observer(() => {
           }
 
           return (
-            <AccordionItem
-              value={team.id}
-              key={team.identifier}
-              className="mb-1"
-            >
+            <AccordionItem value={team.id} key={team.id} className="mb-1">
               <AccordionTrigger className="flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 w-fit rounded-md min-w-0">
                 <div className="w-full justify-start flex items-center gap-1">
                   <div>
