@@ -1,5 +1,3 @@
-
-import type { Team, User } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   DropdownMenu,
@@ -12,7 +10,11 @@ import { useToast } from '@tegonhq/ui/components/use-toast';
 import { AddLine, DeleteLine, MoreLine } from '@tegonhq/ui/icons';
 import React from 'react';
 
-import { useAddTeamMemberMutation, useRemoveTeamMemberMutation } from 'services/team';
+import {
+  useAddTeamMemberMutation,
+  useRemoveTeamMemberMutation,
+} from 'services/team';
+
 import { UserContext } from 'store/user-context';
 
 interface TeamOptionsDropdownProps {
@@ -26,17 +28,18 @@ interface TeamOptionsDropdownProps {
 }
 
 export function TeamOptionsDropdown({
-  team,teamAccessList
+  team,
+  teamAccessList,
 }: TeamOptionsDropdownProps) {
   const { toast } = useToast();
   const currentUser = React.useContext(UserContext);
   const { mutate: removeMember } = useRemoveTeamMemberMutation({
     onSuccess: () => {
-        toast({
-          title: 'Team',
-          description: 'Successfully left team',
-        });
-      },
+      toast({
+        title: 'Team',
+        description: 'Successfully left team',
+      });
+    },
     onError: (err: string) => {
       toast({
         variant: 'destructive',
@@ -54,8 +57,8 @@ export function TeamOptionsDropdown({
     },
   });
 
-  console.log(team,currentUser,teamAccessList);
-  
+  const hasTeamAccess = teamAccessList.includes(team.id);
+
   return (
     <div>
       <DropdownMenu>
@@ -72,29 +75,34 @@ export function TeamOptionsDropdown({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuGroup>
-          
-            {!teamAccessList.includes(team.id) && <DropdownMenuItem
-              onClick={()=>addTeamMember({
-                userId: currentUser.id,
-                teamId: team.id,
-              })}
-            >
-              <div className="flex items-center gap-1">
-                <AddLine size={16} /> Join team
-              </div>
-            </DropdownMenuItem>}
-            <DropdownMenuItem
-              onClick={() => {
-                removeMember({
-                  userId: currentUser.id,
-                  teamId: team.id,
-                });
-              }}
-            >
-              <div className="flex items-center gap-1">
-                <DeleteLine size={16} /> Leave team
-              </div>
-            </DropdownMenuItem>
+            {!hasTeamAccess && (
+              <DropdownMenuItem
+                onClick={() =>
+                  addTeamMember({
+                    userId: currentUser.id,
+                    teamId: team.id,
+                  })
+                }
+              >
+                <div className="flex items-center gap-1">
+                  <AddLine size={16} /> Join team
+                </div>
+              </DropdownMenuItem>
+            )}
+            {hasTeamAccess && (
+              <DropdownMenuItem
+                onClick={() => {
+                  removeMember({
+                    userId: currentUser.id,
+                    teamId: team.id,
+                  });
+                }}
+              >
+                <div className="flex items-center gap-1">
+                  <DeleteLine size={16} /> Leave team
+                </div>
+              </DropdownMenuItem>
+            )}
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -1,4 +1,10 @@
-import { Inbox, MyIssues, Project, StackLine } from '@tegonhq/ui/icons';
+import {
+  Inbox,
+  MyIssues,
+  Project,
+  StackLine,
+  TeamLine,
+} from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
@@ -70,7 +76,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
                   },
                   {
                     title: 'Teams',
-                    icon: Project,
+                    icon: TeamLine,
                     href: `/${workspaceSlug}/teams`,
                   },
                 ]}
