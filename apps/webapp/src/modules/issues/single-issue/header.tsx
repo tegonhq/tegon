@@ -12,14 +12,14 @@ import { HeaderLayout } from 'common/header-layout';
 
 import { useCurrentTeam } from 'hooks/teams';
 
+import { IssueOptionsDropdown } from './issue-actions/issue-options-dropdown';
+
 export const Header = observer(() => {
   const team = useCurrentTeam();
 
   const {
     query: { issueId, workspaceSlug },
   } = useRouter();
-
-  // Use the keyboard shortcuts hook for Accept (A) and Decline (D)
 
   return (
     <HeaderLayout>
@@ -38,6 +38,7 @@ export const Header = observer(() => {
           <BreadcrumbLink>{issueId}</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
+      <IssueOptionsDropdown />
     </HeaderLayout>
   );
 });

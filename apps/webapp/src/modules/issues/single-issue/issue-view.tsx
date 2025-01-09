@@ -14,7 +14,7 @@ import { useContextStore } from 'store/global-context-provider';
 import { IssueStoreInit } from 'store/issue-store-provider';
 
 import { Header } from './header';
-import { LeftSide } from './left-side/left-side';
+import { LeftSideSupport } from './left-side/left-side-support';
 import { RightSide } from './right-side/right-side';
 
 export const IssueView = observer(() => {
@@ -53,7 +53,7 @@ export const IssueView = observer(() => {
         <ContentBox>
           <main className="flex h-[calc(100vh_-_53px)]">
             <div className="grow flex flex-col h-[calc(100vh_-_55px)]">
-              <LeftSide />
+              <LeftSideSupport />
             </div>
             <div className="border-l border-border flex-col flex w-[280px]">
               <RightSide />

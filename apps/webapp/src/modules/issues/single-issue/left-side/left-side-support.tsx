@@ -1,7 +1,5 @@
 import { WorkflowCategoryEnum } from '@tegonhq/types';
-import { Editor, EditorExtensions } from '@tegonhq/ui/components/editor/index';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
-import { Separator } from '@tegonhq/ui/components/separator';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useDebouncedCallback } from 'use-debounce';
@@ -9,7 +7,6 @@ import { useDebouncedCallback } from 'use-debounce';
 import { useEditorSuggestionItems } from 'modules/issues/components/use-editor-suggestion-items';
 
 import { getTiptapJSON } from 'common';
-import { tegonIssueExtension } from 'common/editor/tegon-issue-extension';
 import { type WorkflowType } from 'common/types';
 
 import { useIssueData } from 'hooks/issues';
@@ -19,16 +16,11 @@ import { useTeamWorkflows } from 'hooks/workflows';
 
 import { useUpdateIssueMutation } from 'services/issues';
 
-import { Activity } from './activity';
-import { FileUpload } from './file-upload';
-import { IssueSubIssueSelector } from './issue-sub-issue-selector';
 import { IssueTitle } from './issue-title';
-import { LinkedIssuesView } from './linked-issues-view';
-import { ParentIssueView } from './parent-issue-view';
 import { SimilarIssuesView } from './similar-issues-view';
-import { SubIssueView } from './sub-issue-view';
+import { SupportChat } from './support-chat';
 
-export const LeftSide = observer(() => {
+export const LeftSideSupport = observer(() => {
   const issue = useIssueData();
   const team = useTeamWithId(issue.teamId);
 
@@ -70,40 +62,8 @@ export const LeftSide = observer(() => {
             {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
             <IssueTitle value={issue.title} onChange={onIssueChange} />
-            {issue.parentId && (
-              <div className="px-6">
-                <ParentIssueView issue={issue} />
-              </div>
-            )}
-            <Editor
-              value={issue.description}
-              onChange={onDescriptionChange}
-              handlePaste={handlePaste}
-              extensions={[tegonIssueExtension]}
-              className="min-h-[50px] mb-8 px-6 mt-3 text-md"
-            >
-              <FileUpload />
-              <EditorExtensions suggestionItems={suggestionItems}>
-                <IssueSubIssueSelector />
-              </EditorExtensions>
-            </Editor>
 
-            <div className="mx-6">
-              <Separator />
-            </div>
-
-            <SubIssueView childIssues={issue.children} issueId={issue.id} />
-
-            <div className="mx-6">
-              <Separator />
-            </div>
-
-            <LinkedIssuesView issueId={issue.id} />
-
-            <div className="mx-6">
-              <Separator />
-            </div>
-            <Activity />
+            <SupportChat />
           </div>
         </div>
       </div>
