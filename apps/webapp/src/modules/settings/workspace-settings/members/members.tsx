@@ -1,4 +1,5 @@
 import { Button } from '@tegonhq/ui/components/button';
+import { Input } from '@tegonhq/ui/components/input';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -9,35 +10,38 @@ import type { User } from 'common/types';
 
 import { useUsersData } from 'hooks/users';
 
+import { useContextStore } from 'store/global-context-provider';
+import { UserContext } from 'store/user-context';
+
 import { AddMemberDialog } from './add-member-dialog';
 import { MemberItem } from './member-item';
-import { Input } from '@tegonhq/ui/components/ui/input';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@tegonhq/ui/components/ui/collapsible';
-import { ChevronDown, ChevronRight } from '@tegonhq/ui/icons';
-import { BadgeColor } from '@tegonhq/ui/components/ui/badge';
 
 export const Members = observer(() => {
   const { users, isLoading } = useUsersData(false);
+  const { workspaceStore } = useContextStore();
   const [newMemberDialog, setNewMemberDialog] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
-  const [filteredUsers, setFilteredUsers] = React.useState<User[]>([]);
-  const [isOpen, setIsOpen] = React.useState(true);
-  React.useEffect(() => {
-    // Initialize filtered users with all users
-    console.log(users);
-    
-    setFilteredUsers(users);
-  }, [users]);
+  const currentUser = React.useContext(UserContext);
+  const userRole = workspaceStore.getUserData(currentUser.id)?.role;
 
-  React.useEffect(() => {
-    // Filter users when search value changes
-    const filtered = users.filter((user) =>
-      user.fullname.toLowerCase().includes(searchValue.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchValue.toLowerCase())
+  const getUsers = (isSuspened: boolean = false) => {
+    const nonSuspendedUsers = users.filter((user) =>
+      isSuspened
+        ? workspaceStore.getUserData(user.id).status === 'SUSPENDED'
+        : workspaceStore.getUserData(user.id).status !== 'SUSPENDED',
     );
-    setFilteredUsers(filtered);
-  }, [searchValue, users]);
-  
+
+    if (searchValue) {
+      return nonSuspendedUsers.filter(
+        (user) =>
+          user.fullname.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchValue.toLowerCase()),
+      );
+    }
+
+    return nonSuspendedUsers;
+  };
+
   return (
     <>
       <SettingSection
@@ -56,63 +60,47 @@ export const Members = observer(() => {
                 >
                   Add member
                 </Button>
-                {/* <h3 className="text-xs">{users.length} Members </h3> */}
+
                 <div className="flex">
-              <Input
-                placeholder="Filter by name"
-                onChange={(e) => setSearchValue(e.currentTarget.value)}
-              />
-            </div>
+                  <Input
+                    placeholder="Filter by name"
+                    onChange={(e) => setSearchValue(e.currentTarget.value)}
+                  />
+                </div>
               </div>
 
-              <div className="mt-4 flex flex-col">
-              <Collapsible
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        className="flex flex-col gap-2"
-      >
-        <div className="flex gap-1 items-center">
-          <CollapsibleTrigger asChild>
-            <Button
-              className="flex group items-center w-fit rounded-2xl bg-grayAlpha-100"
-              variant="ghost"
-              size="lg"
-            >
-              <BadgeColor
-                style={{ backgroundColor: 'rgb(131, 131, 131)' }}
-                className="w-2 h-2 group-hover:hidden"
-              />
-              <div className="hidden group-hover:block">
-                {isOpen ? (
-                  <ChevronDown size={20} />
-                ) : (
-                  <ChevronRight size={20} />
-                )}
-              </div>
-              <h3 className="pl-2">Active</h3>
-            </Button>
-          </CollapsibleTrigger>
-
-          <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
-            {filteredUsers.length}
-          </div>
-        </div>
-
-        <CollapsibleContent>
-        {filteredUsers.map((userData: User, index) => (
+              <div className="mt-4 flex flex-col gap-1">
+                {getUsers().map((userData: User, index) => (
                   <MemberItem
                     key={userData.id}
                     id={userData.id}
                     name={userData.fullname}
                     email={userData.email}
-                    Workspace={userData.role === 'ADMIN' ? true : false}
+                    isAdmin={userRole === 'ADMIN'}
                     className={index === users.length - 1 && 'pb-0 !border-b-0'}
                   />
                 ))}
-        </CollapsibleContent>
-      </Collapsible>
-                
               </div>
+
+              {getUsers(true).length > 0 && (
+                <div className="mt-4">
+                  <h2 className="mb-1"> Suspended </h2>
+
+                  {getUsers(true).map((userData: User, index) => (
+                    <MemberItem
+                      key={userData.id}
+                      id={userData.id}
+                      name={userData.fullname}
+                      email={userData.email}
+                      isSuspended
+                      isAdmin={userRole === 'ADMIN'}
+                      className={
+                        index === users.length - 1 && 'pb-0 !border-b-0'
+                      }
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

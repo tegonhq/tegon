@@ -11,6 +11,7 @@ import { useCurrentTeam } from 'hooks/teams';
 import { useUsersData } from 'hooks/users';
 
 import { useContextStore } from 'store/global-context-provider';
+import { UserContext } from 'store/user-context';
 
 import { ShowMembersDropdown } from './show-members-dropdown';
 import { SettingSection } from '../setting-section';
@@ -19,10 +20,16 @@ export const Members = observer(() => {
   const team = useCurrentTeam();
   const { workspaceStore } = useContextStore();
   const usersOnWorkspace = workspaceStore.usersOnWorkspaces;
+  const currentUser = React.useContext(UserContext);
+  const userRole = workspaceStore.getUserData(currentUser.id).role;
 
   const userIds = usersOnWorkspace
     .filter((uOW: UsersOnWorkspaceType) => {
-      return uOW.teamIds.includes(team.id) && uOW.role !== RoleEnum.BOT;
+      return (
+        uOW.teamIds.includes(team.id) &&
+        uOW.role !== RoleEnum.BOT &&
+        uOW.status !== 'SUSPENDED'
+      );
     })
     .map((uOW: UsersOnWorkspaceType) => uOW.userId);
 
@@ -56,6 +63,7 @@ export const Members = observer(() => {
                       id={userData.id}
                       name={userData.fullname}
                       email={userData.email}
+                      isAdmin={userRole === 'ADMIN'}
                       teamId={team.id}
                       className={
                         index === users.length - 1 && 'pb-0 !border-b-0'

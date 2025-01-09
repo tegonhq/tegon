@@ -102,6 +102,18 @@ export class WorkspacesController {
     );
   }
 
+  @Post('suspend')
+  @UseGuards(AuthGuard, AdminGuard)
+  async suspendUser(
+    @WorkspaceD() workspaceId: string,
+    @Body() userBody: UserBody,
+  ) {
+    return await this.workspacesService.suspendUser(
+      workspaceId,
+      userBody.userId,
+    );
+  }
+
   @Post('add_users')
   @UseGuards(AuthGuard)
   async addUserToWorkspace(

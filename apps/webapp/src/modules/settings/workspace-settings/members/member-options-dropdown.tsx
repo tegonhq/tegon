@@ -7,19 +7,24 @@ import {
   DropdownMenuTrigger,
 } from '@tegonhq/ui/components/dropdown-menu';
 import { useToast } from '@tegonhq/ui/components/use-toast';
-import { DeleteLine, MoreLine } from '@tegonhq/ui/icons';
+import { CanceledLine, DeleteLine, MoreLine } from '@tegonhq/ui/icons';
 import React from 'react';
 
 import { useRemoveTeamMemberMutation } from 'services/team';
+import { useSuspendUserMutation } from 'services/workspace';
 
 interface MemberOptionsDropdownProps {
   userId: string;
   teamId: string;
+  isAdmin: boolean;
+  isSuspended: boolean;
 }
 
 export function MemberOptionsDropdown({
   userId,
   teamId,
+  isAdmin,
+  isSuspended,
 }: MemberOptionsDropdownProps) {
   const { toast } = useToast();
   const { mutate: removeMember } = useRemoveTeamMemberMutation({
@@ -31,6 +36,19 @@ export function MemberOptionsDropdown({
       });
     },
   });
+
+  const { mutate: suspendUser } = useSuspendUserMutation({
+    onSuccess: () => {
+      toast({
+        title: 'Success',
+        description: 'User has been suspended',
+      });
+    },
+  });
+
+  if (!isAdmin || isSuspended) {
+    return null;
+  }
 
   return (
     <div>
@@ -48,18 +66,35 @@ export function MemberOptionsDropdown({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuGroup>
-            <DropdownMenuItem
-              onClick={() => {
-                removeMember({
-                  userId,
-                  teamId,
-                });
-              }}
-            >
-              <div className="flex items-center gap-1">
-                <DeleteLine size={16} /> Remove from team
-              </div>
-            </DropdownMenuItem>
+            {isAdmin && (
+              <>
+                <DropdownMenuItem
+                  onClick={() => {
+                    suspendUser({
+                      userId,
+                    });
+                  }}
+                >
+                  <div className="flex items-center gap-1">
+                    <CanceledLine size={16} /> Suspend
+                  </div>
+                </DropdownMenuItem>
+              </>
+            )}
+            {teamId && isAdmin && (
+              <DropdownMenuItem
+                onClick={() => {
+                  removeMember({
+                    userId,
+                    teamId,
+                  });
+                }}
+              >
+                <div className="flex items-center gap-1">
+                  <DeleteLine size={16} /> Remove from team
+                </div>
+              </DropdownMenuItem>
+            )}
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>

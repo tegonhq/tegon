@@ -17,6 +17,7 @@ export interface UsersOnWorkspaceType {
   createdAt: string;
   updatedAt: string;
   role: string;
+  status: string;
 
   userId: string;
   workspaceId: string;

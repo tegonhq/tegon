@@ -1,7 +1,7 @@
 import { RiClipboardLine } from '@remixicon/react';
 import { Button } from '@tegonhq/ui/components/button';
 import { Input } from '@tegonhq/ui/components/input';
-import { useToast } from '@tegonhq/ui/components/ui/use-toast';
+import { useToast } from '@tegonhq/ui/components/use-toast';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 
