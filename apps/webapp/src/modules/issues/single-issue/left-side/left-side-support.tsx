@@ -4,14 +4,10 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-import { useEditorSuggestionItems } from 'modules/issues/components/use-editor-suggestion-items';
-
-import { getTiptapJSON } from 'common';
 import { type WorkflowType } from 'common/types';
 
 import { useIssueData } from 'hooks/issues';
 import { useTeamWithId } from 'hooks/teams';
-import { useEditorPasteHandler } from 'hooks/use-editor-paste-handler';
 import { useTeamWorkflows } from 'hooks/workflows';
 
 import { useUpdateIssueMutation } from 'services/issues';
@@ -32,17 +28,6 @@ export const LeftSideSupport = observer(() => {
   const isTriageView = issue.stateId === triageWorkflow.id;
 
   const { mutate: updateIssue } = useUpdateIssueMutation({});
-  const { suggestionItems } = useEditorSuggestionItems();
-
-  const onDescriptionChange = useDebouncedCallback((content: string) => {
-    const { json: description } = getTiptapJSON(content);
-
-    updateIssue({
-      description: JSON.stringify(description),
-      teamId: issue.teamId,
-      id: issue.id,
-    });
-  }, 1000);
 
   const onIssueChange = useDebouncedCallback((content: string) => {
     updateIssue({
@@ -51,8 +36,6 @@ export const LeftSideSupport = observer(() => {
       id: issue.id,
     });
   }, 1000);
-
-  const { handlePaste } = useEditorPasteHandler();
 
   return (
     <ScrollArea className="grow flex h-full justify-center w-full">
