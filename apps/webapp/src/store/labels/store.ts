@@ -66,7 +66,7 @@ export const LabelsStore: IAnyStateTreeNode = types
               label.name.toLowerCase() === key.toLowerCase(),
           );
 
-          return label?.id;
+          return label?.name;
         })
         .filter(Boolean);
     },

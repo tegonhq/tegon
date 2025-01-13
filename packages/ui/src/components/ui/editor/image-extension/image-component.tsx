@@ -23,16 +23,7 @@ export const ImageComponent = (props: any) => {
     props.node.attrs.src,
     props.node.attrs.attachmentId,
   );
-
-  const setOpen = (openViewer: boolean) => {
-    props.updateAttributes({
-      openViewer,
-    });
-  };
-
-  React.useEffect(() => {
-    setOpen(false); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [openViewer, setOpenViewer] = React.useState(false);
 
   const images = getNodeTypesWithImageExtension(editor);
 
@@ -86,7 +77,7 @@ export const ImageComponent = (props: any) => {
                 size="xs"
                 className="px-1"
                 onClick={() => {
-                  setOpen(true);
+                  setOpenViewer(true);
                 }}
               >
                 <FullscreenLine size={16} />
@@ -94,7 +85,7 @@ export const ImageComponent = (props: any) => {
             </div>
           )}
 
-          {props.node.attrs.openViewer && (
+          {openViewer && (
             <Lightbox
               open
               render={{
@@ -105,7 +96,7 @@ export const ImageComponent = (props: any) => {
                 iconZoomOut: () => <ZoomOut />,
               }}
               plugins={[Zoom]}
-              close={() => setOpen(false)}
+              close={() => setOpenViewer(false)}
               slides={images.map((image: AttrType) => ({
                 src: image.src,
               }))}

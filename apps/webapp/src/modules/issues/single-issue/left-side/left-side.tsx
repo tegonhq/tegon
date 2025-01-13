@@ -66,9 +66,6 @@ export const LeftSide = observer(() => {
     <ScrollArea className="grow flex h-full justify-center w-full">
       <div className="flex h-full justify-center w-full">
         <div className="grow flex flex-col gap-2 h-full max-w-[97ch]">
-          {/* <div className="flex xl:hidden px-6 py-2 border-b">
-            <FilterSmall />
-          </div> */}
           <div className="py-6 flex flex-col">
             {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
