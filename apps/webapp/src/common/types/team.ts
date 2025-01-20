@@ -8,6 +8,7 @@ export interface TeamType {
   currentCycle?: number;
   preferences: {
     cyclesEnabled?: boolean;
+    teamType?: string;
   };
 }
 
