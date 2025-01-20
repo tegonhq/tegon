@@ -12,9 +12,10 @@ import { useTeamWorkflows } from 'hooks/workflows';
 
 import { useUpdateIssueMutation } from 'services/issues';
 
+import { CommentsActivity } from './activity/comments-activity';
 import { IssueTitle } from './issue-title';
+import { ParentIssueView } from './parent-issue-view';
 import { SimilarIssuesView } from './similar-issues-view';
-import { SupportChat } from './support-chat';
 
 export const LeftSideSupport = observer(() => {
   const issue = useIssueData();
@@ -45,8 +46,15 @@ export const LeftSideSupport = observer(() => {
             {isTriageView && <SimilarIssuesView issueId={issue.id} />}
 
             <IssueTitle value={issue.title} onChange={onIssueChange} />
+            {issue.parentId && (
+              <div className="px-6">
+                <ParentIssueView issue={issue} />
+              </div>
+            )}
 
-            <SupportChat />
+            <div className="px-6 flex flex-col">
+              <CommentsActivity commentOrder={-1} />
+            </div>
           </div>
         </div>
       </div>
