@@ -92,8 +92,11 @@ export default class WebhookService {
     const actionEntities = await this.prisma.actionEntity.findMany({
       where: {
         type: ActionTypesEnum.SOURCE_WEBHOOK,
-        entity: sourceName,
-        action: { workspaceId, status: ActionStatusEnum.ACTIVE },
+        action: {
+          workspaceId,
+          status: ActionStatusEnum.ACTIVE,
+          integrations: { has: sourceName },
+        },
         deleted: null,
       },
       include: { action: true },
