@@ -1,0 +1,13 @@
+{
+  "slug": "slack-support",
+  "name": "Slack-Support",
+  "icon": "slack",
+  "description": "Create support tickets from Slack messages and sync threads",
+  "triggers": [
+    {
+      "type": "source_webhook",
+      "entities": ["slack-support"]
+    }
+  ],
+  "integrations": ["slack"]
+}
