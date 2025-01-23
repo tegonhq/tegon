@@ -10,7 +10,7 @@ export function getUserFromUsersData(usersData: User[], userId: string) {
 }
 
 export function getUserIcon(user: User) {
-  if (user.role === RoleEnum.BOT && user.image) {
+  if (user && user.role === RoleEnum.BOT && user.image) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const Component = getBotIcon(user.image as any);
 
