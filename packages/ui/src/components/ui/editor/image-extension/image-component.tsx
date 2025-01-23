@@ -19,17 +19,10 @@ import { useSrc } from '../file-extension/use-src';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ImageComponent = (props: any) => {
   const { editor } = useEditor();
-  const { loading, src } = useSrc(
-    props.node.attrs.src,
-    props.node.attrs.attachmentId,
-  );
+  const { src } = useSrc(props.node.attrs.src, props.node.attrs.attachmentId);
   const [openViewer, setOpenViewer] = React.useState(false);
 
   const images = getNodeTypesWithImageExtension(editor);
-
-  if (loading) {
-    return null;
-  }
 
   return (
     <NodeViewWrapper className="react-component-with-content">

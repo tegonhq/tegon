@@ -13,14 +13,7 @@ import { Progress } from '../../progress';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FileComponent = (props: any) => {
   const type = props.node.attrs.type;
-  const { loading, src } = useSrc(
-    props.node.attrs.src,
-    props.node.attrs.attachmentId,
-  );
-
-  if (loading) {
-    return null;
-  }
+  const { src } = useSrc(props.node.attrs.src, props.node.attrs.attachmentId);
 
   return (
     <NodeViewWrapper className="react-component-with-content">

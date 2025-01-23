@@ -24,7 +24,7 @@ export const MentionComponent = observer((props: NodeViewProps) => {
           'mention bg-grayAlpha-100 p-0.5 px-1 rounded-sm text-primary',
         )}
       >
-        {user.fullname}
+        {user?.fullname}
       </span>
     </NodeViewWrapper>
   );
