@@ -102,8 +102,6 @@ export const getIssueRows = (
     }
   });
 
-  console.log(noValueRows, property);
-
   // Add no-value section if there are any issues without values
   if (noValueRows.length > 0) {
     result[index++] = { type: 'header', key: 'no-value' };

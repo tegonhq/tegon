@@ -1,3 +1,5 @@
+import https from 'https';
+
 import {
   Body,
   Controller,
@@ -88,7 +90,7 @@ export class AttachmentController {
     }
   }
 
-  @Get(':workspaceId/:attachmentId')
+  @Get(':attachmentId')
   @UseGuards(AuthGuard)
   async getFileFromGCS(
     @Workspace() workspaceId: string,
@@ -96,12 +98,22 @@ export class AttachmentController {
     @Res() res: Response,
   ) {
     try {
-      const file = await this.attachementService.getFileFromStorage(
-        attachementRequestParams,
-        workspaceId,
-      );
-      res.setHeader('Content-Type', file.contentType);
-      res.send(file.buffer);
+      const { signedUrl, contentType } =
+        await this.attachementService.getFileFromStorageSignedUrl(
+          attachementRequestParams,
+          workspaceId,
+        );
+
+      // Set content disposition header with the original filename
+      res.set({
+        'Content-Type': contentType,
+        'Content-Disposition': 'inline',
+        'Cache-Control': 'public, immutable, max-age=31536000', // Cache for 1 year (effectively infinite)
+      });
+
+      https.get(signedUrl, (stream) => {
+        stream.pipe(res);
+      });
     } catch (error) {
       res.status(404).send('File not found');
     }
