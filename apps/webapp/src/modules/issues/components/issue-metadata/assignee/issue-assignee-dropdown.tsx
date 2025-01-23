@@ -79,10 +79,10 @@ export function IssueAssigneeDropdown({
           {value ? (
             <>
               <AvatarText
-                text={getUserFromUsersData(users, value).fullname}
+                text={getUserFromUsersData(users, value)?.fullname}
                 className="h-5 w-5 text-[9px] mr-2"
               />
-              {getUserFromUsersData(users, value).fullname}
+              {getUserFromUsersData(users, value)?.fullname}
             </>
           ) : (
             <div className="text-muted-foreground flex">
@@ -106,11 +106,11 @@ export function IssueAssigneeDropdown({
         {value ? (
           <>
             <AvatarText
-              text={getUserFromUsersData(users, value).fullname}
+              text={getUserFromUsersData(users, value)?.fullname}
               className="w-5 h-5 text-[9px]"
             />
 
-            {getUserFromUsersData(users, value).fullname}
+            {getUserFromUsersData(users, value)?.fullname}
           </>
         ) : (
           <>

@@ -14,6 +14,7 @@ import { getWorkflowColor } from 'common/status-color';
 import { getWorkflowIcon } from 'common/workflow-icons';
 
 import { useTeamWorkflows } from 'hooks/workflows/use-team-workflows';
+import type { WorkflowType } from 'common/types';
 
 export enum IssueStatusDropdownVariant {
   NO_BACKGROUND = 'NO_BACKGROUND',
@@ -36,6 +37,7 @@ export const IssueStatusDropdown = observer(
     teamIdentifier,
   }: IssueStatusProps) => {
     const [open, setOpen] = React.useState(false);
+
     const workflows = useTeamWorkflows(teamIdentifier);
 
     const workflow = value
@@ -118,3 +120,5 @@ export const IssueStatusDropdown = observer(
     );
   },
 );
+
+IssueStatusDropdown.displayName = 'IssueStatusDropdown';

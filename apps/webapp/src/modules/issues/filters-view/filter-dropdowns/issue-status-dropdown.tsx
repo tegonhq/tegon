@@ -62,7 +62,7 @@ export function IssueStatusDropdown({ value, onChange }: IssueStatusProps) {
           >
             {value.length > 1
               ? `${value.length} statuses`
-              : getWorkflowData(value[0]).name}
+              : getWorkflowData(value[0])?.name}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-72 p-0" align="start">

@@ -59,9 +59,9 @@ export function IssueAssigneeDropdown({
               <>
                 <AvatarText
                   className="h-5 w-5 text-[9px]"
-                  text={getUserData(value[0]).fullname}
+                  text={getUserData(value[0])?.fullname}
                 />
-                {getUserData(value[0]).fullname}
+                {getUserData(value[0])?.fullname}
               </>
             )}
           </Button>

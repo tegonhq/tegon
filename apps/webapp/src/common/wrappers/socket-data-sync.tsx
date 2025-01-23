@@ -115,6 +115,6 @@ export const SocketDataSyncWrapper: React.FC<Props> = observer(
       return <>{children}</>;
     }
 
-    return <Loader height={500} text="Setting up realtime" />;
+    return <Loader height={500} text="Loading workspace..." />;
   },
 );

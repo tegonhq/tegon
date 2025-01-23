@@ -10,6 +10,8 @@ import { useUpdateIssueMutation } from 'services/issues';
 import { useContextStore } from 'store/global-context-provider';
 
 import { LabelBoardList, NoLabelBoardList } from './label-board-list';
+import { useComputedWorkflows } from 'hooks/workflows';
+import { useComputedLabels } from 'hooks/labels';
 
 interface LabelBoardProps {
   labels: LabelType[];
@@ -37,20 +39,56 @@ function updateOrAddID(idsArray: string[], idToUpdate: string, newID: string) {
   return idsArray;
 }
 
+const getLabelId = (
+  labelName: string,
+  labelMap: any,
+  labels: LabelType[],
+  teamId: string,
+) => {
+  const labelIds = labels.find((label) => label.name === labelName).ids;
+
+  const labelId = labelIds.find(
+    (labelId) =>
+      labelMap[labelId].teamId === null || labelMap[labelId].teamId === teamId,
+  );
+
+  return labelId;
+};
+
 export const LabelBoard = observer(({ labels }: LabelBoardProps) => {
   const { mutate: updateIssue } = useUpdateIssueMutation({});
   const { issuesStore } = useContextStore();
+  const { labelMap } = useComputedLabels();
 
   const onDragEnd = (result: DropResult) => {
-    const issueId = result.draggableId.split('__')[1];
+    const issueId = result.draggableId.includes('__')
+      ? result.draggableId.split('__')[1]
+      : result.draggableId;
 
-    const labelId = result.destination.droppableId;
+    if (!result.destination) {
+      return;
+    }
+
     const issue = issuesStore.getIssueById(issueId);
+    const sourceLabelId =
+      result.source.droppableId !== 'no-label'
+        ? getLabelId(result.source.droppableId, labelMap, labels, issue.teamId)
+        : undefined;
+
+    const destinationId =
+      result.destination.droppableId !== 'no-label'
+        ? getLabelId(
+            result.destination.droppableId,
+            labelMap,
+            labels,
+            issue.teamId,
+          )
+        : 'no-label';
 
     const newLabelIds = updateOrAddID(
       [...issue.labelIds],
-      result.source.droppableId,
-      labelId === 'no-label' ? undefined : labelId,
+      sourceLabelId,
+      destinationId === 'no-label' ? undefined : destinationId,
     );
 
     updateIssue({ id: issue.id, teamId: issue.teamId, labelIds: newLabelIds });

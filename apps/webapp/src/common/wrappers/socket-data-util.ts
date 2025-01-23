@@ -1,4 +1,5 @@
 import type { SyncActionRecord } from 'common/types';
+import { runInAction } from 'mobx';
 
 import { saveActionData } from 'store/action';
 import { saveCommentsData } from 'store/comments';
@@ -30,138 +31,149 @@ export async function saveSocketData(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   MODEL_STORE_MAP: Record<string, any>,
 ) {
-  await Promise.all(
-    data.map(async (record: SyncActionRecord) => {
-      switch (record.modelName) {
-        case MODELS.Label: {
-          return await saveLabelData([record], MODEL_STORE_MAP[MODELS.Label]);
-        }
+  return await runInAction(async () => {
+    await Promise.all(
+      data.map(async (record: SyncActionRecord) => {
+        switch (record.modelName) {
+          case MODELS.Label: {
+            return await saveLabelData([record], MODEL_STORE_MAP[MODELS.Label]);
+          }
 
-        case MODELS.Team: {
-          return await saveTeamData([record], MODEL_STORE_MAP[MODELS.Team]);
-        }
+          case MODELS.Team: {
+            return await saveTeamData([record], MODEL_STORE_MAP[MODELS.Team]);
+          }
 
-        case MODELS.Workflow: {
-          return await saveWorkflowData(
-            [record],
-            MODEL_STORE_MAP[MODELS.Workflow],
-          );
-        }
+          case MODELS.Workflow: {
+            return await saveWorkflowData(
+              [record],
+              MODEL_STORE_MAP[MODELS.Workflow],
+            );
+          }
 
-        case MODELS.Workspace: {
-          return await saveWorkspaceData(
-            [record],
-            MODEL_STORE_MAP[MODELS.Workspace],
-          );
-        }
+          case MODELS.Workspace: {
+            return await saveWorkspaceData(
+              [record],
+              MODEL_STORE_MAP[MODELS.Workspace],
+            );
+          }
 
-        case MODELS.Issue: {
-          return await saveIssuesData([record], MODEL_STORE_MAP[MODELS.Issue]);
-        }
+          case MODELS.Issue: {
+            return await saveIssuesData(
+              [record],
+              MODEL_STORE_MAP[MODELS.Issue],
+            );
+          }
 
-        case MODELS.UsersOnWorkspaces: {
-          return await saveWorkspaceData(
-            [record],
-            MODEL_STORE_MAP[MODELS.UsersOnWorkspaces],
-          );
-        }
+          case MODELS.UsersOnWorkspaces: {
+            return await saveWorkspaceData(
+              [record],
+              MODEL_STORE_MAP[MODELS.UsersOnWorkspaces],
+            );
+          }
 
-        case MODELS.IssueHistory: {
-          return await saveIssueHistoryData(
-            [record],
-            MODEL_STORE_MAP[MODELS.IssueHistory],
-          );
-        }
+          case MODELS.IssueHistory: {
+            return await saveIssueHistoryData(
+              [record],
+              MODEL_STORE_MAP[MODELS.IssueHistory],
+            );
+          }
 
-        case MODELS.IssueComment: {
-          return await saveCommentsData(
-            [record],
-            MODEL_STORE_MAP[MODELS.IssueComment],
-          );
-        }
+          case MODELS.IssueComment: {
+            return await saveCommentsData(
+              [record],
+              MODEL_STORE_MAP[MODELS.IssueComment],
+            );
+          }
 
-        case MODELS.IntegrationAccount: {
-          return await saveIntegrationAccountData(
-            [record],
-            MODEL_STORE_MAP[MODELS.IntegrationAccount],
-          );
-        }
+          case MODELS.IntegrationAccount: {
+            return await saveIntegrationAccountData(
+              [record],
+              MODEL_STORE_MAP[MODELS.IntegrationAccount],
+            );
+          }
 
-        case MODELS.LinkedIssue: {
-          return await saveLinkedIssueData(
-            [record],
-            MODEL_STORE_MAP[MODELS.LinkedIssue],
-          );
-        }
+          case MODELS.LinkedIssue: {
+            return await saveLinkedIssueData(
+              [record],
+              MODEL_STORE_MAP[MODELS.LinkedIssue],
+            );
+          }
 
-        case MODELS.IssueRelation: {
-          return await saveIssueRelationData(
-            [record],
-            MODEL_STORE_MAP[MODELS.IssueRelation],
-          );
-        }
+          case MODELS.IssueRelation: {
+            return await saveIssueRelationData(
+              [record],
+              MODEL_STORE_MAP[MODELS.IssueRelation],
+            );
+          }
 
-        case MODELS.Notification: {
-          return await saveNotificationData(
-            [record],
-            MODEL_STORE_MAP[MODELS.Notification],
-          );
-        }
+          case MODELS.Notification: {
+            return await saveNotificationData(
+              [record],
+              MODEL_STORE_MAP[MODELS.Notification],
+            );
+          }
 
-        case MODELS.View: {
-          return await saveViewData([record], MODEL_STORE_MAP[MODELS.View]);
-        }
+          case MODELS.View: {
+            return await saveViewData([record], MODEL_STORE_MAP[MODELS.View]);
+          }
 
-        case MODELS.IssueSuggestion: {
-          return await saveIssueSuggestionData(
-            [record],
-            MODEL_STORE_MAP[MODELS.IssueSuggestion],
-          );
-        }
+          case MODELS.IssueSuggestion: {
+            return await saveIssueSuggestionData(
+              [record],
+              MODEL_STORE_MAP[MODELS.IssueSuggestion],
+            );
+          }
 
-        case MODELS.Action: {
-          return await saveActionData([record], MODEL_STORE_MAP[MODELS.Action]);
-        }
+          case MODELS.Action: {
+            return await saveActionData(
+              [record],
+              MODEL_STORE_MAP[MODELS.Action],
+            );
+          }
 
-        case MODELS.Project: {
-          return await saveProjectData(
-            [record],
-            MODEL_STORE_MAP[MODELS.Project],
-          );
-        }
+          case MODELS.Project: {
+            return await saveProjectData(
+              [record],
+              MODEL_STORE_MAP[MODELS.Project],
+            );
+          }
 
-        case MODELS.ProjectMilestone: {
-          return await saveProjectMilestoneData(
-            [record],
-            MODEL_STORE_MAP[MODELS.ProjectMilestone],
-          );
-        }
+          case MODELS.ProjectMilestone: {
+            return await saveProjectMilestoneData(
+              [record],
+              MODEL_STORE_MAP[MODELS.ProjectMilestone],
+            );
+          }
 
-        case MODELS.Cycle: {
-          return await saveCyclesData([record], MODEL_STORE_MAP[MODELS.Cycle]);
-        }
+          case MODELS.Cycle: {
+            return await saveCyclesData(
+              [record],
+              MODEL_STORE_MAP[MODELS.Cycle],
+            );
+          }
 
-        case MODELS.Conversation: {
-          return await saveConversationData(
-            [record],
-            MODEL_STORE_MAP[MODELS.Conversation],
-          );
-        }
+          case MODELS.Conversation: {
+            return await saveConversationData(
+              [record],
+              MODEL_STORE_MAP[MODELS.Conversation],
+            );
+          }
 
-        case MODELS.ConversationHistory: {
-          return await saveConversationHistorytData(
-            [record],
-            MODEL_STORE_MAP[MODELS.ConversationHistory],
-          );
-        }
+          case MODELS.ConversationHistory: {
+            return await saveConversationHistorytData(
+              [record],
+              MODEL_STORE_MAP[MODELS.ConversationHistory],
+            );
+          }
 
-        case MODELS.Template: {
-          return await saveTemplateData(
-            [record],
-            MODEL_STORE_MAP[MODELS.Template],
-          );
+          case MODELS.Template: {
+            return await saveTemplateData(
+              [record],
+              MODEL_STORE_MAP[MODELS.Template],
+            );
+          }
         }
-      }
-    }),
-  );
+      }),
+    );
+  });
 }

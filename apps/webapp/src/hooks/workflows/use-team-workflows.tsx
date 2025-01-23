@@ -42,26 +42,7 @@ export function useTeamWorkflows(
   const team = useTeam(teamIdentifier);
   const { workflowsStore } = useContextStore();
 
-  const getWorkflows = () => {
-    if (!team) {
-      return [];
-    }
-
-    const workflows = workflowsStore.workflows
-      .filter((workflow: WorkflowType) => {
-        return workflow.teamId === team.id;
-      })
-      .sort(workflowSort);
-
-    return workflows;
-  };
-
-  const workflows = React.useMemo(
-    () => computed(() => getWorkflows()),
-    [teamIdentifier, team, workflowsStore.workflows.length],
-  ).get();
-
-  return workflows;
+  return workflowsStore.getWorkflowsForTeam(team.id);
 }
 
 export function useAllWorkflows(): WorkflowType[] | undefined {
@@ -87,6 +68,7 @@ export function useComputedWorkflows(): {
   workflows: WorkflowType[];
 } {
   const { workflowsStore } = useContextStore();
+  const workflows = Array.from(workflowsStore.workflows.values());
   const team = useCurrentTeam();
   const project = useProject();
 
@@ -97,7 +79,7 @@ export function useComputedWorkflows(): {
     > = {};
     const uniqueWorkflowsByName: Record<string, WorkflowType> = {};
 
-    workflowsStore.workflows
+    workflows
       .filter((workflow: WorkflowType) => {
         if (team) {
           return workflow.teamId === team.id;
@@ -139,9 +121,9 @@ export function useComputedWorkflows(): {
   };
 
   const { workflowMap, uniqueWorkflowsByName } = React.useMemo(
-    () => computed(() => getWorkflows()),
-    [workflowsStore, team],
-  ).get();
+    () => getWorkflows(),
+    [workflows.length, team?.id],
+  );
 
   return {
     workflowMap,

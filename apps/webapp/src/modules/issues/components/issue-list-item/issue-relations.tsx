@@ -27,10 +27,16 @@ interface IssueRelationsProps {
   issue: IssueType;
   currentView: View;
   setCurrentView: (view: View) => void;
+  changeHeight?: (issueCount?: number) => void;
 }
 
 export const IssueRelations = observer(
-  ({ issue, currentView, setCurrentView }: IssueRelationsProps) => {
+  ({
+    issue,
+    currentView,
+    setCurrentView,
+    changeHeight,
+  }: IssueRelationsProps) => {
     const { issueRelationsStore, issuesStore, workflowsStore, teamsStore } =
       useContextStore();
 
@@ -47,6 +53,7 @@ export const IssueRelations = observer(
       issue.id,
       IssueRelationEnum.BLOCKS,
     );
+
     const parentIssue = issuesStore.getIssueById(issue.parentId);
     const subIssues = issuesStore.getSubIssues(issue.id);
 
@@ -96,11 +103,13 @@ export const IssueRelations = observer(
       );
     }
 
-    function setView(view: View) {
+    function setView(view: View, issueCount: number) {
       if (currentView === view) {
         setCurrentView(undefined);
+        changeHeight(0);
       } else {
         setCurrentView(view);
+        changeHeight(issueCount);
       }
     }
 
@@ -110,7 +119,7 @@ export const IssueRelations = observer(
           className="flex gap-1 text-xs items-center"
           variant="secondary"
           size="sm"
-          onClick={() => setView(View.BLOCKED)}
+          onClick={() => setView(View.BLOCKED, blockedIssues.length)}
         >
           <BlockedFill className="h-4 w-4 text-red-500" />
           <div>Blocked by</div>
@@ -133,7 +142,7 @@ export const IssueRelations = observer(
           className="flex gap-1 text-xs items-center"
           variant="secondary"
           size="sm"
-          onClick={() => setView(View.BLOCKS)}
+          onClick={() => setView(View.BLOCKS, blocksIssues.length)}
         >
           <BlocksFill className="h-4 w-4 text-orange-500" />
           <div>Blocks</div>
@@ -156,7 +165,7 @@ export const IssueRelations = observer(
           className="flex gap-1 text-xs items-center"
           variant="secondary"
           size="sm"
-          onClick={() => setView(View.SUB_ISSUES)}
+          onClick={() => setView(View.SUB_ISSUES, subIssues.length)}
         >
           <SubIssue className="h-4 w-4" />
           <div>Sub-issue</div>
@@ -190,3 +199,4 @@ export const IssueRelations = observer(
     );
   },
 );
+IssueRelations.displayName = 'IssueRelations';

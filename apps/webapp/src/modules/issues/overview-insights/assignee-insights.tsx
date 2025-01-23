@@ -2,6 +2,7 @@ import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
 import { Loader } from '@tegonhq/ui/components/loader';
 import { AssigneeLine } from '@tegonhq/ui/icons';
+import { sort } from 'fast-sort';
 import { observer } from 'mobx-react-lite';
 
 import { groupBy } from 'common/lib/common';
@@ -25,9 +26,10 @@ export const AssigneeInsights = observer(
     const groupedByIssues = groupBy(issues, 'assigneeId');
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sortedUsers = (groupedByIssues.keys() as any)
+    const sortedUsers = sort(Array.from(groupedByIssues.keys()) as any)
+      .desc((key) => groupedByIssues.get(key)?.length ?? 0)
       .map((key: string) => users.find((user) => user.id === key))
-      .toArray()
+
       .filter(Boolean);
 
     if (isLoading) {

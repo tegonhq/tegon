@@ -17,6 +17,10 @@ export function generateOklchColor(): string {
 }
 
 export function getTailwindColor(name: string): string {
+  if (!name) {
+    return `var(--custom-color-1)`;
+  }
+
   // Generate a hash value for the input name
   let hash = 0;
   for (let i = 0; i < name.length; i++) {

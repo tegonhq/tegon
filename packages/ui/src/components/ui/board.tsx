@@ -33,6 +33,7 @@ export function Board({
     <Droppable
       droppableId="board"
       type="COLUMN"
+      mode="virtual"
       ignoreContainerClipping
       direction={direction}
       isCombineEnabled={isCombineEnabled}

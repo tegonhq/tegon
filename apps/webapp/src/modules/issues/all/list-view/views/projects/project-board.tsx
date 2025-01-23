@@ -22,11 +22,19 @@ export const ProjectBoard = observer(({ projects }: ProjectBoardProps) => {
   const onDragEnd = (result: DropResult) => {
     const issueId = result.draggableId;
 
+    if (!result.destination) {
+      return;
+    }
+
     const projectId = result.destination.droppableId;
     const issue = issuesStore.getIssueById(issueId);
 
     if (projectId !== issue.projectId) {
-      updateIssue({ id: issueId, projectId, teamId: issue.teamId });
+      updateIssue({
+        id: issueId,
+        projectId: projectId === 'no-user' ? null : projectId,
+        teamId: issue.teamId,
+      });
     }
   };
 

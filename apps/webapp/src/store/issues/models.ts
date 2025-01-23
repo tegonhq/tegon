@@ -22,6 +22,7 @@ export const Issue = types.model('Issue', {
   projectId: types.union(types.string, types.null, types.undefined),
   projectMilestoneId: types.union(types.string, types.null, types.undefined),
   sourceMetadata: types.union(types.string, types.null, types.undefined),
+  children: types.array(types.string),
 });
 
 export const IssuesMap = types.map(Issue);

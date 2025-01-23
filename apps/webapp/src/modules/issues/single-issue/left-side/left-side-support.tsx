@@ -26,7 +26,7 @@ export const LeftSideSupport = observer(() => {
     (workflow: WorkflowType) =>
       workflow.category === WorkflowCategoryEnum.TRIAGE,
   );
-  const isTriageView = issue.stateId === triageWorkflow.id;
+  const isTriageView = issue.stateId === triageWorkflow?.id;
 
   const { mutate: updateIssue } = useUpdateIssueMutation({});
 

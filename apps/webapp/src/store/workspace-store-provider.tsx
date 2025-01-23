@@ -43,23 +43,24 @@ export const WorkspaceStoreInit = observer(
     // All data related to workspace
     const initWorkspaceBasedStores = React.useCallback(async () => {
       await workspaceStore.load(currentWorkspace.id);
-      await labelsStore.load();
-      await teamsStore.load();
-      await cyclesStore.load();
-      await integrationAccountsStore.load();
-      await issuesStore.load();
       await workflowsStore.load();
-      await issueRelationsStore.load();
-      await notificationsStore.load();
-      await viewsStore.load();
-      await viewsStore.load();
-      await issueSuggestionsStore.load();
-      await actionsStore.load();
-      await projectsStore.load();
-      await projectMilestonesStore.load();
-      await conversationsStore.load();
-      await conversationHistoryStore.load();
-      await templatesStore.load();
+      await Promise.all([
+        labelsStore.load(),
+        teamsStore.load(),
+        cyclesStore.load(),
+        integrationAccountsStore.load(),
+        issuesStore.load(),
+        issueRelationsStore.load(),
+        notificationsStore.load(),
+        viewsStore.load(),
+        issueSuggestionsStore.load(),
+        actionsStore.load(),
+        projectsStore.load(),
+        projectMilestonesStore.load(),
+        conversationsStore.load(),
+        conversationHistoryStore.load(),
+        templatesStore.load(),
+      ]);
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentWorkspace.id]);
