@@ -14,87 +14,94 @@ import { Workflow } from './models';
 
 export const WorkflowsStore: IAnyStateTreeNode = types
   .model({
-    workflows: types.array(Workflow),
-    teamId: types.union(types.string, types.undefined),
+    workflows: types.map(Workflow),
+    workflowsByTeamId: types.map(types.array(types.string)),
   })
   .actions((self) => {
     const update = (workflow: WorkflowType, id: string) => {
-      const indexToUpdate = self.workflows.findIndex((obj) => obj.id === id);
+      // Update or add the workflow in the map
+      self.workflows.set(id, workflow);
 
-      if (indexToUpdate !== -1) {
-        // Update the object at the found index with the new data
-        self.workflows[indexToUpdate] = {
-          ...self.workflows[indexToUpdate],
-          ...workflow,
-          // TODO fix the any and have a type with Issuetype
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any;
-      } else {
-        self.workflows.push(workflow);
+      // Update the team index
+      const teamId = workflow.teamId;
+      const teamWorkflows: string[] = self.workflowsByTeamId.get(teamId) || [];
+      if (!teamWorkflows.includes(id)) {
+        self.workflowsByTeamId.set(teamId, [...teamWorkflows, id]);
       }
     };
 
     const deleteById = (id: string) => {
-      const indexToDelete = self.workflows.findIndex((obj) => obj.id === id);
-
-      if (indexToDelete !== -1) {
-        self.workflows.splice(indexToDelete, 1);
+      const workflow = self.workflows.get(id);
+      if (workflow) {
+        // Remove from team index
+        const teamId = workflow.teamId;
+        const teamWorkflows: string[] =
+          self.workflowsByTeamId.get(teamId) || [];
+        self.workflowsByTeamId.set(
+          teamId,
+          teamWorkflows.filter((wId) => wId !== id),
+        );
+        // Remove from workflows map
+        self.workflows.delete(id);
       }
     };
 
     const load = flow(function* () {
       const workflows = yield tegonDatabase.workflows.toArray();
 
-      self.workflows = workflows.map((workflow: WorkflowType) =>
-        Workflow.create(workflow),
-      );
+      // Clear existing data
+      self.workflows.clear();
+      self.workflowsByTeamId.clear();
+
+      // Populate both the map and team index
+      workflows.forEach((workflow: WorkflowType) => {
+        self.workflows.set(workflow.id, Workflow.create(workflow));
+        const teamWorkflows: string[] =
+          self.workflowsByTeamId.get(workflow.teamId) || [];
+        self.workflowsByTeamId.set(workflow.teamId, [
+          ...teamWorkflows,
+          workflow.id,
+        ]);
+      });
     });
 
     return { update, deleteById, load };
   })
   .views((self) => ({
     getWorkflowWithId(workflowId: string) {
-      return self.workflows.find(
-        (workflow: WorkflowType) => workflow.id === workflowId,
-      );
+      return self.workflows.get(workflowId);
     },
     getWorkflowsForTeam(teamId: string) {
-      return self.workflows.filter(
-        (workflow: WorkflowType) => workflow.teamId === teamId,
-      );
+      const workflowIds: string[] = self.workflowsByTeamId.get(teamId) || [];
+      return workflowIds.map((id) => self.workflows.get(id)).filter(Boolean);
     },
     getCancelledWorkflow(teamId: string) {
-      return self.workflows.find(
+      return Array.from(self.workflows.values()).find(
         (workflow: WorkflowType) =>
-          workflow.teamId === teamId && workflow.name === 'Canceled',
+          workflow.teamId === teamId &&
+          workflow.category === WorkflowCategoryEnum.CANCELED,
       );
     },
     getTriageWorkflow(teamId: string) {
-      return self.workflows.find(
+      return Array.from(self.workflows.values()).find(
         (workflow: WorkflowType) =>
           workflow.teamId === teamId &&
           workflow.category === WorkflowCategoryEnum.TRIAGE,
       );
     },
-    getWorkflowByNames(value: string[]) {
-      return value
-        .map((name: string) => {
-          const workflow = self.workflows.find(
-            (workflow: WorkflowType) =>
-              workflow.name.toLowerCase() === name.toLowerCase(),
-          );
-
-          return workflow?.id;
-        })
-        .filter(Boolean);
+    getWorkflowByNames(names: string[]) {
+      const normalizedNames = names.map((name) => name.toLowerCase());
+      return Array.from(self.workflows.values())
+        .filter((workflow: WorkflowType) =>
+          normalizedNames.includes(workflow.name.toLowerCase()),
+        )
+        .map((workflow) => workflow.id);
     },
     getPositionForCategory(category: WorkflowCategoryEnum, teamId: string) {
-      const workflows = self.workflows.filter(
+      return Array.from(self.workflows.values()).filter(
         (workflow: WorkflowType) =>
           workflow.category === category && workflow.teamId === teamId,
-      );
-
-      return workflows.length;
+      ).length;
     },
   }));
 

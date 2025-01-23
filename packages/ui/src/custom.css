@@ -70,3 +70,7 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
 .command-item[data-selected='true'] .checkbox {
   border-color: oklch(0% 0 0 / 19.22%);
 }
+
+.ReactVirtualized__Grid__innerScrollContainer {
+  margin-bottom: 200px;
+}

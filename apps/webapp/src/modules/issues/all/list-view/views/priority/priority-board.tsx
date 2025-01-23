@@ -19,6 +19,10 @@ export const PriorityBoard = observer(() => {
   const onDragEnd = (result: DropResult) => {
     const issueId = result.draggableId;
 
+    if (!result.destination) {
+      return;
+    }
+
     const priority = result.destination.droppableId;
     const issue = issuesStore.getIssueById(issueId);
 
@@ -31,10 +35,12 @@ export const PriorityBoard = observer(() => {
     }
   };
 
+  const reorderedPriorities = Priorities.filter((p) => p !== '').concat(['']);
+
   return (
     <Board onDragEnd={onDragEnd} className="pl-4">
       <>
-        {Priorities.map((priority: string) => {
+        {reorderedPriorities.map((priority: string) => {
           return (
             <PriorityBoardList
               key={priority}

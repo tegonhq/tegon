@@ -1,25 +1,25 @@
 import { WorkflowCategoryEnum } from '@tegonhq/types';
-import { observer } from 'mobx-react-lite';
-import * as React from 'react';
 
 import { workflowSort } from 'common/sorting';
-import { type WorkflowType } from 'common/types';
+import { ViewEnum, type IssueType, type WorkflowType } from 'common/types';
 
 import { useComputedWorkflows } from 'hooks/workflows';
 
-import { TimeBasedFilterEnum, ViewEnum } from 'store/application';
+import { TimeBasedFilterEnum } from 'store/application';
 import { useContextStore } from 'store/global-context-provider';
 
-import { CategoryBoard } from './category-board';
-import { CategoryList } from './category-list';
+import { getIssueRows } from '../../list-view-utils';
 
-export const CategoryView = observer(() => {
+export const useIssueRowsCategory = (issues: IssueType[]) => {
+  const { workflows: computedWorkflows } = useComputedWorkflows();
+
   const {
     applicationStore: {
-      displaySettings: { completedFilter, view },
+      displaySettings: { completedFilter, view, showEmptyGroups },
     },
+    issuesStore,
+    issueRelationsStore,
   } = useContextStore();
-
   const categorySequence =
     view === ViewEnum.list
       ? [
@@ -43,7 +43,6 @@ export const CategoryView = observer(() => {
     return workflowSort(a, b, categorySequence);
   };
 
-  const { workflows: computedWorkflows } = useComputedWorkflows();
   const workflows = computedWorkflows
     .filter((workflow: WorkflowType) => {
       if (
@@ -57,9 +56,12 @@ export const CategoryView = observer(() => {
     })
     .sort(sorting);
 
-  return view === ViewEnum.list ? (
-    <CategoryList />
-  ) : (
-    <CategoryBoard workflows={workflows} />
+  return getIssueRows(
+    issues,
+    'stateId',
+    workflows.map((workflow) => workflow.id),
+    showEmptyGroups,
+    issuesStore,
+    issueRelationsStore,
   );
-});
+};

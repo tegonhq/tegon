@@ -90,6 +90,7 @@ export function BootstrapWrapper({ children }: Props) {
     userId: user.id,
     onSuccess: async (data: BootstrapResponse) => {
       await saveSocketData(data.syncActions, MODEL_STORE_MAP);
+
       localStorage.setItem(
         `lastSequenceId_${hash(hashKey)}`,
         `${data.lastSequenceId}`,

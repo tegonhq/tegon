@@ -25,8 +25,13 @@ export const CategoryBoard = observer(({ workflows }: CategoryBoardProps) => {
   const onDragEnd = (result: DropResult) => {
     const issueId = result.draggableId;
 
+    if (!result.destination) {
+      return;
+    }
+
     const workflowName = result.destination.droppableId;
     const issue = issuesStore.getIssueById(issueId);
+
     const workflowIds = workflows.find(
       (workflow) => workflow.name === workflowName,
     ).ids;

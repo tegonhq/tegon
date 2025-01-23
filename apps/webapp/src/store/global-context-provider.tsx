@@ -59,8 +59,7 @@ export const storeContextStore = StoreContextModel.create({
     teamId: undefined,
   },
   workflowsStore: {
-    workflows: [],
-    teamId: undefined,
+    workflows: {},
   },
   labelsStore: {
     labels: [],
@@ -90,8 +89,7 @@ export const storeContextStore = StoreContextModel.create({
     issueId: undefined,
   },
   issueRelationsStore: {
-    issueRelations: [],
-    issueId: undefined,
+    issueRelations: {},
   },
   notificationsStore: {
     notifications: [],

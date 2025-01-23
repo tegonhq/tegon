@@ -1,7 +1,10 @@
 import {
   Draggable,
+  Droppable,
   type DraggableProvided,
   type DraggableStateSnapshot,
+  type DroppableProvided,
+  type DroppableStateSnapshot,
 } from '@hello-pangea/dnd';
 import { BoardColumn, BoardItem } from '@tegonhq/ui/components/board';
 import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
@@ -12,7 +15,6 @@ import React from 'react';
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
 import type { TeamType } from 'common/types';
-import type { IssueType } from 'common/types';
 
 import { useProject } from 'hooks/projects';
 import { useComputedWorkflows } from 'hooks/workflows';
@@ -20,6 +22,14 @@ import { useComputedWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
+import {
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+  List,
+  type ListRowProps,
+} from 'react-virtualized';
+import ReactDOM from 'react-dom';
 
 interface TeamBoardListProps {
   team: TeamType;
@@ -43,43 +53,116 @@ export const TeamBoardList = observer(({ team }: TeamBoardListProps) => {
   ) {
     return null;
   }
+
+  // Create a CellMeasurerCache instance
+  const cache = new CellMeasurerCache({
+    defaultHeight: 100, // Default row height
+    fixedWidth: true, // Rows have fixed width but dynamic height
+  });
+
+  const rowRender = ({ index, style, key, parent }: ListRowProps) => {
+    const issue = computedIssues[index];
+
+    if (!issue) {
+      return null;
+    }
+
+    return (
+      <Draggable key={issue.id} draggableId={issue.id} index={index}>
+        {(
+          dragProvided: DraggableProvided,
+          dragSnapshot: DraggableStateSnapshot,
+        ) => (
+          <CellMeasurer
+            key={key}
+            cache={cache}
+            columnIndex={0}
+            parent={parent}
+            rowIndex={index}
+          >
+            <div style={style} key={key}>
+              <BoardIssueItem
+                issueId={issue.id}
+                isDragging={dragSnapshot.isDragging}
+                provided={dragProvided}
+                key={key}
+              />
+            </div>
+          </CellMeasurer>
+        )}
+      </Draggable>
+    );
+  };
+
   return (
-    <BoardColumn key={team.id} id={team.id}>
-      <div className="flex flex-col max-h-[100%]">
-        <div className="flex gap-1 items-center mb-2">
-          <div className="inline-flex items-center w-fit h-8 rounded-2xl px-4 py-2 gap-1 min-w-[0px] bg-grayAlpha-100">
-            <TeamIcon name={team.name} />
-            <div className="truncate"> {team.name}</div>
-          </div>
+    <Droppable
+      droppableId={team.id}
+      type="BoardColumn"
+      mode="virtual"
+      ignoreContainerClipping
+      renderClone={(provided, snapshot) => {
+        return (
+          <BoardIssueItem
+            issueId={provided.draggableProps['data-rfd-draggable-id']}
+            isDragging={snapshot.isDragging}
+            provided={provided}
+          />
+        );
+      }}
+    >
+      {(
+        droppableProvided: DroppableProvided,
+        snapshot: DroppableStateSnapshot,
+      ) => {
+        const itemCount: number = snapshot.isUsingPlaceholder
+          ? issues.length + 1
+          : issues.length;
 
-          <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
-            {computedIssues.length}
-          </div>
-        </div>
+        return (
+          <div className="flex flex-col max-h-[100%] w-[350px]">
+            <div className="flex gap-1 items-center mb-2 w-[310px]">
+              <div className="inline-flex items-center w-fit h-8 rounded-2xl px-4 py-2 gap-1 min-w-[0px] bg-grayAlpha-100">
+                <TeamIcon name={team.name} />
+                <div className="truncate"> {team.name}</div>
+              </div>
 
-        <ScrollArea className="pr-3 mr-2" id="team-board-list">
-          <div className="flex flex-col gap-3 grow pb-10 pt-2">
-            {computedIssues.map((issue: IssueType, index: number) => (
-              <BoardItem key={issue.id} id={issue.id}>
-                <Draggable key={issue.id} draggableId={issue.id} index={index}>
-                  {(
-                    dragProvided: DraggableProvided,
-                    dragSnapshot: DraggableStateSnapshot,
-                  ) => {
-                    return (
-                      <BoardIssueItem
-                        issueId={issue.id}
-                        isDragging={dragSnapshot.isDragging}
-                        provided={dragProvided}
-                      />
-                    );
-                  }}
-                </Draggable>
-              </BoardItem>
-            ))}
+              <div className="rounded-2xl bg-grayAlpha-100 p-1.5 px-2 font-mono">
+                {computedIssues.length}
+              </div>
+            </div>
+
+            <div className="flex flex-col grow mr-3">
+              <AutoSizer className="pb-10 h-full">
+                {({ width, height }) => (
+                  <List
+                    ref={(ref) => {
+                      // react-virtualized has no way to get the list's ref that I can so
+                      // So we use the `ReactDOM.findDOMNode(ref)` escape hatch to get the ref
+                      if (ref) {
+                        // eslint-disable-next-line react/no-find-dom-node
+                        const whatHasMyLifeComeTo = ReactDOM.findDOMNode(ref);
+                        if (whatHasMyLifeComeTo instanceof HTMLElement) {
+                          droppableProvided.innerRef(whatHasMyLifeComeTo);
+                        }
+                      }
+                    }}
+                    height={height}
+                    overscanRowCount={10}
+                    noRowsRenderer={() => <></>}
+                    width={width}
+                    rowCount={itemCount}
+                    outerRef={droppableProvided.innerRef}
+                    rowHeight={cache.rowHeight}
+                    deferredMeasurementCache={cache}
+                    rowRenderer={rowRender}
+                    shallowCompare
+                  />
+                )}
+              </AutoSizer>
+            </div>
           </div>
-        </ScrollArea>
-      </div>
-    </BoardColumn>
+        );
+      }}
+    </Droppable>
   );
 });
