@@ -26,6 +26,7 @@ import { OverviewInsights } from '../overview-insights';
 
 export const AllIssues = withApplicationStore(() => {
   useScope(SCOPES.AllIssues);
+
   const team = useCurrentTeam();
   const [overview, setOverview] = useLocalState('insightsSidebar', false);
 

@@ -46,7 +46,7 @@ export const IssueStoreInit = ({ children }: { children: React.ReactNode }) => {
   }, [issueId]);
 
   if (loading) {
-    return <Loader text="Issue information" />;
+    return <Loader height={500} text="Loading issue details..." />;
   }
 
   return <>{children}</>;

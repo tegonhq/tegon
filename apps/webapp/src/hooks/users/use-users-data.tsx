@@ -13,7 +13,6 @@ import { useContextStore } from 'store/global-context-provider';
 
 export function useUsersData(bot = true, teamId?: string) {
   const { workspaceStore } = useContextStore();
-  const [users, setUsers] = React.useState([]);
   const currentTeam = useCurrentTeam();
   const teamWithId = useTeamWithId(teamId);
   const team = teamWithId ? teamWithId : currentTeam;
@@ -21,12 +20,7 @@ export function useUsersData(bot = true, teamId?: string) {
 
   const { data: usersData, isLoading } = useGetUsersQuery();
 
-  React.useEffect(() => {
-    getUsers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bot, usersData, team?.id, project?.teams]);
-
-  const getUsers = () => {
+  const users = React.useMemo(() => {
     // Memoize the usersOnWorkspace map for O(1) lookup
     const usersOnWorkspaceMap = workspaceStore.usersOnWorkspaces.reduce(
       (acc: Record<string, UsersOnWorkspaceType>, u: UsersOnWorkspaceType) => {
@@ -37,7 +31,7 @@ export function useUsersData(bot = true, teamId?: string) {
     );
 
     if (!usersData) {
-      return;
+      return [];
     }
 
     // Pre-calculate team IDs to check against
@@ -63,8 +57,9 @@ export function useUsersData(bot = true, teamId?: string) {
       return uOW.teamIds.some((id: string) => validTeamIds.has(id));
     });
 
-    setUsers(users);
-  };
+    return users;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bot, usersData, team?.id, project?.teams]);
 
   return {
     isLoading,
