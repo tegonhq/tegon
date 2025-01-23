@@ -6,15 +6,21 @@ import {
   type DroppableProvided,
   type DroppableStateSnapshot,
 } from '@hello-pangea/dnd';
-import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { Project } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import ReactDOM from 'react-dom';
+import {
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+  List,
+  type ListRowProps,
+} from 'react-virtualized';
 
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
 import type { ProjectType } from 'common/types';
-import type { IssueType } from 'common/types';
 
 import { useCycle } from 'hooks/cycles';
 import { useCurrentTeam } from 'hooks/teams';
@@ -23,14 +29,6 @@ import { useComputedWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import {
-  AutoSizer,
-  CellMeasurer,
-  CellMeasurerCache,
-  List,
-  type ListRowProps,
-} from 'react-virtualized';
-import ReactDOM from 'react-dom';
 
 interface ProjectBoardListProps {
   project: ProjectType;

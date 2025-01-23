@@ -1,9 +1,10 @@
+import { sort } from 'fast-sort';
+
 import { type IssueType, type TeamType } from 'common/types';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { getIssueRows } from '../../list-view-utils';
-import { sort } from 'fast-sort';
 
 export const useIssueRowsTeam = (issues: IssueType[], teams: TeamType[]) => {
   const {

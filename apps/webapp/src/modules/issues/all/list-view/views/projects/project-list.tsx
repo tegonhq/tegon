@@ -1,4 +1,5 @@
 import { Button } from '@tegonhq/ui/components/button';
+import { Project } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -13,6 +14,8 @@ import {
 import { IssueListItem } from 'modules/issues/components';
 import { useFilterIssues } from 'modules/issues/issues-utils';
 
+import type { ProjectType } from 'common/types';
+
 import { ScrollManagedList } from 'components/scroll-managed-list';
 import { useCycle } from 'hooks/cycles';
 import { useProject } from 'hooks/projects';
@@ -22,8 +25,6 @@ import { useComputedWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useIssueRowsProject } from './utils';
-import type { ProjectType } from 'common/types';
-import { Project } from '@tegonhq/ui/icons';
 
 interface ProjectListProps {
   projects: ProjectType[];

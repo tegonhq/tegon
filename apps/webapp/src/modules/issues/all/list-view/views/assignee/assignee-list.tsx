@@ -1,5 +1,6 @@
 import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { Button } from '@tegonhq/ui/components/button';
+import { AssigneeLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -25,7 +26,6 @@ import { useComputedWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useIssueRowsAssignee } from './utils';
-import { AssigneeLine } from '@tegonhq/ui/icons';
 
 interface AssigneeListProps {
   users: User[];

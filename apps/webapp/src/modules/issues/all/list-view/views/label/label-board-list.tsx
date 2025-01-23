@@ -7,13 +7,18 @@ import {
   type DroppableStateSnapshot,
 } from '@hello-pangea/dnd';
 import { BadgeColor } from '@tegonhq/ui/components/badge';
-import { BoardColumn, BoardItem } from '@tegonhq/ui/components/board';
-import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import ReactDOM from 'react-dom';
+import {
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+  List,
+  type ListRowProps,
+} from 'react-virtualized';
 
 import type { LabelType } from 'common/types';
-import type { IssueType } from 'common/types';
 
 import { useCycle } from 'hooks/cycles';
 import { useProject } from 'hooks/projects';
@@ -24,14 +29,6 @@ import { useContextStore } from 'store/global-context-provider';
 
 import { BoardIssueItem } from '../../../../components/issue-board-item/issue-board-item';
 import { useFilterIssues } from '../../../../issues-utils';
-import {
-  AutoSizer,
-  CellMeasurer,
-  CellMeasurerCache,
-  List,
-  type ListRowProps,
-} from 'react-virtualized';
-import ReactDOM from 'react-dom';
 
 interface LabelBoardItemProps {
   label: LabelType;

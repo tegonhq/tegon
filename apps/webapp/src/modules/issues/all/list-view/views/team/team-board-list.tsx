@@ -6,11 +6,17 @@ import {
   type DroppableProvided,
   type DroppableStateSnapshot,
 } from '@hello-pangea/dnd';
-import { BoardColumn, BoardItem } from '@tegonhq/ui/components/board';
-import { ScrollArea } from '@tegonhq/ui/components/scroll-area';
 import { TeamIcon } from '@tegonhq/ui/components/team-icon';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import ReactDOM from 'react-dom';
+import {
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+  List,
+  type ListRowProps,
+} from 'react-virtualized';
 
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
@@ -22,14 +28,6 @@ import { useComputedWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import {
-  AutoSizer,
-  CellMeasurer,
-  CellMeasurerCache,
-  List,
-  type ListRowProps,
-} from 'react-virtualized';
-import ReactDOM from 'react-dom';
 
 interface TeamBoardListProps {
   team: TeamType;
