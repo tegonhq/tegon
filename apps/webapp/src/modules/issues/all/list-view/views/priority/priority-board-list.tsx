@@ -8,6 +8,14 @@ import {
 } from '@hello-pangea/dnd';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import ReactDOM from 'react-dom';
+import {
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+  List,
+  type ListRowProps,
+} from 'react-virtualized';
 
 import { PriorityIcons } from 'modules/issues/components';
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
@@ -21,14 +29,6 @@ import { useComputedWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import {
-  AutoSizer,
-  CellMeasurer,
-  CellMeasurerCache,
-  List,
-  type ListRowProps,
-} from 'react-virtualized';
-import ReactDOM from 'react-dom';
 
 interface PriorityBoardListProps {
   priority: number;

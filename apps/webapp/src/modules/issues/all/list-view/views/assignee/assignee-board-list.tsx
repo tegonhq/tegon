@@ -10,6 +10,14 @@ import { AvatarText } from '@tegonhq/ui/components/avatar';
 import { AssigneeLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
+import ReactDOM from 'react-dom';
+import {
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+  List,
+  type ListRowProps,
+} from 'react-virtualized';
 
 import { BoardIssueItem } from 'modules/issues/components/issue-board-item';
 
@@ -23,14 +31,6 @@ import { useComputedWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useFilterIssues } from '../../../../issues-utils';
-import {
-  AutoSizer,
-  CellMeasurer,
-  CellMeasurerCache,
-  List,
-  type ListRowProps,
-} from 'react-virtualized';
-import ReactDOM from 'react-dom';
 
 interface AssigneeBoardListProps {
   user: User;

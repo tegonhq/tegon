@@ -13,11 +13,9 @@ import {
 import { IssueListItem, PriorityIcons } from 'modules/issues/components';
 import { useFilterIssues } from 'modules/issues/issues-utils';
 
-import { getWorkflowColor } from 'common/status-color';
-import { getWorkflowIcon } from 'common/workflow-icons';
-
 import { ScrollManagedList } from 'components/scroll-managed-list';
 import { useCycle } from 'hooks/cycles';
+import { usePriorities } from 'hooks/priorities';
 import { useProject } from 'hooks/projects';
 import { useCurrentTeam } from 'hooks/teams';
 import { useComputedWorkflows } from 'hooks/workflows';
@@ -25,7 +23,6 @@ import { useComputedWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useIssueRowsPriority } from './utils';
-import { usePriorities } from 'hooks/priorities';
 
 export const PriorityList = observer(() => {
   const project = useProject();

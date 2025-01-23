@@ -1,5 +1,6 @@
-import type { SyncActionRecord } from 'common/types';
 import { runInAction } from 'mobx';
+
+import type { SyncActionRecord } from 'common/types';
 
 import { saveActionData } from 'store/action';
 import { saveCommentsData } from 'store/comments';
@@ -31,149 +32,62 @@ export async function saveSocketData(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   MODEL_STORE_MAP: Record<string, any>,
 ) {
-  return await runInAction(async () => {
-    await Promise.all(
-      data.map(async (record: SyncActionRecord) => {
-        switch (record.modelName) {
-          case MODELS.Label: {
-            return await saveLabelData([record], MODEL_STORE_MAP[MODELS.Label]);
-          }
+  return runInAction(async () => {
+    // Pre-initialize the accumulator object with known model names
+    const groupedRecords: Record<string, SyncActionRecord[]> = Object.values(
+      MODELS,
+    ).reduce(
+      (acc, model) => {
+        acc[model] = [];
+        return acc;
+      },
+      {} as Record<string, SyncActionRecord[]>,
+    );
 
-          case MODELS.Team: {
-            return await saveTeamData([record], MODEL_STORE_MAP[MODELS.Team]);
-          }
+    // Use for...of instead of reduce for better performance with large arrays
+    for (const record of data) {
+      if (groupedRecords[record.modelName]) {
+        groupedRecords[record.modelName].push(record);
+      }
+    }
 
-          case MODELS.Workflow: {
-            return await saveWorkflowData(
-              [record],
-              MODEL_STORE_MAP[MODELS.Workflow],
-            );
-          }
+    // Create a map of model names to their save functions to avoid switch statement
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    const saveHandlers: Record<string, Function> = {
+      [MODELS.Label]: saveLabelData,
+      [MODELS.Team]: saveTeamData,
+      [MODELS.Workflow]: saveWorkflowData,
+      [MODELS.Workspace]: saveWorkspaceData,
+      [MODELS.UsersOnWorkspaces]: saveWorkspaceData,
+      [MODELS.Issue]: saveIssuesData,
+      [MODELS.IssueHistory]: saveIssueHistoryData,
+      [MODELS.IssueComment]: saveCommentsData,
+      [MODELS.IntegrationAccount]: saveIntegrationAccountData,
+      [MODELS.LinkedIssue]: saveLinkedIssueData,
+      [MODELS.IssueRelation]: saveIssueRelationData,
+      [MODELS.Notification]: saveNotificationData,
+      [MODELS.View]: saveViewData,
+      [MODELS.IssueSuggestion]: saveIssueSuggestionData,
+      [MODELS.Action]: saveActionData,
+      [MODELS.Project]: saveProjectData,
+      [MODELS.ProjectMilestone]: saveProjectMilestoneData,
+      [MODELS.Cycle]: saveCyclesData,
+      [MODELS.Conversation]: saveConversationData,
+      [MODELS.ConversationHistory]: saveConversationHistorytData,
+      [MODELS.Template]: saveTemplateData,
+    };
 
-          case MODELS.Workspace: {
-            return await saveWorkspaceData(
-              [record],
-              MODEL_STORE_MAP[MODELS.Workspace],
-            );
+    // Process records using the handler map
+    return Promise.all(
+      Object.entries(groupedRecords)
+        .map(([modelName, records]) => {
+          if (records.length === 0) {
+            return null;
           }
-
-          case MODELS.Issue: {
-            return await saveIssuesData(
-              [record],
-              MODEL_STORE_MAP[MODELS.Issue],
-            );
-          }
-
-          case MODELS.UsersOnWorkspaces: {
-            return await saveWorkspaceData(
-              [record],
-              MODEL_STORE_MAP[MODELS.UsersOnWorkspaces],
-            );
-          }
-
-          case MODELS.IssueHistory: {
-            return await saveIssueHistoryData(
-              [record],
-              MODEL_STORE_MAP[MODELS.IssueHistory],
-            );
-          }
-
-          case MODELS.IssueComment: {
-            return await saveCommentsData(
-              [record],
-              MODEL_STORE_MAP[MODELS.IssueComment],
-            );
-          }
-
-          case MODELS.IntegrationAccount: {
-            return await saveIntegrationAccountData(
-              [record],
-              MODEL_STORE_MAP[MODELS.IntegrationAccount],
-            );
-          }
-
-          case MODELS.LinkedIssue: {
-            return await saveLinkedIssueData(
-              [record],
-              MODEL_STORE_MAP[MODELS.LinkedIssue],
-            );
-          }
-
-          case MODELS.IssueRelation: {
-            return await saveIssueRelationData(
-              [record],
-              MODEL_STORE_MAP[MODELS.IssueRelation],
-            );
-          }
-
-          case MODELS.Notification: {
-            return await saveNotificationData(
-              [record],
-              MODEL_STORE_MAP[MODELS.Notification],
-            );
-          }
-
-          case MODELS.View: {
-            return await saveViewData([record], MODEL_STORE_MAP[MODELS.View]);
-          }
-
-          case MODELS.IssueSuggestion: {
-            return await saveIssueSuggestionData(
-              [record],
-              MODEL_STORE_MAP[MODELS.IssueSuggestion],
-            );
-          }
-
-          case MODELS.Action: {
-            return await saveActionData(
-              [record],
-              MODEL_STORE_MAP[MODELS.Action],
-            );
-          }
-
-          case MODELS.Project: {
-            return await saveProjectData(
-              [record],
-              MODEL_STORE_MAP[MODELS.Project],
-            );
-          }
-
-          case MODELS.ProjectMilestone: {
-            return await saveProjectMilestoneData(
-              [record],
-              MODEL_STORE_MAP[MODELS.ProjectMilestone],
-            );
-          }
-
-          case MODELS.Cycle: {
-            return await saveCyclesData(
-              [record],
-              MODEL_STORE_MAP[MODELS.Cycle],
-            );
-          }
-
-          case MODELS.Conversation: {
-            return await saveConversationData(
-              [record],
-              MODEL_STORE_MAP[MODELS.Conversation],
-            );
-          }
-
-          case MODELS.ConversationHistory: {
-            return await saveConversationHistorytData(
-              [record],
-              MODEL_STORE_MAP[MODELS.ConversationHistory],
-            );
-          }
-
-          case MODELS.Template: {
-            return await saveTemplateData(
-              [record],
-              MODEL_STORE_MAP[MODELS.Template],
-            );
-          }
-        }
-      }),
+          const handler = saveHandlers[modelName];
+          return handler ? handler(records, MODEL_STORE_MAP[modelName]) : null;
+        })
+        .filter(Boolean),
     );
   });
 }

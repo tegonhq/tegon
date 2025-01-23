@@ -5,13 +5,13 @@ import { observer } from 'mobx-react-lite';
 
 import type { LabelType } from 'common/types';
 
+import { useComputedLabels } from 'hooks/labels';
+
 import { useUpdateIssueMutation } from 'services/issues';
 
 import { useContextStore } from 'store/global-context-provider';
 
 import { LabelBoardList, NoLabelBoardList } from './label-board-list';
-import { useComputedWorkflows } from 'hooks/workflows';
-import { useComputedLabels } from 'hooks/labels';
 
 interface LabelBoardProps {
   labels: LabelType[];
@@ -41,6 +41,7 @@ function updateOrAddID(idsArray: string[], idToUpdate: string, newID: string) {
 
 const getLabelId = (
   labelName: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   labelMap: any,
   labels: LabelType[],
   teamId: string,

@@ -1,4 +1,5 @@
 import { Button } from '@tegonhq/ui/components/button';
+import { TeamIcon } from '@tegonhq/ui/components/team-icon';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -13,8 +14,7 @@ import {
 import { IssueListItem } from 'modules/issues/components';
 import { useFilterIssues } from 'modules/issues/issues-utils';
 
-import { getWorkflowColor } from 'common/status-color';
-import { getWorkflowIcon } from 'common/workflow-icons';
+import type { TeamType } from 'common/types';
 
 import { ScrollManagedList } from 'components/scroll-managed-list';
 import { useCycle } from 'hooks/cycles';
@@ -25,8 +25,6 @@ import { useComputedWorkflows } from 'hooks/workflows';
 import { useContextStore } from 'store/global-context-provider';
 
 import { useIssueRowsTeam } from './utils';
-import type { TeamType } from 'common/types';
-import { TeamIcon } from '@tegonhq/ui/components/team-icon';
 
 interface TeamListProps {
   teams: TeamType[];
