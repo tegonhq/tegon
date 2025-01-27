@@ -292,6 +292,7 @@ export async function getUnassingedNotification(
 export interface IssueMetadata extends Issue {
   assignee?: string;
   state?: string;
+  stateCagegory?: string;
   teamName?: string;
 }
 
@@ -317,6 +318,7 @@ export async function getIssueMetadata(
     ...issue,
     assignee,
     state: state?.name ?? 'No State',
+    stateCagegory: state?.category ?? '',
     teamName: team?.name ?? 'No Team',
   };
 }

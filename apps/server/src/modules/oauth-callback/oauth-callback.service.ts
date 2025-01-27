@@ -323,4 +323,51 @@ export class OAuthCallbackService {
       `${sessionRecord.redirectURL}?success=true&integrationName=${integrationDefinition.name}${accountIdentifier}${integrationKeys}`,
     );
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async whatsappCallbackHAndler(params: CallbackParams, res: any) {
+    if (!params.state) {
+      throw new BadRequestException({
+        error: 'No state found',
+      });
+    }
+
+    const sessionRecord = this.session[params.state];
+
+    /**
+     * Delete the session once it's used
+     */
+    delete this.session[params.state];
+    const integrationDefinition =
+      await this.integrationDefinitionService.getIntegrationDefinitionWithId({
+        integrationDefinitionId: sessionRecord.integrationDefinitionId,
+      });
+
+    const payload: IntegrationEventPayload = {
+      event: IntegrationPayloadEventType.CREATE,
+      userId: sessionRecord.userId,
+      workspaceId: sessionRecord.workspaceId,
+      data: {
+        integrationDefinition,
+        personal: sessionRecord.personal,
+        accountId: params.clientId,
+      },
+    };
+
+    await this.integrations.loadIntegration(
+      integrationDefinition.slug,
+      payload,
+    );
+
+    const accountIdentifier = sessionRecord.accountIdentifier
+      ? `&accountIdentifier=${sessionRecord.accountIdentifier}`
+      : '';
+    const integrationKeys = sessionRecord.integrationKeys
+      ? `&integrationKeys=${sessionRecord.integrationKeys}`
+      : '';
+
+    res.redirect(
+      `${sessionRecord.redirectURL}?success=true&integrationName=${integrationDefinition.name}${accountIdentifier}${integrationKeys}`,
+    );
+  }
 }

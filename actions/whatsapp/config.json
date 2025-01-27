@@ -1,0 +1,21 @@
+{
+  "slug": "whatsapp",
+  "name": "Whatsapp",
+  "icon": "whatsapp",
+  "description": "Create issues from WhatsApp messages and sync conversations",
+  "triggers": [
+    {
+      "type": "on_create",
+      "entities": ["IssueComment"]
+    },
+    {
+      "type": "source_webhook",
+      "entities": ["whatsapp"]
+    },
+    {
+      "type": "on_update",
+      "entities": ["LinkedIssue"]
+    }
+  ],
+  "integrations": ["whatsapp"]
+}
