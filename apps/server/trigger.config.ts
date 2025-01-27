@@ -16,6 +16,7 @@ export const resolveEnvVars: ResolveEnvironmentVariablesFunction = async ({
       SMTP_PORT: env.SMTP_PORT,
       SMTP_USER: env.SMTP_USER,
       SMTP_PASSWORD: env.SMTP_PASSWORD,
+      GCP_SERVICE_ACCOUNT: env.GCP_SERVICE_ACCOUNT,
     },
   };
 };

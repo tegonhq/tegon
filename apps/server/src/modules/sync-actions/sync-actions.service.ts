@@ -64,7 +64,6 @@ export default class SyncActionsService {
       },
       distinct: ['modelId'],
     });
-
     const deleteModelIds = new Set(
       syncActions
         .filter((action) => action.action === 'D')

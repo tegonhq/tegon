@@ -53,7 +53,7 @@ export default class LinkedIssueService {
 
   async getLinkedIssueBySourceId(sourceId: string): Promise<LinkedIssue[]> {
     return this.prisma.linkedIssue.findMany({
-      where: { sourceId, deleted: null },
+      where: { sourceId: { contains: sourceId }, deleted: null },
       include: { issue: true },
     });
   }
