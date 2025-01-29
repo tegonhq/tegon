@@ -54,7 +54,8 @@
     "TRIGGER_TOKEN",
     "TRIGGER_ACCESS_TOKEN",
     "TRIGGER_API_URL",
-    "OLLAMA_HOST"
+    "OLLAMA_HOST",
+    "APOLLO_API_KEY"
   ],
   "ui": "tui",
   "tasks": {
