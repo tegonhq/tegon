@@ -87,9 +87,8 @@ export const IssueRelationsStore: IAnyStateTreeNode = types
         }
 
         const relationTypeMap = self.indexByIssueId.get(issueRelation.issueId);
-        if (!relationTypeMap.has(issueRelation.type)) {
-          relationTypeMap.set(issueRelation.type, []);
-        }
+
+        relationTypeMap.set(issueRelation.type, []);
         relationTypeMap.get(issueRelation.type).push(issueRelation.id);
       });
     });

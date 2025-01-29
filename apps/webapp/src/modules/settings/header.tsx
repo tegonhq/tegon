@@ -23,8 +23,8 @@ export const Header = observer(({ title }: HeaderProps) => {
   const team = useCurrentTeam();
 
   return (
-    <header className="flex px-4 w-full items-center gap-2">
-      <div className="flex gap-2 py-3 items-center h-[48px]">
+    <header className="flex px-2 w-full items-center gap-2 border-b border-border">
+      <div className="flex gap-2 py-2 items-center h-[38px]">
         <SidebarExpand />
 
         <Breadcrumb>

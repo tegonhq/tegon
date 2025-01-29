@@ -61,6 +61,9 @@ export const AssigneeList = observer(({ users }: AssigneeListProps) => {
   }, [rows]);
 
   const getHeaderRow = (row: { type: string; key: string }, index: number) => {
+    if (!row) {
+      return null;
+    }
     let childContent;
 
     if (row.key === 'no-value') {
@@ -102,7 +105,9 @@ export const AssigneeList = observer(({ users }: AssigneeListProps) => {
 
   const rowRender = ({ index, style, key, parent }: ListRowProps) => {
     const row = rows[index];
-
+    if (!row) {
+      return null;
+    }
     return (
       <CellMeasurer
         key={key}
@@ -139,7 +144,7 @@ export const AssigneeList = observer(({ users }: AssigneeListProps) => {
   };
 
   return (
-    <AutoSizer className="pb-10 h-full">
+    <AutoSizer className="h-full">
       {({ width, height }) => (
         <ScrollManagedList
           className=""
@@ -147,7 +152,7 @@ export const AssigneeList = observer(({ users }: AssigneeListProps) => {
           height={height}
           overscanRowCount={10}
           noRowsRenderer={() => <></>}
-          rowCount={rows.length}
+          rowCount={rows.length + 2}
           rowHeight={rowHeight}
           deferredMeasurementCache={cache}
           rowRenderer={rowRender}

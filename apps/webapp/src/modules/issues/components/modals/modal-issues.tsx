@@ -1,12 +1,11 @@
 import { CommandItem } from '@tegonhq/ui/components/command';
 import { observer } from 'mobx-react-lite';
-import { useRouter } from 'next/router';
 import React from 'react';
 
 import { IssueRelationEnum } from 'common/types';
 import type { IssueType } from 'common/types';
 
-import { useCurrentTeam } from 'hooks/teams';
+import { useIssueData } from 'hooks/issues';
 
 import { useUpdateIssueMutation } from 'services/issues';
 
@@ -22,11 +21,8 @@ interface ModalIssuesProps {
 
 export const ModalIssues = observer(
   ({ value, onClose, type }: ModalIssuesProps) => {
-    const {
-      query: { issueId },
-    } = useRouter();
+    const issue = useIssueData();
 
-    const issueNumber = (issueId as string).split('-')[1];
     const { issuesStore } = useContextStore();
     const { mutate: updateIssue } = useUpdateIssueMutation({});
 
@@ -36,22 +32,17 @@ export const ModalIssues = observer(
       if (value) {
         return issues
           .filter(
-            (issue: IssueType) =>
-              `${issue.number} ${issue.title}`
+            (is: IssueType) =>
+              `${is.number} ${is.title}`
                 .toLowerCase()
-                .includes(value.toLowerCase()) &&
-              issue.number !== parseInt(issueNumber),
+                .includes(value.toLowerCase()) && is.id !== issue.id,
           )
           .slice(0, 10);
       }
 
-      return issues
-        .filter((issue: IssueType) => issue.number !== parseInt(issueNumber))
-        .slice(0, 5);
+      return issues.filter((is: IssueType) => is.id !== issue.id).slice(0, 5);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
-    const team = useCurrentTeam();
-    const currentIssue = issuesStore.getIssueByNumber(issueId, team.id);
 
     const onSelect = (relatedIssueId: string) => {
       if (type === IssueRelationEnum.PARENT) {
@@ -60,14 +51,14 @@ export const ModalIssues = observer(
         updateIssue({
           id: issueData.id,
           teamId: issueData.teamId,
-          parentId: currentIssue.id,
+          parentId: issue.id,
         });
       }
 
       if (type === IssueRelationEnum.SUB_ISSUE) {
         updateIssue({
-          id: currentIssue.id,
-          teamId: currentIssue.teamId,
+          id: issue.id,
+          teamId: issue.teamId,
           parentId: relatedIssueId,
         });
       }
@@ -80,11 +71,11 @@ export const ModalIssues = observer(
         type === IssueRelationEnum.DUPLICATE_OF
       ) {
         updateIssue({
-          id: currentIssue.id,
-          teamId: currentIssue.teamId,
+          id: issue.id,
+          teamId: issue.teamId,
           issueRelation: {
             type,
-            issueId: currentIssue.id,
+            issueId: issue.id,
             relatedIssueId,
           },
         });

@@ -62,7 +62,9 @@ export const LabelList = observer(({ labels }: LabelListProps) => {
 
   const getHeaderRow = (row: { type: string; key: string }, index: number) => {
     let childContent;
-
+    if (!row) {
+      return null;
+    }
     if (row.key === 'no-value') {
       childContent = (
         <>
@@ -109,7 +111,9 @@ export const LabelList = observer(({ labels }: LabelListProps) => {
 
   const rowRender = ({ index, style, key, parent }: ListRowProps) => {
     const row = rows[index];
-
+    if (!row) {
+      return null;
+    }
     return (
       <CellMeasurer
         key={key}
@@ -146,7 +150,7 @@ export const LabelList = observer(({ labels }: LabelListProps) => {
   };
 
   return (
-    <AutoSizer className="pb-10 h-full">
+    <AutoSizer className="h-full">
       {({ width, height }) => (
         <ScrollManagedList
           className=""
@@ -154,7 +158,7 @@ export const LabelList = observer(({ labels }: LabelListProps) => {
           height={height}
           overscanRowCount={10}
           noRowsRenderer={() => <></>}
-          rowCount={rows.length}
+          rowCount={rows.length + 2}
           rowHeight={rowHeight}
           deferredMeasurementCache={cache}
           rowRenderer={rowRender}

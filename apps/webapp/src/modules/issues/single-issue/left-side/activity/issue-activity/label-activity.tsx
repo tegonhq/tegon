@@ -46,9 +46,9 @@ export function LabelActivity({
             {issueHistory.addedLabelIds.map((labelId: string) => (
               <Badge variant="secondary" key={labelId}>
                 <BadgeColor
-                  style={{ backgroundColor: getLabel(labelId).color }}
+                  style={{ backgroundColor: getLabel(labelId)?.color }}
                 />
-                {getLabel(labelId).name}
+                {getLabel(labelId)?.name}
               </Badge>
             ))}
           </div>

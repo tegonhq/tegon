@@ -74,3 +74,16 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
 .ReactVirtualized__Grid__innerScrollContainer {
   margin-bottom: 200px;
 }
+
+.ReactVirtualized__List {
+  outline: none;
+}
+
+.side-issue-view .context-box {
+  @apply border border-border;
+  box-shadow: 0px 16px 32px 0px rgba(20, 20, 20, 0.2) !important;
+}
+
+.dark .side-issue-view .context-box {
+  box-shadow: 0px 16px 32px 0px rgba(20, 20, 20, 0.2) !important;
+}

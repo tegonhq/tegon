@@ -148,6 +148,7 @@ export const NewIssueForm = observer(
                       {...field}
                       className="new-issue-editor min-h-[100px]"
                       editorClassName="min-h-[100px]"
+                      autoFocus
                       extensions={[AiWritingExtension]}
                       onCreate={(editor) => setEditor(editor)}
                     >

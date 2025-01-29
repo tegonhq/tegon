@@ -33,7 +33,6 @@ export function ReplyComment({ issueCommentId }: ReplyCommentProps) {
   const issueData = useIssueData();
   const [commentValue, setCommentValue] = React.useState('');
   const { mutate: createIssueComment } = useCreateIssueCommentMutation({});
-  const [showReplyButton, setShowReplyButton] = React.useState(false);
   const suggestion = useMentionSuggestions();
   const { toast } = useToast();
 
@@ -64,43 +63,35 @@ export function ReplyComment({ issueCommentId }: ReplyCommentProps) {
   };
 
   return (
-    <div className="flex items-start w-full border-t border-border px-3 py-2 pb-0 !mt-0">
+    <div className="flex items-start w-full border-t border-border px-2 py-2 pb-0 !mt-0">
       <AvatarText text={currentUser.fullname} className="text-[9px]" />
 
       <div className="w-full relative">
         <Editor
           placeholder="Leave a reply..."
           value={commentValue}
-          onFocus={() => {
-            setShowReplyButton(true);
-          }}
           extensions={[
             CustomMention.configure({
               suggestion,
             }),
           ]}
+          autoFocus
           onSubmit={onSubmit}
-          onBlur={() => {
-            !commentValue && setShowReplyButton(false);
-          }}
           onChange={(e) => setCommentValue(e)}
           className="w-full min-h-[60px] bg-transparent mb-0 p-2 pt-0 grow text-foreground relative"
         >
-          <div className="absolute right-1 bottom-2 flex items-center gap-1">
-            {showReplyButton && (
-              <>
-                <FileUpload withPosition={false} />
+          <div className="absolute right-1 bottom-1 flex items-center">
+            <FileUpload withPosition={false} />
 
-                <Button
-                  variant="ghost"
-                  className="transition-all duration-500 ease-in-out my-2"
-                  type="submit"
-                  onClick={onSubmit}
-                >
-                  <SendLine size={20} />
-                </Button>
-              </>
-            )}
+            <Button
+              variant="ghost"
+              className="transition-all duration-500 ease-in-out my-2"
+              type="submit"
+              size="sm"
+              onClick={onSubmit}
+            >
+              <SendLine size={20} />
+            </Button>
           </div>
           <EditorExtensions suggestionItems={suggestionItems} />
         </Editor>

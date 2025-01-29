@@ -32,7 +32,7 @@ export function FileUpload({ withPosition = true }: FileUploadProps) {
 
   if (!withPosition) {
     return (
-      <Button variant="ghost" onClick={onClick}>
+      <Button variant="ghost" size="sm" onClick={onClick}>
         <Paperclip size={16} />
       </Button>
     );

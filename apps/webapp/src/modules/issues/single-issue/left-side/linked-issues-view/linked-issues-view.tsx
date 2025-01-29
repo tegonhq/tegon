@@ -35,9 +35,9 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
-        className="w-full py-3"
+        className="w-full py-2"
       >
-        <div className="flex justify-between px-6">
+        <div className="flex justify-between px-6 items-center">
           <div>
             <CollapsibleTrigger asChild>
               <div className="flex items-center">
@@ -61,8 +61,8 @@ export const LinkedIssuesView = observer(({ issueId }: LinkedIssuesView) => {
 
           <div>
             <Button
-              variant="link"
-              className="pr-0"
+              variant="ghost"
+              size="xs"
               onClick={() => setDialogOpen(true)}
             >
               <AddLine size={16} />

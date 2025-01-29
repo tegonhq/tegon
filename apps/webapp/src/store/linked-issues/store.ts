@@ -7,42 +7,54 @@ import {
 
 import type { LinkedIssueType } from 'common/types';
 
+import { CommentArray } from 'store/comments';
 import { tegonDatabase } from 'store/database';
 
-import { LinkedIssue } from './models';
+import { LinkedIssueArray } from './models';
 
 export const LinkedIssuesStore: IAnyStateTreeNode = types
   .model({
-    linkedIssues: types.array(LinkedIssue),
-    issueId: types.union(types.string, types.undefined),
+    linkedIssues: types.map(LinkedIssueArray),
   })
   .actions((self) => {
     const update = (linkedIssue: LinkedIssueType, id: string) => {
-      const indexToUpdate = self.linkedIssues.findIndex((obj) => obj.id === id);
+      const issueId = linkedIssue.issueId;
+      if (!self.linkedIssues.has(issueId)) {
+        self.linkedIssues.set(issueId, CommentArray.create([]));
+      }
+
+      const linkedIssuesArray = self.linkedIssues.get(issueId);
+      const indexToUpdate = linkedIssuesArray.findIndex((obj) => obj.id === id);
 
       if (indexToUpdate !== -1) {
         // Update the object at the found index with the new data
-        self.linkedIssues[indexToUpdate] = {
-          ...self.linkedIssues[indexToUpdate],
+        linkedIssuesArray[indexToUpdate] = {
+          ...linkedIssuesArray[indexToUpdate],
           ...linkedIssue,
-          // TODO fix the any and have a type with Issuetype
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any;
+        };
       } else {
-        self.linkedIssues.push(linkedIssue);
+        linkedIssuesArray.push(linkedIssue);
       }
     };
     const deleteById = (id: string) => {
-      const indexToDelete = self.linkedIssues.findIndex((obj) => obj.id === id);
+      // Iterate through all comment arrays in the map
+      for (const [issueId, linkedIssuesArray] of self.linkedIssues.entries()) {
+        const indexToDelete = linkedIssuesArray.findIndex(
+          (obj) => obj.id === id,
+        );
 
-      if (indexToDelete !== -1) {
-        self.linkedIssues.splice(indexToDelete, 1);
+        if (indexToDelete !== -1) {
+          linkedIssuesArray.splice(indexToDelete, 1);
+          // If the comments array is empty, we can remove it from the map
+          if (linkedIssuesArray.length === 0) {
+            self.linkedIssues.delete(issueId);
+          }
+          break; // Exit loop once we've found and deleted the comment
+        }
       }
     };
 
     const load = flow(function* (issueId: string) {
-      self.issueId = issueId;
-
       const linkedIssues = issueId
         ? yield tegonDatabase.linkedIssues
             .where({
@@ -51,10 +63,20 @@ export const LinkedIssuesStore: IAnyStateTreeNode = types
             .toArray()
         : [];
 
-      self.linkedIssues = linkedIssues;
+      // Create a new LinkedIssueArray for this issueId
+      if (linkedIssues.length > 0) {
+        self.linkedIssues.set(issueId, LinkedIssueArray.create(linkedIssues));
+      }
     });
 
     return { update, deleteById, load };
-  });
+  })
+  .views((self) => ({
+    getLinkedIssues(issueId: string): LinkedIssueType[] {
+      return self.linkedIssues.has(issueId)
+        ? self.linkedIssues.get(issueId)
+        : [];
+    },
+  }));
 
 export type LinkedIssuesStoreType = Instance<typeof LinkedIssuesStore>;

@@ -19,6 +19,7 @@ import {
   SubIssue,
 } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
+import { Reply } from 'lucide-react';
 import * as React from 'react';
 import ReactTimeAgo from 'react-time-ago';
 
@@ -68,13 +69,13 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
   const [defaultIssueCreationValues, setDefaultIssueCreationValues] =
     React.useState(undefined);
   const [newIssueDialog, setNewIssueDialog] = React.useState(false);
+  const [showReply, setShowReply] = React.useState(false);
 
   return (
     <div className="flex items-start">
-      {getUserIcon(user)}
       <div
         className={cn(
-          'group relative w-full flex flex-col text-foreground rounded-md',
+          'group relative w-full flex flex-col text-foreground rounded-md gap-1',
           !comment.parentId && 'bg-grayAlpha-100',
         )}
         key={comment.updatedAt} // Add key to force re-render
@@ -82,10 +83,12 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         <div
           className={cn(
             'flex justify-between items-center',
-            !comment.parentId && 'px-3 py-2 pb-0',
+            !comment.parentId && 'px-2 py-2 pb-0',
           )}
         >
-          <div className="flex gap-2">
+          <div className="flex">
+            {getUserIcon(user)}
+
             {user ? (
               <span>{getUserDetails(sourceMetadata, user).fullname}</span>
             ) : (
@@ -98,7 +101,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           <div className="flex gap-2 items-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="px-2 py-0 h-5">
+                <Button variant="ghost" size="xs" className="h-5">
                   <MoreLine size={16} className="text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
@@ -150,7 +153,16 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-
+            {allowReply && (
+              <Button
+                variant="ghost"
+                size="xs"
+                className="h-5"
+                onClick={() => setShowReply(true)}
+              >
+                <Reply size={16} />
+              </Button>
+            )}
             <div>
               <ReactTimeAgo
                 date={new Date(comment.updatedAt)}
@@ -193,7 +205,7 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
         )}
 
         {childComments.length > 0 && (
-          <div className="w-full border-t border-border px-3 py-2 pb-0">
+          <div className="w-full border-t border-border px-2 py-2 pb-0">
             {childComments.map(
               (subComment: IssueCommentType, index: number) => (
                 <div
@@ -216,7 +228,9 @@ export function GenericCommentActivity(props: GenericCommentActivityProps) {
           </div>
         )}
 
-        {allowReply && <ReplyComment issueCommentId={comment.id} />}
+        {allowReply && showReply && (
+          <ReplyComment issueCommentId={comment.id} />
+        )}
       </div>
 
       {newIssueDialog && (

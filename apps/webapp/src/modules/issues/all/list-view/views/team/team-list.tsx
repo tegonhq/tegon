@@ -60,6 +60,10 @@ export const TeamList = observer(({ teams }: TeamListProps) => {
   }, [rows]);
 
   const getHeaderRow = (row: { type: string; key: string }, index: number) => {
+    if (!row) {
+      return null;
+    }
+
     const team = teams.find((team) => team.id.includes(row.key));
 
     return (
@@ -85,6 +89,10 @@ export const TeamList = observer(({ teams }: TeamListProps) => {
 
   const rowRender = ({ index, style, key, parent }: ListRowProps) => {
     const row = rows[index];
+
+    if (!row) {
+      return null;
+    }
 
     return (
       <CellMeasurer
@@ -122,7 +130,7 @@ export const TeamList = observer(({ teams }: TeamListProps) => {
   };
 
   return (
-    <AutoSizer className="pb-10 h-full">
+    <AutoSizer className="h-full">
       {({ width, height }) => (
         <ScrollManagedList
           className=""
@@ -130,7 +138,7 @@ export const TeamList = observer(({ teams }: TeamListProps) => {
           height={height}
           overscanRowCount={10}
           noRowsRenderer={() => <></>}
-          rowCount={rows.length}
+          rowCount={rows.length + 2}
           rowHeight={rowHeight}
           deferredMeasurementCache={cache}
           rowRenderer={rowRender}

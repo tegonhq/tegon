@@ -50,10 +50,10 @@ const StoreContextModel = types.model({
 
 export const storeContextStore = StoreContextModel.create({
   commentsStore: {
-    comments: [],
+    comments: {},
   },
   issuesHistoryStore: {
-    issueHistories: [],
+    issueHistories: {},
   },
   issuesStore: {
     teamId: undefined,
@@ -85,8 +85,7 @@ export const storeContextStore = StoreContextModel.create({
     workspaceId: undefined,
   },
   linkedIssuesStore: {
-    linkedIssues: [],
-    issueId: undefined,
+    linkedIssues: {},
   },
   issueRelationsStore: {
     issueRelations: {},

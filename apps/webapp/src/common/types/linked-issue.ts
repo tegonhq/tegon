@@ -5,7 +5,6 @@ export interface LinkedIssueType {
 
   url: string;
   sourceId?: string;
-  source: string;
   sourceData: string;
   issueId: string;
   createdById: string;

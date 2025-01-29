@@ -1,7 +1,6 @@
 import type { DraggableProvided } from '@hello-pangea/dnd';
 
 import { observer } from 'mobx-react-lite';
-import { useRouter } from 'next/router';
 import React, { type CSSProperties } from 'react';
 
 import {
@@ -13,6 +12,7 @@ import {
   IssueStatusDropdownVariant,
 } from 'modules/issues/components';
 
+import { IssueViewContext } from 'components/side-issue-view';
 import { useTeamWithId } from 'hooks/teams/use-current-team';
 
 import { useUpdateIssueMutation } from 'services/issues';
@@ -54,13 +54,13 @@ export const BoardIssueItem = observer(
     key,
     measure,
   }: BoardIssueItemProps) => {
-    const {
-      push,
-      query: { workspaceSlug },
-    } = useRouter();
     const { mutate: updateIssue } = useUpdateIssueMutation({});
     const { issuesStore, applicationStore } = useContextStore();
-
+    const {
+      openIssue,
+      issueId: currentViewIssueId,
+      closeIssueView,
+    } = React.useContext(IssueViewContext);
     const issue = issuesStore.getIssueById(issueId);
     const team = useTeamWithId(issue.teamId);
 
@@ -79,8 +79,13 @@ export const BoardIssueItem = observer(
     return (
       <a
         className="p-3 flex flex-col justify-between group rounded-md bg-background-3 dark:bg-grayAlpha-200 w-[100%] gap-2 mb-2 !cursor-default hover:bg-background-3/70"
-        onClick={() => {
-          push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
+        onClick={(e) => {
+          if (!e.metaKey && currentViewIssueId === issue.id) {
+            closeIssueView();
+
+            return;
+          }
+          openIssue(issue.id, e.metaKey);
         }}
         ref={(el) => {
           provided.innerRef(el);

@@ -62,6 +62,10 @@ export const ProjectList = observer(({ projects }: ProjectListProps) => {
   const getHeaderRow = (row: { type: string; key: string }, index: number) => {
     let childContent;
 
+    if (!row) {
+      return null;
+    }
+
     if (row.key === 'no-value') {
       childContent = (
         <>
@@ -103,6 +107,10 @@ export const ProjectList = observer(({ projects }: ProjectListProps) => {
   const rowRender = ({ index, style, key, parent }: ListRowProps) => {
     const row = rows[index];
 
+    if (!row) {
+      return null;
+    }
+
     return (
       <CellMeasurer
         key={key}
@@ -139,7 +147,7 @@ export const ProjectList = observer(({ projects }: ProjectListProps) => {
   };
 
   return (
-    <AutoSizer className="pb-10 h-full">
+    <AutoSizer className="h-full">
       {({ width, height }) => (
         <ScrollManagedList
           className=""
@@ -147,7 +155,7 @@ export const ProjectList = observer(({ projects }: ProjectListProps) => {
           height={height}
           overscanRowCount={10}
           noRowsRenderer={() => <></>}
-          rowCount={rows.length}
+          rowCount={rows.length + 2}
           rowHeight={rowHeight}
           deferredMeasurementCache={cache}
           rowRenderer={rowRender}

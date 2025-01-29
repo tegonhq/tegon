@@ -10,7 +10,6 @@ import { observer } from 'mobx-react-lite';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-import { NewIssueProvider } from 'modules/issues/new-issue';
 import { GlobalShortcuts, IssueShortcutDialogs } from 'modules/shortcuts';
 
 import { AllProviders } from 'common/wrappers/all-providers';
@@ -45,12 +44,12 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
       <div className="h-[100vh] w-[100vw] flex">
         {!applicationStore.sidebarCollapsed && (
           <div className="w-[190px] flex flex-col h-full overflow-auto">
-            <div className="flex py-3 px-4 pr-2 items-center justify-between">
+            <div className="flex py-3 px-4 pr-2 pt-5 items-center justify-between">
               <WorkspaceDropdown />
               <Header />
             </div>
 
-            <div className="px-4 pr-2 mt-4 grow">
+            <div className="px-4 pr-2 mt-1 grow">
               <Nav
                 links={[
                   {
@@ -108,9 +107,7 @@ export const AppLayoutChild = observer(({ children }: LayoutProps) => {
 export function AppLayout(props: LayoutProps) {
   return (
     <AllProviders>
-      <NewIssueProvider>
-        <AppLayoutChild {...props} />
-      </NewIssueProvider>
+      <AppLayoutChild {...props} />
     </AllProviders>
   );
 }

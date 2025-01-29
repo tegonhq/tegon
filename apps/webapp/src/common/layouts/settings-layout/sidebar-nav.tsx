@@ -40,7 +40,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
   }
 
   return (
-    <nav className={cn('flex flex-col', className)} {...props}>
+    <nav className={cn('flex flex-col pt-1', className)} {...props}>
       <div className="flex justify-between items-center">
         <Button
           variant="ghost"
@@ -57,7 +57,7 @@ export function SidebarNav({ className, ...props }: SidebarNavProps) {
         </Button>
       </div>
       <ScrollArea className="overflow-y-auto h-[calc(100vh_-_56px)]">
-        <div className="px-6 py-3">
+        <div className="px-6">
           <div className="flex flex-col items-start justify-start w-full">
             <div className="flex items-center mb-1">
               <BuildingLine size={20} />

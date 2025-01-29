@@ -48,7 +48,7 @@ export const FiltersView = observer(({ Actions }: FilterViewProps) => {
   );
 
   return (
-    <div className="px-4 py-4 pr-2 flex flex-col gap-2">
+    <div className="px-4 py-2 pt-2 pr-2 flex flex-col gap-2">
       <div className="flex justify-between">
         <TooltipWrapper tooltip="Filter Issues (F)">
           <Button
