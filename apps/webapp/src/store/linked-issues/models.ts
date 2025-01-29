@@ -11,3 +11,5 @@ export const LinkedIssue = types.model({
   issueId: types.string,
   createdById: types.union(types.string, types.undefined, types.null),
 });
+
+export const LinkedIssueArray = types.array(LinkedIssue);

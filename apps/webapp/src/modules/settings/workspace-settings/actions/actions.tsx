@@ -54,9 +54,8 @@ Actions.getLayout = function getLayout(page: React.ReactElement) {
   return (
     <SettingsLayout>
       <div className="h-[100vh] flex flex-col w-full">
-        <Header title="Actions" />
-
         <ContentBox>
+          <Header title="Actions" />
           <ScrollArea className="flex grow h-full">
             <div className="w-full p-6">
               <ActionAccessGuard>{page} </ActionAccessGuard>

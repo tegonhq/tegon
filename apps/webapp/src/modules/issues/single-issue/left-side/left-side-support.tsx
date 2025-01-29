@@ -53,7 +53,7 @@ export const LeftSideSupport = observer(() => {
             )}
 
             <div className="px-6 flex flex-col">
-              <CommentsActivity commentOrder={-1} />
+              <CommentsActivity />
             </div>
           </div>
         </div>

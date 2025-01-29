@@ -56,6 +56,10 @@ export const CategoryList = observer(() => {
   }, [rows]);
 
   const getHeaderRow = (row: { type: string; key: string }, index: number) => {
+    if (!row) {
+      return null;
+    }
+
     const workflow = workflows.find((workflow) =>
       workflow.id.includes(row.key),
     );
@@ -86,6 +90,10 @@ export const CategoryList = observer(() => {
   const rowRender = ({ index, style, key, parent }: ListRowProps) => {
     const row = rows[index];
 
+    if (!row) {
+      return null;
+    }
+
     return (
       <CellMeasurer
         key={key}
@@ -100,7 +108,7 @@ export const CategoryList = observer(() => {
           ) : (
             <IssueListItem
               issueId={row.issueId}
-              key={index}
+              key={key}
               changeHeight={(issueCount) => changeHeight(issueCount, index)}
             />
           )}
@@ -122,7 +130,7 @@ export const CategoryList = observer(() => {
   };
 
   return (
-    <AutoSizer className="pb-10 h-full">
+    <AutoSizer className="h-full">
       {({ width, height }) => (
         <ScrollManagedList
           className=""
@@ -130,7 +138,7 @@ export const CategoryList = observer(() => {
           height={height}
           overscanRowCount={10}
           noRowsRenderer={() => <></>}
-          rowCount={rows.length}
+          rowCount={rows.length + 2}
           rowHeight={rowHeight}
           deferredMeasurementCache={cache}
           rowRenderer={rowRender}

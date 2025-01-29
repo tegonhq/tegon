@@ -4,6 +4,7 @@ import { Command, CommandInput } from '@tegonhq/ui/components/command';
 import {
   Popover,
   PopoverContent,
+  PopoverPortal,
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
 import { AssigneeLine } from '@tegonhq/ui/icons';
@@ -129,17 +130,19 @@ export function IssueAssigneeDropdown({
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
-        <PopoverContent className="p-0" align="end">
-          <Command>
-            <CommandInput placeholder="Set assignee..." autoFocus />
-            <IssueAssigneeDropdownContent
-              onClose={() => setOpen(false)}
-              users={users}
-              onChange={onChange}
-              value={value}
-            />
-          </Command>
-        </PopoverContent>
+        <PopoverPortal>
+          <PopoverContent className="p-0" align="end">
+            <Command>
+              <CommandInput placeholder="Set assignee..." autoFocus />
+              <IssueAssigneeDropdownContent
+                onClose={() => setOpen(false)}
+                users={users}
+                onChange={onChange}
+                value={value}
+              />
+            </Command>
+          </PopoverContent>
+        </PopoverPortal>
       </Popover>
     </div>
   );

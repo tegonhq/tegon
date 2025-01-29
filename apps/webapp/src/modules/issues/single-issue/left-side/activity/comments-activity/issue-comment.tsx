@@ -70,7 +70,7 @@ export function IssueComment() {
           onSubmit={onSubmit}
           className="w-full min-h-[60px] mb-0 p-2 border-border border relative"
         >
-          <div className="absolute right-1 bottom-2 flex items-center gap-1">
+          <div className="absolute right-1 bottom-1 flex items-center gap-1">
             <FileUpload withPosition={false} />
             <Button variant="ghost" type="submit" onClick={onSubmit}>
               <SendLine size={20} />

@@ -8,11 +8,11 @@ import { RightSidebarClosed, RightSidebarOpen } from '@tegonhq/ui/icons';
 import React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
-import { ContentBox } from 'common/layouts/content-box';
 import { MainLayout } from 'common/layouts/main-layout';
 import { SCOPES } from 'common/scopes';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
+import { IssueViewContext } from 'components/side-issue-view';
 import { useScope } from 'hooks';
 import { useCurrentTeam } from 'hooks/teams';
 import { useLocalState } from 'hooks/use-local-state';
@@ -29,6 +29,14 @@ export const AllIssues = withApplicationStore(() => {
 
   const team = useCurrentTeam();
   const [overview, setOverview] = useLocalState('insightsSidebar', false);
+  const { closeIssueView } = React.useContext(IssueViewContext);
+
+  React.useEffect(() => {
+    return () => {
+      closeIssueView();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <MainLayout
@@ -53,38 +61,36 @@ export const AllIssues = withApplicationStore(() => {
         />
       }
     >
-      <ContentBox>
-        {team ? (
-          <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel
-              collapsible={false}
-              order={1}
-              id="issues"
-              className="w-full flex flex-col"
-            >
-              <FiltersView Actions={<IssuesViewOptions />} />
-              <ListView />
-            </ResizablePanel>
-            {overview && (
-              <>
-                <ResizableHandle />
-                <ResizablePanel
-                  collapsible={false}
-                  maxSize={25}
-                  minSize={25}
-                  defaultSize={25}
-                  order={2}
-                  id="rightScreen"
-                >
-                  <OverviewInsights />
-                </ResizablePanel>
-              </>
-            )}
-          </ResizablePanelGroup>
-        ) : (
-          <NoTeamContainer />
-        )}
-      </ContentBox>
+      {team ? (
+        <ResizablePanelGroup direction="horizontal">
+          <ResizablePanel
+            collapsible={false}
+            order={1}
+            id="issues"
+            className="w-full flex flex-col"
+          >
+            <FiltersView Actions={<IssuesViewOptions />} />
+            <ListView />
+          </ResizablePanel>
+          {overview && (
+            <>
+              <ResizableHandle />
+              <ResizablePanel
+                collapsible={false}
+                maxSize={25}
+                minSize={25}
+                defaultSize={25}
+                order={2}
+                id="rightScreen"
+              >
+                <OverviewInsights />
+              </ResizablePanel>
+            </>
+          )}
+        </ResizablePanelGroup>
+      ) : (
+        <NoTeamContainer />
+      )}
     </MainLayout>
   );
 });

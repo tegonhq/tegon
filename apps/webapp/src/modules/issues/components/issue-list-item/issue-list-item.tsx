@@ -1,20 +1,20 @@
 import { Checkbox } from '@tegonhq/ui/components/checkbox';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
-import { useRouter } from 'next/router';
 import React, { Suspense } from 'react';
 
 import {
   IssueAssigneeDropdownVariant,
   IssuePriorityDropdown,
   IssuePriorityDropdownVariant,
+  IssueStatusDropdown,
   IssueStatusDropdownVariant,
   LazyIssueAssigneeDropdown,
-  LazyIssueStatusDropdown,
 } from 'modules/issues/components';
 
 import type { IssueType } from 'common/types';
 
+import { IssueViewContext } from 'components/side-issue-view';
 import { useTeamWithId } from 'hooks/teams/use-current-team';
 
 import { useUpdateIssueMutation } from 'services/issues';
@@ -72,11 +72,12 @@ export const IssueListItem = observer(
     noBorder = false,
     changeHeight,
   }: IssueListItemProps) => {
-    const {
-      query: { workspaceSlug },
-    } = useRouter();
-    const { push } = useRouter();
     const [currentView, setCurrentView] = React.useState<View | undefined>();
+    const {
+      openIssue,
+      issueId: currentViewIssueId,
+      closeIssueView,
+    } = React.useContext(IssueViewContext);
 
     const { mutate: updateIssue } = useUpdateIssueMutation({});
     const { issuesStore, applicationStore } = useContextStore();
@@ -101,8 +102,12 @@ export const IssueListItem = observer(
     return (
       <>
         <a
-          onClick={() => {
-            push(`/${workspaceSlug}/issue/${team.identifier}-${issue.number}`);
+          onClick={(e) => {
+            if (!e.metaKey && currentViewIssueId === issue.id) {
+              closeIssueView();
+              return;
+            }
+            openIssue(issue.id, e.metaKey);
           }}
           className={cn(
             'pl-1 pr-2 flex group cursor-default gap-2',
@@ -153,7 +158,7 @@ export const IssueListItem = observer(
               )}
             >
               <div className="pt-2.5 shrink-0">
-                <LazyIssueStatusDropdown
+                <IssueStatusDropdown
                   value={issue.stateId}
                   onChange={statusChange}
                   variant={IssueStatusDropdownVariant.NO_BACKGROUND}

@@ -13,36 +13,45 @@ import { CommentArray } from './models';
 
 export const CommentsStore: IAnyStateTreeNode = types
   .model({
-    comments: CommentArray,
-    issueId: types.union(types.string, types.undefined),
+    comments: types.map(CommentArray),
   })
   .actions((self) => {
     const update = (comment: IssueCommentType, id: string) => {
-      const indexToUpdate = self.comments.findIndex((obj) => obj.id === id);
+      const issueId = comment.issueId;
+      if (!self.comments.has(issueId)) {
+        self.comments.set(issueId, CommentArray.create([]));
+      }
+
+      const commentsArray = self.comments.get(issueId);
+      const indexToUpdate = commentsArray.findIndex((obj) => obj.id === id);
 
       if (indexToUpdate !== -1) {
         // Update the object at the found index with the new data
-        self.comments[indexToUpdate] = {
-          ...self.comments[indexToUpdate],
+        commentsArray[indexToUpdate] = {
+          ...commentsArray[indexToUpdate],
           ...comment,
-          // TODO fix the any and have a type with Issuetype
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any;
+        };
       } else {
-        self.comments.push(comment);
+        commentsArray.push(comment);
       }
     };
     const deleteById = (id: string) => {
-      const indexToDelete = self.comments.findIndex((obj) => obj.id === id);
+      // Iterate through all comment arrays in the map
+      for (const [issueId, commentsArray] of self.comments.entries()) {
+        const indexToDelete = commentsArray.findIndex((obj) => obj.id === id);
 
-      if (indexToDelete !== -1) {
-        self.comments.splice(indexToDelete, 1);
+        if (indexToDelete !== -1) {
+          commentsArray.splice(indexToDelete, 1);
+          // If the comments array is empty, we can remove it from the map
+          if (commentsArray.length === 0) {
+            self.comments.delete(issueId);
+          }
+          break; // Exit loop once we've found and deleted the comment
+        }
       }
     };
 
     const load = flow(function* (issueId: string) {
-      self.issueId = issueId;
-
       const comments = issueId
         ? yield tegonDatabase.comments
             .where({
@@ -51,18 +60,17 @@ export const CommentsStore: IAnyStateTreeNode = types
             .toArray()
         : [];
 
-      self.comments = CommentArray.create(comments);
+      // Create a new CommentArray for this issueId
+      if (comments.length > 0) {
+        self.comments.set(issueId, CommentArray.create(comments));
+      }
     });
 
     return { update, deleteById, load };
   })
   .views((self) => ({
-    getComments(issueId: string) {
-      return issueId === self.issueId
-        ? self.comments.filter(
-            (comment: IssueCommentType) => comment.issueId === issueId,
-          )
-        : [];
+    getComments(issueId: string): IssueCommentType[] {
+      return self.comments.has(issueId) ? self.comments.get(issueId) : [];
     },
   }));
 

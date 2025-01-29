@@ -12,7 +12,6 @@ import { FiltersView } from 'modules/issues/filters-view/filters-view';
 import { OverviewInsights } from 'modules/issues/overview-insights';
 
 import { AppLayout } from 'common/layouts/app-layout';
-import { ContentBox } from 'common/layouts/content-box';
 import { MainLayout } from 'common/layouts/main-layout';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
@@ -74,33 +73,31 @@ export const CycleViewWrapper = withApplicationStore(() => {
         />
       }
     >
-      <ContentBox>
-        <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel
-            collapsible={false}
-            order={1}
-            id="issues"
-            className="w-full flex flex-col"
-          >
-            <CycleView view={view} />
-          </ResizablePanel>
-          {overview && (
-            <>
-              <ResizableHandle />
-              <ResizablePanel
-                collapsible={false}
-                maxSize={25}
-                minSize={25}
-                defaultSize={25}
-                order={2}
-                id="rightScreen"
-              >
-                <OverviewInsights />
-              </ResizablePanel>
-            </>
-          )}
-        </ResizablePanelGroup>
-      </ContentBox>
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel
+          collapsible={false}
+          order={1}
+          id="issues"
+          className="w-full flex flex-col"
+        >
+          <CycleView view={view} />
+        </ResizablePanel>
+        {overview && (
+          <>
+            <ResizableHandle />
+            <ResizablePanel
+              collapsible={false}
+              maxSize={25}
+              minSize={25}
+              defaultSize={25}
+              order={2}
+              id="rightScreen"
+            >
+              <OverviewInsights />
+            </ResizablePanel>
+          </>
+        )}
+      </ResizablePanelGroup>
     </MainLayout>
   );
 });

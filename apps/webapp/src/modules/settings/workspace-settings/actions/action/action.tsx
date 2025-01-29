@@ -47,67 +47,65 @@ export const Action = () => {
   }
 
   return (
-    <>
+    <ContentBox>
       <Header title="Actions" />
-      <ContentBox>
-        <ScrollArea className="flex grow h-full">
-          <div className="w-full p-6">
-            <SettingSection
-              title={action.name}
-              description={action.description}
-              metadata={metadata}
-            >
-              <Tabs defaultValue="overview">
-                <TabsList className="bg-transparent flex gap-2 justify-start px-0">
-                  <>
-                    <TabsTrigger
-                      value="overview"
-                      className={cn(
-                        buttonVariants({
-                          variant: 'secondary',
-                        }),
-                      )}
-                    >
-                      Overview
-                    </TabsTrigger>
+      <ScrollArea className="flex grow h-full">
+        <div className="w-full p-6">
+          <SettingSection
+            title={action.name}
+            description={action.description}
+            metadata={metadata}
+          >
+            <Tabs defaultValue="overview">
+              <TabsList className="bg-transparent flex gap-2 justify-start px-0">
+                <>
+                  <TabsTrigger
+                    value="overview"
+                    className={cn(
+                      buttonVariants({
+                        variant: 'secondary',
+                      }),
+                    )}
+                  >
+                    Overview
+                  </TabsTrigger>
 
-                    <TabsTrigger
-                      value="configuration"
-                      className={cn(
-                        buttonVariants({
-                          variant: 'secondary',
-                        }),
-                      )}
+                  <TabsTrigger
+                    value="configuration"
+                    className={cn(
+                      buttonVariants({
+                        variant: 'secondary',
+                      }),
+                    )}
+                  >
+                    Configuration
+                  </TabsTrigger>
+                </>
+              </TabsList>
+              <TabsContent value="overview">
+                <div className="flex gap-2 bg-background-3 p-6 rounded-md">
+                  <div>
+                    <Editor
+                      className="new-issue-editor min-h-[200px] text-base"
+                      value={latestAction?.guide}
+                      editable={false}
+                      editorClassName="min-h-[300px]"
+                      extensions={[]}
                     >
-                      Configuration
-                    </TabsTrigger>
-                  </>
-                </TabsList>
-                <TabsContent value="overview">
-                  <div className="flex gap-2 bg-background-3 p-6 rounded-md">
-                    <div>
-                      <Editor
-                        className="new-issue-editor min-h-[200px] text-base"
-                        value={latestAction?.guide}
-                        editable={false}
-                        editorClassName="min-h-[300px]"
-                        extensions={[]}
-                      >
-                        <EditorExtensions suggestionItems={suggestionItems} />
-                      </Editor>
-                    </div>
+                      <EditorExtensions suggestionItems={suggestionItems} />
+                    </Editor>
                   </div>
-                </TabsContent>
+                </div>
+              </TabsContent>
 
-                <TabsContent value="configuration">
-                  <Configuration />
-                </TabsContent>
-              </Tabs>
-            </SettingSection>
-          </div>
-        </ScrollArea>
-      </ContentBox>
-    </>
+              <TabsContent value="configuration">
+                <Configuration />
+              </TabsContent>
+            </Tabs>
+          </SettingSection>
+        </div>
+      </ScrollArea>
+    </ContentBox>
   );
 };
 

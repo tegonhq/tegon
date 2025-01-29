@@ -27,7 +27,7 @@ export const Preferences = observer(() => {
 
   return (
     <SettingSection
-      title="Team preferences"
+      title="Workspace preferences"
       description="Manage your workspace preferences"
     >
       <div className="flex flex-col">

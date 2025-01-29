@@ -1,27 +1,20 @@
-import { Button } from '@tegonhq/ui/components/button';
-import { AI } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
-
-import { useCommonStore } from 'hooks/use-common-store';
-import { useUserSettings } from 'hooks/users';
 
 import { SidebarExpand } from './sidebar-expand';
 
 interface HeaderLayoutProps {
   children: React.ReactNode;
+  showExpandIcon?: boolean;
   actions?: React.ReactNode;
 }
 
 export const HeaderLayout = observer(
-  ({ children, actions }: HeaderLayoutProps) => {
-    const commonStore = useCommonStore();
-    const settings = useUserSettings();
-
+  ({ children, actions, showExpandIcon = true }: HeaderLayoutProps) => {
     return (
-      <header className="flex px-2 w-full items-center">
-        <div className="flex justify-between w-full py-2.5 h-[48px] items-center">
+      <header className="flex px-2 w-full items-center border-b border-border">
+        <div className="flex justify-between w-full py-2 h-[38px] items-center">
           <div className="flex gap-1 items-center">
-            <SidebarExpand />
+            {showExpandIcon && <SidebarExpand />}
 
             {children}
           </div>
@@ -30,19 +23,6 @@ export const HeaderLayout = observer(
               <>
                 <div className="flex items-center">{actions}</div>
               </>
-            )}
-            {settings?.ai && (
-              <Button
-                size="sm"
-                variant="ghost"
-                isActive={commonStore.chatOpen}
-                className="ml-0.5"
-                onClick={() =>
-                  commonStore.update({ chatOpen: !commonStore.chatOpen })
-                }
-              >
-                <AI />
-              </Button>
             )}
           </div>
         </div>

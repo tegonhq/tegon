@@ -27,9 +27,8 @@ export function PersonalSettings() {
 
   return (
     <div className="h-[100vh] flex flex-col w-full">
-      <Header title={SECTION_TITLES[settingsSection]} />
-
       <ContentBox>
+        <Header title={SECTION_TITLES[settingsSection]} />
         <ScrollArea className="flex grow h-full">
           <div className="w-full p-4">
             {userData ? <SectionComponent /> : <Loader />}

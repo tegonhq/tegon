@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
-import { ContentBox } from 'common/layouts/content-box';
 import { MainLayout } from 'common/layouts/main-layout';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
 
@@ -59,9 +58,7 @@ export const ProjectView = withApplicationStore(() => {
         />
       }
     >
-      <ContentBox>
-        <Project view={view} />
-      </ContentBox>
+      <Project view={view} />
     </MainLayout>
   );
 });

@@ -65,7 +65,7 @@ export function SyncCommentActivity({
                 !comment.parentId && 'p-2',
               )}
             >
-              <div className="flex gap-1">
+              <div className="flex">
                 {getUserIcon(user)}
 
                 <Editor

@@ -6,8 +6,11 @@ import {
 } from '@tegonhq/ui/components/popover';
 import { SettingsLine } from '@tegonhq/ui/icons';
 import { observer } from 'mobx-react-lite';
+import React from 'react';
 
 import { TooltipWrapper } from 'common/wrappers/tooltip-wrapper';
+
+import { IssueViewContext } from 'components/side-issue-view';
 
 import { useContextStore } from 'store/global-context-provider';
 
@@ -16,6 +19,7 @@ import { ViewOptionItem } from './view-option-item';
 
 export const ViewOptions = observer(() => {
   const { applicationStore } = useContextStore();
+  const { viewType, setViewType } = React.useContext(IssueViewContext);
 
   return (
     <>
@@ -59,6 +63,15 @@ export const ViewOptions = observer(() => {
                   applicationStore.updateDisplaySettings({
                     showEmptyGroups: value,
                   })
+                }
+              />
+
+              <ViewOptionItem
+                text="View issue in sidebar"
+                id="viewIssueInSidebar"
+                checked={viewType === 'side_view'}
+                onCheckedChange={(value: boolean) =>
+                  setViewType(value ? 'side_view' : 'view_screen')
                 }
               />
             </div>

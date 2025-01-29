@@ -3,6 +3,7 @@ import { Command, CommandInput } from '@tegonhq/ui/components/command';
 import {
   Popover,
   PopoverContent,
+  PopoverPortal,
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
 import { cn } from '@tegonhq/ui/lib/utils';
@@ -103,17 +104,19 @@ export const IssuePriorityDropdown = observer(
       >
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
-          <PopoverContent className="w-72 p-0" align="start">
-            <Command>
-              <CommandInput placeholder="Set priority..." autoFocus />
-              <IssuePriorityDropdownContent
-                onChange={onChange}
-                onClose={() => setOpen(false)}
-                Priorities={Priorities}
-                value={value}
-              />
-            </Command>
-          </PopoverContent>
+          <PopoverPortal>
+            <PopoverContent className="w-72 p-0" align="start">
+              <Command>
+                <CommandInput placeholder="Set priority..." autoFocus />
+                <IssuePriorityDropdownContent
+                  onChange={onChange}
+                  onClose={() => setOpen(false)}
+                  Priorities={Priorities}
+                  value={value}
+                />
+              </Command>
+            </PopoverContent>
+          </PopoverPortal>
         </Popover>
       </div>
     );

@@ -1,4 +1,5 @@
 import { Button } from '@tegonhq/ui/components/button';
+import { NoPriorityLine } from '@tegonhq/ui/icons';
 import { cn } from '@tegonhq/ui/lib/utils';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
@@ -55,7 +56,26 @@ export const PriorityList = observer(() => {
   }, [rows]);
 
   const getHeaderRow = (row: { type: string; key: string }, index: number) => {
-    const PriorityIcon = PriorityIcons[parseInt(row.key, 10)];
+    if (!row) {
+      return null;
+    }
+    let childContent;
+
+    if (row.key === 'no-value') {
+      childContent = (
+        <>
+          <NoPriorityLine className="h-5 w-5" />
+        </>
+      );
+    } else {
+      const PriorityIcon = PriorityIcons[parseInt(row.key, 10)];
+      childContent = (
+        <>
+          <PriorityIcon.icon size={20} />
+          <h3 className="pl-2">{Priorities[parseInt(row.key, 10)]}</h3>
+        </>
+      );
+    }
 
     return (
       <Button
@@ -66,9 +86,7 @@ export const PriorityList = observer(() => {
         variant="ghost"
         size="lg"
       >
-        <PriorityIcon.icon size={20} />
-
-        <h3 className="pl-2">{Priorities[parseInt(row.key, 10)]}</h3>
+        {childContent}
       </Button>
     );
   };
@@ -80,6 +98,10 @@ export const PriorityList = observer(() => {
 
   const rowRender = ({ index, style, key, parent }: ListRowProps) => {
     const row = rows[index];
+
+    if (!row) {
+      return null;
+    }
 
     return (
       <CellMeasurer
@@ -117,7 +139,7 @@ export const PriorityList = observer(() => {
   };
 
   return (
-    <AutoSizer className="pb-10 h-full">
+    <AutoSizer className="h-full">
       {({ width, height }) => (
         <ScrollManagedList
           className=""
@@ -125,7 +147,7 @@ export const PriorityList = observer(() => {
           height={height}
           overscanRowCount={10}
           noRowsRenderer={() => <></>}
-          rowCount={rows.length}
+          rowCount={rows.length + 2}
           rowHeight={rowHeight}
           deferredMeasurementCache={cache}
           rowRenderer={rowRender}

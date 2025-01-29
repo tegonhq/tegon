@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { AppLayout } from 'common/layouts/app-layout';
-import { ContentBox } from 'common/layouts/content-box';
 import { MainLayout } from 'common/layouts/main-layout';
 import { SCOPES } from 'common/scopes';
 import { withApplicationStore } from 'common/wrappers/with-application-store';
@@ -17,9 +16,7 @@ export const Teams = withApplicationStore(() => {
 
   return (
     <MainLayout header={<Header title="Teams" />}>
-      <ContentBox>
-        <TeamsList />
-      </ContentBox>
+      <TeamsList />
     </MainLayout>
   );
 });

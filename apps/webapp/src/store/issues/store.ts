@@ -259,6 +259,21 @@ export const IssuesStore: IAnyStateTreeNode = types
         children: [],
       };
     },
+    getIssueByIdWithChildren(issueId: string): IssueType {
+      const issue = self.issuesMap.get(issueId);
+
+      if (!issue) {
+        return undefined;
+      }
+
+      return {
+        ...issue,
+        parent: issue.parentId ? self.issuesMap.get(issue.parentId) : undefined,
+        children: Array.from(self.issuesMap.values()).filter(
+          (is: IssueType) => is.parentId === issue.id,
+        ),
+      };
+    },
     getIssuesFromArray(issueIds: string[]): IssueType[] {
       return issueIds
         .map((issueId: string) =>

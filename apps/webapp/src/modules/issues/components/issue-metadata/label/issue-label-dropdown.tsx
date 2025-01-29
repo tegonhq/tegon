@@ -4,6 +4,7 @@ import { Command, CommandInput } from '@tegonhq/ui/components/command';
 import {
   Popover,
   PopoverContent,
+  PopoverPortal,
   PopoverTrigger,
 } from '@tegonhq/ui/components/popover';
 import { AddLine, LabelLine } from '@tegonhq/ui/icons';
@@ -141,22 +142,24 @@ export const IssueLabelDropdown = observer(
       >
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>{getTrigger()}</PopoverTrigger>
-          <PopoverContent className="w-72 p-0" align="end">
-            <Command shouldFilter={false}>
-              <CommandInput
-                placeholder="Set label..."
-                onValueChange={(value: string) => setLabelSearch(value)}
-                autoFocus
-              />
-              <IssueLabelDropdownContent
-                onChange={onChange}
-                value={value}
-                setLabelSearch={setLabelSearch}
-                labelSearch={labelSearch}
-                labels={labels}
-              />
-            </Command>
-          </PopoverContent>
+          <PopoverPortal>
+            <PopoverContent className="w-72 p-0" align="end">
+              <Command shouldFilter={false}>
+                <CommandInput
+                  placeholder="Set label..."
+                  onValueChange={(value: string) => setLabelSearch(value)}
+                  autoFocus
+                />
+                <IssueLabelDropdownContent
+                  onChange={onChange}
+                  value={value}
+                  setLabelSearch={setLabelSearch}
+                  labelSearch={labelSearch}
+                  labels={labels}
+                />
+              </Command>
+            </PopoverContent>
+          </PopoverPortal>
         </Popover>
       </div>
     );

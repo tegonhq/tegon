@@ -6,21 +6,28 @@ import { useContextStore } from 'store/global-context-provider';
 interface ContentBoxProps {
   children: React.ReactNode;
   className?: string;
+  innerClassName?: string;
 }
 
 export const ContentBox = observer(
-  ({ children, className }: ContentBoxProps) => {
+  ({ children, className, innerClassName }: ContentBoxProps) => {
     const { applicationStore } = useContextStore();
 
     return (
       <main
         className={cn(
-          'p-3 pt-0 pl-0 h-[calc(100vh_-_48px)]',
+          'p-3 pl-0 h-[calc(100vh)]',
           applicationStore.sidebarCollapsed && 'pl-3',
           className,
         )}
       >
-        <div className="bg-background-2 h-full rounded-lg overflow-hidden shadow">
+        <div
+          className={cn(
+            'context-box bg-background-2 h-full rounded-lg overflow-hidden shadow',
+
+            innerClassName,
+          )}
+        >
           {children}
         </div>
       </main>

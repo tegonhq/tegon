@@ -31,10 +31,9 @@ export const IssueActivity = observer(() => {
 
   const { users, isLoading } = useUsersData(true);
 
-  const {
-    issuesHistoryStore,
-    linkedIssuesStore: { linkedIssues },
-  } = useContextStore();
+  const { issuesHistoryStore, linkedIssuesStore } = useContextStore();
+
+  const linkedIssues = linkedIssuesStore.getLinkedIssues(issue.id);
 
   const activities = [
     ...issuesHistoryStore

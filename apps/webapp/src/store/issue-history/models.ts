@@ -38,3 +38,5 @@ export const IssueHistory = types.model({
   relationChanges: types.union(types.null, RelationChangeModel),
   sourceMetadata: types.union(types.null, types.string, types.undefined),
 });
+
+export const IssueHistoriesModel = types.array(IssueHistory);
