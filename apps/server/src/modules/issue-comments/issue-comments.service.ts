@@ -46,6 +46,31 @@ export default class IssueCommentsService {
     return { bodyMarkdown, ...issueComment };
   }
 
+  async getReplyComments(issueCommentParams: IssueCommentRequestParamsDto) {
+    // Get all comments that have this comment as their parent
+    const replyComments = await this.prisma.issueComment.findMany({
+      where: {
+        parentId: issueCommentParams.issueCommentId,
+        deleted: null,
+      },
+      include: {
+        parent: true,
+        linkedComment: true,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    // Convert body to markdown for each reply
+    const repliesWithMarkdown = replyComments.map((comment) => ({
+      ...comment,
+      bodyMarkdown: convertTiptapJsonToMarkdown(comment.body),
+    }));
+
+    return repliesWithMarkdown;
+  }
+
   async createIssueComment(
     issueRequestParams: CreateIssueCommentRequestParamsDto,
     userId: string,

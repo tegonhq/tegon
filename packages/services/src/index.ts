@@ -17,3 +17,4 @@ export * from './workspace';
 export * from './conversation';
 export * from './cycles';
 export * from './templates';
+export * from './company';

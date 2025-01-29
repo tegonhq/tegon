@@ -8,6 +8,7 @@ import AIRequestsService from 'modules/ai-requests/ai-requests.services';
 import { IssueHistoryModule } from 'modules/issue-history/issue-history.module';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
 import { LinkedIssueModule } from 'modules/linked-issue/linked-issue.module';
+import { SupportModule } from 'modules/support/support.module';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 import { UsersService } from 'modules/users/users.service';
 import { VectorModule } from 'modules/vector/vector.module';
@@ -27,6 +28,7 @@ import IssuesService from './issues.service';
     LinkedIssueModule,
     VectorModule,
     BullModule.registerQueue({ name: 'issues' }),
+    SupportModule,
   ],
   controllers: [IssuesController, IssuesAIController],
   providers: [

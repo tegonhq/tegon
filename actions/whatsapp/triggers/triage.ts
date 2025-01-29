@@ -8,7 +8,7 @@ import {
   getLinkedIssueBySource,
 } from '@tegonhq/sdk';
 
-import { getStateId } from '../utils';
+import { getCompanyId, getStateId, isCreateTicket } from '../utils';
 import axios from 'axios';
 
 export const whatsappTriage = async (
@@ -86,37 +86,58 @@ export const whatsappTriage = async (
         })
       : null;
 
-  const existingIssueState = workflowStates.find(
-    (state) => state.id === existingIssue.issue.stateId,
+  const createTicket = await isCreateTicket(
+    integrationAccount.workspaceId,
+    existingIssue,
+    body,
   );
-
-  if (existingIssue && existingIssueState.category !== 'COMPLETED') {
-    // Create a comment on the existing issue instead
-    const commentBody = {
-      type: 'doc',
-      content: [
-        {
-          type: 'paragraph',
-          content: [
-            {
-              type: 'text',
-              text: body,
-            },
-          ],
-        },
-      ],
-    };
-    const exisitingSourcedata = existingIssue.sourceData as JsonObject;
-
-    return await createIssueComment({
-      issueId: existingIssue.issueId,
-      parentId: exisitingSourcedata.syncedCommentId as string,
-      body: JSON.stringify(commentBody),
-      sourceMetadata: { ...sourceMetadata, synced: true },
-    });
+  if (!createTicket) {
+    return { message: 'Ignoring casual message' };
   }
 
-  const createdIssue = await createIssue(issueInput);
+  if (existingIssue) {
+    const existingIssueState = workflowStates.find(
+      (state) => state.id === existingIssue.issue.stateId,
+    );
+    if (existingIssueState.category !== 'COMPLETED') {
+      // Create a comment on the existing issue instead
+      const commentBody = {
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                text: body,
+              },
+            ],
+          },
+        ],
+      };
+      const exisitingSourcedata = existingIssue.sourceData as JsonObject;
+
+      return await createIssueComment({
+        issueId: existingIssue.issueId,
+        parentId: exisitingSourcedata.syncedCommentId as string,
+        body: JSON.stringify(commentBody),
+        sourceMetadata: { ...sourceMetadata, synced: true },
+      });
+    }
+  }
+
+  const companyId = await getCompanyId(
+    integrationAccount.workspaceId,
+    whatsappUsername,
+  );
+  const supportData = {
+    email: chatId._serialized,
+    name: username,
+    source: 'Whatsapp',
+    companyId,
+  };
+
+  const createdIssue = await createIssue({ ...issueInput, supportData });
 
   await axios.post('http://localhost:3002/messages/broadcast', {
     clientId: integrationAccount.accountId,

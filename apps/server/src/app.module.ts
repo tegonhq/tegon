@@ -35,6 +35,7 @@ import { PeopleModule } from 'modules/people/people.module';
 import { ProjectsModule } from 'modules/projects/projects.module';
 import { ReplicationModule } from 'modules/replication/replication.module';
 import { SearchModule } from 'modules/search/search.module';
+import { SupportModule } from 'modules/support/support.module';
 import { SyncModule } from 'modules/sync/sync.module';
 import { SyncActionsModule } from 'modules/sync-actions/sync-actions.module';
 import { TeamsModule } from 'modules/teams/teams.module';
@@ -134,6 +135,7 @@ import { AppService } from './app.service';
 
     CompanyModule,
     PeopleModule,
+    SupportModule,
   ],
   controllers: [AppController],
   providers: [
