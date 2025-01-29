@@ -86,7 +86,7 @@ export const TeamList = observer(() => {
               <AccordionTrigger className="flex justify-between [&[data-state=open]>div>div>svg]:rotate-90 w-fit rounded-md min-w-0">
                 <div className="w-full justify-start flex items-center gap-1">
                   <div>
-                    <TeamIcon name={team.name} />
+                    <TeamIcon preferences={team.preferences} name={team.name} />
                   </div>
 
                   <div className="flex justify-center items-center gap-1 min-w-0">

@@ -58,7 +58,11 @@ export const TeamsDropdown = observer(
             aria-expanded={open}
             className="flex items-center px-0 shadow-none justify-between focus-visible:ring-1 focus-visible:border-primary"
           >
-            <TeamIcon name={teams[0].name} className="mr-1" />
+            <TeamIcon
+              preferences={teams[0].preferences}
+              name={teams[0].name}
+              className="mr-1"
+            />
             {teams.length > 1
               ? `${teams.map((team) => team.identifier).join(', ')}`
               : `${teams[0].name}`}
@@ -73,7 +77,7 @@ export const TeamsDropdown = observer(
           aria-expanded={open}
           className="flex items-center gap-1 justify-between shadow-none focus-visible:ring-1 focus-visible:border-primary "
         >
-          <TeamIcon name={teams[0].name} />
+          <TeamIcon preferences={teams[0].preferences} name={teams[0].name} />
 
           {teams.length > 1
             ? `${teams.map((team) => team.identifier).join(', ')}`

@@ -1,5 +1,3 @@
-import type { PriorityType } from '@tegonhq/types';
-
 export interface WorkspaceType {
   id: string;
   createdAt: string;
@@ -7,9 +5,6 @@ export interface WorkspaceType {
   slug: string;
   name: string;
   actionsEnabled: boolean;
-  preferences: {
-    priorityType?: PriorityType;
-  };
 }
 
 export interface UsersOnWorkspaceType {

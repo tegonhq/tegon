@@ -41,7 +41,7 @@ export const Header = observer(
               className="flex items-center gap-2"
               href={`/${query.workspaceSlug}/team/${team?.identifier}/issues`}
             >
-              <TeamIcon name={team?.name} />
+              <TeamIcon preferences={team.preferences} name={team?.name} />
 
               <span className="inline-block">{team?.name}</span>
             </BreadcrumbLink>

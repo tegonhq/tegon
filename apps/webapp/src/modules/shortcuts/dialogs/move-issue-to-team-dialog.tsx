@@ -90,7 +90,7 @@ export const MoveIssueToTeamDialog = observer(
 
       return teams.map((team: TeamType) => {
         return {
-          Icon: <TeamIcon name={team.name} />,
+          Icon: <TeamIcon preferences={team.preferences} name={team.name} />,
           text: team.name,
           value: team.id,
         };

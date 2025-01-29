@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Team, TeamType as TeamTypeEnum } from '@tegonhq/types';
 import { Button } from '@tegonhq/ui/components/button';
 import {
   Form,
@@ -10,13 +11,16 @@ import {
   FormDescription,
 } from '@tegonhq/ui/components/form';
 import { Input } from '@tegonhq/ui/components/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@tegonhq/ui/components/select';
 import { useToast } from '@tegonhq/ui/components/use-toast';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-import type { TeamType } from 'common/types';
-
-import { useCurrentWorkspace } from 'hooks/workspace';
 
 import { useCreateTeamMutation } from 'services/team';
 
@@ -30,6 +34,11 @@ export const CreateNewTeamSchema = z.object({
     })
     .max(50),
   identifier: z.string().min(3).max(3),
+  teamType: z.enum(['engineering', 'support'], {
+    errorMap: () => ({
+      message: 'Team type must be either engineering or support',
+    }),
+  }),
 });
 
 export function CreateNewTeam() {
@@ -38,13 +47,13 @@ export function CreateNewTeam() {
     defaultValues: {
       name: '',
       identifier: '',
+      teamType: 'engineering',
     },
   });
   const { toast } = useToast();
 
-  const workspace = useCurrentWorkspace();
   const { mutate: createTeam } = useCreateTeamMutation({
-    onSuccess: (data: TeamType) => {
+    onSuccess: (data: Team) => {
       toast({
         title: 'Created!',
         description: `New team ${data.name} is created`,
@@ -53,8 +62,16 @@ export function CreateNewTeam() {
     },
   });
 
-  const onSubmit = (values: { name: string; identifier: string }) => {
-    createTeam({ ...values, workspaceId: workspace.id });
+  const onSubmit = ({
+    name,
+    identifier,
+    teamType,
+  }: {
+    name: string;
+    identifier: string;
+    teamType: TeamTypeEnum;
+  }) => {
+    createTeam({ name, identifier, preferences: { teamType } });
   };
 
   return (
@@ -79,6 +96,37 @@ export function CreateNewTeam() {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="teamType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Team type</FormLabel>
+                  <FormDescription>
+                    Select the type of team - Engineering teams handle technical
+                    projects and development, while Support teams manage
+                    customer inquiries and assistance. This cannot be changed
+                    after team creation.
+                  </FormDescription>
+
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select team type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="engineering">Engineering</SelectItem>
+                        <SelectItem value="support">Support</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="identifier"

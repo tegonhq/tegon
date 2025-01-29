@@ -1,3 +1,10 @@
+export type TeamTypeInterface = 'engineering' | 'support';
+
+export interface TeamPreferences {
+  cyclesEnabled?: boolean;
+  teamType?: string;
+}
+
 export interface TeamType {
   id: string;
   createdAt: string;
@@ -6,10 +13,7 @@ export interface TeamType {
   identifier: string;
   workspaceId: string;
   currentCycle?: number;
-  preferences: {
-    cyclesEnabled?: boolean;
-    teamType?: string;
-  };
+  preferences: TeamPreferences;
 }
 
 export interface WorkflowType {

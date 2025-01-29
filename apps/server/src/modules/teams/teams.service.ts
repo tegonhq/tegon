@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
+  CreateTeamDto,
   RoleEnum,
   Team,
   UpdateTeamDto,
@@ -11,8 +12,8 @@ import { PrismaService } from 'nestjs-prisma';
 import { UserIdParams } from 'modules/users/users.interface';
 
 import {
+  supportWorkflowSeedData,
   TeamRequestParams,
-  CreateTeamInput,
   workflowSeedData,
 } from './teams.interface';
 
@@ -74,13 +75,21 @@ export default class TeamsService {
   async createTeam(
     workspaceId: string,
     userId: string,
-    teamData: CreateTeamInput,
+    { preferences, ...teamData }: CreateTeamDto,
   ): Promise<Team> {
     const team = await this.prisma.team.create({
       data: {
         workspaceId,
         ...teamData,
-        workflow: { create: workflowSeedData },
+        workflow: {
+          create:
+            preferences.teamType === 'support'
+              ? supportWorkflowSeedData
+              : workflowSeedData,
+        },
+        preferences: {
+          ...preferences,
+        },
       },
     });
 

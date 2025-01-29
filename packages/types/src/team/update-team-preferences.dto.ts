@@ -1,4 +1,9 @@
-import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional } from 'class-validator';
+
+export enum TeamType {
+  ENGINEERING = 'engineering',
+  SUPPORT = 'support',
+}
 
 export class UpdateTeamPreferencesDto {
   @IsOptional()
@@ -14,6 +19,6 @@ export class UpdateTeamPreferencesDto {
   upcomingCycles?: number; // Number of cycles to create
 
   @IsOptional()
-  @IsBoolean()
-  triage?: boolean;
+  @IsEnum(TeamType)
+  teamType?: TeamType;
 }

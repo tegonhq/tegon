@@ -1,25 +1,11 @@
+import type { Team } from '@tegonhq/types';
+
+import { createTeam } from '@tegonhq/services';
 import { useMutation } from 'react-query';
-
-import type { TeamType } from 'common/types';
-
-import { ajaxPost } from 'services/utils';
-
-export interface CreateTeamParams {
-  name: string;
-  identifier: string;
-  workspaceId: string;
-}
-
-export function createTeam({ workspaceId, ...data }: CreateTeamParams) {
-  return ajaxPost({
-    url: `/api/v1/teams?workspaceId=${workspaceId}`,
-    data,
-  });
-}
 
 export interface MutationParams {
   onMutate?: () => void;
-  onSuccess?: (data: TeamType) => void;
+  onSuccess?: (data: Team) => void;
   onError?: (error: string) => void;
 }
 
@@ -39,7 +25,7 @@ export function useCreateTeamMutation({
     onError && onError(errorText);
   };
 
-  const onMutationSuccess = (data: TeamType) => {
+  const onMutationSuccess = (data: Team) => {
     onSuccess && onSuccess(data);
   };
 

@@ -7,7 +7,6 @@ import {
 
 import type { LinkedIssueType } from 'common/types';
 
-import { CommentArray } from 'store/comments';
 import { tegonDatabase } from 'store/database';
 
 import { LinkedIssueArray } from './models';
@@ -20,7 +19,7 @@ export const LinkedIssuesStore: IAnyStateTreeNode = types
     const update = (linkedIssue: LinkedIssueType, id: string) => {
       const issueId = linkedIssue.issueId;
       if (!self.linkedIssues.has(issueId)) {
-        self.linkedIssues.set(issueId, CommentArray.create([]));
+        self.linkedIssues.set(issueId, LinkedIssueArray.create([]));
       }
 
       const linkedIssuesArray = self.linkedIssues.get(issueId);
