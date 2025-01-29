@@ -4,6 +4,7 @@ import { IssueHistory } from '../issue-history';
 import { IssueRelation } from '../issue-relation';
 import { IssueSuggestion } from '../issue-suggestion';
 import { LinkedIssue } from '../linked-issue';
+import { Support } from '../support';
 import { Team } from '../team';
 
 export class Issue {
@@ -34,6 +35,7 @@ export class Issue {
   parentId: string | null;
   subIssue?: Issue[];
   attachments: string[];
+  support?: Support;
   comments?: IssueComment[];
   history?: IssueHistory[];
   linkedIssue?: LinkedIssue[];

@@ -40,3 +40,6 @@ export * from './project';
 export * from './conversation';
 export * from './conversation-history';
 export * from './cycle';
+export * from './company';
+export * from './people';
+export * from './support';

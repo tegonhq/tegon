@@ -5,6 +5,7 @@ import {
   ActionTypesEnum,
   EventBody,
   EventHeaders,
+  EventQueryParams,
   IntegrationPayloadEventType,
 } from '@tegonhq/types';
 import { Response } from 'express';
@@ -37,6 +38,7 @@ export default class WebhookService {
     sourceName: string,
     eventHeaders: EventHeaders,
     eventBody: EventBody,
+    eventQueryParams: EventQueryParams,
   ) {
     this.logger.log({
       message: `Received webhook ${sourceName}`,
@@ -49,6 +51,7 @@ export default class WebhookService {
         event: IntegrationPayloadEventType.WEBHOOK_RESPONSE,
         eventBody,
         eventHeaders,
+        eventQueryParams,
       },
     );
 

@@ -147,31 +147,52 @@ model AuthorizationCode {
   code                  String
 }
 
-model Conversation {
+model Company {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
-  title String?
-  user        User       @relation(fields: [userId], references: [id])
-  userId      String
-  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
-  workspaceId String?
+
+  name       String
+  domain     String?
+  website    String?
+  description String?
+  logo       String?
+
+  industry String?
+  size     String?
+  type     String?
+  metadata Json?
+
+  people      People[] // All people from this company
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+}
+
+model Conversation {
+  id                  String                @id @default(uuid())
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  deleted             DateTime?
+  title               String?
+  user                User                  @relation(fields: [userId], references: [id])
+  userId              String
+  workspace           Workspace?            @relation(fields: [workspaceId], references: [id])
+  workspaceId         String?
   ConversationHistory ConversationHistory[]
 }
 
-
 model ConversationHistory {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   DateTime?
-  message  String
-  userType UserType
-  context Json?
-  thoughts Json?
-  user     User?   @relation(fields: [userId], references: [id])
-  userId   String?
+  id             String       @id @default(uuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deleted        DateTime?
+  message        String
+  userType       UserType
+  context        Json?
+  thoughts       Json?
+  user           User?        @relation(fields: [userId], references: [id])
+  userId         String?
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   conversationId String
 }
@@ -182,9 +203,9 @@ model Cycle {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  name                  String
-  description           String?
-  number                Int
+  name        String
+  description String?
+  number      Int
 
   team   Team   @relation(fields: [teamId], references: [id])
   teamId String
@@ -194,7 +215,7 @@ model Cycle {
   closedAt  DateTime?
   status    String
 
-  history   CycleHistory[]
+  history CycleHistory[]
 
   preferences Json @default("{}")
 
@@ -202,25 +223,24 @@ model Cycle {
 }
 
 model CycleHistory {
-
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  userId         String?
-  cycle          Cycle   @relation(fields: [cycleId], references: [id])
-  cycleId        String
+  userId  String?
+  cycle   Cycle   @relation(fields: [cycleId], references: [id])
+  cycleId String
 
-  issueId        String
-  issue          Issue @relation(fields: [issueId], references: [id])
+  issueId String
+  issue   Issue  @relation(fields: [issueId], references: [id])
 
-  changeType  CycleHistoryChangeType
+  changeType CycleHistoryChangeType
 
-  fromStateId     String?
-  toStateId       String?
-  fromEstimate    Int?
-  toEstimate      Int?
+  fromStateId  String?
+  toStateId    String?
+  fromEstimate Int?
+  toEstimate   Int?
 }
 
 model Emoji {
@@ -317,8 +337,8 @@ model Issue {
   projectMilestone   ProjectMilestone? @relation(fields: [projectMilestoneId], references: [id])
   projectMilestoneId String?
 
-  cycle      Cycle?   @relation(fields: [cycleId], references: [id])
-  cycleId    String?
+  cycle   Cycle?  @relation(fields: [cycleId], references: [id])
+  cycleId String?
 
   createdById String?
   updatedById String?
@@ -338,6 +358,8 @@ model Issue {
   issueRelations IssueRelation[]
   cycleHistory   CycleHistory[]
   projectHistory ProjectHistory[]
+
+  support Support?
 
   IssueSuggestion   IssueSuggestion? @relation(fields: [issueSuggestionId], references: [id])
   issueSuggestionId String?          @unique
@@ -380,27 +402,27 @@ model IssueHistory {
   issueId        String
   sourceMetaData Json?
 
-  addedLabelIds   String[]
-  removedLabelIds String[]
-  fromPriority    Int?
-  toPriority      Int?
-  fromStateId     String?
-  toStateId       String?
-  fromEstimate    Int?
-  toEstimate      Int?
-  fromAssigneeId  String?
-  toAssigneeId    String?
-  fromParentId    String?
-  toParentId      String?
-  fromTeamId      String?
-  toTeamId        String?
-  fromProjectId    String?
-  toProjectId      String?
-  fromProjectMilestoneId  String?
-  toProjectMilestoneId    String?
+  addedLabelIds          String[]
+  removedLabelIds        String[]
+  fromPriority           Int?
+  toPriority             Int?
+  fromStateId            String?
+  toStateId              String?
+  fromEstimate           Int?
+  toEstimate             Int?
+  fromAssigneeId         String?
+  toAssigneeId           String?
+  fromParentId           String?
+  toParentId             String?
+  fromTeamId             String?
+  toTeamId               String?
+  fromProjectId          String?
+  toProjectId            String?
+  fromProjectMilestoneId String?
+  toProjectMilestoneId   String?
 
-  fromCycleId  String?
-  toCycleId    String?
+  fromCycleId     String?
+  toCycleId       String?
   relationChanges Json?
 }
 
@@ -528,6 +550,26 @@ model Notification {
   workspaceId String
 }
 
+model People {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name  String
+  email String
+  phone String?
+
+  metadata Json?
+
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+
+  reportedIssues Support[]
+
+  @@unique([email, companyId])
+}
+
 model Project {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
@@ -558,18 +600,18 @@ model ProjectHistory {
   updatedAt DateTime  @updatedAt
   deleted   DateTime?
 
-  userId         String?
-  project        Project   @relation(fields: [projectId], references: [id])
-  projectId      String
-  issueId        String
-  issue          Issue @relation(fields: [issueId], references: [id])
-  
-  changeType     ProjectHistoryChangeType
+  userId    String?
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+  issueId   String
+  issue     Issue   @relation(fields: [issueId], references: [id])
 
-  fromStateId     String?
-  toStateId       String?
-  fromEstimate    Int?
-  toEstimate      Int?
+  changeType ProjectHistoryChangeType
+
+  fromStateId  String?
+  toStateId    String?
+  fromEstimate Int?
+  toEstimate   Int?
 }
 
 model ProjectMilestone {
@@ -620,6 +662,29 @@ model Reaction {
   @@unique([emojiId, commentId, userId])
 }
 
+model Support {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  reportedBy   People? @relation(fields: [reportedById], references: [id])
+  reportedById String?
+
+  slaStatus       String?
+
+  actualFrtAt     DateTime?
+  firstResponseAt DateTime?
+  nextResponseAt  DateTime?
+  resolvedAt      DateTime?
+  slaDueBy        DateTime?
+
+  metadata Json?
+
+  issue   Issue  @relation(fields: [issueId], references: [id])
+  issueId String @unique
+}
+
 model SyncAction {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
@@ -647,17 +712,17 @@ model Team {
   identifier String
   icon       String?
 
-  currentCycle   Int?
+  currentCycle Int?
 
-  workspace      Workspace        @relation(fields: [workspaceId], references: [id])
-  workspaceId    String
-  issue          Issue[]
-  cycles         Cycle[]
-  label          Label[]
-  template       Template[]
-  workflow       Workflow[]
-  preferences    Json  @default("{}")
-  View           View[]
+  workspace   Workspace  @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+  issue       Issue[]
+  cycles      Cycle[]
+  label       Label[]
+  template    Template[]
+  workflow    Workflow[]
+  preferences Json       @default("{}")
+  View        View[]
 
   @@unique([name, identifier, workspaceId])
 }
@@ -708,13 +773,13 @@ model UsersOnWorkspaces {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user                    User      @relation(fields: [userId], references: [id])
-  workspace               Workspace @relation(fields: [workspaceId], references: [id])
-  userId                  String
-  workspaceId             String
-  teamIds                 String[]
-  status                  Status    @default(ACTIVE)
-  settings                Json      @default("{}")
+  user        User      @relation(fields: [userId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  userId      String
+  workspaceId String
+  teamIds     String[]
+  status      Status    @default(ACTIVE)
+  settings    Json      @default("{}")
 
   externalAccountMappings Json?
   role                    Role      @default(ADMIN)
@@ -791,6 +856,7 @@ model Workspace {
 
   ActionEvent  ActionEvent[]
   Conversation Conversation[]
+  Company      Company[]
 }
 
 enum Preference {
@@ -931,7 +997,6 @@ enum CycleHistoryChangeType {
   UPDATED
   REMOVED
 }
-
 
 enum ProjectHistoryChangeType {
   ADDED
