@@ -10,6 +10,7 @@ import {
 
 import { CreateIssueRelationDto } from '../issue-relation';
 import { CreateLinkedIssueDto } from '../linked-issue';
+import { SupportDto } from '../support';
 
 export class LinkIssueDto {
   @IsString()
@@ -108,4 +109,8 @@ export class CreateIssueDto {
   @IsOptional()
   @IsString()
   projectMilestoneId?: string;
+
+  @IsOptional()
+  @IsObject()
+  supportData?: SupportDto;
 }

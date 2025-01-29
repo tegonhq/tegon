@@ -29,6 +29,7 @@ import IssuesHistoryService from 'modules/issue-history/issue-history.service';
 import IssueRelationService from 'modules/issue-relation/issue-relation.service';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { LoggerService } from 'modules/logger/logger.service';
+import SupportService from 'modules/support/support.service';
 import { Env } from 'modules/triggerdev/triggerdev.interface';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
@@ -57,6 +58,7 @@ export default class IssuesService {
     private aiRequestsService: AIRequestsService,
     private linkedIssueService: LinkedIssueService,
     private triggerdevService: TriggerdevService,
+    private supportService: SupportService,
   ) {}
 
   async getIssueById(issueParams: IssueRequestParamsDto): Promise<Issue> {
@@ -106,10 +108,11 @@ export default class IssuesService {
    * @returns The created issue with its relations.
    */
   async createIssueAPI(
-    issueData: CreateIssueDto,
+    createIssueData: CreateIssueDto,
     userId: string,
   ): Promise<Issue> {
     // Destructure issueData to separate parentId, subIssues, issueRelation, teamId, and other issue data
+    const { supportData, ...issueData } = createIssueData;
     const { issueRelation, teamId, linkIssueData, sourceMetadata } = issueData;
 
     this.logger.debug({
@@ -231,6 +234,14 @@ export default class IssuesService {
         const descriptionMarkdown = convertTiptapJsonToMarkdown(
           issues[0].description,
         );
+
+        if (supportData) {
+          await this.supportService.createSupportData(
+            issues[0].id,
+            issues[0].team.workspaceId,
+            supportData,
+          );
+        }
 
         // Return the main created issue
         return { ...issues[0], descriptionMarkdown };
