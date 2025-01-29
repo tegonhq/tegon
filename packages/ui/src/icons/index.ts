@@ -67,6 +67,8 @@ export * from './my-issues';
 export * from './fire';
 export * from './cycle';
 export * from './activity';
+export * from './help-centre';
+export * from './code';
 
 export * from './team-line';
 export * from './issues-fill';

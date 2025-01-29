@@ -50,7 +50,10 @@ export const useProjectColumns = (): Array<ColumnDef<TeamType>> => {
       cell: ({ row }) => {
         return (
           <div className="capitalize pl-4 py-2 flex items-center gap-1">
-            <TeamIcon name={row.original.name} />
+            <TeamIcon
+              preferences={row.original.preferences}
+              name={row.original.name}
+            />
             {row.original.name}
           </div>
         );

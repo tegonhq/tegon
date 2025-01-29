@@ -1,17 +1,5 @@
 import { WorkflowCategoryEnum } from '@tegonhq/types';
-import { IsOptional, IsString } from 'class-validator';
-
-export class CreateTeamInput {
-  @IsString()
-  name: string;
-
-  @IsString()
-  identifier: string;
-
-  @IsOptional()
-  @IsString()
-  icon?: string;
-}
+import { IsString } from 'class-validator';
 
 export class TeamRequestParams {
   @IsString()
@@ -77,6 +65,33 @@ export const workflowSeedData = [
     name: 'Canceled',
     category: WorkflowCategoryEnum.CANCELED,
     color: '3',
+    position: 0,
+  },
+];
+
+export const supportWorkflowSeedData = [
+  {
+    name: 'New',
+    category: WorkflowCategoryEnum.TRIAGE,
+    color: '0',
+    position: 0,
+  },
+  {
+    name: 'In Progress',
+    category: WorkflowCategoryEnum.STARTED,
+    color: '4',
+    position: 0,
+  },
+  {
+    name: 'Waiting on Customer',
+    category: WorkflowCategoryEnum.STARTED,
+    color: '5',
+    position: 1,
+  },
+  {
+    name: 'Resolved',
+    category: WorkflowCategoryEnum.COMPLETED,
+    color: '6',
     position: 0,
   },
 ];

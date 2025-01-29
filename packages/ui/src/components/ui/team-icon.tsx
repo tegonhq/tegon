@@ -1,13 +1,19 @@
-import { TeamLine } from '../../icons';
+import { HelpCentre, Code } from '../../icons';
 import { getTeamColor } from '../../lib/color-utils';
 import { cn } from '../../lib/utils';
 
 export interface TeamIconProps {
   name: string;
   className?: string;
+  icon?: string;
+  preferences?: {
+    teamType?: string;
+  };
 }
 
-export function TeamIcon({ name, className }: TeamIconProps) {
+export function TeamIcon({ name, className, preferences }: TeamIconProps) {
+  const Icon = preferences?.teamType === 'support' ? HelpCentre : Code;
+
   return (
     <div
       className={cn(
@@ -16,7 +22,7 @@ export function TeamIcon({ name, className }: TeamIconProps) {
       )}
       style={{ background: name && getTeamColor(name) }}
     >
-      <TeamLine className="shrink-0 !h-4 !w-4" />
+      <Icon className="shrink-0 !h-4 !w-4" />
     </div>
   );
 }

@@ -41,7 +41,7 @@ export function TeamDropdown({ value, onChange }: TeamProps) {
           variant="secondary"
           className="flex items-center text-foreground gap-2"
         >
-          <TeamIcon name={team.name} />
+          <TeamIcon preferences={team.preferences} name={team.name} />
           {team?.name}
         </Button>
       </DropdownMenuTrigger>

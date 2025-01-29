@@ -8,6 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  CreateTeamDto,
   Team,
   UpdateTeamDto,
   UpdateTeamPreferencesDto,
@@ -19,7 +20,7 @@ import { UserId, Workspace } from 'modules/auth/session.decorator';
 import { AdminGuard } from 'modules/users/admin.guard';
 import { UserIdParams } from 'modules/users/users.interface';
 
-import { TeamRequestParams, CreateTeamInput } from './teams.interface';
+import { TeamRequestParams } from './teams.interface';
 import TeamsService from './teams.service';
 
 @Controller({
@@ -58,7 +59,7 @@ export class TeamsController {
   async createTeam(
     @Workspace() workspaceId: string,
     @UserId() userId: string,
-    @Body() teamData: CreateTeamInput,
+    @Body() teamData: CreateTeamDto,
   ): Promise<Team> {
     return await this.teamsService.createTeam(workspaceId, userId, teamData);
   }

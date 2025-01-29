@@ -75,7 +75,7 @@ export const TeamList = observer(({ teams }: TeamListProps) => {
         size="lg"
         variant="ghost"
       >
-        <TeamIcon name={team.name} />
+        <TeamIcon preferences={team.preferences} name={team.name} />
 
         <h3 className="pl-2">{team.name}</h3>
       </Button>

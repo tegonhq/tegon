@@ -120,7 +120,7 @@ export const TeamBoardList = observer(({ team }: TeamBoardListProps) => {
           <div className="flex flex-col max-h-[100%] w-[350px]">
             <div className="flex gap-1 items-center mb-2 w-[310px]">
               <div className="inline-flex items-center w-fit h-8 rounded-2xl px-4 py-2 gap-1 min-w-[0px] bg-grayAlpha-100">
-                <TeamIcon name={team.name} />
+                <TeamIcon preferences={team.preferences} name={team.name} />
                 <div className="truncate"> {team.name}</div>
               </div>
 

@@ -54,7 +54,7 @@ export const Header = observer(({ sideView }: HeaderProps) => {
               className="flex items-center gap-2"
               href={`/${workspaceSlug}/team/${team.identifier}/all`}
             >
-              <TeamIcon name={team.name} />
+              <TeamIcon preferences={team.preferences} name={team.name} />
               <span className="inline-block">{team.name}</span>
             </BreadcrumbLink>
           </BreadcrumbItem>
