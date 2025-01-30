@@ -92,7 +92,7 @@ export async function isCreateTicket(
         ),
       },
     ],
-    llmModel: LLMMappings.GPT35TURBO,
+    llmModel: LLMMappings.GPT4O,
     model: 'GroupCompanyName',
     workspaceId,
   };

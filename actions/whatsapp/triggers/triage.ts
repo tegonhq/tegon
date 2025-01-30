@@ -22,8 +22,12 @@ export const whatsappTriage = async (
     body,
     messageId: { _serialized: sourceId },
     messageId,
-    chat: { name: username, id: chatId },
+    chat: { name: chatName, id: chatId },
     from,
+    user: {
+      id: { _serialized: whatsappUserId },
+      name: username,
+    },
   } = eventBody;
 
   // Skip status messages from WhatsApp
@@ -131,7 +135,7 @@ export const whatsappTriage = async (
     whatsappUsername,
   );
   const supportData = {
-    email: chatId._serialized,
+    email: whatsappUserId,
     name: username,
     source: 'Whatsapp',
     companyId,
@@ -139,7 +143,7 @@ export const whatsappTriage = async (
 
   const createdIssue = await createIssue({ ...issueInput, supportData });
 
-  await axios.post('http://localhost:3002/messages/broadcast', {
+  await axios.post(`${process.env.SOCKET_SERVER_URL}/messages/broadcast`, {
     clientId: integrationAccount.accountId,
     payload: {
       type: 'ISSUE_CREATED',
@@ -151,7 +155,7 @@ export const whatsappTriage = async (
   // Create Link Comment
   const issueComment = await createIssueComment({
     issueId: createdIssue.id,
-    body: `Whatsapp conversation in #${whatsappUsername}`,
+    body: `Whatsapp conversation in #${chatName}`,
     sourceMetadata: { ...sourceMetadata, synced: true },
   });
 

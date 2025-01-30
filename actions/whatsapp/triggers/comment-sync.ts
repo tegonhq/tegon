@@ -27,7 +27,6 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
   }
 
   const parentIssueComment = issueComment.parent;
-
   const parentSourceMetadata = parentIssueComment
     ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (parentIssueComment.sourceMetadata as Record<string, any>)
@@ -59,7 +58,7 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
   }
 
   // Send a POST request to the Slack API to post the message
-  await axios.post('http://localhost:3002/messages/broadcast', {
+  await axios.post(`${process.env.SOCKET_SERVER_URL}/messages/broadcast`, {
     clientId: integrationAccount.accountId,
     payload: {
       type: 'ISSUE_COMMENT',

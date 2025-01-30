@@ -123,6 +123,7 @@
     "rxjs": "7.8.1",
     "simple-oauth2": "^5.0.0",
     "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.4",
     "supertokens-node": "^21.0.0",
     "turndown": "^7.2.0",
     "typesense": "^1.7.2",
