@@ -27,7 +27,7 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
   }
 
   const parentIssueComment = issueComment.parent;
-  console.log(parentIssueComment);
+
   const parentSourceMetadata = parentIssueComment
     ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (parentIssueComment.sourceMetadata as Record<string, any>)
@@ -58,7 +58,6 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
     return { message: 'Linked issue is not sync with source' };
   }
 
-  console.log(parentSourceMetadata);
   // Send a POST request to the Slack API to post the message
   await axios.post('http://localhost:3002/messages/broadcast', {
     clientId: integrationAccount.accountId,

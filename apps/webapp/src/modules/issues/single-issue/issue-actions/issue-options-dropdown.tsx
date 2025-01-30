@@ -13,8 +13,10 @@ import { AddIssueRelationModal } from 'modules/issues/components/modals';
 import { MoveIssueToTeamDialog } from 'modules/shortcuts/dialogs';
 
 import type { IssueRelationEnum } from 'common/types';
+import { TeamTypeEnum } from 'common/types';
 
 import { useIssueData } from 'hooks/issues';
+import { useTeamWithId } from 'hooks/teams';
 
 import { DeleteIssueDialog } from './delete-issue-dialog';
 import { DeleteIssueItem } from './delete-issue-item';
@@ -24,6 +26,8 @@ import { RemoveParentIssue } from './remove-parent-issue';
 
 export function IssueOptionsDropdown() {
   const currentIssue = useIssueData();
+  const team = useTeamWithId(currentIssue?.teamId);
+  const teamType = team.preferences?.teamType;
   const [relatedModal, setRelatedModal] =
     React.useState<IssueRelationEnum>(undefined);
   const [deleteIssueDialog, setDeleteIssueDialog] = React.useState(false);
@@ -45,11 +49,16 @@ export function IssueOptionsDropdown() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
-          <DropdownMenuItem onClick={() => setMoveIssueDialog(true)}>
-            <DropdownItem Icon={ArrowForwardLine} title="Move to team" />
-          </DropdownMenuItem>
+          {teamType === TeamTypeEnum.ENGINEERING && (
+            <DropdownMenuItem onClick={() => setMoveIssueDialog(true)}>
+              <DropdownItem Icon={ArrowForwardLine} title="Move to team" />
+            </DropdownMenuItem>
+          )}
 
-          <RelatedDropdownItems setRelatedModal={setRelatedModal} />
+          <RelatedDropdownItems
+            setRelatedModal={setRelatedModal}
+            teamType={teamType as TeamTypeEnum}
+          />
           <DropdownMenuSeparator />
           {currentIssue.parentId && <RemoveParentIssue issue={currentIssue} />}
           <DeleteIssueItem setDeleteIssueDialog={setDeleteIssueDialog} />

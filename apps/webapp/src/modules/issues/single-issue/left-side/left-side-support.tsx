@@ -26,6 +26,7 @@ import { FileUpload } from './file-upload';
 import { IssueSubIssueSelector } from './issue-sub-issue-selector';
 import { IssueTitle } from './issue-title';
 import { ParentIssueView } from './parent-issue-view';
+import { RelationsView } from './relations-view';
 import { SimilarIssuesView } from './similar-issues-view';
 
 export const LeftSideSupport = observer(() => {
@@ -88,6 +89,8 @@ export const LeftSideSupport = observer(() => {
                 <IssueSubIssueSelector />
               </EditorExtensions>
             </Editor>
+
+            <RelationsView issueId={issue.id} />
 
             <div className="px-6 flex flex-col">
               <CommentsActivity />

@@ -23,4 +23,9 @@ export enum MODELS {
   Conversation = 'Conversation',
   ConversationHistory = 'ConversationHistory',
   Template = 'Template',
+
+  // Support
+  Support = 'Support',
+  People = 'People',
+  Company = 'Company',
 }

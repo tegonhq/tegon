@@ -20,9 +20,7 @@ interface SubIssueViewProps {
 
 export function SubIssueView({ childIssues, issueId }: SubIssueViewProps) {
   const [newIssueDialog, setNewIssueDialog] = React.useState(false);
-  const [isOpen, setOpen] = React.useState(
-    childIssues.length === 0 ? false : true,
-  );
+  const [isOpen, setOpen] = React.useState(false);
   const issues = useSortIssues(childIssues);
 
   return (

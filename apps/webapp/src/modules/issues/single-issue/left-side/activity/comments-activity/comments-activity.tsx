@@ -17,7 +17,6 @@ import { IssueComment } from './issue-comment';
 
 export const CommentsActivity = observer(() => {
   const issue = useIssueData();
-  console.log(issue);
   const { commentsStore } = useContextStore();
 
   const { users, isLoading } = useUsersData(true);

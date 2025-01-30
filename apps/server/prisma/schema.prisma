@@ -567,7 +567,9 @@ model People {
 
   reportedIssues Support[]
 
-  @@unique([email, companyId])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+  @@unique([email, workspaceId])
 }
 
 model Project {
@@ -857,6 +859,7 @@ model Workspace {
   ActionEvent  ActionEvent[]
   Conversation Conversation[]
   Company      Company[]
+  People       People[]
 }
 
 enum Preference {
@@ -898,6 +901,7 @@ enum ModelName {
   Attachment
   AIRequest
   Cycle
+  Company
   Conversation
   ConversationHistory
   Emoji
@@ -914,10 +918,12 @@ enum ModelName {
   LinkedComment
   LinkedIssue
   Notification
+  People
   Project
   ProjectMilestone
   Prompt
   Reaction
+  Support
   SyncAction
   Team
   Template

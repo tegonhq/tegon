@@ -276,9 +276,7 @@ export const IssuesStore: IAnyStateTreeNode = types
     },
     getIssuesFromArray(issueIds: string[]): IssueType[] {
       return issueIds
-        .map((issueId: string) =>
-          (self as IssuesStoreType).getIssueById(issueId),
-        )
+        .map((issueId: string) => self.issuesMap.get(issueId))
         .filter(Boolean);
     },
     getIssueByNumber(

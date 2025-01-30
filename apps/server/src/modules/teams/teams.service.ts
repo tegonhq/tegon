@@ -83,7 +83,7 @@ export default class TeamsService {
         ...teamData,
         workflow: {
           create:
-            preferences.teamType === 'support'
+            preferences?.teamType === 'support'
               ? supportWorkflowSeedData
               : workflowSeedData,
         },

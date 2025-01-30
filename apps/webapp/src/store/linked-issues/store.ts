@@ -36,7 +36,7 @@ export const LinkedIssuesStore: IAnyStateTreeNode = types
       }
     };
     const deleteById = (id: string) => {
-      // Iterate through all comment arrays in the map
+      // Iterate through all linked issues arrays in the map
       for (const [issueId, linkedIssuesArray] of self.linkedIssues.entries()) {
         const indexToDelete = linkedIssuesArray.findIndex(
           (obj) => obj.id === id,
@@ -44,11 +44,11 @@ export const LinkedIssuesStore: IAnyStateTreeNode = types
 
         if (indexToDelete !== -1) {
           linkedIssuesArray.splice(indexToDelete, 1);
-          // If the comments array is empty, we can remove it from the map
+          // If the linked issues array is empty, we can remove it from the map
           if (linkedIssuesArray.length === 0) {
             self.linkedIssues.delete(issueId);
           }
-          break; // Exit loop once we've found and deleted the comment
+          break; // Exit loop once we've found and deleted the linked issue
         }
       }
     };

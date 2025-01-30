@@ -16,3 +16,6 @@ export * from './project';
 export * from './cycle';
 export * from './conversation';
 export * from './template';
+export * from './support';
+export * from './people';
+export * from './company';

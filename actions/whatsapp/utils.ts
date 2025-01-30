@@ -71,7 +71,6 @@ export async function isCreateTicket(
   let previousMessage = '';
   if (linkedIssue) {
     const linkedSourceData = linkedIssue.sourceData as JsonObject;
-    console.log(linkedSourceData.syncedCommentId);
 
     const issueComments = await getIssueCommentReplies({
       issueCommentId: linkedSourceData.syncedCommentId as string,
