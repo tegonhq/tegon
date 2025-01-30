@@ -13,77 +13,99 @@ import {
   DuplicateLine,
   BlocksFill,
 } from '@tegonhq/ui/icons';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { IssueRelationEnum } from 'common/types';
+import { IssueRelationEnum, TeamTypeEnum } from 'common/types';
 
 import { DropdownItem } from './dropdown-item';
 
 interface RelatedDropdownItemsProps {
   setRelatedModal: (type: IssueRelationEnum) => void;
+  teamType: TeamTypeEnum;
 }
 
-export function RelatedDropdownItems({
-  setRelatedModal,
-}: RelatedDropdownItemsProps) {
-  return (
-    <>
-      <DropdownMenuSub>
-        <DropdownMenuSubTrigger>
-          <DropdownItem Icon={RelatedIssueLine} title="Add related" />
-        </DropdownMenuSubTrigger>
-        <DropdownMenuPortal>
-          <DropdownMenuSubContent>
-            <DropdownMenuItem
-              onClick={() => {
-                setRelatedModal(IssueRelationEnum.PARENT);
-              }}
-            >
-              <DropdownItem Icon={ParentIssueLine} title="Parent of..." />
-            </DropdownMenuItem>
+const relationshipItems = {
+  [TeamTypeEnum.ENGINEERING]: [
+    {
+      type: IssueRelationEnum.PARENT,
+      Icon: ParentIssueLine,
+      title: 'Parent of...',
+    },
+    {
+      type: IssueRelationEnum.SUB_ISSUE,
+      Icon: SubIssue,
+      title: 'Sub-issue of...',
+    },
+    {
+      type: IssueRelationEnum.RELATED,
+      Icon: RelatedIssueLine,
+      title: 'Related to...',
+    },
+    {
+      type: IssueRelationEnum.BLOCKED,
+      Icon: BlockedFill,
+      title: 'Blocked by...',
+    },
+    {
+      type: IssueRelationEnum.BLOCKS,
+      Icon: BlocksFill,
+      title: 'Blocks...',
+    },
+    {
+      type: IssueRelationEnum.DUPLICATE_OF,
+      Icon: DuplicateLine,
+      title: 'Duplicate of...',
+    },
+  ],
+  [TeamTypeEnum.SUPPORT]: [
+    {
+      type: IssueRelationEnum.RELATED,
+      Icon: RelatedIssueLine,
+      title: 'Related to...',
+    },
+    {
+      type: IssueRelationEnum.BLOCKED,
+      Icon: BlockedFill,
+      title: 'Blocked by...',
+    },
 
-            <DropdownMenuItem
-              onClick={() => {
-                setRelatedModal(IssueRelationEnum.SUB_ISSUE);
-              }}
-            >
-              <DropdownItem Icon={SubIssue} title=" Sub-issue of..." />
-            </DropdownMenuItem>
+    {
+      type: IssueRelationEnum.DUPLICATE_OF,
+      Icon: DuplicateLine,
+      title: 'Duplicate of...',
+    },
+  ],
+};
 
-            <DropdownMenuItem
-              onClick={() => {
-                setRelatedModal(IssueRelationEnum.RELATED);
-              }}
-            >
-              <DropdownItem Icon={RelatedIssueLine} title=" Related to..." />
-            </DropdownMenuItem>
+export const RelatedDropdownItems = observer(
+  ({ setRelatedModal, teamType }: RelatedDropdownItemsProps) => {
+    const items =
+      relationshipItems[teamType] ||
+      relationshipItems[TeamTypeEnum.ENGINEERING];
 
-            <DropdownMenuItem
-              onClick={() => {
-                setRelatedModal(IssueRelationEnum.BLOCKED);
-              }}
-            >
-              <DropdownItem Icon={BlockedFill} title=" Blocked by..." />
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onClick={() => {
-                setRelatedModal(IssueRelationEnum.BLOCKS);
-              }}
-            >
-              <DropdownItem Icon={BlocksFill} title="Blocks..." />
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onClick={() => {
-                setRelatedModal(IssueRelationEnum.DUPLICATE_OF);
-              }}
-            >
-              <DropdownItem Icon={DuplicateLine} title="Duplicate of..." />
-            </DropdownMenuItem>
-          </DropdownMenuSubContent>
-        </DropdownMenuPortal>
-      </DropdownMenuSub>
-    </>
-  );
-}
+    return (
+      <>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>
+            <DropdownItem Icon={RelatedIssueLine} title="Add related" />
+          </DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              {items.map((item) => (
+                <DropdownMenuItem
+                  key={item.type}
+                  onClick={() => {
+                    setRelatedModal(item.type);
+                  }}
+                >
+                  <DropdownItem Icon={item.Icon} title={item.title} />
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
+      </>
+    );
+  },
+);

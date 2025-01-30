@@ -4,12 +4,15 @@ import Dexie from 'dexie';
 
 import type {
   ActionType,
+  CompanyType,
   ConversationHistoryType,
   ConversationType,
   CycleType,
   IntegrationAccountType,
+  PeopleType,
   ProjectMilestoneType,
   ProjectType,
+  SupportType,
   TemplateType,
 } from 'common/types';
 import type {
@@ -50,11 +53,14 @@ export class TegonDatabase extends Dexie {
   conversations: Dexie.Table<ConversationType, string>;
   conversationHistory: Dexie.Table<ConversationHistoryType, string>;
   templates: Dexie.Table<TemplateType, string>;
+  people: Dexie.Table<PeopleType, string>;
+  company: Dexie.Table<CompanyType, string>;
+  support: Dexie.Table<SupportType, string>;
 
   constructor(databaseName: string) {
     super(databaseName);
 
-    this.version(17).stores({
+    this.version(18).stores({
       [MODELS.Workspace]: 'id,createdAt,updatedAt,name,slug,preferences',
       [MODELS.Label]:
         'id,createdAt,updatedAt,name,color,description,workspaceId,groupId,teamId',
@@ -95,6 +101,12 @@ export class TegonDatabase extends Dexie {
         'id,createdAt,updatedAt,message,userType,context,thoughts,userId,conversationId',
       [MODELS.Template]:
         'id,createdAt,updatedAt,name,category,templateData,workspaceId,teamId',
+      [MODELS.Support]:
+        'id,createdAt,updatedAt,reportedById,actualFrtAt,firstResponseAt,nextResponseAt,resolvedAt,slaDueBy,metadata,issueId',
+      [MODELS.Company]:
+        'id,createdAt,updatedAt,name,domain,website,workspaceId,description,logo,industry,type,size,metadata',
+      [MODELS.People]:
+        'id,createdAt,updatedAt,name,email,phone,metadata,companyId,workspaceId',
     });
 
     this.workspaces = this.table(MODELS.Workspace);
@@ -118,6 +130,9 @@ export class TegonDatabase extends Dexie {
     this.conversations = this.table(MODELS.Conversation);
     this.conversationHistory = this.table(MODELS.ConversationHistory);
     this.templates = this.table(MODELS.Template);
+    this.people = this.table(MODELS.People);
+    this.company = this.table(MODELS.Company);
+    this.support = this.table(MODELS.Support);
   }
 }
 

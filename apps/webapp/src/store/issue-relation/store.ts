@@ -107,6 +107,26 @@ export const IssueRelationsStore: IAnyStateTreeNode = types
       return ids.map((id) => self.issueRelations.get(id)).filter(Boolean);
     },
 
+    getIssueRelationForIssue(issueId: string) {
+      const relationTypeMap = self.indexByIssueId.get(issueId);
+
+      if (!relationTypeMap) {
+        return {};
+      }
+
+      const result: Record<string, string[]> = {};
+      relationTypeMap.forEach((value, key) => {
+        result[key] = Array.from(value);
+      });
+      return result;
+    },
+
+    getRelationFromIds(issueRelationIds: string[]) {
+      return issueRelationIds.map((issueRelationId) =>
+        self.issueRelations.get(issueRelationId),
+      );
+    },
+
     // Used in filters
     isBlocked(issueId: string) {
       // Check if the index has the issueId and BLOCKED relations

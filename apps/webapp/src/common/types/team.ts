@@ -1,5 +1,9 @@
 export type TeamTypeInterface = 'engineering' | 'support';
 
+export enum TeamTypeEnum {
+  ENGINEERING = 'engineering',
+  SUPPORT = 'support',
+}
 export interface TeamPreferences {
   cyclesEnabled?: boolean;
   teamType?: string;

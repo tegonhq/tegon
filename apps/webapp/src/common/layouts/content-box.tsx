@@ -16,7 +16,7 @@ export const ContentBox = observer(
     return (
       <main
         className={cn(
-          'p-3 pl-0 h-[calc(100vh)]',
+          'main-container p-3 pl-0 h-[calc(100vh)]',
           applicationStore.sidebarCollapsed && 'pl-3',
           className,
         )}

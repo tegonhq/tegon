@@ -4,6 +4,7 @@ import type { SyncActionRecord } from 'common/types';
 
 import { saveActionData } from 'store/action';
 import { saveCommentsData } from 'store/comments';
+import { saveCompanyData } from 'store/company';
 import { saveConversationHistorytData } from 'store/conversation-history';
 import { saveConversationData } from 'store/conversations';
 import { saveCyclesData } from 'store/cycle';
@@ -16,10 +17,12 @@ import { saveLabelData } from 'store/labels';
 import { saveLinkedIssueData } from 'store/linked-issues';
 import { MODELS } from 'store/models';
 import { saveNotificationData } from 'store/notifications';
+import { savePeopleData } from 'store/people';
 import {
   saveProjectData,
   saveProjectMilestoneData,
 } from 'store/projects/save-data';
+import { saveSupportData } from 'store/support';
 import { saveTeamData } from 'store/teams';
 import { saveTemplateData } from 'store/templates';
 import { saveViewData } from 'store/views';
@@ -75,6 +78,9 @@ export async function saveSocketData(
       [MODELS.Conversation]: saveConversationData,
       [MODELS.ConversationHistory]: saveConversationHistorytData,
       [MODELS.Template]: saveTemplateData,
+      [MODELS.People]: savePeopleData,
+      [MODELS.Company]: saveCompanyData,
+      [MODELS.Support]: saveSupportData,
     };
 
     // Process records using the handler map

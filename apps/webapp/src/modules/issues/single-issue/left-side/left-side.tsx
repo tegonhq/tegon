@@ -24,6 +24,7 @@ import { FileUpload } from './file-upload';
 import { IssueSubIssueSelector } from './issue-sub-issue-selector';
 import { IssueTitle } from './issue-title';
 import { ParentIssueView } from './parent-issue-view';
+import { RelationsView } from './relations-view';
 import { SimilarIssuesView } from './similar-issues-view';
 import { SubIssueView } from './sub-issue-view';
 
@@ -91,6 +92,8 @@ export const LeftSide = observer(() => {
               <Separator />
             </div>
             <SubIssueView childIssues={issue.children} issueId={issue.id} />
+
+            <RelationsView issueId={issue.id} />
 
             <Activity />
           </div>

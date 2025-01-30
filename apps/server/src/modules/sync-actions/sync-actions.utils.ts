@@ -174,6 +174,25 @@ export async function getWorkspaceId(
       });
       return projectMilestone.project.workspaceId;
 
+    case ModelName.Company:
+      const company = await prisma.company.findUnique({
+        where: { id: modelId },
+      });
+      return company.workspaceId;
+
+    case ModelName.People:
+      const people = await prisma.people.findUnique({
+        where: { id: modelId },
+      });
+      return people.workspaceId;
+
+    case ModelName.Support:
+      const support = await prisma.support.findUnique({
+        where: { id: modelId },
+        include: { issue: { include: { team: true } } },
+      });
+      return support.issue.team.workspaceId;
+
     default:
       return undefined;
   }
@@ -302,6 +321,9 @@ export async function getModelData(
     IssueSuggestion: prisma.issueSuggestion,
     Project: prisma.project,
     ProjectMilestone: prisma.projectMilestone,
+    Support: prisma.support,
+    People: prisma.people,
+    Company: prisma.company,
   };
 
   const model = modelMap[modelName];

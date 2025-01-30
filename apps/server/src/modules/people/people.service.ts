@@ -44,6 +44,7 @@ export default class PeopleService {
       data: {
         ...data,
         companyId,
+        workspaceId,
       },
       include: {
         company: true,
