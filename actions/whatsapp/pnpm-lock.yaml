@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@tegonhq/sdk':
-        specifier: file:../../packages/tegon-sdk/dist
-        version: dist@file:../../packages/tegon-sdk/dist
+        specifier: 0.1.13
+        version: 0.1.13(typescript@5.5.4)
       '@trigger.dev/sdk':
         specifier: 3.0.0-beta.56
         version: 3.0.0-beta.56(typescript@5.5.4)
       axios:
         specifier: ^1.6.7
-        version: 1.7.5
+        version: 1.7.5(debug@4.3.6)
       form-data:
         specifier: ^4.0.0
         version: 4.0.0
@@ -375,6 +375,10 @@ packages:
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
 
+  '@tegonhq/sdk@0.1.13':
+    resolution: {integrity: sha512-7UDcXsN9F+g7c1IRFuHR1ZSM8IIR8dhy2M/nara1JMpcWYHWg5zVYN8F49w4mwzqIOEjIIwI7rmEIuyupylndA==}
+    engines: {node: '>=18.0.0'}
+
   '@trigger.dev/core-backend@3.0.0-beta.56':
     resolution: {integrity: sha512-8GmYTgUmljFIWGUzZy+Mh/uuaxgzs0GCHjZgwnigChG3znmz46InwQH7HW9Gxo+6A3aSss05NZUzVKrnFCY1bQ==}
     engines: {node: '>=18.0.0'}
@@ -540,6 +544,9 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
+  atomically@2.0.3:
+    resolution: {integrity: sha512-kU6FmrwZ3Lx7/7y3hPS5QnbJfaohcIul5fGqf7ok+4KklIEk9tJ0C2IQPdacSbVUWv6zVHXEBWoWd6NrVMT7Cw==}
+
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
@@ -608,6 +615,10 @@ packages:
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
+  configstore@7.0.0:
+    resolution: {integrity: sha512-yk7/5PN5im4qwz0WFZW3PXnzHgPu9mX29Y8uZ3aefe2lBPC1FYttWZRcaW9fKkT0pBCJyuQ2HfbmPVaODi9jcQ==}
+    engines: {node: '>=18'}
+
   cookie@0.5.0:
     resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
     engines: {node: '>= 0.6'}
@@ -672,9 +683,6 @@ packages:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
 
-  dist@file:../../packages/tegon-sdk/dist:
-    resolution: {directory: ../../packages/tegon-sdk/dist, type: directory}
-
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
     engines: {node: '>=0.10.0'}
@@ -682,6 +690,10 @@ packages:
   doctrine@3.0.0:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
+
+  dot-prop@9.0.0:
+    resolution: {integrity: sha512-1gxPBJpI/pcjQhKgIU91II6Wkay+dLcN3M6rf2uwP8hRur3HtQXjVrdAK3sjC0piaEuxzMwjXChcETiJl47lAQ==}
+    engines: {node: '>=18'}
 
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
@@ -956,6 +968,9 @@ packages:
 
   gopd@1.0.1:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
+
+  graceful-fs@4.2.11:
+    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
@@ -1476,6 +1491,9 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
+  stubborn-fs@1.2.5:
+    resolution: {integrity: sha512-H2N9c26eXjzL/S/K+i/RHHcFanE74dptvvjM8iwzwbVcWY/zjBbgRqF3K0DY4+OD+uTTASTBvDoxPDaPN02D7g==}
+
   superjson@2.2.1:
     resolution: {integrity: sha512-8iGv75BYOa0xRJHK5vRLEjE2H/i4lulTjzpUXic3Eg8akftYjkmQDa8JARQ42rlczXyFR3IeRoeFCc7RxHsYZA==}
     engines: {node: '>=16'}
@@ -1584,6 +1602,9 @@ packages:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
 
+  when-exit@2.1.4:
+    resolution: {integrity: sha512-4rnvd3A1t16PWzrBUcSDZqcAmsUIy4minDXT/CZ8F2mVDgd65i4Aalimgz1aQkRGU0iH5eT5+6Rx2TK8o443Pg==}
+
   which-boxed-primitive@1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
 
@@ -1634,6 +1655,10 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+
+  xdg-basedir@5.1.0:
+    resolution: {integrity: sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ==}
+    engines: {node: '>=12'}
 
   xmlhttprequest-ssl@2.0.0:
     resolution: {integrity: sha512-QKxVRxiRACQcVuQEYFsI1hhkrMlrXHPegbbd1yn9UHOmRxY+si12nQYzri3vbzt8VdTTRviqcKxcyllFas5z2A==}
@@ -2044,6 +2069,25 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
+  '@tegonhq/sdk@0.1.13(typescript@5.5.4)':
+    dependencies:
+      '@trigger.dev/sdk': 3.0.0-beta.56(typescript@5.5.4)
+      axios: 1.7.5(debug@4.3.6)
+      chalk: 5.3.0
+      configstore: 7.0.0
+      cronstrue: 2.50.0
+      debug: 4.3.6
+      evt: 2.5.7
+      slug: 6.1.0
+      terminal-link: 3.0.0
+      uuid: 9.0.1
+      zod: 3.22.3
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - typescript
+      - utf-8-validate
+
   '@trigger.dev/core-backend@3.0.0-beta.56':
     dependencies:
       '@opentelemetry/api': 1.9.0
@@ -2291,13 +2335,18 @@ snapshots:
 
   asynckit@0.4.0: {}
 
+  atomically@2.0.3:
+    dependencies:
+      stubborn-fs: 1.2.5
+      when-exit: 2.1.4
+
   available-typed-arrays@1.0.7:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  axios@1.7.5:
+  axios@1.7.5(debug@4.3.6):
     dependencies:
-      follow-redirects: 1.15.6
+      follow-redirects: 1.15.6(debug@4.3.6)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -2361,6 +2410,13 @@ snapshots:
 
   concat-map@0.0.1: {}
 
+  configstore@7.0.0:
+    dependencies:
+      atomically: 2.0.3
+      dot-prop: 9.0.0
+      graceful-fs: 4.2.11
+      xdg-basedir: 5.1.0
+
   cookie@0.5.0: {}
 
   copy-anything@3.0.5:
@@ -2421,8 +2477,6 @@ snapshots:
     dependencies:
       path-type: 4.0.0
 
-  dist@file:../../packages/tegon-sdk/dist: {}
-
   doctrine@2.1.0:
     dependencies:
       esutils: 2.0.3
@@ -2430,6 +2484,10 @@ snapshots:
   doctrine@3.0.0:
     dependencies:
       esutils: 2.0.3
+
+  dot-prop@9.0.0:
+    dependencies:
+      type-fest: 4.26.0
 
   ecdsa-sig-formatter@1.0.11:
     dependencies:
@@ -2714,7 +2772,9 @@ snapshots:
 
   flatted@3.3.1: {}
 
-  follow-redirects@1.15.6: {}
+  follow-redirects@1.15.6(debug@4.3.6):
+    optionalDependencies:
+      debug: 4.3.6
 
   for-each@0.3.3:
     dependencies:
@@ -2803,6 +2863,8 @@ snapshots:
   gopd@1.0.1:
     dependencies:
       get-intrinsic: 1.2.4
+
+  graceful-fs@4.2.11: {}
 
   graphemer@1.4.0: {}
 
@@ -3324,6 +3386,8 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
+  stubborn-fs@1.2.5: {}
+
   superjson@2.2.1:
     dependencies:
       copy-anything: 3.0.5
@@ -3437,6 +3501,8 @@ snapshots:
 
   uuid@9.0.1: {}
 
+  when-exit@2.1.4: {}
+
   which-boxed-primitive@1.0.2:
     dependencies:
       is-bigint: 1.0.4
@@ -3476,6 +3542,8 @@ snapshots:
   ws@8.17.1: {}
 
   ws@8.18.0: {}
+
+  xdg-basedir@5.1.0: {}
 
   xmlhttprequest-ssl@2.0.0: {}
 

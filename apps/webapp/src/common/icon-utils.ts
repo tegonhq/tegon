@@ -1,11 +1,12 @@
 import { RiDiscordFill, RiGithubFill, RiMailFill } from '@remixicon/react';
-import { Actions, SlackIcon, StackLine } from '@tegonhq/ui/icons';
+import { Actions, SlackIcon, StackLine, Whatsapp } from '@tegonhq/ui/icons';
 
 export const ICON_MAPPING = {
   slack: SlackIcon,
   email: RiMailFill,
   discord: RiDiscordFill,
   github: RiGithubFill,
+  whatsapp: Whatsapp,
 
   // Default icon
   integration: StackLine,

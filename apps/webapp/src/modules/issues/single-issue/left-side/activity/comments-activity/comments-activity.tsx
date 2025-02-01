@@ -34,8 +34,8 @@ export const CommentsActivity = observer(() => {
   const sortedComments = React.useMemo(() => {
     const comments = commentsStore.getComments(issue.id) as IssueCommentType[];
 
-    return sort(comments).desc((comment) =>
-      new Date(comment.updatedAt).getTime(),
+    return sort(comments).asc((comment) =>
+      new Date(comment.createdAt).getTime(),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commentsStore.comments.length, issue]);
@@ -46,8 +46,6 @@ export const CommentsActivity = observer(() => {
 
   return (
     <div className="my-2 w-full flex flex-col gap-4">
-      <IssueComment />
-
       <Timeline>
         {sortedComments
           .filter((comment: IssueCommentType) => !comment.parentId)
@@ -64,6 +62,7 @@ export const CommentsActivity = observer(() => {
             />
           ))}
       </Timeline>
+      <IssueComment />
     </div>
   );
 });

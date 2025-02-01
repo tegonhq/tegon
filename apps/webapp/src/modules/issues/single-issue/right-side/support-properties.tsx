@@ -24,9 +24,7 @@ export const People = observer(({ peopleId }: { peopleId?: string }) => {
       {people && (
         <div className={cn('flex flex-col items-start')}>
           <div className="text-xs text-left">User</div>
-          <div className="text-left mt-0.5">
-            {people.name} ({people.email})
-          </div>
+          <div className="text-left mt-0.5">{people.name}</div>
         </div>
       )}
 
