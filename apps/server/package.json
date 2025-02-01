@@ -128,7 +128,6 @@
     "turndown": "^7.2.0",
     "typesense": "^1.7.2",
     "uuid": "^10.0.0",
-    "whatsapp-web.js": "^1.26.0",
     "winston": "^3.14.2"
   },
   "devDependencies": {
