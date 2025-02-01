@@ -69,6 +69,7 @@ export * from './cycle';
 export * from './activity';
 export * from './help-centre';
 export * from './code';
+export * from './whatsapp';
 
 export * from './team-line';
 export * from './issues-fill';

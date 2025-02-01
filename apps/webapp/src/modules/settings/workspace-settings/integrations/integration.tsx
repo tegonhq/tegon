@@ -19,8 +19,8 @@ export function Integration() {
 
   return (
     <>
-      {!isLoading && <Header title={integrationDefinition.name} />}
       <ContentBox>
+        {!isLoading && <Header title={integrationDefinition.name} />}
         <ScrollArea className="flex grow h-full">
           <div className="w-full p-4">
             {!isLoading && (
