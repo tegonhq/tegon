@@ -59,7 +59,7 @@ export class AttachmentService {
         contentType: file.contentType,
       });
 
-      const publicURL = `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/${workspaceId}/${attachment.id}`;
+      const publicURL = `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/${attachment.id}`;
 
       return {
         url,
