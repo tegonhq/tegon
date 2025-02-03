@@ -81,11 +81,12 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
 
 .side-issue-view .context-box {
   @apply border border-border;
+  border-radius: 0 !important;
   box-shadow: 0px 16px 32px 0px rgba(20, 20, 20, 0.2) !important;
 }
 
 .side-issue-view .main-container {
-  @apply py-2;
+  padding: 0 !important;
 }
 
 .dark .side-issue-view .context-box {

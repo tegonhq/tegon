@@ -90,6 +90,34 @@ export class AttachmentController {
     }
   }
 
+  @Get(':workspaceId/:attachmentId')
+  @UseGuards(AuthGuard)
+  async getFileFromGCSForWorkspace(
+    @Param() attachementRequestParams: AttachmentRequestParams,
+    @Res() res: Response,
+  ) {
+    try {
+      const { signedUrl, contentType } =
+        await this.attachementService.getFileFromStorageSignedUrl(
+          attachementRequestParams,
+          attachementRequestParams.workspaceId,
+        );
+
+      // Set content disposition header with the original filename
+      res.set({
+        'Content-Type': contentType,
+        'Content-Disposition': 'inline',
+        'Cache-Control': 'public, immutable, max-age=31536000', // Cache for 1 year (effectively infinite)
+      });
+
+      https.get(signedUrl, (stream) => {
+        stream.pipe(res);
+      });
+    } catch (error) {
+      res.status(404).send('File not found');
+    }
+  }
+
   @Get(':attachmentId')
   @UseGuards(AuthGuard)
   async getFileFromGCS(
