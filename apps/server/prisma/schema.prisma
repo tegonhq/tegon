@@ -855,11 +855,31 @@ model Workspace {
   prompts               Prompt[]
   action                Action[]
   projects              Project[]
+  webhookSubscription   WebhookSubscription[]
 
   ActionEvent  ActionEvent[]
   Conversation Conversation[]
   Company      Company[]
   People       People[]
+}
+
+
+model WebhookSubscription {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   DateTime?
+
+  name        String
+  url         String
+  secret      String?
+  isActive    Boolean @default(true)
+  events      String[]
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspaceId String
+
+  @@unique([name, workspaceId])
 }
 
 enum Preference {

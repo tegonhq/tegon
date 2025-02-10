@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   ActionEntity,
   ActionEvent,
@@ -11,6 +12,7 @@ import { getActionEnv } from 'modules/action/action.utils';
 import { IntegrationsService } from 'modules/integrations/integrations.service';
 import { LoggerService } from 'modules/logger/logger.service';
 import { convertLsnToInt } from 'modules/sync-actions/sync-actions.utils';
+import { Env } from 'modules/triggerdev/triggerdev.interface';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { CreateActionEvent } from './action-event.interface';
@@ -28,6 +30,7 @@ export default class ActionEventService {
     private prisma: PrismaService,
     private triggerdevService: TriggerdevService,
     private integrationsService: IntegrationsService,
+    private configService: ConfigService,
   ) {}
 
   async createEvent(event: CreateActionEvent) {
@@ -58,6 +61,8 @@ export default class ActionEventService {
 
         const processedIds = await this.triggerActions(actionEvent);
         this.updateEvent(actionEvent.id, processedIds);
+
+        await this.triggerWebhookAction(actionEvent, event.workspaceId);
       }
     }
   }
@@ -121,6 +126,23 @@ export default class ActionEventService {
       actionEntity.action.isDev
         ? {}
         : { lockToVersion: actionEntity.action.triggerVersion },
+    );
+
+    return triggerHandle.id;
+  }
+
+  async triggerWebhookAction(actionEvent: ActionEvent, workspaceId: string) {
+    const triggerHandle = await this.triggerdevService.triggerTaskAsync(
+      'common',
+      'webhook-subscription',
+      {
+        event: actionEvent.eventType,
+        changedData: actionEvent.eventData,
+        type: actionEvent.modelName,
+        modelId: actionEvent.modelId,
+        workspaceId,
+      },
+      this.configService.get('NODE_ENV') === 'production' ? Env.PROD : Env.DEV,
     );
 
     return triggerHandle.id;

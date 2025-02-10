@@ -44,6 +44,26 @@ export default class TeamsService {
     });
   }
 
+  async getTeamsByUser(userId: string, workspaceId: string): Promise<Team[]> {
+    const usersOnWorkspace = await this.prisma.usersOnWorkspaces.findUnique({
+      where: {
+        userId_workspaceId: {
+          userId,
+          workspaceId,
+        },
+      },
+    });
+
+    return await this.prisma.team.findMany({
+      where: {
+        id: {
+          in: usersOnWorkspace.teamIds,
+        },
+      },
+      include: { workspace: true },
+    });
+  }
+
   async getTeamByName(
     workspaceId: string,
     nameOrIdentifier: string,

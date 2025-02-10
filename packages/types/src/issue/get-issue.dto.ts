@@ -4,7 +4,9 @@ import { FilterKey, FilterValue } from '../view';
 
 export class GetIssuesByFilterDTO {
   @IsObject()
-  filters: Record<FilterKey, FilterValue>;
+  filters: {
+    [K in FilterKey]?: FilterValue;
+  };
 
   @IsString()
   workspaceId: string;

@@ -35,6 +35,7 @@ export class Issue {
   parentId: string | null;
   subIssue?: Issue[];
   attachments: string[];
+  url?: string;
   support?: Support;
   comments?: IssueComment[];
   history?: IssueHistory[];
