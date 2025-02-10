@@ -43,3 +43,4 @@ export * from './cycle';
 export * from './company';
 export * from './people';
 export * from './support';
+export * from './webhook-subscription';
