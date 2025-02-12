@@ -70,7 +70,9 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
     string
   >;
 
-  const user = (await getUsers({ userIds: [issueComment.userId] }))[0];
+  const user = (
+    await getUsers({ userIds: [issueComment.userId as string] })
+  )[0];
 
   // Send a POST request to the Slack API to post the message
   const response = await axios.post(

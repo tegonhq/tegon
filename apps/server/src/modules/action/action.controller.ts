@@ -67,7 +67,7 @@ export class ActionController {
   }
 
   @Get(':slug/inputs')
-  @UseGuards(ActionGuard)
+  @UseGuards(AuthGuard)
   async getInputsForSlug(
     @Workspace() workspaceId: string,
     @Param() slugDto: { slug: string },

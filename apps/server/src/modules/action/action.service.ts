@@ -382,7 +382,7 @@ export default class ActionService {
       action.id,
     );
 
-    return await tasks.trigger<typeof actionRun>('action-run', {
+    return await tasks.triggerAndPoll<typeof actionRun>('action-run', {
       workspaceId: action.workspaceId,
       payload: {
         event: ActionTypesEnum.GET_INPUTS,

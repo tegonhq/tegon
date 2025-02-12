@@ -139,8 +139,8 @@ export class AttachmentService {
     return `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/actions/${uniqueId}`;
   }
 
-  async getFileForAction(attachementRequestParams: AttachmentRequestParams) {
-    const filePath = `actions/${attachementRequestParams.attachmentId}.js`;
+  async getFileForAction(attachmentId: string) {
+    const filePath = `actions/${attachmentId}.js`;
 
     if (!(await this.storageProvider.fileExists(filePath))) {
       throw new BadRequestException('File not found');

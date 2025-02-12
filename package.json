@@ -26,7 +26,7 @@
     "typescript": "5.4.3",
     "zod": "3.23.8"
   },
-  "packageManager": "pnpm@10.3.0",
+  "packageManager": "pnpm@8.15.6",
   "dependencies": {
     "date-fns": "^3.6.0",
     "react-day-picker": "^8.9.1"
