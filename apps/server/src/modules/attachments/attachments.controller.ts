@@ -99,13 +99,12 @@ export class AttachmentController {
 
   @Get('actions/:attachmentId')
   async getFileForAction(
-    @Param() attachementRequestParams: AttachmentRequestParams,
+    @Param() { attachmentId }: { attachmentId: string },
     @Res() res: Response,
   ) {
     try {
-      const { signedUrl } = await this.attachementService.getFileForAction(
-        attachementRequestParams,
-      );
+      const { signedUrl } =
+        await this.attachementService.getFileForAction(attachmentId);
 
       // Set content disposition header with the original filename
       res.set({

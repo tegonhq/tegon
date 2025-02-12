@@ -15,7 +15,6 @@ import {
 
 import axios from 'axios';
 import fs from 'fs';
-import FormData from 'form-data';
 
 import {
   SlackBlock,
@@ -183,6 +182,11 @@ export async function createLinkIssueComment(
   // Log the successful creation of the issue comment
   logger.info('Issue comment created successfully', { issueComment });
 
+  // Add type guard for sourceData
+  if (!linkIssueInput.sourceData) {
+    linkIssueInput.sourceData = {};
+  }
+
   // Update the linked issue input with the new comment ID and message timestamp
   linkIssueInput.sourceData.messageTs = messageTs;
   linkIssueInput.sourceData.syncedCommentId = issueComment.id;
@@ -255,7 +259,9 @@ export async function getFilesBuffer(
         writeStream.on('error', reject);
       });
 
-      formData.append('files', fs.createReadStream(tempFilePath));
+      const fileBuffer = await fs.promises.readFile(tempFilePath);
+      const blob = new Blob([fileBuffer]);
+      formData.append('files', blob);
 
       return tempFilePath;
     }),
@@ -413,7 +419,7 @@ export function convertSlackMessageToTiptapJson(
                 return [
                   {
                     type: 'codeBlock',
-                    attrs: { language: null },
+                    attrs: { language: null as string },
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     content: element.elements.flatMap((sectionElement: any) => {
                       if (sectionElement.type === 'text') {

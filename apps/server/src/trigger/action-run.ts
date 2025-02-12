@@ -1,6 +1,7 @@
 import createLoadRemoteModule, {
   createRequires,
 } from '@paciolan/remote-module-loader';
+import * as tegonSDK from '@tegonhq/sdk';
 import { logger, task } from '@trigger.dev/sdk/v3';
 import axios from 'axios';
 
@@ -11,28 +12,27 @@ const fetcher = async (url: string) => {
   return response.data;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const loadRemoteModule = async (requires: any) =>
-  createLoadRemoteModule({ fetcher, requires });
-
 function createAxiosInstance(token: string) {
   const instance = axios.create();
 
-  instance.interceptors.request.use((config) => {
-    if (
-      config.url.includes(process.env.FRONTEND_HOST) ||
-      config.url.includes(process.env.BACKEND_HOST)
-    ) {
-      config.headers.Authorization = `Bearer ${token}`;
+  instance.interceptors.request.use((axiosConfig) => {
+    if (axiosConfig.url.startsWith('/api')) {
+      axiosConfig.url = process.env.BASE_HOST
+        ? `${process.env.BASE_HOST}${axiosConfig.url}`
+        : `http://host.docker.internal:3000${axiosConfig.url}`;
     }
-    return config;
+
+    if (!axiosConfig.headers.Authorization) {
+      if (token) {
+        axiosConfig.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+
+    return axiosConfig;
   });
 
   return instance;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getRequires = (axios: any) => createRequires({ axios });
 
 export const actionRun = task({
   id: 'action-run',
@@ -47,12 +47,16 @@ export const actionRun = task({
   }) => {
     const { action, accessToken } = payload;
     logger.log(workspaceId);
-    const remoteModuleLoad = await loadRemoteModule(
-      getRequires(createAxiosInstance(accessToken)),
-    );
+    const remoteModuleLoad = await createLoadRemoteModule({
+      fetcher,
+      requires: createRequires({
+        axios: createAxiosInstance(accessToken),
+        '@tegonhq/sdk': tegonSDK,
+      }),
+    });
 
     const integrationFunction = await remoteModuleLoad(`${action.url}`);
 
-    return await integrationFunction.run(event);
+    return await integrationFunction.run(payload);
   },
 });

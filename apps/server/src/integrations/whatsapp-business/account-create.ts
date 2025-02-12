@@ -16,7 +16,6 @@ export const integrationCreate = async (
     access_expires_in: oauthResponse.expires_at,
   };
 
-  console.log(oauthResponse, oauthParams);
   const appData = await axios.get(
     `https://graph.facebook.com/v22.0/debug_token?input_token=${oauthParams.code}`,
   );
@@ -26,7 +25,6 @@ export const integrationCreate = async (
     (scope: any) => scope.scope === 'whatsapp_business_management',
   );
 
-  console.log(businessManagementScope);
   const accountId = businessManagementScope?.target_ids[0];
 
   if (!accountId) {
