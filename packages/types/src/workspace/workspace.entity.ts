@@ -2,7 +2,6 @@ import { Action } from '../action';
 import { ActionEvent } from '../action-event';
 import { AIRequest } from '../ai-request';
 import { Attachment } from '../attachment';
-import { JsonValue } from '../common';
 import { Company } from '../company';
 import { Conversation } from '../conversation';
 import { IntegrationAccount } from '../integration-account';
@@ -25,7 +24,7 @@ export class Workspace {
   slug: string;
   icon: string | null;
   actionsEnabled: boolean;
-  preferences: JsonValue | null;
+  preferences: any | null;
   usersOnWorkspaces?: UsersOnWorkspaces[];
   team?: Team[];
   label?: Label[];

@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { JsonObject } from '@tegonhq/types';
 
 const prisma = new PrismaClient();
 export const getToken = async (integrationAccountId: string) => {
@@ -10,8 +9,8 @@ export const getToken = async (integrationAccountId: string) => {
     },
   });
 
-  const integrationConfig =
-    integrationAccount.integrationConfiguration as JsonObject;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const integrationConfig = integrationAccount.integrationConfiguration as any;
 
   return { token: integrationConfig.api_key };
 };

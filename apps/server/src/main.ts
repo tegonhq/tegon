@@ -10,7 +10,6 @@ import type { CorsConfig } from 'common/configs/config.interface';
 import { SupertokensExceptionFilter } from 'modules/auth/auth.filter';
 import { LoggerService } from 'modules/logger/logger.service';
 import ReplicationService from 'modules/replication/replication.service';
-import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { AppModule } from './app.module';
 
@@ -32,10 +31,6 @@ async function bootstrap() {
   // Initiate replication service
   const replicationService = app.get(ReplicationService);
   replicationService.init();
-
-  // Initiate trigger service
-  const triggerService = app.get(TriggerdevService);
-  triggerService.initCommonProject();
 
   // enable shutdown hook
   app.enableShutdownHooks();

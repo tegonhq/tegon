@@ -21,11 +21,7 @@ model Action {
 
   status  ActionStatus
   version String
-
-  // Used to trigger only specific version of trigger
-  triggerVersion String?
-
-  isDev Boolean @default(false)
+  url     String?
 
   // To define if the action is deployed in personal account
   isPersonal Boolean @default(false)

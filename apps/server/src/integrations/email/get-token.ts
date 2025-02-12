@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { JsonObject } from '@tegonhq/types';
 import axios from 'axios';
 
 const prisma = new PrismaClient();
@@ -16,7 +15,8 @@ export const getToken = async (integrationAccountId: string) => {
     return null;
   }
   const integrationConfig =
-    integrationAccount.integrationConfiguration as JsonObject;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    integrationAccount.integrationConfiguration as any;
 
   const accessResponse = await axios.post(
     'https://oauth2.googleapis.com/token',

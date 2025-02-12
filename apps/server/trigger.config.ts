@@ -1,29 +1,16 @@
-import type {
-  ResolveEnvironmentVariablesFunction,
-  TriggerConfig,
-} from '@trigger.dev/sdk/v3';
-
 import { PrismaInstrumentation } from '@prisma/instrumentation';
+import {
+  additionalPackages,
+  syncEnvVars,
+} from '@trigger.dev/build/extensions/core';
+import { prismaExtension } from '@trigger.dev/build/extensions/prisma';
+import { defineConfig } from '@trigger.dev/sdk/v3';
 
-// This runs when you run the deploy command or the dev command
-export const resolveEnvVars: ResolveEnvironmentVariablesFunction = async ({
-  env,
-}) => {
-  return {
-    variables: {
-      DATABASE_URL: env.DATABASE_URL,
-      SMTP_HOST: env.SMTP_HOST,
-      SMTP_PORT: env.SMTP_PORT,
-      SMTP_USER: env.SMTP_USER,
-      SMTP_PASSWORD: env.SMTP_PASSWORD,
-      GCP_SERVICE_ACCOUNT: env.GCP_SERVICE_ACCOUNT,
-    },
-  };
-};
-
-export const config: TriggerConfig = {
-  project: 'proj_common',
+export default defineConfig({
+  project: 'proj_gkqvmuiqybanhghopksd',
+  runtime: 'node',
   logLevel: 'log',
+  maxDuration: 3600,
   retries: {
     enabledInDev: true,
     default: {
@@ -34,10 +21,24 @@ export const config: TriggerConfig = {
       randomize: true,
     },
   },
-  triggerDirectories: ['./src/trigger'],
-  dependenciesToBundle: ['@tegonhq/types'],
+  dirs: ['./src/trigger'],
   instrumentations: [new PrismaInstrumentation()],
-
-  additionalFiles: ['./prisma/schema.prisma'],
-  additionalPackages: ['prisma@5.17.0'],
-};
+  build: {
+    extensions: [
+      syncEnvVars(({ env }) => ({
+        DATABASE_URL: env.DATABASE_URL,
+        SMTP_HOST: env.SMTP_HOST,
+        SMTP_PORT: env.SMTP_PORT,
+        SMTP_USER: env.SMTP_USER,
+        SMTP_PASSWORD: env.SMTP_PASSWORD,
+        GCP_SERVICE_ACCOUNT: env.GCP_SERVICE_ACCOUNT,
+      })),
+      additionalPackages({
+        packages: ['@sigma/types'],
+      }),
+      prismaExtension({
+        schema: 'prisma/schema.prisma',
+      }),
+    ],
+  },
+});

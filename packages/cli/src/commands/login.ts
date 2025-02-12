@@ -15,7 +15,6 @@ import {
 } from '../utilities/configFiles';
 import { getVersion } from '../utilities/getVersion';
 import { printInitialBanner } from '../utilities/initialBanner';
-import { writeAuthConfigProfile as triggerWrite } from '../utilities/triggerConfigFiles';
 
 export const LoginCommandOptions = CommonCommandOptions.extend({
   apiUrl: z.string(),
@@ -43,7 +42,6 @@ async function loginCommand() {
 export async function login(embedded: boolean) {
   const opts = {
     defaultApiUrl: 'https://app.tegon.ai',
-    triggerUrl: 'https://trigger.tegon.ai',
   };
 
   if (embedded) {
@@ -56,7 +54,6 @@ export async function login(embedded: boolean) {
     const auth = {
       accessToken: accessTokenFromEnv,
       apiUrl: env.BASE_HOST ?? opts.defaultApiUrl,
-      triggerUrl: env.TRIGGER_HOST ?? opts.triggerUrl,
       workspaceId: env.WORKSPACE_ID,
     };
 
@@ -69,7 +66,6 @@ export async function login(embedded: boolean) {
     const auth = {
       accessToken: authConfig.accessToken,
       apiUrl: env.BASE_HOST ?? authConfig.apiUrl ?? opts.defaultApiUrl,
-      triggerUrl: env.TRIGGER_HOST ?? authConfig.triggerUrl ?? opts.triggerUrl,
       workspaceId: authConfig.workspaceId,
     };
 
@@ -112,16 +108,10 @@ export async function login(embedded: boolean) {
       accessToken: indexResult.token,
       workspaceId: indexResult.workspaceId,
       apiUrl: env.BASE_HOST ?? opts.defaultApiUrl,
-      triggerUrl: env.TRIGGER_HOST ?? opts.triggerUrl,
     };
 
     interceptAxios(userConfig.accessToken);
 
-    const triggerToken = await apiClient.getTriggerAccessToken(
-      userConfig.workspaceId,
-    );
-
-    triggerWrite({ accessToken: triggerToken, apiUrl: userConfig.triggerUrl });
     writeAuthConfigProfile(userConfig);
 
     return {

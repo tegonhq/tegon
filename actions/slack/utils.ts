@@ -4,7 +4,6 @@ import {
   EventBody,
   IntegrationAccount,
   Issue,
-  JsonObject,
   logger,
   TiptapMarks,
   TiptapNode,
@@ -26,8 +25,8 @@ import {
 } from './types';
 
 export function getSlackHeaders(integrationAccount: IntegrationAccount) {
-  const integrationConfig =
-    integrationAccount.integrationConfiguration as JsonObject;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const integrationConfig = integrationAccount.integrationConfiguration as any;
   return {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',

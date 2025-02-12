@@ -1,4 +1,3 @@
-import { JsonObject } from '../common';
 import { People } from '../people';
 import { Workspace } from '../workspace';
 
@@ -16,7 +15,7 @@ export class Company {
   industry?: string;
   size?: string;
   type?: string;
-  metadata?: JsonObject;
+  metadata?: any;
 
   people?: People[];
   workspace: Workspace;

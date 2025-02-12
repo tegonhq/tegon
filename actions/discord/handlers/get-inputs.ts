@@ -1,10 +1,4 @@
-import {
-  ActionEventPayload,
-  getTeams,
-  JsonObject,
-  logger,
-  Team,
-} from '@tegonhq/sdk';
+import { ActionEventPayload, getTeams, logger, Team } from '@tegonhq/sdk';
 import { Client } from 'discord.js';
 
 export const getInputs = async (payload: ActionEventPayload) => {
@@ -12,8 +6,9 @@ export const getInputs = async (payload: ActionEventPayload) => {
 
   const integrationAccount = integrationAccounts.discord;
 
-  const integrationDefinitionConfig = integrationAccount.integrationDefinition
-    .config as JsonObject;
+  const integrationDefinitionConfig =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    integrationAccount.integrationDefinition.config as any;
 
   const client = new Client({ intents: [] }); // Create a new client instance
   await client.login(integrationDefinitionConfig.botToken as string); // Login with the bot token

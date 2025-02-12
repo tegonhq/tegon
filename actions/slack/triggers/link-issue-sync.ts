@@ -8,7 +8,6 @@ import {
   getUsers,
   RoleEnum,
   ActionTypesEnum,
-  JsonObject,
   getLinkedIssueBySource,
 } from '@tegonhq/sdk';
 
@@ -45,7 +44,6 @@ async function onCreateLinkedIssue(actionPayload: ActionEventPayload) {
   const userRole = (
     await getUsers({
       userIds: [linkedIssue.updatedById],
-      workspaceId: integrationAccount.workspaceId,
     })
   )[0].role;
 
@@ -179,7 +177,6 @@ async function onUpdateLinkedIssue(actionPayload: ActionEventPayload) {
     const userRole = (
       await getUsers({
         userIds: [linkedIssue.updatedById],
-        workspaceId: integrationAccount.workspaceId,
       })
     )[0].role;
 
@@ -189,7 +186,8 @@ async function onUpdateLinkedIssue(actionPayload: ActionEventPayload) {
       };
     }
 
-    const sourceData = linkedIssue.sourceData as JsonObject;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sourceData = linkedIssue.sourceData as any;
 
     const {
       issue: { team, number: issueNumber },

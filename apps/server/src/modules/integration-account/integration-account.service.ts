@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import {
-  InputJsonValue,
   IntegrationAccountIdDto,
   PersonalAccountDto,
   UpdateIntegrationAccountDto,
@@ -78,7 +77,8 @@ export class IntegrationAccountService {
     return await this.prisma.integrationAccount.update({
       data: {
         ...updateIntegrationAccountBody,
-        settings: updateIntegrationAccountBody.settings as InputJsonValue,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        settings: updateIntegrationAccountBody.settings as any,
       },
       where: {
         id: integrationAccountId,

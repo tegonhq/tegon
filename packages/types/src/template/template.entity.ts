@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { Team } from '../team';
 import { User } from '../user/user.entity';
 import { Workspace } from '../workspace/workspace.entity';
@@ -26,7 +25,7 @@ export class Template {
   name: string;
 
   category: TemplateCategory;
-  templateData: JsonValue;
+  templateData: any;
   createdBy?: User;
   createdById: string;
   workspace?: Workspace;

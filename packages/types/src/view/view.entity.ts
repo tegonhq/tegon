@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { Team } from '../team';
 import { Workspace } from '../workspace';
 
@@ -13,7 +12,7 @@ export class View {
   team?: Team | null;
   name: string;
   description: string;
-  filters: JsonValue;
+  filters: any;
   isBookmarked: boolean;
   createdById: string;
 }

@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { Issue } from '../issue';
 import { LinkedComment } from '../linked-comment';
 import { Reaction } from '../reaction';
@@ -12,9 +11,9 @@ export class IssueComment {
   bodyMarkdown?: string | null;
   userId: string | null;
   updatedById: string;
-  sourceMetadata: JsonValue | null;
+  sourceMetadata: any | null;
   reactions?: Reaction[];
-  reactionsData: JsonValue[];
+  reactionsData: any[];
   issue?: Issue;
   issueId: string;
   parent?: IssueComment | null;

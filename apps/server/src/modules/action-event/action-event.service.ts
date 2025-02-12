@@ -5,13 +5,13 @@ import {
   ActionStatusEnum,
   ActionTypesEnum,
 } from '@tegonhq/types';
+import { tasks } from '@trigger.dev/sdk/v3';
 import { PrismaService } from 'nestjs-prisma';
+import { actionRun } from 'trigger/action-run';
 
-import { getActionEnv } from 'modules/action/action.utils';
 import { IntegrationsService } from 'modules/integrations/integrations.service';
 import { LoggerService } from 'modules/logger/logger.service';
 import { convertLsnToInt } from 'modules/sync-actions/sync-actions.utils';
-import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { CreateActionEvent } from './action-event.interface';
 import { prepareTriggerPayload } from './action-event.utils';
@@ -26,7 +26,7 @@ export default class ActionEventService {
 
   constructor(
     private prisma: PrismaService,
-    private triggerdevService: TriggerdevService,
+
     private integrationsService: IntegrationsService,
   ) {}
 
@@ -107,21 +107,16 @@ export default class ActionEventService {
       actionEntity.action.id,
     );
 
-    const triggerHandle = await this.triggerdevService.triggerTaskAsync(
-      actionEvent.workspaceId,
-      actionEntity.action.slug,
-      {
+    const triggerHandle = await tasks.trigger<typeof actionRun>('action-run', {
+      workspaceId: actionEvent.workspaceId,
+      payload: {
         event: actionEvent.eventType,
         changedData: actionEvent.eventData,
         type: actionEvent.modelName,
         modelId: actionEvent.modelId,
         ...addedTaskInfo,
       },
-      getActionEnv(actionEntity.action),
-      actionEntity.action.isDev
-        ? {}
-        : { lockToVersion: actionEntity.action.triggerVersion },
-    );
+    });
 
     return triggerHandle.id;
   }

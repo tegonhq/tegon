@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { Issue } from '../issue';
 
 export const IssueRelationType = {
@@ -31,7 +30,7 @@ export class IssueRelation {
   relatedIssueId: string;
 
   type: IssueRelationType;
-  metadata: JsonValue | null;
+  metadata: any | null;
   createdById: string | null;
   deletedById: string | null;
   deleted: Date | null;

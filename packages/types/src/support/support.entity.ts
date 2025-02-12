@@ -1,4 +1,3 @@
-import { JsonObject } from '../common';
 import { Issue } from '../issue';
 import { People } from '../people';
 
@@ -17,7 +16,7 @@ export class Support {
   resolvedAt?: Date;
   dueBy?: Date;
 
-  metadata?: JsonObject;
+  metadata?: any;
 
   issue: Issue;
   issueId: string;

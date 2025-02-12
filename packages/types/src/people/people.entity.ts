@@ -1,4 +1,3 @@
-import { type JsonObject } from '../common';
 import { Company } from '../company';
 import { Support } from '../support';
 
@@ -12,7 +11,7 @@ export class People {
   email: string;
   phone?: string;
 
-  metadata?: JsonObject;
+  metadata?: any;
 
   company?: Company;
   companyId?: string;

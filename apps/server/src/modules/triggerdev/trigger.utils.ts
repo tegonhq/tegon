@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { JsonValue } from '@tegonhq/types';
-
 // Used to parse the logs - This is taken directly from the
 // https://github.dev/triggerdotdev/trigger.dev - triggerdotdev/trigger.dev/apps/webapp/app/v3/eventRepository.server.ts,
 // triggerdotdev/trigger.dev/apps/webapp/app/routes/resources.runs.$runParam.logs.download.ts
@@ -89,7 +87,7 @@ export function prepareEvent(event: any) {
   };
 }
 
-function parseEventsField(events: JsonValue) {
+function parseEventsField(events: any) {
   const unsafe = events
     ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (events as unknown[]).map((e: any) => ({
@@ -101,7 +99,7 @@ function parseEventsField(events: JsonValue) {
   return unsafe;
 }
 
-function parseStyleField(style: JsonValue) {
+function parseStyleField(style: any) {
   const unsafe = unflattenAttributes(style);
 
   if (!unsafe) {

@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { Conversation } from '../conversation';
 
 export enum UserTypeEnum {
@@ -24,8 +23,8 @@ export class ConversationHistory {
   message: string;
   userType: UserType;
 
-  context?: JsonValue | null;
-  thoughts: JsonValue;
+  context?: any | null;
+  thoughts: any;
   userId?: string | null;
 
   conversation?: Conversation | null;

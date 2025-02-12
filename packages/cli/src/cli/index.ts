@@ -1,8 +1,6 @@
 import { Command } from 'commander';
 
 import { configureDeployCommand } from '../commands/deploy';
-import { configureDevCommand } from '../commands/dev';
-import { configureDevCleanupCommand } from '../commands/dev-cleanup';
 import { configureInitCommand } from '../commands/init';
 import { configureLoginCommand } from '../commands/login';
 import { configureLogoutCommand } from '../commands/logout';
@@ -19,6 +17,4 @@ program
 configureDeployCommand(program);
 configureInitCommand(program);
 configureLoginCommand(program);
-configureDevCommand(program);
 configureLogoutCommand(program);
-configureDevCleanupCommand(program);

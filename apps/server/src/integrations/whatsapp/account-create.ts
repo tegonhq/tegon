@@ -1,12 +1,7 @@
-import { ConfigService } from '@nestjs/config';
 import { createIntegrationAccount } from 'integrations/utils';
 import { PrismaService } from 'nestjs-prisma';
 
-import { Env } from 'modules/triggerdev/triggerdev.interface';
-import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
-
 const prisma = new PrismaService();
-const triggerDevService = new TriggerdevService(prisma, new ConfigService());
 
 export const integrationCreate = async (
   userId: string,
@@ -30,12 +25,12 @@ export const integrationCreate = async (
     personal,
   });
 
-  await triggerDevService.triggerTaskAsync(
-    'common',
-    'whatsapp',
-    { integrationAccount },
-    Env.PROD,
-  );
+  // await triggerDevService.triggerTaskAsync(
+  //   'common',
+  //   'whatsapp',
+  //   { integrationAccount },
+  //   Env.PROD,
+  // );
 
   return {
     message: `Created integration account ${integrationAccount.id}`,

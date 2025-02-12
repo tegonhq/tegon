@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { Issue } from '../issue';
 
 export class IssueSuggestion {
@@ -9,6 +8,6 @@ export class IssueSuggestion {
   issueId: string;
   suggestedLabelIds: string[];
   suggestedAssigneeId: string | null;
-  metadata: JsonValue | null;
+  metadata: any | null;
   issue?: Issue | null;
 }

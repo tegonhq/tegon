@@ -43,52 +43,12 @@ export class ApiClient {
     };
   }
 
-  async getDockerToken() {
-    const response = await axios.get(
-      `${this.apiUrl}/api/v1/triggerdev/docker-token`,
-    );
-
-    const base64Token = response.data.token;
-    const decodedToken = Buffer.from(base64Token, 'base64').toString('utf-8');
-    const { username, pat } = JSON.parse(decodedToken);
-
-    return {
-      username,
-      pat,
-    };
-  }
-
-  async getTriggerAccessToken(workspaceId: string): Promise<string> {
-    try {
-      const response = await axios.get(`${this.apiUrl}/api/v1/triggerdev`, {
-        params: { workspaceId },
-      });
-      return response.data.triggerKey;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        log.error(
-          `The token you passed is invalid create a personal token in the app: ${error}`,
-        );
-      } else {
-        log.error(`Unexpected error: ${error}`);
-      }
-      process.exit(1);
-    }
-  }
-
   // Create resources for the deployed action
-  async resourceCreation(
-    config: ConfigMap,
-    workspaceId: string,
-    version: string,
-    isDev: boolean = false,
-  ) {
+  async resourceCreation(config: ConfigMap, version: string) {
     try {
       await axios.post(`${this.apiUrl}/api/v1/action/create-action`, {
-        workspaceId,
         config,
         version,
-        isDev,
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -101,16 +61,26 @@ export class ApiClient {
     }
   }
 
-  async cleanResources(config: ConfigMap, workspaceId: string) {
+  async uploadActionFile(file: File) {
     try {
-      await axios.post(`${this.apiUrl}/api/v1/action/clean-dev-action`, {
-        workspaceId,
-        config,
-      });
+      const formData = new FormData();
+      formData.append('files', file);
+
+      const response = await axios.post(
+        `${this.apiUrl}/api/v1/attachment/upload/action`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         log.error(
-          `Error cleaning resources: ${JSON.stringify(error.response?.data)}`,
+          `Error uploading files: ${JSON.stringify(error.response?.data)}`,
         );
       } else {
         log.error(`Unexpected error: ${error}`);

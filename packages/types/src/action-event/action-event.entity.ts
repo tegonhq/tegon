@@ -1,5 +1,3 @@
-import { JsonValue } from '../common';
-
 export class ActionEvent {
   id: string;
   createdAt: Date;
@@ -9,7 +7,7 @@ export class ActionEvent {
   eventType: string;
   modelName: string;
   modelId: string;
-  eventData: JsonValue;
+  eventData: any;
 
   sequenceId: bigint;
   workspaceId: string;

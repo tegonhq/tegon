@@ -10,10 +10,9 @@ import {
   NotificationData,
   NotificationEventFrom,
 } from '@tegonhq/types';
+import { tasks } from '@trigger.dev/sdk/v3';
 import { PrismaService } from 'nestjs-prisma';
-
-import { Env } from 'modules/triggerdev/triggerdev.interface';
-import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
+import { notificationHandler } from 'trigger/notification';
 
 import {
   IssueRelationWithIssue,
@@ -22,10 +21,7 @@ import {
 
 @Injectable()
 export default class IssueRelationService {
-  constructor(
-    private prisma: PrismaService,
-    private triggerdevService: TriggerdevService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async createIssueRelation(
     userId: string,
@@ -86,22 +82,17 @@ export default class IssueRelationService {
           ? issueRelationData.relatedIssueId
           : inverseRelationData.relatedIssueId;
 
-      await this.triggerdevService.triggerTaskAsync(
-        'common',
-        'notification',
-        {
-          event: ActionTypesEnum.ON_CREATE,
-          notificationType: NotificationEventFrom.IssueBlocks,
-          notificationData: {
-            subscriberIds: issueRelationData.issue.subscriberIds,
-            issueId,
-            issueRelationId,
-            workspaceId: issueRelationData.issue.team.workspaceId,
-            userId,
-          } as NotificationData,
-        },
-        Env.PROD,
-      );
+      tasks.trigger<typeof notificationHandler>('notification', {
+        event: ActionTypesEnum.ON_CREATE,
+        notificationType: NotificationEventFrom.IssueBlocks,
+        notificationData: {
+          subscriberIds: issueRelationData.issue.subscriberIds,
+          issueId,
+          issueRelationId,
+          workspaceId: issueRelationData.issue.team.workspaceId,
+          userId,
+        } as NotificationData,
+      });
     }
 
     return issueRelationData;
@@ -143,25 +134,20 @@ export default class IssueRelationService {
           ? issueRelationData.issueId
           : inverseRelationData.issueId;
 
-      await this.triggerdevService.triggerTaskAsync(
-        'common',
-        'notification',
-        {
-          event: ActionTypesEnum.ON_DELETE,
-          notificationType: NotificationEventFrom.DeleteByEvent,
-          notificationData: {
-            subscriberIds: issueRelationData.issue.subscriberIds,
-            issueId,
-            issueRelationId:
-              issueRelationData.type === IssueRelationType.BLOCKS
-                ? issueRelationData.id
-                : inverseRelationData.id,
-            workspaceId: issueRelationData.issue.team.workspaceId,
-            userId,
-          } as NotificationData,
-        },
-        Env.PROD,
-      );
+      tasks.trigger<typeof notificationHandler>('notification', {
+        event: ActionTypesEnum.ON_DELETE,
+        notificationType: NotificationEventFrom.DeleteByEvent,
+        notificationData: {
+          subscriberIds: issueRelationData.issue.subscriberIds,
+          issueId,
+          issueRelationId:
+            issueRelationData.type === IssueRelationType.BLOCKS
+              ? issueRelationData.id
+              : inverseRelationData.id,
+          workspaceId: issueRelationData.issue.team.workspaceId,
+          userId,
+        } as NotificationData,
+      });
     }
 
     return issueRelationData;
