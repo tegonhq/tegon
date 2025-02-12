@@ -9,7 +9,9 @@ import {
   NotificationEventFrom,
   UpdateIssueCommentDto,
 } from '@tegonhq/types';
+import { tasks } from '@trigger.dev/sdk/v3';
 import { PrismaService } from 'nestjs-prisma';
+import { notificationHandler } from 'trigger/notification';
 
 import {
   convertMarkdownToTiptapJson,
@@ -17,8 +19,6 @@ import {
 } from 'common/utils/tiptap.utils';
 
 import IssuesService from 'modules/issues/issues.service';
-import { Env } from 'modules/triggerdev/triggerdev.interface';
-import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import {
   ReactionInput,
@@ -32,7 +32,6 @@ export default class IssueCommentsService {
   constructor(
     private prisma: PrismaService,
     private issuesService: IssuesService,
-    private triggerdevService: TriggerdevService,
   ) {}
 
   async getIssueComment(issueCommentParams: IssueCommentRequestParamsDto) {
@@ -112,22 +111,17 @@ export default class IssueCommentsService {
       subscribersToAdd,
     );
 
-    this.triggerdevService.triggerTaskAsync(
-      'common',
-      'notification',
-      {
-        event: ActionTypesEnum.ON_CREATE,
-        notificationType: NotificationEventFrom.NewComment,
-        notificationData: {
-          subscriberIds: issueComment.issue.subscriberIds,
-          issueCommentId: issueComment.id,
-          issueId: issueComment.issueId,
-          workspaceId: issueComment.issue.team.workspaceId,
-          userId,
-        },
+    tasks.trigger<typeof notificationHandler>('notification', {
+      event: ActionTypesEnum.ON_CREATE,
+      notificationType: NotificationEventFrom.NewComment,
+      notificationData: {
+        subscriberIds: issueComment.issue.subscriberIds,
+        issueCommentId: issueComment.id,
+        issueId: issueComment.issueId,
+        workspaceId: issueComment.issue.team.workspaceId,
+        userId,
       },
-      Env.PROD,
-    );
+    });
 
     const newBodyMarkdown = convertTiptapJsonToMarkdown(issueComment.body);
     return { ...issueComment, bodyMarkdown: newBodyMarkdown };

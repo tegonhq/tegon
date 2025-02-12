@@ -10,6 +10,7 @@ import {
   SignedURLBody,
 } from '@tegonhq/types';
 import { PrismaService } from 'nestjs-prisma';
+import { v4 as uuidv4 } from 'uuid'; // Add this import at the top with other imports
 
 import { LoggerService } from 'modules/logger/logger.service';
 
@@ -124,6 +125,38 @@ export class AttachmentService {
     });
 
     return await Promise.all(attachmentPromises);
+  }
+
+  async uploadActionFile(file: Express.Multer.File): Promise<string> {
+    const uniqueId = uuidv4(); //
+    const filePath = `actions/${uniqueId}.js`;
+    await this.storageProvider.uploadFile(filePath, file.buffer, {
+      contentType: file.mimetype,
+      resumable: false,
+      validation: false,
+    });
+
+    return `${process.env.PUBLIC_ATTACHMENT_URL}/v1/attachment/actions/${uniqueId}`;
+  }
+
+  async getFileForAction(attachementRequestParams: AttachmentRequestParams) {
+    const filePath = `actions/${attachementRequestParams.attachmentId}.js`;
+
+    if (!(await this.storageProvider.fileExists(filePath))) {
+      throw new BadRequestException('File not found');
+    }
+
+    const metadata = await this.storageProvider.getMetadata(filePath);
+    const signedUrl = await this.storageProvider.getSignedUrl(filePath, {
+      action: 'read',
+      expires: Date.now() + 60 * 60 * 1000,
+      responseDisposition: 'inline',
+    });
+
+    return {
+      signedUrl,
+      size: metadata.size,
+    };
   }
 
   async getFileFromStorage(

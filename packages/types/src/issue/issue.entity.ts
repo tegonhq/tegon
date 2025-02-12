@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { IssueComment } from '../issue-comment';
 import { IssueHistory } from '../issue-history';
 import { IssueRelation } from '../issue-relation';
@@ -21,7 +20,7 @@ export class Issue {
   sortOrder: number | null;
   subIssueSortOrder: number | null;
   estimate: number | null;
-  sourceMetadata: JsonValue | null;
+  sourceMetadata: any | null;
   isBidirectional: boolean | null;
   team?: Team;
   teamId: string;

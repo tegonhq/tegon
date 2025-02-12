@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { Issue } from '../issue';
 
 export class IssueHistory {
@@ -9,7 +8,7 @@ export class IssueHistory {
   userId: string | null;
   issue?: Issue;
   issueId: string;
-  sourceMetaData: JsonValue | null;
+  sourceMetaData: any | null;
   addedLabelIds: string[];
   removedLabelIds: string[];
   fromPriority: number | null;
@@ -28,5 +27,5 @@ export class IssueHistory {
   toProjectId: string | null;
   fromProjectMilestoneId: string | null;
   toProjectMilestoneId: string | null;
-  relationChanges: JsonValue | null;
+  relationChanges: any | null;
 }

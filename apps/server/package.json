@@ -35,8 +35,8 @@
     "prisma:studio": "prisma studio",
     "generate": "prisma generate",
     "db:init-resources": "pnpm run migrate && pnpm run generate",
-    "deploy-trigger-tasks": "npx trigger.dev@beta deploy --self-hosted",
-    "trigger-dev": "npx trigger.dev@beta dev"
+    "trigger-deploy": "npx trigger.dev@latest deploy --self-hosted",
+    "trigger-dev": "npx trigger.dev@latest dev"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.63",
@@ -57,6 +57,7 @@
     "@nestjs/platform-socket.io": "^10.3.1",
     "@nestjs/throttler": "^6.2.1",
     "@nestjs/websockets": "^10.3.1",
+    "@paciolan/remote-module-loader": "^3.0.3",
     "@prisma/client": "^5.17.0",
     "@prisma/instrumentation": "^5.17.0",
     "@tegonhq/sdk": "workspace:*",
@@ -80,7 +81,8 @@
     "@tiptap/extension-underline": "^2.4.0",
     "@tiptap/html": "^2.4.0",
     "@tiptap/pm": "^2.4.0",
-    "@trigger.dev/sdk": "3.0.0-beta.56",
+    "@trigger.dev/build": "3.3.13",
+    "@trigger.dev/sdk": "3.3.13",
     "@types/multer": "^1.4.11",
     "@types/nodemailer": "^6.4.17",
     "@types/turndown": "^5.0.5",

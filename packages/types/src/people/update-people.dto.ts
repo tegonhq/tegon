@@ -1,7 +1,5 @@
 import { IsObject, IsOptional, IsString } from 'class-validator';
 
-import { type JsonObject } from '../common';
-
 export class UpdatePersonDto {
   @IsOptional()
   @IsString()
@@ -17,7 +15,7 @@ export class UpdatePersonDto {
 
   @IsOptional()
   @IsObject()
-  metadata?: JsonObject;
+  metadata?: any;
 
   @IsOptional()
   @IsString()

@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { Issue } from '../issue';
 
 export class LinkedIssue {
@@ -8,7 +7,7 @@ export class LinkedIssue {
   deleted: Date | null;
   url: string;
   sourceId: string | null;
-  sourceData: JsonValue | null;
+  sourceData: any | null;
   sync: boolean;
   createdById: string | null;
   updatedById: string;

@@ -1,5 +1,3 @@
-import { JsonValue } from '../common';
-
 export enum NotificationActionTypeEnum {
   IssueAssigned = 'IssueAssigned',
   IssueUnAssigned = 'IssueUnAssigned',
@@ -30,9 +28,9 @@ export class Notification {
   type: NotificationActionType;
   userId: string;
   issueId: string | null;
-  actionData: JsonValue | null;
+  actionData: any | null;
   createdById: string | null;
-  sourceMetadata: JsonValue | null;
+  sourceMetadata: any | null;
   readAt: Date | null;
   snoozedUntil: Date | null;
   workspaceId: string;

@@ -24,7 +24,6 @@ export const commentSync = async (actionPayload: ActionEventPayload) => {
   const userRole = (
     await getUsers({
       userIds: [issueComment.updatedById],
-      workspaceId: integrationAccount.workspaceId,
     })
   )[0].role;
 

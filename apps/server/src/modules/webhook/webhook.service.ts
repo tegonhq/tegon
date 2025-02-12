@@ -8,24 +8,23 @@ import {
   EventQueryParams,
   IntegrationPayloadEventType,
 } from '@tegonhq/types';
+import { tasks } from '@trigger.dev/sdk/v3';
 import { Response } from 'express';
 import { PrismaService } from 'nestjs-prisma';
+import { actionRun } from 'trigger/action-run';
 
-import { getActionEnv } from 'modules/action/action.utils';
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
 import { IntegrationsService } from 'modules/integrations/integrations.service';
 import IssueCommentsService from 'modules/issue-comments/issue-comments.service';
 import IssuesService from 'modules/issues/issues.service';
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { LoggerService } from 'modules/logger/logger.service';
-import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 @Injectable()
 export default class WebhookService {
   private readonly logger: LoggerService = new LoggerService('WebhookService'); // Logger instance for logging
 
   constructor(
-    private triggerDevService: TriggerdevService,
     private prisma: PrismaService,
     private integrations: IntegrationsService,
     private issuesService: IssuesService,
@@ -107,10 +106,9 @@ export default class WebhookService {
 
     // TODO (actons): Send all integration accounts based on the ask
     actionEntities.map(async (actionEntity: ActionEntity) => {
-      this.triggerDevService.triggerTaskAsync(
+      tasks.trigger<typeof actionRun>('action-run', {
         workspaceId,
-        actionEntity.action.slug,
-        {
+        payload: {
           event: ActionTypesEnum.SOURCE_WEBHOOK,
           eventBody,
           eventHeaders,
@@ -120,11 +118,7 @@ export default class WebhookService {
             actionEntity.action.id,
           )),
         },
-        getActionEnv(actionEntity.action),
-        actionEntity.action.isDev
-          ? {}
-          : { lockToVersion: actionEntity.action.triggerVersion },
-      );
+      });
     });
 
     return { status: 200 };

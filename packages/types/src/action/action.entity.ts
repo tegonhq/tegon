@@ -1,5 +1,5 @@
 import { ActionEntity } from '../action-entity';
-import { ActionTypesEnum, JsonValue } from '../common';
+import { ActionTypesEnum } from '../common';
 import { Workspace } from '../workspace';
 
 interface BaseTrigger {
@@ -28,6 +28,7 @@ export interface ActionConfig {
   triggers: ActionTrigger[];
   integrations: string[];
   inputs: any;
+  url: string;
 }
 
 export const ActionStatus = {
@@ -56,14 +57,12 @@ export class Action {
   updatedAt: Date;
   deleted: Date | null;
 
-  config: JsonValue;
+  config: any;
   data?: any;
 
   status: ActionStatus;
-  isDev: boolean;
   isPersonal: boolean;
 
-  triggerVersion: string;
   version: string;
 
   name: string;
@@ -77,4 +76,6 @@ export class Action {
   actionEntity?: ActionEntity[];
 
   createdById: string;
+
+  url?: string;
 }

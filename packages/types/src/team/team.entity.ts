@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { Issue } from '../issue';
 import { Label } from '../label';
 import { Template } from '../template';
@@ -15,7 +14,7 @@ export class Team {
   identifier: string;
   icon: string | null;
   currentCycle?: number | null;
-  preferences?: JsonValue;
+  preferences?: any;
   workspace?: Workspace;
   workspaceId: string;
   issue?: Issue[];

@@ -1,11 +1,9 @@
 import { IsObject, IsOptional, IsString } from 'class-validator';
 
-import { type JsonObject } from '../common';
-
 export class UpdateIntegrationAccountDto {
   @IsOptional()
   @IsObject()
-  integrationConfiguration: JsonObject;
+  integrationConfiguration: any;
 
   @IsString()
   @IsOptional()
@@ -17,7 +15,7 @@ export class UpdateIntegrationAccountDto {
 
   @IsObject()
   @IsOptional()
-  settings: JsonObject;
+  settings: any;
 
   @IsString()
   @IsOptional()

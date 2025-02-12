@@ -1,4 +1,3 @@
-import { JsonObject, JsonValue } from '../common';
 import { IntegrationAccount } from '../integration-account';
 import { Workspace } from '../workspace';
 
@@ -22,7 +21,7 @@ export class Spec {
   personal_auth?: {
     OAuth2: OAuth2Params;
   };
-  other_data?: JsonObject;
+  other_data?: any;
 }
 
 export class IntegrationDefinition {
@@ -34,7 +33,7 @@ export class IntegrationDefinition {
   slug: string;
   description: string;
   icon: string;
-  config?: JsonValue;
+  config?: any;
   spec?: Spec;
   clientId: string;
   clientSecret: string;
@@ -52,7 +51,7 @@ export class PublicIntegrationDefinition {
   slug: string;
   description: string;
   icon: string;
-  config?: JsonValue;
+  config?: any;
   spec?: Spec;
   workspace?: Workspace;
   workspaceId?: string;

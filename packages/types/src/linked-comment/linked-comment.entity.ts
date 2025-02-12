@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { IssueComment } from '../issue-comment';
 
 export class LinkedComment {
@@ -8,7 +7,7 @@ export class LinkedComment {
   deleted: Date | null;
   url: string;
   sourceId: string;
-  sourceData: JsonValue | null;
+  sourceData: any | null;
   createdById: string | null;
   comment?: IssueComment;
   commentId: string;

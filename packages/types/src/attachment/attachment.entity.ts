@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { User } from '../user';
 import { Workspace } from '../workspace';
 
@@ -33,7 +32,7 @@ export class Attachment {
   size: number;
   url: string | null;
   status: AttachmentStatus;
-  sourceMetadata: JsonValue | null;
+  sourceMetadata: any | null;
   uploadedBy?: User | null;
   uploadedById: string | null;
   workspace?: Workspace | null;

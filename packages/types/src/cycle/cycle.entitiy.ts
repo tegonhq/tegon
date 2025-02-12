@@ -1,5 +1,4 @@
 import { CycleHistory } from './cycle-history.entity';
-import { JsonValue } from '../common';
 import { Issue } from '../issue';
 import { Team } from '../team';
 
@@ -31,7 +30,7 @@ export class Cycle {
 
   history?: CycleHistory[];
 
-  preferences: JsonValue;
+  preferences: any;
 
   issues?: Issue[];
 }

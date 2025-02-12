@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { JsonObject } from '@tegonhq/types';
 
 const prisma = new PrismaClient();
 export const getToken = async (integrationAccountId: string) => {
@@ -11,8 +10,9 @@ export const getToken = async (integrationAccountId: string) => {
     include: { integrationDefinition: true },
   });
 
-  const definitionConfig = integrationAccount.integrationDefinition
-    .config as JsonObject;
+  const definitionConfig =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    integrationAccount.integrationDefinition.config as any;
 
   return { token: definitionConfig.botToken };
 };

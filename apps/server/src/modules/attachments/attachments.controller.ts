@@ -60,6 +60,13 @@ export class AttachmentController {
     );
   }
 
+  @Post('upload/action')
+  @UseInterceptors(FilesInterceptor('files'))
+  @UseGuards(AuthGuard)
+  async uploadActionFile(@UploadedFiles() files: Express.Multer.File[]) {
+    return await this.attachementService.uploadActionFile(files[0]);
+  }
+
   @Post('get-signed-url')
   @UseGuards(AuthGuard)
   async getUploadSignedUrl(
@@ -87,6 +94,31 @@ export class AttachmentController {
       );
     } catch (error) {
       return undefined;
+    }
+  }
+
+  @Get('actions/:attachmentId')
+  async getFileForAction(
+    @Param() attachementRequestParams: AttachmentRequestParams,
+    @Res() res: Response,
+  ) {
+    try {
+      const { signedUrl } = await this.attachementService.getFileForAction(
+        attachementRequestParams,
+      );
+
+      // Set content disposition header with the original filename
+      res.set({
+        'Content-Type': 'application/javascript',
+        'Content-Disposition': 'inline',
+        'Cache-Control': 'public, immutable, max-age=31536000', // Cache for 1 year (effectively infinite)
+      });
+
+      https.get(signedUrl, (stream) => {
+        stream.pipe(res);
+      });
+    } catch (error) {
+      res.status(404).send('File not found');
     }
   }
 

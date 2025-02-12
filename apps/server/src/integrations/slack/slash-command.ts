@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { EventBody, JsonObject } from '@tegonhq/types';
+import { EventBody } from '@tegonhq/types';
 import axios from 'axios';
 
 import { CacheService } from 'modules/cache/cache.service';
@@ -38,8 +38,8 @@ export const slashCommand = async (
     include: { workspace: true, integrationDefinition: true },
   });
 
-  const integrationConfig =
-    integrationAccount.integrationConfiguration as JsonObject;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const integrationConfig = integrationAccount.integrationConfiguration as any;
 
   // If no integration account is found, log a message and return
   if (!integrationAccount) {

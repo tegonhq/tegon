@@ -1,7 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 // To send the webhook
 import { ConfigService } from '@nestjs/config';
-import { JsonObject } from '@tegonhq/types';
 import axios from 'axios';
 import { Client, GatewayIntentBits } from 'discord.js';
 import { PrismaService } from 'nestjs-prisma';
@@ -36,7 +35,8 @@ export class DiscordBotService implements OnModuleInit {
         });
 
       if (integrationDefinition && integrationDefinition.config) {
-        const integrationConfig = integrationDefinition.config as JsonObject;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const integrationConfig = integrationDefinition.config as any;
         if (integrationConfig.botToken) {
           this.logger.info({
             message: `Logging into discord`,

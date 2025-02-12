@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import {
   IntegrationDefinition,
   PublicIntegrationDefinition,
@@ -11,9 +10,9 @@ export class IntegrationAccount {
   createdAt: Date;
   updatedAt: Date;
   deleted: Date | null;
-  integrationConfiguration?: JsonValue;
+  integrationConfiguration?: any;
   accountId: string | null;
-  settings: JsonValue | null;
+  settings: any | null;
   personal: boolean;
   isActive: boolean;
   integratedBy?: User;

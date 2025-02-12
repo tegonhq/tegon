@@ -23,20 +23,14 @@
     "declaration": false,
     "removeComments": true,
     "esModuleInterop": true,
-    "paths": {
-      "@tegonhq/sdk": ["./node_modules/@tegonhq/sdk"]
-    },
     "baseUrl": ".",
     "module": "commonjs",
     "outDir": "./dist",
-    "lib": ["ES2022"],
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["DOM", "DOM.Iterable"],
+    "declarationMap": false,
+    "stripInternal": true
   },
   "exclude": ["node_modules"],
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".eslintrc.js",
-    "trigger.config.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", ".eslintrc.js", "trigger.config.ts"]
 }

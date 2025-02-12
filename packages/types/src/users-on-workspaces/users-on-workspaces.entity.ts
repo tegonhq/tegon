@@ -1,4 +1,3 @@
-import { JsonValue } from '../common';
 import { Role } from '../invite';
 import { User } from '../user';
 import { Workspace } from '../workspace';
@@ -29,7 +28,7 @@ export class UsersOnWorkspaces {
   teamIds: string[];
 
   status: WorkspaceStatus;
-  externalAccountMappings: JsonValue | null;
+  externalAccountMappings: any | null;
   role: Role;
   joinedAt: Date | null;
 }

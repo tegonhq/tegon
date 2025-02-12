@@ -2,10 +2,7 @@ import fsModule from 'fs/promises';
 import { tmpdir } from 'node:os';
 import pathModule from 'node:path';
 
-import { Action } from '@tegonhq/types';
 import axios from 'axios';
-
-import { Env } from 'modules/triggerdev/triggerdev.interface';
 
 // Create a temporary directory within the OS's temp directory
 export async function createTempDir(): Promise<string> {
@@ -71,8 +68,4 @@ export async function getActionReadme(slug: string) {
   } catch (e) {
     return undefined;
   }
-}
-
-export function getActionEnv(action: Action) {
-  return action.isDev ? Env.DEV : Env.PROD;
 }

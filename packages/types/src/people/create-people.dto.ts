@@ -1,7 +1,5 @@
 import { IsObject, IsOptional, IsString } from 'class-validator';
 
-import { type JsonObject } from '../common';
-
 export class CreatePersonDto {
   @IsString()
   name: string;
@@ -15,7 +13,7 @@ export class CreatePersonDto {
 
   @IsOptional()
   @IsObject()
-  metadata?: JsonObject;
+  metadata?: any;
 
   @IsOptional()
   @IsString()

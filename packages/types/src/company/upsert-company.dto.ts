@@ -1,7 +1,5 @@
 import { IsObject, IsOptional, IsString } from 'class-validator';
 
-import { type JsonObject } from '../common';
-
 export class UpsertCompanyDto {
   @IsString()
   @IsOptional()
@@ -33,5 +31,5 @@ export class UpsertCompanyDto {
 
   @IsOptional()
   @IsObject()
-  metadata?: JsonObject;
+  metadata?: any;
 }

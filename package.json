@@ -15,7 +15,7 @@
     "start": "dotenv -- turbo run start-prod",
     "create-resources": "dotenv -- turbo run create-resources --filter=server",
     "trigger-dev": "dotenv -- turbo run trigger-dev",
-    "deploy-trigger-tasks": "dotenv -- turbo run deploy-trigger-tasks --filter=server --",
+    "trigger-deploy": "dotenv -- turbo run trigger-deploy --filter=server --",
     "prisma:studio": "dotenv -- turbo run prisma:studio --filter=server",
     "migrate": "dotenv -- turbo run migrate --filter=server"
   },
@@ -26,7 +26,7 @@
     "typescript": "5.4.3",
     "zod": "3.23.8"
   },
-  "packageManager": "pnpm@8.15.6",
+  "packageManager": "pnpm@10.3.0",
   "dependencies": {
     "date-fns": "^3.6.0",
     "react-day-picker": "^8.9.1"

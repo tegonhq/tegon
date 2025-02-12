@@ -4,7 +4,6 @@ import {
   ActionTypesEnum,
   IntegrationAccount,
   Issue,
-  JsonObject,
   LinkedIssue,
   NotificationActionType,
   User,
@@ -234,7 +233,8 @@ async function sendSlackMessage(
   body: Record<string, any>,
 ) {
   const integrationConfiguration =
-    integrationAccount.integrationConfiguration as JsonObject;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    integrationAccount.integrationConfiguration as any;
   const apiKey = integrationConfiguration.api_key;
 
   await axios.post('https://slack.com/api/chat.postMessage', body, {
@@ -265,7 +265,8 @@ async function handleLinkedIssueStatus(
 ) {
   return await Promise.all(
     linkedIssues.map(async (linkedIssue) => {
-      const sourceData = linkedIssue.sourceData as JsonObject;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const sourceData = linkedIssue.sourceData as any;
       const channelId = sourceData.channelId as string;
       const ts = sourceData.parentTs as string;
 

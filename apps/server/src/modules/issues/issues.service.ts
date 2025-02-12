@@ -15,8 +15,10 @@ import {
   UpdateIssueDto,
   WorkflowCategoryEnum,
 } from '@tegonhq/types';
+import { tasks } from '@trigger.dev/sdk/v3';
 import { createObjectCsvStringifier } from 'csv-writer';
 import { PrismaService } from 'nestjs-prisma';
+import { notificationHandler } from 'trigger/notification';
 
 import {
   convertMarkdownToTiptapJson,
@@ -30,8 +32,6 @@ import IssueRelationService from 'modules/issue-relation/issue-relation.service'
 import LinkedIssueService from 'modules/linked-issue/linked-issue.service';
 import { LoggerService } from 'modules/logger/logger.service';
 import SupportService from 'modules/support/support.service';
-import { Env } from 'modules/triggerdev/triggerdev.interface';
-import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { SubscribeType } from './issues.interface';
 import { IssuesQueue } from './issues.queue';
@@ -57,7 +57,6 @@ export default class IssuesService {
     private issueRelationService: IssueRelationService,
     private aiRequestsService: AIRequestsService,
     private linkedIssueService: LinkedIssueService,
-    private triggerdevService: TriggerdevService,
     private supportService: SupportService,
   ) {}
 
@@ -223,7 +222,6 @@ export default class IssuesService {
 
             handlePostCreateIssue(
               this.prisma,
-              this.triggerdevService,
               this.issuesQueue,
               issue,
               sourceMetadata,
@@ -400,23 +398,18 @@ export default class IssuesService {
 
     // Add the updated issue to the notifications queue if it has subscribers
     if (updatedIssue.subscriberIds) {
-      this.triggerdevService.triggerTaskAsync(
-        'common',
-        'notification',
-        {
-          event: ActionTypesEnum.ON_UPDATE,
-          notificationType: NotificationEventFrom.IssueUpdated,
-          notificationData: {
-            issueId: updatedIssue.id,
-            ...issueDiff,
-            sourceMetadata,
-            subscriberIds: updatedIssue.subscriberIds,
-            workspaceId: updatedIssue.team.workspaceId,
-            userId,
-          } as NotificationData,
-        },
-        Env.PROD,
-      );
+      tasks.trigger<typeof notificationHandler>('notification', {
+        event: ActionTypesEnum.ON_UPDATE,
+        notificationType: NotificationEventFrom.IssueUpdated,
+        notificationData: {
+          issueId: updatedIssue.id,
+          ...issueDiff,
+          sourceMetadata,
+          subscriberIds: updatedIssue.subscriberIds,
+          workspaceId: updatedIssue.team.workspaceId,
+          userId,
+        } as NotificationData,
+      });
     }
 
     // Add the updated issue to the vector
@@ -491,19 +484,15 @@ export default class IssuesService {
     // Delete the issue history associated with the deleted issue
     await this.deleteIssueHistory(deleteIssue.id);
 
-    this.triggerdevService.triggerTaskAsync(
-      'common',
-      'notification',
-      {
-        event: ActionTypesEnum.ON_DELETE,
-        notificationType: NotificationEventFrom.DeleteIssue,
-        notificationData: {
-          issueId: deleteIssue.id,
-          userId: deleteIssue.updatedById,
-        } as NotificationData,
-      },
-      Env.PROD,
-    );
+    tasks.trigger<typeof notificationHandler>('notification', {
+      event: ActionTypesEnum.ON_DELETE,
+      notificationType: NotificationEventFrom.DeleteIssue,
+      notificationData: {
+        issueId: deleteIssue.id,
+        userId: deleteIssue.updatedById,
+      } as NotificationData,
+    });
+
     // await this.notificationsQueue.deleteNotificationsByIssue(deleteIssue.id);
 
     this.logger.info({

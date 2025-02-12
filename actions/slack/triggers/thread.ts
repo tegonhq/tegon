@@ -8,7 +8,6 @@ import {
   getLinkedComment,
   getLinkedIssueBySource,
   uploadAttachment,
-  JsonObject,
 } from '@tegonhq/sdk';
 
 import {
@@ -60,7 +59,8 @@ export const slackThread = async (
   }
   const linkedIssue = linkedIssues[0];
 
-  const sourceData = linkedIssue.sourceData as JsonObject;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sourceData = linkedIssue.sourceData as any;
   const syncingLinkedIssue =
     sourceData.type === integrationAccount.integrationDefinition.slug &&
     linkedIssue.sync === true;

@@ -12,7 +12,6 @@ import {
 } from '../utilities/configFiles.js';
 import { printInitialBanner } from '../utilities/initialBanner.js';
 import { logger } from '../utilities/logger.js';
-import { deleteAuthConfigProfile as triggerDelete } from '../utilities/triggerConfigFiles.js';
 
 const LogoutCommandOptions = CommonCommandOptions;
 
@@ -47,7 +46,6 @@ export async function logout() {
   }
 
   deleteAuthConfigProfile();
-  triggerDelete();
 
   logger.info(`Logged out of Tegon`);
 }

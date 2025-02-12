@@ -11,22 +11,20 @@ import {
   ActionConfig,
   ActionStatusEnum,
   UpdateActionInputsDto,
-  JsonObject,
   ActionTypesEnum,
   ActionScheduleStatusEnum,
   ActionScheduleDto,
   User,
 } from '@tegonhq/types';
+import { tasks } from '@trigger.dev/sdk/v3';
 import { PrismaService } from 'nestjs-prisma';
+import { actionRun } from 'trigger/action-run';
 import { v4 as uuidv4 } from 'uuid';
 
 import { prepareTriggerPayload } from 'modules/action-event/action-event.utils';
 import { IntegrationsService } from 'modules/integrations/integrations.service';
-import { Env } from 'modules/triggerdev/triggerdev.interface';
 import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 import { UsersService } from 'modules/users/users.service';
-
-import { getActionEnv } from './action.utils';
 
 @Injectable()
 export default class ActionService {
@@ -35,7 +33,6 @@ export default class ActionService {
     private triggerdev: TriggerdevService, // Service for interacting with TriggerDev
     private usersService: UsersService, // Service for managing users
     private integrationsService: IntegrationsService,
-    private triggerdevService: TriggerdevService,
   ) {}
 
   async getAction(slug: string, workspaceId: string) {
@@ -68,9 +65,11 @@ export default class ActionService {
 
     // Update the inputs in the data object
     const updateData = {
-      ...(currentData as JsonObject),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...(currentData as any),
       inputs: updateBodyDto.inputs,
-    } as JsonObject;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
 
     // Update the action with the new data and set the status to ACTIVE
     return await this.prisma.action.update({
@@ -85,9 +84,12 @@ export default class ActionService {
   }
 
   // Create a new action resource
-  async createAction(actionCreateResource: CreateActionDto, userId: string) {
+  async createAction(
+    actionCreateResource: CreateActionDto,
+    workspaceId: string,
+    userId: string,
+  ) {
     const config = actionCreateResource.config;
-    const workspaceId = actionCreateResource.workspaceId;
 
     let workflowUser: User;
     // Use a transaction to ensure atomicity
@@ -98,7 +100,7 @@ export default class ActionService {
         actionCreateResource.config.slug,
       );
 
-      if (!actionCreateResource.isDev && !actionCreateResource.isPersonal) {
+      if (!actionCreateResource.isPersonal) {
         // Upsert a workflow user for the action
         workflowUser = await this.upsertWorkflowUser(
           prisma,
@@ -122,7 +124,6 @@ export default class ActionService {
         workspaceId,
         config,
         actionCreateResource.version,
-        actionCreateResource.isDev,
       );
 
       // Recreate the action entities
@@ -147,7 +148,9 @@ export default class ActionService {
     const workspace = await prisma.workspace.findUnique({
       where: { id: workspaceId },
     });
-    const workspacePreferences = workspace.preferences as JsonObject;
+    const workspacePreferences = workspace.preferences as {
+      actionCount: number;
+    };
 
     const totalActionsDeployed = await prisma.action.findMany({
       where: {
@@ -164,7 +167,7 @@ export default class ActionService {
     if (
       workspace.actionsEnabled &&
       !alreadyCreatedAction &&
-      totalActionsDeployed >= workspacePreferences.actionCount
+      totalActionsDeployed.length >= workspacePreferences.actionCount
     ) {
       throw new BadRequestException(
         'Total number of actions you can deploy is maxed',
@@ -266,17 +269,11 @@ export default class ActionService {
     workspaceId: string,
     config: ActionConfig,
     version: string,
-    isDev: boolean = false,
   ) {
     // Find an existing action by slug and workspace
     let action = await prisma.action.findFirst({
       where: { slug: config.slug, workspaceId },
     });
-
-    // Get the latest version for the task
-    const latestVersion = await this.triggerdev.getLatestVersionForTask(
-      config.slug,
-    );
 
     // If no action exists, create a new one
     if (!action) {
@@ -287,15 +284,14 @@ export default class ActionService {
           description: config.description,
           integrations: config.integrations ? config.integrations : [],
           createdById: userId,
-          isDev,
           workspaceId,
           status: config.inputs
             ? ActionStatusEnum.NEEDS_CONFIGURATION
             : ActionStatusEnum.ACTIVE,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           config: config as any,
-          triggerVersion: latestVersion,
           version,
+          url: config.url,
         },
       });
     } else {
@@ -310,8 +306,8 @@ export default class ActionService {
           name: action.name,
           integrations: config.integrations ? config.integrations : [],
           status: ActionStatusEnum.ACTIVE,
-          triggerVersion: latestVersion,
           deleted: null,
+          url: config.url,
         },
       });
     }
@@ -360,17 +356,6 @@ export default class ActionService {
     }
   }
 
-  async cleanDevActions(slug: string, workspaceId: string, userId: string) {
-    // Find the action by name and workspace
-    const action = await this.prisma.action.findFirst({
-      where: { slug, workspaceId, createdById: userId, isDev: true },
-    });
-
-    if (action) {
-      await this.delete(action.id);
-    }
-  }
-
   // Get all actions for a workspace
   async getActions(workspaceId: string) {
     const actions = await this.prisma.action.findMany({
@@ -380,56 +365,6 @@ export default class ActionService {
     });
 
     return actions;
-  }
-
-  // Get runs for a specific action slug
-  async getRunsForSlug(workspaceId: string, slug: string) {
-    // Find the action by slug and workspace
-    const action = await this.getAction(slug, workspaceId);
-
-    // Get runs for the action from TriggerDev
-    return await this.triggerdev.getRunsForTask(
-      action.workspaceId,
-      slug,
-      action.isDev ? Env.DEV : Env.PROD,
-    );
-  }
-
-  // Get a specific run for an action slug
-  async getRunForSlug(workspaceId: string, slug: string, runId: string) {
-    // Find the action by slug and workspace
-    const action = await this.getAction(slug, workspaceId);
-
-    // Get the run from TriggerDev
-    return await this.triggerdev.getRun(
-      action.workspaceId,
-      runId,
-      action.isDev ? Env.DEV : Env.PROD,
-    );
-  }
-
-  async replayRunForSlug(workspaceId: string, slug: string, runId: string) {
-    // Find the action by slug and workspace
-    const action = await this.getAction(slug, workspaceId);
-
-    // Get the run from TriggerDev
-    return await this.triggerdev.replayRun(
-      action.workspaceId,
-      runId,
-      action.isDev ? Env.DEV : Env.PROD,
-    );
-  }
-
-  async cancelRunForSlug(workspaceId: string, slug: string, runId: string) {
-    // Find the action by slug and workspace
-    const action = await this.getAction(slug, workspaceId);
-
-    // Get the run from TriggerDev
-    return await this.triggerdev.cancelRun(
-      action.workspaceId,
-      runId,
-      action.isDev ? Env.DEV : Env.PROD,
-    );
   }
 
   async getInputsForSlug(slug: string, workspaceId: string) {
@@ -447,17 +382,14 @@ export default class ActionService {
       action.id,
     );
 
-    return await this.triggerdev.triggerTask(
-      action.workspaceId,
-      action.slug,
-      {
+    return await tasks.trigger<typeof actionRun>('action-run', {
+      workspaceId: action.workspaceId,
+      payload: {
         event: ActionTypesEnum.GET_INPUTS,
         workspaceId,
         ...triggerPayload,
       },
-      getActionEnv(action),
-      action.isDev ? {} : { lockToVersion: action.triggerVersion },
-    );
+    });
   }
 
   async createActionSchedule(
@@ -482,17 +414,14 @@ export default class ActionService {
       });
 
       try {
-        const scheduleResponse = await this.triggerdev.createScheduleTask(
-          {
-            cron: actionSchedule.cron,
-            deduplicationKey: actionSchedule.id,
-            externalId: actionSchedule.id,
-            ...(actionSchedule.timezone
-              ? { timezone: actionSchedule.timezone }
-              : {}),
-          },
-          getActionEnv(action),
-        );
+        const scheduleResponse = await this.triggerdev.createScheduleTask({
+          cron: actionSchedule.cron,
+          deduplicationKey: actionSchedule.id,
+          externalId: actionSchedule.id,
+          ...(actionSchedule.timezone
+            ? { timezone: actionSchedule.timezone }
+            : {}),
+        });
 
         return await tx.actionSchedule.update({
           where: { id: actionSchedule.id },
@@ -521,17 +450,13 @@ export default class ActionService {
       });
 
       try {
-        await this.triggerdev.updateScheduleTask(
-          actionScheduleId,
-          {
-            cron: actionSchedule.cron,
-            externalId: actionSchedule.id,
-            ...(actionSchedule.timezone
-              ? { timezone: actionSchedule.timezone }
-              : {}),
-          },
-          getActionEnv(actionSchedule.action),
-        );
+        await this.triggerdev.updateScheduleTask(actionScheduleId, {
+          cron: actionSchedule.cron,
+          externalId: actionSchedule.id,
+          ...(actionSchedule.timezone
+            ? { timezone: actionSchedule.timezone }
+            : {}),
+        });
 
         return actionSchedule;
       } catch (error) {
@@ -554,17 +479,13 @@ export default class ActionService {
       });
 
       try {
-        await this.triggerdev.updateScheduleTask(
-          actionScheduleId,
-          {
-            cron: actionSchedule.cron,
-            externalId: actionSchedule.id,
-            ...(actionSchedule.timezone
-              ? { timezone: actionSchedule.timezone }
-              : {}),
-          },
-          getActionEnv(actionSchedule.action),
-        );
+        await this.triggerdev.updateScheduleTask(actionScheduleId, {
+          cron: actionSchedule.cron,
+          externalId: actionSchedule.id,
+          ...(actionSchedule.timezone
+            ? { timezone: actionSchedule.timezone }
+            : {}),
+        });
 
         return actionSchedule;
       } catch (error) {
@@ -585,15 +506,12 @@ export default class ActionService {
       action.id,
     );
 
-    return await this.triggerdevService.triggerTaskAsync(
-      action.workspaceId,
-      action.slug,
-      {
+    return await tasks.trigger<typeof actionRun>('action-run', {
+      workspaceId: action.workspaceId,
+      payload: {
         event: ActionTypesEnum.ON_SCHEDULE,
         ...addedTaskInfo,
       },
-      getActionEnv(action),
-      { lockToVersion: action.triggerVersion },
-    );
+    });
   }
 }

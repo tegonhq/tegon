@@ -6,7 +6,6 @@ export interface ActionType {
   updatedAt: string;
   config: string;
   data?: string;
-  isDev: boolean;
   isPersonal: boolean;
   status: ActionStatusEnum;
   version: string;

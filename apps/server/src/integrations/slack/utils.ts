@@ -3,7 +3,6 @@ import {
   EventBody,
   IntegrationAccount,
   Issue,
-  JsonObject,
   TiptapMarks,
   TiptapNode,
   UpdateLinkedIssueDto,
@@ -675,8 +674,8 @@ export async function issueCreate(
     include: { integrationDefinition: true },
   });
 
-  const integrationConfig =
-    integrationAccount.integrationConfiguration as JsonObject;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const integrationConfig = integrationAccount.integrationConfiguration as any;
 
   const messageResponse = (
     await axios.post('https://slack.com/api/chat.postMessage', messagePayload, {
