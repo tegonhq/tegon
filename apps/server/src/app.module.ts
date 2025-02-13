@@ -44,6 +44,7 @@ import { TriggerdevModule } from 'modules/triggerdev/triggerdev.module';
 import { UsersModule } from 'modules/users/users.module';
 import { ViewsModule } from 'modules/views/views.module';
 import { WebhookModule } from 'modules/webhook/webhook.module';
+import { WebhookSubscriptionModule } from 'modules/webhook-subscription/webhook-subscription.module';
 import { WorkflowsModule } from 'modules/workflows/workflows.module';
 import { WorkspacesModule } from 'modules/workspaces/workspaces.module';
 
@@ -114,6 +115,7 @@ import { AppService } from './app.service';
     AIRequestsModule,
     ProjectsModule,
     CyclesModule,
+    WebhookSubscriptionModule,
 
     WebhookModule,
 

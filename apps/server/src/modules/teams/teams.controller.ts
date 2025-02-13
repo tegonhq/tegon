@@ -36,6 +36,15 @@ export class TeamsController {
     return await this.teamsService.getTeams(workspaceId);
   }
 
+  @Get('user')
+  @UseGuards(AuthGuard)
+  async getTeamsByUser(
+    @UserId() userId: string,
+    @Workspace() workspaceId: string,
+  ): Promise<Team[]> {
+    return await this.teamsService.getTeamsByUser(userId, workspaceId);
+  }
+
   @Get(':teamId')
   @UseGuards(AuthGuard)
   async getTeam(
