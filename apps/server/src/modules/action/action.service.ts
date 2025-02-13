@@ -382,14 +382,23 @@ export default class ActionService {
       action.id,
     );
 
-    return await tasks.triggerAndPoll<typeof actionRun>('action-run', {
-      workspaceId: action.workspaceId,
-      payload: {
-        event: ActionTypesEnum.GET_INPUTS,
-        workspaceId,
-        ...triggerPayload,
+    const response = await tasks.triggerAndPoll<typeof actionRun>(
+      'action-run',
+      {
+        workspaceId: action.workspaceId,
+        payload: {
+          event: ActionTypesEnum.GET_INPUTS,
+          workspaceId,
+          ...triggerPayload,
+        },
       },
-    });
+    );
+
+    if (response.status === 'COMPLETED') {
+      return response.output;
+    }
+
+    throw new Error(`Trigger action failed with status: ${response.status}`);
   }
 
   async createActionSchedule(

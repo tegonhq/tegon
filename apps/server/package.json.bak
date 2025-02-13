@@ -39,7 +39,6 @@
     "trigger-dev": "npx trigger.dev@latest dev"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^1.1.7",
     "@ai-sdk/openai": "^0.0.63",
     "@aws-sdk/client-s3": "^3.712.0",
     "@aws-sdk/s3-request-presigner": "^3.712.0",
@@ -82,8 +81,8 @@
     "@tiptap/extension-underline": "^2.4.0",
     "@tiptap/html": "^2.4.0",
     "@tiptap/pm": "^2.4.0",
-    "@trigger.dev/build": "3.3.15",
-    "@trigger.dev/sdk": "3.3.15",
+    "@trigger.dev/build": "3.3.13",
+    "@trigger.dev/sdk": "3.3.13",
     "@types/multer": "^1.4.11",
     "@types/nodemailer": "^6.4.17",
     "@types/turndown": "^5.0.5",

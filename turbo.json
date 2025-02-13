@@ -46,6 +46,7 @@
     "SMTP_USE_SLS",
     "COHERE_API_KEY",
     "OPENAI_API_KEY",
+    "ANTHROPIC_API_KEY",
     "LOCAL_MODEL",
     "OLLAMA_HOST",
     "TRIGGER_DB",
@@ -59,29 +60,29 @@
   "ui": "tui",
   "tasks": {
     "start-prod": {
-      "dependsOn": [ "db:init-resources" ],
+      "dependsOn": ["db:init-resources"],
       "cache": false
     },
     "generate": {
-      "dependsOn": [ "^generate" ],
+      "dependsOn": ["^generate"],
       "cache": false
     },
     "dev": {
-      "dependsOn": [ "generate" ],
+      "dependsOn": ["generate"],
       "interactive": true,
       "cache": false
     },
     "build": {
-      "dependsOn": [ "^build" ],
-      "outputs": [ "dist/**", ".next/**" ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
     },
-    "lint": { },
+    "lint": {},
     "create-resources": {
       "interactive": true,
       "cache": false
     },
     "trigger-deploy": {
-      "env": [ "TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL" ],
+      "env": ["TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL"],
       "cache": false
     },
     "trigger-dev": {
@@ -89,10 +90,10 @@
       "cache": false
     },
     "prisma:studio": {
-      "env": [ "DATABASE_URL" ]
+      "env": ["DATABASE_URL"]
     },
     "migrate": {
-      "env": [ "DATABASE_URL" ],
+      "env": ["DATABASE_URL"],
       "interactive": true,
       "cache": false
     }

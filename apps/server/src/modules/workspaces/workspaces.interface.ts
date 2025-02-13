@@ -1,4 +1,5 @@
-import { LLMModelsEnum, RoleEnum, WorkspaceStatusEnum } from '@tegonhq/types';
+import { LLMModels } from '@prisma/client';
+import { RoleEnum, WorkspaceStatusEnum } from '@tegonhq/types';
 import {
   filterPrompt,
   issueDescriptionPrompt,
@@ -82,36 +83,36 @@ export const promptsSeedData = [
   {
     name: 'IssueTitle',
     prompt: issueTitlePrompt,
-    model: LLMModelsEnum.GPT35TURBO,
+    model: LLMModels.GPT35TURBO,
   },
   {
     name: 'IssueLabels',
     prompt: issueLabelPrompt,
-    model: LLMModelsEnum.GPT35TURBO,
+    model: LLMModels.GPT35TURBO,
   },
   {
     name: 'IssueSummary',
     prompt: issueSummarizePrompt,
-    model: LLMModelsEnum.GPT35TURBO,
+    model: LLMModels.GPT35TURBO,
   },
   {
     name: 'Filter',
     prompt: filterPrompt,
-    model: LLMModelsEnum.GPT4TURBO,
+    model: LLMModels.GPT4TURBO,
   },
   {
     name: 'SubIssues',
     prompt: subIssuesPrompt,
-    model: LLMModelsEnum.GPT4TURBO,
+    model: LLMModels.GPT4TURBO,
   },
   {
     name: 'ViewNameDescription',
     prompt: viewNameDescriptionPrompt,
-    model: LLMModelsEnum.GPT35TURBO,
+    model: LLMModels.GPT35TURBO,
   },
   {
     name: 'IssueDescription',
     prompt: issueDescriptionPrompt,
-    model: LLMModelsEnum.GPT4O,
+    model: LLMModels.GPT4O,
   },
 ];

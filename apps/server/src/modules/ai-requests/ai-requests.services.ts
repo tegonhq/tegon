@@ -1,8 +1,20 @@
+import { anthropic } from '@ai-sdk/anthropic';
 import { openai } from '@ai-sdk/openai';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AIStreamResponse, GetAIRequestDTO } from '@tegonhq/types';
-import { CoreMessage, CoreUserMessage, generateText, streamText } from 'ai';
+import {
+  AIStreamResponse,
+  GetAIRequestDTO,
+  LLMMappings,
+  LLMModelEnum,
+} from '@tegonhq/types';
+import {
+  CoreMessage,
+  CoreUserMessage,
+  generateText,
+  LanguageModelV1,
+  streamText,
+} from 'ai';
 import { PrismaService } from 'nestjs-prisma';
 import { Ollama } from 'ollama';
 import { ollama } from 'ollama-ai-provider';
@@ -16,7 +28,10 @@ export default class AIRequestsService {
     private prisma: PrismaService,
     private configService: ConfigService,
   ) {
-    if (!configService.get('OPENAI_API_KEY')) {
+    if (
+      !configService.get('OPENAI_API_KEY') ||
+      !configService.get('ANTHROPIC_API_KEY')
+    ) {
       const ollama = new Ollama({ host: process.env['OLLAMA_HOST'] });
       ollama.pull({ model: process.env['LOCAL_MODEL'] });
     }
@@ -59,7 +74,7 @@ export default class AIRequestsService {
     try {
       return await this.makeModelCall(
         stream,
-        model,
+        model as LLMModelEnum,
         messages,
         (text: string, model: string) => {
           this.createRecord(
@@ -83,7 +98,7 @@ export default class AIRequestsService {
 
   async makeModelCall(
     stream: boolean,
-    model: string,
+    model: LLMModelEnum,
     messages: CoreMessage[],
     onFinish: (text: string, model: string) => void,
   ) {
@@ -95,16 +110,28 @@ export default class AIRequestsService {
     }
 
     switch (model) {
-      case 'gpt-3.5-turbo':
-      case 'gpt-4-turbo':
-      case 'gpt-4o':
-        finalModel = model;
+      case LLMModelEnum.GPT35TURBO:
+      case LLMModelEnum.GPT4TURBO:
+      case LLMModelEnum.GPT4O:
+        finalModel = LLMMappings[model];
         this.logger.info({
           message: `Sending request to OpenAI with model: ${model}`,
           where: `AIRequestsService.makeModelCall`,
         });
         modelInstance = openai(model);
         break;
+
+      case LLMModelEnum.CLAUDEOPUS:
+      case LLMModelEnum.CLAUDESONNET:
+      case LLMModelEnum.CLAUDEHAIKU:
+        finalModel = LLMMappings[model];
+        this.logger.info({
+          message: `Sending request to Claude with model: ${finalModel}`,
+          where: `AIRequestsService.makeModelCall`,
+        });
+        modelInstance = anthropic(finalModel);
+        break;
+
       default:
         finalModel = process.env.LOCAL_MODEL;
         this.logger.info({
@@ -116,7 +143,7 @@ export default class AIRequestsService {
 
     if (stream) {
       return await streamText({
-        model: modelInstance,
+        model: modelInstance as LanguageModelV1,
         messages,
         onFinish: async ({ text }) => {
           onFinish(text, finalModel);
@@ -125,7 +152,7 @@ export default class AIRequestsService {
     }
 
     const { text } = await generateText({
-      model: modelInstance,
+      model: modelInstance as LanguageModelV1,
       messages,
     });
 
