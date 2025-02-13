@@ -7,7 +7,7 @@ import { prismaExtension } from '@trigger.dev/build/extensions/prisma';
 import { defineConfig } from '@trigger.dev/sdk/v3';
 
 export default defineConfig({
-  project: 'proj_drsvtahklkupnkvfkunu',
+  project: 'proj_common',
   runtime: 'node',
   logLevel: 'log',
   maxDuration: 3600,

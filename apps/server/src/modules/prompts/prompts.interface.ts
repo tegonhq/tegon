@@ -1,4 +1,4 @@
-import { LLMModels } from '@tegonhq/types';
+import { LLMModelEnum, LLMModelType } from '@tegonhq/types';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class PromptInput {
@@ -9,8 +9,8 @@ export class PromptInput {
   prompt: string;
 
   @IsOptional()
-  @IsEnum(LLMModels)
-  models: LLMModels;
+  @IsEnum(LLMModelEnum)
+  models: LLMModelType;
 }
 
 export enum LLMMappings {

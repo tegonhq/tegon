@@ -1,11 +1,3 @@
-export enum LLMMappings {
-  GPT35TURBO = 'gpt-3.5-turbo',
-  GPT4TURBO = 'gpt-4-turbo',
-  LLAMA3 = 'llama3',
-  CLAUDEOPUS = 'opus',
-  GPT4O = 'gpt-4o',
-}
-
 export const issueTitlePrompt = ` You have deep expertise in project management and task management for software teams. Whenever a text is provided to you, you have to create an issue title for software development tasks based on the description text.
 
 Step 1: If description is null then result null output.

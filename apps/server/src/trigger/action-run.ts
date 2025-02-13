@@ -13,9 +13,8 @@ const fetcher = async (url: string) => {
 };
 
 function createAxiosInstance(token: string) {
-  const instance = axios.create();
-
-  instance.interceptors.request.use((axiosConfig) => {
+  axios.interceptors.request.use((axiosConfig) => {
+    console.log(axiosConfig.url);
     if (axiosConfig.url.startsWith('/api')) {
       axiosConfig.url = process.env.BASE_HOST
         ? `${process.env.BASE_HOST}${axiosConfig.url}`
@@ -31,7 +30,7 @@ function createAxiosInstance(token: string) {
     return axiosConfig;
   });
 
-  return instance;
+  return axios;
 }
 
 export const actionRun = task({
