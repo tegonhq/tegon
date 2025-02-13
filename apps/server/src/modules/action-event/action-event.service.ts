@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import {
   ActionEntity,
   ActionEvent,
@@ -29,7 +28,6 @@ export default class ActionEventService {
     private prisma: PrismaService,
 
     private integrationsService: IntegrationsService,
-    private configService: ConfigService,
   ) {}
 
   async createEvent(event: CreateActionEvent) {
@@ -60,8 +58,6 @@ export default class ActionEventService {
 
         const processedIds = await this.triggerActions(actionEvent);
         this.updateEvent(actionEvent.id, processedIds);
-
-        await this.triggerWebhookAction(actionEvent, event.workspaceId);
       }
     }
   }

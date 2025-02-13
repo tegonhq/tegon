@@ -2,12 +2,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 import { openai } from '@ai-sdk/openai';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  AIStreamResponse,
-  GetAIRequestDTO,
-  LLMMappings,
-  LLMModelEnum,
-} from '@tegonhq/types';
+import { AIStreamResponse, GetAIRequestDTO } from '@tegonhq/types';
 import {
   CoreMessage,
   CoreUserMessage,
@@ -74,7 +69,7 @@ export default class AIRequestsService {
     try {
       return await this.makeModelCall(
         stream,
-        model as LLMModelEnum,
+        model,
         messages,
         (text: string, model: string) => {
           this.createRecord(
@@ -98,33 +93,35 @@ export default class AIRequestsService {
 
   async makeModelCall(
     stream: boolean,
-    model: LLMModelEnum,
+    model: string,
     messages: CoreMessage[],
     onFinish: (text: string, model: string) => void,
   ) {
     let modelInstance;
     let finalModel: string;
-
-    if (!this.configService.get('OPENAI_API_KEY')) {
+    if (
+      !this.configService.get('OPENAI_API_KEY') ||
+      !this.configService.get('ANTHROPIC_API_KEY')
+    ) {
       model = null;
     }
 
     switch (model) {
-      case LLMModelEnum.GPT35TURBO:
-      case LLMModelEnum.GPT4TURBO:
-      case LLMModelEnum.GPT4O:
-        finalModel = LLMMappings[model];
+      case 'gpt-3.5-turbo':
+      case 'gpt-4-turbo':
+      case 'gpt-4o':
+        finalModel = model;
         this.logger.info({
-          message: `Sending request to OpenAI with model: ${model}`,
+          message: `Sending request to OpenAI with model: ${finalModel}`,
           where: `AIRequestsService.makeModelCall`,
         });
-        modelInstance = openai(model);
+        modelInstance = openai(finalModel);
         break;
 
-      case LLMModelEnum.CLAUDEOPUS:
-      case LLMModelEnum.CLAUDESONNET:
-      case LLMModelEnum.CLAUDEHAIKU:
-        finalModel = LLMMappings[model];
+      case 'claude-3-opus-20240229':
+      case 'claude-3-5-sonnet-20241022':
+      case 'claude-3-haiku-20240307':
+        finalModel = model;
         this.logger.info({
           message: `Sending request to Claude with model: ${finalModel}`,
           where: `AIRequestsService.makeModelCall`,
