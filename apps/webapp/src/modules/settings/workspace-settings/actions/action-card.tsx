@@ -1,3 +1,5 @@
+import type { ActionConfig } from '@tegonhq/types';
+
 import {
   Card,
   CardDescription,
@@ -8,10 +10,8 @@ import Link from 'next/link';
 
 import { useCurrentWorkspace } from 'hooks/workspace';
 
-import type { ActionSource } from 'services/action';
-
 interface ActionCardProps {
-  action: ActionSource;
+  action: ActionConfig;
 }
 
 export function ActionCard({ action }: ActionCardProps) {

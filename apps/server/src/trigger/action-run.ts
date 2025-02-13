@@ -14,7 +14,6 @@ const fetcher = async (url: string) => {
 
 function createAxiosInstance(token: string) {
   axios.interceptors.request.use((axiosConfig) => {
-    console.log(axiosConfig.url);
     if (axiosConfig.url.startsWith('/api')) {
       axiosConfig.url = process.env.BASE_HOST
         ? `${process.env.BASE_HOST}${axiosConfig.url}`

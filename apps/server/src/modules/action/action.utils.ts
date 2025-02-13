@@ -21,6 +21,32 @@ export async function getExternalActions() {
   const response = await axios.get(actionsUrl);
   const actions = response.data;
 
+  return [
+    {
+      slug: 'slack',
+      name: 'Slack',
+      description: 'Create issues from Slack messages and sync threads',
+      version: '0.1.0',
+      icon: 'slack',
+      url: 'https://app.tegon.ai/api/v1/attachment/actions/slack-0.1.0',
+      triggers: [
+        {
+          type: 'on_create',
+          entities: ['IssueComment', 'LinkedIssue'],
+        },
+        {
+          type: 'source_webhook',
+          entities: ['slack'],
+        },
+        {
+          type: 'on_update',
+          entities: ['LinkedIssue'],
+        },
+      ],
+      integrations: ['slack'],
+    },
+  ];
+
   return await Promise.all(
     actions.map(async (action: { slug: string }) => {
       const config = await getActionConfig(action.slug);

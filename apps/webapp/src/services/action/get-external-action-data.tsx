@@ -1,4 +1,4 @@
-import type { ActionSource } from './get-all-actions';
+import type { ActionConfig } from '@tegonhq/types';
 
 import { type UseQueryResult, useQuery } from 'react-query';
 
@@ -17,7 +17,7 @@ export function getExternalActionData(actionSlug: string) {
 
 export function useGetExternalActionDataQuery(
   actionSlug: string,
-): UseQueryResult<ActionSource, XHRErrorResponse> {
+): UseQueryResult<ActionConfig, XHRErrorResponse> {
   return useQuery(
     [GetExternalActionData, actionSlug],
     () => getExternalActionData(actionSlug),

@@ -56,6 +56,11 @@ export class ActionController {
     );
   }
 
+  @Delete(':actionId')
+  async deleteAction(@Param() actionIdDto: ActionIdDto) {
+    return await this.actionService.delete(actionIdDto.actionId);
+  }
+
   @Get('external')
   async getExternalActions() {
     return await getExternalActions();

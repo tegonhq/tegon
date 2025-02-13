@@ -18,7 +18,7 @@ interface HeaderProps {
 
 export const Header = observer(({ title }: HeaderProps) => {
   const {
-    query: { workspaceSlug },
+    query: { workspaceSlug, actionSlug },
   } = useRouter();
   const team = useCurrentTeam();
 
@@ -47,6 +47,17 @@ export const Header = observer(({ title }: HeaderProps) => {
                 <TeamIcon preferences={team.preferences} name={team.name} />
 
                 <span className="inline-block">{team.name}</span>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          )}
+          {actionSlug && (
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                as={Link}
+                className="flex items-center gap-2"
+                href={`/${workspaceSlug}/settings/actions`}
+              >
+                Actions
               </BreadcrumbLink>
             </BreadcrumbItem>
           )}
