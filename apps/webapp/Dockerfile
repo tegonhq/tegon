@@ -18,7 +18,7 @@ COPY --from=pruner --chown=node:node /app/out/pnpm-workspace.yaml ./pnpm-workspa
 FROM base AS dev-deps
 WORKDIR /app
 # Corepack is used to install pnpm
-RUN corepack enable
+RUN npm install -g corepack && corepack enable
 ENV NODE_ENV development
 RUN pnpm install --ignore-scripts --no-frozen-lockfile
 
@@ -26,7 +26,7 @@ RUN pnpm install --ignore-scripts --no-frozen-lockfile
 FROM base AS production-deps
 WORKDIR /app
 # Corepack is used to install pnpm
-RUN corepack enable
+RUN npm install -g corepack && corepack enable
 ENV NODE_ENV production
 RUN pnpm install --prod --no-frozen-lockfile
 
@@ -36,7 +36,7 @@ WORKDIR /app
 ARG SENTRY_AUTH_TOKEN
 
 # Corepack is used to install pnpm
-RUN corepack enable
+RUN npm install -g corepack && corepack enable
 
 COPY --from=pruner --chown=node:node /app/out/full/ .
 COPY --from=dev-deps --chown=node:node /app/ .
@@ -51,7 +51,7 @@ RUN pnpm run build --filter=webapp...
 FROM node:18-alpine AS runner
 RUN apk add --no-cache dumb-init bash
 WORKDIR /app
-RUN corepack enable
+RUN npm install -g corepack && corepack enable
 ENV NODE_ENV production
 
 COPY --from=builder  --chown=node:node /app/apps/webapp/.next/standalone ./
