@@ -11,6 +11,7 @@
     "dev": "dotenv -- turbo run migrate dev --parallel --filter=!website",
     "build": "dotenv -- turbo run build",
     "lint": "turbo run lint",
+    "prune": "turbo prune",
     "generate": "dotenv -- turbo run generate",
     "start": "dotenv -- turbo run start-prod",
     "create-resources": "dotenv -- turbo run create-resources --filter=server",
@@ -19,16 +20,13 @@
     "prisma:studio": "dotenv -- turbo run prisma:studio --filter=server",
     "migrate": "dotenv -- turbo run migrate --filter=server"
   },
-  "devDependencies": {
-    "dotenv-cli": "^7.4.2",
-    "syncpack": "^12.3.3",
+  "packageManager": "pnpm@8.15.6",
+  "dependencies": {
+    "dotenv-cli": "^7.4.4",
+    "date-fns": "^3.6.0",
+    "react-day-picker": "^8.9.1",
     "turbo": "^2.0.9",
     "typescript": "5.4.3",
     "zod": "3.23.8"
-  },
-  "packageManager": "pnpm@8.15.6",
-  "dependencies": {
-    "date-fns": "^3.6.0",
-    "react-day-picker": "^8.9.1"
   }
 }

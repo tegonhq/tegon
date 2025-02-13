@@ -1,4 +1,4 @@
-FROM node:18-alpine AS pruner
+FROM node:20-alpine AS pruner
 WORKDIR /app
 
 COPY --chown=node:node . .
@@ -6,7 +6,7 @@ RUN npx -q turbo@1.10.9 prune --scope=webapp --docker
 RUN find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
 
 # Base strategy to have layer caching
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 RUN apk add openssl dumb-init libc6-compat
 WORKDIR /app
 COPY --chown=node:node .gitignore .gitignore
@@ -17,7 +17,7 @@ COPY --from=pruner --chown=node:node /app/out/pnpm-workspace.yaml ./pnpm-workspa
 ## Dev deps
 FROM base AS dev-deps
 WORKDIR /app
-# Corepack is used to install pnpm
+
 RUN npm install -g corepack && corepack enable
 ENV NODE_ENV development
 RUN pnpm install --ignore-scripts --no-frozen-lockfile
@@ -25,7 +25,7 @@ RUN pnpm install --ignore-scripts --no-frozen-lockfile
 ## Production deps
 FROM base AS production-deps
 WORKDIR /app
-# Corepack is used to install pnpm
+
 RUN npm install -g corepack && corepack enable
 ENV NODE_ENV production
 RUN pnpm install --prod --no-frozen-lockfile
@@ -35,7 +35,7 @@ FROM base AS builder
 WORKDIR /app
 ARG SENTRY_AUTH_TOKEN
 
-# Corepack is used to install pnpm
+
 RUN npm install -g corepack && corepack enable
 
 COPY --from=pruner --chown=node:node /app/out/full/ .
@@ -48,7 +48,7 @@ RUN pnpm run build --filter=webapp...
 
 
 # Runner
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 RUN apk add --no-cache dumb-init bash
 WORKDIR /app
 RUN npm install -g corepack && corepack enable
