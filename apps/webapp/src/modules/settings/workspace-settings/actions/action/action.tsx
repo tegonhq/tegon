@@ -27,6 +27,7 @@ import { useContextStore } from 'store/global-context-provider';
 
 import { Metadata } from './components/metadata';
 import { Configuration } from './configuration';
+import { DeleteActionButton } from './delete-action-button';
 
 export const Action = () => {
   const { actionSlug } = useParams<{ actionSlug: string }>();
@@ -46,9 +47,13 @@ export const Action = () => {
     return null;
   }
 
+  if (!action) {
+    return null;
+  }
+
   return (
     <ContentBox>
-      <Header title="Actions" />
+      <Header title={action?.name} />
       <ScrollArea className="flex grow h-full">
         <div className="w-full p-6">
           <SettingSection
@@ -102,6 +107,10 @@ export const Action = () => {
                 <Configuration />
               </TabsContent>
             </Tabs>
+
+            <div className="flex justify-end pt-2">
+              <DeleteActionButton id={action.id} />
+            </div>
           </SettingSection>
         </div>
       </ScrollArea>

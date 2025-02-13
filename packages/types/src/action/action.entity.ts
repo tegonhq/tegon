@@ -25,6 +25,7 @@ export interface ActionConfig {
   slug: string;
   icon?: string;
   description?: string;
+  guide?: string;
   triggers: ActionTrigger[];
   integrations: string[];
   inputs: any;

@@ -1,3 +1,3 @@
-import { Actions } from 'modules/settings/workspace-settings/actions';
+import { ActionsWrapper } from 'modules/settings/workspace-settings/actions';
 
-export default Actions;
+export default ActionsWrapper;

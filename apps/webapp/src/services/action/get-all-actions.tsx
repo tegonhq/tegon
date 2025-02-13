@@ -4,20 +4,14 @@ import { type UseQueryResult, useQuery } from 'react-query';
 
 import { type XHRErrorResponse, ajaxGet } from 'services/utils';
 
+export interface ActionExternalConfig extends ActionConfig {
+  version: string;
+}
+
 /**
  * Query Key for Get user.
  */
 const GetAllActions = 'getAllActions';
-
-export interface ActionSource {
-  name: string;
-  slug: string;
-  description: string;
-  guide?: string;
-  version: string;
-  icon: string;
-  config?: ActionConfig;
-}
 
 export function getAllActions() {
   return ajaxGet({
@@ -26,7 +20,7 @@ export function getAllActions() {
 }
 
 export function useGetAllActionsQuery(): UseQueryResult<
-  ActionSource[],
+  ActionExternalConfig[],
   XHRErrorResponse
 > {
   return useQuery([GetAllActions], () => getAllActions(), {
