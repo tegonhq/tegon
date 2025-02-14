@@ -5,7 +5,6 @@
   "main": "index.js",
   "repository": "https://github.com/tegonhq/tegon.git",
   "author": "Tegon <support@tegon.ai>",
-  "private": true,
   "scripts": {
     "dev-website": "dotenv -- turbo run dev --filter=website",
     "dev": "dotenv -- turbo run migrate dev --parallel --filter=!website",
@@ -20,7 +19,7 @@
     "prisma:studio": "dotenv -- turbo run prisma:studio --filter=server",
     "migrate": "dotenv -- turbo run migrate --filter=server"
   },
-  "packageManager": "pnpm@8.15.6",
+  "packageManager": "pnpm@10.3.0",
   "dependencies": {
     "dotenv-cli": "^7.4.4",
     "date-fns": "^3.6.0",

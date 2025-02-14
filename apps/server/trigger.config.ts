@@ -7,7 +7,7 @@ import { prismaExtension } from '@trigger.dev/build/extensions/prisma';
 import { defineConfig } from '@trigger.dev/sdk/v3';
 
 export default defineConfig({
-  project: 'proj_common',
+  project: 'proj_mmcuxtmqscunuddmvjwm',
   runtime: 'node',
   logLevel: 'log',
   maxDuration: 3600,
@@ -25,20 +25,19 @@ export default defineConfig({
   instrumentations: [new PrismaInstrumentation()],
   build: {
     extensions: [
-      syncEnvVars(({ env }) => {
-        console.log(env);
+      syncEnvVars(() => {
         return {
-          BASE_HOST: env.BASE_HOST,
-          DATABASE_URL: env.DATABASE_URL,
-          SMTP_HOST: env.SMTP_HOST,
-          SMTP_PORT: env.SMTP_PORT,
-          SMTP_USER: env.SMTP_USER,
-          SMTP_PASSWORD: env.SMTP_PASSWORD,
-          GCP_SERVICE_ACCOUNT: env.GCP_SERVICE_ACCOUNT,
+          BASE_HOST: process.env.BASE_HOST,
+          DATABASE_URL: process.env.DATABASE_URL,
+          SMTP_HOST: process.env.SMTP_HOST,
+          SMTP_PORT: process.env.SMTP_PORT,
+          SMTP_USER: process.env.SMTP_USER,
+          SMTP_PASSWORD: process.env.SMTP_PASSWORD,
+          GCP_SERVICE_ACCOUNT: process.env.GCP_SERVICE_ACCOUNT,
         };
       }),
       additionalPackages({
-        packages: ['@sigma/types', '@tegonhq/sdk'],
+        packages: ['@tegonhq/types'],
       }),
       prismaExtension({
         schema: 'prisma/schema.prisma',
