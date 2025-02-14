@@ -41,7 +41,7 @@
     "zod": "3.22.3"
   },
   "devDependencies": {
-    "@trigger.dev/sdk": "3.3.15",
+    "@trigger.dev/sdk": "3.3.13",
     "@tegonhq/services": "workspace:*",
     "@tegonhq/types": "workspace:*",
     "@tegonhq/typescript-config": "workspace:*",

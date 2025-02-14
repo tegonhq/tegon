@@ -27,7 +27,6 @@
     "PUBLIC_ATTACHMENT_URL",
     "BASE_HOST",
     "OAUTH_CALLBACK_URL",
-    "DOCKER_TOKEN",
     "TYPESENSE_HOST",
     "TYPESENSE_PORT",
     "TYPESENSE_PROTOCOL",
@@ -51,6 +50,8 @@
     "OLLAMA_HOST",
     "TRIGGER_DB",
     "TRIGGER_DATABASE_URL",
+    "TRIGGER_COMMON_ID",
+    "TRIGGER_TOKEN",
     "TRIGGER_ACCESS_TOKEN",
     "TRIGGER_SECRET_KEY",
     "TRIGGER_API_URL",
@@ -60,29 +61,28 @@
   "ui": "tui",
   "tasks": {
     "start-prod": {
-      "dependsOn": ["db:init-resources"],
+      "dependsOn": [ "db:init-resources" ],
       "cache": false
     },
     "generate": {
-      "dependsOn": ["^generate"],
+      "dependsOn": [ "^generate" ],
       "cache": false
     },
     "dev": {
-      "dependsOn": ["generate"],
+      "dependsOn": [ "generate" ],
       "interactive": true,
       "cache": false
     },
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "dependsOn": [ "^build" ],
+      "outputs": [ "dist/**", ".next/**" ]
     },
-    "lint": {},
+    "lint": { },
     "create-resources": {
       "interactive": true,
       "cache": false
     },
     "trigger-deploy": {
-      "env": ["TRIGGER_ACCESS_TOKEN", "TRIGGER_API_URL"],
       "cache": false
     },
     "trigger-dev": {
@@ -90,10 +90,10 @@
       "cache": false
     },
     "prisma:studio": {
-      "env": ["DATABASE_URL"]
+      "env": [ "DATABASE_URL" ]
     },
     "migrate": {
-      "env": ["DATABASE_URL"],
+      "env": [ "DATABASE_URL" ],
       "interactive": true,
       "cache": false
     }

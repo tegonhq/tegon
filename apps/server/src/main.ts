@@ -10,6 +10,7 @@ import type { CorsConfig } from 'common/configs/config.interface';
 import { SupertokensExceptionFilter } from 'modules/auth/auth.filter';
 import { LoggerService } from 'modules/logger/logger.service';
 import ReplicationService from 'modules/replication/replication.service';
+import { TriggerdevService } from 'modules/triggerdev/triggerdev.service';
 
 import { AppModule } from './app.module';
 
@@ -27,6 +28,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({}));
 
   app.use(bodyParser.json({ limit: '50mb' })); // Adjust limit as required
+
+  // Initiate trigger service
+  const triggerService = app.get(TriggerdevService);
+  triggerService.initCommonProject();
 
   // Initiate replication service
   const replicationService = app.get(ReplicationService);

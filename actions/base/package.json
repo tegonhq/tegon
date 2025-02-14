@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint . --fix"
   },
-  "packageManager": "pnpm@8.15.6",
+  "packageManager": "pnpm@10.3.0",
   "dependencies": {
     "@tegonhq/sdk": "^0.1.8",
     "@trigger.dev/sdk": "3.0.0-beta.56",

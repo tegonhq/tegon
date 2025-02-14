@@ -35,8 +35,8 @@
     "prisma:studio": "prisma studio",
     "generate": "prisma generate",
     "db:init-resources": "pnpm run migrate && pnpm run generate",
-    "trigger-deploy": "npx trigger.dev@latest deploy --self-hosted",
-    "trigger-dev": "npx trigger.dev@latest dev"
+    "trigger-deploy": "npx trigger.dev@3.3.13 deploy --self-hosted",
+    "trigger-dev": "npx trigger.dev@3.3.13 dev"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.1.7",
@@ -82,8 +82,8 @@
     "@tiptap/extension-underline": "^2.11.5",
     "@tiptap/html": "^2.11.5",
     "@tiptap/pm": "^2.11.5",
-    "@trigger.dev/build": "3.3.15",
-    "@trigger.dev/sdk": "3.3.15",
+    "@trigger.dev/build": "3.3.13",
+    "@trigger.dev/sdk": "3.3.13",
     "@types/multer": "^1.4.11",
     "@types/nodemailer": "^6.4.17",
     "@types/turndown": "^5.0.5",
