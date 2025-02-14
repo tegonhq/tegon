@@ -17,7 +17,7 @@ COPY --from=pruner --chown=node:node /app/out/pnpm-workspace.yaml ./pnpm-workspa
 FROM base AS dev-deps
 WORKDIR /app
 # Corepack is used to install pnpm
-RUN npm install -g pnpm
+RUN npm install -g corepack && corepack enable
 ENV NODE_ENV development
 RUN pnpm install --ignore-scripts --no-frozen-lockfile
 
@@ -25,7 +25,7 @@ RUN pnpm install --ignore-scripts --no-frozen-lockfile
 FROM base AS production-deps
 WORKDIR /app
 # Corepack is used to install pnpm
-RUN npm install -g pnpm
+RUN npm install -g corepack && corepack enable
 ENV NODE_ENV production
 RUN pnpm install --prod --no-frozen-lockfile
 COPY --from=pruner --chown=node:node /app/apps/server/prisma/schema.prisma /app/apps/server/prisma/schema.prisma
@@ -36,7 +36,7 @@ ENV NPM_CONFIG_IGNORE_WORKSPACE_ROOT_CHECK true
 FROM base AS builder
 WORKDIR /app
 # Corepack is used to install pnpm
-RUN npm install -g pnpm
+RUN npm install -g corepack && corepack enable
 
 COPY --from=pruner --chown=node:node /app/out/full/ .
 COPY --from=dev-deps --chown=node:node /app/ .
@@ -52,7 +52,7 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 RUN apk add --no-cache dumb-init bash
 WORKDIR /app
-RUN npm install -g pnpm
+RUN npm install -g corepack && corepack enable
 ENV NODE_ENV production
 
 COPY --from=pruner --chown=node:node /app/out/full/ .
