@@ -1,29 +1,60 @@
-# Security Policy
+# Security Policy  
 
-## Reporting a Vulnerability
+**Last Updated:** 2025-03-09  
 
-Reporting any potential vulnerabilities is strongly encouraged.
+## Reporting a Vulnerability  
 
-If you suspect a vulnerability, please take the following steps:
+We encourage responsible disclosure of security vulnerabilities to help keep the project secure. If you discover a security issue, follow these steps:  
 
-- Contact the team at `harshith at tegon.ai`.
-- Include a comprehensive description of the potential vulnerability and steps to reproduce the issue, if possible. The more information you can provide, the quicker Tegon can address the problem.
+1. **Do not open a public issue**  
+   - Publicly disclosing a vulnerability before a fix is available can put users at risk. Please report the issue privately.  
 
-You can expect a response to your initial report within one business day.
-While the core team works on addressing the issue, please maintain confidentiality about the vulnerability to ensure the security of all users.
-Please refrain from exploiting the vulnerability or revealing the problem to others.
+2. **Contact the Tegon security team**  
+   - Email **`harshith at tegon.ai`** with the subject line: **"Security Vulnerability Report"**.  
+   - Provide a detailed description, including:  
+     - Steps to reproduce  
+     - Affected components  
+     - Any supporting evidence (logs, proof-of-concept, screenshots, etc.)  
 
-While Tegon doesn't have a formal bug bounty program right now due to the project's nascent stage, rest assured that:
+3. **Response and follow-up**  
+   - You will receive an acknowledgement within **one business day**.  
+   - The security team may request additional details or clarification.  
 
-- You will get a response within one business day.
-- Your report and all accompanying data will receive the highest level of confidentiality.
-- Your contribution is greatly appreciated, and Tegon would acknowledge your role in the vulnerability fix, if you opt for identification.
-- Tegon will grant you permission to publicly discuss your findings once users have had a reasonable time to apply the patch after it becomes available.
-- Tegon guarantees not to pursue any legal action as long as the vulnerability is not exploited.
+4. **Confidentiality**  
+   - Do not publicly disclose the vulnerability until the team has resolved it.  
+   - Tegon will notify you once a fix is available and coordinate a responsible disclosure timeline.  
 
-## Security Features
+## Out-of-Scope Vulnerabilities  
 
-Efforts are continually made to enhance the security of the product.
-If you have any recommendations or feature request that could enhance the product's security, please share them via the discussion forum.
+The following types of vulnerabilities are **not considered security issues** under this policy:  
 
-⚠️ Note this does not apply to security vulnerabilities. If you're in doubt, then always follow the security vulnerability process
+- Clickjacking on pages without sensitive actions.  
+- Unauthenticated/logout/login **CSRF**.  
+- Attacks requiring **man-in-the-middle (MITM)** or **physical access** to a device.  
+- **Denial-of-Service (DoS) attacks** or any activity that disrupts service availability.  
+- Content spoofing or text injection issues **without a clear attack vector**.  
+- **Email spoofing** (without direct exploitability).  
+- Missing **DNSSEC, CAA, CSP headers**.  
+- Lack of **Secure** or **HttpOnly** flags on non-sensitive cookies.  
+- **Broken links (dead links)**.  
+
+If you are unsure whether an issue qualifies, you may still reach out for clarification.  
+
+## Testing Guidelines  
+
+When testing for vulnerabilities, please adhere to the following rules:  
+
+- **Do not run automated scanners** without prior approval, as they may cause unnecessary server load.  
+- **Do not attempt to access, modify, or delete** any user data or sensitive information.  
+- **Do not perform aggressive or disruptive testing** that could impact system availability.  
+
+If you wish to conduct in-depth security testing, please contact the Tegon security team first to discuss the scope and obtain permission.  
+
+## What to Expect  
+
+- You will receive an **acknowledgement** within **one business day**.  
+- The security team may request additional information or clarification.  
+- The team will **work to resolve** the issue as quickly as possible and keep you informed.  
+- Once a **fix is implemented**, you will be notified with details about the patch.  
+- **No legal action** will be taken against researchers who report vulnerabilities responsibly.  
+- You will be granted permission to **publicly disclose** the issue once users have had reasonable time to update.
