@@ -30,7 +30,7 @@ export const recipeList = (
   const isProd = process.env.NODE_ENV === 'production';
   const cookieSettings = isProd
     ? {
-        cookieDomain: '.tegon.ai',
+        cookieDomain: process.env.SUPERTOKENS_DOMAIN,
         olderCookieDomain: '',
         cookieSecure: true,
       }
